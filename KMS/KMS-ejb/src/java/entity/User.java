@@ -6,12 +6,16 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -22,7 +26,7 @@ import util.security.CryptographicHelper;
  * @author Jeremy
  */
 @Entity
-public class UserEntity implements Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -55,13 +59,36 @@ public class UserEntity implements Serializable {
     private Boolean isAdmin;
     @Temporal(TemporalType.DATE)
     private Date adminStartDate;
+    
+    private String profilePicture;
+    
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews;
+    
+    @OneToMany(mappedBy = "user")
+    private List<Project> projects;
+    
+    @ManyToMany
+    private List<Group> groups;
+    
+    @OneToMany(mappedBy = "postOwner")
+    private List<Post> posts;
+    
+    @OneToMany(mappedBy = "commentOwner")
+    private List<PostComment> postComments;
 
-    public UserEntity() {
+    public User() {
+        this.reviews = new ArrayList<>();
+        this.projects = new ArrayList<>();
+        this.groups = new ArrayList<>();
+        this.posts = new ArrayList<>();
+        this.postComments = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
     }
 
-    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate) {
+    public User(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
@@ -69,6 +96,7 @@ public class UserEntity implements Serializable {
         this.email = email;
         this.password = password;
         this.joinedDate = joinedDate;
+        this.profilePicture = profilePicture;
     }
     
         
@@ -91,10 +119,10 @@ public class UserEntity implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the userId fields are not set
-        if (!(object instanceof UserEntity)) {
+        if (!(object instanceof User)) {
             return false;
         }
-        UserEntity other = (UserEntity) object;
+        User other = (User) object;
         if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
             return false;
         }
@@ -189,6 +217,54 @@ public class UserEntity implements Serializable {
 
     public void setAdminStartDate(Date adminStartDate) {
         this.adminStartDate = adminStartDate;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<PostComment> getPostComments() {
+        return postComments;
+    }
+
+    public void setPostComments(List<PostComment> postComments) {
+        this.postComments = postComments;
     }
     
 }
