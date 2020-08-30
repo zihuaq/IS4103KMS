@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,6 +36,9 @@ public class Group implements Serializable {
     private String country;
     
     private String profilePicture;
+    
+    @ManyToOne
+    private User groupOwner;
     
     @ManyToMany
     private List<User> users;
@@ -106,6 +110,22 @@ public class Group implements Serializable {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public User getGroupOwner() {
+        return groupOwner;
+    }
+
+    public void setGroupOwner(User groupOwner) {
+        this.groupOwner = groupOwner;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
     
 }

@@ -76,6 +76,15 @@ public class User implements Serializable {
     
     @OneToMany(mappedBy = "commentOwner")
     private List<PostComment> postComments;
+    
+    @OneToMany(mappedBy = "groupOwner")
+    private List<Group> groupsOwned;
+    
+    @OneToMany
+    private List<Badge> badges;
+    
+    @OneToMany
+    private List<MaterialResourceAvailable> mras;
 
     public User() {
         this.reviews = new ArrayList<>();
@@ -83,6 +92,9 @@ public class User implements Serializable {
         this.groups = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.postComments = new ArrayList<>();
+        this.groupsOwned = new ArrayList<>();
+        this.badges = new ArrayList<>();
+        this.mras = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
     }
@@ -265,6 +277,30 @@ public class User implements Serializable {
 
     public void setPostComments(List<PostComment> postComments) {
         this.postComments = postComments;
+    }
+
+    public List<Group> getGroupsOwned() {
+        return groupsOwned;
+    }
+
+    public void setGroupsOwned(List<Group> groupsOwned) {
+        this.groupsOwned = groupsOwned;
+    }
+
+    public List<Badge> getBadges() {
+        return badges;
+    }
+
+    public void setBadges(List<Badge> badges) {
+        this.badges = badges;
+    }
+
+    public List<MaterialResourceAvailable> getMras() {
+        return mras;
+    }
+
+    public void setMras(List<MaterialResourceAvailable> mras) {
+        this.mras = mras;
     }
     
 }
