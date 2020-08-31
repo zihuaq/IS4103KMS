@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -45,6 +46,18 @@ public class Project implements Serializable {
     
     private Double monetaryFundingRequired;
     private Double monetaryFundingObtained;
+    
+    @OneToMany(mappedBy = "project")
+    private List<Activity> activities;
+    
+    @OneToMany(mappedBy = "project")
+    private List<HumanResourcePosting> humanResourcePostings;
+    
+    @OneToMany(mappedBy = "project")
+    private List<MaterialResourcePosting> materialResourcePostings;
+    
+    @OneToMany
+    private List<Task> tasks;
 
     public Project() {
         this.contributors = new ArrayList<>();
