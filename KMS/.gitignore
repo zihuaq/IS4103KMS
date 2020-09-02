@@ -1,0 +1,7 @@
+nbproject/private/
+build/
+dist/
+
+KMS-war/nbproject/private/
+KMS-war/build/
+KMS-war/dist/
