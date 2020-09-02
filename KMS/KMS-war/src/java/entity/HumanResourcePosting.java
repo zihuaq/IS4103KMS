@@ -29,53 +29,53 @@ public class HumanResourcePosting implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long humanResourcePostingId;
-
+    
     @NotNull
     @Column(nullable=false)
     private String name;
-
+    
     @NotNull
     @Column(nullable=false)
     private Integer totalSlots;
-
+    
     @NotNull
     @Column(nullable=false)
     private Integer obtainedSlots;
-
+    
     @NotNull
     @Column(nullable=false)
     private Integer lackingSlots;
-
+    
     @NotNull
     @Column(nullable=false)
     private String description;
-
+    
      @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
-
+    
     @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
-
+    
     @NotNull
     @Column(nullable=false)
     private Double latitude;
-
+    
     @NotNull
     @Column(nullable=false)
     private Double lontitude;
-
+    
     @ManyToOne
     private Activity activity;
-
+    
     @ManyToOne
     @JoinColumn
     private Project project;
-
-
+    
+    
 
     public Long getHumanResourcePostingId() {
         return humanResourcePostingId;
@@ -109,5 +109,5 @@ public class HumanResourcePosting implements Serializable {
     public String toString() {
         return "entity.HumanResourcePosting[ id=" + humanResourcePostingId + " ]";
     }
-
+    
 }

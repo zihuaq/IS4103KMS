@@ -25,23 +25,23 @@ public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskId;
-
+    
     @NotNull
     @Column(nullable=false)
     private String name;
-
+    
     @NotNull
     @Column(nullable=false)
     private String description;
-
+    
     @NotNull
     @Column(nullable=false)
     private Date startDate;
-
+    
     @NotNull
     @Column(nullable=false)
     private Date endDate;
-
+    
 
     public Long getTaskId() {
         return taskId;
@@ -75,5 +75,5 @@ public class Task implements Serializable {
     public String toString() {
         return "entity.Task[ id=" + taskId + " ]";
     }
-
+    
 }

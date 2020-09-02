@@ -29,48 +29,48 @@ public class MaterialResourcePosting implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long materialResourcePostingId;
-
+    
     @NotNull
     @Column(nullable=false)
     private String name;
-
+    
     @NotNull
     @Column(nullable=false)
     private Double totalQuantity;
-
+    
     @NotNull
     @Column(nullable=false)
     private Double obtainedQuantity;
-
+    
     @NotNull
     @Column(nullable=false)
     private Double lackingQuantity;
-
+    
     @NotNull
     @Column(nullable=false)
     private String description;
-
+    
      @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
-
+    
     @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
-
+    
     @NotNull
     @Column(nullable=false)
     private Double latitude;
-
+    
     @NotNull
     @Column(nullable=false)
     private Double lontitude;
-
+    
     @ManyToOne
     private Activity activity;
-
+    
     @ManyToOne
     @JoinColumn
     private Project project;
@@ -107,5 +107,5 @@ public class MaterialResourcePosting implements Serializable {
     public String toString() {
         return "entity.MaterialResourcePosting[ id=" + materialResourcePostingId + " ]";
     }
-
+    
 }

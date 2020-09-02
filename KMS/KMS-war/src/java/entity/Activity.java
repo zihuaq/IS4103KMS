@@ -31,46 +31,46 @@ public class Activity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long activityId;
-
+    
     @NotNull
     @Column(nullable=false)
     private String name;
-
+    
     @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
-
+    
     @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
-
+    
     private String coutry;
-
+    
     @NotNull
     @Column(nullable=false)
     private String location;
-
+ 
     @NotNull
     @Column(nullable=false)
     private String description;
-
+    
     //private ActivityStatusEnum activityStatus
-
+    
     @ManyToOne
     @JoinColumn
     private Project project;
-
+    
     @OneToMany(mappedBy = "activity")
     private List<HumanResourcePosting> humanResourcePostings;
-
+    
     @OneToMany(mappedBy = "activity")
     private List<MaterialResourcePosting> materialResourcePostings;
     //@OneToMany
     //private List<HumanResourcePosting> humanResourcePostings;
-
-
+    
+    
 
     public Long getActivityId() {
         return activityId;
@@ -104,5 +104,5 @@ public class Activity implements Serializable {
     public String toString() {
         return "entity.Activity[ id=" + activityId + " ]";
     }
-
+    
 }

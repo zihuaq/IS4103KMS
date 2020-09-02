@@ -52,10 +52,10 @@ public class Project implements Serializable {
 
     @OneToMany(mappedBy = "project")
     private List<HumanResourcePosting> humanResourcePostings;
-
+    
     @OneToMany(mappedBy = "project")
     private List<MaterialResourcePosting> materialResourcePostings;
-
+    
     @OneToMany
     private List<Task> tasks;
 
