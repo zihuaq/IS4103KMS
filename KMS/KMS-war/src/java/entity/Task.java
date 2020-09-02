@@ -12,58 +12,60 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author chai
+ * @author zeplh
  */
 @Entity
-public class Chat implements Serializable {
+public class Task implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatId;
-    
+    private Long taskId;
+
     @NotNull
     @Column(nullable=false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateTime;
+    private String name;
 
-    public Chat() {
+    @NotNull
+    @Column(nullable=false)
+    private String description;
+
+    @NotNull
+    @Column(nullable=false)
+    private Date startDate;
+
+    @NotNull
+    @Column(nullable=false)
+    private Date endDate;
+
+
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public Chat(Date dateTime) {
-        this();
-        this.dateTime = dateTime;
-    }
-                    
-    public Long getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (chatId != null ? chatId.hashCode() : 0);
+        hash += (taskId != null ? taskId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the chatId fields are not set
-        if (!(object instanceof Chat)) {
+        // TODO: Warning - this method won't work in the case the taskId fields are not set
+        if (!(object instanceof Task)) {
             return false;
         }
-        Chat other = (Chat) object;
-        if ((this.chatId == null && other.chatId != null) || (this.chatId != null && !this.chatId.equals(other.chatId))) {
+        Task other = (Task) object;
+        if ((this.taskId == null && other.taskId != null) || (this.taskId != null && !this.taskId.equals(other.taskId))) {
             return false;
         }
         return true;
@@ -71,7 +73,7 @@ public class Chat implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Chat[ id=" + chatId + " ]";
+        return "entity.Task[ id=" + taskId + " ]";
     }
-    
+
 }
