@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "KMSAngular"
+    }
+  },
+  "defaultProject": "KMSAngular",
+  "cli": {
+    "analytics": false
+  }
 }
