@@ -1,1 +1,72 @@
-<p>create-new-user works!</p>
+<div class="container">
+    <div class="row">
+        <div class = "col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+            <form (ngSubmit) = "onSubmit(signUpForm)" #signUpForm = "ngForm">
+                <hr>
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input 
+                    type="text"
+                    id="firstName"
+                    class="form-control"
+                    ngModel
+                    name = "firstName"
+                    required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input 
+                    type="text"
+                    id="lastName"
+                    class="form-control"
+                    ngModel
+                    name = "lastName"
+                    required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                    type="email"
+                    id="email"
+                    class="form-control"
+                    ngModel
+                    name = "email"
+                    required
+                    email
+                    #email = "ngModel">
+                    <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                    type="text"
+                    id="password"
+                    class="form-control"
+                    ngModel
+                    name = "password"
+                    required
+                    #password = "ngModel"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input 
+                    type="text"
+                    id="confirmPassword"
+                    class="form-control"
+                    ngModel
+                    name = "confirmPassword"
+                    required
+                    #confirmPassword = "ngModel"
+                    >
+                    <span class="help-block" *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not match</span>
+                </div>
+
+                <button class="btn btn-primary"
+                type = "submit"
+                [disabled] = "!signUpForm.valid || password.value != confirmPassword.value">Create New Account</button>
+            </form>
+        </div>
+    </div>
+</div>
