@@ -35,6 +35,7 @@ public class MaterialResourceAvailable implements Serializable {
     @NotNull
     @Column(nullable=false)
     private String name;
+    
     @NotNull
     @Column(nullable=false)
     private Integer quantity;
@@ -60,7 +61,7 @@ public class MaterialResourceAvailable implements Serializable {
     private Double latitude;
     
     @ManyToOne
-    private User user;
+    private User materialResourceAvailableOwner;
     
     @ManyToMany
     private List<Tag> tags;
@@ -171,12 +172,12 @@ public class MaterialResourceAvailable implements Serializable {
         this.latitude = latitude;
     }
 
-    public User getUser() {
-        return user;
+    public User getMaterialResourceAvailableOwner() {
+        return materialResourceAvailableOwner;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setMaterialResourceAvailableOwner(User materialResourceAvailableOwner) {
+        this.materialResourceAvailableOwner = materialResourceAvailableOwner;
     }
 
     public List<Tag> getTags() {
