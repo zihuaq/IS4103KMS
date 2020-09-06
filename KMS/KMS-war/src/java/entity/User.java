@@ -83,7 +83,7 @@ public class User implements Serializable {
     @OneToMany
     private List<Badge> badges;
     
-    @OneToMany
+    @OneToMany(mappedBy = "materialResourceAvailableOwner")
     private List<MaterialResourceAvailable> mras;
     
     @OneToMany
