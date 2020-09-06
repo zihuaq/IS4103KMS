@@ -74,9 +74,6 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "postOwner")
     private List<Post> posts;
     
-    @OneToMany(mappedBy = "commentOwner")
-    private List<PostComment> postComments;
-    
     @OneToMany(mappedBy = "groupOwner")
     private List<Group> groupsOwned;
     
@@ -94,7 +91,6 @@ public class User implements Serializable {
         this.projects = new ArrayList<>();
         this.groups = new ArrayList<>();
         this.posts = new ArrayList<>();
-        this.postComments = new ArrayList<>();
         this.groupsOwned = new ArrayList<>();
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
@@ -273,14 +269,6 @@ public class User implements Serializable {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
-    }
-
-    public List<PostComment> getPostComments() {
-        return postComments;
-    }
-
-    public void setPostComments(List<PostComment> postComments) {
-        this.postComments = postComments;
     }
 
     public List<Group> getGroupsOwned() {

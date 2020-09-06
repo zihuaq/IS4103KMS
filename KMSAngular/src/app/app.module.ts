@@ -10,15 +10,7 @@ import { IndexComponent } from './index/index.component';
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
 import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Routes, RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
-
-
-const appRoutes: Routes = [
-  { path: '', component: IndexComponent},
-  { path: 'signup', component: CreateNewUserComponent},
-  { path: 'login', component: UserLoginPageComponent} 
-]
 
 @NgModule({
   declarations: [
@@ -28,16 +20,15 @@ const appRoutes: Routes = [
     IndexComponent,
     UserLoginPageComponent,
     ViewAllUsersComponent,
-    HeaderComponent
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(appRoutes)
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
