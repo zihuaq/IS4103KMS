@@ -1,1 +1,21 @@
-<p>basic-details works!</p>
+<mat-card class="basic-details-card">
+  <mat-card-header>
+    <mat-card-title>Info</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-divider></mat-divider>
+      <mat-list-item><b>Lives in</b> &nbsp; {{profile.country}}</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item><b>Birth Date</b> &nbsp; {{profile.dateOfBirth | date}}</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item><b>Gender</b> &nbsp; {{profile.gender}}</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item><b>Email</b> &nbsp; {{profile.email}}</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item><b>Number of Followers</b> &nbsp; {{profile.followers.length}}</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item><b>Number of Followings</b> &nbsp; {{profile.following.length}}</mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

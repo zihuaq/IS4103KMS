@@ -1,5 +1,25 @@
-.container {
+.profile {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.details {
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+app-overview {
+  margin: 20px;
+  display: block;
+}
+
+app-basic-details {
+  width: 100%;
+  display: block;
 }

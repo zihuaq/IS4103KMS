@@ -1,0 +1,9 @@
+.basic-details-card {
+  background-color: aqua;
+  width: 100%;
+}
+
+mat-card-title {
+  font-size: 2em;
+  font-weight: bolder;
+}
