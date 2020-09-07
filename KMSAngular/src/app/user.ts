@@ -9,14 +9,14 @@ export class User {
     profilePicture : String;
     country : String;
     reputationPoiints : Number;
-    type : Enumerator; 
+    type : String; 
     joinDate : Date;
     appoinmentDate : Date;
 
     constructor(userId?: Number, firstName?: String, lastName?: String,
         dateOfBirth?: Date, gender?: String, email?: String, password?: String,
         profilePicture?: String, country?: String, reputationPoiints?: Number,
-        type?: Enumerator, joinDate?: Date, appoinmentDate?: Date){
+        type?: String, joinDate?: Date, appoinmentDate?: Date){
         
             this.userId = userId; 
             this.firstName = firstName; 
