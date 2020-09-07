@@ -21,7 +21,7 @@ export class BasicDetailsComponent implements OnInit, OnChanges {
       'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80',
       'Singapore',
       10,
-      false,
+      'user',
       new Date(),
       new Date(),
       [],

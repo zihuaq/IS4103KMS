@@ -8,8 +8,8 @@ export class User {
   password: String;
   profilePicture: String;
   country: String;
-  reputationPoiints: Number;
-  isAdmin: Boolean;
+  reputationPoints: Number;
+  type: String;
   joinDate: Date;
   appoinmentDate: Date;
   followers: User[];
@@ -25,8 +25,8 @@ export class User {
     password?: String,
     profilePicture?: String,
     country?: String,
-    reputationPoiints?: Number,
-    isAdmin?: Boolean,
+    reputationPoints?: Number,
+    type?: String,
     joinDate?: Date,
     appoinmentDate?: Date,
     followers?: User[],
@@ -41,8 +41,8 @@ export class User {
     this.password = password;
     this.profilePicture = profilePicture;
     this.country = country;
-    this.reputationPoiints = reputationPoiints;
-    this.isAdmin = isAdmin;
+    this.reputationPoints = reputationPoints;
+    this.type = type;
     this.joinDate = joinDate;
     this.appoinmentDate = appoinmentDate;
     this.followers = followers;
