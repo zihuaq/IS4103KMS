@@ -83,8 +83,11 @@ public class User implements Serializable {
     @OneToMany
     private List<Badge> badges;
     
-    @OneToMany
+    @OneToMany(mappedBy = "materialResourceAvailableOwner")
     private List<MaterialResourceAvailable> mras;
+    
+    @OneToMany
+    private List<Tag> skills;
 
     public User() {
         this.reviews = new ArrayList<>();
@@ -95,6 +98,7 @@ public class User implements Serializable {
         this.groupsOwned = new ArrayList<>();
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
+        this.skills = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
     }
@@ -301,6 +305,14 @@ public class User implements Serializable {
 
     public void setMras(List<MaterialResourceAvailable> mras) {
         this.mras = mras;
+    }
+
+    public List<Tag> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<Tag> skills) {
+        this.skills = skills;
     }
     
 }
