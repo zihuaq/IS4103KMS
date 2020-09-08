@@ -15,15 +15,20 @@ import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import ws.restful.model.ErrorRsp;
+import ws.restful.model.UserRegistrationReq;
+import ws.restful.model.UserRegistrationRsp;
 
 /**
  * REST Web Service
@@ -119,6 +124,7 @@ public class UserResource {
         }
     }
 
+
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,5 +139,43 @@ public class UserResource {
                     .build();
             return Response.status(404).entity(exception).build();
         }
+    }
+
+    
+    @Path("userRegistration")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response userRegistration(UserRegistrationReq userRegistrationReq) {
+        
+        System.out.println("*********** HERE1");
+        User newUser = userRegistrationReq.getNewUser();
+        try {
+            
+            if(em==null)
+                System.out.println("******* em is null");
+            
+            em.persist(newUser);
+            em.flush();
+            
+        } catch (PersistenceException ex) {
+            if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
+                    ErrorRsp errorRsp = new ErrorRsp("Email already in use");
+                    return Response.status(Response.Status.BAD_REQUEST).entity(errorRsp).build();
+                } else {
+                    ErrorRsp errorRsp = new ErrorRsp("Unknown Persitence Error");
+                    return Response.status(Response.Status.BAD_REQUEST).entity(errorRsp).build();
+                }
+            }
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+        
+        Long newUserId = newUser.getUserId();
+        UserRegistrationRsp userRegistrationRsp = new UserRegistrationRsp(newUserId);
+        return Response.status(Response.Status.OK).entity(userRegistrationRsp).build();
+
     }
 }
