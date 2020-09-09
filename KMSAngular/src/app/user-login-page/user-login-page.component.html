@@ -1,44 +1,27 @@
+<app-header></app-header>
 <div class="container">
     <div class="row">
-        <div class = "col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-            <form (ngSubmit) = "onLogin(loginForm)" #loginForm = "ngForm">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+            <form (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm">
                 <hr>
-                
+
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input 
-                    type="email"
-                    id="email"
-                    class="form-control"
-                    ngModel
-                    name = "email"
-                    required
-                    email
-                    #email = "ngModel">
-                    <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
+                    <input type="email" id="email" class="form-control" ngModel name="email" required email
+                        #email="ngModel">
+                    <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid
+                        email!</span>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input 
-                    type="text"
-                    id="password"
-                    class="form-control"
-                    ngModel
-                    name = "password"
-                    required
-                    #password = "ngModel"
-                    >
+                    <input type="text" id="password" class="form-control" ngModel name="password" required
+                        #password="ngModel">
                 </div>
-                
-                <button class="btn btn-primary"
-                (click) = "newAccountRedirect()"
-                >Create New Account</button>
 
-                <button class="btn btn-success"
-                type = "submit"
-                style="float: right ;"
-                >Login</button>
+                <button class="btn btn-primary" (click)="newAccountRedirect()">Create New Account</button>
+
+                <button class="btn btn-success" type="submit" style="float: right ;">Login</button>
             </form>
         </div>
     </div>

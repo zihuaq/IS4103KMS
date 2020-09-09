@@ -11,7 +11,14 @@ import { UserLoginPageComponent } from './user-login-page/user-login-page.compon
 import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
-import { ProfileModule } from './profile/profile.module';
+import { TopNavbarComponent } from './top-navbar/top-navbar.component';
+import { ProfileComponent } from './profile/profile.component';
+import { BasicDetailsComponent } from './profile/basic-details/basic-details.component';
+import { ProjectsComponent } from './profile/projects/projects.component';
+import { OverviewComponent } from './profile/overview/overview.component';
+import { MaterialResourceAvailableComponent } from './profile/material-resource-available/material-resource-available.component';
+import { SkillsComponent } from './profile/skills/skills.component';
+import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 
 @NgModule({
   declarations: [
@@ -21,13 +28,20 @@ import { ProfileModule } from './profile/profile.module';
     UserLoginPageComponent,
     ViewAllUsersComponent,
     HeaderComponent,
+    TopNavbarComponent,
+    ProfileComponent,
+    BasicDetailsComponent,
+    ProjectsComponent,
+    OverviewComponent,
+    MaterialResourceAvailableComponent,
+    SkillsComponent,
+    SideNavbarComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    ProfileModule,
     HttpClientModule,
   ],
   providers: [],

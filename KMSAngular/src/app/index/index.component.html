@@ -1,7 +1,35 @@
-<h2>Main Page</h2>
-<ul>
-    <li><a routerLink = "/">View All Users</a></li>
-    <li><a routerLink = "/signup">Create New User</a></li>
-    <li><a routerLink = "/login">User Login Page</a></li>
-    <li><a routerLink = "/profile"> User Profile </a></li>
-</ul>
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Dashboard v3</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard v3</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <h2>Main Page</h2>
+        <ul>
+            <li><a routerLink="/viewAllUsers">View All Users</a></li>
+            <li><a routerLink="/signup">Create New User</a></li>
+            <li><a routerLink="/login">User Login Page</a></li>
+            <li><a routerLink="/profile"> User Profile </a></li>
+        </ul>
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
