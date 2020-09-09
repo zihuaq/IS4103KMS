@@ -3,14 +3,20 @@ import { SessionService } from './session.service';
 import { User } from './classes/user';
 //import { getMaxListeners } from 'cluster';
 import { NgForm } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable,throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   users: User[];
-  baseUrl: string = '/api/User';
+  baseUrl: string = "/api/user";
 
   constructor(
     private sessionService: SessionService,
@@ -28,15 +34,31 @@ export class UserService {
     }
   }
 
-  userRegistration(newUser: User) {
-    return this.http.post('url', newUser).pipe();
+  userRegistration(newUser: User){
+    return this.http.post(this.baseUrl + "/userRegistration",newUser,httpOptions).pipe(
+      catchError(this.handleError)
+    )
   }
 
-  login(email: String, password: String) {
-    return this.http
-      .get<any>(
-        this.baseUrl + '/customerLogin?email=' + email + '&password=' + password
-      )
-      .pipe();
+  login(email: String, password: String){
+    return this.http.get<any>(this.baseUrl + "/userLogin?email=" + email + "&password=" + password).pipe(
+
+    )
   }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage: string = "";
+
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = "An unknown error has occurred: " + error.error.message;
+    }
+    else {
+      errorMessage = "A HTTP error has occurred: " + `HTTP ${error.status}: ${error.error.message}`;
+    }
+
+    console.error(errorMessage);
+
+    return throwError(errorMessage);
+  }
+
 }

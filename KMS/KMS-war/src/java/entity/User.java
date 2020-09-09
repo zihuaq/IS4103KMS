@@ -110,6 +110,16 @@ public class User implements Serializable {
         this.joinedDate = joinedDate;
         this.profilePicture = profilePicture;
     }
+
+    public User(String firstName, String lastName, Date dob, String gender, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.email = email;
+        this.password = password;
+        this.joinedDate = new Date();
+    }
     
         
     

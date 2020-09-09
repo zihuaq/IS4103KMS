@@ -19,6 +19,26 @@
                         #email="ngModel">
                     <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
                 </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input 
+                    type="date"
+                    id="dob"
+                    class="form-control"
+                    ngModel
+                    name = "dob"
+                    required
+                    [max] = "maxDate">
+                    <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid Date of Birth!</span>
+                </div>
+                <div>
+                    <label>Gender</label>
+                    <div class="radio" *ngFor = "let gender of genders">
+                        <label>
+                            <input type="radio" name="gender" ngModel [value] = "gender"> {{gender}}
+                        </label>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>

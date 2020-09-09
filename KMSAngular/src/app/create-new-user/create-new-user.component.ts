@@ -10,6 +10,8 @@ import { User } from '../classes/user';
 })
 export class CreateNewUserComponent implements OnInit {
   newUser: User;
+  maxDate = new Date().toISOString().slice(0,10);
+  genders = ['male', 'female'];
 
   constructor(private userService: UserService) {
     this.newUser = new User();
@@ -19,16 +21,16 @@ export class CreateNewUserComponent implements OnInit {
 
   onCreateUser(userRegistrationForm: NgForm) {
     console.log(userRegistrationForm);
-    if (userRegistrationForm.valid) {
-      this.newUser.firstName = userRegistrationForm.value.firstName;
-      this.newUser.lastName = userRegistrationForm.value.lastName;
-      this.newUser.email = userRegistrationForm.value.email;
-      this.newUser.password = userRegistrationForm.value.password;
-      this.userService
-        .userRegistration(this.newUser)
-        .subscribe((responsedata) => {
-          console.log(responsedata);
-        });
+    if(userRegistrationForm.valid){
+      this.newUser.firstName = userRegistrationForm.value.firstName
+      this.newUser.lastName = userRegistrationForm.value.lastName
+      this.newUser.email = userRegistrationForm.value.email
+      this.newUser.dateOfBirth = userRegistrationForm.value.dob
+      this.newUser.gender = userRegistrationForm.value.gender
+      this.newUser.password = userRegistrationForm.value.password
+      this.userService.userRegistration(this.newUser).subscribe(responsedata => {
+        console.log(responsedata)
+      })
     }
   }
 
