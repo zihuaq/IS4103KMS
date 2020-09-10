@@ -25,7 +25,8 @@ export class CreateNewUserComponent implements OnInit {
       this.newUser.firstName = userRegistrationForm.value.firstName
       this.newUser.lastName = userRegistrationForm.value.lastName
       this.newUser.email = userRegistrationForm.value.email
-      this.newUser.dob = userRegistrationForm.value.dob
+      let dobDate = new Date(userRegistrationForm.value.dob)
+      this.newUser.dob = dobDate
       this.newUser.gender = userRegistrationForm.value.gender
       this.newUser.password = userRegistrationForm.value.password
       this.newUser.joinedDate = new Date()
