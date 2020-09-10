@@ -15,6 +15,7 @@ import java.util.List;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -27,8 +28,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import ws.restful.model.ErrorRsp;
 import ws.restful.model.UserRegistrationReq;
 import ws.restful.model.UserRegistrationRsp;
@@ -41,8 +44,8 @@ import ws.restful.model.UserRegistrationRsp;
 @Path("user")
 public class UserResource {
 
-    @PersistenceContext(unitName = "KMS-warPU")
-    private EntityManager em;
+    @Context
+    private UriInfo context;
 
     /**
      * Creates a new instance of UserResource
@@ -50,7 +53,7 @@ public class UserResource {
     public UserResource() {
     }
 
-    @PUT
+/*    @PUT
     @Path("/addskill/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addSkillToProfile(@PathParam("userId") Long userId, @PathParam("tagId") Long tagId) {
@@ -144,14 +147,13 @@ public class UserResource {
         }
     }
 
-    
+  */  
     @Path("userRegistration")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response userRegistration(UserRegistrationReq userRegistrationReq) {
         
-        System.out.println("*********** HERE1");
         User newUser = userRegistrationReq.getNewUser();
         if(newUser == null){
             System.out.println("new user is null");
@@ -169,6 +171,7 @@ public class UserResource {
             javax.naming.Context ctx = new InitialContext();
             UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
             utx.begin();
+
              System.out.println("*********** HERE2");
             EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
             em.persist(newUser);
@@ -186,13 +189,12 @@ public class UserResource {
                 }
             }
         } catch (Exception ex) {
-            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+            ex.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
-        
+
         Long newUserId = newUser.getUserId();
         UserRegistrationRsp userRegistrationRsp = new UserRegistrationRsp(newUserId);
         return Response.status(Response.Status.OK).entity(userRegistrationRsp).build();
-
     }
 }
