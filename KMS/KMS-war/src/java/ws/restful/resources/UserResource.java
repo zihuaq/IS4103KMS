@@ -9,15 +9,18 @@ import Exception.DuplicateSkillInProfileException;
 import entity.MaterialResourceAvailable;
 import entity.Tag;
 import entity.User;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
@@ -143,21 +146,35 @@ public class UserResource {
 
     
     @Path("userRegistration")
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response userRegistration(UserRegistrationReq userRegistrationReq) {
         
         System.out.println("*********** HERE1");
         User newUser = userRegistrationReq.getNewUser();
+        if(newUser == null){
+            System.out.println("new user is null");
+        }
+        else{
+            System.out.println(newUser.getEmail());
+            //System.out.println(newUser.getDob());
+            //System.out.println(newUser.getJoinedDate());
+            System.out.println(newUser.getFirstName());
+            System.out.println(newUser.getLastName());
+            System.out.println(newUser.getPassword());
+            System.out.println(newUser.getIsAdmin());
+        }
         try {
-            
-            if(em==null)
-                System.out.println("******* em is null");
-            
+            javax.naming.Context ctx = new InitialContext();
+            UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
+            utx.begin();
+             System.out.println("*********** HERE2");
+            EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
             em.persist(newUser);
-            em.flush();
-            
+            utx.commit();
+            System.out.println("*********** HERE3");
+             
         } catch (PersistenceException ex) {
             if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                 if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {

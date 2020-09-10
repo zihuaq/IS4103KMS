@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, Inject, LOCALE_ID } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UserService } from '../user.service';
 import { User } from '../classes/user';
@@ -25,35 +25,15 @@ export class CreateNewUserComponent implements OnInit {
       this.newUser.firstName = userRegistrationForm.value.firstName
       this.newUser.lastName = userRegistrationForm.value.lastName
       this.newUser.email = userRegistrationForm.value.email
-      this.newUser.dateOfBirth = userRegistrationForm.value.dob
+      this.newUser.dob = userRegistrationForm.value.dob
       this.newUser.gender = userRegistrationForm.value.gender
       this.newUser.password = userRegistrationForm.value.password
+      this.newUser.joinedDate = new Date()
+      this.newUser.isAdmin = false
+      console.log(this.newUser)
       this.userService.userRegistration(this.newUser).subscribe(responsedata => {
         console.log(responsedata)
       })
     }
   }
-
-  // customerRegistration(customerRegistrationForm: NgForm) {
-  //   this.submitted = true;
-
-  //   if (customerRegistrationForm.valid) {
-  //     this.customerService.customerRegistration(this.newCustomer).subscribe(
-  //       response => {
-  //         let newCustomerId: number = response.newCustomerId;
-  //         if (newCustomerId != null) {
-  //           this.registrationError = false;
-  //           this.displayRegistrationSuccessModal = true;
-  //         } else {
-  //           this.registrationError = true;
-  //           this.errorMessage = "Null customer error";
-  //         }
-  //       }, error => {
-  //         this.registrationError = true;
-  //         console.log('********** CustomerRegistrationComponent.ts customerRegistration(): ' + error);
-  //         this.errorMessage = "Error: " + error.slice(37);
-  //       }
-  //     );
-  //   }
-  // }
 }

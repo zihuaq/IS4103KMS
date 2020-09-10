@@ -35,7 +35,8 @@ export class UserService {
   }
 
   userRegistration(newUser: User){
-    return this.http.post(this.baseUrl + "/userRegistration",newUser,httpOptions).pipe(
+    let userRegistrationReq = { "newUser": newUser }
+    return this.http.put<any>(this.baseUrl + "/userRegistration",userRegistrationReq,httpOptions).pipe(
       catchError(this.handleError)
     )
   }
