@@ -19,6 +19,7 @@ import { OverviewComponent } from './profile/overview/overview.component';
 import { MaterialResourceAvailableComponent } from './profile/material-resource-available/material-resource-available.component';
 import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { SideNavbarComponent } from './side-navbar/side-navbar.component';
     MaterialResourceAvailableComponent,
     SkillsComponent,
     SideNavbarComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

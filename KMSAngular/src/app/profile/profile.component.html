@@ -20,16 +20,22 @@
   <!-- /.content-header -->
   <!-- Main content -->
   <div class="content">
-    <div class="profile">
-      <div>Newsfeed</div>
-      <div class="details">
-        <app-overview></app-overview>
-        <app-basic-details></app-basic-details>
-        <app-projects></app-projects>
-        <app-material-resource-available></app-material-resource-available>
-        <app-skills></app-skills>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-8">
+          <div>Newsfeed</div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-4">
+          <app-overview></app-overview>
+          <app-basic-details></app-basic-details>
+          <app-projects></app-projects>
+          <app-material-resource-available></app-material-resource-available>
+          <app-skills></app-skills>
+        </div>
       </div>
-    </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
   </div>
   <!-- /.content -->
 </div>
