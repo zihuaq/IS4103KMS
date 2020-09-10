@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
 @Injectable({
   providedIn: 'root',
