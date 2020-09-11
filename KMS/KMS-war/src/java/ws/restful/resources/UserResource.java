@@ -5,22 +5,20 @@
  */
 package ws.restful.resources;
 
+import Exception.DuplicateEmailException;
 import Exception.DuplicateSkillInProfileException;
+import Exception.NoResultException;
+import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
+import ejb.session.stateless.TagSessionBeanLocal;
+import ejb.session.stateless.UserSessionBeanLocal;
 import entity.MaterialResourceAvailable;
-import entity.Tag;
 import entity.User;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -32,9 +30,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import ws.restful.model.ErrorRsp;
-import ws.restful.model.UserRegistrationReq;
-import ws.restful.model.UserRegistrationRsp;
 
 /**
  * REST Web Service
@@ -43,6 +38,13 @@ import ws.restful.model.UserRegistrationRsp;
  */
 @Path("user")
 public class UserResource {
+
+    UserSessionBeanLocal userSessionBeanLocal = lookupUserSessionBeanLocal();
+
+    TagSessionBeanLocal tagSessionBeanLocal = lookupTagSessionBeanLocal();
+
+    MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBeanLocal = lookupMaterialResourceAvailableSessionBeanLocal();
+
 
     @Context
     private UriInfo context;
@@ -53,23 +55,12 @@ public class UserResource {
     public UserResource() {
     }
 
-/*    @PUT
+    @PUT
     @Path("/addskill/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addSkillToProfile(@PathParam("userId") Long userId, @PathParam("tagId") Long tagId) {
-        User user = em.find(User.class, userId);
-        Tag tag = em.find(Tag.class, tagId);
-        
         try {
-            if (user == null || tag == null) {
-                throw new NoResultException("No user or tag found.");
-            }
-            List<Tag> skills = user.getSkills();
-            if (skills.contains(tag)) {
-                throw new DuplicateSkillInProfileException("Skill is already present in user's profile");
-            }
-            skills.add(tag);
-            user.setSkills(skills);
+            userSessionBeanLocal.addSkillToProfile(userId, tagId);
             return Response.status(204).build();
 
         } catch (NoResultException | DuplicateSkillInProfileException ex) {
@@ -84,19 +75,8 @@ public class UserResource {
     @Path("/removeskill/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeSkillFromProfile(@PathParam("userId") Long userId, @PathParam("tagId") Long tagId) {
-        User user = em.find(User.class, userId);
-        Tag tag = em.find(Tag.class, tagId);
-        
         try {
-            if (user == null || tag == null) {
-                throw new NoResultException("No user or tag found.");
-            }
-            List<Tag> skills = user.getSkills();
-            if (!skills.contains(tag)) {
-                throw new NoResultException("Skill does not exist in user's profile");
-            }
-            skills.remove(tag);
-            user.setSkills(skills);
+            userSessionBeanLocal.removeSkillFromProfile(userId, tagId);
             return Response.status(204).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -105,22 +85,13 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @POST
     @Path("/mra/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createMaterialRequestAvailable(@PathParam("userId") Long userId, MaterialResourceAvailable mra) {
         try {
-            User user = em.find(User.class, userId);
-            if(user == null){
-                throw new NoResultException("User does not exist.");
-            }
-            mra.setMaterialResourceAvailableOwner(user);
-            em.persist(mra);
-            em.flush();
-            List<MaterialResourceAvailable> mras = user.getMras();
-            mras.add(mra);
-            user.setMras(mras);
+            materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
             return Response.status(204).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -130,16 +101,14 @@ public class UserResource {
         }
     }
 
-
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("userId") Long userId) {
-        User user = em.find(User.class, userId);
-        if (user != null) {
-            em.detach(user);
+        try {
+            User user = userSessionBeanLocal.getUserById(userId);
             return Response.status(200).entity(user).build();
-        } else {
+        } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", "No user found.")
                     .build();
@@ -147,54 +116,48 @@ public class UserResource {
         }
     }
 
-  */  
     @Path("userRegistration")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response userRegistration(UserRegistrationReq userRegistrationReq) {
-        
-        User newUser = userRegistrationReq.getNewUser();
-        if(newUser == null){
-            System.out.println("new user is null");
-        }
-        else{
-            System.out.println(newUser.getEmail());
-            //System.out.println(newUser.getDob());
-            //System.out.println(newUser.getJoinedDate());
-            System.out.println(newUser.getFirstName());
-            System.out.println(newUser.getLastName());
-            System.out.println(newUser.getPassword());
-            System.out.println(newUser.getIsAdmin());
-        }
+    public Response userRegistration(User user) {
+        User newUser;
         try {
-            javax.naming.Context ctx = new InitialContext();
-            UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
-            utx.begin();
-
-             System.out.println("*********** HERE2");
-            EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
-            em.persist(newUser);
-            utx.commit();
-            System.out.println("*********** HERE3");
-             
-        } catch (PersistenceException ex) {
-            if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
-                if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
-                    ErrorRsp errorRsp = new ErrorRsp("Email already in use");
-                    return Response.status(Response.Status.BAD_REQUEST).entity(errorRsp).build();
-                } else {
-                    ErrorRsp errorRsp = new ErrorRsp("Unknown Persitence Error");
-                    return Response.status(Response.Status.BAD_REQUEST).entity(errorRsp).build();
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            newUser = userSessionBeanLocal.createNewUser(user);
+        } catch (DuplicateEmailException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
-
-        Long newUserId = newUser.getUserId();
-        UserRegistrationRsp userRegistrationRsp = new UserRegistrationRsp(newUserId);
-        return Response.status(Response.Status.OK).entity(userRegistrationRsp).build();
+        return Response.status(Response.Status.OK).entity(newUser).build();
     }
+
+    private MaterialResourceAvailableSessionBeanLocal lookupMaterialResourceAvailableSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (MaterialResourceAvailableSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/MaterialResourceAvailableSessionBean!ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private TagSessionBeanLocal lookupTagSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (TagSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/TagSessionBean!ejb.session.stateless.TagSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private UserSessionBeanLocal lookupUserSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (UserSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/UserSessionBean!ejb.session.stateless.UserSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
 }

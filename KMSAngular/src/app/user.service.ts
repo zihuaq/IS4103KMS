@@ -3,12 +3,16 @@ import { SessionService } from './session.service';
 import { User } from './classes/user';
 //import { getMaxListeners } from 'cluster';
 import { NgForm } from '@angular/forms';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable,throwError } from 'rxjs';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
 @Injectable({
@@ -16,7 +20,7 @@ const httpOptions = {
 })
 export class UserService {
   users: User[];
-  baseUrl: string = "/api/user";
+  baseUrl: string = '/api/user';
 
   constructor(
     private sessionService: SessionService,
@@ -34,32 +38,33 @@ export class UserService {
     }
   }
 
-  userRegistration(newUser: User){
-    let userRegistrationReq = { "newUser": newUser }
-    return this.http.put<any>(this.baseUrl + "/userRegistration",userRegistrationReq,httpOptions).pipe(
-      catchError(this.handleError)
-    )
+  userRegistration(newUser: User) {
+    return this.http
+      .put<any>(this.baseUrl + '/userRegistration', newUser, httpOptions)
+      .pipe(catchError(this.handleError));
   }
 
-  login(email: String, password: String){
-    return this.http.get<any>(this.baseUrl + "/userLogin?email=" + email + "&password=" + password).pipe(
-
-    )
+  login(email: String, password: String) {
+    return this.http
+      .get<any>(
+        this.baseUrl + '/userLogin?email=' + email + '&password=' + password
+      )
+      .pipe();
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage: string = "";
+    let errorMessage: string = '';
 
     if (error.error instanceof ErrorEvent) {
-      errorMessage = "An unknown error has occurred: " + error.error.message;
-    }
-    else {
-      errorMessage = "A HTTP error has occurred: " + `HTTP ${error.status}: ${error.error.message}`;
+      errorMessage = 'An unknown error has occurred: ' + error.error.message;
+    } else {
+      errorMessage =
+        'A HTTP error has occurred: ' +
+        `HTTP ${error.status}: ${error.error.message}`;
     }
 
     console.error(errorMessage);
 
     return throwError(errorMessage);
   }
-
 }
