@@ -2,15 +2,16 @@ export class User {
   userId: Number;
   firstName: String;
   lastName: String;
-  dateOfBirth: Date;
+  dob: Date;
   gender: String;
   email: String;
   password: String;
+  isAdmin: boolean;
   profilePicture: String;
   country: String;
   reputationPoints: Number;
   type: String;
-  joinDate: Date;
+  joinedDate: Date;
   appoinmentDate: Date;
   followers: User[];
   following: User[];
@@ -19,7 +20,7 @@ export class User {
     userId?: Number,
     firstName?: String,
     lastName?: String,
-    dateOfBirth?: Date,
+    dob?: Date,
     gender?: String,
     email?: String,
     password?: String,
@@ -27,7 +28,7 @@ export class User {
     country?: String,
     reputationPoints?: Number,
     type?: String,
-    joinDate?: Date,
+    joinedDate?: Date,
     appoinmentDate?: Date,
     followers?: User[],
     following?: User[]
@@ -35,15 +36,16 @@ export class User {
     this.userId = userId;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.dateOfBirth = dateOfBirth;
+    this.dob = dob;
     this.gender = gender;
     this.email = email;
     this.password = password;
+    this.isAdmin = false;
     this.profilePicture = profilePicture;
     this.country = country;
     this.reputationPoints = reputationPoints;
     this.type = type;
-    this.joinDate = joinDate;
+    this.joinedDate = joinedDate;
     this.appoinmentDate = appoinmentDate;
     this.followers = followers;
     this.following = following;
