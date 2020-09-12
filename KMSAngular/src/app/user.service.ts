@@ -52,6 +52,12 @@ export class UserService {
       .pipe();
   }
 
+  getUser(userId: String) {
+    return this.http
+      .get<any>(this.baseUrl + '/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
 

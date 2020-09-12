@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class Badge implements Serializable {
+public class BadgeEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -35,10 +35,10 @@ public class Badge implements Serializable {
     @Column(nullable=false)
     private Integer point;
 
-    public Badge() {
+    public BadgeEntity() {
     }
 
-    public Badge(String name, String description, Integer point) {
+    public BadgeEntity(String name, String description, Integer point) {
         this();
         this.name = name;
         this.description = description;
@@ -63,10 +63,10 @@ public class Badge implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the badgeId fields are not set
-        if (!(object instanceof Badge)) {
+        if (!(object instanceof BadgeEntity)) {
             return false;
         }
-        Badge other = (Badge) object;
+        BadgeEntity other = (BadgeEntity) object;
         if ((this.badgeId == null && other.badgeId != null) || (this.badgeId != null && !this.badgeId.equals(other.badgeId))) {
             return false;
         }

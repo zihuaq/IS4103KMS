@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -26,7 +27,7 @@ import util.security.CryptographicHelper;
  * @author Jeremy
  */
 @Entity
-public class User implements Serializable {
+public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -62,31 +63,41 @@ public class User implements Serializable {
     
     private String profilePicture;
     
-    @OneToMany(mappedBy = "user")
-    private List<Review> reviews;
+    private int reputationPoints;
     
     @OneToMany(mappedBy = "user")
-    private List<Project> projects;
+    private List<ReviewEntity> reviews;
     
-    @ManyToMany
-    private List<Group> groups;
+    @OneToMany(mappedBy = "user")
+    private List<ProjectEntity> projects;
+    
+    @ManyToMany(mappedBy = "users")
+    private List<GroupEntity> groups;
     
     @OneToMany(mappedBy = "postOwner")
-    private List<Post> posts;
+    private List<PostEntity> posts;
     
     @OneToMany(mappedBy = "groupOwner")
-    private List<Group> groupsOwned;
+    private List<GroupEntity> groupsOwned;
     
     @OneToMany
-    private List<Badge> badges;
+    private List<BadgeEntity> badges;
     
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
-    private List<MaterialResourceAvailable> mras;
+    private List<MaterialResourceAvailableEntity> mras;
     
     @OneToMany
-    private List<Tag> skills;
+    private List<TagEntity> skills;
+    
+    @JoinTable(name = "following")
+    @OneToMany
+    private List<UserEntity> following;
+    
+    @JoinTable(name = "followers")
+    @OneToMany
+    private List<UserEntity> followers;
 
-    public User() {
+    public UserEntity() {
         this.reviews = new ArrayList<>();
         this.projects = new ArrayList<>();
         this.groups = new ArrayList<>();
@@ -95,11 +106,13 @@ public class User implements Serializable {
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
         this.skills = new ArrayList<>();
+        this.following = new ArrayList<>();
+        this.followers = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
     }
 
-    public User(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
         this();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -111,7 +124,7 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public User(String firstName, String lastName, Date dob, String gender, String email, String password) {
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
@@ -141,10 +154,10 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the userId fields are not set
-        if (!(object instanceof User)) {
+        if (!(object instanceof UserEntity)) {
             return false;
         }
-        User other = (User) object;
+        UserEntity other = (UserEntity) object;
         if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
             return false;
         }
@@ -250,68 +263,92 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public List<Review> getReviews() {
+    public List<ReviewEntity> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<Review> reviews) {
+    public void setReviews(List<ReviewEntity> reviews) {
         this.reviews = reviews;
     }
 
-    public List<Project> getProjects() {
+    public List<ProjectEntity> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(List<ProjectEntity> projects) {
         this.projects = projects;
     }
 
-    public List<Group> getGroups() {
+    public List<GroupEntity> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Group> groups) {
+    public void setGroups(List<GroupEntity> groups) {
         this.groups = groups;
     }
 
-    public List<Post> getPosts() {
+    public List<PostEntity> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
     }
 
-    public List<Group> getGroupsOwned() {
+    public List<GroupEntity> getGroupsOwned() {
         return groupsOwned;
     }
 
-    public void setGroupsOwned(List<Group> groupsOwned) {
+    public void setGroupsOwned(List<GroupEntity> groupsOwned) {
         this.groupsOwned = groupsOwned;
     }
 
-    public List<Badge> getBadges() {
+    public List<BadgeEntity> getBadges() {
         return badges;
     }
 
-    public void setBadges(List<Badge> badges) {
+    public void setBadges(List<BadgeEntity> badges) {
         this.badges = badges;
     }
 
-    public List<MaterialResourceAvailable> getMras() {
+    public List<MaterialResourceAvailableEntity> getMras() {
         return mras;
     }
 
-    public void setMras(List<MaterialResourceAvailable> mras) {
+    public void setMras(List<MaterialResourceAvailableEntity> mras) {
         this.mras = mras;
     }
 
-    public List<Tag> getSkills() {
+    public List<TagEntity> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<Tag> skills) {
+    public void setSkills(List<TagEntity> skills) {
         this.skills = skills;
+    }
+
+    public List<UserEntity> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<UserEntity> following) {
+        this.following = following;
+    }
+
+    public List<UserEntity> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<UserEntity> followers) {
+        this.followers = followers;
+    }
+
+    public int getReputationPoints() {
+        return reputationPoints;
+    }
+
+    public void setReputationPoints(int reputationPoints) {
+        this.reputationPoints = reputationPoints;
     }
     
 }

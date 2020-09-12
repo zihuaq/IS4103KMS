@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class Tag implements Serializable {
+public class TagEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,10 +36,10 @@ public class Tag implements Serializable {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    public Tag() {
+    public TagEntity() {
     }
 
-    public Tag(String name) {
+    public TagEntity(String name) {
         this();
         this.name = name;
     }
@@ -62,10 +62,10 @@ public class Tag implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the tagId fields are not set
-        if (!(object instanceof Tag)) {
+        if (!(object instanceof TagEntity)) {
             return false;
         }
-        Tag other = (Tag) object;
+        TagEntity other = (TagEntity) object;
         if ((this.tagId == null && other.tagId != null) || (this.tagId != null && !this.tagId.equals(other.tagId))) {
             return false;
         }

@@ -1,8 +1,8 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
-import entity.MaterialResourceAvailable;
-import entity.User;
+import entity.MaterialResourceAvailableEntity;
+import entity.UserEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,8 +18,8 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
     private EntityManager em;
 
     @Override
-    public void createMaterialResourceAvailable(MaterialResourceAvailable materialResourceAvailable, long userId) throws NoResultException {
-        User materialResourceAvailableOwner = em.find(User.class, userId);
+    public void createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable, long userId) throws NoResultException {
+        UserEntity materialResourceAvailableOwner = em.find(UserEntity.class, userId);
         if (materialResourceAvailableOwner != null) {
             em.persist(materialResourceAvailable);
             materialResourceAvailable.setMaterialResourceAvailableOwner(materialResourceAvailableOwner);

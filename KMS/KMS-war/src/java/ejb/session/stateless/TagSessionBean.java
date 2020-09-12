@@ -1,7 +1,7 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
-import entity.Tag;
+import entity.TagEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,8 +17,8 @@ public class TagSessionBean implements TagSessionBeanLocal {
     private EntityManager em;
 
     @Override
-    public Tag getTagById(long tagId) throws NoResultException {
-        Tag tag = em.find(Tag.class, tagId);
+    public TagEntity getTagById(long tagId) throws NoResultException {
+        TagEntity tag = em.find(TagEntity.class, tagId);
         if (tag != null) {
             return tag;
         } else {

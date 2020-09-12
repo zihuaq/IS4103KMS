@@ -22,17 +22,18 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-8">
-          <div>Newsfeed</div>
-        </div>
-        <!-- /.col -->
-        <div class="col-md-4">
-          <app-overview></app-overview>
+
+        <div class="col-md-3">
+          <app-overview [profile]="profile"></app-overview>
           <app-basic-details></app-basic-details>
           <app-projects></app-projects>
           <app-material-resource-available></app-material-resource-available>
           <app-skills></app-skills>
         </div>
+        <div class="col-md-9">
+          <div>Newsfeed</div>
+        </div>
+        <!-- /.col -->
       </div>
       <!-- /.row -->
     </div><!-- /.container-fluid -->

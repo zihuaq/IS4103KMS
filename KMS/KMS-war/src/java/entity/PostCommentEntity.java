@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class PostComment implements Serializable {
+public class PostCommentEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,15 +40,15 @@ public class PostComment implements Serializable {
     private Date dateTime;
     
     @OneToOne
-    private Post post;
+    private PostEntity post;
     
     @ManyToOne
-    private User commentOwner;
+    private UserEntity commentOwner;
 
-    public PostComment() {
+    public PostCommentEntity() {
     }
 
-    public PostComment(String comment, Date dateTime) {
+    public PostCommentEntity(String comment, Date dateTime) {
         this();
         this.comment = comment;
         this.dateTime = dateTime;
@@ -72,10 +72,10 @@ public class PostComment implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the postCommentId fields are not set
-        if (!(object instanceof PostComment)) {
+        if (!(object instanceof PostCommentEntity)) {
             return false;
         }
-        PostComment other = (PostComment) object;
+        PostCommentEntity other = (PostCommentEntity) object;
         if ((this.postCommentId == null && other.postCommentId != null) || (this.postCommentId != null && !this.postCommentId.equals(other.postCommentId))) {
             return false;
         }
@@ -103,19 +103,19 @@ public class PostComment implements Serializable {
         this.dateTime = dateTime;
     }
 
-    public Post getPost() {
+    public PostEntity getPost() {
         return post;
     }
 
-    public void setPost(Post post) {
+    public void setPost(PostEntity post) {
         this.post = post;
     }
 
-    public User getCommentOwner() {
+    public UserEntity getCommentOwner() {
         return commentOwner;
     }
 
-    public void setCommentOwner(User commentOwner) {
+    public void setCommentOwner(UserEntity commentOwner) {
         this.commentOwner = commentOwner;
     }
     
