@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.MaterialResourceAvailableEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -18,4 +19,7 @@ public interface MaterialResourceAvailableSessionBeanLocal {
 
     public void createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable, long userId) throws NoResultException;
 
+    public List<MaterialResourceAvailableEntity> getMaterialResourceAvailableForUser(long userId) throws NoResultException;
+    
+    public void deleteMaterialResourceAvailableForUser(long userId, long mraId) throws NoResultException; 
 }
