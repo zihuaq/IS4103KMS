@@ -109,6 +109,7 @@ public class User implements Serializable {
         this.sdgs = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
+        this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
     }
 
     public User(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
