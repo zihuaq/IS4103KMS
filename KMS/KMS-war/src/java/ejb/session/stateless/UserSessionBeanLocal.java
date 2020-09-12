@@ -6,7 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.DuplicateEmailException;
-import Exception.DuplicateSkillInProfileException;
+import Exception.DuplicateTagInProfileException;
 import Exception.NoResultException;
 import entity.User;
 import javax.ejb.Local;
@@ -22,8 +22,12 @@ public interface UserSessionBeanLocal {
 
     public User getUserById(long userId) throws NoResultException;
 
-    public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateSkillInProfileException;
+    public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
 
     public void removeSkillFromProfile(long userId, long tagId) throws NoResultException;
+    
+    public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
+    
+    public void removeSDGFromProfile(long userId, long tagId) throws NoResultException;
 
 }

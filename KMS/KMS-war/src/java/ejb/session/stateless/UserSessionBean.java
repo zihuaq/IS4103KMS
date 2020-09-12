@@ -1,7 +1,7 @@
 package ejb.session.stateless;
 
 import Exception.DuplicateEmailException;
-import Exception.DuplicateSkillInProfileException;
+import Exception.DuplicateTagInProfileException;
 import Exception.NoResultException;
 import entity.Tag;
 import entity.User;
@@ -45,7 +45,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateSkillInProfileException {
+    public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
         User user = em.find(User.class, userId);
         Tag tag = em.find(Tag.class, tagId);
 
@@ -54,7 +54,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         List<Tag> skills = user.getSkills();
         if (skills.contains(tag)) {
-            throw new DuplicateSkillInProfileException("Skill is already present in user's profile");
+            throw new DuplicateTagInProfileException("Skill is already present in user's profile");
         }
         skills.add(tag);
         user.setSkills(skills);
@@ -74,5 +74,37 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         skills.remove(tag);
         user.setSkills(skills);
+    }
+    
+    @Override
+    public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
+        User user = em.find(User.class, userId);
+        Tag tag = em.find(Tag.class, tagId);
+
+        if (user == null || tag == null) {
+            throw new NoResultException("User or Tag not found.");
+        }
+        List<Tag> sdgs = user.getSdgs();
+        if (sdgs.contains(tag)) {
+            throw new DuplicateTagInProfileException("Tag is already present in user's profile");
+        }
+        sdgs.add(tag);
+        user.setSdgs(sdgs);
+    }
+
+    @Override
+    public void removeSDGFromProfile(long userId, long tagId) throws NoResultException {
+        User user = em.find(User.class, userId);
+        Tag tag = em.find(Tag.class, tagId);
+
+        if (user == null || tag == null) {
+            throw new NoResultException("User or Tag not found.");
+        }
+        List<Tag> sdgs = user.getSdgs();
+        if (!sdgs.contains(tag)) {
+            throw new NoResultException("Skill does not exist in user's profile");
+        }
+        sdgs.remove(tag);
+        user.setSdgs(sdgs);
     }
 }

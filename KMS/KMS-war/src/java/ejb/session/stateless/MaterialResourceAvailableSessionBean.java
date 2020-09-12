@@ -3,6 +3,7 @@ package ejb.session.stateless;
 import Exception.NoResultException;
 import entity.MaterialResourceAvailable;
 import entity.User;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +28,27 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
         } else {
             throw new NoResultException("User not found");
         }
-
+    }
+    
+    @Override
+    public List<MaterialResourceAvailable> getMaterialResourceAvailableForUser(long userId) throws NoResultException {
+        User user = em.find(User.class, userId);
+        if (user != null) {
+            return user.getMras();
+        } else {
+            throw new NoResultException("User not found");
+        }
+    }
+    
+    @Override
+    public void deleteMaterialResourceAvailableForUser(long userId, long mraId) throws NoResultException {
+        User user = em.find(User.class, userId);
+        MaterialResourceAvailable mra = em.find(MaterialResourceAvailable.class, mraId);
+        
+        if (user != null && mra != null) {
+            user.getMras().remove(mra);
+        } else {
+            throw new NoResultException("User or Material Resource Available not found");
+        }
     }
 }

@@ -85,6 +85,9 @@ public class User implements Serializable {
     
     @OneToMany
     private List<Tag> skills;
+    
+    @OneToMany
+    private List<Tag> sdgs;
 
     public User() {
         this.reviews = new ArrayList<>();
@@ -95,6 +98,7 @@ public class User implements Serializable {
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
         this.skills = new ArrayList<>();
+        this.sdgs = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
     }
@@ -312,6 +316,14 @@ public class User implements Serializable {
 
     public void setSkills(List<Tag> skills) {
         this.skills = skills;
+    }
+
+    public List<Tag> getSdgs() {
+        return sdgs;
+    }
+
+    public void setSdgs(List<Tag> sdgs) {
+        this.sdgs = sdgs;
     }
     
 }
