@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import util.enumeration.TagTypeEnum;
 
 /**
  *
@@ -34,7 +35,7 @@ public class Tag implements Serializable {
     @NotNull
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private TagTypeEnum tagType;
 
     public Tag() {
     }
@@ -85,18 +86,12 @@ public class Tag implements Serializable {
         this.name = name;
     }
     
-    public Type getType() {
-        return type;
+    public TagTypeEnum getTagType() {
+        return tagType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
-    
-    public enum Type {
-        SKILL,
-        SDG,
-        MATERIALRESOURCE
+    public void setTagType(TagTypeEnum tagType) {
+        this.tagType = this.tagType;
     }
 }
 

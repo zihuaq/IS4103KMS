@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import util.enumeration.AccountPrivacySettingEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -88,6 +91,11 @@ public class User implements Serializable {
     
     @OneToMany
     private List<Tag> sdgs;
+    
+    @NotNull
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private AccountPrivacySettingEnum accountPrivacySetting;
 
     public User() {
         this.reviews = new ArrayList<>();
@@ -324,6 +332,14 @@ public class User implements Serializable {
 
     public void setSdgs(List<Tag> sdgs) {
         this.sdgs = sdgs;
+    }
+
+    public AccountPrivacySettingEnum getAccountPrivacySetting() {
+        return accountPrivacySetting;
+    }
+
+    public void setAccountPrivacySetting(AccountPrivacySettingEnum accountPrivacySetting) {
+        this.accountPrivacySetting = accountPrivacySetting;
     }
     
 }
