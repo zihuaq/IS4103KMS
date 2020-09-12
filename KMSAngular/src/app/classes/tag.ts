@@ -7,11 +7,11 @@ enum TagType {
 export class Tag {
     tagId: number;
     name: string;
-    type: TagType;
+    tagType: TagType;
 
-    constructor(tagId?: number, name?: string, type?:TagType){
+    constructor(tagId?: number, name?: string, tagType?:TagType){
         this.tagId = tagId;
         this.name = name;
-        this.type = type;
+        this.tagType = tagType;
     }
 }

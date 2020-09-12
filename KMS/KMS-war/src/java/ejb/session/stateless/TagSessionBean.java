@@ -41,4 +41,22 @@ public class TagSessionBean implements TagSessionBeanLocal {
             throw new TagNameExistException("Name of Tag exist");
         }
     }
+
+    @Override
+    public List<Tag> getAllSkillTags() {
+        Query q = em.createQuery("SELECT t FROM Tag t WHERE t.TagType = 'SKILl'");
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<Tag> getAllMaterialResourceTags() {
+        Query q = em.createQuery("SELECT t FROM Tag t WHERE t.TagType = 'MATERIALRESOURCE'");
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<Tag> getAllSDGTags() {
+        Query q = em.createQuery("SELECT t FROM Tag t WHERE t.TagType = 'SDG'");
+        return q.getResultList();
+    }    
 }
