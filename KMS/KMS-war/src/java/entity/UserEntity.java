@@ -374,6 +374,5 @@ public class UserEntity implements Serializable {
 
     public void setAccountPrivacySetting(AccountPrivacySettingEnum accountPrivacySetting) {
         this.accountPrivacySetting = accountPrivacySetting;
-    }
-
+    }   
 }

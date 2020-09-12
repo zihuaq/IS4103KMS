@@ -40,10 +40,10 @@ public class TagEntity implements Serializable {
     public TagEntity() {
     }
 
-    public TagEntity(String name, String tagType) {
+    public TagEntity(String name, TagTypeEnum tagType) {
         this();
         this.name = name;
-        this.tagType = TagTypeEnum.valueOf(tagType);
+        this.tagType = tagType;
     }
     
     public Long getTagId() {
