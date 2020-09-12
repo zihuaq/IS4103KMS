@@ -36,7 +36,7 @@ export class UserLoginPageComponent implements OnInit {
       // console.log(this.password)
       
       this.userService.login(this.email, this.password).subscribe((response)=>{
-        let user: User = response.user
+        let user: User = response
         user.password = "";
           
           if (user != null) {
@@ -44,7 +44,7 @@ export class UserLoginPageComponent implements OnInit {
             this.sessionService.setIsLogin(true)
             this.sessionService.setCurrentUser(user);
             this.loginError = false; 
-            this.router.navigate(["/index"]);
+            this.router.navigate(["profile/:" + user.userId]);
           } else {
             this.loginError = true;
             this.errorMessage = "Null user error";

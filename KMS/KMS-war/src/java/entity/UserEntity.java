@@ -11,14 +11,18 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import util.enumeration.AccountPrivacySettingEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -26,67 +30,85 @@ import util.security.CryptographicHelper;
  * @author Jeremy
  */
 @Entity
-public class User implements Serializable {
+public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String firstName;
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String lastName;
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dob;
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String gender;
     @NotNull
-    @Column(nullable=false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String password;
     private String salt;
-    @Column(nullable=false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date joinedDate;
-    @Column(nullable=false)
+    @Column(nullable = false)
     private Boolean isAdmin;
     @Temporal(TemporalType.DATE)
     private Date adminStartDate;
-    
-    private String profilePicture;
-    
-    @OneToMany(mappedBy = "user")
-    private List<Review> reviews;
-    
-    @OneToMany(mappedBy = "user")
-    private List<Project> projects;
-    
-    @ManyToMany
-    private List<Group> groups;
-    
-    @OneToMany(mappedBy = "postOwner")
-    private List<Post> posts;
-    
-    @OneToMany(mappedBy = "groupOwner")
-    private List<Group> groupsOwned;
-    
-    @OneToMany
-    private List<Badge> badges;
-    
-    @OneToMany(mappedBy = "materialResourceAvailableOwner")
-    private List<MaterialResourceAvailable> mras;
-    
-    @OneToMany
-    private List<Tag> skills;
 
-    public User() {
+    private String profilePicture;
+
+    private int reputationPoints;
+
+    @OneToMany(mappedBy = "user")
+    private List<ReviewEntity> reviews;
+
+    @OneToMany(mappedBy = "user")
+    private List<ProjectEntity> projects;
+
+    @ManyToMany(mappedBy = "users")
+    private List<GroupEntity> groups;
+
+    @OneToMany(mappedBy = "postOwner")
+    private List<PostEntity> posts;
+
+    @OneToMany(mappedBy = "groupOwner")
+    private List<GroupEntity> groupsOwned;
+
+    @OneToMany
+    private List<BadgeEntity> badges;
+
+    @OneToMany(mappedBy = "materialResourceAvailableOwner")
+    private List<MaterialResourceAvailableEntity> mras;
+
+    @OneToMany
+    private List<TagEntity> skills;
+
+    @JoinTable(name = "following")
+    @OneToMany
+    private List<UserEntity> following;
+
+    @JoinTable(name = "followers")
+    @OneToMany
+    private List<UserEntity> followers;
+
+    @OneToMany
+    private List<TagEntity> sdgs;
+
+    @NotNull
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AccountPrivacySettingEnum accountPrivacySetting;
+
+    public UserEntity() {
         this.reviews = new ArrayList<>();
         this.projects = new ArrayList<>();
         this.groups = new ArrayList<>();
@@ -95,11 +117,15 @@ public class User implements Serializable {
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
         this.skills = new ArrayList<>();
+        this.following = new ArrayList<>();
+        this.followers = new ArrayList<>();
+        this.sdgs = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
+        this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
     }
 
-    public User(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
         this();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -111,7 +137,7 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public User(String firstName, String lastName, Date dob, String gender, String email, String password) {
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
@@ -120,9 +146,7 @@ public class User implements Serializable {
         this.password = password;
         this.joinedDate = new Date();
     }
-    
-        
-    
+
     public Long getUserId() {
         return userId;
     }
@@ -141,10 +165,10 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the userId fields are not set
-        if (!(object instanceof User)) {
+        if (!(object instanceof UserEntity)) {
             return false;
         }
-        User other = (User) object;
+        UserEntity other = (UserEntity) object;
         if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
             return false;
         }
@@ -155,7 +179,6 @@ public class User implements Serializable {
     public String toString() {
         return "User{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reviews=" + reviews + ", projects=" + projects + ", groups=" + groups + ", posts=" + posts + ", groupsOwned=" + groupsOwned + ", badges=" + badges + ", mras=" + mras + ", skills=" + skills + '}';
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -202,10 +225,9 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        if(password != null) {
+        if (password != null) {
             this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
-        }
-        else {
+        } else {
             this.password = null;
         }
     }
@@ -250,68 +272,107 @@ public class User implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public List<Review> getReviews() {
+    public List<ReviewEntity> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<Review> reviews) {
+    public void setReviews(List<ReviewEntity> reviews) {
         this.reviews = reviews;
     }
 
-    public List<Project> getProjects() {
+    public List<ProjectEntity> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(List<ProjectEntity> projects) {
         this.projects = projects;
     }
 
-    public List<Group> getGroups() {
+    public List<GroupEntity> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Group> groups) {
+    public void setGroups(List<GroupEntity> groups) {
         this.groups = groups;
     }
 
-    public List<Post> getPosts() {
+    public List<PostEntity> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
     }
 
-    public List<Group> getGroupsOwned() {
+    public List<GroupEntity> getGroupsOwned() {
         return groupsOwned;
     }
 
-    public void setGroupsOwned(List<Group> groupsOwned) {
+    public void setGroupsOwned(List<GroupEntity> groupsOwned) {
         this.groupsOwned = groupsOwned;
     }
 
-    public List<Badge> getBadges() {
+    public List<BadgeEntity> getBadges() {
         return badges;
     }
 
-    public void setBadges(List<Badge> badges) {
+    public void setBadges(List<BadgeEntity> badges) {
         this.badges = badges;
     }
 
-    public List<MaterialResourceAvailable> getMras() {
+    public List<MaterialResourceAvailableEntity> getMras() {
         return mras;
     }
 
-    public void setMras(List<MaterialResourceAvailable> mras) {
+    public void setMras(List<MaterialResourceAvailableEntity> mras) {
         this.mras = mras;
     }
 
-    public List<Tag> getSkills() {
+    public List<TagEntity> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<Tag> skills) {
+    public void setSkills(List<TagEntity> skills) {
         this.skills = skills;
     }
-    
+
+    public List<UserEntity> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<UserEntity> following) {
+        this.following = following;
+    }
+
+    public List<UserEntity> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<UserEntity> followers) {
+        this.followers = followers;
+    }
+
+    public int getReputationPoints() {
+        return reputationPoints;
+    }
+
+    public void setReputationPoints(int reputationPoints) {
+        this.reputationPoints = reputationPoints;
+    }
+
+    public List<TagEntity> getSdgs() {
+        return sdgs;
+    }
+
+    public void setSdgs(List<TagEntity> sdgs) {
+        this.sdgs = sdgs;
+    }
+
+    public AccountPrivacySettingEnum getAccountPrivacySetting() {
+        return accountPrivacySetting;
+    }
+
+    public void setAccountPrivacySetting(AccountPrivacySettingEnum accountPrivacySetting) {
+        this.accountPrivacySetting = accountPrivacySetting;
+    }   
 }

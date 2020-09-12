@@ -9,13 +9,13 @@ package Exception;
  *
  * @author cassie
  */
-public class DuplicateSkillInProfileException extends Exception {
+public class DuplicateTagInProfileException extends Exception {
 
     /**
      * Creates a new instance of <code>DuplicateSkillInProfileException</code>
      * without detail message.
      */
-    public DuplicateSkillInProfileException() {
+    public DuplicateTagInProfileException() {
     }
 
     /**
@@ -24,7 +24,7 @@ public class DuplicateSkillInProfileException extends Exception {
      *
      * @param msg the detail message.
      */
-    public DuplicateSkillInProfileException(String msg) {
+    public DuplicateTagInProfileException(String msg) {
         super(msg);
     }
 }

@@ -1,10 +1,13 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
-import entity.Tag;
+import entity.TagEntity;
+import Exception.TagNameExistException;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -17,12 +20,25 @@ public class TagSessionBean implements TagSessionBeanLocal {
     private EntityManager em;
 
     @Override
-    public Tag getTagById(long tagId) throws NoResultException {
-        Tag tag = em.find(Tag.class, tagId);
+    public TagEntity getTagById(long tagId) throws NoResultException {
+        TagEntity tag = em.find(TagEntity.class, tagId);
         if (tag != null) {
             return tag;
         } else {
             throw new NoResultException("Tag not found");
+        }
+    }
+
+    @Override
+    public void createNewTag(TagEntity tag) throws TagNameExistException {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE LOWER(t.name)= :name");
+        q.setParameter("name", tag.getName().toLowerCase());
+        List<TagEntity> tags = (List<TagEntity>) q.getResultList();
+
+        if (tags.isEmpty()) {
+            em.persist(tag);
+        } else {
+            throw new TagNameExistException("Name of Tag exist");
         }
     }
 }

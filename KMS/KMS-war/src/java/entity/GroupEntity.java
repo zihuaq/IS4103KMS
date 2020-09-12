@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class Group implements Serializable {
+public class GroupEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,16 +38,16 @@ public class Group implements Serializable {
     private String profilePicture;
     
     @ManyToOne
-    private User groupOwner;
+    private UserEntity groupOwner;
     
     @ManyToMany
-    private List<User> users;
+    private List<UserEntity> users;
     
-    public Group() {
+    public GroupEntity() {
         users = new ArrayList<>();
     }
 
-    public Group(String name, String country, String profilePicture) {
+    public GroupEntity(String name, String country, String profilePicture) {
         this();
         this.name = name;
         this.country = country;
@@ -73,10 +73,10 @@ public class Group implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the groupId fields are not set
-        if (!(object instanceof Group)) {
+        if (!(object instanceof GroupEntity)) {
             return false;
         }
-        Group other = (Group) object;
+        GroupEntity other = (GroupEntity) object;
         if ((this.groupId == null && other.groupId != null) || (this.groupId != null && !this.groupId.equals(other.groupId))) {
             return false;
         }
@@ -112,19 +112,19 @@ public class Group implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public User getGroupOwner() {
+    public UserEntity getGroupOwner() {
         return groupOwner;
     }
 
-    public void setGroupOwner(User groupOwner) {
+    public void setGroupOwner(UserEntity groupOwner) {
         this.groupOwner = groupOwner;
     }
 
-    public List<User> getUsers() {
+    public List<UserEntity> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<UserEntity> users) {
         this.users = users;
     }
     

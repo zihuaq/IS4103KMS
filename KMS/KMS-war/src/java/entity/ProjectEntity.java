@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class Project implements Serializable {
+public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -39,31 +39,31 @@ public class Project implements Serializable {
     // Status enumeration
     
     @ManyToOne
-    private User user;
+    private UserEntity user;
     
     @ManyToMany
-    private List<User> contributors;
+    private List<UserEntity> contributors;
     
     private Double monetaryFundingRequired;
     private Double monetaryFundingObtained;
     
     @OneToMany(mappedBy = "project")
-    private List<Activity> activities;
+    private List<ActivityEntity> activities;
 
     @OneToMany(mappedBy = "project")
-    private List<HumanResourcePosting> humanResourcePostings;
+    private List<HumanResourcePostingEntity> humanResourcePostings;
     
     @OneToMany(mappedBy = "project")
-    private List<MaterialResourcePosting> materialResourcePostings;
+    private List<MaterialResourcePostingEntity> materialResourcePostings;
     
     @OneToMany
-    private List<Task> tasks;
+    private List<TaskEntity> tasks;
 
-    public Project() {
+    public ProjectEntity() {
         this.contributors = new ArrayList<>();
     }
 
-    public Project(String name, String description, User user, Double monetaryFundingRequired, Double monetaryFundingObtained) {
+    public ProjectEntity(String name, String description, UserEntity user, Double monetaryFundingRequired, Double monetaryFundingObtained) {
         this();
         this.name = name;
         this.description = description;
@@ -90,10 +90,10 @@ public class Project implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the projectId fields are not set
-        if (!(object instanceof Project)) {
+        if (!(object instanceof ProjectEntity)) {
             return false;
         }
-        Project other = (Project) object;
+        ProjectEntity other = (ProjectEntity) object;
         if ((this.projectId == null && other.projectId != null) || (this.projectId != null && !this.projectId.equals(other.projectId))) {
             return false;
         }
@@ -121,19 +121,19 @@ public class Project implements Serializable {
         this.description = description;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 
-    public List<User> getContributors() {
+    public List<UserEntity> getContributors() {
         return contributors;
     }
 
-    public void setContributors(List<User> contributors) {
+    public void setContributors(List<UserEntity> contributors) {
         this.contributors = contributors;
     }
 

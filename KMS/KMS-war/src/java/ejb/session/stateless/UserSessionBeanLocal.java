@@ -6,9 +6,11 @@
 package ejb.session.stateless;
 
 import Exception.DuplicateEmailException;
-import Exception.DuplicateSkillInProfileException;
+import Exception.DuplicateTagInProfileException;
+import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
-import entity.User;
+import Exception.UserNotFoundException;
+import entity.UserEntity;
 import javax.ejb.Local;
 
 /**
@@ -18,12 +20,20 @@ import javax.ejb.Local;
 @Local
 public interface UserSessionBeanLocal {
 
-    public User createNewUser(User user) throws DuplicateEmailException;
+    public UserEntity createNewUser(UserEntity user) throws DuplicateEmailException;
 
-    public User getUserById(long userId) throws NoResultException;
+    public UserEntity getUserById(long userId) throws NoResultException;
 
-    public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateSkillInProfileException;
+    public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
 
     public void removeSkillFromProfile(long userId, long tagId) throws NoResultException;
+    
+    public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
+    
+    public void removeSDGFromProfile(long userId, long tagId) throws NoResultException;
+
+    public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException;
+
+    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
 
 }

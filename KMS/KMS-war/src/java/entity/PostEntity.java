@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -21,49 +22,57 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class Chat implements Serializable {
+public class PostEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatId;
+    private Long postId;
     
     @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
+    
+    @NotNull
+    @Column(nullable=false)
+    private Integer upvotes;
+    
+    @ManyToOne
+    private UserEntity postOwner;
 
-    public Chat() {
+    public PostEntity() {
     }
 
-    public Chat(Date dateTime) {
+    public PostEntity(Date dateTime, Integer upvotes) {
         this();
         this.dateTime = dateTime;
+        this.upvotes = upvotes;
     }
-                    
-    public Long getChatId() {
-        return chatId;
+     
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (chatId != null ? chatId.hashCode() : 0);
+        hash += (postId != null ? postId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the chatId fields are not set
-        if (!(object instanceof Chat)) {
+        // TODO: Warning - this method won't work in the case the postId fields are not set
+        if (!(object instanceof PostEntity)) {
             return false;
         }
-        Chat other = (Chat) object;
-        if ((this.chatId == null && other.chatId != null) || (this.chatId != null && !this.chatId.equals(other.chatId))) {
+        PostEntity other = (PostEntity) object;
+        if ((this.postId == null && other.postId != null) || (this.postId != null && !this.postId.equals(other.postId))) {
             return false;
         }
         return true;
@@ -71,7 +80,7 @@ public class Chat implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Chat[ id=" + chatId + " ]";
+        return "entity.Post[ id=" + postId + " ]";
     }
 
     public Date getDateTime() {
@@ -80,6 +89,22 @@ public class Chat implements Serializable {
 
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public Integer getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(Integer upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public UserEntity getPostOwner() {
+        return postOwner;
+    }
+
+    public void setPostOwner(UserEntity postOwner) {
+        this.postOwner = postOwner;
     }
     
 }

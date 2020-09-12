@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class Review implements Serializable {
+public class ReviewEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,12 +36,12 @@ public class Review implements Serializable {
     private Integer rating;
     
     @ManyToOne
-    private User user;
+    private UserEntity user;
 
-    public Review() {
+    public ReviewEntity() {
     }
 
-    public Review(String title, String reviewField, Integer rating) {
+    public ReviewEntity(String title, String reviewField, Integer rating) {
         this();
         this.title = title;
         this.reviewField = reviewField;
@@ -68,10 +68,10 @@ public class Review implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the reviewId fields are not set
-        if (!(object instanceof Review)) {
+        if (!(object instanceof ReviewEntity)) {
             return false;
         }
-        Review other = (Review) object;
+        ReviewEntity other = (ReviewEntity) object;
         if ((this.reviewId == null && other.reviewId != null) || (this.reviewId != null && !this.reviewId.equals(other.reviewId))) {
             return false;
         }
@@ -107,11 +107,11 @@ public class Review implements Serializable {
         this.rating = rating;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
     
