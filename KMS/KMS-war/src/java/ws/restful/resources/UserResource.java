@@ -11,8 +11,8 @@ import Exception.NoResultException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
-import entity.MaterialResourceAvailable;
-import entity.User;
+import entity.MaterialResourceAvailableEntity;
+import entity.UserEntity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -119,7 +119,7 @@ public class UserResource {
     @POST
     @Path("/mra/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createMaterialResourceAvailable(@PathParam("userId") Long userId, MaterialResourceAvailable mra) {
+    public Response createMaterialResourceAvailable(@PathParam("userId") Long userId, MaterialResourceAvailableEntity mra) {
         try {
             materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
             return Response.status(204).build();
@@ -152,11 +152,11 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMaterialRequestAvailable(@PathParam("userId") Long userId) {
         try {
-            User user = userSessionBeanLocal.getUserById(userId);
+            UserEntity user = userSessionBeanLocal.getUserById(userId);
             return Response.status(200).entity(user.getMras()).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
-                    .add("error", "No user found.")
+                    .add("error", ex.getMessage())
                     .build();
             return Response.status(404).entity(exception).build();
         }
@@ -167,11 +167,11 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("userId") Long userId) {
         try {
-            User user = userSessionBeanLocal.getUserById(userId);
+            UserEntity user = userSessionBeanLocal.getUserById(userId);
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
-                    .add("error", "No user found.")
+                    .add("error", ex.getMessage())
                     .build();
             return Response.status(404).entity(exception).build();
         }
@@ -181,8 +181,8 @@ public class UserResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response userRegistration(User user) {
-        User newUser;
+    public Response userRegistration(UserEntity user) {
+        UserEntity newUser;
         try {
             newUser = userSessionBeanLocal.createNewUser(user);
         } catch (DuplicateEmailException ex) {

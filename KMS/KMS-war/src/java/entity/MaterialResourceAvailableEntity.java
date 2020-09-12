@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class MaterialResourceAvailable implements Serializable {
+public class MaterialResourceAvailableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -61,16 +61,16 @@ public class MaterialResourceAvailable implements Serializable {
     private Double latitude;
     
     @ManyToOne
-    private User materialResourceAvailableOwner;
+    private UserEntity materialResourceAvailableOwner;
     
     @ManyToMany
-    private List<Tag> tags;
+    private List<TagEntity> tags;
 
-    public MaterialResourceAvailable() {
+    public MaterialResourceAvailableEntity() {
         this.tags = new ArrayList<>();
     }
 
-    public MaterialResourceAvailable(String name, Integer quantity, String description, Date startDate, Date endDate, Double longitude, Double latitude) {
+    public MaterialResourceAvailableEntity(String name, Integer quantity, String description, Date startDate, Date endDate, Double longitude, Double latitude) {
         this();
         this.name = name;
         this.quantity = quantity;
@@ -101,10 +101,10 @@ public class MaterialResourceAvailable implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the mraId fields are not set
-        if (!(object instanceof MaterialResourceAvailable)) {
+        if (!(object instanceof MaterialResourceAvailableEntity)) {
             return false;
         }
-        MaterialResourceAvailable other = (MaterialResourceAvailable) object;
+        MaterialResourceAvailableEntity other = (MaterialResourceAvailableEntity) object;
         if ((this.mraId == null && other.mraId != null) || (this.mraId != null && !this.mraId.equals(other.mraId))) {
             return false;
         }
@@ -172,19 +172,19 @@ public class MaterialResourceAvailable implements Serializable {
         this.latitude = latitude;
     }
 
-    public User getMaterialResourceAvailableOwner() {
+    public UserEntity getMaterialResourceAvailableOwner() {
         return materialResourceAvailableOwner;
     }
 
-    public void setMaterialResourceAvailableOwner(User materialResourceAvailableOwner) {
+    public void setMaterialResourceAvailableOwner(UserEntity materialResourceAvailableOwner) {
         this.materialResourceAvailableOwner = materialResourceAvailableOwner;
     }
 
-    public List<Tag> getTags() {
+    public List<TagEntity> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(List<TagEntity> tags) {
         this.tags = tags;
     }
     

@@ -23,12 +23,12 @@ import javax.validation.constraints.NotNull;
  * @author zeplh
  */
 @Entity
-public class HumanResourcePosting implements Serializable {
+public class MaterialResourcePostingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long humanResourcePostingId;
+    private Long materialResourcePostingId;
     
     @NotNull
     @Column(nullable=false)
@@ -36,15 +36,15 @@ public class HumanResourcePosting implements Serializable {
     
     @NotNull
     @Column(nullable=false)
-    private Integer totalSlots;
+    private Double totalQuantity;
     
     @NotNull
     @Column(nullable=false)
-    private Integer obtainedSlots;
+    private Double obtainedQuantity;
     
     @NotNull
     @Column(nullable=false)
-    private Integer lackingSlots;
+    private Double lackingQuantity;
     
     @NotNull
     @Column(nullable=false)
@@ -69,37 +69,35 @@ public class HumanResourcePosting implements Serializable {
     private Double lontitude;
     
     @ManyToOne
-    private Activity activity;
+    private ActivityEntity activity;
     
     @ManyToOne
     @JoinColumn
-    private Project project;
-    
-    
+    private ProjectEntity project;
 
-    public Long getHumanResourcePostingId() {
-        return humanResourcePostingId;
+    public Long getMaterialResourcePostingId() {
+        return materialResourcePostingId;
     }
 
-    public void setHumanResourcePostingId(Long humanResourcePostingId) {
-        this.humanResourcePostingId = humanResourcePostingId;
+    public void setMaterialResourcePostingId(Long materialResourcePostingId) {
+        this.materialResourcePostingId = materialResourcePostingId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (humanResourcePostingId != null ? humanResourcePostingId.hashCode() : 0);
+        hash += (materialResourcePostingId != null ? materialResourcePostingId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the humanResourcePostingId fields are not set
-        if (!(object instanceof HumanResourcePosting)) {
+        // TODO: Warning - this method won't work in the case the materialResourcePostingId fields are not set
+        if (!(object instanceof MaterialResourcePostingEntity)) {
             return false;
         }
-        HumanResourcePosting other = (HumanResourcePosting) object;
-        if ((this.humanResourcePostingId == null && other.humanResourcePostingId != null) || (this.humanResourcePostingId != null && !this.humanResourcePostingId.equals(other.humanResourcePostingId))) {
+        MaterialResourcePostingEntity other = (MaterialResourcePostingEntity) object;
+        if ((this.materialResourcePostingId == null && other.materialResourcePostingId != null) || (this.materialResourcePostingId != null && !this.materialResourcePostingId.equals(other.materialResourcePostingId))) {
             return false;
         }
         return true;
@@ -107,7 +105,7 @@ public class HumanResourcePosting implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.HumanResourcePosting[ id=" + humanResourcePostingId + " ]";
+        return "entity.MaterialResourcePosting[ id=" + materialResourcePostingId + " ]";
     }
     
 }

@@ -8,7 +8,7 @@ package ejb.session.singleton;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
 import ejb.session.stateless.TagSessionBeanLocal;
-import entity.Tag;
+import entity.TagEntity;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -38,17 +38,17 @@ public class DataInitializationSessionBean {
         } catch (NoResultException ex) {
             try {
                 initializeData();
-            } catch (Exception e) {
+            } catch (TagNameExistException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
     private void initializeData() throws TagNameExistException {
-        tagSessionBean.createNewTag(new Tag("Project Management", TagTypeEnum.SKILL));
-        tagSessionBean.createNewTag(new Tag("HTML", TagTypeEnum.SKILL));
-        tagSessionBean.createNewTag(new Tag("Java", TagTypeEnum.SKILL));
-        tagSessionBean.createNewTag(new Tag("Food", TagTypeEnum.MATERIALRESOURCE));
-        tagSessionBean.createNewTag(new Tag("Construction Equipment", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Project Management", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("HTML", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Java", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Food", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Construction Equipment", TagTypeEnum.MATERIALRESOURCE));
     }
 }

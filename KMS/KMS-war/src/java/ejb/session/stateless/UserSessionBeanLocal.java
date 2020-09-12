@@ -8,7 +8,7 @@ package ejb.session.stateless;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateTagInProfileException;
 import Exception.NoResultException;
-import entity.User;
+import entity.UserEntity;
 import javax.ejb.Local;
 
 /**
@@ -18,9 +18,9 @@ import javax.ejb.Local;
 @Local
 public interface UserSessionBeanLocal {
 
-    public User createNewUser(User user) throws DuplicateEmailException;
+    public UserEntity createNewUser(UserEntity user) throws DuplicateEmailException;
 
-    public User getUserById(long userId) throws NoResultException;
+    public UserEntity getUserById(long userId) throws NoResultException;
 
     public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
 

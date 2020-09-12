@@ -6,8 +6,8 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
+import entity.TagEntity;
 import Exception.TagNameExistException;
-import entity.Tag;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,13 +18,13 @@ import javax.ejb.Local;
 @Local
 public interface TagSessionBeanLocal {
 
-    public Tag getTagById(long tagId) throws NoResultException;
+    public TagEntity getTagById(long tagId) throws NoResultException;
     
-    public void createNewTag (Tag tag) throws TagNameExistException;
+    public void createNewTag (TagEntity tag) throws TagNameExistException;
     
-    public List<Tag> getAllSkillTags();
+    public List<TagEntity> getAllSkillTags();
     
-    public List<Tag> getAllMaterialResourceTags();
+    public List<TagEntity> getAllMaterialResourceTags();
     
-    public List<Tag> getAllSDGTags();
+    public List<TagEntity> getAllSDGTags();
 }

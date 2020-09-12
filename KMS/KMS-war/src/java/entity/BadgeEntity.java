@@ -8,67 +8,66 @@ package entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
-import util.enumeration.TagTypeEnum;
 
 /**
  *
  * @author chai
  */
 @Entity
-public class Tag implements Serializable {
+public class BadgeEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagId;
+    private Long badgeId;
     
     @NotNull
     @Column(nullable=false)
     private String name;
     
+    private String description;
+    
     @NotNull
     @Column(nullable=false)
-    @Enumerated(EnumType.STRING)
-    private TagTypeEnum tagType;
+    private Integer point;
 
-    public Tag() {
+    public BadgeEntity() {
     }
 
-    public Tag(String name, TagTypeEnum tagType) {
+    public BadgeEntity(String name, String description, Integer point) {
         this();
         this.name = name;
-        this.tagType = tagType;
+        this.description = description;
+        this.point = point;
     }
     
-    public Long getTagId() {
-        return tagId;
+    public Long getBadgeId() {
+        return badgeId;
     }
 
-    public void setTagId(Long tagId) {
-        this.tagId = tagId;
+    public void setBadgeId(Long badgeId) {
+        this.badgeId = badgeId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (tagId != null ? tagId.hashCode() : 0);
+        hash += (badgeId != null ? badgeId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the tagId fields are not set
-        if (!(object instanceof Tag)) {
+        // TODO: Warning - this method won't work in the case the badgeId fields are not set
+        if (!(object instanceof BadgeEntity)) {
             return false;
         }
-        Tag other = (Tag) object;
-        if ((this.tagId == null && other.tagId != null) || (this.tagId != null && !this.tagId.equals(other.tagId))) {
+        BadgeEntity other = (BadgeEntity) object;
+        if ((this.badgeId == null && other.badgeId != null) || (this.badgeId != null && !this.badgeId.equals(other.badgeId))) {
             return false;
         }
         return true;
@@ -76,7 +75,7 @@ public class Tag implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Tag[ id=" + tagId + " ]";
+        return "entity.Badge[ id=" + badgeId + " ]";
     }
 
     public String getName() {
@@ -86,14 +85,21 @@ public class Tag implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
+    }
     
-    public TagTypeEnum getTagType() {
-        return tagType;
-    }
-
-    public void setTagType(TagTypeEnum tagType) {
-        this.tagType = this.tagType;
-    }
 }
-
-   

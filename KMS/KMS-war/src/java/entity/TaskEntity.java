@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
  * @author zeplh
  */
 @Entity
-public class Task implements Serializable {
+public class TaskEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -61,10 +61,10 @@ public class Task implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the taskId fields are not set
-        if (!(object instanceof Task)) {
+        if (!(object instanceof TaskEntity)) {
             return false;
         }
-        Task other = (Task) object;
+        TaskEntity other = (TaskEntity) object;
         if ((this.taskId == null && other.taskId != null) || (this.taskId != null && !this.taskId.equals(other.taskId))) {
             return false;
         }
