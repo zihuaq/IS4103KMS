@@ -40,10 +40,10 @@ public class Tag implements Serializable {
     public Tag() {
     }
 
-    public Tag(String name, String tagType) {
+    public Tag(String name, TagTypeEnum tagType) {
         this();
         this.name = name;
-        this.tagType = TagTypeEnum.valueOf(tagType);
+        this.tagType = tagType;
     }
     
     public Long getTagId() {
