@@ -49,7 +49,7 @@ export class UserService {
       .get<any>(
         this.baseUrl + '/userLogin?email=' + email + '&password=' + password
       )
-      .pipe();
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {

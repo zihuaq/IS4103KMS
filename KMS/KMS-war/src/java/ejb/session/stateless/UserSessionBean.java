@@ -75,4 +75,15 @@ public class UserSessionBean implements UserSessionBeanLocal {
         skills.remove(tag);
         user.setSkills(skills);
     }
+    
+    /*
+    public User retrieveUserByEmail(String email){
+        
+    }
+    
+    public User userLogin(String email, String password){
+        
+        
+    }
+    */
 }

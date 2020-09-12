@@ -10,6 +10,7 @@ import Exception.DuplicateSkillInProfileException;
 import Exception.NoResultException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
+import ejb.session.stateless.UserSessionBean;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.MaterialResourceAvailable;
 import entity.User;
@@ -26,6 +27,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -159,5 +161,17 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
+    
+    /*
+    @Path("userLogin")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response userLogin(@QueryParam("email") String email, @QueryParam("password") String password) {
+        
+            User user = UserSessionBean.userLogin(email, password);
+        
+    }
+    */
 
 }
