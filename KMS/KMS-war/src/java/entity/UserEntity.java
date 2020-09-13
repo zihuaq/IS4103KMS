@@ -399,4 +399,8 @@ public class UserEntity implements Serializable {
     public void setAccountPrivacySetting(AccountPrivacySettingEnum accountPrivacySetting) {
         this.accountPrivacySetting = accountPrivacySetting;
     }   
+
+    public Object getProjects() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
