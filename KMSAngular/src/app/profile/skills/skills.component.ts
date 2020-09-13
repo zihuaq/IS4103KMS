@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Tag } from '../../classes/tag';
-import {TagService} from '../../tag.service'
+import { TagService } from '../../tag.service'
+import { User } from '../../classes/user';
 
 @Component({
   selector: 'app-skills',
@@ -8,10 +9,14 @@ import {TagService} from '../../tag.service'
   styleUrls: ['./skills.component.css']
 })
 export class SkillsComponent implements OnInit {
-
-  tags: Tag[]
+  @Input() user: User;
+  skillTags: Tag[]
   constructor(private tagService: TagService) { }
 
   ngOnInit(): void {
+    this.tagService.getAllSkillTags().subscribe(
+      response => {
+        this.skillTags = response;
+      });
   }
 }

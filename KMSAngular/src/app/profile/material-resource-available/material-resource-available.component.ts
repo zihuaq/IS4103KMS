@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { User } from '../../classes/user';
 
 @Component({
   selector: 'app-material-resource-available',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./material-resource-available.component.css']
 })
 export class MaterialResourceAvailableComponent implements OnInit {
+
+  @Input() user: User;
 
   constructor() { }
 
