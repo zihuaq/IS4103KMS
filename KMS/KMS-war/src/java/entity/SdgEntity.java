@@ -19,7 +19,7 @@ import javax.persistence.OneToMany;
  * @author chai
  */
 @Entity
-public class Sdg implements Serializable {
+public class SdgEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -29,13 +29,13 @@ public class Sdg implements Serializable {
     private String description;
     
     @OneToMany
-    private List<Project> projects;
+    private List<ProjectEntity> projects;
 
-    public Sdg() {
+    public SdgEntity() {
         this.projects = new ArrayList<>();
     }
 
-    public Sdg(String description) {
+    public SdgEntity(String description) {
         this();
         this.description = description;
     }
@@ -58,10 +58,10 @@ public class Sdg implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the sdgId fields are not set
-        if (!(object instanceof Sdg)) {
+        if (!(object instanceof SdgEntity)) {
             return false;
         }
-        Sdg other = (Sdg) object;
+        SdgEntity other = (SdgEntity) object;
         if ((this.sdgId == null && other.sdgId != null) || (this.sdgId != null && !this.sdgId.equals(other.sdgId))) {
             return false;
         }
@@ -81,11 +81,11 @@ public class Sdg implements Serializable {
         this.description = description;
     }
 
-    public List<Project> getProjects() {
+    public List<ProjectEntity> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(List<ProjectEntity> projects) {
         this.projects = projects;
     }
     

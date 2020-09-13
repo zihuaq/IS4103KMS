@@ -27,7 +27,7 @@ import util.enumeration.ProjectStatusEnum;
  * @author chai
  */
 @Entity
-public class Project implements Serializable {
+public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -61,33 +61,35 @@ public class Project implements Serializable {
     private String location;
     
     @ManyToOne
-    private User owner;
+    private UserEntity owner;
+
     
     @ManyToMany
-    private List<User> contributors;
+    private List<UserEntity> contributors;
     
     @ManyToMany
-    private List<User> admins;
+    private List<UserEntity> admins;
     
     private Double monetaryFundingRequired;
     private Double monetaryFundingObtained;
     
     @OneToMany(mappedBy = "project")
-    private List<Activity> activities;
+    private List<ActivityEntity> activities;
 
     @OneToMany(mappedBy = "project")
-    private List<HumanResourcePosting> humanResourcePostings;
+    private List<HumanResourcePostingEntity> humanResourcePostings;
     
     @OneToMany(mappedBy = "project")
-    private List<MaterialResourcePosting> materialResourcePostings;
+    private List<MaterialResourcePostingEntity> materialResourcePostings;
     
     @OneToMany(mappedBy = "project")
-    private List<Task> tasks;
+    private List<TaskEntity> tasks;
     
     @OneToMany(mappedBy = "project")
-    private List<Post> posts;
+    private List<PostEntity> posts;
 
-    public Project() {
+
+    public ProjectEntity() {
         this.contributors = new ArrayList<>();
         this.activities = new ArrayList<>();
         this.humanResourcePostings = new ArrayList<>();
@@ -97,7 +99,7 @@ public class Project implements Serializable {
         this.status = ProjectStatusEnum.NOTSTARTED;
     }
 
-    public Project(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, User user, Double monetaryFundingRequired, Double monetaryFundingObtained) {
+    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, UserEntity user, Double monetaryFundingRequired, Double monetaryFundingObtained) {
         this();
         this.projectId = projectId;
         this.name = name;
@@ -129,10 +131,10 @@ public class Project implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the projectId fields are not set
-        if (!(object instanceof Project)) {
+        if (!(object instanceof ProjectEntity)) {
             return false;
         }
-        Project other = (Project) object;
+        ProjectEntity other = (ProjectEntity) object;
         if ((this.projectId == null && other.projectId != null) || (this.projectId != null && !this.projectId.equals(other.projectId))) {
             return false;
         }
@@ -160,19 +162,19 @@ public class Project implements Serializable {
         this.description = description;
     }
 
-    public User getOwner() {
+    public UserEntity getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(UserEntity owner) {
         this.owner = owner;
     }
 
-    public List<User> getContributors() {
+    public List<UserEntity> getContributors() {
         return contributors;
     }
 
-    public void setContributors(List<User> contributors) {
+    public void setContributors(List<UserEntity> contributors) {
         this.contributors = contributors;
     }
 
@@ -224,35 +226,35 @@ public class Project implements Serializable {
         this.location = location;
     }
 
-    public List<Activity> getActivities() {
+    public List<ActivityEntity> getActivities() {
         return activities;
     }
 
-    public void setActivities(List<Activity> activities) {
+    public void setActivities(List<ActivityEntity> activities) {
         this.activities = activities;
     }
 
-    public List<HumanResourcePosting> getHumanResourcePostings() {
+    public List<HumanResourcePostingEntity> getHumanResourcePostings() {
         return humanResourcePostings;
     }
 
-    public void setHumanResourcePostings(List<HumanResourcePosting> humanResourcePostings) {
+    public void setHumanResourcePostings(List<HumanResourcePostingEntity> humanResourcePostings) {
         this.humanResourcePostings = humanResourcePostings;
     }
 
-    public List<MaterialResourcePosting> getMaterialResourcePostings() {
+    public List<MaterialResourcePostingEntity> getMaterialResourcePostings() {
         return materialResourcePostings;
     }
 
-    public void setMaterialResourcePostings(List<MaterialResourcePosting> materialResourcePostings) {
+    public void setMaterialResourcePostings(List<MaterialResourcePostingEntity> materialResourcePostings) {
         this.materialResourcePostings = materialResourcePostings;
     }
 
-    public List<Task> getTasks() {
+    public List<TaskEntity> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(List<TaskEntity> tasks) {
         this.tasks = tasks;
     }
 
@@ -264,19 +266,19 @@ public class Project implements Serializable {
         this.status = status;
     }
 
-    public List<User> getAdmins() {
+    public List<UserEntity> getAdmins() {
         return admins;
     }
 
-    public void setAdmins(List<User> admins) {
+    public void setAdmins(List<UserEntity> admins) {
         this.admins = admins;
     }
 
-    public List<Post> getPosts() {
+    public List<PostEntity> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
     }
     

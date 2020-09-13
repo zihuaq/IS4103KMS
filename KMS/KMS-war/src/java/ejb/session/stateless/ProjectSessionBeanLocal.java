@@ -7,7 +7,7 @@ package ejb.session.stateless;
 
 import Exception.CreateProjectException;
 import Exception.NoResultException;
-import entity.Project;
+import entity.ProjectEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.enumeration.ProjectStatusEnum;
@@ -19,19 +19,19 @@ import util.enumeration.ProjectStatusEnum;
 @Local
 public interface ProjectSessionBeanLocal {
 
-    public Long createNewProject(Project newProject, Long userId) throws CreateProjectException;
+    public Long createNewProject(ProjectEntity newProject, Long userId) throws CreateProjectException;
 
-    public List<Project> retrieveAllProject();
+    public List<ProjectEntity> retrieveAllProject();
 
-    public List<Project> retrieveProjectByStatus(ProjectStatusEnum status);
+    public List<ProjectEntity> retrieveProjectByStatus(ProjectStatusEnum status);
 
-    public Project getProjectById(Long projectId);
+    public ProjectEntity getProjectById(Long projectId);
 
     public void addContributor(Long projectId, Long userId) throws NoResultException;
 
     public void removeContributor(Long projectId, Long userId) throws NoResultException;
 
-    public void updateProject(Project projectToUpdate);
+    public void updateProject(ProjectEntity projectToUpdate);
 
     public void updateStatus(Long projectId, ProjectStatusEnum status);
 

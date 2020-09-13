@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class Post implements Serializable {
+public class PostEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -39,15 +39,16 @@ public class Post implements Serializable {
     private Integer upvotes;
     
     @ManyToOne
-    private User postOwner;
+    private UserEntity postOwner;
     
     @ManyToOne
-    private Project project;
+    private ProjectEntity project;
 
-    public Post() {
+
+    public PostEntity() {
     }
 
-    public Post(Date dateTime, Integer upvotes) {
+    public PostEntity(Date dateTime, Integer upvotes) {
         this();
         this.dateTime = dateTime;
         this.upvotes = upvotes;
@@ -71,10 +72,10 @@ public class Post implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the postId fields are not set
-        if (!(object instanceof Post)) {
+        if (!(object instanceof PostEntity)) {
             return false;
         }
-        Post other = (Post) object;
+        PostEntity other = (PostEntity) object;
         if ((this.postId == null && other.postId != null) || (this.postId != null && !this.postId.equals(other.postId))) {
             return false;
         }
@@ -102,19 +103,19 @@ public class Post implements Serializable {
         this.upvotes = upvotes;
     }
 
-    public User getPostOwner() {
+    public UserEntity getPostOwner() {
         return postOwner;
     }
 
-    public void setPostOwner(User postOwner) {
+    public void setPostOwner(UserEntity postOwner) {
         this.postOwner = postOwner;
     }
 
-    public Project getProject() {
+    public ProjectEntity getProject() {
         return project;
     }
 
-    public void setProject(Project project) {
+    public void setProject(ProjectEntity project) {
         this.project = project;
     }
     

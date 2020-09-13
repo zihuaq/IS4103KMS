@@ -7,13 +7,13 @@ package ejb.session.stateless;
 
 import Exception.CreateProjectException;
 import Exception.NoResultException;
-import entity.Activity;
-import entity.HumanResourcePosting;
-import entity.MaterialResourcePosting;
-import entity.Post;
-import entity.Project;
-import entity.Task;
-import entity.User;
+import entity.ActivityEntity;
+import entity.HumanResourcePostingEntity;
+import entity.MaterialResourcePostingEntity;
+import entity.PostEntity;
+import entity.ProjectEntity;
+import entity.TaskEntity;
+import entity.UserEntity;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -39,9 +39,9 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     private PostSessionBeanLocal postSessionBeanLocal;
 
     @Override
-    public Long createNewProject(Project newProject, Long userId) throws CreateProjectException {
+    public Long createNewProject(ProjectEntity newProject, Long userId) throws CreateProjectException {
         try {
-            User user = userSessionBeanLocal.getUserById(userId);
+            UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newProject);
             em.flush();
             
@@ -55,14 +55,14 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public List<Project> retrieveAllProject() {
+    public List<ProjectEntity> retrieveAllProject() {
         Query query = em.createQuery("SELECT p FROM Project p");
         
         return query.getResultList();
     }
     
     @Override
-    public List<Project> retrieveProjectByStatus(ProjectStatusEnum status) {
+    public List<ProjectEntity> retrieveProjectByStatus(ProjectStatusEnum status) {
         Query query = em.createQuery("SELECT p from Project p WHERE p.status = :inStatus");
         query.setParameter("inStatus", status);
         
@@ -70,17 +70,17 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public Project getProjectById(Long projectId) {
-        Project project = em.find(Project.class, projectId);
+    public ProjectEntity getProjectById(Long projectId) {
+        ProjectEntity project = em.find(ProjectEntity.class, projectId);
         
         return project;
     }
     
     @Override
     public void addContributor(Long projectId, Long userId) throws NoResultException {
-        Project project = getProjectById(projectId);
+        ProjectEntity project = getProjectById(projectId);
         
-        User user = userSessionBeanLocal.getUserById(userId);
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         project.getContributors().add(user);
         
@@ -88,31 +88,31 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @Override
     public void removeContributor(Long projectId, Long userId) throws NoResultException {
-        Project project = getProjectById(projectId);
+        ProjectEntity project = getProjectById(projectId);
         
-        User user = userSessionBeanLocal.getUserById(userId);
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         project.getContributors().remove(user);
         
     }
     
     @Override
-    public void updateProject(Project projectToUpdate) {
+    public void updateProject(ProjectEntity projectToUpdate) {
         em.merge(projectToUpdate);
         em.flush();
     }
     
     @Override
     public void updateStatus(Long projectId, ProjectStatusEnum status) {
-        Project project = getProjectById(projectId);
+        ProjectEntity project = getProjectById(projectId);
         
         project.setStatus(status);
     }
     
     @Override
     public void addAdmin(Long projectId, Long userId) throws NoResultException {
-        Project project = getProjectById(projectId);
-        User user = userSessionBeanLocal.getUserById(userId);
+        ProjectEntity project = getProjectById(projectId);
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         project.getAdmins().add(user);
         user.getProjectAdmins().add(project);
@@ -120,8 +120,8 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @Override
     public void removeAdmin(Long projectId, Long userId) throws NoResultException {
-        Project project = getProjectById(projectId);
-        User user = userSessionBeanLocal.getUserById(userId);
+        ProjectEntity project = getProjectById(projectId);
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         project.getAdmins().add(user);
         user.getProjectAdmins().remove(project);
@@ -129,8 +129,8 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @Override
     public void changeOwner(Long projectId, Long newOwnerId) throws NoResultException {
-        Project project = getProjectById(projectId);
-        User user = userSessionBeanLocal.getUserById(newOwnerId);
+        ProjectEntity project = getProjectById(projectId);
+        UserEntity user = userSessionBeanLocal.getUserById(newOwnerId);
         
         project.getOwner().getProjectsOwned().remove(project);
         project.setOwner(user);
@@ -138,42 +138,42 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     public void deleteProject(Long projectId) {
-        Project projectToDelete = getProjectById(projectId);
+        ProjectEntity projectToDelete = getProjectById(projectId);
         
-        for (User user : projectToDelete.getAdmins()) {
+        for (UserEntity user : projectToDelete.getAdmins()) {
             user.getProjectAdmins().remove(projectToDelete);
         }
         projectToDelete.getAdmins().clear();
         
-        for (User user : projectToDelete.getContributors()) {
+        for (UserEntity user : projectToDelete.getContributors()) {
             user.getProjectsContributed().remove(projectToDelete);
         }
         projectToDelete.getContributors().clear();
         
-        for (Activity activity : projectToDelete.getActivities()) {
+        for (ActivityEntity activity : projectToDelete.getActivities()) {
             activity.setProject(null);
         }
         projectToDelete.getActivities().clear();
         
-        for (HumanResourcePosting hrp : projectToDelete.getHumanResourcePostings()) {
+        for (HumanResourcePostingEntity hrp : projectToDelete.getHumanResourcePostings()) {
             hrp.setProject(null);
             // Delete hrp here
         }
         projectToDelete.getHumanResourcePostings().clear();
         
-        for (MaterialResourcePosting mrp : projectToDelete.getMaterialResourcePostings()) {
+        for (MaterialResourcePostingEntity mrp : projectToDelete.getMaterialResourcePostings()) {
             mrp.setProject(null);
             // Delete mrp here
         }
         projectToDelete.getMaterialResourcePostings().clear();
         
-        for (Task task : projectToDelete.getTasks()) {
+        for (TaskEntity task : projectToDelete.getTasks()) {
             task.setProject(null);
             // Delete task here
         }
         projectToDelete.getTasks().clear();
         
-        for (Post post : projectToDelete.getPosts()) {
+        for (PostEntity post : projectToDelete.getPosts()) {
             postSessionBeanLocal.deletePost(post.getPostId());
         }
         projectToDelete.getPosts().clear();

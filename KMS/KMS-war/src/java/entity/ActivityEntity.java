@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
  * @author zeplh
  */
 @Entity
-public class Activity implements Serializable {
+public class ActivityEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -60,13 +60,13 @@ public class Activity implements Serializable {
     
     @ManyToOne
     @JoinColumn
-    private Project project;
+    private ProjectEntity project;
     
     @OneToMany(mappedBy = "activity")
-    private List<HumanResourcePosting> humanResourcePostings;
+    private List<HumanResourcePostingEntity> humanResourcePostings;
     
     @OneToMany(mappedBy = "activity")
-    private List<MaterialResourcePosting> materialResourcePostings;
+    private List<MaterialResourcePostingEntity> materialResourcePostings;
     //@OneToMany
     //private List<HumanResourcePosting> humanResourcePostings;
     
@@ -90,10 +90,10 @@ public class Activity implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the activityId fields are not set
-        if (!(object instanceof Activity)) {
+        if (!(object instanceof ActivityEntity)) {
             return false;
         }
-        Activity other = (Activity) object;
+        ActivityEntity other = (ActivityEntity) object;
         if ((this.activityId == null && other.activityId != null) || (this.activityId != null && !this.activityId.equals(other.activityId))) {
             return false;
         }
@@ -153,27 +153,27 @@ public class Activity implements Serializable {
         this.description = description;
     }
 
-    public Project getProject() {
+    public ProjectEntity getProject() {
         return project;
     }
 
-    public void setProject(Project project) {
+    public void setProject(ProjectEntity project) {
         this.project = project;
     }
 
-    public List<HumanResourcePosting> getHumanResourcePostings() {
+    public List<HumanResourcePostingEntity> getHumanResourcePostings() {
         return humanResourcePostings;
     }
 
-    public void setHumanResourcePostings(List<HumanResourcePosting> humanResourcePostings) {
+    public void setHumanResourcePostings(List<HumanResourcePostingEntity> humanResourcePostings) {
         this.humanResourcePostings = humanResourcePostings;
     }
 
-    public List<MaterialResourcePosting> getMaterialResourcePostings() {
+    public List<MaterialResourcePostingEntity> getMaterialResourcePostings() {
         return materialResourcePostings;
     }
 
-    public void setMaterialResourcePostings(List<MaterialResourcePosting> materialResourcePostings) {
+    public void setMaterialResourcePostings(List<MaterialResourcePostingEntity> materialResourcePostings) {
         this.materialResourcePostings = materialResourcePostings;
     }
     

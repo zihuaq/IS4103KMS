@@ -6,9 +6,9 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
-import entity.Post;
-import entity.Project;
-import entity.User;
+import entity.PostEntity;
+import entity.ProjectEntity;
+import entity.UserEntity;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,9 +31,9 @@ public class PostSessionBean implements PostSessionBeanLocal {
     private UserSessionBeanLocal userSessionBeanLocal;
 
     @Override
-    public Long createNewPost(Post newPost, Long projectId, Long userId) throws NoResultException {
-        Project project = projectSessionBeanLocal.getProjectById(projectId);
-        User user = userSessionBeanLocal.getUserById(userId);
+    public Long createNewPost(PostEntity newPost, Long projectId, Long userId) throws NoResultException {
+        ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
         em.persist(newPost);
         em.flush();
         
@@ -45,20 +45,20 @@ public class PostSessionBean implements PostSessionBeanLocal {
         return newPost.getPostId();
     }
     
-    public Post getPostById(Long postId) {
-        Post post = em.find(Post.class, postId);
+    public PostEntity getPostById(Long postId) {
+        PostEntity post = em.find(PostEntity.class, postId);
         return post;
     }
     
     @Override
-    public void updatePost(Post postToUpdate) {
+    public void updatePost(PostEntity postToUpdate) {
         em.merge(postToUpdate);
         em.flush();
     }
     
     @Override
     public void deletePost(Long postId) {
-        Post postToDelete = getPostById(postId);
+        PostEntity postToDelete = getPostById(postId);
         
         postToDelete.getPostOwner().getPosts().remove(postToDelete);
         postToDelete.setPostOwner(null);

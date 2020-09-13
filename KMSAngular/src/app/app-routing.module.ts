@@ -9,6 +9,7 @@ import { ViewAllUsersComponent } from './view-all-users/view-all-users.component
 const routes: Routes = [
   { path: 'signup', component: CreateNewUserComponent },
   { path: 'login', component: UserLoginPageComponent },
+  { path: 'profile/:userid', component: ProfileComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'viewAllUsers', component: ViewAllUsersComponent },
   { path: '', component: IndexComponent },

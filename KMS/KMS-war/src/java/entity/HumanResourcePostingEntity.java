@@ -23,12 +23,12 @@ import javax.validation.constraints.NotNull;
  * @author zeplh
  */
 @Entity
-public class MaterialResourcePosting implements Serializable {
+public class HumanResourcePostingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long materialResourcePostingId;
+    private Long humanResourcePostingId;
     
     @NotNull
     @Column(nullable=false)
@@ -36,15 +36,15 @@ public class MaterialResourcePosting implements Serializable {
     
     @NotNull
     @Column(nullable=false)
-    private Double totalQuantity;
+    private Integer totalSlots;
     
     @NotNull
     @Column(nullable=false)
-    private Double obtainedQuantity;
+    private Integer obtainedSlots;
     
     @NotNull
     @Column(nullable=false)
-    private Double lackingQuantity;
+    private Integer lackingSlots;
     
     @NotNull
     @Column(nullable=false)
@@ -69,35 +69,37 @@ public class MaterialResourcePosting implements Serializable {
     private Double lontitude;
     
     @ManyToOne
-    private Activity activity;
+    private ActivityEntity activity;
     
     @ManyToOne
     @JoinColumn
-    private Project project;
+    private ProjectEntity project;
+    
+    
 
-    public Long getMaterialResourcePostingId() {
-        return materialResourcePostingId;
+    public Long getHumanResourcePostingId() {
+        return humanResourcePostingId;
     }
 
-    public void setMaterialResourcePostingId(Long materialResourcePostingId) {
-        this.materialResourcePostingId = materialResourcePostingId;
+    public void setHumanResourcePostingId(Long humanResourcePostingId) {
+        this.humanResourcePostingId = humanResourcePostingId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (materialResourcePostingId != null ? materialResourcePostingId.hashCode() : 0);
+        hash += (humanResourcePostingId != null ? humanResourcePostingId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the materialResourcePostingId fields are not set
-        if (!(object instanceof MaterialResourcePosting)) {
+        // TODO: Warning - this method won't work in the case the humanResourcePostingId fields are not set
+        if (!(object instanceof HumanResourcePostingEntity)) {
             return false;
         }
-        MaterialResourcePosting other = (MaterialResourcePosting) object;
-        if ((this.materialResourcePostingId == null && other.materialResourcePostingId != null) || (this.materialResourcePostingId != null && !this.materialResourcePostingId.equals(other.materialResourcePostingId))) {
+        HumanResourcePostingEntity other = (HumanResourcePostingEntity) object;
+        if ((this.humanResourcePostingId == null && other.humanResourcePostingId != null) || (this.humanResourcePostingId != null && !this.humanResourcePostingId.equals(other.humanResourcePostingId))) {
             return false;
         }
         return true;
@@ -105,7 +107,7 @@ public class MaterialResourcePosting implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.MaterialResourcePosting[ id=" + materialResourcePostingId + " ]";
+        return "entity.HumanResourcePosting[ id=" + humanResourcePostingId + " ]";
     }
 
     public String getName() {
@@ -116,28 +118,28 @@ public class MaterialResourcePosting implements Serializable {
         this.name = name;
     }
 
-    public Double getTotalQuantity() {
-        return totalQuantity;
+    public Integer getTotalSlots() {
+        return totalSlots;
     }
 
-    public void setTotalQuantity(Double totalQuantity) {
-        this.totalQuantity = totalQuantity;
+    public void setTotalSlots(Integer totalSlots) {
+        this.totalSlots = totalSlots;
     }
 
-    public Double getObtainedQuantity() {
-        return obtainedQuantity;
+    public Integer getObtainedSlots() {
+        return obtainedSlots;
     }
 
-    public void setObtainedQuantity(Double obtainedQuantity) {
-        this.obtainedQuantity = obtainedQuantity;
+    public void setObtainedSlots(Integer obtainedSlots) {
+        this.obtainedSlots = obtainedSlots;
     }
 
-    public Double getLackingQuantity() {
-        return lackingQuantity;
+    public Integer getLackingSlots() {
+        return lackingSlots;
     }
 
-    public void setLackingQuantity(Double lackingQuantity) {
-        this.lackingQuantity = lackingQuantity;
+    public void setLackingSlots(Integer lackingSlots) {
+        this.lackingSlots = lackingSlots;
     }
 
     public String getDescription() {
@@ -180,19 +182,19 @@ public class MaterialResourcePosting implements Serializable {
         this.lontitude = lontitude;
     }
 
-    public Activity getActivity() {
+    public ActivityEntity getActivity() {
         return activity;
     }
 
-    public void setActivity(Activity activity) {
+    public void setActivity(ActivityEntity activity) {
         this.activity = activity;
     }
 
-    public Project getProject() {
+    public ProjectEntity getProject() {
         return project;
     }
 
-    public void setProject(Project project) {
+    public void setProject(ProjectEntity project) {
         this.project = project;
     }
     

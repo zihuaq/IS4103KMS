@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
  * @author chai
  */
 @Entity
-public class Chat implements Serializable {
+public class ChatEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -33,10 +33,10 @@ public class Chat implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
 
-    public Chat() {
+    public ChatEntity() {
     }
 
-    public Chat(Date dateTime) {
+    public ChatEntity(Date dateTime) {
         this();
         this.dateTime = dateTime;
     }
@@ -59,10 +59,10 @@ public class Chat implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the chatId fields are not set
-        if (!(object instanceof Chat)) {
+        if (!(object instanceof ChatEntity)) {
             return false;
         }
-        Chat other = (Chat) object;
+        ChatEntity other = (ChatEntity) object;
         if ((this.chatId == null && other.chatId != null) || (this.chatId != null && !this.chatId.equals(other.chatId))) {
             return false;
         }

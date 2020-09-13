@@ -6,7 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
-import entity.Post;
+import entity.PostEntity;
 import javax.ejb.Local;
 
 /**
@@ -16,11 +16,11 @@ import javax.ejb.Local;
 @Local
 public interface PostSessionBeanLocal {
 
-    public Long createNewPost(Post newPost, Long projectId, Long userId) throws NoResultException;
+    public Long createNewPost(PostEntity newPost, Long projectId, Long userId) throws NoResultException;
 
-    public Post getPostById(Long postId);
+    public PostEntity getPostById(Long postId);
     
-    public void updatePost(Post postToUpdate);
+    public void updatePost(PostEntity postToUpdate);
 
     public void deletePost(Long postId);
 
