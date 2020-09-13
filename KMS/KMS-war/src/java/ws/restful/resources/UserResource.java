@@ -235,7 +235,9 @@ public class UserResource {
             user.getGroups().clear();
             user.getGroupsOwned().clear();
             user.getPosts().clear();
-            user.getProjects().clear();
+            user.getProjectAdmins().clear();
+            user.getProjectsContributed().clear();
+            user.getProjectsOwned().clear();
             user.getReviews().clear();
             user.getSdgs().clear();
             user.getSkills().clear();
