@@ -109,4 +109,15 @@ public class UserSessionBean implements UserSessionBeanLocal {
         sdgs.remove(tag);
         user.setSdgs(sdgs);
     }
+    
+    
+    @Override
+    public void deleteUser (long userId, UserEntity user) throws NoResultException {
+        UserEntity userEntityToRemove = getUserById(userId);
+        em.remove(userEntityToRemove);
+    
+    }
+    
+    
+    
 }

@@ -1,4 +1,5 @@
 import { Tag } from './tag';
+import { MaterialResourceAvailable } from './material-resource-available'
 
 export class User {
   userId: Number;
@@ -18,7 +19,7 @@ export class User {
   followers: User[];
   following: User[];
   skills: Tag[];
-  mras: Tag[];
+  mras: MaterialResourceAvailable[];
 
   constructor(
     userId?: Number,
@@ -37,7 +38,7 @@ export class User {
     followers?: User[],
     following?: User[],
     skills?: Tag[],
-    mras?: Tag[]
+    mras?: MaterialResourceAvailable[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
