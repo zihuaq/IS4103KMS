@@ -65,8 +65,14 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
     
-    @OneToMany(mappedBy = "user")
-    private List<Project> projects;
+    @OneToMany(mappedBy = "owner")
+    private List<Project> projectsOwned;
+    
+    @ManyToMany(mappedBy = "contributors")
+    private List<Project> projectsContributed;
+    
+    @ManyToMany(mappedBy = "admins")
+    private List<Project> projectAdmins;
     
     @ManyToMany
     private List<Group> groups;
@@ -88,13 +94,15 @@ public class User implements Serializable {
 
     public User() {
         this.reviews = new ArrayList<>();
-        this.projects = new ArrayList<>();
+        this.projectsOwned = new ArrayList<>();
         this.groups = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.groupsOwned = new ArrayList<>();
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
         this.skills = new ArrayList<>();
+        this.projectAdmins = new ArrayList<>();
+        this.projectsContributed = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
     }
@@ -153,7 +161,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reviews=" + reviews + ", projects=" + projects + ", groups=" + groups + ", posts=" + posts + ", groupsOwned=" + groupsOwned + ", badges=" + badges + ", mras=" + mras + ", skills=" + skills + '}';
+        return "User{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reviews=" + reviews + ", projects=" + projectsOwned + ", groups=" + groups + ", posts=" + posts + ", groupsOwned=" + groupsOwned + ", badges=" + badges + ", mras=" + mras + ", skills=" + skills + '}';
     }
 
 
@@ -258,12 +266,12 @@ public class User implements Serializable {
         this.reviews = reviews;
     }
 
-    public List<Project> getProjects() {
-        return projects;
+    public List<Project> getProjectsOwned() {
+        return projectsOwned;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public void setProjectsOwned(List<Project> projectsOwned) {
+        this.projectsOwned = projectsOwned;
     }
 
     public List<Group> getGroups() {
@@ -312,6 +320,22 @@ public class User implements Serializable {
 
     public void setSkills(List<Tag> skills) {
         this.skills = skills;
+    }
+
+    public List<Project> getProjectsContributed() {
+        return projectsContributed;
+    }
+
+    public void setProjectsContributed(List<Project> projectsContributed) {
+        this.projectsContributed = projectsContributed;
+    }
+
+    public List<Project> getProjectAdmins() {
+        return projectAdmins;
+    }
+
+    public void setProjectAdmins(List<Project> projectAdmins) {
+        this.projectAdmins = projectAdmins;
     }
     
 }

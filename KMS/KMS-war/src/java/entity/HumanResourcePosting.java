@@ -109,5 +109,93 @@ public class HumanResourcePosting implements Serializable {
     public String toString() {
         return "entity.HumanResourcePosting[ id=" + humanResourcePostingId + " ]";
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getTotalSlots() {
+        return totalSlots;
+    }
+
+    public void setTotalSlots(Integer totalSlots) {
+        this.totalSlots = totalSlots;
+    }
+
+    public Integer getObtainedSlots() {
+        return obtainedSlots;
+    }
+
+    public void setObtainedSlots(Integer obtainedSlots) {
+        this.obtainedSlots = obtainedSlots;
+    }
+
+    public Integer getLackingSlots() {
+        return lackingSlots;
+    }
+
+    public void setLackingSlots(Integer lackingSlots) {
+        this.lackingSlots = lackingSlots;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLontitude() {
+        return lontitude;
+    }
+
+    public void setLontitude(Double lontitude) {
+        this.lontitude = lontitude;
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
     
 }

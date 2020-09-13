@@ -104,5 +104,77 @@ public class Activity implements Serializable {
     public String toString() {
         return "entity.Activity[ id=" + activityId + " ]";
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getCoutry() {
+        return coutry;
+    }
+
+    public void setCoutry(String coutry) {
+        this.coutry = coutry;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public List<HumanResourcePosting> getHumanResourcePostings() {
+        return humanResourcePostings;
+    }
+
+    public void setHumanResourcePostings(List<HumanResourcePosting> humanResourcePostings) {
+        this.humanResourcePostings = humanResourcePostings;
+    }
+
+    public List<MaterialResourcePosting> getMaterialResourcePostings() {
+        return materialResourcePostings;
+    }
+
+    public void setMaterialResourcePostings(List<MaterialResourcePosting> materialResourcePostings) {
+        this.materialResourcePostings = materialResourcePostings;
+    }
     
 }
