@@ -1,7 +1,8 @@
 <div class="form-group">
   <label>Multiple (.select2-purple)</label>
   <div class="select2-purple">
-    <select class="select2" multiple="multiple" data-placeholder="Select a State" data-dropdown-css-class="select2-purple" style="width: 100%;">
+    <select class="select2" multiple="multiple" data-placeholder="Select a State"
+      data-dropdown-css-class="select2-purple" style="width: 100%;">
       <option>Alabama</option>
       <option>Alaska</option>
       <option>California</option>
@@ -13,19 +14,18 @@
   </div>
 </div>
 
+<div *ngFor="let skill of skillTags">
+  <small class="badge badge-warning">
+    {{skill.name}}
+  </small>
+</div>
 
-  <div *ngFor="let skill of skillTags">
+<span *ngIf="user.skills.length == 0"> You have no skills at the moment.</span>
+
+<span *ngIf="user.skills.length > 0">
+  <div *ngFor="let skill of user.skills">
     <small class="badge badge-warning">
-      {{skill.name}}
+      {{skill}}
     </small>
   </div>
-
-  <span *ngIf="user.skills.length == 0"> You have no skills at the moment.</span>
-
-  <span *ngIf="user.skills.length > 0">
-    <div *ngFor="let skill of user.skills">
-      <small class="badge badge-warning">
-        {{skill}}
-      </small>
-    </div>
-  </span>
+</span>
