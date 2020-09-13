@@ -12,6 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -36,11 +39,16 @@ public class TaskEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
+    @Temporal(TemporalType.DATE)
     private Date startDate;
     
     @NotNull
     @Column(nullable=false)
+    @Temporal(TemporalType.DATE)
     private Date endDate;
+    
+    @ManyToOne
+    private ProjectEntity project;
     
 
     public Long getTaskId() {
@@ -74,6 +82,46 @@ public class TaskEntity implements Serializable {
     @Override
     public String toString() {
         return "entity.Task[ id=" + taskId + " ]";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
     }
     
 }

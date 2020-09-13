@@ -107,5 +107,93 @@ public class MaterialResourcePostingEntity implements Serializable {
     public String toString() {
         return "entity.MaterialResourcePosting[ id=" + materialResourcePostingId + " ]";
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(Double totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    public Double getObtainedQuantity() {
+        return obtainedQuantity;
+    }
+
+    public void setObtainedQuantity(Double obtainedQuantity) {
+        this.obtainedQuantity = obtainedQuantity;
+    }
+
+    public Double getLackingQuantity() {
+        return lackingQuantity;
+    }
+
+    public void setLackingQuantity(Double lackingQuantity) {
+        this.lackingQuantity = lackingQuantity;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLontitude() {
+        return lontitude;
+    }
+
+    public void setLontitude(Double lontitude) {
+        this.lontitude = lontitude;
+    }
+
+    public ActivityEntity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(ActivityEntity activity) {
+        this.activity = activity;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
+    }
     
 }
