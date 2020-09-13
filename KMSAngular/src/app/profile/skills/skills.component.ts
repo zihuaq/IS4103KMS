@@ -10,7 +10,8 @@ import { User } from '../../classes/user';
 })
 export class SkillsComponent implements OnInit {
   @Input() user: User;
-  skillTags: Tag[]
+  skillTags: Tag[];
+  
   constructor(private tagService: TagService) { }
 
   ngOnInit(): void {

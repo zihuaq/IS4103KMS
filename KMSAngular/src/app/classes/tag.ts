@@ -1,8 +1,4 @@
-enum TagType {
-    SKILL,
-    SDG,
-    MATERIALRESOURCE
-}
+import {TagType} from './tag-type.enum'
 
 export class Tag {
     tagId: number;

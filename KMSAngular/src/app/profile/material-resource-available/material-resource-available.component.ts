@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../../classes/user';
+import { TagService } from '../../tag.service';
+import { Tag } from '../../classes/tag';
 
 @Component({
   selector: 'app-material-resource-available',
@@ -9,10 +11,15 @@ import { User } from '../../classes/user';
 export class MaterialResourceAvailableComponent implements OnInit {
 
   @Input() user: User;
+  mraTags: Tag[];
 
-  constructor() { }
+  constructor(private tagService: TagService) { }
 
   ngOnInit(): void {
+    this.tagService.getAllMaterialResourceTags().subscribe(
+      response => {
+        this.mraTags = response;
+      });
   }
 
 }
