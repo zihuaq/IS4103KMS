@@ -1,3 +1,5 @@
+import { Tag } from './tag';
+
 export class User {
   userId: Number;
   firstName: String;
@@ -15,6 +17,8 @@ export class User {
   appoinmentDate: Date;
   followers: User[];
   following: User[];
+  skills: Tag[];
+  mras: Tag[];
 
   constructor(
     userId?: Number,
@@ -31,7 +35,9 @@ export class User {
     joinedDate?: Date,
     appoinmentDate?: Date,
     followers?: User[],
-    following?: User[]
+    following?: User[],
+    skills?: Tag[],
+    mras?: Tag[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -49,5 +55,7 @@ export class User {
     this.appoinmentDate = appoinmentDate;
     this.followers = followers;
     this.following = following;
+    this.skills = skills;
+    this.mras = mras;
   }
 }
