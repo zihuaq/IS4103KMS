@@ -40,6 +40,10 @@ public class PostEntity implements Serializable {
     
     @ManyToOne
     private UserEntity postOwner;
+    
+    @ManyToOne
+    private ProjectEntity project;
+
 
     public PostEntity() {
     }
@@ -105,6 +109,14 @@ public class PostEntity implements Serializable {
 
     public void setPostOwner(UserEntity postOwner) {
         this.postOwner = postOwner;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
     }
     
 }
