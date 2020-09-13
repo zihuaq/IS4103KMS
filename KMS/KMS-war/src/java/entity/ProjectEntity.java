@@ -99,7 +99,7 @@ public class ProjectEntity implements Serializable {
         this.status = ProjectStatusEnum.NOTSTARTED;
     }
 
-    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, UserEntity user, Double monetaryFundingRequired, Double monetaryFundingObtained) {
+    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, Double monetaryFundingRequired, Double monetaryFundingObtained) {
         this();
         this.projectId = projectId;
         this.name = name;
@@ -108,7 +108,6 @@ public class ProjectEntity implements Serializable {
         this.endDate = endDate;
         this.country = country;
         this.location = location;
-        this.owner = user;
         this.monetaryFundingRequired = monetaryFundingRequired;
         this.monetaryFundingObtained = monetaryFundingObtained;
     } 
