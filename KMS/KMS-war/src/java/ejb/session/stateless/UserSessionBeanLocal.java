@@ -7,7 +7,9 @@ package ejb.session.stateless;
 
 import Exception.DuplicateEmailException;
 import Exception.DuplicateTagInProfileException;
+import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
+import Exception.UserNotFoundException;
 import entity.UserEntity;
 import javax.ejb.Local;
 
@@ -29,5 +31,9 @@ public interface UserSessionBeanLocal {
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
     
     public void removeSDGFromProfile(long userId, long tagId) throws NoResultException;
+
+    public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException;
+
+    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
 
 }

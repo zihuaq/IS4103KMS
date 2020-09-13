@@ -2,14 +2,18 @@ package ejb.session.stateless;
 
 import Exception.DuplicateEmailException;
 import Exception.DuplicateTagInProfileException;
+import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
+import Exception.UserNotFoundException;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.security.CryptographicHelper;
 
 /**
  *
@@ -78,6 +82,65 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.setSkills(skills);
     }
     
+
+    @Override
+    public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException{
+        System.out.println(email);
+        Query query = em.createQuery("SELECT u FROM UserEntity U WHERE u.email = :userInput");
+        query.setParameter("userInput", email);
+        System.out.println("here");
+        try{
+            UserEntity user = (UserEntity) query.getSingleResult();
+            System.out.println("here");
+            user.getGroups().size();
+            user.getGroupsOwned().size();
+            user.getPosts().size();
+            user.getProjects().size();
+            user.getReviews().size();
+            user.getSdgs().size();
+            user.getSkills().size();
+            user.getBadges().size();
+            user.getFollowers().size();
+            user.getFollowing().size();
+            
+            return user;
+        }
+        catch(javax.persistence.NoResultException ex){
+            System.out.println("No results");
+            throw new UserNotFoundException("Email " + email + " does not exist");
+        }
+        catch(NonUniqueResultException ex){
+            System.out.println("No unique results");
+            throw new UserNotFoundException("Email " + email + " does not exist");
+        }
+        
+    }
+    
+    @Override
+    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException{
+        try{
+            UserEntity user = retrieveUserByEmail(email);
+            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + user.getSalt()));
+            if(user.getPassword().equals(passwordHash)){
+                System.out.println("user login if()");
+                System.out.println(user.getPassword());
+                System.out.println(passwordHash);
+                return user;
+            }
+            else {
+                System.out.println("user login else()");
+                System.out.println(user.getPassword());
+                System.out.println(passwordHash);
+                throw new InvalidLoginCredentialException("Email does not exist of invalid password");
+            }
+        } catch (UserNotFoundException ex){
+            System.out.println("here");
+          throw new InvalidLoginCredentialException("Email does not exist or invalid password!");  
+        }
+        
+    }
+    
+
     @Override
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
         UserEntity user = em.find(UserEntity.class, userId);
@@ -109,4 +172,5 @@ public class UserSessionBean implements UserSessionBeanLocal {
         sdgs.remove(tag);
         user.setSdgs(sdgs);
     }
+
 }
