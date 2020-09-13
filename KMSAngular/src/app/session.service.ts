@@ -27,4 +27,20 @@ export class SessionService {
   {
     sessionStorage.users = JSON.stringify(users);
   }
+
+  getIsLogin(): boolean {
+    return localStorage.isLogin == "true";
+  }
+
+  setIsLogin(isLogin: boolean): void {
+    localStorage.isLogin = isLogin;
+  }
+
+  getCurrentUser(): User {
+    return JSON.parse(localStorage.currentUser);
+  }
+
+  setCurrentUser(currentUser: User): void {
+    localStorage.currentCustomer = JSON.stringify(currentUser);
+  }
 }

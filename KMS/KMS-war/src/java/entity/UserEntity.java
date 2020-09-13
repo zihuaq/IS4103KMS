@@ -70,13 +70,19 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "user")
     private List<ReviewEntity> reviews;
-
-    @OneToMany(mappedBy = "user")
-    private List<ProjectEntity> projects;
-
+    
+    @OneToMany(mappedBy = "owner")
+    private List<ProjectEntity> projectsOwned;
+    
+    @ManyToMany(mappedBy = "contributors")
+    private List<ProjectEntity> projectsContributed;
+    
+    @ManyToMany(mappedBy = "admins")
+    private List<ProjectEntity> projectAdmins;
+    
     @ManyToMany(mappedBy = "users")
     private List<GroupEntity> groups;
-
+    
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
 
@@ -110,13 +116,15 @@ public class UserEntity implements Serializable {
 
     public UserEntity() {
         this.reviews = new ArrayList<>();
-        this.projects = new ArrayList<>();
+        this.projectsOwned = new ArrayList<>();
         this.groups = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.groupsOwned = new ArrayList<>();
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
         this.skills = new ArrayList<>();
+        this.projectAdmins = new ArrayList<>();
+        this.projectsContributed = new ArrayList<>();
         this.following = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.sdgs = new ArrayList<>();
@@ -177,7 +185,7 @@ public class UserEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reviews=" + reviews + ", projects=" + projects + ", groups=" + groups + ", posts=" + posts + ", groupsOwned=" + groupsOwned + ", badges=" + badges + ", mras=" + mras + ", skills=" + skills + '}';
+        return "User{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reviews=" + reviews + ", projects=" + projectsOwned + ", groups=" + groups + ", posts=" + posts + ", groupsOwned=" + groupsOwned + ", badges=" + badges + ", mras=" + mras + ", skills=" + skills + '}';
     }
 
     public String getFirstName() {
@@ -280,12 +288,12 @@ public class UserEntity implements Serializable {
         this.reviews = reviews;
     }
 
-    public List<ProjectEntity> getProjects() {
-        return projects;
+    public List<ProjectEntity> getProjectsOwned() {
+        return projectsOwned;
     }
 
-    public void setProjects(List<ProjectEntity> projects) {
-        this.projects = projects;
+    public void setProjectsOwned(List<ProjectEntity> projectsOwned) {
+        this.projectsOwned = projectsOwned;
     }
 
     public List<GroupEntity> getGroups() {
@@ -336,6 +344,22 @@ public class UserEntity implements Serializable {
         this.skills = skills;
     }
 
+    public List<ProjectEntity> getProjectsContributed() {
+        return projectsContributed;
+    }
+
+    public void setProjectsContributed(List<ProjectEntity> projectsContributed) {
+        this.projectsContributed = projectsContributed;
+    }
+
+    public List<ProjectEntity> getProjectAdmins() {
+        return projectAdmins;
+    }
+
+    public void setProjectAdmins(List<ProjectEntity> projectAdmins) {
+        this.projectAdmins = projectAdmins;
+    }
+    
     public List<UserEntity> getFollowing() {
         return following;
     }
@@ -375,4 +399,8 @@ public class UserEntity implements Serializable {
     public void setAccountPrivacySetting(AccountPrivacySettingEnum accountPrivacySetting) {
         this.accountPrivacySetting = accountPrivacySetting;
     }   
+
+    public Object getProjects() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
