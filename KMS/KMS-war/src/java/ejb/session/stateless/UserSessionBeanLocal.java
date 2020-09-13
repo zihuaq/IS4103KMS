@@ -30,4 +30,7 @@ public interface UserSessionBeanLocal {
     
     public void removeSDGFromProfile(long userId, long tagId) throws NoResultException;
 
+    public void deleteUser(long userId, UserEntity user) throws NoResultException;
+
+    
 }
