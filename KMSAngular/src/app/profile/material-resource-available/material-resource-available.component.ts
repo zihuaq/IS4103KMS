@@ -2,6 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { User } from '../../classes/user';
 import { TagService } from '../../tag.service';
 import { Tag } from '../../classes/tag';
+import { NgForm } from '@angular/forms';
+
+declare var $: any;
 
 @Component({
   selector: 'app-material-resource-available',
@@ -23,4 +26,6 @@ export class MaterialResourceAvailableComponent implements OnInit {
       });
   }
 
+  createMaterialResourceRequest(mraForm: NgForm) {
+  }
 }

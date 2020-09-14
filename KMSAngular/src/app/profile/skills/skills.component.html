@@ -1,7 +1,7 @@
 <div *ngIf="showError" class="alert alert-danger alert-dismissible fade show" role="alert">
   <h4 class="alert-heading">Error</h4>
   <p> Please do not select a skill already present in your profile </p>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <button type="button" class="close" (click)="closeAlert()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>

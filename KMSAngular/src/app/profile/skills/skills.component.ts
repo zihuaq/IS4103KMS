@@ -22,12 +22,11 @@ export class SkillsComponent implements OnInit, OnChanges {
   constructor(private tagService: TagService, private userService: UserService) { }
   ngOnChanges(changes: SimpleChanges): void {
     this.user = changes.user.currentValue;
-    this.initialiseTags;
+    this.initialiseTags();
   }
 
   ngOnInit(): void {
-    this.initialiseTags();
-    
+    this.initialiseTags();   
   }
 
   submitSkills() {
@@ -39,6 +38,7 @@ export class SkillsComponent implements OnInit, OnChanges {
         this.selectedTags.push(element);
       }
     });
+    console.log(this.selectedTagNames);
     if (!this.isSelectedTagInProfile()) {
       this.userService.addSkillsToProfile(this.user.userId, this.selectedTags).subscribe(responsedata => {
         this.user.skills = responsedata;
@@ -54,6 +54,10 @@ export class SkillsComponent implements OnInit, OnChanges {
       this.user.skills = responsedata;
     });
     this.userChanged.emit(this.user);
+  }
+
+  closeAlert(){
+    this.showError = false;
   }
 
   private initialiseTags(){
