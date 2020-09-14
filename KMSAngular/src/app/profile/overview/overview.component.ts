@@ -1,5 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SessionService } from 'src/app/session.service';
 import { UserService } from 'src/app/user.service';
 import { User } from '../../classes/user';
@@ -11,17 +10,27 @@ import { User } from '../../classes/user';
 })
 export class OverviewComponent implements OnInit {
   @Input() profile: User;
-  loggedInUser: User;
+  @Input() loggedInUser: User;
+  @Output() profileChanged = new EventEmitter<User>();
+  @Output() userChanged = new EventEmitter<User>();
 
   constructor(
     private sessionService: SessionService,
-    private userService: UserService,
-    private router: Router
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    this.loggedInUser = this.sessionService.getCurrentUser();
-    console.log(this.loggedInUser.userId);
+    // this.loggedInUser = this.sessionService.getCurrentUser();
+    // this.userService
+    //   .getUser(this.loggedInUser.userId.toString())
+    //   .subscribe((data: User) => {
+    //     this.loggedInUser = data;
+    //     console.log(this.loggedInUser);
+    //     return this.loggedInUser.following
+    //       .map((user) => user.userId)
+    //       .includes(this.profile.userId);
+    //   });
+    // console.log(this.loggedInUser.userId);
   }
 
   checkfollowing() {
@@ -41,6 +50,13 @@ export class OverviewComponent implements OnInit {
           .getUser(this.profile.userId.toString())
           .subscribe((data: User) => {
             this.profile = data;
+            this.profileChanged.emit(this.profile);
+          });
+        this.userService
+          .getUser(this.loggedInUser.userId.toString())
+          .subscribe((data: User) => {
+            this.loggedInUser = data;
+            this.userChanged.emit(this.loggedInUser);
           });
       });
   }
@@ -56,6 +72,13 @@ export class OverviewComponent implements OnInit {
           .getUser(this.profile.userId.toString())
           .subscribe((data: User) => {
             this.profile = data;
+            this.profileChanged.emit(this.profile);
+          });
+        this.userService
+          .getUser(this.loggedInUser.userId.toString())
+          .subscribe((data: User) => {
+            this.loggedInUser = data;
+            this.userChanged.emit(this.loggedInUser);
           });
       });
   }

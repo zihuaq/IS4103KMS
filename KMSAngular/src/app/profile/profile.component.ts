@@ -19,13 +19,23 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let userid = this.activatedRoute.snapshot.params.userid;
-    if (!userid) {
-      userid = this.sessionService.getCurrentUser().userId;
+    let profileid = this.activatedRoute.snapshot.params.userid;
+    let loggedInUserId = this.sessionService.getCurrentUser().userId;
+    if (!profileid) {
+      profileid = loggedInUserId;
+      this.userService.getUser(profileid).subscribe((data: User) => {
+        this.profile = data;
+        this.loggedInUser = data;
+      });
+    } else {
+      this.userService
+        .getUser(loggedInUserId.toString())
+        .subscribe((data: User) => {
+          this.loggedInUser = data;
+        });
+      this.userService.getUser(profileid).subscribe((data: User) => {
+        this.profile = data;
+      });
     }
-    console.log(userid);
-    this.userService.getUser(userid).subscribe((data: User) => {
-      this.profile = data;
-    });
   }
 }

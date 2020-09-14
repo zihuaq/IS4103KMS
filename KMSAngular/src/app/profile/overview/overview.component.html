@@ -25,8 +25,8 @@
       </li>
     </ul>
     <div *ngIf="profile.userId != loggedInUser.userId">
-      <a class="btn btn-primary btn-block" *ngIf="checkfollowing()" (click)="follow()"><b>Follow</b></a>
-      <a class="btn btn-primary btn-block" *ngIf="!checkfollowing()" (click)="unfollow()"><b>Unfollow</b></a>
+      <a class="btn btn-primary btn-block" *ngIf="!checkfollowing()" (click)="follow()"><b>Follow</b></a>
+      <a class="btn btn-primary btn-block" *ngIf="checkfollowing()" (click)="unfollow()"><b>Unfollow</b></a>
     </div>
   </div>
   <!-- /.card-body -->

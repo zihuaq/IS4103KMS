@@ -23,7 +23,9 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
-          <app-overview [profile]="profile"></app-overview>
+          <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+            (userChanged)="loggedInUser=$event">
+          </app-overview>
           <app-basic-details [profile]="profile"></app-basic-details>
         </div>
         <div class="col-md-9">
