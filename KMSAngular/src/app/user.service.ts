@@ -9,7 +9,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -55,6 +55,27 @@ export class UserService {
   getUser(userId: String) {
     return this.http
       .get<any>(this.baseUrl + '/' + userId)
+      .pipe(map(this.parseDate), catchError(this.handleError));
+  }
+
+  followUser(toUserId: String, fromUserId: String) {
+    return this.http
+      .post<any>(this.baseUrl + '/follow/' + toUserId + '/' + fromUserId, null)
+      .pipe(catchError(this.handleError));
+  }
+
+  unfollowUser(toUserId: String, fromUserId: String) {
+    return this.http
+      .post<any>(
+        this.baseUrl + '/unfollow/' + toUserId + '/' + fromUserId,
+        null
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  acceptFollow(toUserId: String, fromUserId: String) {
+    return this.http
+      .get<any>(this.baseUrl + '/acceptfollow/' + toUserId + '/' + fromUserId)
       .pipe(catchError(this.handleError));
   }
 
@@ -72,5 +93,28 @@ export class UserService {
     console.error(errorMessage);
 
     return throwError(errorMessage);
+  }
+
+  private parseDate(data: any) {
+    if (data.isAdmin) {
+      return {
+        ...data,
+        joinedDate: new Date(
+          data.joinedDate.substring(0, data.joinedDate.length - 6)
+        ),
+        dob: new Date(data.dob.substring(0, data.dob.length - 6)),
+        adminStartDate: new Date(
+          data.adminStartDate.substring(0, data.adminStartDate.length - 6)
+        ),
+      };
+    } else {
+      return {
+        ...data,
+        joinedDate: new Date(
+          data.joinedDate.substring(0, data.joinedDate.length - 6)
+        ),
+        dob: new Date(data.dob.substring(0, data.dob.length - 6)),
+      };
+    }
   }
 }

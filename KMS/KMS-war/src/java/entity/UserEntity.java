@@ -68,21 +68,24 @@ public class UserEntity implements Serializable {
 
     private int reputationPoints;
 
-    @OneToMany(mappedBy = "user")
-    private List<ReviewEntity> reviews;
-    
+    @OneToMany(mappedBy = "from")
+    private List<ReviewEntity> reviewsGiven;
+
+    @OneToMany(mappedBy = "to")
+    private List<ReviewEntity> reviewsReceived;
+
     @OneToMany(mappedBy = "owner")
     private List<ProjectEntity> projectsOwned;
-    
+
     @ManyToMany(mappedBy = "contributors")
     private List<ProjectEntity> projectsContributed;
-    
+
     @ManyToMany(mappedBy = "admins")
     private List<ProjectEntity> projectAdmins;
-    
+
     @ManyToMany(mappedBy = "users")
     private List<GroupEntity> groups;
-    
+
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
 
@@ -109,13 +112,22 @@ public class UserEntity implements Serializable {
     @OneToMany
     private List<TagEntity> sdgs;
 
+    @JoinTable(name = "followRequestMade")
+    @OneToMany(mappedBy = "from")
+    private List<FollowRequestEntity> followRequestMade;
+
+    @JoinTable(name = "followRequestReceived")
+    @OneToMany(mappedBy = "to")
+    private List<FollowRequestEntity> followRequestReceived;
+
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountPrivacySettingEnum accountPrivacySetting;
 
     public UserEntity() {
-        this.reviews = new ArrayList<>();
+        this.reviewsGiven = new ArrayList<>();
+        this.reviewsReceived = new ArrayList<>();
         this.projectsOwned = new ArrayList<>();
         this.groups = new ArrayList<>();
         this.posts = new ArrayList<>();
@@ -128,6 +140,8 @@ public class UserEntity implements Serializable {
         this.following = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.sdgs = new ArrayList<>();
+        this.followRequestMade = new ArrayList<>();
+        this.followRequestReceived = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.isAdmin = Boolean.FALSE;
         this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
@@ -185,7 +199,7 @@ public class UserEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reviews=" + reviews + ", projects=" + projectsOwned + ", groups=" + groups + ", posts=" + posts + ", groupsOwned=" + groupsOwned + ", badges=" + badges + ", mras=" + mras + ", skills=" + skills + '}';
+        return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
 
     public String getFirstName() {
@@ -280,12 +294,12 @@ public class UserEntity implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public List<ReviewEntity> getReviews() {
-        return reviews;
+    public List<ReviewEntity> getReviewsGiven() {
+        return reviewsGiven;
     }
 
-    public void setReviews(List<ReviewEntity> reviews) {
-        this.reviews = reviews;
+    public void setReviewsGiven(List<ReviewEntity> reviewsGiven) {
+        this.reviewsGiven = reviewsGiven;
     }
 
     public List<ProjectEntity> getProjectsOwned() {
@@ -359,7 +373,7 @@ public class UserEntity implements Serializable {
     public void setProjectAdmins(List<ProjectEntity> projectAdmins) {
         this.projectAdmins = projectAdmins;
     }
-    
+
     public List<UserEntity> getFollowing() {
         return following;
     }
@@ -398,9 +412,32 @@ public class UserEntity implements Serializable {
 
     public void setAccountPrivacySetting(AccountPrivacySettingEnum accountPrivacySetting) {
         this.accountPrivacySetting = accountPrivacySetting;
-    }   
+    }
 
-    public Object getProjects() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    public Object getProjects() {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+    public List<FollowRequestEntity> getFollowRequestMade() {
+        return followRequestMade;
+    }
+
+    public void setFollowRequestMade(List<FollowRequestEntity> followRequestMade) {
+        this.followRequestMade = followRequestMade;
+    }
+
+    public List<FollowRequestEntity> getFollowRequestReceived() {
+        return followRequestReceived;
+    }
+
+    public void setFollowRequestReceived(List<FollowRequestEntity> followRequestReceived) {
+        this.followRequestReceived = followRequestReceived;
+    }
+
+    public List<ReviewEntity> getReviewsReceived() {
+        return reviewsReceived;
+    }
+
+    public void setReviewsReceived(List<ReviewEntity> reviewsReceived) {
+        this.reviewsReceived = reviewsReceived;
     }
 }

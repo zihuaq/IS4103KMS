@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { SessionService } from 'src/app/session.service';
+import { UserService } from 'src/app/user.service';
 import { User } from '../../classes/user';
 
 @Component({
@@ -8,26 +11,52 @@ import { User } from '../../classes/user';
 })
 export class OverviewComponent implements OnInit {
   @Input() profile: User;
+  loggedInUser: User;
 
-  constructor() {}
+  constructor(
+    private sessionService: SessionService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    // this.profile = new User(
-    //   1,
-    //   'Yi',
-    //   'Ren',
-    //   new Date(),
-    //   'F',
-    //   'yiren@gmail.com',
-    //   'password',
-    //   'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80',
-    //   'Singapore',
-    //   10,
-    //   'user',
-    //   new Date(),
-    //   new Date(),
-    //   [],
-    //   []
-    // );
+    this.loggedInUser = this.sessionService.getCurrentUser();
+    console.log(this.loggedInUser.userId);
+  }
+
+  checkfollowing() {
+    return this.loggedInUser.following
+      .map((user) => user.userId)
+      .includes(this.profile.userId);
+  }
+
+  follow() {
+    this.userService
+      .followUser(
+        this.profile.userId.toString(),
+        this.loggedInUser.userId.toString()
+      )
+      .subscribe(() => {
+        this.userService
+          .getUser(this.profile.userId.toString())
+          .subscribe((data: User) => {
+            this.profile = data;
+          });
+      });
+  }
+
+  unfollow() {
+    this.userService
+      .unfollowUser(
+        this.profile.userId.toString(),
+        this.loggedInUser.userId.toString()
+      )
+      .subscribe(() => {
+        this.userService
+          .getUser(this.profile.userId.toString())
+          .subscribe((data: User) => {
+            this.profile = data;
+          });
+      });
   }
 }

@@ -27,9 +27,9 @@ public interface UserSessionBeanLocal {
     public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
 
     public void removeSkillFromProfile(long userId, long tagId) throws NoResultException;
-    
+
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
-    
+
     public void removeSDGFromProfile(long userId, long tagId) throws NoResultException;
 
     public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException;
@@ -37,5 +37,11 @@ public interface UserSessionBeanLocal {
     public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
 
     public void deleteUser(long userId, UserEntity user) throws NoResultException;
+
+    public void followUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
+
+    public void acceptFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
+
+    public void unfollowUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
 
 }

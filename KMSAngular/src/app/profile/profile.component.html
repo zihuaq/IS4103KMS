@@ -24,7 +24,7 @@
       <div class="row">
         <div class="col-md-3">
           <app-overview [profile]="profile"></app-overview>
-          <app-basic-details></app-basic-details>
+          <app-basic-details [profile]="profile"></app-basic-details>
         </div>
         <div class="col-md-9">
           <app-profile-tabpanel [user]="profile"></app-profile-tabpanel>
