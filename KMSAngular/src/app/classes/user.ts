@@ -2,7 +2,7 @@ import { Tag } from './tag';
 import { MaterialResourceAvailable } from './material-resource-available';
 
 export class User {
-  userId: Number;
+  userId: number;
   firstName: String;
   lastName: String;
   dob: Date;
@@ -12,7 +12,7 @@ export class User {
   isAdmin: boolean;
   profilePicture: String;
   country: String;
-  reputationPoints: Number;
+  reputationPoints: number;
   type: String;
   joinedDate: Date;
   adminStartDate: Date;
@@ -23,7 +23,7 @@ export class User {
   sdg: Tag[];
 
   constructor(
-    userId?: Number,
+    userId?: number,
     firstName?: String,
     lastName?: String,
     dob?: Date,
@@ -32,7 +32,7 @@ export class User {
     password?: String,
     profilePicture?: String,
     country?: String,
-    reputationPoints?: Number,
+    reputationPoints?: number,
     type?: String,
     joinedDate?: Date,
     adminStartDate?: Date,

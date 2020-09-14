@@ -71,10 +71,10 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void removeSkillFromProfile(long userId, long tagId) throws NoResultException {
+    public List<TagEntity> removeSkillFromProfile(long userId, long tagId) throws NoResultException {
         UserEntity user = em.find(UserEntity.class, userId);
         TagEntity tag = em.find(TagEntity.class, tagId);
-
+        
         if (user == null || tag == null) {
             throw new NoResultException("User or Tag not found.");
         }
@@ -84,6 +84,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         skills.remove(tag);
         user.setSkills(skills);
+        return skills;
     }
 
     @Override
@@ -229,4 +230,28 @@ public class UserSessionBean implements UserSessionBeanLocal {
         toUser.getFollowers().remove(fromUser);
     }
 
+    @Override
+    public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (user == null) {
+            throw new NoResultException("User not found.");
+        }
+        
+        List<TagEntity> skillTags = user.getSkills();
+        
+        for(int i=0; i<tags.size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, tags.get(i).getTagId());
+            if(tag == null){
+                throw new NoResultException("Tag not found.");   
+            }
+            if (skillTags.contains(tag)) {
+            throw new DuplicateTagInProfileException("Tag is already present in user's profile");
+            }
+            skillTags.add(tag);
+        }
+        
+        user.setSkills(skillTags);
+        return skillTags;
+    }
 }

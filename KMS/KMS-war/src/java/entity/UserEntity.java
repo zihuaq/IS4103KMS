@@ -98,6 +98,7 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
     private List<MaterialResourceAvailableEntity> mras;
 
+    @JoinTable(name = "skills")
     @OneToMany
     private List<TagEntity> skills;
 
@@ -109,6 +110,7 @@ public class UserEntity implements Serializable {
     @OneToMany
     private List<UserEntity> followers;
 
+    @JoinTable(name = "sdgs")
     @OneToMany
     private List<TagEntity> sdgs;
 

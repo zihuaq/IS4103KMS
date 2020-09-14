@@ -1,4 +1,4 @@
-import { Input } from '@angular/core';
+import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../classes/user';
 
@@ -9,10 +9,15 @@ import { User } from '../../classes/user';
 })
 export class ProfileTabpanelComponent implements OnInit {
   @Input() user: User;
+  @Output() userChanged = new EventEmitter<User>();
   
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  handleUserChanged(event){
+    this.user = event;
+    this.userChanged.emit(this.user);
+  }
 }

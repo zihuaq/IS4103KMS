@@ -19,7 +19,9 @@ import entity.MaterialResourceAvailableEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
+import entity.TagEntity;
 import entity.UserEntity;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -94,6 +96,23 @@ public class UserResource {
     }
 
     @PUT
+    @Path("/addskills/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addSkillsToProfile(@PathParam("userId") Long userId, List<TagEntity> tags) {
+        try {
+            List<TagEntity> updatedSkills = userSessionBeanLocal.addSkillsToProfile(userId, tags);
+            return Response.status(200).entity(updatedSkills).build();
+
+        } catch (NoResultException | DuplicateTagInProfileException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @PUT
     @Path("/addskill/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addSkillToProfile(@PathParam("userId") Long userId, @PathParam("tagId") Long tagId) {
@@ -109,13 +128,14 @@ public class UserResource {
         }
     }
 
-    @PUT
+    @DELETE
     @Path("/removeskill/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response removeSkillFromProfile(@PathParam("userId") Long userId, @PathParam("tagId") Long tagId) {
         try {
-            userSessionBeanLocal.removeSkillFromProfile(userId, tagId);
-            return Response.status(204).build();
+            List<TagEntity> updatedSkills = userSessionBeanLocal.removeSkillFromProfile(userId, tagId);
+            return Response.status(200).entity(updatedSkills).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())

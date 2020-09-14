@@ -22,15 +22,15 @@
         <div class="tab-content" id="custom-tabs-three-tabContent">
             <div class="tab-pane fade show active" id="profile-tab-projects" role="tabpanel"
                 aria-labelledby="profile-tab-projects-tabname">
-                <app-projects [user]="user"></app-projects>
+                <app-projects [user]="user" (userChanged)="handleUserChanged($event)"></app-projects>
             </div>
             <div class="tab-pane fade" id="profile-tab-material-resource-available" role="tabpanel"
                 aria-labelledby="profile-tab-material-resource-available-tabname">
-                <app-material-resource-available [user]="user"></app-material-resource-available>
+                <app-material-resource-available [user]="user" (userChanged)="handleUserChanged($event)"></app-material-resource-available>
             </div>
             <div class="tab-pane fade" id="profile-tab-skills" role="tabpanel"
                 aria-labelledby="profile-tab-skills-tabname">
-                <app-skills [user]="user"></app-skills>
+                <app-skills [user]="user" (userChanged)="handleUserChanged($event)"></app-skills>
             </div>
         </div>
     </div>
