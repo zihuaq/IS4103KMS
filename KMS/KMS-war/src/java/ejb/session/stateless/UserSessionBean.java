@@ -30,14 +30,14 @@ public class UserSessionBean implements UserSessionBeanLocal {
         Query q = em.createQuery("SELECT u FROM UserEntity u WHERE u.email = :email");
         q.setParameter("email", user.getEmail());
         System.out.println(user);
-        if(!q.getResultList().isEmpty()){
+        if (!q.getResultList().isEmpty()) {
             throw new DuplicateEmailException("Email already exist!");
         }
         em.persist(user);
         em.flush();
         return user;
     }
-    
+
     @Override
     public UserEntity getUserById(long userId) throws NoResultException {
         System.out.println(em);
@@ -67,10 +67,10 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void removeSkillFromProfile(long userId, long tagId) throws NoResultException {
+    public List<TagEntity> removeSkillFromProfile(long userId, long tagId) throws NoResultException {
         UserEntity user = em.find(UserEntity.class, userId);
         TagEntity tag = em.find(TagEntity.class, tagId);
-
+        
         if (user == null || tag == null) {
             throw new NoResultException("User or Tag not found.");
         }
@@ -80,16 +80,16 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         skills.remove(tag);
         user.setSkills(skills);
+        return skills;
     }
-    
 
     @Override
-    public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException{
+    public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException {
         System.out.println(email);
         Query query = em.createQuery("SELECT u FROM UserEntity U WHERE u.email = :userInput");
         query.setParameter("userInput", email);
         System.out.println("here");
-        try{
+        try {
             UserEntity user = (UserEntity) query.getSingleResult();
             System.out.println("here");
             user.getGroups().size();
@@ -102,44 +102,40 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getBadges().size();
             user.getFollowers().size();
             user.getFollowing().size();
-            
+
             return user;
-        }
-        catch(javax.persistence.NoResultException ex){
+        } catch (javax.persistence.NoResultException ex) {
             System.out.println("No results");
             throw new UserNotFoundException("Email " + email + " does not exist");
-        }
-        catch(NonUniqueResultException ex){
+        } catch (NonUniqueResultException ex) {
             System.out.println("No unique results");
             throw new UserNotFoundException("Email " + email + " does not exist");
         }
-        
+
     }
-    
+
     @Override
-    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException{
-        try{
+    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException {
+        try {
             UserEntity user = retrieveUserByEmail(email);
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + user.getSalt()));
-            if(user.getPassword().equals(passwordHash)){
+            if (user.getPassword().equals(passwordHash)) {
                 System.out.println("user login if()");
                 System.out.println(user.getPassword());
                 System.out.println(passwordHash);
                 return user;
-            }
-            else {
+            } else {
                 System.out.println("user login else()");
                 System.out.println(user.getPassword());
                 System.out.println(passwordHash);
                 throw new InvalidLoginCredentialException("Email does not exist of invalid password");
             }
-        } catch (UserNotFoundException ex){
+        } catch (UserNotFoundException ex) {
             System.out.println("here");
-          throw new InvalidLoginCredentialException("Email does not exist or invalid password!");  
+            throw new InvalidLoginCredentialException("Email does not exist or invalid password!");
         }
-        
+
     }
-    
 
     @Override
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
@@ -172,15 +168,36 @@ public class UserSessionBean implements UserSessionBeanLocal {
         sdgs.remove(tag);
         user.setSdgs(sdgs);
     }
-    
-    
+
     @Override
-    public void deleteUser (long userId, UserEntity user) throws NoResultException {
+    public void deleteUser(long userId, UserEntity user) throws NoResultException {
         UserEntity userEntityToRemove = getUserById(userId);
         em.remove(userEntityToRemove);
-    
+
     }
-    
-    
-    
+
+    @Override
+    public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (user == null) {
+            throw new NoResultException("User not found.");
+        }
+        
+        List<TagEntity> skillTags = user.getSkills();
+        
+        for(int i=0; i<tags.size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, tags.get(i).getTagId());
+            if(tag == null){
+                throw new NoResultException("Tag not found.");   
+            }
+            if (skillTags.contains(tag)) {
+            throw new DuplicateTagInProfileException("Tag is already present in user's profile");
+            }
+            skillTags.add(tag);
+        }
+        
+        user.setSkills(skillTags);
+        return skillTags;
+    }
 }

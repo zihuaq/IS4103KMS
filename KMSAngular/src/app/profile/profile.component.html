@@ -27,7 +27,7 @@
           <app-basic-details></app-basic-details>
         </div>
         <div class="col-md-9">
-          <app-profile-tabpanel [user]="profile"></app-profile-tabpanel>
+          <app-profile-tabpanel [user]="profile" (userChanged)="profile=$event"></app-profile-tabpanel>
         </div>
         <!-- /.col -->
       </div>

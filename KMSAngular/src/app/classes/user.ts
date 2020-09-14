@@ -2,7 +2,7 @@ import { Tag } from './tag';
 import { MaterialResourceAvailable } from './material-resource-available'
 
 export class User {
-  userId: Number;
+  userId: number;
   firstName: String;
   lastName: String;
   dob: Date;
@@ -12,7 +12,7 @@ export class User {
   isAdmin: boolean;
   profilePicture: String;
   country: String;
-  reputationPoints: Number;
+  reputationPoints: number;
   type: String;
   joinedDate: Date;
   appoinmentDate: Date;
@@ -22,7 +22,7 @@ export class User {
   mras: MaterialResourceAvailable[];
 
   constructor(
-    userId?: Number,
+    userId?: number,
     firstName?: String,
     lastName?: String,
     dob?: Date,
@@ -31,7 +31,7 @@ export class User {
     password?: String,
     profilePicture?: String,
     country?: String,
-    reputationPoints?: Number,
+    reputationPoints?: number,
     type?: String,
     joinedDate?: Date,
     appoinmentDate?: Date,

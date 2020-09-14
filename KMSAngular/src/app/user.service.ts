@@ -10,6 +10,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Tag } from './classes/tag';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -56,6 +57,14 @@ export class UserService {
     return this.http
       .get<any>(this.baseUrl + '/' + userId)
       .pipe(catchError(this.handleError));
+  }
+
+  addSkillsToProfile(userId: number, skillTags: Tag[]): Observable<any> {
+    return this.http.put<any>(this.baseUrl + '/addskills/' + userId, skillTags, httpOptions).pipe(catchError(this.handleError));
+  }
+
+  removeSkillFromProfile(userId: number, tagId: number): Observable<any> {
+    return this.http.delete<any>(this.baseUrl + '/removeskill/' + userId +'/' + tagId).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {

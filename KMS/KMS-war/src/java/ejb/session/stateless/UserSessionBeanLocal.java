@@ -10,7 +10,9 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.TagEntity;
 import entity.UserEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -24,9 +26,11 @@ public interface UserSessionBeanLocal {
 
     public UserEntity getUserById(long userId) throws NoResultException;
 
+    public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
+    
     public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
 
-    public void removeSkillFromProfile(long userId, long tagId) throws NoResultException;
+    public List<TagEntity> removeSkillFromProfile(long userId, long tagId) throws NoResultException;
     
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
     

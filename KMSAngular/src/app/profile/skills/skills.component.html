@@ -1,27 +1,25 @@
 <div class="form-group">
-  <label>Multiple (.select2-purple)</label>
+  <label>Select Skills</label>
   <div class="select2-purple">
-    <select class="select2" multiple="multiple" data-placeholder="Select a State"
+    <select class="select2" multiple="multiple" data-placeholder="Select skills"
       data-dropdown-css-class="select2-purple" style="width: 100%;">
       <option *ngFor="let skill of skillTags">
-          {{skill.name}}
+        {{skill.name}}
       </option>
     </select>
   </div>
+  <button type="button" class="btn btn-block btn-default" (click)="submitSkills()">Submit selections</button>
 </div>
 
-<div *ngFor="let skill of skillTags">
-  <small class="badge badge-warning">
-    {{skill.name}}
-  </small>
-</div>
-
+<label>Your Skills</label>
+<br />
 <span *ngIf="user.skills.length == 0"> You have no skills at the moment.</span>
 
 <span *ngIf="user.skills.length > 0">
   <div *ngFor="let skill of user.skills">
-    <small class="badge badge-warning">
-      {{skill}}
+    <small class="badge badge-warning" (click)="deleteSkill(skill.tagId)">
+      {{skill.name}}
+      <i class="far fa-times-circle"></i>
     </small>
   </div>
 </span>

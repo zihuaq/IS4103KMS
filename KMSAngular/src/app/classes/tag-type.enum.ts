@@ -1,5 +1,5 @@
 export enum TagType {
-    SKILL,
-    SDG,
-    MATERIALRESOURCE
+    SKILL = <any> "SKILL",
+    SDG = <any> "SDG",
+    MATERIALRESOURCE = <any> "MATERIALRESOURCE"
 }

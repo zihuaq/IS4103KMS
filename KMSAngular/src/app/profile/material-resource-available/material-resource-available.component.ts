@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { User } from '../../classes/user';
 import { TagService } from '../../tag.service';
 import { Tag } from '../../classes/tag';
@@ -11,6 +11,7 @@ import { Tag } from '../../classes/tag';
 export class MaterialResourceAvailableComponent implements OnInit {
 
   @Input() user: User;
+  @Output() userChanged = new EventEmitter<User>();
   mraTags: Tag[];
 
   constructor(private tagService: TagService) { }
