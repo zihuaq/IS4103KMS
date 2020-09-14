@@ -22,16 +22,12 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-
         <div class="col-md-3">
           <app-overview [profile]="profile"></app-overview>
           <app-basic-details></app-basic-details>
-          <app-projects></app-projects>
-          <app-material-resource-available></app-material-resource-available>
-          <app-skills></app-skills>
         </div>
         <div class="col-md-9">
-          <div>Newsfeed</div>
+          <app-profile-tabpanel [user]="profile"></app-profile-tabpanel>
         </div>
         <!-- /.col -->
       </div>

@@ -7,6 +7,7 @@ package ws.restful.resources;
 
 import Exception.DuplicateEmailException;
 import Exception.DuplicateTagInProfileException;
+import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
@@ -27,6 +28,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -218,6 +220,58 @@ public class UserResource {
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
+        }
+    }
+    
+    
+    @Path("userLogin")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response userLogin(@QueryParam("email") String email, @QueryParam("password") String password) {
+        try{
+            UserEntity user = this.userSessionBeanLocal.userLogin(email, password);
+            System.out.println("here");
+            user.getGroups().clear();
+            user.getGroupsOwned().clear();
+            user.getPosts().clear();
+            user.getProjectAdmins().clear();
+            user.getProjectsContributed().clear();
+            user.getProjectsOwned().clear();
+            user.getReviews().clear();
+            user.getSdgs().clear();
+            user.getSkills().clear();
+            user.getBadges().clear();
+            user.getFollowers().clear();
+            user.getFollowing().clear();
+            System.out.println("here");
+            return Response.status(Response.Status.OK).entity(user).build();
+        }
+        catch(InvalidLoginCredentialException ex){
+             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+        }
+        catch(StackOverflowError ex){
+             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+        catch(Exception ex){
+             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+          
+    }
+    @DELETE
+    @Path("deleteUser")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUser(@PathParam("userId") Long userId, UserEntity user) {
+        try {
+            userSessionBeanLocal.deleteUser(userId, user);
+
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
         }
     }
 

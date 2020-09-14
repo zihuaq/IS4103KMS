@@ -95,6 +95,7 @@ public class ProjectEntity implements Serializable {
         this.humanResourcePostings = new ArrayList<>();
         this.materialResourcePostings = new ArrayList<>();
         this.admins = new ArrayList<>();
+        this.tasks = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.status = ProjectStatusEnum.NOTSTARTED;
     }

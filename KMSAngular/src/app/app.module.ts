@@ -20,6 +20,7 @@ import { MaterialResourceAvailableComponent } from './profile/material-resource-
 import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
+import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { FooterComponent } from './footer/footer.component';
     SkillsComponent,
     SideNavbarComponent,
     FooterComponent,
+    ProfileTabpanelComponent,
   ],
   imports: [
     BrowserModule,
