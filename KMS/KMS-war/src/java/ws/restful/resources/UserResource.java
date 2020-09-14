@@ -274,5 +274,4 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
 }

@@ -3,13 +3,9 @@
   <div class="select2-purple">
     <select class="select2" multiple="multiple" data-placeholder="Select a State"
       data-dropdown-css-class="select2-purple" style="width: 100%;">
-      <option>Alabama</option>
-      <option>Alaska</option>
-      <option>California</option>
-      <option>Delaware</option>
-      <option>Tennessee</option>
-      <option>Texas</option>
-      <option>Washington</option>
+      <option *ngFor="let skill of skillTags">
+          {{skill.name}}
+      </option>
     </select>
   </div>
 </div>

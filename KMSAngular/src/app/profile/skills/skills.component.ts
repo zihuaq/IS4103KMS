@@ -20,6 +20,8 @@ export class SkillsComponent implements OnInit {
     this.tagService.getAllSkillTags().subscribe((response) => {
       this.skillTags = response;
     });
-    $('.select2').select2();
+    $('.select2').select2({
+      data: this.skillTags
+    });
   }
 }
