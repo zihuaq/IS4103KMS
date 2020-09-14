@@ -1,8 +1,8 @@
 import { Tag } from './tag';
-import { MaterialResourceAvailable } from './material-resource-available'
+import { MaterialResourceAvailable } from './material-resource-available';
 
 export class User {
-  userId: Number;
+  userId: number;
   firstName: String;
   lastName: String;
   dob: Date;
@@ -12,17 +12,18 @@ export class User {
   isAdmin: boolean;
   profilePicture: String;
   country: String;
-  reputationPoints: Number;
+  reputationPoints: number;
   type: String;
   joinedDate: Date;
-  appoinmentDate: Date;
+  adminStartDate: Date;
   followers: User[];
   following: User[];
   skills: Tag[];
   mras: MaterialResourceAvailable[];
+  sdg: Tag[];
 
   constructor(
-    userId?: Number,
+    userId?: number,
     firstName?: String,
     lastName?: String,
     dob?: Date,
@@ -31,14 +32,15 @@ export class User {
     password?: String,
     profilePicture?: String,
     country?: String,
-    reputationPoints?: Number,
+    reputationPoints?: number,
     type?: String,
     joinedDate?: Date,
-    appoinmentDate?: Date,
+    adminStartDate?: Date,
     followers?: User[],
     following?: User[],
     skills?: Tag[],
-    mras?: MaterialResourceAvailable[]
+    mras?: MaterialResourceAvailable[],
+    sdg?: Tag[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -53,10 +55,11 @@ export class User {
     this.reputationPoints = reputationPoints;
     this.type = type;
     this.joinedDate = joinedDate;
-    this.appoinmentDate = appoinmentDate;
+    this.adminStartDate = adminStartDate;
     this.followers = followers;
     this.following = following;
     this.skills = skills;
     this.mras = mras;
+    this.sdg = sdg;
   }
 }
