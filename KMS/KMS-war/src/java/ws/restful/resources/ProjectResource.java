@@ -57,7 +57,7 @@ public class ProjectResource {
         List<ProjectEntity> projects = projectSessionBeanLocal.retrieveAllProject();
         for (ProjectEntity p : projects) {
             p.getOwner().getProjectsOwned().clear();
-            p.getContributors().clear();
+            p.getGroupMembers().clear();
             p.getAdmins().clear();
             p.getActivities().clear();
             p.getHumanResourcePostings().clear();
@@ -103,9 +103,9 @@ public class ProjectResource {
     @Path("joinProject/{projectId}/{userId}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addContributor(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+    public Response addMember(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
         try {
-            projectSessionBeanLocal.addContributor(projectId, userId);
+            projectSessionBeanLocal.addMember(projectId, userId);
 
             return Response.status(Status.OK).build();
         } catch (NoResultException ex) {
@@ -118,9 +118,9 @@ public class ProjectResource {
     @Path("leaveProject/{projectId}/{userId}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeContributor(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+    public Response removeMember(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
         try {
-            projectSessionBeanLocal.removeContributor(projectId, userId);
+            projectSessionBeanLocal.removeMember(projectId, userId);
 
             return Response.status(Status.OK).build();
         } catch (NoResultException ex) {
@@ -151,6 +151,21 @@ public class ProjectResource {
     public Response removeAdmin(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
         try {
             projectSessionBeanLocal.removeAdmin(projectId, userId);
+
+            return Response.status(Status.OK).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("changeOwner/{projectId}/{userId}")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeOwner(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+        try {
+            projectSessionBeanLocal.changeOwner(projectId, userId);
 
             return Response.status(Status.OK).build();
         } catch (NoResultException ex) {

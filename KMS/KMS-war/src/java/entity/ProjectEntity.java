@@ -65,7 +65,7 @@ public class ProjectEntity implements Serializable {
 
     
     @ManyToMany
-    private List<UserEntity> contributors;
+    private List<UserEntity> groupMembers;
     
     @ManyToMany
     private List<UserEntity> admins;
@@ -90,7 +90,7 @@ public class ProjectEntity implements Serializable {
 
 
     public ProjectEntity() {
-        this.contributors = new ArrayList<>();
+        this.groupMembers = new ArrayList<>();
         this.activities = new ArrayList<>();
         this.humanResourcePostings = new ArrayList<>();
         this.materialResourcePostings = new ArrayList<>();
@@ -169,12 +169,12 @@ public class ProjectEntity implements Serializable {
         this.owner = owner;
     }
 
-    public List<UserEntity> getContributors() {
-        return contributors;
+    public List<UserEntity> getGroupMembers() {
+        return groupMembers;
     }
 
-    public void setContributors(List<UserEntity> contributors) {
-        this.contributors = contributors;
+    public void setGroupMembers(List<UserEntity> groupMembers) {
+        this.groupMembers = groupMembers;
     }
 
     public Double getMonetaryFundingRequired() {
