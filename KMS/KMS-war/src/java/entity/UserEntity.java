@@ -76,8 +76,9 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "owner")
     private List<ProjectEntity> projectsOwned;
+    
+    @ManyToMany(mappedBy = "groupMembers")
 
-    @ManyToMany(mappedBy = "contributors")
     private List<ProjectEntity> projectsContributed;
 
     @ManyToMany(mappedBy = "admins")

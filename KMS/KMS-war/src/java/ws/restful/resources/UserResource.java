@@ -325,7 +325,7 @@ public class UserResource {
             for (int i = 0; i < user.getProjectAdmins().size(); i++) {
                 user.getProjectAdmins().get(i).getActivities().clear();
                 user.getProjectAdmins().get(i).getAdmins().clear();
-                user.getProjectAdmins().get(i).getContributors().clear();
+                user.getProjectAdmins().get(i).getGroupMembers().clear();
                 user.getProjectAdmins().get(i).getHumanResourcePostings().clear();
                 user.getProjectAdmins().get(i).getMaterialResourcePostings().clear();
                 user.getProjectAdmins().get(i).getPosts().clear();
@@ -335,7 +335,7 @@ public class UserResource {
             for (int i = 0; i < user.getProjectsContributed().size(); i++) {
                 user.getProjectsContributed().get(i).getActivities().clear();
                 user.getProjectsContributed().get(i).getAdmins().clear();
-                user.getProjectsContributed().get(i).getContributors().clear();
+                user.getProjectsContributed().get(i).getGroupMembers().clear();
                 user.getProjectsContributed().get(i).getHumanResourcePostings().clear();
                 user.getProjectsContributed().get(i).getMaterialResourcePostings().clear();
                 user.getProjectsContributed().get(i).getPosts().clear();
@@ -345,7 +345,7 @@ public class UserResource {
             for (int i = 0; i < user.getProjectsOwned().size(); i++) {
                 user.getProjectsOwned().get(i).getActivities().clear();
                 user.getProjectsOwned().get(i).getAdmins().clear();
-                user.getProjectsOwned().get(i).getContributors().clear();
+                user.getProjectsOwned().get(i).getGroupMembers().clear();
                 user.getProjectsOwned().get(i).getHumanResourcePostings().clear();
                 user.getProjectsOwned().get(i).getMaterialResourcePostings().clear();
                 user.getProjectsOwned().get(i).getPosts().clear();
