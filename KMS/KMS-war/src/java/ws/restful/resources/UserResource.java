@@ -256,9 +256,23 @@ public class UserResource {
         catch(Exception ex){
              return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
-        
-        
+          
     }
-    
+    @DELETE
+    @Path("deleteUser")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUser(@PathParam("userId") Long userId, UserEntity user) {
+        try {
+            userSessionBeanLocal.deleteUser(userId, user);
+
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
 
 }

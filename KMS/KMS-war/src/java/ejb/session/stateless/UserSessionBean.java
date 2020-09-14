@@ -95,7 +95,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getGroups().size();
             user.getGroupsOwned().size();
             user.getPosts().size();
-            user.getProjects().size();
+            //user.getProjects().size();
             user.getReviews().size();
             user.getSdgs().size();
             user.getSkills().size();
@@ -172,5 +172,15 @@ public class UserSessionBean implements UserSessionBeanLocal {
         sdgs.remove(tag);
         user.setSdgs(sdgs);
     }
-
+    
+    
+    @Override
+    public void deleteUser (long userId, UserEntity user) throws NoResultException {
+        UserEntity userEntityToRemove = getUserById(userId);
+        em.remove(userEntityToRemove);
+    
+    }
+    
+    
+    
 }

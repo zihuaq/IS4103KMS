@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.TagTypeEnum;
 
 /**
  *
@@ -41,4 +42,25 @@ public class TagSessionBean implements TagSessionBeanLocal {
             throw new TagNameExistException("Name of Tag exist");
         }
     }
+
+    @Override
+    public List<TagEntity> getAllSkillTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.SKILL);
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<TagEntity> getAllMaterialResourceTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.MATERIALRESOURCE);
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<TagEntity> getAllSDGTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.SDG);
+        return q.getResultList();
+    }    
 }
