@@ -5,10 +5,4 @@
             30
         </session-timeout>
     </session-config>
-    <ejb-local-ref>
-        <ejb-ref-name>ProjectSessionBeanLocal</ejb-ref-name>
-        <ejb-ref-type>Session</ejb-ref-type>
-        <local>ejb.session.stateless.ProjectSessionBeanLocal</local>
-        <ejb-link>#ProjectSessionBean</ejb-link>
-    </ejb-local-ref>
 </web-app>
