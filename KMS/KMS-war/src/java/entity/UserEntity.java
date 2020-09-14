@@ -67,6 +67,10 @@ public class UserEntity implements Serializable {
     private String profilePicture;
 
     private int reputationPoints;
+    
+    private String verificationCode;
+    
+    private Boolean isVerified;
 
     @OneToMany(mappedBy = "user")
     private List<ReviewEntity> reviews;
@@ -187,6 +191,7 @@ public class UserEntity implements Serializable {
     public String toString() {
         return "User{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reviews=" + reviews + ", projects=" + projectsOwned + ", groups=" + groups + ", posts=" + posts + ", groupsOwned=" + groupsOwned + ", badges=" + badges + ", mras=" + mras + ", skills=" + skills + '}';
     }
+    
 
     public String getFirstName() {
         return firstName;

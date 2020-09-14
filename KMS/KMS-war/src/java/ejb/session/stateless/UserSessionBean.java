@@ -8,7 +8,15 @@ import Exception.UserNotFoundException;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
+import java.util.Properties;
 import javax.ejb.Stateless;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
@@ -95,7 +103,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getGroups().size();
             user.getGroupsOwned().size();
             user.getPosts().size();
-            user.getProjects().size();
+            user.getProjectAdmins().size();
+            user.getProjectsContributed().size();
+            user.getProjectsOwned().size();
             user.getReviews().size();
             user.getSdgs().size();
             user.getSkills().size();
@@ -171,6 +181,116 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         sdgs.remove(tag);
         user.setSdgs(sdgs);
+    }
+    
+    @Override
+    public void sendVerificationEmail(String destinationEmail){
+        
+        final String username = "4103kms";
+        final String password = "4103kmsemail";
+        final String host = "localhost";
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.user", username);
+        
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication(){
+                return new PasswordAuthentication(username, password);
+            }
+        });
+        
+        try{
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("4103kms@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinationEmail));
+            message.setSubject("Thank you for signing up with kms");
+            message.setText("Please verify your email address here");
+            
+            Transport.send(message);
+            
+            System.out.println("message sent");
+        }
+        catch(MessagingException ex){
+            throw new RuntimeException(ex);
+        }
+
+          /*
+        // change accordingly 
+        String from = "4103kms@gmail.com";  
+          
+        // or IP address 
+        String host = "localhost";  
+          
+        // mail id 
+        final String username = "4103kms@gmail.com";
+          
+        // correct password for gmail id 
+        final String password = "4103kmsemail";  
+  
+        System.out.println("TLSEmail Start"); 
+        // Get the session object 
+          
+        // Get system properties 
+        Properties props = System.getProperties();  
+          
+         
+        
+        props.put("mail.smtp.user","username"); 
+        props.put("mail.smtp.host", "smtp.gmail.com"); 
+        props.put("mail.smtp.port", "25"); 
+        props.put("mail.debug", "true"); 
+        props.put("mail.smtp.auth", "true"); 
+        props.put("mail.smtp.starttls.enable","true"); 
+        props.put("mail.smtp.EnableSSL.enable","true");
+
+        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");   
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");   
+        props.setProperty("mail.smtp.port", "465");   
+        props.setProperty("mail.smtp.socketFactory.port", "465"); 
+  
+        // creating Session instance referenced to  
+        // Authenticator object to pass in  
+        // Session.getInstance argument 
+        Session session = Session.getInstance(props, 
+            new javax.mail.Authenticator() { 
+                  
+                // override the getPasswordAuthentication  
+                // method 
+                protected PasswordAuthentication  
+                        getPasswordAuthentication() { 
+                    return new PasswordAuthentication(username, 
+                                                    password); 
+                } 
+            }); 
+ 
+  
+        //compose the message 
+       try { 
+           // javax.mail.internet.MimeMessage class is mostly  
+           // used for abstraction. 
+           MimeMessage message = new MimeMessage(session);  
+
+           // header field of the header. 
+           message.setFrom(new InternetAddress(from)); 
+
+           message.addRecipient(Message.RecipientType.TO,  
+                                 new InternetAddress(destinationEmail)); 
+           message.setSubject("subject"); 
+           message.setText("Hello, kms is sending email "); 
+
+           // Send message 
+           Transport.send(message); 
+           System.out.println("Yo it has been sent.."); 
+       } 
+       catch (MessagingException mex) { 
+           mex.printStackTrace(); 
+       } */
+
     }
 
 }

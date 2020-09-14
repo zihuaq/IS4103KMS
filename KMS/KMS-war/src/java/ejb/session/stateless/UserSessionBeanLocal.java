@@ -36,4 +36,6 @@ public interface UserSessionBeanLocal {
 
     public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
 
+    public void sendVerificationEmail(String destinationEmail);
+
 }

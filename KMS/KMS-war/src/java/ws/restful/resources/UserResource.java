@@ -187,6 +187,7 @@ public class UserResource {
         UserEntity newUser;
         try {
             newUser = userSessionBeanLocal.createNewUser(user);
+            userSessionBeanLocal.sendVerificationEmail(newUser.getEmail());
         } catch (DuplicateEmailException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }

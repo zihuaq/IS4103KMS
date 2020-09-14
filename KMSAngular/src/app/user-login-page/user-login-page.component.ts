@@ -34,16 +34,18 @@ export class UserLoginPageComponent implements OnInit {
       this.password = loginForm.value.password
       // console.log(this.email)
       // console.log(this.password)
-      
+
       this.userService.login(this.email, this.password).subscribe((response)=>{
         let user: User = response
         user.password = "";
-          
+
           if (user != null) {
 
             this.sessionService.setIsLogin(true)
             this.sessionService.setCurrentUser(user);
-            this.loginError = false; 
+            this.loginError = false;
+            console.log(user)
+            console.log('***********************')
             this.router.navigate(["profile/:" + user.userId]);
           } else {
             this.loginError = true;
