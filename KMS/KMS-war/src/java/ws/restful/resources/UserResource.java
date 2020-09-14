@@ -124,7 +124,7 @@ public class UserResource {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
-            return Response.status(404).entity(exception).build();
+            return Response.status(400).entity(exception).build();
         }
     }
 
