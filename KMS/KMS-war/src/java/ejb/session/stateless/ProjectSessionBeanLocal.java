@@ -27,9 +27,9 @@ public interface ProjectSessionBeanLocal {
 
     public ProjectEntity getProjectById(Long projectId);
 
-    public void addContributor(Long projectId, Long userId) throws NoResultException;
+    public void addMember(Long projectId, Long userId) throws NoResultException;
 
-    public void removeContributor(Long projectId, Long userId) throws NoResultException;
+    public void removeMember(Long projectId, Long userId) throws NoResultException;
 
     public void updateProject(ProjectEntity projectToUpdate);
 

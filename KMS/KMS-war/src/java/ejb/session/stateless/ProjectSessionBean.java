@@ -77,22 +77,22 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public void addContributor(Long projectId, Long userId) throws NoResultException {
+    public void addMember(Long projectId, Long userId) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
         
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
-        project.getContributors().add(user);
+        project.getGroupMembers().add(user);
         
     }
     
     @Override
-    public void removeContributor(Long projectId, Long userId) throws NoResultException {
+    public void removeMember(Long projectId, Long userId) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
         
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
-        project.getContributors().remove(user);
+        project.getGroupMembers().remove(user);
         
     }
     
@@ -145,10 +145,10 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         }
         projectToDelete.getAdmins().clear();
         
-        for (UserEntity user : projectToDelete.getContributors()) {
+        for (UserEntity user : projectToDelete.getGroupMembers()) {
             user.getProjectsContributed().remove(projectToDelete);
         }
-        projectToDelete.getContributors().clear();
+        projectToDelete.getGroupMembers().clear();
         
         for (ActivityEntity activity : projectToDelete.getActivities()) {
             activity.setProject(null);
