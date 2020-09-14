@@ -2,34 +2,25 @@ import { Injectable } from '@angular/core';
 import { User } from './classes/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SessionService {
+  constructor() {}
 
-  constructor() {
-
-   }
-
-   getUsers(): User[]{
-    try
-    {
+  getUsers(): User[] {
+    try {
       return JSON.parse(sessionStorage.users);
-
-    }
-    catch
-    {
+    } catch {
       return null;
-
     }
   }
 
-  setUsers(users: User[]): void 
-  {
+  setUsers(users: User[]): void {
     sessionStorage.users = JSON.stringify(users);
   }
 
   getIsLogin(): boolean {
-    return localStorage.isLogin == "true";
+    return localStorage.isLogin == 'true';
   }
 
   setIsLogin(isLogin: boolean): void {
@@ -41,6 +32,6 @@ export class SessionService {
   }
 
   setCurrentUser(currentUser: User): void {
-    localStorage.currentCustomer = JSON.stringify(currentUser);
+    localStorage.currentUser = JSON.stringify(currentUser);
   }
 }

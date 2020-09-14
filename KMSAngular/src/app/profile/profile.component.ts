@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../user.service';
 import { User } from '../classes/user';
+import { SessionService } from '../session.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,17 +11,31 @@ import { User } from '../classes/user';
 })
 export class ProfileComponent implements OnInit {
   profile: User;
+  loggedInUser: User;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private userService: UserService
+    private userService: UserService,
+    private sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
-    let userid = this.activatedRoute.snapshot.params.userid;
-    console.log(userid);
-    this.userService.getUser(userid).subscribe((data: User) => {
-      this.profile = data;
-      console.log(this.profile);
-    });
+    let profileid = this.activatedRoute.snapshot.params.userid;
+    let loggedInUserId = this.sessionService.getCurrentUser().userId;
+    if (!profileid) {
+      profileid = loggedInUserId;
+      this.userService.getUser(profileid).subscribe((data: User) => {
+        this.profile = data;
+        this.loggedInUser = data;
+      });
+    } else {
+      this.userService
+        .getUser(loggedInUserId.toString())
+        .subscribe((data: User) => {
+          this.loggedInUser = data;
+        });
+      this.userService.getUser(profileid).subscribe((data: User) => {
+        this.profile = data;
+      });
+    }
   }
 }

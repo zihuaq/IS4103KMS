@@ -5,6 +5,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.FollowRequestEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.AccountPrivacySettingEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -44,6 +46,8 @@ public class UserSessionBean implements UserSessionBeanLocal {
         System.out.println(userId);
         UserEntity user = em.find(UserEntity.class, userId);
         if (user != null) {
+            user.getFollowers().size();
+            user.getFollowing().size();
             return user;
         } else {
             throw new NoResultException("User not found");
@@ -96,7 +100,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getGroupsOwned().size();
             user.getPosts().size();
             //user.getProjects().size();
-            user.getReviews().size();
+            user.getReviewsGiven().size();
             user.getSdgs().size();
             user.getSkills().size();
             user.getBadges().size();
@@ -174,6 +178,56 @@ public class UserSessionBean implements UserSessionBeanLocal {
         UserEntity userEntityToRemove = getUserById(userId);
         em.remove(userEntityToRemove);
 
+    }
+
+    @Override
+    public void followUser(Long toUserId, Long fromUserId) throws UserNotFoundException {
+        System.out.println(toUserId);
+        System.out.println(fromUserId);
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        if (toUser.getAccountPrivacySetting().equals(AccountPrivacySettingEnum.PUBLIC)) {
+            fromUser.getFollowing().add(toUser);
+            toUser.getFollowers().add(fromUser);
+        } else {
+            FollowRequestEntity followRequestEntity = new FollowRequestEntity();
+            em.persist(followRequestEntity);
+            followRequestEntity.setFrom(fromUser);
+            followRequestEntity.setTo(toUser);
+        }
+    }
+
+    @Override
+    public void acceptFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException {
+        Query q = em.createQuery("SELECT f FROM FollowRequestEntity AS f WHERE f.from=:from AND f.to=:to");
+        q.setParameter("from", fromUserId);
+        q.setParameter("to", toUserId);
+        FollowRequestEntity f = (FollowRequestEntity) q.getSingleResult();
+        if (f == null) {
+            throw new NoResultException("follow request not found");
+        }
+        em.remove(f);
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, toUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        fromUser.getFollowing().add(toUser);
+        toUser.getFollowers().add(fromUser);
+    }
+
+    @Override
+    public void unfollowUser(Long toUserId, Long fromUserId) throws UserNotFoundException {
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        fromUser.getFollowing().remove(toUser);
+        toUser.getFollowers().remove(fromUser);
     }
 
     @Override

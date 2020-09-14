@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { SessionService } from 'src/app/session.service';
+import { UserService } from 'src/app/user.service';
 import { User } from '../../classes/user';
 
 @Component({
@@ -8,26 +10,76 @@ import { User } from '../../classes/user';
 })
 export class OverviewComponent implements OnInit {
   @Input() profile: User;
+  @Input() loggedInUser: User;
+  @Output() profileChanged = new EventEmitter<User>();
+  @Output() userChanged = new EventEmitter<User>();
 
-  constructor() {}
+  constructor(
+    private sessionService: SessionService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    // this.profile = new User(
-    //   1,
-    //   'Yi',
-    //   'Ren',
-    //   new Date(),
-    //   'F',
-    //   'yiren@gmail.com',
-    //   'password',
-    //   'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80',
-    //   'Singapore',
-    //   10,
-    //   'user',
-    //   new Date(),
-    //   new Date(),
-    //   [],
-    //   []
-    // );
+    // this.loggedInUser = this.sessionService.getCurrentUser();
+    // this.userService
+    //   .getUser(this.loggedInUser.userId.toString())
+    //   .subscribe((data: User) => {
+    //     this.loggedInUser = data;
+    //     console.log(this.loggedInUser);
+    //     return this.loggedInUser.following
+    //       .map((user) => user.userId)
+    //       .includes(this.profile.userId);
+    //   });
+    // console.log(this.loggedInUser.userId);
+  }
+
+  checkfollowing() {
+    return this.loggedInUser.following
+      .map((user) => user.userId)
+      .includes(this.profile.userId);
+  }
+
+  follow() {
+    this.userService
+      .followUser(
+        this.profile.userId.toString(),
+        this.loggedInUser.userId.toString()
+      )
+      .subscribe(() => {
+        this.userService
+          .getUser(this.profile.userId.toString())
+          .subscribe((data: User) => {
+            this.profile = data;
+            this.profileChanged.emit(this.profile);
+          });
+        this.userService
+          .getUser(this.loggedInUser.userId.toString())
+          .subscribe((data: User) => {
+            this.loggedInUser = data;
+            this.userChanged.emit(this.loggedInUser);
+          });
+      });
+  }
+
+  unfollow() {
+    this.userService
+      .unfollowUser(
+        this.profile.userId.toString(),
+        this.loggedInUser.userId.toString()
+      )
+      .subscribe(() => {
+        this.userService
+          .getUser(this.profile.userId.toString())
+          .subscribe((data: User) => {
+            this.profile = data;
+            this.profileChanged.emit(this.profile);
+          });
+        this.userService
+          .getUser(this.loggedInUser.userId.toString())
+          .subscribe((data: User) => {
+            this.loggedInUser = data;
+            this.userChanged.emit(this.loggedInUser);
+          });
+      });
   }
 }
