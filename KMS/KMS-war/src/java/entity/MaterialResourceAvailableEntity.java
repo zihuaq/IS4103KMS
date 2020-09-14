@@ -44,6 +44,10 @@ public class MaterialResourceAvailableEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
+    private String country;
+    
+    @NotNull
+    @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
@@ -51,14 +55,6 @@ public class MaterialResourceAvailableEntity implements Serializable {
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
-    
-    @NotNull
-    @Column(nullable=false)
-    private Double longitude;
-    
-    @NotNull
-    @Column(nullable=false)
-    private Double latitude;
     
     @ManyToOne
     private UserEntity materialResourceAvailableOwner;
@@ -70,17 +66,16 @@ public class MaterialResourceAvailableEntity implements Serializable {
         this.tags = new ArrayList<>();
     }
 
-    public MaterialResourceAvailableEntity(String name, Integer quantity, String description, Date startDate, Date endDate, Double longitude, Double latitude) {
+    public MaterialResourceAvailableEntity(String name, Integer quantity, String description, Date startDate, Date endDate, String country, List<TagEntity> tags) {
         this();
         this.name = name;
         this.quantity = quantity;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.country = country;
+        this.tags = tags;
     }
-    
     
     
     public Long getMraId() {
@@ -156,22 +151,6 @@ public class MaterialResourceAvailableEntity implements Serializable {
         this.endDate = endDate;
     }
 
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
     public UserEntity getMaterialResourceAvailableOwner() {
         return materialResourceAvailableOwner;
     }
@@ -186,6 +165,14 @@ public class MaterialResourceAvailableEntity implements Serializable {
 
     public void setTags(List<TagEntity> tags) {
         this.tags = tags;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
     
 }

@@ -1,6 +1,34 @@
-<form class="navbar-form navbar-left" role="search">
-    <div class="form-group">
-      <input type="text" class="form-control" placeholder="Search Skill Tags">
-    </div>
-    <button type="submit" class="btn btn-default">Submit</button>
-</form>
+<div *ngIf="showError" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <h4 class="alert-heading">Error</h4>
+  <p> Please do not select a skill already present in your profile </p>
+  <button type="button" class="close" (click)="closeAlert()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="form-group">
+  <label>Select Skills</label>
+  <div class="select2-purple">
+    <select class="select2" multiple="multiple" data-placeholder="Select skills"
+      data-dropdown-css-class="select2-purple" style="width: 100%;">
+      <option *ngFor="let skill of skillTags">
+        {{skill.name}}
+      </option>
+    </select>
+  </div>
+  <button type="button" class="btn btn-block btn-default" (click)="submitSkills()">Submit selections</button>
+</div>
+
+<label>Your Skills</label>
+<br />
+<span *ngIf="user.skills.length == 0"> You have no skills at the moment.</span>
+
+<span *ngIf="user.skills.length > 0">
+  <div *ngFor="let skill of user.skills">
+    <small class="badge badge-warning" (click)="deleteSkill(skill.tagId)">
+      {{skill.name}}
+      <i class="far fa-times-circle"></i>
+    </small>
+  </div>
+</span>
+

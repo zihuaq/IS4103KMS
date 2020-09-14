@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { User } from '../../classes/user';
+import { TagService } from '../../tag.service';
+import { Tag } from '../../classes/tag';
+import { NgForm } from '@angular/forms';
+
+declare var $: any;
 
 @Component({
   selector: 'app-material-resource-available',
@@ -7,9 +13,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MaterialResourceAvailableComponent implements OnInit {
 
-  constructor() { }
+  @Input() user: User;
+  @Output() userChanged = new EventEmitter<User>();
+  mraTags: Tag[];
+
+  constructor(private tagService: TagService) { }
 
   ngOnInit(): void {
+    this.tagService.getAllMaterialResourceTags().subscribe(
+      response => {
+        this.mraTags = response;
+      });
   }
 
+  createMaterialResourceRequest(mraForm: NgForm) {
+  }
 }

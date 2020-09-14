@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { User } from '../../classes/user';
 
 @Component({
   selector: 'app-projects',
@@ -6,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
-
+  @Input() user: User;
+  @Output() userChanged = new EventEmitter<User>();
+  
   constructor() { }
 
   ngOnInit(): void {

@@ -5,6 +5,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.FollowRequestEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.AccountPrivacySettingEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -38,20 +40,22 @@ public class UserSessionBean implements UserSessionBeanLocal {
         Query q = em.createQuery("SELECT u FROM UserEntity u WHERE u.email = :email");
         q.setParameter("email", user.getEmail());
         System.out.println(user);
-        if(!q.getResultList().isEmpty()){
+        if (!q.getResultList().isEmpty()) {
             throw new DuplicateEmailException("Email already exist!");
         }
         em.persist(user);
         em.flush();
         return user;
     }
-    
+
     @Override
     public UserEntity getUserById(long userId) throws NoResultException {
         System.out.println(em);
         System.out.println(userId);
         UserEntity user = em.find(UserEntity.class, userId);
         if (user != null) {
+            user.getFollowers().size();
+            user.getFollowing().size();
             return user;
         } else {
             throw new NoResultException("User not found");
@@ -75,10 +79,10 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void removeSkillFromProfile(long userId, long tagId) throws NoResultException {
+    public List<TagEntity> removeSkillFromProfile(long userId, long tagId) throws NoResultException {
         UserEntity user = em.find(UserEntity.class, userId);
         TagEntity tag = em.find(TagEntity.class, tagId);
-
+        
         if (user == null || tag == null) {
             throw new NoResultException("User or Tag not found.");
         }
@@ -88,16 +92,16 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         skills.remove(tag);
         user.setSkills(skills);
+        return skills;
     }
-    
 
     @Override
-    public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException{
+    public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException {
         System.out.println(email);
         Query query = em.createQuery("SELECT u FROM UserEntity U WHERE u.email = :userInput");
         query.setParameter("userInput", email);
         System.out.println("here");
-        try{
+        try {
             UserEntity user = (UserEntity) query.getSingleResult();
             System.out.println("here");
             user.getGroups().size();
@@ -106,50 +110,46 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getProjectAdmins().size();
             user.getProjectsContributed().size();
             user.getProjectsOwned().size();
-            user.getReviews().size();
+            user.getReviewsGiven().size();
             user.getSdgs().size();
             user.getSkills().size();
             user.getBadges().size();
             user.getFollowers().size();
             user.getFollowing().size();
-            
+
             return user;
-        }
-        catch(javax.persistence.NoResultException ex){
+        } catch (javax.persistence.NoResultException ex) {
             System.out.println("No results");
             throw new UserNotFoundException("Email " + email + " does not exist");
-        }
-        catch(NonUniqueResultException ex){
+        } catch (NonUniqueResultException ex) {
             System.out.println("No unique results");
             throw new UserNotFoundException("Email " + email + " does not exist");
         }
-        
+
     }
-    
+
     @Override
-    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException{
-        try{
+    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException {
+        try {
             UserEntity user = retrieveUserByEmail(email);
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + user.getSalt()));
-            if(user.getPassword().equals(passwordHash)){
+            if (user.getPassword().equals(passwordHash)) {
                 System.out.println("user login if()");
                 System.out.println(user.getPassword());
                 System.out.println(passwordHash);
                 return user;
-            }
-            else {
+            } else {
                 System.out.println("user login else()");
                 System.out.println(user.getPassword());
                 System.out.println(passwordHash);
                 throw new InvalidLoginCredentialException("Email does not exist of invalid password");
             }
-        } catch (UserNotFoundException ex){
+        } catch (UserNotFoundException ex) {
             System.out.println("here");
-          throw new InvalidLoginCredentialException("Email does not exist or invalid password!");  
+            throw new InvalidLoginCredentialException("Email does not exist or invalid password!");
         }
-        
+
     }
-    
 
     @Override
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
@@ -219,78 +219,87 @@ public class UserSessionBean implements UserSessionBeanLocal {
             throw new RuntimeException(ex);
         }
 
-          /*
-        // change accordingly 
-        String from = "4103kms@gmail.com";  
-          
-        // or IP address 
-        String host = "localhost";  
-          
-        // mail id 
-        final String username = "4103kms@gmail.com";
-          
-        // correct password for gmail id 
-        final String password = "4103kmsemail";  
-  
-        System.out.println("TLSEmail Start"); 
-        // Get the session object 
-          
-        // Get system properties 
-        Properties props = System.getProperties();  
-          
-         
-        
-        props.put("mail.smtp.user","username"); 
-        props.put("mail.smtp.host", "smtp.gmail.com"); 
-        props.put("mail.smtp.port", "25"); 
-        props.put("mail.debug", "true"); 
-        props.put("mail.smtp.auth", "true"); 
-        props.put("mail.smtp.starttls.enable","true"); 
-        props.put("mail.smtp.EnableSSL.enable","true");
+    }
 
-        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");   
-        props.setProperty("mail.smtp.socketFactory.fallback", "false");   
-        props.setProperty("mail.smtp.port", "465");   
-        props.setProperty("mail.smtp.socketFactory.port", "465"); 
-  
-        // creating Session instance referenced to  
-        // Authenticator object to pass in  
-        // Session.getInstance argument 
-        Session session = Session.getInstance(props, 
-            new javax.mail.Authenticator() { 
-                  
-                // override the getPasswordAuthentication  
-                // method 
-                protected PasswordAuthentication  
-                        getPasswordAuthentication() { 
-                    return new PasswordAuthentication(username, 
-                                                    password); 
-                } 
-            }); 
- 
-  
-        //compose the message 
-       try { 
-           // javax.mail.internet.MimeMessage class is mostly  
-           // used for abstraction. 
-           MimeMessage message = new MimeMessage(session);  
-
-           // header field of the header. 
-           message.setFrom(new InternetAddress(from)); 
-
-           message.addRecipient(Message.RecipientType.TO,  
-                                 new InternetAddress(destinationEmail)); 
-           message.setSubject("subject"); 
-           message.setText("Hello, kms is sending email "); 
-
-           // Send message 
-           Transport.send(message); 
-           System.out.println("Yo it has been sent.."); 
-       } 
-       catch (MessagingException mex) { 
-           mex.printStackTrace(); 
-       } */
+    @Override
+    public void deleteUser(long userId, UserEntity user) throws NoResultException {
+        UserEntity userEntityToRemove = getUserById(userId);
+        em.remove(userEntityToRemove);
 
     }
 
+    @Override
+    public void followUser(Long toUserId, Long fromUserId) throws UserNotFoundException {
+        System.out.println(toUserId);
+        System.out.println(fromUserId);
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        if (toUser.getAccountPrivacySetting().equals(AccountPrivacySettingEnum.PUBLIC)) {
+            fromUser.getFollowing().add(toUser);
+            toUser.getFollowers().add(fromUser);
+        } else {
+            FollowRequestEntity followRequestEntity = new FollowRequestEntity();
+            em.persist(followRequestEntity);
+            followRequestEntity.setFrom(fromUser);
+            followRequestEntity.setTo(toUser);
+        }
+    }
+
+    @Override
+    public void acceptFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException {
+        Query q = em.createQuery("SELECT f FROM FollowRequestEntity AS f WHERE f.from=:from AND f.to=:to");
+        q.setParameter("from", fromUserId);
+        q.setParameter("to", toUserId);
+        FollowRequestEntity f = (FollowRequestEntity) q.getSingleResult();
+        if (f == null) {
+            throw new NoResultException("follow request not found");
+        }
+        em.remove(f);
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, toUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        fromUser.getFollowing().add(toUser);
+        toUser.getFollowers().add(fromUser);
+    }
+
+    @Override
+    public void unfollowUser(Long toUserId, Long fromUserId) throws UserNotFoundException {
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        fromUser.getFollowing().remove(toUser);
+        toUser.getFollowers().remove(fromUser);
+    }
+
+    @Override
+    public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (user == null) {
+            throw new NoResultException("User not found.");
+        }
+        
+        List<TagEntity> skillTags = user.getSkills();
+        
+        for(int i=0; i<tags.size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, tags.get(i).getTagId());
+            if(tag == null){
+                throw new NoResultException("Tag not found.");   
+            }
+            if (skillTags.contains(tag)) {
+            throw new DuplicateTagInProfileException("Tag is already present in user's profile");
+            }
+            skillTags.add(tag);
+        }
+        
+        user.setSkills(skillTags);
+        return skillTags;
+    }
 }

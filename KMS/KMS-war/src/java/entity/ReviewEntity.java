@@ -36,7 +36,10 @@ public class ReviewEntity implements Serializable {
     private Integer rating;
     
     @ManyToOne
-    private UserEntity user;
+    private UserEntity to;
+    
+    @ManyToOne
+    private UserEntity from;
 
     public ReviewEntity() {
     }
@@ -107,12 +110,20 @@ public class ReviewEntity implements Serializable {
         this.rating = rating;
     }
 
-    public UserEntity getUser() {
-        return user;
+    public UserEntity getTo() {
+        return to;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void setTo(UserEntity to) {
+        this.to = to;
+    }
+
+    public UserEntity getFrom() {
+        return from;
+    }
+
+    public void setFrom(UserEntity from) {
+        this.from = from;
     }
     
 }
