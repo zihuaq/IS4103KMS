@@ -180,6 +180,9 @@ public class UserResource {
     public Response createMaterialResourceAvailable(@PathParam("userId") Long userId, MaterialResourceAvailableEntity mra) {
         try {
             List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
+            for(int i=0; i<mras.size();i++){
+                mras.get(i).setMaterialResourceAvailableOwner(null);
+            }
             return Response.status(200).entity(mras).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
