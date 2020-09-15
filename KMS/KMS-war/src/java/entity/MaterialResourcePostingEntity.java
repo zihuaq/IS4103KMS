@@ -75,6 +75,25 @@ public class MaterialResourcePostingEntity implements Serializable {
     @JoinColumn
     private ProjectEntity project;
 
+    public MaterialResourcePostingEntity() {
+    }
+
+    public MaterialResourcePostingEntity(Long materialResourcePostingId, String name, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
+        this();
+        this.materialResourcePostingId = materialResourcePostingId;
+        this.name = name;
+        this.totalQuantity = totalQuantity;
+        this.obtainedQuantity = obtainedQuantity;
+        this.lackingQuantity = lackingQuantity;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.latitude = latitude;
+        this.lontitude = lontitude;
+    }
+    
+    
+
     public Long getMaterialResourcePostingId() {
         return materialResourcePostingId;
     }
