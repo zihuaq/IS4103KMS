@@ -7,6 +7,7 @@ import { UserLoginPageComponent } from './user-login-page/user-login-page.compon
 import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 
 const routes: Routes = [
+  { path: 'index', component: IndexComponent },
   { path: 'signup', component: CreateNewUserComponent },
   { path: 'login', component: UserLoginPageComponent },
   { path: 'profile/:userid', component: ProfileComponent },

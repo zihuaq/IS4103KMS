@@ -21,6 +21,7 @@ import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
+import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tab
     SideNavbarComponent,
     FooterComponent,
     ProfileTabpanelComponent,
+    EditProfileComponent,
   ],
   imports: [
     BrowserModule,

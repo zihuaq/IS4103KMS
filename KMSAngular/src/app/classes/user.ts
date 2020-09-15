@@ -10,7 +10,7 @@ export class User {
   email: String;
   password: String;
   isAdmin: boolean;
-  profilePicture: String;
+  profilePicture: string | ArrayBuffer;
   country: String;
   reputationPoints: number;
   type: String;
@@ -30,7 +30,7 @@ export class User {
     gender?: String,
     email?: String,
     password?: String,
-    profilePicture?: String,
+    profilePicture?: string | ArrayBuffer,
     country?: String,
     reputationPoints?: number,
     type?: String,

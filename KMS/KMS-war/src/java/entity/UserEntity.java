@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -64,6 +65,8 @@ public class UserEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date adminStartDate;
 
+    @Lob
+    @Column
     private String profilePicture;
 
     private int reputationPoints;
@@ -202,7 +205,7 @@ public class UserEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
+        return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
 
     public String getFirstName() {
@@ -417,9 +420,6 @@ public class UserEntity implements Serializable {
         this.accountPrivacySetting = accountPrivacySetting;
     }
 
-//    public Object getProjects() {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
     public List<FollowRequestEntity> getFollowRequestMade() {
         return followRequestMade;
     }

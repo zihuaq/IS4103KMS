@@ -1,4 +1,14 @@
-import { APP_INITIALIZER, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, SystemJsNgModuleLoader } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  SystemJsNgModuleLoader,
+} from '@angular/core';
 import { Tag } from '../../classes/tag';
 import { TagService } from '../../tag.service';
 import { User } from '../../classes/user';
@@ -19,59 +29,66 @@ export class SkillsComponent implements OnInit, OnChanges {
   selectedTags: Tag[] = [];
   showError: boolean = false;
 
-  constructor(private tagService: TagService, private userService: UserService) { }
+  constructor(
+    private tagService: TagService,
+    private userService: UserService
+  ) {}
   ngOnChanges(changes: SimpleChanges): void {
     this.user = changes.user.currentValue;
     this.initialiseTags();
   }
 
   ngOnInit(): void {
-    this.initialiseTags();   
+    this.initialiseTags();
   }
 
   submitSkills() {
     this.selectedTags = [];
     this.showError = false;
     this.selectedTagNames = $('.select2').val();
-    this.skillTags.forEach(element => {
+    this.skillTags.forEach((element) => {
       if (this.selectedTagNames.includes(element.name)) {
         this.selectedTags.push(element);
       }
     });
     console.log(this.selectedTagNames);
     if (!this.isSelectedTagInProfile()) {
-      this.userService.addSkillsToProfile(this.user.userId, this.selectedTags).subscribe(responsedata => {
-        this.user.skills = responsedata;
-      });
-      this.userChanged.emit(this.user);
+      this.userService
+        .addSkillsToProfile(this.user.userId, this.selectedTags)
+        .subscribe((responsedata) => {
+          this.user.skills = responsedata;
+          this.userChanged.emit(this.user);
+        });
     } else {
       this.showError = true;
     }
   }
 
   deleteSkill(tagId: number) {
-    this.userService.removeSkillFromProfile(this.user.userId, tagId).subscribe(responsedata => {
-      this.user.skills = responsedata;
-    });
-    this.userChanged.emit(this.user);
+    this.userService
+      .removeSkillFromProfile(this.user.userId, tagId)
+      .subscribe((responsedata) => {
+        this.user.skills = responsedata;
+        this.userChanged.emit(this.user);
+      });
   }
 
-  closeAlert(){
+  closeAlert() {
     this.showError = false;
   }
 
-  private initialiseTags(){
+  private initialiseTags() {
     this.tagService.getAllSkillTags().subscribe((response) => {
       this.skillTags = response;
     });
     $('.select2').select2({
       data: this.skillTags,
-      allowClear: true
+      allowClear: true,
     });
   }
 
-  private isSelectedTagInProfile():boolean {
-    for(var skill of this.user.skills){
+  private isSelectedTagInProfile(): boolean {
+    for (var skill of this.user.skills) {
       if (this.selectedTagNames.includes(skill.name)) {
         return true;
       }

@@ -2,10 +2,10 @@
 <div class="card card-primary card-outline">
   <div class="card-body box-profile">
     <div class="text-center">
-      <img *ngIf="profile.profilePicture" class="profile-user-img img-fluid img-circle" src="{{profile.profilePicture}}"
+      <img *ngIf="profile.profilePicture" class="profile-user-img img-fluid img-circle" [src]="profile.profilePicture"
         alt="User profile picture">
       <img *ngIf="!profile.profilePicture" class="profile-user-img img-fluid img-circle"
-        src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
         alt="User profile picture">
     </div>
 

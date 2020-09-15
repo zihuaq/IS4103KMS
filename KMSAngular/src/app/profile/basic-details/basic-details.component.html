@@ -6,25 +6,19 @@
   <!-- /.card-header -->
   <div class="card-body">
     <strong *ngIf="profile.sdg">Interested SDGs</strong>
-
     <p class="text-muted" *ngFor="let sdg of profile.sdg">
       sdg
     </p>
-
     <hr *ngIf="profile.sdg">
-
-    <strong><i class="fas fa-map-marker-alt mr-1"></i> Joined Date</strong>
-
+    <strong><i class="fas fa-map-marker-alt mr-1"></i>Joined Date</strong>
     <p class="text-muted">{{profile.joinedDate | date}}</p>
-
     <hr>
-
-    <strong><i class="fas fa-pencil-alt mr-1"></i> Gender</strong>
-
+    <strong><i class="fas fa-pencil-alt mr-1"></i>Gender</strong>
     <p class="text-muted">{{profile.gender}}</p>
-
     <hr>
-
+    <strong><i class="fas fa-pencil-alt mr-1"></i>Date of Birth</strong>
+    <p class="text-muted">{{profile.dob | date}}</p>
+    <hr *ngIf="profile.isAdmin">
     <strong *ngIf="profile.isAdmin">Administrator</strong>
   </div>
   <!-- /.card-body -->
