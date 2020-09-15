@@ -56,14 +56,14 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @Override
     public List<ProjectEntity> retrieveAllProject() {
-        Query query = em.createQuery("SELECT p FROM Project p");
+        Query query = em.createQuery("SELECT p FROM ProjectEntity p");
         
         return query.getResultList();
     }
     
     @Override
     public List<ProjectEntity> retrieveProjectByStatus(ProjectStatusEnum status) {
-        Query query = em.createQuery("SELECT p from Project p WHERE p.status = :inStatus");
+        Query query = em.createQuery("SELECT p from ProjectEntity p WHERE p.status = :inStatus");
         query.setParameter("inStatus", status);
         
         return query.getResultList();
