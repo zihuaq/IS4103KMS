@@ -8,7 +8,13 @@ package ws.restful.resources;
 import Exception.CreateProjectException;
 import Exception.NoResultException;
 import ejb.session.stateless.ProjectSessionBeanLocal;
+import entity.ActivityEntity;
+import entity.HumanResourcePostingEntity;
+import entity.MaterialResourcePostingEntity;
+import entity.PostEntity;
 import entity.ProjectEntity;
+import entity.TaskEntity;
+import entity.UserEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -96,6 +102,78 @@ public class ProjectResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProject(@PathParam("projectId") Long projectId) {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
+        project.getOwner().getGroupsOwned().clear();
+        project.getOwner().getReviewsGiven().clear();
+        project.getOwner().getReviewsReceived().clear();
+        project.getOwner().getProjectsOwned().clear();
+        project.getOwner().getProjectsContributed().clear();
+        project.getOwner().getProjectAdmins().clear();
+        project.getOwner().getGroups().clear();
+        project.getOwner().getPosts().clear();
+        project.getOwner().getBadges().clear();
+        project.getOwner().getMras().clear();
+        project.getOwner().getSkills().clear();
+        project.getOwner().getFollowers().clear();
+        project.getOwner().getFollowing().clear();
+        project.getOwner().getSdgs().clear();
+        project.getOwner().getFollowRequestMade().clear();
+        project.getOwner().getFollowRequestReceived().clear();
+        for (UserEntity member : project.getGroupMembers()) {
+            member.getGroupsOwned().clear();
+            member.getReviewsGiven().clear();
+            member.getReviewsReceived().clear();
+            member.getProjectsOwned().clear();
+            member.getProjectsContributed().clear();
+            member.getProjectAdmins().clear();
+            member.getGroups().clear();
+            member.getPosts().clear();
+            member.getBadges().clear();
+            member.getMras().clear();
+            member.getSkills().clear();
+            member.getFollowers().clear();
+            member.getFollowing().clear();
+            member.getSdgs().clear();
+            member.getFollowRequestMade().clear();
+            member.getFollowRequestReceived().clear();
+        }
+        for (UserEntity admin : project.getAdmins()) {
+            admin.getGroupsOwned().clear();
+            admin.getReviewsGiven().clear();
+            admin.getReviewsReceived().clear();
+            admin.getProjectsOwned().clear();
+            admin.getProjectsContributed().clear();
+            admin.getProjectAdmins().clear();
+            admin.getGroups().clear();
+            admin.getPosts().clear();
+            admin.getBadges().clear();
+            admin.getMras().clear();
+            admin.getSkills().clear();
+            admin.getFollowers().clear();
+            admin.getFollowing().clear();
+            admin.getSdgs().clear();
+            admin.getFollowRequestMade().clear();
+            admin.getFollowRequestReceived().clear();
+        }
+        for (ActivityEntity ae : project.getActivities()) {
+            ae.setProject(null);
+            ae.getHumanResourcePostings().clear();
+            ae.getMaterialResourcePostings().clear();
+        }
+        for (HumanResourcePostingEntity hrp : project.getHumanResourcePostings()) {
+            hrp.setActivity(null);
+            hrp.setProject(null);
+        }
+        for (MaterialResourcePostingEntity mrp : project.getMaterialResourcePostings()) {
+            mrp.setActivity(null);
+            mrp.setProject(null);
+        }
+        for (TaskEntity task : project.getTasks()) {
+            task.setProject(null);
+        }
+        for (PostEntity post : project.getPosts()) {
+            post.setPostOwner(null);
+            post.setProject(null);
+        }
         return Response.status(Status.OK).entity(project).build();
 
     }
