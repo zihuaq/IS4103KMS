@@ -179,8 +179,8 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createMaterialResourceAvailable(@PathParam("userId") Long userId, MaterialResourceAvailableEntity mra) {
         try {
-            materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
-            return Response.status(204).build();
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
+            return Response.status(200).entity(mras).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -195,8 +195,11 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteMaterialRequestFromProfile(@PathParam("userId") Long userId, @PathParam("mraId") Long mraId) {
         try {
-            materialResourceAvailableSessionBeanLocal.deleteMaterialResourceAvailableForUser(userId, mraId);
-            return Response.status(204).build();
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.deleteMaterialResourceAvailableForUser(userId, mraId);
+            for(int i=0; i<mras.size();i++){
+                mras.get(i).setMaterialResourceAvailableOwner(null);
+            }
+            return Response.status(200).entity(mras).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())

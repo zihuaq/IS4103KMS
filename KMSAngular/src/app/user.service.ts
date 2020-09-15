@@ -11,6 +11,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Tag } from './classes/tag';
+import { MaterialResourceAvailable } from './classes/material-resource-available';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -89,6 +90,19 @@ export class UserService {
   removeSkillFromProfile(userId: number, tagId: number): Observable<any> {
     return this.http
       .delete<any>(this.baseUrl + '/removeskill/' + userId + '/' + tagId)
+      .pipe(catchError(this.handleError));
+  }
+
+  createMaterialResourceAvailable(userId: number, mra: MaterialResourceAvailable): Observable<any> {
+    return this.http
+      .post<any>(this.baseUrl + '/mra/' + userId, mra, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteMaterialResourceAvailable(userId: number, mraId: number): Observable<any> {
+    console.log("delete method called");
+    return this.http
+      .delete<any>(this.baseUrl + '/mra/' + userId + '/' + mraId)
       .pipe(catchError(this.handleError));
   }
 
