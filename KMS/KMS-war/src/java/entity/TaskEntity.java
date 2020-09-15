@@ -49,6 +49,18 @@ public class TaskEntity implements Serializable {
     
     @ManyToOne
     private ProjectEntity project;
+
+    public TaskEntity() {
+    }
+
+    public TaskEntity(Long taskId, String name, String description, Date startDate, Date endDate) {
+        this();
+        this.taskId = taskId;
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
     
 
     public Long getTaskId() {

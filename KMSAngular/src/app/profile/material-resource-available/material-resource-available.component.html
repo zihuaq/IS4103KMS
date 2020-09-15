@@ -7,8 +7,9 @@
         <div class="modal-content bg-info">
             <div class="modal-header">
                 <h4 class="modal-title">Add Material Resource Available</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
+                <button type="button" id="addMraModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form (ngSubmit)="createMaterialResourceRequest(mraForm)" #mraForm="ngForm">
                 <div class="modal-body">
@@ -30,11 +31,16 @@
                     </div>
                     <div class="form-group">
                         <label>Start Date:</label>
+                        <input type="date" id="startDate" class="form-control" ngModel name="startDate" [min] = "minDate" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date:</label>
+                        <input type="date" id="endDate" class="form-control" ngModel name="endDate" [min] = "minEndDate" required/>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                    <button type="button" type="submit" class="btn btn-outline-light">Submit</button>
+                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!mraForm.valid">Submit</button>
                 </div>
             </form>
         </div>
@@ -60,7 +66,7 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <button type="button" class="btn btn-tool" data-card-widget="remove" (click)="deleteMra(mra.mraId)">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -70,7 +76,7 @@
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     <li class="item">
                         <div class="product-info">
-                            <a href="javascript:void(0)" class="product-title">{{mra.startDate}} - {{mra.endDate}}
+                            <a href="javascript:void(0)" class="product-title">Available from {{mra.startDate.toString().slice(0,10)}} to {{mra.endDate.toString().slice(0,10)}}
                                 <span class="badge badge-warning float-right">{{mra.country}}</span></a>
                             <span class="product-description">
                                 {{mra.description}}
