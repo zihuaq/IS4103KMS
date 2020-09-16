@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
-import { SessionService } from './session.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
 @Injectable({
@@ -13,17 +17,39 @@ const httpOptions = {
 export class TagService {
   baseUrl: string = '/api/tag';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllSkillTags(): Observable<any> {
-    return this.http.get<any>(this.baseUrl + '/skill');
+    return this.http
+      .get<any>(this.baseUrl + '/skill')
+      .pipe(catchError(this.handleError));
   }
 
   getAllMaterialResourceTags(): Observable<any> {
-    return this.http.get<any>(this.baseUrl + '/materialresource');
+    return this.http
+      .get<any>(this.baseUrl + '/materialresource')
+      .pipe(catchError(this.handleError));
   }
 
   getAllSDGTags(): Observable<any> {
-    return this.http.get<any>(this.baseUrl + '/sdg');
+    return this.http
+      .get<any>(this.baseUrl + '/sdg')
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage: string = '';
+
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = 'An unknown error has occurred: ' + error.error.message;
+    } else {
+      errorMessage =
+        'A HTTP error has occurred: ' +
+        `HTTP ${error.status}: ${error.error.error}`;
+    }
+
+    console.error(errorMessage);
+
+    return throwError(errorMessage);
   }
 }

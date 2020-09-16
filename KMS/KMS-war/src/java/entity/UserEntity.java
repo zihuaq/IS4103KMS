@@ -13,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -65,68 +64,48 @@ public class UserEntity implements Serializable {
     private Boolean isAdmin;
     @Temporal(TemporalType.DATE)
     private Date adminStartDate;
-
     @Lob
     @Column
     private String profilePicture;
-
     private int reputationPoints;
-
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
-
     @OneToMany(mappedBy = "to")
     private List<ReviewEntity> reviewsReceived;
-
     @OneToMany(mappedBy = "owner")
     private List<ProjectEntity> projectsOwned;
-    
     @ManyToMany(mappedBy = "groupMembers")
-
     private List<ProjectEntity> projectsContributed;
-
     @ManyToMany(mappedBy = "admins")
     private List<ProjectEntity> projectAdmins;
-
     @ManyToMany(mappedBy = "users")
     private List<GroupEntity> groups;
-
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
-
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
-
     @OneToMany
     private List<BadgeEntity> badges;
-
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
     private List<MaterialResourceAvailableEntity> mras;
-
     @JoinTable(name = "skills")
     @OneToMany
     private List<TagEntity> skills;
-
     @JoinTable(name = "following")
     @OneToMany
     private List<UserEntity> following;
-
     @JoinTable(name = "followers")
     @OneToMany
     private List<UserEntity> followers;
-
     @JoinTable(name = "sdgs")
     @OneToMany
     private List<TagEntity> sdgs;
-
     @JoinTable(name = "followRequestMade")
     @OneToMany(mappedBy = "from")
     private List<FollowRequestEntity> followRequestMade;
-
     @JoinTable(name = "followRequestReceived")
     @OneToMany(mappedBy = "to")
     private List<FollowRequestEntity> followRequestReceived;
-
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -42,7 +42,19 @@
             accept="image/*" (change)="getFiles($event)">
           <label class="custom-file-label" for="profilePictureFile">Choose file</label>
         </div>
+        <div class="input-group-append" style="cursor: pointer" *ngIf="profilePictureFile">
+          <span class="input-group-text" (click)="removePic()">Remove</span>
+        </div>
       </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="privacySettings" class="col-sm-2 col-form-label">Privacy Settings</label>
+    <div class="col-sm-10">
+      <!-- select -->
+      <select class="custom-select" id="privacySettings" [ngModel]="user.accountPrivacySetting" name="privacySettings">
+        <option *ngFor="let enum of privacySettings | keyvalue">{{enum.value}}</option>
+      </select>
     </div>
   </div>
   <div class="form-group row">

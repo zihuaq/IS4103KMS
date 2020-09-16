@@ -77,7 +77,10 @@ export class UserService {
 
   acceptFollow(toUserId: String, fromUserId: String) {
     return this.http
-      .get<any>(this.baseUrl + '/acceptfollow/' + toUserId + '/' + fromUserId)
+      .post<any>(
+        this.baseUrl + '/acceptfollow/' + toUserId + '/' + fromUserId,
+        null
+      )
       .pipe(catchError(this.handleError));
   }
 
@@ -90,6 +93,12 @@ export class UserService {
   removeSkillFromProfile(userId: number, tagId: number): Observable<any> {
     return this.http
       .delete<any>(this.baseUrl + '/removeskill/' + userId + '/' + tagId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getSkillsForProfile(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /skills/ + userId)
       .pipe(catchError(this.handleError));
   }
 
@@ -115,6 +124,24 @@ export class UserService {
     console.log('delete method called');
     return this.http
       .delete<any>(this.baseUrl + '/mra/' + userId + '/' + mraId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getMaterialResourceAvailable(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/mra/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getFollowers(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /followers/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getFollowing(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /following/ + userId)
       .pipe(catchError(this.handleError));
   }
 

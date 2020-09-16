@@ -16,7 +16,7 @@
                 <a class="nav-link" id="profile-tab-skills-tabname" data-toggle="pill" href="#profile-tab-skills"
                     role="tab" aria-controls="profile-tab-skills" aria-selected="false">Skills</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="profile.userId == loggedInUser.userId">
                 <a class="nav-link" id="profile-tab-edit-profile-tabname" data-toggle="pill"
                     href="#profile-tab-edit-profile" role="tab" aria-controls="profile-tab-edit-profile"
                     aria-selected="false">Edit Profile</a>
@@ -27,20 +27,22 @@
         <div class="tab-content" id="custom-tabs-four-tabContent">
             <div class="tab-pane fade show active" id="profile-tab-projects" role="tabpanel"
                 aria-labelledby="profile-tab-projects-tabname">
-                <app-projects [user]="user" (userChanged)="handleUserChanged($event)"></app-projects>
+                <app-projects [user]="profile" (profileChanged)="handleProfileChanged($event)"></app-projects>
             </div>
             <div class="tab-pane fade" id="profile-tab-material-resource-available" role="tabpanel"
                 aria-labelledby="profile-tab-material-resource-available-tabname">
-                <app-material-resource-available [user]="user" (userChanged)="handleUserChanged($event)">
+                <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser"
+                    (profileChanged)="handleProfileChanged($event)">
                 </app-material-resource-available>
             </div>
             <div class="tab-pane fade" id="profile-tab-skills" role="tabpanel"
                 aria-labelledby="profile-tab-skills-tabname">
-                <app-skills [user]="user" (userChanged)="handleUserChanged($event)"></app-skills>
+                <app-skills [profile]="profile" [loggedInUser]="loggedInUser"
+                    (profileChanged)="handleProfileChanged($event)"></app-skills>
             </div>
             <div class="tab-pane fade" id="profile-tab-edit-profile" role="tabpanel"
                 aria-labelledby="profile-tab-edit-profile-tabname">
-                <app-edit-profile [user]="user" (userChanged)="handleUserChanged($event)"></app-edit-profile>
+                <app-edit-profile [user]="profile" (profileChanged)="handleProfileChanged($event)"></app-edit-profile>
             </div>
         </div>
     </div>

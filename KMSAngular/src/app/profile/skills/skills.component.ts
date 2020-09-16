@@ -1,5 +1,4 @@
 import {
-  APP_INITIALIZER,
   Component,
   EventEmitter,
   Input,
@@ -7,7 +6,6 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  SystemJsNgModuleLoader,
 } from '@angular/core';
 import { Tag } from '../../classes/tag';
 import { TagService } from '../../tag.service';
@@ -22,8 +20,9 @@ declare var $: any;
   styleUrls: ['./skills.component.css'],
 })
 export class SkillsComponent implements OnInit, OnChanges {
-  @Input() user: User;
-  @Output() userChanged = new EventEmitter<User>();
+  @Input() profile: User;
+  @Input() loggedInUser: User;
+  @Output() profileChanged = new EventEmitter<User>();
   skillTags: Tag[];
   selectedTagNames: string[];
   selectedTags: Tag[] = [];
@@ -34,12 +33,17 @@ export class SkillsComponent implements OnInit, OnChanges {
     private userService: UserService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    this.user = changes.user.currentValue;
+    this.profile = changes.profile.currentValue;
     this.initialiseTags();
   }
 
   ngOnInit(): void {
     this.initialiseTags();
+    this.userService
+      .getSkillsForProfile(this.profile.userId)
+      .subscribe((skills) => {
+        this.profile = { ...this.profile, skills };
+      });
   }
 
   submitSkills() {
@@ -54,10 +58,9 @@ export class SkillsComponent implements OnInit, OnChanges {
     console.log(this.selectedTagNames);
     if (!this.isSelectedTagInProfile()) {
       this.userService
-        .addSkillsToProfile(this.user.userId, this.selectedTags)
+        .addSkillsToProfile(this.profile.userId, this.selectedTags)
         .subscribe((responsedata) => {
-          this.user.skills = responsedata;
-          this.userChanged.emit(this.user);
+          this.profile.skills = responsedata;
         });
     } else {
       this.showError = true;
@@ -66,10 +69,9 @@ export class SkillsComponent implements OnInit, OnChanges {
 
   deleteSkill(tagId: number) {
     this.userService
-      .removeSkillFromProfile(this.user.userId, tagId)
+      .removeSkillFromProfile(this.profile.userId, tagId)
       .subscribe((responsedata) => {
-        this.user.skills = responsedata;
-        this.userChanged.emit(this.user);
+        this.profile.skills = responsedata;
       });
   }
 
@@ -80,15 +82,15 @@ export class SkillsComponent implements OnInit, OnChanges {
   private initialiseTags() {
     this.tagService.getAllSkillTags().subscribe((response) => {
       this.skillTags = response;
-    });
-    $('.select2').select2({
-      data: this.skillTags,
-      allowClear: true,
+      $('.select2').select2({
+        data: this.skillTags,
+        allowClear: true,
+      });
     });
   }
 
   private isSelectedTagInProfile(): boolean {
-    for (var skill of this.user.skills) {
+    for (var skill of this.profile.skills) {
       if (this.selectedTagNames.includes(skill.name)) {
         return true;
       }

@@ -19,7 +19,7 @@
   </div>
   <!-- /.content-header -->
   <!-- Main content -->
-  <div class="content" *ngIf="profile">
+  <div class="content" *ngIf="profile && loggedInUser">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
@@ -29,7 +29,9 @@
           <app-basic-details [profile]="profile"></app-basic-details>
         </div>
         <div class="col-md-9">
-          <app-profile-tabpanel [user]="profile" (userChanged)="profile=$event"></app-profile-tabpanel>
+          <app-profile-tabpanel [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+            (userchanged)="loggedInUser=$event">
+          </app-profile-tabpanel>
         </div>
         <!-- /.col -->
       </div>

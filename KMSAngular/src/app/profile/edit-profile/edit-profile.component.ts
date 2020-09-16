@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { AccountPrivacySettingEnum } from 'src/app/classes/privacy-settings.enum';
 import { User } from 'src/app/classes/user';
 import { UserService } from 'src/app/user.service';
 
@@ -16,6 +17,7 @@ export class EditProfileComponent implements OnInit {
   @Output() userChanged = new EventEmitter<User>();
   profilePictureFile: string | ArrayBuffer;
   updatedUser: User;
+  privacySettings = AccountPrivacySettingEnum;
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
@@ -23,6 +25,7 @@ export class EditProfileComponent implements OnInit {
       format: 'DD/MM/YYYY',
     });
     bsCustomFileInput.init();
+    this.profilePictureFile = this.user.profilePicture;
   }
 
   getFiles(event) {
@@ -45,11 +48,26 @@ export class EditProfileComponent implements OnInit {
         $('#datetimepicker').datetimepicker('viewDate')
       );
       this.updatedUser.profilePicture = this.profilePictureFile;
+      this.updatedUser.accountPrivacySetting = editForm.value.privacySettings;
       this.userService.updateUser(this.updatedUser).subscribe(
         (responsedata: User) => {
           console.log(responsedata);
-          this.user = responsedata;
+          this.user = {
+            ...this.user,
+            firstName: responsedata.firstName,
+            lastName: responsedata.lastName,
+            email: responsedata.email,
+            dob: responsedata.dob,
+            profilePicture: responsedata.profilePicture,
+          };
           this.userChanged.emit(this.user);
+          $(document).Toasts('create', {
+            class: 'bg-primary',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Profile updated',
+          });
         },
         (err) => {
           console.log(err);
@@ -62,6 +80,13 @@ export class EditProfileComponent implements OnInit {
           });
         }
       );
+    }
+  }
+
+  removePic() {
+    if (this.profilePictureFile != undefined) {
+      this.profilePictureFile = undefined;
+      $('#profilePictureFile').next('label').text('Choose file');
     }
   }
 }
