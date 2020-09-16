@@ -22,6 +22,7 @@ import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
 import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
+import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { SearchUsersComponent } from './search-users/search-users.component';
     ProfileTabpanelComponent,
     SearchbarComponent,
     SearchUsersComponent,
+    EditProfileComponent,
   ],
   imports: [
     BrowserModule,

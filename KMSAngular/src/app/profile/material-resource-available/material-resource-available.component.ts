@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { User } from '../../classes/user';
 import { TagService } from '../../tag.service';
 import { Tag } from '../../classes/tag';
@@ -11,59 +19,67 @@ declare var $: any;
 @Component({
   selector: 'app-material-resource-available',
   templateUrl: './material-resource-available.component.html',
-  styleUrls: ['./material-resource-available.component.css']
+  styleUrls: ['./material-resource-available.component.css'],
 })
 export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
-
-  @Input() user: User;
+  @Input() profile: User;
+  @Input() loggedInUser: User;
   @Output() userChanged = new EventEmitter<User>();
   mraTags: Tag[];
   newMra: MaterialResourceAvailable;
-  minDate = new Date().toISOString().slice(0,10);
-  minEndDate = new Date().toISOString().slice(0,10);
+  minDate = new Date().toISOString().slice(0, 10);
+  minEndDate = new Date().toISOString().slice(0, 10);
   lat = 51.678418;
   lng = 7.809007;
 
-  constructor(private tagService: TagService, private userService: UserService) { }
+  constructor(
+    private tagService: TagService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    this.tagService.getAllMaterialResourceTags().subscribe(
-      response => {
-        this.mraTags = response;
+    this.userService
+      .getMaterialResourceAvailable(this.profile.userId)
+      .subscribe((mras) => {
+        this.profile = { ...this.profile, mras };
       });
+    this.tagService.getAllMaterialResourceTags().subscribe((response) => {
+      this.mraTags = response;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.tagService.getAllMaterialResourceTags().subscribe(
-      response => {
-        this.mraTags = response;
-      });
-    this.user = changes.user.currentValue;
+    this.tagService.getAllMaterialResourceTags().subscribe((response) => {
+      this.mraTags = response;
+    });
+    this.profile = changes.profile.currentValue;
   }
 
   createMaterialResourceRequest(mraForm: NgForm) {
-    if(mraForm.valid) {
+    if (mraForm.valid) {
       this.newMra = new MaterialResourceAvailable();
-      this.newMra.mraOwner = this.user;
+      this.newMra.mraOwner = this.profile;
       this.newMra.name = mraForm.value.mraName;
       this.newMra.quantity = mraForm.value.quantity;
       this.newMra.description = mraForm.value.description;
       this.newMra.country = mraForm.value.country;
       this.newMra.startDate = new Date(mraForm.value.startDate);
       this.newMra.endDate = new Date(mraForm.value.endDate);
-      this.userService.createMaterialResourceAvailable(this.user.userId, this.newMra).subscribe(responsedata => {
-        this.user.mras = responsedata;
-      });
-      
-      $("#addMraModalCloseBtn").click();
-      this.userChanged.emit(this.user);
+      this.userService
+        .createMaterialResourceAvailable(this.profile.userId, this.newMra)
+        .subscribe((responsedata) => {
+          this.profile.mras = responsedata;
+        });
+
+      $('#addMraModalCloseBtn').click();
     }
   }
 
-  deleteMra(mraId: number){
-    this.userService.deleteMaterialResourceAvailable(this.user.userId, mraId).subscribe(responsedata => {
-      this.user.mras = responsedata;
-    });
-    this.userChanged.emit(this.user);
+  deleteMra(mraId: number) {
+    this.userService
+      .deleteMaterialResourceAvailable(this.profile.userId, mraId)
+      .subscribe((responsedata) => {
+        this.profile.mras = responsedata;
+      });
   }
 }

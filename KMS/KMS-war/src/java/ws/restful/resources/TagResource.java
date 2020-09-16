@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response;
 @Path("tag")
 public class TagResource {
 
-    TagSessionBeanLocal tagSessionBean = lookupTagSessionBeanLocal();
+    TagSessionBeanLocal tagSessionBeanLocal = lookupTagSessionBeanLocal();
 
     @Context
     private UriInfo context;
@@ -47,21 +47,21 @@ public class TagResource {
     @Path("/skill")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSkillTags() {
-        return Response.status(200).entity(tagSessionBean.getAllSkillTags()).build();
+        return Response.status(200).entity(tagSessionBeanLocal.getAllSkillTags()).build();
     }
     
     @GET
     @Path("/materialresource")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllMaterialResourceTags() {
-        return Response.status(200).entity(tagSessionBean.getAllMaterialResourceTags()).build();
+        return Response.status(200).entity(tagSessionBeanLocal.getAllMaterialResourceTags()).build();
     }
     
     @GET
     @Path("/sdg")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSDGTags() {
-        return Response.status(200).entity(tagSessionBean.getAllSDGTags()).build();
+        return Response.status(200).entity(tagSessionBeanLocal.getAllSDGTags()).build();
     }
 
     private TagSessionBeanLocal lookupTagSessionBeanLocal() {

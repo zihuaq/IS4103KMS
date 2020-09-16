@@ -1,9 +1,9 @@
 {
-	"/api": {
-		"target": "http://localhost:8080/KMS-war/Resources",
-		"secure": false,
-		"pathRewrite": {
-		  "^/api": ""
-		}
-	}
+  "/api": {
+    "target": "http://localhost:8080/KMS-war/Resources",
+    "secure": false,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
 }

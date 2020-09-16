@@ -1,8 +1,9 @@
-<button type="button" class="btn btn-block bg-gradient-info" data-toggle="modal" data-target="#modal-info">
+<button type="button" class="btn btn-block bg-gradient-info" data-toggle="modal" data-target="#modal-info"
+    *ngIf="loggedInUser.userId == profile.userId">
     Add Material Resource Available
     <i class="fas fa-plus"></i>
 </button>
-<div class="modal fade" id="modal-info">
+<div class="modal fade" id="modal-info" *ngIf="loggedInUser.userId == profile.userId">
     <div class="modal-dialog">
         <div class="modal-content bg-info">
             <div class="modal-header">
@@ -31,16 +32,19 @@
                     </div>
                     <div class="form-group">
                         <label>Start Date:</label>
-                        <input type="date" id="startDate" class="form-control" ngModel name="startDate" [min] = "minDate" required/>
+                        <input type="date" id="startDate" class="form-control" ngModel name="startDate" [min]="minDate"
+                            required />
                     </div>
                     <div class="form-group">
                         <label>End Date:</label>
-                        <input type="date" id="endDate" class="form-control" ngModel name="endDate" [min] = "minEndDate" required/>
+                        <input type="date" id="endDate" class="form-control" ngModel name="endDate" [min]="minEndDate"
+                            required />
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!mraForm.valid">Submit</button>
+                    <button type="button" type="submit" class="btn btn-outline-light"
+                        [disabled]="!mraForm.valid">Submit</button>
                 </div>
             </form>
         </div>
@@ -50,13 +54,18 @@
 </div>
 
 <br />
-<label>Your Material Resources Available</label>
+<label *ngIf="loggedInUser.userId == profile.userId">Your Material Resources Available</label>
+<label *ngIf="loggedInUser.userId != profile.userId">{{profile.firstName}}
+    {{profile.lastName}} Material Resources Available</label>
 <br />
 
-<span *ngIf="user.mras.length == 0"> You have no material resource available at the moment.</span>
+<span *ngIf="profile.mras.length == 0 && loggedInUser.userId == profile.userId"> You have no material resource available
+    at the moment.</span>
+<span *ngIf="profile.mras.length == 0 && loggedInUser.userId != profile.userId"> {{profile.firstName}}
+    {{profile.lastName}} has no material resource available at the moment.</span>
 
-<span *ngIf="user.mras.length > 0">
-    <div *ngFor="let mra of user.mras">
+<span *ngIf="profile.mras.length > 0">
+    <div *ngFor="let mra of profile.mras">
         <div class="card">
             <!-- /.card-header -->
             <div class="card-header">
@@ -76,7 +85,8 @@
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     <li class="item">
                         <div class="product-info">
-                            <a href="javascript:void(0)" class="product-title">Available from {{mra.startDate.toString().slice(0,10)}} to {{mra.endDate.toString().slice(0,10)}}
+                            <a href="javascript:void(0)" class="product-title">Available from
+                                {{mra.startDate.toString().slice(0,10)}} to {{mra.endDate.toString().slice(0,10)}}
                                 <span class="badge badge-warning float-right">{{mra.country}}</span></a>
                             <span class="product-description">
                                 {{mra.description}}

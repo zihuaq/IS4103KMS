@@ -6,6 +6,7 @@ import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.FollowRequestEntity;
+import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -55,19 +56,13 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void addSkillToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
+    public List<TagEntity> getSkillsForProfile(long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
-        TagEntity tag = em.find(TagEntity.class, tagId);
 
-        if (user == null || tag == null) {
-            throw new NoResultException("User or Tag not found.");
+        if (user == null) {
+            throw new UserNotFoundException("User not found.");
         }
-        List<TagEntity> skills = user.getSkills();
-        if (skills.contains(tag)) {
-            throw new DuplicateTagInProfileException("Skill is already present in user's profile");
-        }
-        skills.add(tag);
-        user.setSkills(skills);
+        return user.getSkills();
     }
 
     @Override
@@ -260,5 +255,54 @@ public class UserSessionBean implements UserSessionBeanLocal {
         Query q = em.createQuery("SELECT u FROM UserEntity u");
         List<UserEntity> users = q.getResultList();
         return users;
+    }
+    
+    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException {
+        UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        Query q = em.createQuery("SELECT u FROM UserEntity u WHERE u.email = :email");
+        q.setParameter("email", updatedUser.getEmail());
+        if (!q.getResultList().isEmpty() && !updatedUser.getEmail().equals(user.getEmail())) {
+            throw new DuplicateEmailException("Email already exist!");
+        }
+
+        user.setFirstName(updatedUser.getFirstName());
+        user.setLastName(updatedUser.getLastName());
+        user.setEmail(updatedUser.getEmail());
+        user.setDob(updatedUser.getDob());
+        System.out.println(updatedUser);
+        user.setProfilePicture(updatedUser.getProfilePicture());
+        user.setAccountPrivacySetting(updatedUser.getAccountPrivacySetting());
+
+        return user;
+    }
+
+    @Override
+    public List<UserEntity> getFollowers(long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user.getFollowers();
+    }
+    
+    @Override
+    public List<UserEntity> getFollowing(long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user.getFollowing();
+    }
+    
+    @Override
+    public List<MaterialResourceAvailableEntity> getMaterialRequestAvailable(long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user.getMras();
     }
 }
