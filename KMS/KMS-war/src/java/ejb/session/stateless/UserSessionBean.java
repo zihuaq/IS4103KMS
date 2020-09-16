@@ -96,7 +96,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         try {
             UserEntity user = (UserEntity) query.getSingleResult();
             System.out.println("here");
-            user.getGroups().size();
+            user.getGroupsJoined().size();
             user.getGroupsOwned().size();
             user.getPosts().size();
             //user.getProjects().size();

@@ -232,24 +232,24 @@ public class UserResource {
                 user.getFollowRequestMade().get(i).getFrom().getFollowRequestReceived().clear();
                 user.getFollowRequestMade().get(i).getFrom().getFollowers().clear();
                 user.getFollowRequestMade().get(i).getFrom().getFollowing().clear();
-                user.getFollowRequestMade().get(i).getFrom().getGroups().clear();
+                user.getFollowRequestMade().get(i).getFrom().getGroupsJoined().clear();
                 user.getFollowRequestMade().get(i).getFrom().getGroupsOwned().clear();
                 user.getFollowRequestMade().get(i).getFrom().getMras().clear();
                 user.getFollowRequestMade().get(i).getFrom().getPosts().clear();
                 user.getFollowRequestMade().get(i).getFrom().getProjectAdmins().clear();
-                user.getFollowRequestMade().get(i).getFrom().getProjectsContributed().clear();
+                user.getFollowRequestMade().get(i).getFrom().getProjectsJoined().clear();
                 user.getFollowRequestMade().get(i).getFrom().getProjectsOwned().clear();
                 user.getFollowRequestMade().get(i).getFrom().getReviewsGiven().clear();
                 user.getFollowRequestMade().get(i).getTo().getFollowRequestMade().clear();
                 user.getFollowRequestMade().get(i).getTo().getFollowRequestReceived().clear();
                 user.getFollowRequestMade().get(i).getTo().getFollowers().clear();
                 user.getFollowRequestMade().get(i).getTo().getFollowing().clear();
-                user.getFollowRequestMade().get(i).getTo().getGroups().clear();
+                user.getFollowRequestMade().get(i).getTo().getGroupsJoined().clear();
                 user.getFollowRequestMade().get(i).getTo().getGroupsOwned().clear();
                 user.getFollowRequestMade().get(i).getTo().getMras().clear();
                 user.getFollowRequestMade().get(i).getTo().getPosts().clear();
                 user.getFollowRequestMade().get(i).getTo().getProjectAdmins().clear();
-                user.getFollowRequestMade().get(i).getTo().getProjectsContributed().clear();
+                user.getFollowRequestMade().get(i).getTo().getProjectsJoined().clear();
                 user.getFollowRequestMade().get(i).getTo().getProjectsOwned().clear();
                 user.getFollowRequestMade().get(i).getTo().getReviewsGiven().clear();
             }
@@ -258,24 +258,24 @@ public class UserResource {
                 user.getFollowRequestReceived().get(i).getFrom().getFollowRequestReceived().clear();
                 user.getFollowRequestReceived().get(i).getFrom().getFollowers().clear();
                 user.getFollowRequestReceived().get(i).getFrom().getFollowing().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getGroups().clear();
+                user.getFollowRequestReceived().get(i).getFrom().getGroupsJoined().clear();
                 user.getFollowRequestReceived().get(i).getFrom().getGroupsOwned().clear();
                 user.getFollowRequestReceived().get(i).getFrom().getMras().clear();
                 user.getFollowRequestReceived().get(i).getFrom().getPosts().clear();
                 user.getFollowRequestReceived().get(i).getFrom().getProjectAdmins().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getProjectsContributed().clear();
+                user.getFollowRequestReceived().get(i).getFrom().getProjectsJoined().clear();
                 user.getFollowRequestReceived().get(i).getFrom().getProjectsOwned().clear();
                 user.getFollowRequestReceived().get(i).getFrom().getReviewsGiven().clear();
                 user.getFollowRequestReceived().get(i).getTo().getFollowRequestMade().clear();
                 user.getFollowRequestReceived().get(i).getTo().getFollowRequestReceived().clear();
                 user.getFollowRequestReceived().get(i).getTo().getFollowers().clear();
                 user.getFollowRequestReceived().get(i).getTo().getFollowing().clear();
-                user.getFollowRequestReceived().get(i).getTo().getGroups().clear();
+                user.getFollowRequestReceived().get(i).getTo().getGroupsJoined().clear();
                 user.getFollowRequestReceived().get(i).getTo().getGroupsOwned().clear();
                 user.getFollowRequestReceived().get(i).getTo().getMras().clear();
                 user.getFollowRequestReceived().get(i).getTo().getPosts().clear();
                 user.getFollowRequestReceived().get(i).getTo().getProjectAdmins().clear();
-                user.getFollowRequestReceived().get(i).getTo().getProjectsContributed().clear();
+                user.getFollowRequestReceived().get(i).getTo().getProjectsJoined().clear();
                 user.getFollowRequestReceived().get(i).getTo().getProjectsOwned().clear();
                 user.getFollowRequestReceived().get(i).getTo().getReviewsGiven().clear();
             }
@@ -284,12 +284,12 @@ public class UserResource {
                 user.getFollowers().get(i).getFollowRequestReceived().clear();
                 user.getFollowers().get(i).getFollowers().clear();
                 user.getFollowers().get(i).getFollowing().clear();
-                user.getFollowers().get(i).getGroups().clear();
+                user.getFollowers().get(i).getGroupsJoined().clear();
                 user.getFollowers().get(i).getGroupsOwned().clear();
                 user.getFollowers().get(i).getMras().clear();
                 user.getFollowers().get(i).getPosts().clear();
                 user.getFollowers().get(i).getProjectAdmins().clear();
-                user.getFollowers().get(i).getProjectsContributed().clear();
+                user.getFollowers().get(i).getProjectsJoined().clear();
                 user.getFollowers().get(i).getProjectsOwned().clear();
                 user.getFollowers().get(i).getReviewsGiven().clear();
             }
@@ -298,22 +298,22 @@ public class UserResource {
                 user.getFollowing().get(i).getFollowRequestReceived().clear();
                 user.getFollowing().get(i).getFollowers().clear();
                 user.getFollowing().get(i).getFollowing().clear();
-                user.getFollowing().get(i).getGroups().clear();
+                user.getFollowing().get(i).getGroupsJoined().clear();
                 user.getFollowing().get(i).getGroupsOwned().clear();
                 user.getFollowing().get(i).getMras().clear();
                 user.getFollowing().get(i).getPosts().clear();
                 user.getFollowing().get(i).getProjectAdmins().clear();
-                user.getFollowing().get(i).getProjectsContributed().clear();
+                user.getFollowing().get(i).getProjectsJoined().clear();
                 user.getFollowing().get(i).getProjectsOwned().clear();
                 user.getFollowing().get(i).getReviewsGiven().clear();
             }
-            for (int i = 0; i < user.getGroups().size(); i++) {
-                user.getGroups().get(i).setGroupOwner(null);
-                user.getGroups().get(i).getUsers().clear();
+            for (int i = 0; i < user.getGroupsJoined().size(); i++) {
+                user.getGroupsJoined().get(i).setGroupOwner(null);
+                user.getGroupsJoined().get(i).getGroupMembers().clear();
             }
             for (int i = 0; i < user.getGroupsOwned().size(); i++) {
                 user.getGroupsOwned().get(i).setGroupOwner(null);
-                user.getGroupsOwned().get(i).getUsers().clear();
+                user.getGroupsOwned().get(i).getGroupMembers().clear();
             }
             for (int i = 0; i < user.getMras().size(); i++) {
                 user.getMras().get(i).setMaterialResourceAvailableOwner(null);
@@ -324,32 +324,32 @@ public class UserResource {
             }
             for (int i = 0; i < user.getProjectAdmins().size(); i++) {
                 user.getProjectAdmins().get(i).getActivities().clear();
-                user.getProjectAdmins().get(i).getAdmins().clear();
-                user.getProjectAdmins().get(i).getGroupMembers().clear();
+                user.getProjectAdmins().get(i).getProjectAdmins().clear();
+                user.getProjectAdmins().get(i).getProjectMembers().clear();
                 user.getProjectAdmins().get(i).getHumanResourcePostings().clear();
                 user.getProjectAdmins().get(i).getMaterialResourcePostings().clear();
                 user.getProjectAdmins().get(i).getPosts().clear();
-                user.getProjectAdmins().get(i).setOwner(null);
+                user.getProjectAdmins().get(i).setProjectOwner(null);
                 user.getProjectAdmins().get(i).getTasks().clear();
             }
-            for (int i = 0; i < user.getProjectsContributed().size(); i++) {
-                user.getProjectsContributed().get(i).getActivities().clear();
-                user.getProjectsContributed().get(i).getAdmins().clear();
-                user.getProjectsContributed().get(i).getGroupMembers().clear();
-                user.getProjectsContributed().get(i).getHumanResourcePostings().clear();
-                user.getProjectsContributed().get(i).getMaterialResourcePostings().clear();
-                user.getProjectsContributed().get(i).getPosts().clear();
-                user.getProjectsContributed().get(i).setOwner(null);
-                user.getProjectsContributed().get(i).getTasks().clear();
+            for (int i = 0; i < user.getProjectsJoined().size(); i++) {
+                user.getProjectsJoined().get(i).getActivities().clear();
+                user.getProjectsJoined().get(i).getProjectAdmins().clear();
+                user.getProjectsJoined().get(i).getProjectMembers().clear();
+                user.getProjectsJoined().get(i).getHumanResourcePostings().clear();
+                user.getProjectsJoined().get(i).getMaterialResourcePostings().clear();
+                user.getProjectsJoined().get(i).getPosts().clear();
+                user.getProjectsJoined().get(i).setProjectOwner(null);
+                user.getProjectsJoined().get(i).getTasks().clear();
             }
             for (int i = 0; i < user.getProjectsOwned().size(); i++) {
                 user.getProjectsOwned().get(i).getActivities().clear();
-                user.getProjectsOwned().get(i).getAdmins().clear();
-                user.getProjectsOwned().get(i).getGroupMembers().clear();
+                user.getProjectsOwned().get(i).getProjectAdmins().clear();
+                user.getProjectsOwned().get(i).getProjectMembers().clear();
                 user.getProjectsOwned().get(i).getHumanResourcePostings().clear();
                 user.getProjectsOwned().get(i).getMaterialResourcePostings().clear();
                 user.getProjectsOwned().get(i).getPosts().clear();
-                user.getProjectsOwned().get(i).setOwner(null);
+                user.getProjectsOwned().get(i).setProjectOwner(null);
                 user.getProjectsOwned().get(i).getTasks().clear();
             }
             for (int i = 0; i < user.getReviewsGiven().size(); i++) {
@@ -391,11 +391,11 @@ public class UserResource {
         try {
             UserEntity user = this.userSessionBeanLocal.userLogin(email, password);
             System.out.println("here");
-            user.getGroups().clear();
+            user.getGroupsJoined().clear();
             user.getGroupsOwned().clear();
             user.getPosts().clear();
             user.getProjectAdmins().clear();
-            user.getProjectsContributed().clear();
+            user.getProjectsJoined().clear();
             user.getProjectsOwned().clear();
             user.getReviewsGiven().clear();
             user.getSdgs().clear();
