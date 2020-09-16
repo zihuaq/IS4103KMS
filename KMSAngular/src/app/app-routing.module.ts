@@ -4,14 +4,14 @@ import { ProfileComponent } from './profile/profile.component';
 import { IndexComponent } from './index/index.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
-import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
+import { SearchUsersComponent } from './search-users/search-users.component';
 
 const routes: Routes = [
   { path: 'signup', component: CreateNewUserComponent },
   { path: 'login', component: UserLoginPageComponent },
   { path: 'profile/:userid', component: ProfileComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'viewAllUsers', component: ViewAllUsersComponent },
+  { path: 'searchUsers', component: SearchUsersComponent },
   { path: '', component: IndexComponent },
 ];
 

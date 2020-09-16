@@ -60,6 +60,12 @@ export class UserService {
       .pipe(map(this.parseDate), catchError(this.handleError));
   }
 
+  getAllUsers() {
+    return this.http
+      .get<any>(this.baseUrl + '/allusers')
+      .pipe(catchError(this.handleError));
+  }
+
   followUser(toUserId: String, fromUserId: String) {
     return this.http
       .post<any>(this.baseUrl + '/follow/' + toUserId + '/' + fromUserId, null)

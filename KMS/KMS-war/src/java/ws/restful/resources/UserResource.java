@@ -374,6 +374,36 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+    
+    @GET
+    @Path("/allusers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllUsers() {
+        try {
+            List<UserEntity> users = userSessionBeanLocal.getAllUsers();
+            for (int i = 0; i < users.size(); i++) {
+                users.get(i).getFollowRequestMade().clear();
+                users.get(i).getFollowRequestReceived().clear();
+                users.get(i).getFollowers().clear();
+                users.get(i).getFollowing().clear();
+                users.get(i).getGroups().clear();
+                users.get(i).getGroupsOwned().clear();
+                users.get(i).getMras().clear();
+                users.get(i).getPosts().clear();
+                users.get(i).getProjectAdmins();
+                users.get(i).getProjectsContributed().clear();
+                users.get(i).getProjectsOwned().clear();
+                users.get(i).getReviewsGiven().clear();
+                users.get(i).getReviewsReceived().clear();
+            }
+            return Response.status(200).entity(users).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
 
     @Path("userRegistration")
     @PUT
