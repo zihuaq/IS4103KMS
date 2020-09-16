@@ -21,7 +21,7 @@ export class User {
   following: User[];
   skills: Tag[];
   mras: MaterialResourceAvailable[];
-  sdg: Tag[];
+  sdgs: Tag[];
   accountPrivacySetting: AccountPrivacySettingEnum;
 
   constructor(
@@ -42,7 +42,7 @@ export class User {
     following?: User[],
     skills?: Tag[],
     mras?: MaterialResourceAvailable[],
-    sdg?: Tag[],
+    sdgs?: Tag[],
     accountPrivacySetting?: AccountPrivacySettingEnum
   ) {
     this.userId = userId;
@@ -63,7 +63,7 @@ export class User {
     this.following = following;
     this.skills = skills;
     this.mras = mras;
-    this.sdg = sdg;
+    this.sdgs = sdgs;
     this.accountPrivacySetting = accountPrivacySetting;
   }
 }
