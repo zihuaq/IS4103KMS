@@ -75,12 +75,27 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  acceptFollow(toUserId: String, fromUserId: String) {
+  acceptFollow(toUserId: number, fromUserId: number) {
     return this.http
       .post<any>(
         this.baseUrl + '/acceptfollow/' + toUserId + '/' + fromUserId,
         null
       )
+      .pipe(catchError(this.handleError));
+  }
+
+  rejectFollow(toUserId: number, fromUserId: number) {
+    return this.http
+      .post<any>(
+        this.baseUrl + '/rejectfollow/' + toUserId + '/' + fromUserId,
+        null
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  getFollowRequests(userId: number) {
+    return this.http
+      .get<any>(this.baseUrl + /followrequests/ + userId)
       .pipe(catchError(this.handleError));
   }
 

@@ -22,6 +22,8 @@ import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,8 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
     FooterComponent,
     ProfileTabpanelComponent,
     EditProfileComponent,
+    NotificationsComponent,
+    FollowRequestsComponent,
   ],
   imports: [
     BrowserModule,

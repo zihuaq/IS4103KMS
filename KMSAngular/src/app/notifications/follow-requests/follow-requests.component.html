@@ -1,0 +1,37 @@
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Follow Requests</h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body p-0">
+    <ul class="products-list product-list-in-card pl-2 pr-2">
+      <li class="item" *ngFor="let followRequest of followRequests">
+        <div class="product-img">
+          <img *ngIf="!followRequest.from.profilePicture"
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            alt="Product Image" class="img-size-50">
+          <img *ngIf="followRequest.from.profilePicture" [src]="followRequest.from.profilePicture" alt="Product Image"
+            class="img-size-50">
+        </div>
+        <div class="product-info">
+          <a class="product-title d-flex justify-content-around">{{followRequest.from.firstName}}
+            {{followRequest.from.lastName}} wants to follow
+            you</a>
+          <div class="d-flex justify-content-around">
+            <button type="button" class="btn bg-gradient-primary btn-sm col-4"
+              (click)="acceptFollow(followRequest.to.userId,followRequest.from.userId)">Accept</button>
+            <button type="button" class="btn bg-gradient-primary btn-sm col-4"
+              (click)="rejectFollow(followRequest.to.userId,followRequest.from.userId)">Reject</button>
+          </div>
+        </div>
+      </li>
+      <!-- /.item -->
+    </ul>
+  </div>
+  <!-- /.card-body -->
+  <div class="card-footer text-center">
+    <a href="javascript:void(0)" class="uppercase">View All Follow Requests</a>
+  </div>
+  <!-- /.card-footer -->
+</div>
+<!-- /.card -->

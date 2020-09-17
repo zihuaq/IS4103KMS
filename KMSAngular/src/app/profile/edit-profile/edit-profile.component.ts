@@ -16,6 +16,7 @@ export class EditProfileComponent implements OnInit {
   @Input() user: User;
   @Output() userChanged = new EventEmitter<User>();
   profilePictureFile: string | ArrayBuffer;
+  selectedFile: string | ArrayBuffer;
   updatedUser: User;
   privacySettings = AccountPrivacySettingEnum;
   constructor(private userService: UserService) {}
@@ -29,12 +30,17 @@ export class EditProfileComponent implements OnInit {
   }
 
   getFiles(event) {
-    var reader = new FileReader();
-    reader.onload = (e) => {
-      this.profilePictureFile = e.target.result;
-      console.log(this.profilePictureFile);
-    };
-    reader.readAsDataURL(event.target.files[0]);
+    if (event.target.files[0] != undefined) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.selectedFile = e.target.result;
+        console.log(this.selectedFile);
+      };
+      console.log(event.target.files[0]);
+      reader.readAsDataURL(event.target.files[0]);
+    } else {
+      this.selectedFile = undefined;
+    }
   }
 
   onEditProfile(editForm: NgForm) {
@@ -47,7 +53,11 @@ export class EditProfileComponent implements OnInit {
       this.updatedUser.dob = new Date(
         $('#datetimepicker').datetimepicker('viewDate')
       );
-      this.updatedUser.profilePicture = this.profilePictureFile;
+      if (this.selectedFile == undefined) {
+        this.updatedUser.profilePicture = this.profilePictureFile;
+      } else {
+        this.updatedUser.profilePicture = this.selectedFile;
+      }
       this.updatedUser.accountPrivacySetting = editForm.value.privacySettings;
       this.userService.updateUser(this.updatedUser).subscribe(
         (responsedata: User) => {
@@ -60,9 +70,10 @@ export class EditProfileComponent implements OnInit {
             dob: responsedata.dob,
             profilePicture: responsedata.profilePicture,
           };
+          this.profilePictureFile = responsedata.profilePicture;
           this.userChanged.emit(this.user);
           $(document).Toasts('create', {
-            class: 'bg-primary',
+            class: 'bg-success',
             title: 'Success',
             autohide: true,
             delay: 2500,
@@ -86,7 +97,8 @@ export class EditProfileComponent implements OnInit {
   removePic() {
     if (this.profilePictureFile != undefined) {
       this.profilePictureFile = undefined;
-      $('#profilePictureFile').next('label').text('Choose file');
+      this.selectedFile = undefined;
+      $('#modal-default').modal('hide');
     }
   }
 }

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -100,10 +101,8 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "sdgs")
     @OneToMany
     private List<TagEntity> sdgs;
-    @JoinTable(name = "followRequestMade")
     @OneToMany(mappedBy = "from")
     private List<FollowRequestEntity> followRequestMade;
-    @JoinTable(name = "followRequestReceived")
     @OneToMany(mappedBy = "to")
     private List<FollowRequestEntity> followRequestReceived;
     @NotNull

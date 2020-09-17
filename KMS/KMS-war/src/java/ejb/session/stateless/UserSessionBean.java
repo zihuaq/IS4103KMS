@@ -176,7 +176,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void followUser(Long toUserId, Long fromUserId) throws UserNotFoundException {
+    public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException {
         System.out.println(toUserId);
         System.out.println(fromUserId);
         UserEntity toUser = em.find(UserEntity.class, toUserId);
@@ -187,31 +187,64 @@ public class UserSessionBean implements UserSessionBeanLocal {
         if (toUser.getAccountPrivacySetting().equals(AccountPrivacySettingEnum.PUBLIC)) {
             fromUser.getFollowing().add(toUser);
             toUser.getFollowers().add(fromUser);
+            return null;
         } else {
             FollowRequestEntity followRequestEntity = new FollowRequestEntity();
-            em.persist(followRequestEntity);
             followRequestEntity.setFrom(fromUser);
             followRequestEntity.setTo(toUser);
+            
+            fromUser.getFollowRequestMade().add(followRequestEntity);
+            toUser.getFollowRequestReceived().add(followRequestEntity);
+            em.persist(followRequestEntity);
+            em.flush();
+            return followRequestEntity;
         }
     }
 
     @Override
     public void acceptFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException {
-        Query q = em.createQuery("SELECT f FROM FollowRequestEntity AS f WHERE f.from=:from AND f.to=:to");
+        Query q = em.createQuery("SELECT f FROM FollowRequestEntity AS f WHERE f.from.userId = :from AND f.to.userId = :to");
         q.setParameter("from", fromUserId);
         q.setParameter("to", toUserId);
         FollowRequestEntity f = (FollowRequestEntity) q.getSingleResult();
         if (f == null) {
             throw new NoResultException("follow request not found");
         }
-        em.remove(f);
         UserEntity toUser = em.find(UserEntity.class, toUserId);
-        UserEntity fromUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
         if (toUser == null || fromUser == null) {
             throw new UserNotFoundException("User not found");
         }
+        fromUser.getFollowRequestMade().remove(f);
+        toUser.getFollowRequestReceived().remove(f);
+        f.setTo(null);
+        f.setFrom(null);
+        em.remove(f);
         fromUser.getFollowing().add(toUser);
         toUser.getFollowers().add(fromUser);
+//        em.flush();
+    }
+
+    @Override
+    public void rejectFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException {
+        Query q = em.createQuery("SELECT f FROM FollowRequestEntity AS f WHERE f.from.userId = :from AND f.to.userId = :to");
+        q.setParameter("from", fromUserId);
+        q.setParameter("to", toUserId);
+        FollowRequestEntity f = (FollowRequestEntity) q.getSingleResult();
+        if (f == null) {
+            throw new NoResultException("follow request not found");
+        }
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        fromUser.getFollowRequestMade().remove(f);
+        toUser.getFollowRequestReceived().remove(f);
+        f.setTo(null);
+        f.setFrom(null);
+        em.remove(f);
+//        em.flush();
     }
 
     @Override
@@ -279,24 +312,39 @@ public class UserSessionBean implements UserSessionBeanLocal {
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
+        user.getFollowers().size();
         return user.getFollowers();
     }
-    
+
     @Override
     public List<UserEntity> getFollowing(long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
+        user.getFollowing().size();
         return user.getFollowing();
     }
-    
+
     @Override
     public List<MaterialResourceAvailableEntity> getMaterialRequestAvailable(long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
+        user.getMras().size();
         return user.getMras();
+    }
+
+    @Override
+    public List<FollowRequestEntity> getFollowRequests(Long userId) throws UserNotFoundException {
+//        em.flush();
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getFollowRequestReceived().size();
+        System.out.println(user.getFollowRequestReceived());
+        return user.getFollowRequestReceived();
     }
 }

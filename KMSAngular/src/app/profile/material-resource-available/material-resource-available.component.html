@@ -53,10 +53,10 @@
     <!-- /.modal-dialog -->
 </div>
 
-<br />
+<br *ngIf="loggedInUser.userId == profile.userId" />
 <label *ngIf="loggedInUser.userId == profile.userId">Your Material Resources Available</label>
 <label *ngIf="loggedInUser.userId != profile.userId">{{profile.firstName}}
-    {{profile.lastName}} Material Resources Available</label>
+    {{profile.lastName}}'s Material Resources Available</label>
 <br />
 
 <span *ngIf="profile.mras.length == 0 && loggedInUser.userId == profile.userId"> You have no material resource available
