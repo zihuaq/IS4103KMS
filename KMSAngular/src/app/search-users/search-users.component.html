@@ -69,11 +69,14 @@
                                         <a routerLink="/profile/{{user.userId}}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-user"></i> View Profile
                                         </a>
-                                        <button *ngIf="loggedInUser.following.includes(user)" type="button" class="btn bg-gradient-info btn-sm"> 
+                                        <button *ngIf="user.userId != loggedInUser.userId && !checkLoginUserHasFollowed(user.userId) && !checkLoginUserHaveSentFollowReq(user.userId)" type="button" class="btn bg-gradient-info btn-sm" (click)="follow(user.userId)"> 
                                             <i class="fas fa-user-plus"></i> Follow 
                                         </button>
-                                        <button *ngIf="!loggedInUser.following.includes(user)"type=" button" class="btn bg-gradient-danger btn-sm"> 
+                                        <button *ngIf="user.userId != loggedInUser.userId && checkLoginUserHasFollowed(user.userId)" type=" button" class="btn bg-gradient-danger btn-sm" (click)="unfollow(user.userId)"> 
                                             <i class="fas fa-user-times"></i> Unfollow 
+                                        </button>
+                                        <button *ngIf="user.userId != loggedInUser.userId && !checkLoginUserHasFollowed(user.userId) && checkLoginUserHaveSentFollowReq(user.userId)" type=" button" class="btn bg-gradient-info btn-sm" disabled=true> 
+                                            <i class="fas fa-check"></i> Follow Request Sent 
                                         </button>
                                     </div>
                                 </div>

@@ -2,6 +2,7 @@ import { Tag } from './tag';
 import { MaterialResourceAvailable } from './material-resource-available';
 import { AccountPrivacySettingEnum } from './privacy-settings.enum';
 import { UserType } from './user-type.enum';
+import { FollowRequest } from './follow-request';
 
 export class User {
   userId: number;
@@ -22,6 +23,8 @@ export class User {
   skills: Tag[];
   mras: MaterialResourceAvailable[];
   sdgs: Tag[];
+  followRequestMade: FollowRequest[];
+  followRequestReceived: FollowRequest[];
   accountPrivacySetting: AccountPrivacySettingEnum;
 
   constructor(
@@ -43,6 +46,8 @@ export class User {
     skills?: Tag[],
     mras?: MaterialResourceAvailable[],
     sdgs?: Tag[],
+    followRequestMade?: FollowRequest[],
+    followRequestReceived?: FollowRequest[],
     accountPrivacySetting?: AccountPrivacySettingEnum
   ) {
     this.userId = userId;
@@ -63,6 +68,8 @@ export class User {
     this.skills = skills;
     this.mras = mras;
     this.sdgs = sdgs;
+    this.followRequestMade = followRequestMade;
+    this.followRequestReceived = followRequestReceived;
     this.accountPrivacySetting = accountPrivacySetting;
   }
 }

@@ -46,13 +46,13 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("user")
 public class UserResource {
-    
+
     UserSessionBeanLocal userSessionBeanLocal = lookupUserSessionBeanLocal();
-    
+
     TagSessionBeanLocal tagSessionBeanLocal = lookupTagSessionBeanLocal();
-    
+
     MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBeanLocal = lookupMaterialResourceAvailableSessionBeanLocal();
-    
+
     @Context
     private UriInfo context;
 
@@ -61,7 +61,7 @@ public class UserResource {
      */
     public UserResource() {
     }
-    
+
     private MaterialResourceAvailableSessionBeanLocal lookupMaterialResourceAvailableSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -71,7 +71,7 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
-    
+
     private TagSessionBeanLocal lookupTagSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -81,7 +81,7 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
-    
+
     private UserSessionBeanLocal lookupUserSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -91,7 +91,7 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
-    
+
     @PUT
     @Path("/addskills/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -100,7 +100,7 @@ public class UserResource {
         try {
             List<TagEntity> updatedSkills = userSessionBeanLocal.addSkillsToProfile(userId, tags);
             return Response.status(200).entity(updatedSkills).build();
-            
+
         } catch (NoResultException | DuplicateTagInProfileException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -108,7 +108,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/skills/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -116,7 +116,7 @@ public class UserResource {
         try {
             List<TagEntity> skills = userSessionBeanLocal.getSkillsForProfile(userId);
             return Response.status(200).entity(skills).build();
-            
+
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -124,7 +124,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @DELETE
     @Path("/removeskill/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -140,7 +140,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/addSDG/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -155,7 +155,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/removeSDG/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -170,7 +170,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @POST
     @Path("/mra/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -188,7 +188,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @DELETE
     @Path("/mra/{userId}/{mraId}")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -207,7 +207,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/mra/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -225,7 +225,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -257,66 +257,14 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/allusers")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers() {
         try {
             List<UserEntity> users = userSessionBeanLocal.getAllUsers();
-            for (int i = 0; i < users.size(); i++) {
-                users.get(i).getFollowRequestMade().clear();
-                users.get(i).getFollowRequestReceived().clear();
-                List<UserEntity> followers = users.get(i).getFollowers();
-                for (UserEntity user : followers) {
-                    user.getReviewsGiven().clear();
-                    user.getReviewsReceived().clear();
-                    user.getProjectsOwned().clear();
-                    user.getProjectsContributed().clear();
-                    user.getProjectAdmins().clear();
-                    user.getGroups().clear();
-                    user.getPosts().clear();
-                    user.getGroupsOwned().clear();
-                    user.getBadges().clear();
-                    user.getMras().clear();
-                    user.getSkills().clear();
-                    user.getFollowing().clear();
-                    user.getFollowers().clear();
-                    user.getFollowRequestMade().clear();
-                    user.getFollowRequestReceived().clear();
-                    user.setPassword("");
-                }
-                users.get(i).setFollowers(followers);
-                List<UserEntity> following = users.get(i).getFollowing();
-                for (UserEntity user : following) {
-                    user.getReviewsGiven().clear();
-                    user.getReviewsReceived().clear();
-                    user.getProjectsOwned().clear();
-                    user.getProjectsContributed().clear();
-                    user.getProjectAdmins().clear();
-                    user.getGroups().clear();
-                    user.getPosts().clear();
-                    user.getGroupsOwned().clear();
-                    user.getBadges().clear();
-                    user.getMras().clear();
-                    user.getSkills().clear();
-                    user.getFollowing().clear();
-                    user.getFollowers().clear();
-                    user.getFollowRequestMade().clear();
-                    user.getFollowRequestReceived().clear();
-                    user.setPassword("");
-                }
-                users.get(i).setFollowing(following);
-                users.get(i).getGroups().clear();
-                users.get(i).getGroupsOwned().clear();
-                users.get(i).getMras().clear();
-                users.get(i).getPosts().clear();
-                users.get(i).getProjectAdmins();
-                users.get(i).getProjectsContributed().clear();
-                users.get(i).getProjectsOwned().clear();
-                users.get(i).getReviewsGiven().clear();
-                users.get(i).getReviewsReceived().clear();
-            }
+            users = getUsersResponse(users);
             return Response.status(200).entity(users).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -325,7 +273,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @Path("userRegistration")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -339,7 +287,7 @@ public class UserResource {
         }
         return Response.status(Response.Status.OK).entity(newUser).build();
     }
-    
+
     @Path("userLogin")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
@@ -369,9 +317,9 @@ public class UserResource {
         } catch (InvalidLoginCredentialException ex) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
-        
+
     }
-    
+
     @DELETE
     @Path("deleteUser")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -379,7 +327,7 @@ public class UserResource {
     public Response deleteUser(@PathParam("userId") Long userId, UserEntity user) {
         try {
             userSessionBeanLocal.deleteUser(userId, user);
-            
+
             return Response.status(204).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -388,7 +336,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @POST
     @Path("/follow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -417,7 +365,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @POST
     @Path("/acceptfollow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -432,7 +380,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @POST
     @Path("/rejectfollow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -467,27 +415,9 @@ public class UserResource {
     @Path("/followrequests/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFollowRequests(@PathParam("userId") Long userId) {
-        //TODO: fix this                                   
         try {
             List<FollowRequestEntity> followRequests = userSessionBeanLocal.getFollowRequests(userId);
-            List<FollowRequestEntity> followRequestsResponse = new ArrayList<>();
-            for (FollowRequestEntity followRequestEntity : followRequests) {
-                UserEntity to = new UserEntity();
-                to.setUserId(followRequestEntity.getTo().getUserId());
-                to.setFirstName(followRequestEntity.getTo().getFirstName());
-                to.setLastName(followRequestEntity.getTo().getLastName());
-                to.setProfilePicture(followRequestEntity.getTo().getProfilePicture());
-                UserEntity from = new UserEntity();
-                from.setUserId(followRequestEntity.getFrom().getUserId());
-                from.setFirstName(followRequestEntity.getFrom().getFirstName());
-                from.setLastName(followRequestEntity.getFrom().getLastName());
-                from.setProfilePicture(followRequestEntity.getFrom().getProfilePicture());
-                FollowRequestEntity temp = new FollowRequestEntity();
-                temp.setId(followRequestEntity.getId());
-                temp.setTo(to);
-                temp.setFrom(from);
-                followRequestsResponse.add(temp);
-            }
+            List<FollowRequestEntity> followRequestsResponse = getFollowRequestsResponse(followRequests);
             return Response.status(200).entity(followRequestsResponse).build();
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -496,7 +426,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -534,28 +464,14 @@ public class UserResource {
             return Response.status(400).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/followers/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFollowers(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> followers = userSessionBeanLocal.getFollowers(userId);
-            List<UserEntity> followersResponse = new ArrayList<>();
-            for (UserEntity user : followers) {
-                UserEntity temp = new UserEntity();
-                temp.setUserId(user.getUserId());
-                temp.setFirstName(user.getFirstName());
-                temp.setLastName(user.getLastName());
-                temp.setEmail(user.getEmail());
-                temp.setDob(user.getDob());
-                temp.setGender(user.getGender());
-                temp.setJoinedDate(user.getJoinedDate());
-                temp.setProfilePicture(user.getProfilePicture());
-                temp.setSkills(user.getSkills());
-                temp.setSdgs(user.getSdgs());
-                followersResponse.add(temp);
-            }
+            List<UserEntity> followersResponse = getUsersResponse(followers);
             System.out.println(followersResponse);
             return Response.status(200).entity(followersResponse).build();
         } catch (UserNotFoundException ex) {
@@ -572,21 +488,7 @@ public class UserResource {
     public Response getFollowing(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> following = userSessionBeanLocal.getFollowing(userId);
-            List<UserEntity> followingResponse = new ArrayList<>();
-            for (UserEntity user : following) {
-                UserEntity temp = new UserEntity();
-                temp.setUserId(user.getUserId());
-                temp.setFirstName(user.getFirstName());
-                temp.setLastName(user.getLastName());
-                temp.setEmail(user.getEmail());
-                temp.setDob(user.getDob());
-                temp.setGender(user.getGender());
-                temp.setJoinedDate(user.getJoinedDate());
-                temp.setProfilePicture(user.getProfilePicture());
-                temp.setSkills(user.getSkills());
-                temp.setSdgs(user.getSdgs());
-                followingResponse.add(temp);
-            }
+            List<UserEntity> followingResponse = getUsersResponse(following);
             System.out.println(followingResponse);
             return Response.status(200).entity(followingResponse).build();
         } catch (UserNotFoundException ex) {
@@ -595,5 +497,49 @@ public class UserResource {
                     .build();
             return Response.status(404).entity(exception).build();
         }
+    }
+    
+
+    private List<UserEntity> getUsersResponse(List<UserEntity> users) {
+        List<UserEntity> usersResponse = new ArrayList<>();
+        for (UserEntity user : users) {
+            UserEntity temp = new UserEntity();
+            temp.setUserId(user.getUserId());
+            temp.setFirstName(user.getFirstName());
+            temp.setLastName(user.getLastName());
+            temp.setEmail(user.getEmail());
+            temp.setDob(user.getDob());
+            temp.setGender(user.getGender());
+            temp.setJoinedDate(user.getJoinedDate());
+            temp.setProfilePicture(user.getProfilePicture());
+            temp.setSkills(user.getSkills());
+            temp.setSdgs(user.getSdgs());
+            temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
+            temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            usersResponse.add(temp);
+        }
+        return usersResponse;
+    }
+    
+    private List<FollowRequestEntity> getFollowRequestsResponse(List<FollowRequestEntity> followRequests) {
+        List<FollowRequestEntity> followRequestsResponse = new ArrayList<>();
+        for (FollowRequestEntity followRequestEntity : followRequests) {
+            UserEntity to = new UserEntity();
+            to.setUserId(followRequestEntity.getTo().getUserId());
+            to.setFirstName(followRequestEntity.getTo().getFirstName());
+            to.setLastName(followRequestEntity.getTo().getLastName());
+            to.setProfilePicture(followRequestEntity.getTo().getProfilePicture());
+            UserEntity from = new UserEntity();
+            from.setUserId(followRequestEntity.getFrom().getUserId());
+            from.setFirstName(followRequestEntity.getFrom().getFirstName());
+            from.setLastName(followRequestEntity.getFrom().getLastName());
+            from.setProfilePicture(followRequestEntity.getFrom().getProfilePicture());
+            FollowRequestEntity temp = new FollowRequestEntity();
+            temp.setId(followRequestEntity.getId());
+            temp.setTo(to);
+            temp.setFrom(from);
+            followRequestsResponse.add(temp);
+        }
+        return followRequestsResponse;
     }
 }
