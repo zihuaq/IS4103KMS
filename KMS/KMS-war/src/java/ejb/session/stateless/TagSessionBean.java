@@ -63,4 +63,11 @@ public class TagSessionBean implements TagSessionBeanLocal {
         q.setParameter("tagType", TagTypeEnum.SDG);
         return q.getResultList();
     }    
+    
+    @Override
+    public List<TagEntity> getAllReportTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.REPORT);
+        return q.getResultList();
+    }  
 }

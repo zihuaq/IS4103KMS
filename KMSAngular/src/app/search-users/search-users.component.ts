@@ -35,7 +35,7 @@ export class SearchUsersComponent implements OnInit {
     this.searchString = event;
     this.filteredUsers = [];
     for (var user of this.allUsers) {
-      if (user.firstName.includes(this.searchString) || user.lastName.includes(this.searchString)) {
+      if (user.firstName.toLowerCase().includes(this.searchString.toLowerCase()) || user.lastName.toLowerCase().includes(this.searchString.toLowerCase())) {
         this.filteredUsers.push(user);
       }
     }

@@ -25,6 +25,7 @@ import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
+import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { FollowRequestsComponent } from './notifications/follow-requests/follow-
     EditProfileComponent,
     NotificationsComponent,
     FollowRequestsComponent,
+    ReportProfileComponent,
   ],
   imports: [
     BrowserModule,

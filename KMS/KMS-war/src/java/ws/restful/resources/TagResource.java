@@ -63,6 +63,13 @@ public class TagResource {
     public Response getAllSDGTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllSDGTags()).build();
     }
+    
+    @GET
+    @Path("/report")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllReportTags() {
+        return Response.status(200).entity(tagSessionBeanLocal.getAllReportTags()).build();
+    }
 
     private TagSessionBeanLocal lookupTagSessionBeanLocal() {
         try {

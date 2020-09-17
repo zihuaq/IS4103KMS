@@ -9,9 +9,8 @@ package util.enumeration;
  *
  * @author Cassie
  */
-public enum TagTypeEnum {
-    SKILL,
-    SDG,
-    MATERIALRESOURCE,
-    REPORT
+public enum ReportTypeEnum {
+    PROFILE,
+    GROUP,
+    PROJECT
 }
