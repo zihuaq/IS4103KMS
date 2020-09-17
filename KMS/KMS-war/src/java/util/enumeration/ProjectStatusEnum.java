@@ -10,7 +10,17 @@ package util.enumeration;
  * @author chai
  */
 public enum ProjectStatusEnum {
-    NOTSTARTED,
-    ONGOING,
-    COMPLETED
+    INACTIVE("INACTIVE"),
+    ACTIVE("ACTIVE"),
+    COMPLETED("COMPLETED");
+    
+    private final String name;
+
+    ProjectStatusEnum(String name) {
+        this.name = name;
+    }
+    
+    public String getName() {
+        return name;
+    }
 }

@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.CreateProjectException;
+import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import entity.ProjectEntity;
 import java.util.List;
@@ -27,13 +28,13 @@ public interface ProjectSessionBeanLocal {
 
     public ProjectEntity getProjectById(Long projectId);
 
-    public void addMember(Long projectId, Long userId) throws NoResultException;
+    public void joinProject(Long projectId, Long userId) throws NoResultException;
 
-    public void removeMember(Long projectId, Long userId) throws NoResultException;
+    public void removeMember(Long projectId, Long userId) throws NoResultException, InvalidRoleException;
 
     public void updateProject(ProjectEntity projectToUpdate);
 
-    public void updateStatus(Long projectId, ProjectStatusEnum status);
+    public void updateStatus(Long projectId, String status);
 
     public void addAdmin(Long projectId, Long userId) throws NoResultException;
 
