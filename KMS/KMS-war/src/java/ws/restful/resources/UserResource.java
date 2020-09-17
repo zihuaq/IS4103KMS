@@ -34,8 +34,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -545,4 +547,42 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+    //    @POST
+//    @Path("ResetPassword")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response changePassword(@PathParam("password") String password) {
+////            try {
+////                userSessionBeanLocal.customerLogin(changePasswordReq.getUsername(), changePasswordReq.getPassword());
+////                
+////                userSessionBeanLocal.changePassword(changePasswordReq.getUsername(), changePasswordReq.getOldPassword(), changePasswordReq.getNewPassword());
+////                
+////                return Response.status(Response.Status.OK).build();
+////            } catch (InvalidLoginCredentialException | ChangePasswordException ex) {
+////                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+////
+////                return Response.status(Response.Status.UNAUTHORIZED).entity(errorRsp).build();
+////            } catch (Exception ex) {
+////                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+////
+////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+////            }
+//    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllRecords()
+    {
+        try {
+            List<UserEntity> UserEntities = userSessionBeanLocal.retrieveAllUser();
+            GenericEntity<List<UserEntity>> genericEntities = new GenericEntity<List<UserEntity>>(UserEntities) {
+            };
+            
+            return Response.status(Status.OK).entity(genericEntities).build();
+        } catch (UserNotFoundException ex) {
+            Logger.getLogger(UserResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
 }

@@ -66,5 +66,7 @@ public interface UserSessionBeanLocal {
 
     public void resetPassword(String email)throws UserNotFoundException;
     
+    public List<UserEntity> retrieveAllUser() throws UserNotFoundException;
+
 
 }
