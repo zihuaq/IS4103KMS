@@ -13,9 +13,11 @@ import Exception.UserNotFoundException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.FollowRequestEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -392,8 +394,22 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
         try {
-            userSessionBeanLocal.followUser(toUserId, fromUserId);
-            return Response.status(204).build();
+            FollowRequestEntity followRequestEntity = userSessionBeanLocal.followUser(toUserId, fromUserId);
+            UserEntity to = new UserEntity();
+            to.setUserId(followRequestEntity.getTo().getUserId());
+            to.setFirstName(followRequestEntity.getTo().getFirstName());
+            to.setLastName(followRequestEntity.getTo().getLastName());
+            to.setProfilePicture(followRequestEntity.getTo().getProfilePicture());
+            UserEntity from = new UserEntity();
+            from.setUserId(followRequestEntity.getFrom().getUserId());
+            from.setFirstName(followRequestEntity.getFrom().getFirstName());
+            from.setLastName(followRequestEntity.getFrom().getLastName());
+            from.setProfilePicture(followRequestEntity.getFrom().getProfilePicture());
+            FollowRequestEntity followRequestEntityResponse = new FollowRequestEntity();
+            followRequestEntityResponse.setId(followRequestEntity.getId());
+            followRequestEntityResponse.setTo(to);
+            followRequestEntityResponse.setFrom(from);
+            return Response.status(200).entity(followRequestEntityResponse).build();
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -418,6 +434,21 @@ public class UserResource {
     }
     
     @POST
+    @Path("/rejectfollow/{toUserId}/{fromUserId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response rejectFollow(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
+        try {
+            userSessionBeanLocal.rejectFollowRequest(toUserId, fromUserId);
+            return Response.status(204).build();
+        } catch (NoResultException | UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @POST
     @Path("/unfollow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response unfollowUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
@@ -431,7 +462,41 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
+    @GET
+    @Path("/followrequests/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowRequests(@PathParam("userId") Long userId) {
+        //TODO: fix this                                   
+        try {
+            List<FollowRequestEntity> followRequests = userSessionBeanLocal.getFollowRequests(userId);
+            List<FollowRequestEntity> followRequestsResponse = new ArrayList<>();
+            for (FollowRequestEntity followRequestEntity : followRequests) {
+                UserEntity to = new UserEntity();
+                to.setUserId(followRequestEntity.getTo().getUserId());
+                to.setFirstName(followRequestEntity.getTo().getFirstName());
+                to.setLastName(followRequestEntity.getTo().getLastName());
+                to.setProfilePicture(followRequestEntity.getTo().getProfilePicture());
+                UserEntity from = new UserEntity();
+                from.setUserId(followRequestEntity.getFrom().getUserId());
+                from.setFirstName(followRequestEntity.getFrom().getFirstName());
+                from.setLastName(followRequestEntity.getFrom().getLastName());
+                from.setProfilePicture(followRequestEntity.getFrom().getProfilePicture());
+                FollowRequestEntity temp = new FollowRequestEntity();
+                temp.setId(followRequestEntity.getId());
+                temp.setTo(to);
+                temp.setFrom(from);
+                followRequestsResponse.add(temp);
+            }
+            return Response.status(200).entity(followRequestsResponse).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -476,26 +541,23 @@ public class UserResource {
     public Response getFollowers(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> followers = userSessionBeanLocal.getFollowers(userId);
+            List<UserEntity> followersResponse = new ArrayList<>();
             for (UserEntity user : followers) {
-                user.getReviewsGiven().clear();
-                user.getReviewsReceived().clear();
-                user.getProjectsOwned().clear();
-                user.getProjectsContributed().clear();
-                user.getProjectAdmins().clear();
-                user.getGroups().clear();
-                user.getPosts().clear();
-                user.getGroupsOwned().clear();
-                user.getBadges().clear();
-                user.getMras().clear();
-                user.getSkills().clear();
-                user.getFollowing().clear();
-                user.getFollowers().clear();
-                user.getSdgs().clear();
-                user.getFollowRequestMade().clear();
-                user.getFollowRequestReceived().clear();
-                user.setPassword("");
+                UserEntity temp = new UserEntity();
+                temp.setUserId(user.getUserId());
+                temp.setFirstName(user.getFirstName());
+                temp.setLastName(user.getLastName());
+                temp.setEmail(user.getEmail());
+                temp.setDob(user.getDob());
+                temp.setGender(user.getGender());
+                temp.setJoinedDate(user.getJoinedDate());
+                temp.setProfilePicture(user.getProfilePicture());
+                temp.setSkills(user.getSkills());
+                temp.setSdgs(user.getSdgs());
+                followersResponse.add(temp);
             }
-            return Response.status(200).entity(followers).build();
+            System.out.println(followersResponse);
+            return Response.status(200).entity(followersResponse).build();
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -510,26 +572,23 @@ public class UserResource {
     public Response getFollowing(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> following = userSessionBeanLocal.getFollowing(userId);
+            List<UserEntity> followingResponse = new ArrayList<>();
             for (UserEntity user : following) {
-                user.getReviewsGiven().clear();
-                user.getReviewsReceived().clear();
-                user.getProjectsOwned().clear();
-                user.getProjectsContributed().clear();
-                user.getProjectAdmins().clear();
-                user.getGroups().clear();
-                user.getPosts().clear();
-                user.getGroupsOwned().clear();
-                user.getBadges().clear();
-                user.getMras().clear();
-                user.getSkills().clear();
-                user.getFollowing().clear();
-                user.getFollowers().clear();
-                user.getSdgs().clear();
-                user.getFollowRequestMade().clear();
-                user.getFollowRequestReceived().clear();
-                user.setPassword("");
+                UserEntity temp = new UserEntity();
+                temp.setUserId(user.getUserId());
+                temp.setFirstName(user.getFirstName());
+                temp.setLastName(user.getLastName());
+                temp.setEmail(user.getEmail());
+                temp.setDob(user.getDob());
+                temp.setGender(user.getGender());
+                temp.setJoinedDate(user.getJoinedDate());
+                temp.setProfilePicture(user.getProfilePicture());
+                temp.setSkills(user.getSkills());
+                temp.setSdgs(user.getSdgs());
+                followingResponse.add(temp);
             }
-            return Response.status(200).entity(following).build();
+            System.out.println(followingResponse);
+            return Response.status(200).entity(followingResponse).build();
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())

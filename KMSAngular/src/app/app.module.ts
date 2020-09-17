@@ -23,6 +23,8 @@ import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tab
 import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
     SearchbarComponent,
     SearchUsersComponent,
     EditProfileComponent,
+    NotificationsComponent,
+    FollowRequestsComponent,
   ],
   imports: [
     BrowserModule,

@@ -10,6 +10,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.FollowRequestEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
@@ -30,11 +31,11 @@ public interface UserSessionBeanLocal {
     public List<UserEntity> getAllUsers() throws NoResultException;
 
     public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
-    
+
     public List<TagEntity> getSkillsForProfile(long userId) throws UserNotFoundException;
 
     public List<TagEntity> removeSkillFromProfile(long userId, long tagId) throws NoResultException;
-    
+
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
 
     public void removeSDGFromProfile(long userId, long tagId) throws NoResultException;
@@ -45,9 +46,11 @@ public interface UserSessionBeanLocal {
 
     public void deleteUser(long userId, UserEntity user) throws NoResultException;
 
-    public void followUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
+    public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
 
     public void acceptFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
+
+    public void rejectFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
 
     public void unfollowUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
 
@@ -58,6 +61,7 @@ public interface UserSessionBeanLocal {
     public List<UserEntity> getFollowing(long userId) throws UserNotFoundException;
 
     public List<MaterialResourceAvailableEntity> getMaterialRequestAvailable(long userId) throws UserNotFoundException;
-    
+
+    public List<FollowRequestEntity> getFollowRequests(Long userId) throws UserNotFoundException;
 
 }
