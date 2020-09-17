@@ -13,12 +13,7 @@ import Exception.UserNotFoundException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
-import entity.FollowRequestEntity;
-import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
-import entity.PostEntity;
-import entity.ProjectEntity;
-import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -31,11 +26,11 @@ import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -111,20 +106,20 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
-    @PUT
-    @Path("/addskill/{userId}/{tagId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addSkillToProfile(@PathParam("userId") Long userId, @PathParam("tagId") Long tagId) {
-        try {
-            userSessionBeanLocal.addSkillToProfile(userId, tagId);
-            return Response.status(204).build();
 
-        } catch (NoResultException | DuplicateTagInProfileException ex) {
+    @GET
+    @Path("/skills/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSkillsForProfile(@PathParam("userId") Long userId) {
+        try {
+            List<TagEntity> skills = userSessionBeanLocal.getSkillsForProfile(userId);
+            return Response.status(200).entity(skills).build();
+
+        } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
-            return Response.status(400).entity(exception).build();
+            return Response.status(404).entity(exception).build();
         }
     }
 
@@ -179,8 +174,11 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createMaterialResourceAvailable(@PathParam("userId") Long userId, MaterialResourceAvailableEntity mra) {
         try {
-            materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
-            return Response.status(204).build();
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
+            for (int i = 0; i < mras.size(); i++) {
+                mras.get(i).setMaterialResourceAvailableOwner(null);
+            }
+            return Response.status(200).entity(mras).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -195,8 +193,11 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteMaterialRequestFromProfile(@PathParam("userId") Long userId, @PathParam("mraId") Long mraId) {
         try {
-            materialResourceAvailableSessionBeanLocal.deleteMaterialResourceAvailableForUser(userId, mraId);
-            return Response.status(204).build();
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.deleteMaterialResourceAvailableForUser(userId, mraId);
+            for (int i = 0; i < mras.size(); i++) {
+                mras.get(i).setMaterialResourceAvailableOwner(null);
+            }
+            return Response.status(200).entity(mras).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -210,9 +211,12 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMaterialRequestAvailable(@PathParam("userId") Long userId) {
         try {
-            UserEntity user = userSessionBeanLocal.getUserById(userId);
-            return Response.status(200).entity(user.getMras()).build();
-        } catch (NoResultException ex) {
+            List<MaterialResourceAvailableEntity> mras = userSessionBeanLocal.getMaterialRequestAvailable(userId);
+            for (int i = 0; i < mras.size(); i++) {
+                mras.get(i).setMaterialResourceAvailableOwner(null);
+            }
+            return Response.status(200).entity(mras).build();
+        } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -226,141 +230,61 @@ public class UserResource {
     public Response getUser(@PathParam("userId") Long userId) {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
-            System.out.println("following" + user.getFollowing());
-            for (int i = 0; i < user.getFollowRequestMade().size(); i++) {
-                user.getFollowRequestMade().get(i).getFrom().getFollowRequestMade().clear();
-                user.getFollowRequestMade().get(i).getFrom().getFollowRequestReceived().clear();
-                user.getFollowRequestMade().get(i).getFrom().getFollowers().clear();
-                user.getFollowRequestMade().get(i).getFrom().getFollowing().clear();
-                user.getFollowRequestMade().get(i).getFrom().getGroupsJoined().clear();
-                user.getFollowRequestMade().get(i).getFrom().getGroupsOwned().clear();
-                user.getFollowRequestMade().get(i).getFrom().getMras().clear();
-                user.getFollowRequestMade().get(i).getFrom().getPosts().clear();
-                user.getFollowRequestMade().get(i).getFrom().getProjectAdmins().clear();
-                user.getFollowRequestMade().get(i).getFrom().getProjectsJoined().clear();
-                user.getFollowRequestMade().get(i).getFrom().getProjectsOwned().clear();
-                user.getFollowRequestMade().get(i).getFrom().getReviewsGiven().clear();
-                user.getFollowRequestMade().get(i).getTo().getFollowRequestMade().clear();
-                user.getFollowRequestMade().get(i).getTo().getFollowRequestReceived().clear();
-                user.getFollowRequestMade().get(i).getTo().getFollowers().clear();
-                user.getFollowRequestMade().get(i).getTo().getFollowing().clear();
-                user.getFollowRequestMade().get(i).getTo().getGroupsJoined().clear();
-                user.getFollowRequestMade().get(i).getTo().getGroupsOwned().clear();
-                user.getFollowRequestMade().get(i).getTo().getMras().clear();
-                user.getFollowRequestMade().get(i).getTo().getPosts().clear();
-                user.getFollowRequestMade().get(i).getTo().getProjectAdmins().clear();
-                user.getFollowRequestMade().get(i).getTo().getProjectsJoined().clear();
-                user.getFollowRequestMade().get(i).getTo().getProjectsOwned().clear();
-                user.getFollowRequestMade().get(i).getTo().getReviewsGiven().clear();
-            }
-            for (int i = 0; i < user.getFollowRequestReceived().size(); i++) {
-                user.getFollowRequestReceived().get(i).getFrom().getFollowRequestMade().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getFollowRequestReceived().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getFollowers().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getFollowing().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getGroupsJoined().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getGroupsOwned().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getMras().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getPosts().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getProjectAdmins().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getProjectsJoined().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getProjectsOwned().clear();
-                user.getFollowRequestReceived().get(i).getFrom().getReviewsGiven().clear();
-                user.getFollowRequestReceived().get(i).getTo().getFollowRequestMade().clear();
-                user.getFollowRequestReceived().get(i).getTo().getFollowRequestReceived().clear();
-                user.getFollowRequestReceived().get(i).getTo().getFollowers().clear();
-                user.getFollowRequestReceived().get(i).getTo().getFollowing().clear();
-                user.getFollowRequestReceived().get(i).getTo().getGroupsJoined().clear();
-                user.getFollowRequestReceived().get(i).getTo().getGroupsOwned().clear();
-                user.getFollowRequestReceived().get(i).getTo().getMras().clear();
-                user.getFollowRequestReceived().get(i).getTo().getPosts().clear();
-                user.getFollowRequestReceived().get(i).getTo().getProjectAdmins().clear();
-                user.getFollowRequestReceived().get(i).getTo().getProjectsJoined().clear();
-                user.getFollowRequestReceived().get(i).getTo().getProjectsOwned().clear();
-                user.getFollowRequestReceived().get(i).getTo().getReviewsGiven().clear();
-            }
-            for (int i = 0; i < user.getFollowers().size(); i++) {
-                user.getFollowers().get(i).getFollowRequestMade().clear();
-                user.getFollowers().get(i).getFollowRequestReceived().clear();
-                user.getFollowers().get(i).getFollowers().clear();
-                user.getFollowers().get(i).getFollowing().clear();
-                user.getFollowers().get(i).getGroupsJoined().clear();
-                user.getFollowers().get(i).getGroupsOwned().clear();
-                user.getFollowers().get(i).getMras().clear();
-                user.getFollowers().get(i).getPosts().clear();
-                user.getFollowers().get(i).getProjectAdmins().clear();
-                user.getFollowers().get(i).getProjectsJoined().clear();
-                user.getFollowers().get(i).getProjectsOwned().clear();
-                user.getFollowers().get(i).getReviewsGiven().clear();
-            }
-            for (int i = 0; i < user.getFollowing().size(); i++) {
-                user.getFollowing().get(i).getFollowRequestMade().clear();
-                user.getFollowing().get(i).getFollowRequestReceived().clear();
-                user.getFollowing().get(i).getFollowers().clear();
-                user.getFollowing().get(i).getFollowing().clear();
-                user.getFollowing().get(i).getGroupsJoined().clear();
-                user.getFollowing().get(i).getGroupsOwned().clear();
-                user.getFollowing().get(i).getMras().clear();
-                user.getFollowing().get(i).getPosts().clear();
-                user.getFollowing().get(i).getProjectAdmins().clear();
-                user.getFollowing().get(i).getProjectsJoined().clear();
-                user.getFollowing().get(i).getProjectsOwned().clear();
-                user.getFollowing().get(i).getReviewsGiven().clear();
-            }
-            for (int i = 0; i < user.getGroupsJoined().size(); i++) {
-                user.getGroupsJoined().get(i).setGroupOwner(null);
-                user.getGroupsJoined().get(i).getGroupMembers().clear();
-            }
-            for (int i = 0; i < user.getGroupsOwned().size(); i++) {
-                user.getGroupsOwned().get(i).setGroupOwner(null);
-                user.getGroupsOwned().get(i).getGroupMembers().clear();
-            }
-            for (int i = 0; i < user.getMras().size(); i++) {
-                user.getMras().get(i).setMaterialResourceAvailableOwner(null);
-            }
-            for (int i = 0; i < user.getPosts().size(); i++) {
-                user.getPosts().get(i).setPostOwner(null);
-                user.getPosts().get(i).setProject(null);
-            }
-            for (int i = 0; i < user.getProjectAdmins().size(); i++) {
-                user.getProjectAdmins().get(i).getActivities().clear();
-                user.getProjectAdmins().get(i).getProjectAdmins().clear();
-                user.getProjectAdmins().get(i).getProjectMembers().clear();
-                user.getProjectAdmins().get(i).getHumanResourcePostings().clear();
-                user.getProjectAdmins().get(i).getMaterialResourcePostings().clear();
-                user.getProjectAdmins().get(i).getPosts().clear();
-                user.getProjectAdmins().get(i).setProjectOwner(null);
-                user.getProjectAdmins().get(i).getTasks().clear();
-            }
-            for (int i = 0; i < user.getProjectsJoined().size(); i++) {
-                user.getProjectsJoined().get(i).getActivities().clear();
-                user.getProjectsJoined().get(i).getProjectAdmins().clear();
-                user.getProjectsJoined().get(i).getProjectMembers().clear();
-                user.getProjectsJoined().get(i).getHumanResourcePostings().clear();
-                user.getProjectsJoined().get(i).getMaterialResourcePostings().clear();
-                user.getProjectsJoined().get(i).getPosts().clear();
-                user.getProjectsJoined().get(i).setProjectOwner(null);
-                user.getProjectsJoined().get(i).getTasks().clear();
-            }
-            for (int i = 0; i < user.getProjectsOwned().size(); i++) {
-                user.getProjectsOwned().get(i).getActivities().clear();
-                user.getProjectsOwned().get(i).getProjectAdmins().clear();
-                user.getProjectsOwned().get(i).getProjectMembers().clear();
-                user.getProjectsOwned().get(i).getHumanResourcePostings().clear();
-                user.getProjectsOwned().get(i).getMaterialResourcePostings().clear();
-                user.getProjectsOwned().get(i).getPosts().clear();
-                user.getProjectsOwned().get(i).setProjectOwner(null);
-                user.getProjectsOwned().get(i).getTasks().clear();
-            }
-            for (int i = 0; i < user.getReviewsGiven().size(); i++) {
-                user.getReviewsGiven().get(i).setFrom(null);
-                user.getReviewsGiven().get(i).setTo(null);
-            }
-            for (int i = 0; i < user.getReviewsReceived().size(); i++) {
-                user.getReviewsReceived().get(i).setFrom(null);
-                user.getReviewsReceived().get(i).setTo(null);
-            }
+
+            user.getReviewsGiven().clear();
+            user.getReviewsReceived().clear();
+            user.getProjectsOwned().clear();
+            user.getProjectsJoined().clear();
+            user.getProjectAdmins().clear();
+            user.getGroupsJoined().clear();
+            user.getGroupAdmins().clear();
+            user.getGroupsOwned().clear();
+            user.getPosts().clear();
+            user.getBadges().clear();
+            user.getMras().clear();
+            user.getSkills().clear();
+            user.getFollowing().clear();
+            user.getFollowers().clear();
+            user.getSdgs().clear();
+            user.getFollowRequestMade().clear();
+            user.getFollowRequestReceived().clear();
+            user.setPassword("");
+
             return Response.status(200).entity(user).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @GET
+    @Path("/allusers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllUsers() {
+        try {
+            List<UserEntity> users = userSessionBeanLocal.getAllUsers();
+            for (int i = 0; i < users.size(); i++) {
+                users.get(i).getFollowRequestMade().clear();
+                users.get(i).getFollowRequestReceived().clear();
+                users.get(i).getFollowers().clear();
+                users.get(i).getFollowing().clear();
+                users.get(i).getGroupsJoined().clear();
+                users.get(i).getGroupsOwned().clear();
+                users.get(i).getGroupAdmins().clear();
+                users.get(i).getMras().clear();
+                users.get(i).getSkills().clear();
+                users.get(i).getPosts().clear();
+                users.get(i).getProjectAdmins();
+                users.get(i).getProjectsJoined().clear();
+                users.get(i).getProjectsOwned().clear();
+                users.get(i).getReviewsGiven().clear();
+                users.get(i).getReviewsReceived().clear();
+                users.get(i).getBadges().clear();
+                users.get(i).getSdgs().clear();
+            }
+            return Response.status(200).entity(users).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -391,26 +315,28 @@ public class UserResource {
         try {
             UserEntity user = this.userSessionBeanLocal.userLogin(email, password);
             System.out.println("here");
-            user.getGroupsJoined().clear();
-            user.getGroupsOwned().clear();
-            user.getPosts().clear();
-            user.getProjectAdmins().clear();
-            user.getProjectsJoined().clear();
-            user.getProjectsOwned().clear();
+
             user.getReviewsGiven().clear();
-            user.getSdgs().clear();
-            user.getSkills().clear();
+            user.getReviewsReceived().clear();
+            user.getProjectsOwned().clear();
+            user.getProjectsJoined().clear();
+            user.getProjectAdmins().clear();
+            user.getGroupsJoined().clear();
+            user.getGroupAdmins().clear();
+            user.getPosts().clear();
+            user.getGroupsOwned().clear();
             user.getBadges().clear();
-            user.getFollowers().clear();
+            user.getMras().clear();
+            user.getSkills().clear();
             user.getFollowing().clear();
-            System.out.println("here");
+            user.getFollowers().clear();
+            user.getSdgs().clear();
+            user.getFollowRequestMade().clear();
+            user.getFollowRequestReceived().clear();
+            user.setPassword("");
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-        } catch (StackOverflowError ex) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-        } catch (Exception ex) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
 
     }
@@ -477,4 +403,111 @@ public class UserResource {
         }
     }
 
+    @POST
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateUser(UserEntity updatedUser) {
+        try {
+            UserEntity user = userSessionBeanLocal.updateUser(updatedUser);
+            user.getReviewsGiven().clear();
+            user.getReviewsReceived().clear();
+            user.getProjectsOwned().clear();
+            user.getProjectsJoined().clear();
+            user.getProjectAdmins().clear();
+            user.getGroupsJoined().clear();
+            user.getGroupAdmins().clear();
+            user.getPosts().clear();
+            user.getGroupsOwned().clear();
+            user.getBadges().clear();
+            user.getMras().clear();
+            user.getSkills().clear();
+            user.getFollowing().clear();
+            user.getFollowers().clear();
+            user.getSdgs().clear();
+            user.getFollowRequestMade().clear();
+            user.getFollowRequestReceived().clear();
+            user.setPassword("");
+            return Response.status(200).entity(user).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        } catch (DuplicateEmailException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(400).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/followers/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowers(@PathParam("userId") Long userId) {
+        try {
+            List<UserEntity> followers = userSessionBeanLocal.getFollowers(userId);
+            for (UserEntity user : followers) {
+                user.getReviewsGiven().clear();
+                user.getReviewsReceived().clear();
+                user.getProjectsOwned().clear();
+                user.getProjectsJoined().clear();
+                user.getProjectAdmins().clear();
+                user.getGroupsJoined().clear();
+                user.getGroupAdmins().clear();
+                user.getPosts().clear();
+                user.getGroupsOwned().clear();
+                user.getBadges().clear();
+                user.getMras().clear();
+                user.getSkills().clear();
+                user.getFollowing().clear();
+                user.getFollowers().clear();
+                user.getSdgs().clear();
+                user.getFollowRequestMade().clear();
+                user.getFollowRequestReceived().clear();
+                user.setPassword("");
+            }
+            return Response.status(200).entity(followers).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    @GET
+    @Path("/following/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowing(@PathParam("userId") Long userId) {
+        try {
+            List<UserEntity> following = userSessionBeanLocal.getFollowing(userId);
+            for (UserEntity user : following) {
+                user.getReviewsGiven().clear();
+                user.getReviewsReceived().clear();
+                user.getProjectsOwned().clear();
+                user.getProjectsJoined().clear();
+                user.getProjectAdmins().clear();
+                user.getGroupsJoined().clear();
+                user.getGroupAdmins().clear();
+                user.getPosts().clear();
+                user.getGroupsOwned().clear();
+                user.getBadges().clear();
+                user.getMras().clear();
+                user.getSkills().clear();
+                user.getFollowing().clear();
+                user.getFollowers().clear();
+                user.getSdgs().clear();
+                user.getFollowRequestMade().clear();
+                user.getFollowRequestReceived().clear();
+                user.setPassword("");
+            }
+            return Response.status(200).entity(following).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
 }

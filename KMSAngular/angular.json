@@ -25,13 +25,17 @@
               "node_modules/admin-lte/plugins/fontawesome-free/css/all.min.css",
               "node_modules/admin-lte/dist/css/adminlte.min.css",
               "src/styles.css",
-              "node_modules/admin-lte/plugins/select2/css/select2.min.css"
+              "node_modules/admin-lte/plugins/select2/css/select2.min.css",
+              "node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"
             ],
             "scripts": [
+              "node_modules/admin-lte/plugins/moment/moment.min.js",
               "node_modules/admin-lte/plugins/jquery/jquery.min.js",
               "node_modules/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js",
               "node_modules/admin-lte/dist/js/adminlte.js",
-              "node_modules/admin-lte/plugins/select2/js/select2.full.min.js"
+              "node_modules/admin-lte/plugins/select2/js/select2.full.min.js",
+              "node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js",
+              "node_modules/admin-lte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"
             ]
           },
           "configurations": {
@@ -96,13 +100,17 @@
               "node_modules/admin-lte/plugins/fontawesome-free/css/all.min.css",
               "node_modules/admin-lte/dist/css/adminlte.min.css",
               "src/styles.css",
-              "node_modules/admin-lte/plugins/select2/css/select2.min.css"
+              "node_modules/admin-lte/plugins/select2/css/select2.min.css",
+              "node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"
             ],
             "scripts": [
+              "node_modules/admin-lte/plugins/moment/moment.min.js",
               "node_modules/admin-lte/plugins/jquery/jquery.min.js",
               "node_modules/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js",
               "node_modules/admin-lte/dist/js/adminlte.js",
-              "node_modules/admin-lte/plugins/select2/js/select2.full.min.js"
+              "node_modules/admin-lte/plugins/select2/js/select2.full.min.js",
+              "node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js",
+              "node_modules/admin-lte/plugins/bs-custom-file-input/bs-custom-file-input.min.js"
             ]
           }
         },

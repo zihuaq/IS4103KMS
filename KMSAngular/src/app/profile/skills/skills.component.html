@@ -6,7 +6,7 @@
   </button>
 </div>
 
-<div class="form-group">
+<div class="form-group" *ngIf="loggedInUser.userId == profile.userId">
   <label>Select Skills</label>
   <div class="select2-purple">
     <select class="select2" multiple="multiple" data-placeholder="Select skills"
@@ -21,10 +21,13 @@
 
 <label>Your Skills</label>
 <br />
-<span *ngIf="user.skills.length == 0"> You have no skills at the moment.</span>
+<span *ngIf="profile.skills.length == 0 && loggedInUser.userId == profile.userId"> You have no skills at the
+  moment.</span>
+<span *ngIf="profile.skills.length == 0 && loggedInUser.userId != profile.userId"> {{profile.firstName}}
+  {{profile.lastName}} has no skills at the moment.</span>
 
-<span *ngIf="user.skills.length > 0">
-  <div *ngFor="let skill of user.skills">
+<span *ngIf="profile.skills.length > 0 && loggedInUser.userId == profile.userId">
+  <div *ngFor="let skill of profile.skills">
     <small class="badge badge-warning" (click)="deleteSkill(skill.tagId)">
       {{skill.name}}
       <i class="far fa-times-circle"></i>
@@ -32,3 +35,10 @@
   </div>
 </span>
 
+<span *ngIf="profile.skills.length > 0 && loggedInUser.userId != profile.userId">
+  <div *ngFor="let skill of profile.skills">
+    <small class="badge badge-warning">
+      {{skill.name}}
+    </small>
+  </div>
+</span>
