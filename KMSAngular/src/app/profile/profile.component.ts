@@ -21,11 +21,12 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     let profileid = this.activatedRoute.snapshot.params.userid;
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
-    if (!profileid) {
+    if (!profileid || profileid == loggedInUserId) {
       profileid = loggedInUserId;
       this.userService.getUser(profileid).subscribe((data: User) => {
         this.profile = data;
         this.loggedInUser = data;
+        console.log(data);
       });
     } else {
       this.userService

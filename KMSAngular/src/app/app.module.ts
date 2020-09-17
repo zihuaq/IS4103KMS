@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 import { IndexComponent } from './index/index.component';
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
-import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { TopNavbarComponent } from './top-navbar/top-navbar.component';
@@ -24,6 +23,9 @@ import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tab
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AppPasswordDirective } from './app-password.directive'
+import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
+import { SearchUsersComponent } from './search-users/search-users.component';
+import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,6 @@ import { AppPasswordDirective } from './app-password.directive'
     CreateNewUserComponent,
     IndexComponent,
     UserLoginPageComponent,
-    ViewAllUsersComponent,
     HeaderComponent,
     TopNavbarComponent,
     ProfileComponent,
@@ -45,7 +46,10 @@ import { AppPasswordDirective } from './app-password.directive'
     ProfileTabpanelComponent,
     AccountVerificationComponent,
     LoadingSpinnerComponent,
-    AppPasswordDirective
+    AppPasswordDirective,
+    SearchbarComponent,
+    SearchUsersComponent,
+    EditProfileComponent,
   ],
   imports: [
     BrowserModule,

@@ -61,14 +61,13 @@ public class ProjectEntity implements Serializable {
     private String location;
     
     @ManyToOne
-    private UserEntity owner;
+    private UserEntity projectOwner;
 
+    @ManyToMany
+    private List<UserEntity> projectMembers;
     
     @ManyToMany
-    private List<UserEntity> groupMembers;
-    
-    @ManyToMany
-    private List<UserEntity> admins;
+    private List<UserEntity> projectAdmins;
     
     private Double monetaryFundingRequired;
     private Double monetaryFundingObtained;
@@ -90,14 +89,14 @@ public class ProjectEntity implements Serializable {
 
 
     public ProjectEntity() {
-        this.groupMembers = new ArrayList<>();
+        this.projectMembers = new ArrayList<>();
         this.activities = new ArrayList<>();
         this.humanResourcePostings = new ArrayList<>();
         this.materialResourcePostings = new ArrayList<>();
-        this.admins = new ArrayList<>();
+        this.projectAdmins = new ArrayList<>();
         this.tasks = new ArrayList<>();
         this.posts = new ArrayList<>();
-        this.status = ProjectStatusEnum.NOTSTARTED;
+        this.status = ProjectStatusEnum.ACTIVE;
     }
 
     public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, Double monetaryFundingRequired, Double monetaryFundingObtained) {
@@ -162,20 +161,20 @@ public class ProjectEntity implements Serializable {
         this.description = description;
     }
 
-    public UserEntity getOwner() {
-        return owner;
+    public UserEntity getProjectOwner() {
+        return projectOwner;
     }
 
-    public void setOwner(UserEntity owner) {
-        this.owner = owner;
+    public void setProjectOwner(UserEntity projectOwner) {
+        this.projectOwner = projectOwner;
     }
 
-    public List<UserEntity> getGroupMembers() {
-        return groupMembers;
+    public List<UserEntity> getProjectMembers() {
+        return projectMembers;
     }
 
-    public void setGroupMembers(List<UserEntity> groupMembers) {
-        this.groupMembers = groupMembers;
+    public void setProjectMembers(List<UserEntity> projectMembers) {
+        this.projectMembers = projectMembers;
     }
 
     public Double getMonetaryFundingRequired() {
@@ -266,12 +265,12 @@ public class ProjectEntity implements Serializable {
         this.status = status;
     }
 
-    public List<UserEntity> getAdmins() {
-        return admins;
+    public List<UserEntity> getProjectAdmins() {
+        return projectAdmins;
     }
 
-    public void setAdmins(List<UserEntity> admins) {
-        this.admins = admins;
+    public void setProjectAdmins(List<UserEntity> projectAdmins) {
+        this.projectAdmins = projectAdmins;
     }
 
     public List<PostEntity> getPosts() {

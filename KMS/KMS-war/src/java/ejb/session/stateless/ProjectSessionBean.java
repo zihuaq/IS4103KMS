@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.CreateProjectException;
+import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import entity.ActivityEntity;
 import entity.HumanResourcePostingEntity;
@@ -46,7 +47,9 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             em.flush();
             
             user.getProjectsOwned().add(newProject);
-            newProject.setOwner(user);
+            newProject.setProjectOwner(user);
+            newProject.getProjectAdmins().add(user);
+            newProject.getProjectMembers().add(user);
             
             return newProject.getProjectId();
         } catch (NoResultException ex) {
@@ -56,14 +59,14 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @Override
     public List<ProjectEntity> retrieveAllProject() {
-        Query query = em.createQuery("SELECT p FROM Project p");
+        Query query = em.createQuery("SELECT p FROM ProjectEntity p");
         
         return query.getResultList();
     }
     
     @Override
     public List<ProjectEntity> retrieveProjectByStatus(ProjectStatusEnum status) {
-        Query query = em.createQuery("SELECT p from Project p WHERE p.status = :inStatus");
+        Query query = em.createQuery("SELECT p from ProjectEntity p WHERE p.status = :inStatus");
         query.setParameter("inStatus", status);
         
         return query.getResultList();
@@ -76,23 +79,30 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         return project;
     }
     
+    //User join project
     @Override
-    public void addMember(Long projectId, Long userId) throws NoResultException {
+    public void joinProject(Long projectId, Long userId) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
-        
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
-        project.getGroupMembers().add(user);
-        
+        user.getProjectsJoined().add(project);
+        project.getProjectMembers().add(user); 
+
     }
     
+    //Admin/Member leave project or Admin remove Admin/Member from project
     @Override
-    public void removeMember(Long projectId, Long userId) throws NoResultException {
+    public void removeMember(Long projectId, Long userId) throws NoResultException, InvalidRoleException {
         ProjectEntity project = getProjectById(projectId);
-        
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
-        project.getGroupMembers().remove(user);
+        if (project.getProjectOwner().getUserId().equals(userId)) {
+            throw new InvalidRoleException("Owner cannot leave the project");
+            
+        } else {
+            user.getProjectsJoined().remove(project);
+            project.getProjectMembers().remove(user);
+        }
         
     }
     
@@ -102,53 +112,60 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         em.flush();
     }
     
+    //Change project status
     @Override
-    public void updateStatus(Long projectId, ProjectStatusEnum status) {
+    public void updateStatus(Long projectId, String status) {
         ProjectEntity project = getProjectById(projectId);
-        
-        project.setStatus(status);
+
+        project.setStatus(ProjectStatusEnum.valueOf(status));
     }
     
+    //Promote Member to Admin
     @Override
     public void addAdmin(Long projectId, Long userId) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
-        project.getAdmins().add(user);
+        project.getProjectAdmins().add(user);
         user.getProjectAdmins().add(project);
     }
     
+    //Demote Admin to Member
     @Override
     public void removeAdmin(Long projectId, Long userId) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
-        project.getAdmins().add(user);
+        project.getProjectAdmins().remove(user);
         user.getProjectAdmins().remove(project);
     }
     
+    //Pass Owner status to Admin
     @Override
     public void changeOwner(Long projectId, Long newOwnerId) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
         UserEntity user = userSessionBeanLocal.getUserById(newOwnerId);
         
-        project.getOwner().getProjectsOwned().remove(project);
-        project.setOwner(user);
+        project.getProjectOwner().getProjectsOwned().remove(project);
+        project.setProjectOwner(user);
         user.getProjectsOwned().add(project);
     }
     
     public void deleteProject(Long projectId) {
         ProjectEntity projectToDelete = getProjectById(projectId);
         
-        for (UserEntity user : projectToDelete.getAdmins()) {
+        projectToDelete.getProjectOwner().getProjectsOwned().remove(projectToDelete);
+        projectToDelete.setProjectOwner(null);
+        
+        for (UserEntity user : projectToDelete.getProjectAdmins()) {
             user.getProjectAdmins().remove(projectToDelete);
         }
-        projectToDelete.getAdmins().clear();
+        projectToDelete.getProjectAdmins().clear();
         
-        for (UserEntity user : projectToDelete.getGroupMembers()) {
-            user.getProjectsContributed().remove(projectToDelete);
+        for (UserEntity user : projectToDelete.getProjectMembers()) {
+            user.getProjectsJoined().remove(projectToDelete);
         }
-        projectToDelete.getGroupMembers().clear();
+        projectToDelete.getProjectMembers().clear();
         
         for (ActivityEntity activity : projectToDelete.getActivities()) {
             activity.setProject(null);

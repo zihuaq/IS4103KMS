@@ -20,17 +20,7 @@ export class OverviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.loggedInUser = this.sessionService.getCurrentUser();
-    // this.userService
-    //   .getUser(this.loggedInUser.userId.toString())
-    //   .subscribe((data: User) => {
-    //     this.loggedInUser = data;
-    //     console.log(this.loggedInUser);
-    //     return this.loggedInUser.following
-    //       .map((user) => user.userId)
-    //       .includes(this.profile.userId);
-    //   });
-    // console.log(this.loggedInUser.userId);
+    this.getFollowersAndFollowing();
   }
 
   checkfollowing() {
@@ -46,18 +36,7 @@ export class OverviewComponent implements OnInit {
         this.loggedInUser.userId.toString()
       )
       .subscribe(() => {
-        this.userService
-          .getUser(this.profile.userId.toString())
-          .subscribe((data: User) => {
-            this.profile = data;
-            this.profileChanged.emit(this.profile);
-          });
-        this.userService
-          .getUser(this.loggedInUser.userId.toString())
-          .subscribe((data: User) => {
-            this.loggedInUser = data;
-            this.userChanged.emit(this.loggedInUser);
-          });
+        this.getFollowersAndFollowing();
       });
   }
 
@@ -68,18 +47,30 @@ export class OverviewComponent implements OnInit {
         this.loggedInUser.userId.toString()
       )
       .subscribe(() => {
-        this.userService
-          .getUser(this.profile.userId.toString())
-          .subscribe((data: User) => {
-            this.profile = data;
-            this.profileChanged.emit(this.profile);
-          });
-        this.userService
-          .getUser(this.loggedInUser.userId.toString())
-          .subscribe((data: User) => {
-            this.loggedInUser = data;
-            this.userChanged.emit(this.loggedInUser);
-          });
+        this.getFollowersAndFollowing();
+      });
+  }
+
+  getFollowersAndFollowing() {
+    this.userService
+      .getFollowers(this.profile.userId)
+      .subscribe((followers: User[]) => {
+        this.profile = { ...this.profile, followers };
+      });
+    this.userService
+      .getFollowing(this.profile.userId)
+      .subscribe((following: User[]) => {
+        this.profile = { ...this.profile, following };
+      });
+    this.userService
+      .getFollowers(this.loggedInUser.userId)
+      .subscribe((followers: User[]) => {
+        this.loggedInUser = { ...this.loggedInUser, followers };
+      });
+    this.userService
+      .getFollowing(this.loggedInUser.userId)
+      .subscribe((following: User[]) => {
+        this.loggedInUser = { ...this.loggedInUser, following };
       });
   }
 }

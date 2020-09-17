@@ -17,12 +17,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import util.enumeration.AccountPrivacySettingEnum;
+import util.enumeration.UserTypeEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -59,14 +61,18 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date joinedDate;
-    @Column(nullable = false)
-    private Boolean isAdmin;
     @Temporal(TemporalType.DATE)
     private Date adminStartDate;
-
+    
+    @NotNull
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private UserTypeEnum userType;
+    @Lob
+    @Column
     private String profilePicture;
-
     private int reputationPoints;
+
     
     private String verificationCode;
     
@@ -74,59 +80,44 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
-
     @OneToMany(mappedBy = "to")
     private List<ReviewEntity> reviewsReceived;
-
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "projectOwner")
     private List<ProjectEntity> projectsOwned;
-    
-    @ManyToMany(mappedBy = "groupMembers")
-
-    private List<ProjectEntity> projectsContributed;
-
-    @ManyToMany(mappedBy = "admins")
+    @ManyToMany(mappedBy = "projectMembers")
+    private List<ProjectEntity> projectsJoined;
+    @ManyToMany(mappedBy = "projectAdmins")
     private List<ProjectEntity> projectAdmins;
-
-    @ManyToMany(mappedBy = "users")
-    private List<GroupEntity> groups;
-
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
-
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
-
+    @ManyToMany(mappedBy = "groupMembers")
+    private List<GroupEntity> groupsJoined;  
+    @ManyToMany(mappedBy = "groupAdmins")
+    private List<ProjectEntity> groupAdmins;
     @OneToMany
     private List<BadgeEntity> badges;
-
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
     private List<MaterialResourceAvailableEntity> mras;
-
     @JoinTable(name = "skills")
     @OneToMany
     private List<TagEntity> skills;
-
     @JoinTable(name = "following")
     @OneToMany
     private List<UserEntity> following;
-
     @JoinTable(name = "followers")
     @OneToMany
     private List<UserEntity> followers;
-
     @JoinTable(name = "sdgs")
     @OneToMany
     private List<TagEntity> sdgs;
-
     @JoinTable(name = "followRequestMade")
     @OneToMany(mappedBy = "from")
     private List<FollowRequestEntity> followRequestMade;
-
     @JoinTable(name = "followRequestReceived")
     @OneToMany(mappedBy = "to")
     private List<FollowRequestEntity> followRequestReceived;
-
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -136,21 +127,22 @@ public class UserEntity implements Serializable {
         this.reviewsGiven = new ArrayList<>();
         this.reviewsReceived = new ArrayList<>();
         this.projectsOwned = new ArrayList<>();
-        this.groups = new ArrayList<>();
+        this.groupsJoined = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.groupsOwned = new ArrayList<>();
+        this.groupAdmins = new ArrayList<>();
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
         this.skills = new ArrayList<>();
         this.projectAdmins = new ArrayList<>();
-        this.projectsContributed = new ArrayList<>();
+        this.projectsJoined = new ArrayList<>();
         this.following = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.sdgs = new ArrayList<>();
         this.followRequestMade = new ArrayList<>();
         this.followRequestReceived = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
-        this.isAdmin = Boolean.FALSE;
+        this.userType = UserTypeEnum.INDIVIDUAL;
         this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
     }
 
@@ -167,6 +159,7 @@ public class UserEntity implements Serializable {
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
@@ -206,7 +199,7 @@ public class UserEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", profilePicture=" + profilePicture + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
+        return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", userType=" + userType + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
     
 
@@ -278,14 +271,6 @@ public class UserEntity implements Serializable {
         this.joinedDate = joinedDate;
     }
 
-    public Boolean getIsAdmin() {
-        return isAdmin;
-    }
-
-    public void setIsAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-
     public Date getAdminStartDate() {
         return adminStartDate;
     }
@@ -334,12 +319,12 @@ public class UserEntity implements Serializable {
         this.projectsOwned = projectsOwned;
     }
 
-    public List<GroupEntity> getGroups() {
-        return groups;
+    public List<GroupEntity> getGroupsJoined() {
+        return groupsJoined;
     }
 
-    public void setGroups(List<GroupEntity> groups) {
-        this.groups = groups;
+    public void setGroupsJoined(List<GroupEntity> groupsJoined) {
+        this.groupsJoined = groupsJoined;
     }
 
     public List<PostEntity> getPosts() {
@@ -356,6 +341,14 @@ public class UserEntity implements Serializable {
 
     public void setGroupsOwned(List<GroupEntity> groupsOwned) {
         this.groupsOwned = groupsOwned;
+    }
+
+    public List<ProjectEntity> getGroupAdmins() {
+        return groupAdmins;
+    }
+
+    public void setGroupAdmins(List<ProjectEntity> groupAdmins) {
+        this.groupAdmins = groupAdmins;
     }
 
     public List<BadgeEntity> getBadges() {
@@ -382,12 +375,12 @@ public class UserEntity implements Serializable {
         this.skills = skills;
     }
 
-    public List<ProjectEntity> getProjectsContributed() {
-        return projectsContributed;
+    public List<ProjectEntity> getProjectsJoined() {
+        return projectsJoined;
     }
 
-    public void setProjectsContributed(List<ProjectEntity> projectsContributed) {
-        this.projectsContributed = projectsContributed;
+    public void setProjectsJoined(List<ProjectEntity> projectsJoined) {
+        this.projectsJoined = projectsJoined;
     }
 
     public List<ProjectEntity> getProjectAdmins() {
@@ -438,9 +431,6 @@ public class UserEntity implements Serializable {
         this.accountPrivacySetting = accountPrivacySetting;
     }
 
-//    public Object getProjects() {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
     public List<FollowRequestEntity> getFollowRequestMade() {
         return followRequestMade;
     }
@@ -463,5 +453,13 @@ public class UserEntity implements Serializable {
 
     public void setReviewsReceived(List<ReviewEntity> reviewsReceived) {
         this.reviewsReceived = reviewsReceived;
+    }
+
+    public UserTypeEnum getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserTypeEnum userType) {
+        this.userType = userType;
     }
 }
