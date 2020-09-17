@@ -59,5 +59,7 @@ public interface UserSessionBeanLocal {
 
     public List<MaterialResourceAvailableEntity> getMaterialRequestAvailable(long userId) throws UserNotFoundException;
     
+    public List<UserEntity> retrieveAllUser() throws UserNotFoundException;
+
 
 }

@@ -305,4 +305,10 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         return user.getMras();
     }
+    
+    @Override
+    public List<UserEntity> retrieveAllUser() throws UserNotFoundException{
+        Query query = em.createQuery("SELECT u FROM UserEntity U");
+        return query.getResultList();
+    }
 }
