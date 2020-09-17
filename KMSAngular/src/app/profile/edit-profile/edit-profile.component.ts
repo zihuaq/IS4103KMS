@@ -6,6 +6,7 @@ import { UserService } from 'src/app/user.service';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
+declare var moment: any;
 
 @Component({
   selector: 'app-edit-profile',
@@ -27,6 +28,7 @@ export class EditProfileComponent implements OnInit {
     });
     bsCustomFileInput.init();
     this.profilePictureFile = this.user.profilePicture;
+    $('#datetimepicker').datetimepicker('date', moment(this.user.dob));
   }
 
   getFiles(event) {
