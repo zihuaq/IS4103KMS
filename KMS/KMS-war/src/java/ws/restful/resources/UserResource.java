@@ -395,6 +395,7 @@ public class UserResource {
     public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
         try {
             FollowRequestEntity followRequestEntity = userSessionBeanLocal.followUser(toUserId, fromUserId);
+            if(followRequestEntity != null) {
             UserEntity to = new UserEntity();
             to.setUserId(followRequestEntity.getTo().getUserId());
             to.setFirstName(followRequestEntity.getTo().getFirstName());
@@ -410,6 +411,9 @@ public class UserResource {
             followRequestEntityResponse.setTo(to);
             followRequestEntityResponse.setFrom(from);
             return Response.status(200).entity(followRequestEntityResponse).build();
+            } else {
+                return Response.status(204).build();
+            }
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
