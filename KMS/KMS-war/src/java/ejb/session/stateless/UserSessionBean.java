@@ -1,6 +1,7 @@
 package ejb.session.stateless;
 
 import Exception.DuplicateEmailException;
+import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
@@ -176,9 +177,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException {
-        System.out.println(toUserId);
-        System.out.println(fromUserId);
+    public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException, DuplicateFollowRequestException {
         UserEntity toUser = em.find(UserEntity.class, toUserId);
         UserEntity fromUser = em.find(UserEntity.class, fromUserId);
         if (toUser == null || fromUser == null) {
@@ -189,15 +188,23 @@ public class UserSessionBean implements UserSessionBeanLocal {
             toUser.getFollowers().add(fromUser);
             return null;
         } else {
-            FollowRequestEntity followRequestEntity = new FollowRequestEntity();
-            followRequestEntity.setFrom(fromUser);
-            followRequestEntity.setTo(toUser);
-            
-            fromUser.getFollowRequestMade().add(followRequestEntity);
-            toUser.getFollowRequestReceived().add(followRequestEntity);
-            em.persist(followRequestEntity);
-            em.flush();
-            return followRequestEntity;
+            Query q = em.createQuery("SELECT f FROM FollowRequestEntity AS f WHERE f.from.userId = :from AND f.to.userId = :to");
+            q.setParameter("from", fromUserId);
+            q.setParameter("to", toUserId);
+            FollowRequestEntity f = (FollowRequestEntity) q.getSingleResult();
+            if (f == null) {
+                FollowRequestEntity followRequestEntity = new FollowRequestEntity();
+                followRequestEntity.setFrom(fromUser);
+                followRequestEntity.setTo(toUser);
+
+                fromUser.getFollowRequestMade().add(followRequestEntity);
+                toUser.getFollowRequestReceived().add(followRequestEntity);
+                em.persist(followRequestEntity);
+                em.flush();
+                return followRequestEntity;
+            } else {
+                throw new DuplicateFollowRequestException("Follow request already sent!");
+            }
         }
     }
 
@@ -208,7 +215,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         q.setParameter("to", toUserId);
         FollowRequestEntity f = (FollowRequestEntity) q.getSingleResult();
         if (f == null) {
-            throw new NoResultException("follow request not found");
+            throw new NoResultException("Follow request not found");
         }
         UserEntity toUser = em.find(UserEntity.class, toUserId);
         UserEntity fromUser = em.find(UserEntity.class, fromUserId);
@@ -220,9 +227,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
         f.setTo(null);
         f.setFrom(null);
         em.remove(f);
-        fromUser.getFollowing().add(toUser);
-        toUser.getFollowers().add(fromUser);
-//        em.flush();
+        if (!fromUser.getFollowing().contains(toUser)) {
+            fromUser.getFollowing().add(toUser);
+        }
+        if (!toUser.getFollowers().contains(fromUser)) {
+            toUser.getFollowers().add(fromUser);
+        }
     }
 
     @Override
@@ -244,7 +254,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
         f.setTo(null);
         f.setFrom(null);
         em.remove(f);
-//        em.flush();
     }
 
     @Override
@@ -284,12 +293,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public List<UserEntity> getAllUsers() throws NoResultException{
+    public List<UserEntity> getAllUsers() throws NoResultException {
         Query q = em.createQuery("SELECT u FROM UserEntity u");
         List<UserEntity> users = q.getResultList();
         return users;
     }
-    
+
     public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException {
         UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
         if (user == null) {
@@ -344,7 +353,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
     @Override
     public List<FollowRequestEntity> getFollowRequests(Long userId) throws UserNotFoundException {
-//        em.flush();
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
             throw new UserNotFoundException("User not found");

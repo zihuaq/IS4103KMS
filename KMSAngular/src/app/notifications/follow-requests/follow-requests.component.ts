@@ -22,7 +22,6 @@ export class FollowRequestsComponent implements OnInit {
       .getFollowRequests(this.loggedInUserId)
       .subscribe((followRequests) => {
         this.followRequests = followRequests;
-        console.log(this.followRequests);
       });
   }
 

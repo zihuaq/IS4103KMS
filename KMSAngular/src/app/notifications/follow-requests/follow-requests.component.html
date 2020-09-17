@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" style="height: 60vh;">
   <div class="card-header">
     <h3 class="card-title">Follow Requests</h3>
   </div>
@@ -25,12 +25,14 @@
           </div>
         </div>
       </li>
+      <li class="item" *ngIf="followRequests.length == 0">
+        <h6 class="d-flex justify-content-around">No follow requests</h6>
+      </li>
       <!-- /.item -->
     </ul>
   </div>
   <!-- /.card-body -->
   <div class="card-footer text-center">
-    <a href="javascript:void(0)" class="uppercase">View All Follow Requests</a>
   </div>
   <!-- /.card-footer -->
 </div>
