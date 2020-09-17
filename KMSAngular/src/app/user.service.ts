@@ -99,9 +99,15 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  getFollowRequests(userId: number) {
+  getFollowRequestMade(userId: number) {
     return this.http
-      .get<any>(this.baseUrl + /followrequests/ + userId)
+      .get<any>(this.baseUrl + /followrequestmade/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getFollowRequestReceived(userId: number) {
+    return this.http
+      .get<any>(this.baseUrl + /followrequestreceived/ + userId)
       .pipe(catchError(this.handleError));
   }
 

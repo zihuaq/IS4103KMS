@@ -296,6 +296,10 @@ public class UserSessionBean implements UserSessionBeanLocal {
     public List<UserEntity> getAllUsers() throws NoResultException {
         Query q = em.createQuery("SELECT u FROM UserEntity u");
         List<UserEntity> users = q.getResultList();
+        for(UserEntity userEntity : users) {
+            userEntity.getFollowers().size();
+            userEntity.getFollowing().size();
+        }
         return users;
     }
 
@@ -352,13 +356,22 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public List<FollowRequestEntity> getFollowRequests(Long userId) throws UserNotFoundException {
+    public List<FollowRequestEntity> getFollowRequestReceived(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
         user.getFollowRequestReceived().size();
-        System.out.println(user.getFollowRequestReceived());
         return user.getFollowRequestReceived();
+    }
+    
+    @Override
+    public List<FollowRequestEntity> getFollowRequestMade(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getFollowRequestMade().size();
+        return user.getFollowRequestMade();
     }
 }

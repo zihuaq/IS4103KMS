@@ -63,6 +63,8 @@ public interface UserSessionBeanLocal {
 
     public List<MaterialResourceAvailableEntity> getMaterialRequestAvailable(long userId) throws UserNotFoundException;
 
-    public List<FollowRequestEntity> getFollowRequests(Long userId) throws UserNotFoundException;
+    public List<FollowRequestEntity> getFollowRequestReceived(Long userId) throws UserNotFoundException;
+
+    public List<FollowRequestEntity> getFollowRequestMade(Long userId) throws UserNotFoundException;
 
 }
