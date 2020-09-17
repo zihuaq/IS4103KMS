@@ -19,7 +19,7 @@ export class TopNavbarComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInUserId = this.sessionService.getCurrentUser().userId;
     this.userService
-      .getFollowRequests(this.loggedInUserId)
+      .getFollowRequestReceived(this.loggedInUserId)
       .subscribe((followRequests) => {
         this.followRequests = followRequests;
       });

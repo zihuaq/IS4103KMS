@@ -265,7 +265,7 @@ public class UserResource {
     public Response getAllUsers() {
         try {
             List<UserEntity> users = userSessionBeanLocal.getAllUsers();
-            users = getUsersResponse(users);
+            users = getUsersResponseWithFollowersAndFollowing(users);
             return Response.status(200).entity(users).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -344,26 +344,26 @@ public class UserResource {
     public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) throws DuplicateFollowRequestException {
         try {
             FollowRequestEntity followRequestEntity = userSessionBeanLocal.followUser(toUserId, fromUserId);
-            if(followRequestEntity != null) {
-            UserEntity to = new UserEntity();
-            to.setUserId(followRequestEntity.getTo().getUserId());
-            to.setFirstName(followRequestEntity.getTo().getFirstName());
-            to.setLastName(followRequestEntity.getTo().getLastName());
-            to.setProfilePicture(followRequestEntity.getTo().getProfilePicture());
-            UserEntity from = new UserEntity();
-            from.setUserId(followRequestEntity.getFrom().getUserId());
-            from.setFirstName(followRequestEntity.getFrom().getFirstName());
-            from.setLastName(followRequestEntity.getFrom().getLastName());
-            from.setProfilePicture(followRequestEntity.getFrom().getProfilePicture());
-            FollowRequestEntity followRequestEntityResponse = new FollowRequestEntity();
-            followRequestEntityResponse.setId(followRequestEntity.getId());
-            followRequestEntityResponse.setTo(to);
-            followRequestEntityResponse.setFrom(from);
-            return Response.status(200).entity(followRequestEntityResponse).build();
+            if (followRequestEntity != null) {
+                UserEntity to = new UserEntity();
+                to.setUserId(followRequestEntity.getTo().getUserId());
+                to.setFirstName(followRequestEntity.getTo().getFirstName());
+                to.setLastName(followRequestEntity.getTo().getLastName());
+                to.setProfilePicture(followRequestEntity.getTo().getProfilePicture());
+                UserEntity from = new UserEntity();
+                from.setUserId(followRequestEntity.getFrom().getUserId());
+                from.setFirstName(followRequestEntity.getFrom().getFirstName());
+                from.setLastName(followRequestEntity.getFrom().getLastName());
+                from.setProfilePicture(followRequestEntity.getFrom().getProfilePicture());
+                FollowRequestEntity followRequestEntityResponse = new FollowRequestEntity();
+                followRequestEntityResponse.setId(followRequestEntity.getId());
+                followRequestEntityResponse.setTo(to);
+                followRequestEntityResponse.setFrom(from);
+                return Response.status(200).entity(followRequestEntityResponse).build();
             } else {
                 return Response.status(204).build();
             }
-        } catch (UserNotFoundException ex) {
+        } catch (UserNotFoundException | DuplicateFollowRequestException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -417,12 +417,12 @@ public class UserResource {
     }
 
     @GET
-    @Path("/followrequests/{userId}")
+    @Path("/followrequestreceived/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFollowRequests(@PathParam("userId") Long userId) {
+    public Response getFollowRequestReceived(@PathParam("userId") Long userId) {
         try {
-            List<FollowRequestEntity> followRequests = userSessionBeanLocal.getFollowRequests(userId);
-            List<FollowRequestEntity> followRequestsResponse = getFollowRequestsResponse(followRequests);
+            List<FollowRequestEntity> followRequestsReceived = userSessionBeanLocal.getFollowRequestReceived(userId);
+            List<FollowRequestEntity> followRequestsResponse = getFollowRequestsResponse(followRequestsReceived);
             return Response.status(200).entity(followRequestsResponse).build();
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -431,7 +431,23 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
+    @GET
+    @Path("/followrequestmade/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowRequestMade(@PathParam("userId") Long userId) {
+        try {
+            List<FollowRequestEntity> followRequestsMade = userSessionBeanLocal.getFollowRequestMade(userId);
+            List<FollowRequestEntity> followRequestsResponse = getFollowRequestsResponse(followRequestsMade);
+            return Response.status(200).entity(followRequestsResponse).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -503,7 +519,6 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
 
     private List<UserEntity> getUsersResponse(List<UserEntity> users) {
         List<UserEntity> usersResponse = new ArrayList<>();
@@ -526,6 +541,29 @@ public class UserResource {
         return usersResponse;
     }
     
+    private List<UserEntity> getUsersResponseWithFollowersAndFollowing(List<UserEntity> users) {
+        List<UserEntity> usersResponse = new ArrayList<>();
+        for (UserEntity user : users) {
+            UserEntity temp = new UserEntity();
+            temp.setUserId(user.getUserId());
+            temp.setFirstName(user.getFirstName());
+            temp.setLastName(user.getLastName());
+            temp.setEmail(user.getEmail());
+            temp.setDob(user.getDob());
+            temp.setGender(user.getGender());
+            temp.setJoinedDate(user.getJoinedDate());
+            temp.setProfilePicture(user.getProfilePicture());
+            temp.setSkills(user.getSkills());
+            temp.setSdgs(user.getSdgs());
+            temp.setFollowers(getUsersResponse(user.getFollowers()));
+            temp.setFollowing(getUsersResponse(user.getFollowing()));
+            temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
+            temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            usersResponse.add(temp);
+        }
+        return usersResponse;
+    }
+
     private List<FollowRequestEntity> getFollowRequestsResponse(List<FollowRequestEntity> followRequests) {
         List<FollowRequestEntity> followRequestsResponse = new ArrayList<>();
         for (FollowRequestEntity followRequestEntity : followRequests) {

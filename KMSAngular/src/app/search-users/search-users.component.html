@@ -26,8 +26,8 @@
                 <app-searchbar [searchString]="searchString" (searchStringChanged)="handleSearchStringChanged($event)">
                 </app-searchbar>
             </div>
-            <span *ngIf="filteredUsers.length == 0"> No users found.</span>
-            <span *ngIf="filteredUsers.length > 0">
+            <span *ngIf="filteredUsers && filteredUsers.length == 0"> No users found.</span>
+            <span *ngIf="filteredUsers && filteredUsers.length > 0">
                 <div class="card-body pb-0">
                     <div class="row d-flex align-items-stretch">
                         <div *ngFor="let user of filteredUsers"
@@ -39,8 +39,8 @@
                                 <div class="card-body pt-0">
                                     <div class="row">
                                         <div class="col-7">
-                                            <h2 class="lead" *ngIf="user.userId == loggedInUser.userId"><b> Me </b></h2>
-                                            <h2 class="lead" *ngIf="user.userId != loggedInUser.userId">
+                                            <h2 class="lead" *ngIf="user.userId == loggedInUserId"><b> Me </b></h2>
+                                            <h2 class="lead" *ngIf="user.userId != loggedInUserId">
                                                 <b>{{user.firstName}} {{user.lastName}}</b></h2>
                                             <p class="text-muted text-sm">
                                                 <b> {{user.followers.length}} followers &bull; {{user.following.length}}
@@ -71,14 +71,22 @@
                                         <a routerLink="/profile/{{user.userId}}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-user"></i> View Profile
                                         </a>
-                                        <button *ngIf="user.userId != loggedInUser.userId && !checkLoginUserHasFollowed(user.userId) && !checkLoginUserHaveSentFollowReq(user.userId)" type="button" class="btn bg-gradient-info btn-sm" (click)="follow(user.userId)"> 
-                                            <i class="fas fa-user-plus"></i> Follow 
+                                        <button
+                                            *ngIf="user.userId != loggedInUserId && !checkLoginUserHasFollowed(user.userId) && !checkLoginUserHaveSentFollowReq(user.userId)"
+                                            type="button" class="btn bg-gradient-info btn-sm"
+                                            (click)="follow(user.userId)">
+                                            <i class="fas fa-user-plus"></i> Follow
                                         </button>
-                                        <button *ngIf="user.userId != loggedInUser.userId && checkLoginUserHasFollowed(user.userId)" type=" button" class="btn bg-gradient-danger btn-sm" (click)="unfollow(user.userId)"> 
-                                            <i class="fas fa-user-times"></i> Unfollow 
+                                        <button
+                                            *ngIf="user.userId != loggedInUserId && checkLoginUserHasFollowed(user.userId)"
+                                            type=" button" class="btn bg-gradient-danger btn-sm"
+                                            (click)="unfollow(user.userId)">
+                                            <i class="fas fa-user-times"></i> Unfollow
                                         </button>
-                                        <button *ngIf="user.userId != loggedInUser.userId && !checkLoginUserHasFollowed(user.userId) && checkLoginUserHaveSentFollowReq(user.userId)" type=" button" class="btn bg-gradient-info btn-sm" disabled=true> 
-                                            <i class="fas fa-check"></i> Follow Request Sent 
+                                        <button
+                                            *ngIf="user.userId != loggedInUserId && !checkLoginUserHasFollowed(user.userId) && checkLoginUserHaveSentFollowReq(user.userId)"
+                                            type=" button" class="btn bg-gradient-info btn-sm" disabled=true>
+                                            <i class="fas fa-check"></i> Follow Request Sent
                                         </button>
                                     </div>
                                 </div>

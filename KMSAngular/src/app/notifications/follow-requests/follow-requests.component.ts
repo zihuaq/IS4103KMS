@@ -19,7 +19,7 @@ export class FollowRequestsComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInUserId = this.sessionService.getCurrentUser().userId;
     this.userService
-      .getFollowRequests(this.loggedInUserId)
+      .getFollowRequestReceived(this.loggedInUserId)
       .subscribe((followRequests) => {
         this.followRequests = followRequests;
       });
@@ -28,7 +28,7 @@ export class FollowRequestsComponent implements OnInit {
   acceptFollow(toUserid: number, fromUserid: number) {
     this.userService.acceptFollow(toUserid, fromUserid).subscribe(() => {
       this.userService
-        .getFollowRequests(this.loggedInUserId)
+        .getFollowRequestReceived(this.loggedInUserId)
         .subscribe((followRequests) => {
           this.followRequests = followRequests;
         });
@@ -38,7 +38,7 @@ export class FollowRequestsComponent implements OnInit {
   rejectFollow(toUserid: number, fromUserid: number) {
     this.userService.rejectFollow(toUserid, fromUserid).subscribe(() => {
       this.userService
-        .getFollowRequests(this.loggedInUserId)
+        .getFollowRequestReceived(this.loggedInUserId)
         .subscribe((followRequests) => {
           this.followRequests = followRequests;
         });
