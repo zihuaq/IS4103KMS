@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 import { IndexComponent } from './index/index.component';
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
-import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { TopNavbarComponent } from './top-navbar/top-navbar.component';
@@ -21,6 +20,8 @@ import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
+import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
+import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
@@ -31,7 +32,6 @@ import { FollowRequestsComponent } from './notifications/follow-requests/follow-
     CreateNewUserComponent,
     IndexComponent,
     UserLoginPageComponent,
-    ViewAllUsersComponent,
     HeaderComponent,
     TopNavbarComponent,
     ProfileComponent,
@@ -43,6 +43,8 @@ import { FollowRequestsComponent } from './notifications/follow-requests/follow-
     SideNavbarComponent,
     FooterComponent,
     ProfileTabpanelComponent,
+    SearchbarComponent,
+    SearchUsersComponent,
     EditProfileComponent,
     NotificationsComponent,
     FollowRequestsComponent,

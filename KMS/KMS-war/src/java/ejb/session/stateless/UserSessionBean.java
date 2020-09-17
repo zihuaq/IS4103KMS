@@ -284,6 +284,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
+    public List<UserEntity> getAllUsers() throws NoResultException{
+        Query q = em.createQuery("SELECT u FROM UserEntity u");
+        List<UserEntity> users = q.getResultList();
+        return users;
+    }
+    
     public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException {
         UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
         if (user == null) {

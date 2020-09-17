@@ -27,6 +27,8 @@ public interface UserSessionBeanLocal {
     public UserEntity createNewUser(UserEntity user) throws DuplicateEmailException;
 
     public UserEntity getUserById(long userId) throws NoResultException;
+    
+    public List<UserEntity> getAllUsers() throws NoResultException;
 
     public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
 

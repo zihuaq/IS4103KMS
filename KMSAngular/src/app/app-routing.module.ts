@@ -6,6 +6,7 @@ import { CreateNewUserComponent } from './create-new-user/create-new-user.compon
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
 import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { SearchUsersComponent } from './search-users/search-users.component';
 
 const routes: Routes = [
   { path: 'index', component: IndexComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'viewAllUsers', component: ViewAllUsersComponent },
   { path: 'notifications', component: NotificationsComponent },
+  { path: 'searchUsers', component: SearchUsersComponent },
   { path: '', component: IndexComponent },
 ];
 
