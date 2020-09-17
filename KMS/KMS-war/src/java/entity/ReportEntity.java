@@ -15,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
@@ -32,6 +33,8 @@ public class ReportEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
     
+    @NotNull
+    @JoinColumn(nullable=false)
     @ManyToOne
     private UserEntity reportOwner;
     
@@ -40,11 +43,19 @@ public class ReportEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ReportTypeEnum reportType;
     
+    private String reportContent;
+    
+    @JoinColumn
     @ManyToOne
     private UserEntity reportedUser;
-    
+
+    @NotNull
+    @JoinColumn(nullable=false)
+    @ManyToMany
+    private List<TagEntity> reportTags;
+
     public ReportEntity(){
-        this.tags = new ArrayList<>();
+        this.reportTags = new ArrayList<>();
     }
 
     public ReportEntity(Long reportId, UserEntity reportOwner, ReportTypeEnum reportType, UserEntity reportedUser, String reportContent, List<TagEntity> tags) {
@@ -54,14 +65,9 @@ public class ReportEntity implements Serializable {
         this.reportType = reportType;
         this.reportedUser = reportedUser;
         this.reportContent = reportContent;
-        this.tags = tags;
+        this.reportTags = tags;
     }
     
-    private String reportContent;
-    
-    @ManyToMany
-    private List<TagEntity> tags;
-
     public Long getReportId() {
         return reportId;
     }
@@ -119,12 +125,12 @@ public class ReportEntity implements Serializable {
         this.reportContent = reportContent;
     }
 
-    public List<TagEntity> getTags() {
-        return tags;
+    public List<TagEntity> getReportTags() {
+        return reportTags;
     }
 
-    public void setTags(List<TagEntity> tags) {
-        this.tags = tags;
+    public void setReportTags(List<TagEntity> tags) {
+        this.reportTags = tags;
     }
 
     public UserEntity getReportedUser() {

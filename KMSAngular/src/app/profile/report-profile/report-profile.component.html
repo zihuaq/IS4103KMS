@@ -17,12 +17,21 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Help us understand what is happening</p>
-                
+                <p>Help us understand what is happening, please select your concerns. </p>
+                <div class="select2-red">
+                  <select class="select2" multiple="multiple" data-placeholder="Select concerns"
+                    data-dropdown-css-class="select2-red" style="width: 100%;">
+                    <option *ngFor="let reportTag of reportTags">
+                      {{reportTag.name}}
+                    </option>
+                  </select>
+                </div>
+                <br/>
+                <textarea class="form-control" id="content" rows="3" placeholder="Elaboration if necessary" [(ngModel)]="content" ></textarea>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
-                <button type="button" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit</button>
             </div>
         </div>
         <!-- /.modal-content -->

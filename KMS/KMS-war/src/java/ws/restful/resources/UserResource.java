@@ -6,6 +6,7 @@
 package ws.restful.resources;
 
 import Exception.DuplicateEmailException;
+import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
@@ -340,7 +341,7 @@ public class UserResource {
     @POST
     @Path("/follow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
+    public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) throws DuplicateFollowRequestException {
         try {
             FollowRequestEntity followRequestEntity = userSessionBeanLocal.followUser(toUserId, fromUserId);
             if(followRequestEntity != null) {
