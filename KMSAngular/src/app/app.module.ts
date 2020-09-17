@@ -21,6 +21,8 @@ import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
+import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
+import { CreateNewProjectComponent } from './project/create-new-project/create-new-project.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,8 @@ import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tab
     SideNavbarComponent,
     FooterComponent,
     ProfileTabpanelComponent,
+    ViewAllProjectComponent,
+    CreateNewProjectComponent,
   ],
   imports: [
     BrowserModule,
