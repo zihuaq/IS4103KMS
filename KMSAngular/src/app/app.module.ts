@@ -20,14 +20,12 @@ import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
-<<<<<<< HEAD
 import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
 import { CreateNewProjectComponent } from './project/create-new-project/create-new-project.component';
-=======
 import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
->>>>>>> master
+
 
 @NgModule({
   declarations: [
@@ -46,14 +44,11 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
     SideNavbarComponent,
     FooterComponent,
     ProfileTabpanelComponent,
-<<<<<<< HEAD
     ViewAllProjectComponent,
     CreateNewProjectComponent,
-=======
     SearchbarComponent,
     SearchUsersComponent,
     EditProfileComponent,
->>>>>>> master
   ],
   imports: [
     BrowserModule,
