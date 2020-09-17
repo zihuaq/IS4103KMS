@@ -1,5 +1,6 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { User } from '../../classes/user';
+import { UserType } from '../../classes/user-type.enum'
 
 @Component({
   selector: 'app-basic-details',
@@ -8,6 +9,7 @@ import { User } from '../../classes/user';
 })
 export class BasicDetailsComponent implements OnInit, OnChanges {
   @Input() profile: User;
+  UserType = UserType;
 
   constructor() {}
   ngOnChanges(): void {}

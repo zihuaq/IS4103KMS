@@ -18,8 +18,8 @@
     <hr>
     <strong><i class="fas fa-pencil-alt mr-1"></i>Date of Birth</strong>
     <p class="text-muted">{{profile.dob | date}}</p>
-    <hr *ngIf="profile.isAdmin">
-    <strong *ngIf="profile.isAdmin">Administrator</strong>
+    <hr *ngIf="profile.userType == UserType.ADMIN">
+    <strong *ngIf="profile.userType == UserType.ADMIN">Administrator</strong>
   </div>
   <!-- /.card-body -->
 </div>

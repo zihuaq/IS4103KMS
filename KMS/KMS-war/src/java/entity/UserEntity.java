@@ -24,6 +24,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import util.enumeration.AccountPrivacySettingEnum;
+import util.enumeration.UserTypeEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -60,10 +61,13 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date joinedDate;
-    @Column(nullable = false)
-    private Boolean isAdmin;
     @Temporal(TemporalType.DATE)
     private Date adminStartDate;
+    
+    @NotNull
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private UserTypeEnum userType;
     @Lob
     @Column
     private String profilePicture;
@@ -129,7 +133,7 @@ public class UserEntity implements Serializable {
         this.followRequestMade = new ArrayList<>();
         this.followRequestReceived = new ArrayList<>();
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
-        this.isAdmin = Boolean.FALSE;
+        this.userType = UserTypeEnum.INDIVIDUAL;
         this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
     }
 
@@ -186,7 +190,7 @@ public class UserEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", isAdmin=" + isAdmin + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
+        return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", userType=" + userType + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
 
     public String getFirstName() {
@@ -255,14 +259,6 @@ public class UserEntity implements Serializable {
 
     public void setJoinedDate(Date joinedDate) {
         this.joinedDate = joinedDate;
-    }
-
-    public Boolean getIsAdmin() {
-        return isAdmin;
-    }
-
-    public void setIsAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
     }
 
     public Date getAdminStartDate() {
@@ -423,5 +419,13 @@ public class UserEntity implements Serializable {
 
     public void setReviewsReceived(List<ReviewEntity> reviewsReceived) {
         this.reviewsReceived = reviewsReceived;
+    }
+
+    public UserTypeEnum getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserTypeEnum userType) {
+        this.userType = userType;
     }
 }
