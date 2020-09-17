@@ -30,18 +30,29 @@ export class OverviewComponent implements OnInit {
         this.profile.userId.toString(),
         this.loggedInUser.userId.toString()
       )
-      .subscribe((followRequest: FollowRequest) => {
-        if (followRequest) {
+      .subscribe(
+        (followRequest: FollowRequest) => {
+          if (followRequest) {
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Sent Follow Request',
+              autohide: true,
+              delay: 2500,
+              body: 'Follow Request sent successfully',
+            });
+          }
+          this.getFollowersAndFollowing();
+        },
+        (err: any) => {
           $(document).Toasts('create', {
-            class: 'bg-success',
-            title: 'Sent Follow Request',
+            class: 'bg-danger',
+            title: 'Error',
             autohide: true,
             delay: 2500,
-            body: 'Follow Request sent successfully',
+            body: err,
           });
         }
-        this.getFollowersAndFollowing();
-      });
+      );
   }
 
   unfollow() {

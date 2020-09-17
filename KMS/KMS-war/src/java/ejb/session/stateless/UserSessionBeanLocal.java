@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.DuplicateEmailException;
+import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.NoResultException;
@@ -46,7 +47,7 @@ public interface UserSessionBeanLocal {
 
     public void deleteUser(long userId, UserEntity user) throws NoResultException;
 
-    public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
+    public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException , DuplicateFollowRequestException;
 
     public void acceptFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
 

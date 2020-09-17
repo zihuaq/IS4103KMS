@@ -83,7 +83,6 @@ export class EditProfileComponent implements OnInit {
           });
         },
         (err) => {
-          console.log(err);
           $(document).Toasts('create', {
             class: 'bg-danger',
             title: 'Error',

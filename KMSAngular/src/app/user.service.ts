@@ -172,9 +172,7 @@ export class UserService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = 'An unknown error has occurred: ' + error.error.message;
     } else {
-      errorMessage =
-        'A HTTP error has occurred: ' +
-        `HTTP ${error.status}: ${error.error.error}`;
+      errorMessage = error.error.error;
     }
 
     console.error(errorMessage);
