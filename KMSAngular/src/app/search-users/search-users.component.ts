@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FollowRequest } from '../classes/follow-request';
 import { User } from '../classes/user';
@@ -19,24 +20,59 @@ export class SearchUsersComponent implements OnInit {
   loggedInUserId: number;
   loggedInUserFollowing: User[];
   loggedInUserFollowRequestMade: FollowRequest[];
+  user: User;
+  query: string;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
+    let userId = this.activatedRoute.snapshot.params.userid;
+    this.query = this.activatedRoute.snapshot.url[1]?.path;
     this.loggedInUserId = this.sessionService.getCurrentUser().userId;
-    forkJoin([
-      this.userService.getAllUsers(),
-      this.userService.getFollowing(this.loggedInUserId),
-      this.userService.getFollowRequestMade(this.loggedInUserId),
-    ]).subscribe((result) => {
-      this.allUsers = result[0];
-      this.filteredUsers = this.allUsers;
-      this.loggedInUserFollowing = result[1];
-      this.loggedInUserFollowRequestMade = result[2];
-    });
+    if (this.query && userId) {
+      if (this.query == 'followers') {
+        forkJoin([
+          this.userService.getFollowers(parseInt(userId)),
+          this.userService.getFollowing(this.loggedInUserId),
+          this.userService.getFollowRequestMade(this.loggedInUserId),
+          this.userService.getUser(userId),
+        ]).subscribe((result) => {
+          this.allUsers = result[0];
+          this.filteredUsers = this.allUsers;
+          this.loggedInUserFollowing = result[1];
+          this.loggedInUserFollowRequestMade = result[2];
+          this.user = result[3];
+        });
+      } else if (this.query == 'following') {
+        forkJoin([
+          this.userService.getFollowing(parseInt(userId)),
+          this.userService.getFollowing(this.loggedInUserId),
+          this.userService.getFollowRequestMade(this.loggedInUserId),
+          this.userService.getUser(userId),
+        ]).subscribe((result) => {
+          this.allUsers = result[0];
+          this.filteredUsers = this.allUsers;
+          this.loggedInUserFollowing = result[1];
+          this.loggedInUserFollowRequestMade = result[2];
+          this.user = result[3];
+        });
+      }
+    } else {
+      forkJoin([
+        this.userService.getAllUsers(),
+        this.userService.getFollowing(this.loggedInUserId),
+        this.userService.getFollowRequestMade(this.loggedInUserId),
+      ]).subscribe((result) => {
+        this.allUsers = result[0];
+        this.filteredUsers = this.allUsers;
+        this.loggedInUserFollowing = result[1];
+        this.loggedInUserFollowRequestMade = result[2];
+      });
+    }
   }
 
   handleSearchStringChanged(event) {
@@ -49,8 +85,6 @@ export class SearchUsersComponent implements OnInit {
           .includes(this.searchString.toLowerCase()) ||
         user.lastName.toLowerCase().includes(this.searchString.toLowerCase())
       ) {
-        console.log(user.followers);
-        console.log(user.following);
         this.filteredUsers.push(user);
       }
     }
@@ -82,7 +116,6 @@ export class SearchUsersComponent implements OnInit {
   }
 
   checkLoginUserHasFollowed(userId: number) {
-    // console.log(this.loggedInUserFollowing);
     return this.loggedInUserFollowing
       .map((user) => user.userId)
       .includes(userId);
@@ -102,7 +135,6 @@ export class SearchUsersComponent implements OnInit {
       this.userService.getFollowRequestMade(this.loggedInUserId),
     ]).subscribe((result) => {
       this.loggedInUserFollowing = result[2];
-      console.log(this.loggedInUserFollowing);
       this.loggedInUserFollowRequestMade = result[3];
       for (var user of this.filteredUsers) {
         if (user.userId == userId) {

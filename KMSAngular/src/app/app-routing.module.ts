@@ -14,6 +14,8 @@ const routes: Routes = [
   { path: 'profile/:userid', component: ProfileComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'notifications', component: NotificationsComponent },
+  { path: 'searchUsers/followers/:userid', component: SearchUsersComponent },
+  { path: 'searchUsers/following/:userid', component: SearchUsersComponent },
   { path: 'searchUsers', component: SearchUsersComponent },
   { path: '', component: IndexComponent },
 ];

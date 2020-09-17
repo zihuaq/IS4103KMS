@@ -20,7 +20,6 @@ export class BasicDetailsComponent implements OnInit {
   ngOnInit(): void {
     const parsedUrl = new URL(window.location.href);
     this.profileUrl = parsedUrl.origin + '/profile/' + this.profile.userId;
-    console.log(this.profileUrl); // this will print http://example.com or http://localhost:4200
   }
 
   copyProfileUrl() {

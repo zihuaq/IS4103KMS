@@ -72,7 +72,6 @@ export class OverviewComponent implements OnInit {
       this.userService.getFollowing(this.profile.userId),
       this.userService.getFollowing(this.loggedInUser.userId),
     ]).subscribe((result) => {
-      console.log(result);
       this.profile = { ...this.profile, followers: result[0] };
       this.profile = { ...this.profile, following: result[1] };
       this.loggedInUser = { ...this.loggedInUser, following: result[2] };

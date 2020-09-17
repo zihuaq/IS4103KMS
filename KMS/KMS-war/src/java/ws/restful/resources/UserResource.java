@@ -492,7 +492,7 @@ public class UserResource {
     public Response getFollowers(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> followers = userSessionBeanLocal.getFollowers(userId);
-            List<UserEntity> followersResponse = getUsersResponse(followers);
+            List<UserEntity> followersResponse = getUsersResponseWithFollowersAndFollowing(followers);
             System.out.println(followersResponse);
             return Response.status(200).entity(followersResponse).build();
         } catch (UserNotFoundException ex) {
@@ -509,7 +509,7 @@ public class UserResource {
     public Response getFollowing(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> following = userSessionBeanLocal.getFollowing(userId);
-            List<UserEntity> followingResponse = getUsersResponse(following);
+            List<UserEntity> followingResponse = getUsersResponseWithFollowersAndFollowing(following);
             System.out.println(followingResponse);
             return Response.status(200).entity(followingResponse).build();
         } catch (UserNotFoundException ex) {

@@ -15,10 +15,12 @@
 
     <ul class="list-group list-group-unbordered mb-3">
       <li class="list-group-item">
-        <b>Followers</b> <a class="float-right">{{profile.followers.length}}</a>
+        <b>Followers</b> <a class="float-right"
+          [routerLink]="['/searchUsers/followers/', profile.userId]">{{profile.followers.length}}</a>
       </li>
       <li class="list-group-item">
-        <b>Following</b> <a class="float-right">{{profile.following.length}}</a>
+        <b>Following</b> <a class="float-right"
+          [routerLink]="['/searchUsers/following/', profile.userId]">{{profile.following.length}}</a>
       </li>
       <li class="list-group-item">
         <b>Reputation points</b> <a class="float-right">{{profile.reputationPoints}}</a>

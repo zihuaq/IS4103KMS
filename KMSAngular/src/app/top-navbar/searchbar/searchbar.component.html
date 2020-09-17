@@ -1,7 +1,9 @@
 <!-- SEARCH FORM -->
 <div class="input-group input-group-sm">
-    <input class="form-control form-control-navbar" type="search" placeholder="Search users" aria-label="Search" 
-    [(ngModel)] = "searchString" (ngModelChange)="handleSearch()">
+    <input class="form-control form-control-navbar" *ngIf="!query" type="search" placeholder="Search users"
+        aria-label="Search" [(ngModel)]="searchString" (ngModelChange)="handleSearch()">
+    <input class="form-control form-control-navbar" *ngIf="query" type="search" [placeholder]="['search '+ query]"
+        aria-label="Search" [(ngModel)]="searchString" (ngModelChange)="handleSearch()">
     <div class="input-group-append">
         <button class="btn btn-navbar" (click)="handleSearch()">
             <i class="fas fa-search"></i>
