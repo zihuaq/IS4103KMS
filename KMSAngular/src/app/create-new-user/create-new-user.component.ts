@@ -13,6 +13,10 @@ export class CreateNewUserComponent implements OnInit {
   newUser: User;
   maxDate = new Date().toISOString().slice(0,10);
   genders = ['male', 'female'];
+  accountCreated = false;
+  accountCreationError = false;
+  errorMessage: string;
+  isLoading = false;
 
   constructor(private userService: UserService) {
     this.newUser = new User();
@@ -33,8 +37,15 @@ export class CreateNewUserComponent implements OnInit {
       this.newUser.joinedDate = new Date()
       this.newUser.userType = UserType.INDIVIDUAL;
       console.log(this.newUser)
+      this.isLoading = true;
       this.userService.userRegistration(this.newUser).subscribe(responsedata => {
         console.log(responsedata)
+        this.isLoading = false;
+        this.accountCreated = true;
+      }, error => {
+        this.isLoading = false;
+        this.accountCreationError = true;
+        this.errorMessage = 'Error: ' + error;
       })
     }
   }

@@ -10,6 +10,7 @@ import entity.FollowRequestEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -52,6 +53,69 @@ public class UserSessionBean implements UserSessionBeanLocal {
         em.persist(user);
         em.flush();
         return user;
+    }
+    
+    @Override
+    public void resetPassword(String email)throws UserNotFoundException{
+        String password = this.generateRandomPassword(10);
+        UserEntity user = this.retrieveUserByEmail(email);
+        user.setPassword(password);
+        em.merge(user);
+        em.flush();
+        this.sendResetPasswordEmail(user.getEmail(), password);
+    }
+    
+    private String generateRandomPassword(int len){
+        
+        final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 0; i < len; i++){
+            int randomIndex = random.nextInt(chars.length());
+            sb.append(chars.charAt(randomIndex));
+        }
+        return sb.toString();
+    }
+    
+    private void sendResetPasswordEmail(String destinationEmail, String newPassword){
+        
+        final String username = "4103kms";
+        final String password = "4103kmsemail";
+        final String host = "localhost";
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.user", username);
+        
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication(){
+                return new PasswordAuthentication(username, password);
+            }
+        });
+        
+        try{
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("4103kms@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinationEmail));
+            message.setSubject("Password Reset for KMS");
+            message.setText("Dear user, "+ 
+                    "\n" +
+                    "\n" + "Your password has been reset. New password: " + newPassword +
+                    "\n" + "Please login and change your password");
+            
+            Transport.send(message);
+            
+            System.out.println("reset password message sent");
+        }
+        catch(MessagingException ex){
+            throw new RuntimeException(ex);
+        }
+
     }
 
     @Override

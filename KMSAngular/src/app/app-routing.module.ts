@@ -8,11 +8,13 @@ import { UserLoginPageComponent } from './user-login-page/user-login-page.compon
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { RouteGuard } from "./route-guard.service";
 import { SearchUsersComponent } from './search-users/search-users.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 const routes: Routes = [
   { path: 'index', component: IndexComponent },
   { path: 'signup', component: CreateNewUserComponent },
   { path: 'login', component: UserLoginPageComponent },
+  { path: 'forgotPassword', component: ForgotPasswordComponent },
   { path: 'profile/:userid', canActivate:[RouteGuard], component: ProfileComponent },
   { path: 'profile', canActivate:[RouteGuard], component: ProfileComponent },
   // { path: 'viewAllUsers', canActivate:[RouteGuard], component: ViewAllUsersComponent },

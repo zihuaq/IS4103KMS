@@ -308,6 +308,21 @@ public class UserResource {
         }
         return Response.status(Response.Status.OK).entity(newUser).build();
     }
+    
+    @Path("resetPassword")
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response forgotPassword(@QueryParam("email") String email) {
+        try {
+            System.out.println("forgot password for " + email);
+            UserEntity user = userSessionBeanLocal.retrieveUserByEmail(email);
+            userSessionBeanLocal.resetPassword(email);
+        } catch (UserNotFoundException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+        return Response.status(Response.Status.OK).build();
+    }
 
     @Path("userLogin")
     @GET

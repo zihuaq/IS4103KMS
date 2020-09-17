@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { MomentModule } from 'angular2-moment';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +29,7 @@ import { AppPasswordDirective } from './app-password.directive'
 import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +54,7 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
     SearchbarComponent,
     SearchUsersComponent,
     EditProfileComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +62,9 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    NgIdleKeepaliveModule.forRoot(),
+    MomentModule,
+    ModalModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent],

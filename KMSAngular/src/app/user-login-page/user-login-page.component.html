@@ -24,10 +24,16 @@
                     <input type="password" appAppPassword id="password" class="form-control" ngModel name="password" required
                         #password="ngModel">
                 </div>
-
-                <button class="btn btn-primary" (click)="newAccountRedirect()">Create New Account</button>
-
-                <button class="btn btn-success" type="submit" style="float: right ;">Login</button>
+                <hr>
+                <div>
+                  <div>
+                    <a href="/signup">Sign up now!</a>
+                    <button class="btn btn-success" type="submit" style="float:right;">Login</button>
+                  </div>
+                  <div>
+                    <a href="/forgotPassword">I forgot my password</a>
+                  </div>
+                </div>
             </form>
         </div>
     </div>

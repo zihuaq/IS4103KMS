@@ -63,6 +63,8 @@ public interface UserSessionBeanLocal {
     public List<UserEntity> getFollowing(long userId) throws UserNotFoundException;
 
     public List<MaterialResourceAvailableEntity> getMaterialRequestAvailable(long userId) throws UserNotFoundException;
+
+    public void resetPassword(String email)throws UserNotFoundException;
     
 
 }

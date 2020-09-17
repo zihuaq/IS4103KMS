@@ -58,6 +58,14 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  resetPassword(email: String) {
+    return this.http
+      .post<any>(
+        this.baseUrl + '/resetPassword?email=' + email, null
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   getUser(userId: String) {
     return this.http
       .get<any>(this.baseUrl + '/' + userId)
