@@ -19,7 +19,8 @@
   <button type="button" class="btn btn-block btn-default" (click)="submitSkills()">Submit selections</button>
 </div>
 
-<label>Your Skills</label>
+<label *ngIf="loggedInUser.userId == profile.userId"> My Skills</label>
+<label *ngIf="loggedInUser.userId != profile.userId"> {{profile.firstName}} {{profile.lastName}}'s Skills </label>
 <br />
 <span *ngIf="profile.skills.length == 0 && loggedInUser.userId == profile.userId"> You have no skills at the
   moment.</span>

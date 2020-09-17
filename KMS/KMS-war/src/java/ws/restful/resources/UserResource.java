@@ -44,13 +44,13 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("user")
 public class UserResource {
-
+    
     UserSessionBeanLocal userSessionBeanLocal = lookupUserSessionBeanLocal();
-
+    
     TagSessionBeanLocal tagSessionBeanLocal = lookupTagSessionBeanLocal();
-
+    
     MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBeanLocal = lookupMaterialResourceAvailableSessionBeanLocal();
-
+    
     @Context
     private UriInfo context;
 
@@ -59,7 +59,7 @@ public class UserResource {
      */
     public UserResource() {
     }
-
+    
     private MaterialResourceAvailableSessionBeanLocal lookupMaterialResourceAvailableSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -69,7 +69,7 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
-
+    
     private TagSessionBeanLocal lookupTagSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -79,7 +79,7 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
-
+    
     private UserSessionBeanLocal lookupUserSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -89,7 +89,7 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
-
+    
     @PUT
     @Path("/addskills/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -98,7 +98,7 @@ public class UserResource {
         try {
             List<TagEntity> updatedSkills = userSessionBeanLocal.addSkillsToProfile(userId, tags);
             return Response.status(200).entity(updatedSkills).build();
-
+            
         } catch (NoResultException | DuplicateTagInProfileException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -106,7 +106,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/skills/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -114,7 +114,7 @@ public class UserResource {
         try {
             List<TagEntity> skills = userSessionBeanLocal.getSkillsForProfile(userId);
             return Response.status(200).entity(skills).build();
-
+            
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -122,7 +122,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @DELETE
     @Path("/removeskill/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -138,7 +138,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/addSDG/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -153,7 +153,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/removeSDG/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -168,7 +168,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @POST
     @Path("/mra/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -186,7 +186,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @DELETE
     @Path("/mra/{userId}/{mraId}")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -205,7 +205,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/mra/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -223,7 +223,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -265,8 +265,46 @@ public class UserResource {
             for (int i = 0; i < users.size(); i++) {
                 users.get(i).getFollowRequestMade().clear();
                 users.get(i).getFollowRequestReceived().clear();
-                users.get(i).getFollowers().clear();
-                users.get(i).getFollowing().clear();
+                List<UserEntity> followers = users.get(i).getFollowers();
+                for (UserEntity user : followers) {
+                    user.getReviewsGiven().clear();
+                    user.getReviewsReceived().clear();
+                    user.getProjectsOwned().clear();
+                    user.getProjectsContributed().clear();
+                    user.getProjectAdmins().clear();
+                    user.getGroups().clear();
+                    user.getPosts().clear();
+                    user.getGroupsOwned().clear();
+                    user.getBadges().clear();
+                    user.getMras().clear();
+                    user.getSkills().clear();
+                    user.getFollowing().clear();
+                    user.getFollowers().clear();
+                    user.getFollowRequestMade().clear();
+                    user.getFollowRequestReceived().clear();
+                    user.setPassword("");
+                }
+                users.get(i).setFollowers(followers);
+                List<UserEntity> following = users.get(i).getFollowing();
+                for (UserEntity user : following) {
+                    user.getReviewsGiven().clear();
+                    user.getReviewsReceived().clear();
+                    user.getProjectsOwned().clear();
+                    user.getProjectsContributed().clear();
+                    user.getProjectAdmins().clear();
+                    user.getGroups().clear();
+                    user.getPosts().clear();
+                    user.getGroupsOwned().clear();
+                    user.getBadges().clear();
+                    user.getMras().clear();
+                    user.getSkills().clear();
+                    user.getFollowing().clear();
+                    user.getFollowers().clear();
+                    user.getFollowRequestMade().clear();
+                    user.getFollowRequestReceived().clear();
+                    user.setPassword("");
+                }
+                users.get(i).setFollowing(following);
                 users.get(i).getGroups().clear();
                 users.get(i).getGroupsOwned().clear();
                 users.get(i).getMras().clear();
@@ -285,7 +323,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @Path("userRegistration")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -299,7 +337,7 @@ public class UserResource {
         }
         return Response.status(Response.Status.OK).entity(newUser).build();
     }
-
+    
     @Path("userLogin")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
@@ -329,9 +367,9 @@ public class UserResource {
         } catch (InvalidLoginCredentialException ex) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
-
+        
     }
-
+    
     @DELETE
     @Path("deleteUser")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -339,7 +377,7 @@ public class UserResource {
     public Response deleteUser(@PathParam("userId") Long userId, UserEntity user) {
         try {
             userSessionBeanLocal.deleteUser(userId, user);
-
+            
             return Response.status(204).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -348,7 +386,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @POST
     @Path("/follow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -363,7 +401,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @POST
     @Path("/acceptfollow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -378,7 +416,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @POST
     @Path("/unfollow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -393,7 +431,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -431,7 +469,7 @@ public class UserResource {
             return Response.status(400).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/followers/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -465,6 +503,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+
     @GET
     @Path("/following/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
