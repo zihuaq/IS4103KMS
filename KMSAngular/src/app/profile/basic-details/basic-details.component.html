@@ -5,27 +5,21 @@
   </div>
   <!-- /.card-header -->
   <div class="card-body">
-    <strong *ngIf="profile.sdg">Interested SDGs</strong>
-
-    <p class="text-muted" *ngFor="let sdg of profile.sdg">
+    <strong *ngIf="profile.sdgs">Interested SDGs</strong>
+    <p class="text-muted" *ngFor="let sdg of profile.sdgs">
       sdg
     </p>
-
-    <hr *ngIf="profile.sdg">
-
-    <strong><i class="fas fa-map-marker-alt mr-1"></i> Joined Date</strong>
-
+    <hr *ngIf="profile.sdgs">
+    <strong><i class="fas fa-map-marker-alt mr-1"></i>Joined Date</strong>
     <p class="text-muted">{{profile.joinedDate | date}}</p>
-
     <hr>
-
-    <strong><i class="fas fa-pencil-alt mr-1"></i> Gender</strong>
-
+    <strong><i class="fas fa-pencil-alt mr-1"></i>Gender</strong>
     <p class="text-muted">{{profile.gender}}</p>
-
     <hr>
-
-    <strong *ngIf="profile.isAdmin">Administrator</strong>
+    <strong><i class="fas fa-pencil-alt mr-1"></i>Date of Birth</strong>
+    <p class="text-muted">{{profile.dob | date}}</p>
+    <hr *ngIf="profile.userType == UserType.ADMIN">
+    <strong *ngIf="profile.userType == UserType.ADMIN">Administrator</strong>
   </div>
   <!-- /.card-body -->
 </div>

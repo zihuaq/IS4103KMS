@@ -1,5 +1,7 @@
 import { Tag } from './tag';
 import { MaterialResourceAvailable } from './material-resource-available';
+import { AccountPrivacySettingEnum } from './privacy-settings.enum';
+import { UserType } from './user-type.enum';
 
 export class User {
   userId: number;
@@ -9,18 +11,18 @@ export class User {
   gender: String;
   email: String;
   password: String;
-  isAdmin: boolean;
-  profilePicture: String;
+  userType: UserType;
+  profilePicture: string | ArrayBuffer;
   country: String;
   reputationPoints: number;
-  type: String;
   joinedDate: Date;
   adminStartDate: Date;
   followers: User[];
   following: User[];
   skills: Tag[];
   mras: MaterialResourceAvailable[];
-  sdg: Tag[];
+  sdgs: Tag[];
+  accountPrivacySetting: AccountPrivacySettingEnum;
 
   constructor(
     userId?: number,
@@ -30,17 +32,18 @@ export class User {
     gender?: String,
     email?: String,
     password?: String,
-    profilePicture?: String,
+    profilePicture?: string | ArrayBuffer,
     country?: String,
     reputationPoints?: number,
-    type?: String,
+    userType?: UserType,
     joinedDate?: Date,
     adminStartDate?: Date,
     followers?: User[],
     following?: User[],
     skills?: Tag[],
     mras?: MaterialResourceAvailable[],
-    sdg?: Tag[]
+    sdgs?: Tag[],
+    accountPrivacySetting?: AccountPrivacySettingEnum
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -49,17 +52,17 @@ export class User {
     this.gender = gender;
     this.email = email;
     this.password = password;
-    this.isAdmin = false;
+    this.userType = userType;
     this.profilePicture = profilePicture;
     this.country = country;
     this.reputationPoints = reputationPoints;
-    this.type = type;
     this.joinedDate = joinedDate;
     this.adminStartDate = adminStartDate;
     this.followers = followers;
     this.following = following;
     this.skills = skills;
     this.mras = mras;
-    this.sdg = sdg;
+    this.sdgs = sdgs;
+    this.accountPrivacySetting = accountPrivacySetting;
   }
 }

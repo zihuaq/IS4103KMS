@@ -68,5 +68,22 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Construction Equipment", TagTypeEnum.MATERIALRESOURCE));
  //       userSessionBean.createNewUser(new UserEntity("test1", "last name", new Date(), "Female", "1@1.com", "pw"));
  //       materialResourceAvailableSessionBean.createMaterialResourceAvailable(new MaterialResourceAvailableEntity("name", 100, "description", new Date(), new Date(), "country", new ArrayList<TagEntity>()), 1);
+        tagSessionBean.createNewTag(new TagEntity("SDG 1", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 2", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 3", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 4", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 5", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 6", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 7", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 8", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 9", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 10", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 11", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 12", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 13", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 14", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 15", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 16", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("SDG 17", TagTypeEnum.SDG));
     }
 }

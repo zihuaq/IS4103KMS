@@ -32,6 +32,7 @@ public class ApplicationConfig extends Application {
         resources.add(ws.restful.resources.CorsFilter.class);
         resources.add(ws.restful.resources.ProjectResource.class);
         resources.add(ws.restful.resources.TagResource.class);
+        resources.add(ws.restful.resources.UserResource.class);
     }
     
 }

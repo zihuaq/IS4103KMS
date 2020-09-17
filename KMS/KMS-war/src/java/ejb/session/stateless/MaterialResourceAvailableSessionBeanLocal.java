@@ -17,9 +17,9 @@ import javax.ejb.Local;
 @Local
 public interface MaterialResourceAvailableSessionBeanLocal {
 
-    public void createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable, long userId) throws NoResultException;
+    public List<MaterialResourceAvailableEntity> createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable, long userId) throws NoResultException;
 
     public List<MaterialResourceAvailableEntity> getMaterialResourceAvailableForUser(long userId) throws NoResultException;
     
-    public void deleteMaterialResourceAvailableForUser(long userId, long mraId) throws NoResultException; 
+    public List<MaterialResourceAvailableEntity> deleteMaterialResourceAvailableForUser(long userId, long mraId) throws NoResultException; 
 }

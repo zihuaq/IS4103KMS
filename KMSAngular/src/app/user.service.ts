@@ -11,6 +11,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Tag } from './classes/tag';
+import { MaterialResourceAvailable } from './classes/material-resource-available';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -59,6 +60,12 @@ export class UserService {
       .pipe(map(this.parseDate), catchError(this.handleError));
   }
 
+  getAllUsers() {
+    return this.http
+      .get<any>(this.baseUrl + '/allusers')
+      .pipe(catchError(this.handleError));
+  }
+
   followUser(toUserId: String, fromUserId: String) {
     return this.http
       .post<any>(this.baseUrl + '/follow/' + toUserId + '/' + fromUserId, null)
@@ -76,7 +83,10 @@ export class UserService {
 
   acceptFollow(toUserId: String, fromUserId: String) {
     return this.http
-      .get<any>(this.baseUrl + '/acceptfollow/' + toUserId + '/' + fromUserId)
+      .post<any>(
+        this.baseUrl + '/acceptfollow/' + toUserId + '/' + fromUserId,
+        null
+      )
       .pipe(catchError(this.handleError));
   }
 
@@ -92,6 +102,55 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  getSkillsForProfile(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /skills/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  updateUser(updatedUser: User) {
+    return this.http
+      .post<any>(this.baseUrl + '/update', updatedUser, httpOptions)
+      .pipe(map(this.parseDate), catchError(this.handleError));
+  }
+
+  createMaterialResourceAvailable(
+    userId: number,
+    mra: MaterialResourceAvailable
+  ): Observable<any> {
+    return this.http
+      .post<any>(this.baseUrl + '/mra/' + userId, mra, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteMaterialResourceAvailable(
+    userId: number,
+    mraId: number
+  ): Observable<any> {
+    console.log('delete method called');
+    return this.http
+      .delete<any>(this.baseUrl + '/mra/' + userId + '/' + mraId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getMaterialResourceAvailable(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/mra/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getFollowers(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /followers/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getFollowing(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /following/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
 
@@ -100,7 +159,7 @@ export class UserService {
     } else {
       errorMessage =
         'A HTTP error has occurred: ' +
-        `HTTP ${error.status}: ${error.error.message}`;
+        `HTTP ${error.status}: ${error.error.error}`;
     }
 
     console.error(errorMessage);
@@ -113,20 +172,59 @@ export class UserService {
       return {
         ...data,
         joinedDate: new Date(
-          data.joinedDate.substring(0, data.joinedDate.length - 6)
+          Date.UTC(
+            data.joinedDate.substring(0, 4),
+            data.joinedDate.substring(5, 7) - 1,
+            data.joinedDate.substring(8, 10),
+            data.joinedDate.substring(11, 13),
+            data.joinedDate.substring(14, 16),
+            data.joinedDate.substring(17, 19)
+          )
         ),
-        dob: new Date(data.dob.substring(0, data.dob.length - 6)),
+        dob: new Date(
+          Date.UTC(
+            data.dob.substring(0, 4),
+            data.dob.substring(5, 7) - 1,
+            data.dob.substring(8, 10),
+            data.dob.substring(11, 13),
+            data.dob.substring(14, 16),
+            data.dob.substring(17, 19)
+          )
+        ),
         adminStartDate: new Date(
-          data.adminStartDate.substring(0, data.adminStartDate.length - 6)
+          Date.UTC(
+            data.adminStartDate.substring(0, 4),
+            data.adminStartDate.substring(5, 7) - 1,
+            data.adminStartDate.substring(8, 10),
+            data.adminStartDate.substring(11, 13),
+            data.adminStartDate.substring(14, 16),
+            data.adminStartDate.substring(17, 19)
+          )
         ),
       };
     } else {
       return {
         ...data,
         joinedDate: new Date(
-          data.joinedDate.substring(0, data.joinedDate.length - 6)
+          Date.UTC(
+            data.joinedDate.substring(0, 4),
+            data.joinedDate.substring(5, 7) - 1,
+            data.joinedDate.substring(8, 10),
+            data.joinedDate.substring(11, 13),
+            data.joinedDate.substring(14, 16),
+            data.joinedDate.substring(17, 19)
+          )
         ),
-        dob: new Date(data.dob.substring(0, data.dob.length - 6)),
+        dob: new Date(
+          Date.UTC(
+            data.dob.substring(0, 4),
+            data.dob.substring(5, 7) - 1,
+            data.dob.substring(8, 10),
+            data.dob.substring(11, 13),
+            data.dob.substring(14, 16),
+            data.dob.substring(17, 19)
+          )
+        ),
       };
     }
   }

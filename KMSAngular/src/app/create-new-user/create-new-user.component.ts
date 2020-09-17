@@ -2,6 +2,7 @@ import { Component, OnInit, inject, Inject, LOCALE_ID } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UserService } from '../user.service';
 import { User } from '../classes/user';
+import { UserType } from '../classes/user-type.enum';
 
 @Component({
   selector: 'app-create-new-user',
@@ -30,7 +31,7 @@ export class CreateNewUserComponent implements OnInit {
       this.newUser.gender = userRegistrationForm.value.gender
       this.newUser.password = userRegistrationForm.value.password
       this.newUser.joinedDate = new Date()
-      this.newUser.isAdmin = false
+      this.newUser.userType = UserType.INDIVIDUAL;
       console.log(this.newUser)
       this.userService.userRegistration(this.newUser).subscribe(responsedata => {
         console.log(responsedata)
