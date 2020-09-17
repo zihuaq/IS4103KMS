@@ -22,7 +22,7 @@ export class ReportService {
 
   createReport(report: Report): Observable<any> {
     return this.http
-      .post<any>(this.baseUrl + '/create' + report, httpOptions)
+      .post<any>(this.baseUrl + '/create', report, httpOptions)
       .pipe(catchError(this.handleError));
   }
 

@@ -48,7 +48,6 @@ public class ReportResource {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createReport(ReportEntity report) {
-        System.out.println("Reached create report resource");
         try {
             reportSessionBean.createNewReport(report);
             return Response.status(200).entity(report).build();

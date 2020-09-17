@@ -68,6 +68,7 @@ export class ReportProfileComponent implements OnInit {
         autohide: true,
         delay: 2500,
       });
+      $('#modal-default').modal('hide');
     });
   }
 }

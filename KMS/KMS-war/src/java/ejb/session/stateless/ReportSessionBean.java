@@ -24,9 +24,8 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
 
     @Override
     public ReportEntity createNewReport(ReportEntity report) throws NoResultException {
-        UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner());
-        UserEntity reportedUser = em.find(UserEntity.class, report.getReportedUser());
-        System.out.println(report);
+        UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
+        UserEntity reportedUser = em.find(UserEntity.class, report.getReportedUser().getUserId());
         if (reportOwner != null && reportedUser != null) {
             em.persist(report);
             em.flush();
