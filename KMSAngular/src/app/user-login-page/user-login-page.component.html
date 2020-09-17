@@ -2,7 +2,13 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-            <form (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm">
+          <div class="alert alert-danger" *ngIf = "loginError">
+            <p>{{ errorMessage }}</p>
+          </div>
+          <div *ngIf ='isLoading' style="text-align: center;">
+            <app-loading-spinner></app-loading-spinner>
+          </div>
+            <form (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf = "!isLoading">
                 <hr>
 
                 <div class="form-group">
@@ -15,7 +21,7 @@
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="text" id="password" class="form-control" ngModel name="password" required
+                    <input type="password" appAppPassword id="password" class="form-control" ngModel name="password" required
                         #password="ngModel">
                 </div>
 

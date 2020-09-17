@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
+import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.TagEntity;
@@ -40,8 +41,6 @@ public interface UserSessionBeanLocal {
 
     public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
 
-    public void sendVerificationEmail(String destinationEmail);
-
     public void deleteUser(long userId, UserEntity user) throws NoResultException;
 
     public void followUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
@@ -49,6 +48,12 @@ public interface UserSessionBeanLocal {
     public void acceptFollowRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
 
     public void unfollowUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
+
+    public void sendVerificationEmail(String destinationEmail, String verificationCode);
+
+    public Boolean verifyEmail(String email, String uuid) throws UserNotFoundException, InvalidUUIDException;
+
+    
 
 
 }

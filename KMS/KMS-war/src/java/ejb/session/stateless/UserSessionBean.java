@@ -3,6 +3,7 @@ package ejb.session.stateless;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
+import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.FollowRequestEntity;
@@ -10,6 +11,7 @@ import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -43,6 +45,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
         if (!q.getResultList().isEmpty()) {
             throw new DuplicateEmailException("Email already exist!");
         }
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        user.setVerificationCode(uuid);
+        user.setIsVerified(Boolean.FALSE);
         em.persist(user);
         em.flush();
         return user;
@@ -135,17 +140,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + user.getSalt()));
             if (user.getPassword().equals(passwordHash)) {
                 System.out.println("user login if()");
-                System.out.println(user.getPassword());
-                System.out.println(passwordHash);
                 return user;
             } else {
                 System.out.println("user login else()");
-                System.out.println(user.getPassword());
-                System.out.println(passwordHash);
                 throw new InvalidLoginCredentialException("Email does not exist of invalid password");
             }
         } catch (UserNotFoundException ex) {
-            System.out.println("here");
             throw new InvalidLoginCredentialException("Email does not exist or invalid password!");
         }
 
@@ -184,7 +184,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
     
     @Override
-    public void sendVerificationEmail(String destinationEmail){
+    public void sendVerificationEmail(String destinationEmail, String verificationCode){
         
         final String username = "4103kms";
         final String password = "4103kmsemail";
@@ -209,7 +209,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
             message.setFrom(new InternetAddress("4103kms@gmail.com"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinationEmail));
             message.setSubject("Thank you for signing up with kms");
-            message.setText("Please verify your email address here");
+            message.setText("Please verify your email address at http://localhost:4200//accountVerification/" + destinationEmail + "/"+ verificationCode);
             
             Transport.send(message);
             
@@ -219,6 +219,22 @@ public class UserSessionBean implements UserSessionBeanLocal {
             throw new RuntimeException(ex);
         }
 
+    }
+    
+    public Boolean verifyEmail(String email, String uuid) throws UserNotFoundException, InvalidUUIDException{
+        
+        UserEntity user = this.retrieveUserByEmail(email);
+        if(user.getIsVerified() == Boolean.TRUE){
+            return user.getIsVerified();
+        }
+        
+        if(user.getVerificationCode().equals(uuid)){
+            user.setIsVerified(Boolean.TRUE);
+            em.flush();
+        }else{
+            throw new InvalidUUIDException("Invalid UUID");
+        }
+        return user.getIsVerified();
     }
 
     @Override
@@ -302,4 +318,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.setSkills(skillTags);
         return skillTags;
     }
+    
+    
 }

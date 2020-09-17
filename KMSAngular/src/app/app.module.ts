@@ -21,6 +21,9 @@ import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
+import { AccountVerificationComponent } from './account-verification/account-verification.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { AppPasswordDirective } from './app-password.directive'
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tab
     SideNavbarComponent,
     FooterComponent,
     ProfileTabpanelComponent,
+    AccountVerificationComponent,
+    LoadingSpinnerComponent,
+    AppPasswordDirective
   ],
   imports: [
     BrowserModule,

@@ -8,17 +8,13 @@ package ws.restful.resources;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
+import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
-import entity.FollowRequestEntity;
-import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
-import entity.PostEntity;
-import entity.ProjectEntity;
-import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -377,7 +373,7 @@ public class UserResource {
         UserEntity newUser;
         try {
             newUser = userSessionBeanLocal.createNewUser(user);
-            userSessionBeanLocal.sendVerificationEmail(newUser.getEmail());
+            userSessionBeanLocal.sendVerificationEmail(newUser.getEmail(), newUser.getVerificationCode());
         } catch (DuplicateEmailException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
@@ -391,7 +387,6 @@ public class UserResource {
     public Response userLogin(@QueryParam("email") String email, @QueryParam("password") String password) {
         try {
             UserEntity user = this.userSessionBeanLocal.userLogin(email, password);
-            System.out.println("here");
             user.getGroups().clear();
             user.getGroupsOwned().clear();
             user.getPosts().clear();
@@ -404,9 +399,9 @@ public class UserResource {
             user.getBadges().clear();
             user.getFollowers().clear();
             user.getFollowing().clear();
-            System.out.println("here");
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
+            System.out.println(ex.getMessage());
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         } catch (StackOverflowError ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
@@ -475,6 +470,21 @@ public class UserResource {
                     .add("error", ex.getMessage())
                     .build();
             return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @GET
+    @Path("verifyEmail")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response verifyEmail(@QueryParam("email") String email, @QueryParam("uuid") String uuid) {
+        try {
+            Boolean isVerified = userSessionBeanLocal.verifyEmail(email, uuid);
+            return Response.status(Response.Status.OK).entity(isVerified).build();
+        } catch (UserNotFoundException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } catch (InvalidUUIDException ex){
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
 

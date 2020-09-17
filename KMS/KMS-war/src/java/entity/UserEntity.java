@@ -302,6 +302,22 @@ public class UserEntity implements Serializable {
         this.profilePicture = profilePicture;
     }
 
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public Boolean getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Boolean isVerified) {
+        this.isVerified = isVerified;
+    }
+
     public List<ReviewEntity> getReviewsGiven() {
         return reviewsGiven;
     }
