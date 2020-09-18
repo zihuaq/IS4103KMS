@@ -9,9 +9,10 @@ import { CreateNewProjectComponent } from './project/create-new-project/create-n
 import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
 
 
+import { NotificationsComponent } from './notifications/notifications.component';
 // import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
-import { RouteGuard } from "./route-guard.service";
+import { RouteGuard } from './route-guard.service';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
@@ -19,12 +20,38 @@ const routes: Routes = [
   { path: 'index', component: IndexComponent },
   { path: 'signup', component: CreateNewUserComponent },
   { path: 'login', component: UserLoginPageComponent },
+  {
+    path: 'notifications',
+    canActivate: [RouteGuard],
+    component: NotificationsComponent,
+  },
+  {
+    path: 'searchUsers/followers/:userid',
+    canActivate: [RouteGuard],
+    component: SearchUsersComponent,
+  },
+  {
+    path: 'searchUsers/following/:userid',
+    canActivate: [RouteGuard],
+    component: SearchUsersComponent,
+  },
+  {
+    path: 'searchUsers',
+    canActivate: [RouteGuard],
+    component: SearchUsersComponent,
+  },
   { path: 'forgotPassword', component: ForgotPasswordComponent },
-  { path: 'profile/:userid', canActivate:[RouteGuard], component: ProfileComponent },
-  { path: 'profile', canActivate:[RouteGuard], component: ProfileComponent },
+  {
+    path: 'profile/:userid',
+    canActivate: [RouteGuard],
+    component: ProfileComponent,
+  },
+  { path: 'profile', canActivate: [RouteGuard], component: ProfileComponent },
   // { path: 'viewAllUsers', canActivate:[RouteGuard], component: ViewAllUsersComponent },
-  { path: 'accountVerification/:email/:uuid', component: AccountVerificationComponent },
-  { path: 'searchUsers', canActivate:[RouteGuard], component: SearchUsersComponent },
+  {
+    path: 'accountVerification/:email/:uuid',
+    component: AccountVerificationComponent,
+  },
   { path: '', component: IndexComponent },
   { path: 'viewAllProjects', component: ViewAllProjectComponent},
   { path: 'createNewProject', component: CreateNewProjectComponent },

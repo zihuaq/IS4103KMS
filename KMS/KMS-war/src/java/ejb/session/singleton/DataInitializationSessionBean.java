@@ -85,5 +85,8 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("SDG 15", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 16", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 17", TagTypeEnum.SDG));
+        tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or bullying", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORT));
     }
 }

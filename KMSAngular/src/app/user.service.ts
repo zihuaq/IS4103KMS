@@ -93,12 +93,33 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  acceptFollow(toUserId: String, fromUserId: String) {
+  acceptFollow(toUserId: number, fromUserId: number) {
     return this.http
       .post<any>(
         this.baseUrl + '/acceptfollow/' + toUserId + '/' + fromUserId,
         null
       )
+      .pipe(catchError(this.handleError));
+  }
+
+  rejectFollow(toUserId: number, fromUserId: number) {
+    return this.http
+      .post<any>(
+        this.baseUrl + '/rejectfollow/' + toUserId + '/' + fromUserId,
+        null
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  getFollowRequestMade(userId: number) {
+    return this.http
+      .get<any>(this.baseUrl + /followrequestmade/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getFollowRequestReceived(userId: number) {
+    return this.http
+      .get<any>(this.baseUrl + /followrequestreceived/ + userId)
       .pipe(catchError(this.handleError));
   }
 
@@ -116,7 +137,43 @@ export class UserService {
 
   getSkillsForProfile(userId: number): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + /skills/ + userId)
+      .get<any>(this.baseUrl + '/skills/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getSDGsForProfile(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/getSDG/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  addSDGToProfile(userId: number, sdgTags: Tag[]): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/addSDG/' + userId, sdgTags, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  removeSDGFromProfile(userId: number, tagId: number): Observable<any> {
+    return this.http
+      .delete<any>(this.baseUrl + '/removeSDG/' + userId + '/' + tagId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getAffiliatedUsers(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/affiliated/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  addAffiliatedUser(userId: number, affiliatedUserToAddId: number): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/addaffiliated/' + userId + '/' + affiliatedUserToAddId, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  removeAffiliatedUser(userId: number, affiliatedUserToRemoveId: number): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/removeaffiliated/' + userId + '/' + affiliatedUserToRemoveId, httpOptions)
       .pipe(catchError(this.handleError));
   }
 
@@ -127,11 +184,10 @@ export class UserService {
   }
 
   createMaterialResourceAvailable(
-    userId: number,
     mra: MaterialResourceAvailable
   ): Observable<any> {
     return this.http
-      .post<any>(this.baseUrl + '/mra/' + userId, mra, httpOptions)
+      .post<any>(this.baseUrl + '/mra', mra, httpOptions)
       .pipe(catchError(this.handleError));
   }
 
@@ -169,9 +225,7 @@ export class UserService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = 'An unknown error has occurred: ' + error.error.message;
     } else {
-      errorMessage =
-        'A HTTP error has occurred: ' +
-        `HTTP ${error.status}: ${error.error.error}`;
+      errorMessage = error.error.error;
     }
 
     console.error(errorMessage);

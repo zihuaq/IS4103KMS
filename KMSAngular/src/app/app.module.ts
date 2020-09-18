@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxPayPalModule } from 'ngx-paypal';
+import { GoogleMapsModule } from '@angular/google-maps';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MomentModule } from 'angular2-moment';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -29,10 +30,13 @@ import { CreateNewProjectComponent } from './project/create-new-project/create-n
 import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
-import { AppPasswordDirective } from './app-password.directive'
-import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
+import { AppPasswordDirective } from './app-password.directive';
+import { SearchbarComponent } from './searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
+import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
@@ -61,6 +65,9 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     SearchbarComponent,
     SearchUsersComponent,
     EditProfileComponent,
+    NotificationsComponent,
+    FollowRequestsComponent,
+    ReportProfileComponent,
     ForgotPasswordComponent,
   ],
   imports: [
@@ -70,9 +77,10 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     BrowserAnimationsModule,
     HttpClientModule,
     NgxPayPalModule,
+    GoogleMapsModule,
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -12,5 +12,6 @@ package util.enumeration;
 public enum TagTypeEnum {
     SKILL,
     SDG,
-    MATERIALRESOURCE
+    MATERIALRESOURCE,
+    REPORT
 }
