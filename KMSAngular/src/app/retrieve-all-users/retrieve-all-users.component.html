@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>View All Users</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>View All Users</h2>       
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>User ID </th>
+        <th>First Name </th>
+        <th>Last Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Password</th>
+        <th> Account Type</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let User of users">
+            <td>{{User.userId}}</td>
+            <td>{{User.firstName}}</td>
+            <td>{{User.lastName}}</td>
+            <td>{{User.gender}}</td>
+            <td>{{User.email}}</td>
+            <td class="hidetext">{{User.password}}</td>
+            <td>{{User.accountType}}</td> 
+            <button  class = "button" (click)="deleteUser(User.userId) && refresh()">DELETE</button>
+
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
