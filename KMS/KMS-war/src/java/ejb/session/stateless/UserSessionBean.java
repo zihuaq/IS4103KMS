@@ -212,6 +212,27 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
 
     }
+    
+  
+    @Override
+    public Boolean changePassword(String email, String oldPassword, String newPassword) throws InvalidLoginCredentialException{
+        try {
+            UserEntity user = retrieveUserByEmail(email);
+            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(oldPassword + user.getSalt()));
+            if (user.getPassword().equals(passwordHash)) {
+                System.out.println("change password  if()");
+                user.setPassword(newPassword);
+                em.merge(user);
+                em.flush();
+                return true;
+            } else {
+                System.out.println("change password else()");
+                throw new InvalidLoginCredentialException("Email does not exist of invalid password");
+            }
+        } catch (UserNotFoundException ex) {
+            throw new InvalidLoginCredentialException("Email does not exist or invalid password!");
+        }
+    }
 
     @Override
     public List<TagEntity> getSDGsForProfile(long userId) throws UserNotFoundException {

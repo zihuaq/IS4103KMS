@@ -295,6 +295,21 @@ export class UserService {
     }
   }
 
+  updateCustomerPassword(email: String, oldPassword: String, newPassword: String): Observable<any> {
+
+    let updateUserPasswordReq = {
+      "email": email,
+      "oldPassword": oldPassword,
+      "newPassword": newPassword
+    }
+
+    return this.http.post<any>(this.baseUrl + "/updateUserPassword", updateUserPasswordReq, httpOptions).pipe
+      (
+        catchError(this.handleError)
+      );
+
+  }
+
   verifyEmail(email: String, uuid: String){
     return this.http
       .get<any>(
@@ -306,7 +321,7 @@ export class UserService {
   isAuthenticated() {
     const promise = new Promise(
       (resolve, reject) => {
-          resolve(this.loggedIn);
+          resolve(this.sessionService.getIsLogin());
       }
     );
     return promise

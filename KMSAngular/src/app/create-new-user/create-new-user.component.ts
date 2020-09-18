@@ -48,7 +48,7 @@ export class CreateNewUserComponent implements OnInit {
         this.isLoading = false;
         this.accountCreated = false;
         this.accountCreationError = true;
-        this.errorMessage = 'Error: ' + error;
+        this.errorMessage = 'This email is already in use.';
       })
     }
   }

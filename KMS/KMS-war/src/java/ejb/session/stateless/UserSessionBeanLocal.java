@@ -80,4 +80,6 @@ public interface UserSessionBeanLocal {
 
     public void resetPassword(String email) throws UserNotFoundException;
 
+    public Boolean changePassword(String email, String oldPassword, String newPassword) throws InvalidLoginCredentialException;
+
 }

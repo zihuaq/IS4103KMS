@@ -35,6 +35,7 @@ import { FollowRequestsComponent } from './notifications/follow-requests/follow-
 import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
+import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { CreateNewInstitutionComponent } from './create-new-institution/create-n
     ReportProfileComponent,
     ForgotPasswordComponent,
     CreateNewInstitutionComponent,
+    CreateNewUserSelectorComponent,
   ],
   imports: [
     BrowserModule,

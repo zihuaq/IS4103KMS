@@ -11,11 +11,13 @@ import { RouteGuard } from './route-guard.service';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
+import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 
 const routes: Routes = [
   { path: 'index', component: IndexComponent },
   { path: 'signup', component: CreateNewUserComponent },
   { path: 'signupInstitution', component: CreateNewInstitutionComponent },
+  { path: 'signupSelection', component: CreateNewUserSelectorComponent },
   { path: 'login', component: UserLoginPageComponent },
   {
     path: 'notifications',

@@ -38,11 +38,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import ws.restful.model.ErrorRsp;
+import ws.restful.model.UpdateUserPasswordReq;
 
 /**
  * REST Web Service
@@ -686,6 +687,20 @@ public class UserResource {
             followRequestsResponse.add(temp);
         }
         return followRequestsResponse;
+    }
+    @Path("updateUserPassword")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCustomerPassword(UpdateUserPasswordReq updateUserPasswordReq) {
+        try {
+            //UserEntity userToUpdate = userSessionBeanLocal.retrieveUserByEmail(updateUserPasswordReq.getEmail());
+            userSessionBeanLocal.changePassword(updateUserPasswordReq.getEmail(), updateUserPasswordReq.getOldPassword(), updateUserPasswordReq.getNewPassword());
+            return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
     }
     //    @POST
 //    @Path("ResetPassword")
