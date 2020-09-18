@@ -37,6 +37,12 @@ export class TagService {
       .pipe(catchError(this.handleError));
   }
 
+  getAllReportTags(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/report')
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
 

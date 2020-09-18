@@ -10,7 +10,7 @@
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a routerLink="/index">Home</a></li>
             <li class="breadcrumb-item active">Profile</li>
           </ol>
         </div><!-- /.col -->
@@ -26,6 +26,7 @@
           <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
             (userChanged)="loggedInUser=$event">
           </app-overview>
+          <app-report-profile *ngIf="profile.userId != loggedInUser.userId" [profile]="profile" [loggedInUser]="loggedInUser"></app-report-profile>
           <app-basic-details [profile]="profile"></app-basic-details>
         </div>
         <div class="col-md-9">
@@ -41,3 +42,4 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<app-footer></app-footer>

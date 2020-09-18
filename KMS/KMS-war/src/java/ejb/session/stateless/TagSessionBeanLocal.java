@@ -27,4 +27,7 @@ public interface TagSessionBeanLocal {
     public List<TagEntity> getAllMaterialResourceTags();
     
     public List<TagEntity> getAllSDGTags();
+    
+    public List<TagEntity> getAllReportTags();
+
 }
