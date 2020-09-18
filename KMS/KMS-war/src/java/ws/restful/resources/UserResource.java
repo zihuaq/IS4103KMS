@@ -276,7 +276,7 @@ public class UserResource {
                 users.get(i).getMras().clear();
                 users.get(i).getSkills().clear();
                 users.get(i).getPosts().clear();
-                users.get(i).getProjectAdmins();
+                users.get(i).getProjectAdmins().clear();
                 users.get(i).getProjectsJoined().clear();
                 users.get(i).getProjectsOwned().clear();
                 users.get(i).getReviewsGiven().clear();
