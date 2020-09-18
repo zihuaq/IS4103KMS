@@ -381,7 +381,6 @@ public class UserResource {
             UserEntity user = this.userSessionBeanLocal.userLogin(email, password);
             System.out.println("here");
 
-
             user.getReviewsGiven().clear();
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
@@ -709,21 +708,5 @@ public class UserResource {
 ////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
 ////            }
 //    }
-    
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllRecords()
-    {
-        try {
-            List<UserEntity> UserEntities = userSessionBeanLocal.retrieveAllUser();
-            GenericEntity<List<UserEntity>> genericEntities = new GenericEntity<List<UserEntity>>(UserEntities) {
-            };
-            
-            return Response.status(Status.OK).entity(genericEntities).build();
-        } catch (UserNotFoundException ex) {
-            Logger.getLogger(UserResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
     
 }
