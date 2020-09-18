@@ -314,4 +314,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
         Query query = em.createQuery("SELECT u FROM UserEntity U");
         return query.getResultList();
     }
+
+    @Override
+    public void deleteUser(long userId, UserEntity user) throws NoResultException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
