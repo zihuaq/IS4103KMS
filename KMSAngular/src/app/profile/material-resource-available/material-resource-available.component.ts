@@ -117,6 +117,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       this.newMra.materialResourceAvailableOwner = this.profile;
       this.newMra.name = mraForm.value.mraName;
       this.newMra.quantity = mraForm.value.quantity;
+      this.newMra.units = mraForm.value.units;
       this.newMra.description = mraForm.value.description;
       this.newMra.latitude = this.lat;
       this.newMra.longitude = this.lng;
