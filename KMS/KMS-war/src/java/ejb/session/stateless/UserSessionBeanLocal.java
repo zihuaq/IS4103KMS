@@ -36,6 +36,8 @@ public interface UserSessionBeanLocal {
     public List<TagEntity> getSkillsForProfile(long userId) throws UserNotFoundException;
 
     public List<TagEntity> removeSkillFromProfile(long userId, long tagId) throws NoResultException;
+    
+    public List<TagEntity> getSDGsForProfile(long userId) throws UserNotFoundException;
 
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
 

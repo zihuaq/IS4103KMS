@@ -125,7 +125,13 @@ export class UserService {
 
   getSkillsForProfile(userId: number): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + /skills/ + userId)
+      .get<any>(this.baseUrl + '/skills/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getSDGsForProfile(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/getSDG/' + userId)
       .pipe(catchError(this.handleError));
   }
 

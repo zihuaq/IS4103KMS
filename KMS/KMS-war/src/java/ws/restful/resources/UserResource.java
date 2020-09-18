@@ -142,6 +142,21 @@ public class UserResource {
         }
     }
 
+    @GET
+    @Path("/getSDG/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getSDGsForProfile(@PathParam("userId") Long userId) {
+        try {
+            List<TagEntity> SDGs = userSessionBeanLocal.getSDGsForProfile(userId);
+            return Response.status(200).entity(SDGs).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     @PUT
     @Path("/addSDG/{userId}/{tagId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -472,7 +487,7 @@ public class UserResource {
             user.getFollowRequestReceived().clear();
             user.setPassword("");
             return Response.status(200).entity(user).build();
-        } catch (UserNotFoundException|NoResultException ex) {
+        } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -539,7 +554,7 @@ public class UserResource {
         }
         return usersResponse;
     }
-    
+
     private List<UserEntity> getUsersResponseWithFollowersAndFollowing(List<UserEntity> users) {
         List<UserEntity> usersResponse = new ArrayList<>();
         for (UserEntity user : users) {

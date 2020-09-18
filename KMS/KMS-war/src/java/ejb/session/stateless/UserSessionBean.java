@@ -138,6 +138,16 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
+    public List<TagEntity> getSDGsForProfile(long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found.");
+        }
+        return user.getSdgs();
+    }
+    
+    @Override
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
         UserEntity user = em.find(UserEntity.class, userId);
         TagEntity tag = em.find(TagEntity.class, tagId);

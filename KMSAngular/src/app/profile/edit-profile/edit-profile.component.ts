@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AccountPrivacySettingEnum } from 'src/app/classes/privacy-settings.enum';
 import { Tag } from 'src/app/classes/tag';
@@ -15,7 +15,7 @@ declare var moment: any;
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css'],
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, OnChanges {
   @Input() user: User;
   @Output() userChanged = new EventEmitter<User>();
   profilePictureFile: string | ArrayBuffer;
@@ -24,8 +24,14 @@ export class EditProfileComponent implements OnInit {
   privacySettings = AccountPrivacySettingEnum;
   allSDGTags: Tag[];
   selectedTags: Tag[] = [];
-  
-  constructor(private userService: UserService, private tagService: TagService) {}
+
+  constructor(private userService: UserService, private tagService: TagService) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.userService.getSDGsForProfile(this.user.userId).subscribe((sdgs) => {
+      this.selectedTags = sdgs;
+    })
+  }
 
   ngOnInit(): void {
     $('#datetimepicker').datetimepicker({
@@ -39,6 +45,7 @@ export class EditProfileComponent implements OnInit {
       this.allSDGTags = response;
     });
   }
+
 
   getFiles(event) {
     if (event.target.files[0] != undefined) {
@@ -115,11 +122,11 @@ export class EditProfileComponent implements OnInit {
   }
 
   checkIfTagSelectedByUser(tag: Tag) {
-    return this.selectedTags.includes(tag);
+    return this.selectedTags.map((tag) => tag.tagId).includes(tag.tagId);
   }
 
   removeSDG(tag: Tag) {
-    this.selectedTags.splice(this.selectedTags.indexOf(tag),1);
+    this.selectedTags.splice(this.selectedTags.indexOf(tag), 1);
   }
 
   addSDG(tag: Tag) {
