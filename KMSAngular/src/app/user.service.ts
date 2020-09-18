@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { User } from './classes/user';
-//import { getMaxListeners } from 'cluster';
-import { NgForm } from '@angular/forms';
 import {
   HttpClient,
   HttpErrorResponse,
@@ -22,7 +20,6 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class UserService {
-  users: User[];
   baseUrl: string = '/api/user';
   loggedIn = false;
   user = new Subject<User>();
@@ -31,18 +28,7 @@ export class UserService {
     private sessionService: SessionService,
     private http: HttpClient,
     private router: Router
-  ) {
-    this.users = this.sessionService.getUsers();
-
-    if (this.users == null) {
-      this.users = new Array();
-
-      let user: User;
-
-      //user = new User(1, "Yi", "Ren", date, "F", "yiren@gmail.com", password, "", "Singapore", 10, "", date, date);
-      //this.users.push(user);
-    }
-  }
+  ) {}
 
   userRegistration(newUser: User) {
     return this.http
@@ -70,7 +56,7 @@ export class UserService {
       .pipe(map(this.parseDate), catchError(this.handleError));
   }
 
-  getAllUsers() {
+  getAllUsers(): Observable<any> {
     return this.http
       .get<any>(this.baseUrl + '/allusers')
       .pipe(catchError(this.handleError));
@@ -247,6 +233,29 @@ export class UserService {
     return throwError(errorMessage);
   }
 
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    let changePasswordReq = {
+      username: this.sessionService.getUsername(),
+      password: this.sessionService.getPassword(),
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
+
+    return this.http
+      .post<any>(
+        this.baseUrl + '/PasswordReset',
+        changePasswordReq,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteUser(userId: number): Observable<any> {
+    return this.http
+      .delete<any>(this.baseUrl + '/deleteUser/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
   private parseDate(data: any) {
     if (data.isAdmin) {
       return {
@@ -309,6 +318,26 @@ export class UserService {
     }
   }
 
+  updateCustomerPassword(
+    email: String,
+    oldPassword: String,
+    newPassword: String
+  ): Observable<any> {
+    let updateUserPasswordReq = {
+      email: email,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
+
+    return this.http
+      .post<any>(
+        this.baseUrl + '/updateUserPassword',
+        updateUserPasswordReq,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   verifyEmail(email: String, uuid: String) {
     return this.http
       .get<any>(this.baseUrl + '/verifyEmail?email=' + email + '&uuid=' + uuid)
@@ -317,7 +346,7 @@ export class UserService {
 
   isAuthenticated() {
     const promise = new Promise((resolve, reject) => {
-      resolve(this.sessionService.getIsLogin);
+      resolve(this.sessionService.getIsLogin());
     });
     return promise;
   }

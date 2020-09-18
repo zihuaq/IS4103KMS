@@ -63,9 +63,9 @@ export class UserLoginPageComponent implements OnInit {
         (error) => {
           this.isLoading = false;
           this.loginError = true;
-          this.errorMessage = error;
+          this.errorMessage = "Email does not exist or Password is incorrect.";
           console.log('********** UserLoginComponent.ts UserLogin(): ' + error);
-          this.errorMessage = 'Error: ' + error;
+          //this.errorMessage = 'Error: ' + error;
         }
       );
     }
