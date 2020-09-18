@@ -5,17 +5,22 @@
  */
 package ws.restful.resources;
 
+import Exception.AffiliatedUserExistException;
 import Exception.DuplicateEmailException;
+import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
+import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.FollowRequestEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,8 +38,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -138,6 +145,66 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+    
+    @GET
+    @Path("/affiliated/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAffiliatedUsers(@PathParam("userId") Long userId) {
+        try {
+            List<UserEntity> affiliatedUsers = userSessionBeanLocal.getAffiliatedUsers(userId);
+            return Response.status(200).entity(affiliatedUsers).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @PUT
+    @Path("/addaffiliated/{userId}/{affiliatedToAddUserIdId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addAffiliatedUser(@PathParam("userId") Long userId, @PathParam("affiliatedToAddUserIdId") Long affiliatedToAddUserId) {
+        try {
+            userSessionBeanLocal.addAffiliatedUser(userId, affiliatedToAddUserId);
+            return Response.status(204).build();
+        } catch (AffiliatedUserExistException | UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/removeaffiliated/{userId}/{affiliatedToRemoveUserId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response removeAffiliatedUser(@PathParam("userId") Long userId, @PathParam("affiliatedToRemoveUserId") Long affiliatedToRemoveUserId) {
+        try {
+            userSessionBeanLocal.removeAffiliatedUser(userId, affiliatedToRemoveUserId);
+            return Response.status(204).build();
+        } catch (NoResultException |UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/getSDG/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getSDGsForProfile(@PathParam("userId") Long userId) {
+        try {
+            List<TagEntity> SDGs = userSessionBeanLocal.getSDGsForProfile(userId);
+            return Response.status(200).entity(SDGs).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
 
     @PUT
     @Path("/addSDG/{userId}/{tagId}")
@@ -170,11 +237,11 @@ public class UserResource {
     }
 
     @POST
-    @Path("/mra/{userId}")
+    @Path("/mra")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createMaterialResourceAvailable(@PathParam("userId") Long userId, MaterialResourceAvailableEntity mra) {
+    public Response createMaterialResourceAvailable(MaterialResourceAvailableEntity mra) {
         try {
-            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra);
             for (int i = 0; i < mras.size(); i++) {
                 mras.get(i).setMaterialResourceAvailableOwner(null);
             }
@@ -209,9 +276,9 @@ public class UserResource {
     @GET
     @Path("/mra/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMaterialRequestAvailable(@PathParam("userId") Long userId) {
+    public Response getMaterialResourceAvailable(@PathParam("userId") Long userId) {
         try {
-            List<MaterialResourceAvailableEntity> mras = userSessionBeanLocal.getMaterialRequestAvailable(userId);
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableForUser(userId);
             for (int i = 0; i < mras.size(); i++) {
                 mras.get(i).setMaterialResourceAvailableOwner(null);
             }
@@ -258,7 +325,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/allusers")
     @Produces(MediaType.APPLICATION_JSON)
@@ -276,7 +343,7 @@ public class UserResource {
                 users.get(i).getMras().clear();
                 users.get(i).getSkills().clear();
                 users.get(i).getPosts().clear();
-                users.get(i).getProjectAdmins();
+                users.get(i).getProjectAdmins().clear();
                 users.get(i).getProjectsJoined().clear();
                 users.get(i).getProjectsOwned().clear();
                 users.get(i).getReviewsGiven().clear();
@@ -284,6 +351,8 @@ public class UserResource {
                 users.get(i).getBadges().clear();
                 users.get(i).getSdgs().clear();
             }
+            users = getUsersResponseWithFollowersAndFollowing(users);
+
             return Response.status(200).entity(users).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -301,10 +370,26 @@ public class UserResource {
         UserEntity newUser;
         try {
             newUser = userSessionBeanLocal.createNewUser(user);
+            userSessionBeanLocal.sendVerificationEmail(newUser.getEmail(), newUser.getVerificationCode());
         } catch (DuplicateEmailException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
         return Response.status(Response.Status.OK).entity(newUser).build();
+    }
+    
+    @Path("resetPassword")
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response forgotPassword(@QueryParam("email") String email) {
+        try {
+            System.out.println("forgot password for " + email);
+            UserEntity user = userSessionBeanLocal.retrieveUserByEmail(email);
+            userSessionBeanLocal.resetPassword(email);
+        } catch (UserNotFoundException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 
     @Path("userLogin")
@@ -334,8 +419,10 @@ public class UserResource {
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
             user.setPassword("");
+
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
+            System.out.println(ex.getMessage());
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
 
@@ -361,11 +448,29 @@ public class UserResource {
     @POST
     @Path("/follow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
+    public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) throws DuplicateFollowRequestException {
         try {
-            userSessionBeanLocal.followUser(toUserId, fromUserId);
-            return Response.status(204).build();
-        } catch (UserNotFoundException ex) {
+            FollowRequestEntity followRequestEntity = userSessionBeanLocal.followUser(toUserId, fromUserId);
+            if (followRequestEntity != null) {
+                UserEntity to = new UserEntity();
+                to.setUserId(followRequestEntity.getTo().getUserId());
+                to.setFirstName(followRequestEntity.getTo().getFirstName());
+                to.setLastName(followRequestEntity.getTo().getLastName());
+                to.setProfilePicture(followRequestEntity.getTo().getProfilePicture());
+                UserEntity from = new UserEntity();
+                from.setUserId(followRequestEntity.getFrom().getUserId());
+                from.setFirstName(followRequestEntity.getFrom().getFirstName());
+                from.setLastName(followRequestEntity.getFrom().getLastName());
+                from.setProfilePicture(followRequestEntity.getFrom().getProfilePicture());
+                FollowRequestEntity followRequestEntityResponse = new FollowRequestEntity();
+                followRequestEntityResponse.setId(followRequestEntity.getId());
+                followRequestEntityResponse.setTo(to);
+                followRequestEntityResponse.setFrom(from);
+                return Response.status(200).entity(followRequestEntityResponse).build();
+            } else {
+                return Response.status(204).build();
+            }
+        } catch (UserNotFoundException | DuplicateFollowRequestException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -389,12 +494,74 @@ public class UserResource {
     }
 
     @POST
+    @Path("/rejectfollow/{toUserId}/{fromUserId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response rejectFollow(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
+        try {
+            userSessionBeanLocal.rejectFollowRequest(toUserId, fromUserId);
+            return Response.status(204).build();
+        } catch (NoResultException | UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @POST
     @Path("/unfollow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response unfollowUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
         try {
             userSessionBeanLocal.unfollowUser(toUserId, fromUserId);
             return Response.status(204).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @GET
+    @Path("verifyEmail")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response verifyEmail(@QueryParam("email") String email, @QueryParam("uuid") String uuid) {
+        try {
+            Boolean isVerified = userSessionBeanLocal.verifyEmail(email, uuid);
+            return Response.status(Response.Status.OK).entity(isVerified).build();
+        } catch (UserNotFoundException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } catch (InvalidUUIDException ex){
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/followrequestreceived/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowRequestReceived(@PathParam("userId") Long userId) {
+        try {
+            List<FollowRequestEntity> followRequestsReceived = userSessionBeanLocal.getFollowRequestReceived(userId);
+            List<FollowRequestEntity> followRequestsResponse = getFollowRequestsResponse(followRequestsReceived);
+            return Response.status(200).entity(followRequestsResponse).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/followrequestmade/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowRequestMade(@PathParam("userId") Long userId) {
+        try {
+            List<FollowRequestEntity> followRequestsMade = userSessionBeanLocal.getFollowRequestMade(userId);
+            List<FollowRequestEntity> followRequestsResponse = getFollowRequestsResponse(followRequestsMade);
+            return Response.status(200).entity(followRequestsResponse).build();
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -424,12 +591,11 @@ public class UserResource {
             user.getSkills().clear();
             user.getFollowing().clear();
             user.getFollowers().clear();
-            user.getSdgs().clear();
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
             user.setPassword("");
             return Response.status(200).entity(user).build();
-        } catch (UserNotFoundException ex) {
+        } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -448,27 +614,9 @@ public class UserResource {
     public Response getFollowers(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> followers = userSessionBeanLocal.getFollowers(userId);
-            for (UserEntity user : followers) {
-                user.getReviewsGiven().clear();
-                user.getReviewsReceived().clear();
-                user.getProjectsOwned().clear();
-                user.getProjectsJoined().clear();
-                user.getProjectAdmins().clear();
-                user.getGroupsJoined().clear();
-                user.getGroupAdmins().clear();
-                user.getPosts().clear();
-                user.getGroupsOwned().clear();
-                user.getBadges().clear();
-                user.getMras().clear();
-                user.getSkills().clear();
-                user.getFollowing().clear();
-                user.getFollowers().clear();
-                user.getSdgs().clear();
-                user.getFollowRequestMade().clear();
-                user.getFollowRequestReceived().clear();
-                user.setPassword("");
-            }
-            return Response.status(200).entity(followers).build();
+            List<UserEntity> followersResponse = getUsersResponseWithFollowersAndFollowing(followers);
+            System.out.println(followersResponse);
+            return Response.status(200).entity(followersResponse).build();
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -476,33 +624,16 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+
     @GET
     @Path("/following/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFollowing(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> following = userSessionBeanLocal.getFollowing(userId);
-            for (UserEntity user : following) {
-                user.getReviewsGiven().clear();
-                user.getReviewsReceived().clear();
-                user.getProjectsOwned().clear();
-                user.getProjectsJoined().clear();
-                user.getProjectAdmins().clear();
-                user.getGroupsJoined().clear();
-                user.getGroupAdmins().clear();
-                user.getPosts().clear();
-                user.getGroupsOwned().clear();
-                user.getBadges().clear();
-                user.getMras().clear();
-                user.getSkills().clear();
-                user.getFollowing().clear();
-                user.getFollowers().clear();
-                user.getSdgs().clear();
-                user.getFollowRequestMade().clear();
-                user.getFollowRequestReceived().clear();
-                user.setPassword("");
-            }
-            return Response.status(200).entity(following).build();
+            List<UserEntity> followingResponse = getUsersResponseWithFollowersAndFollowing(following);
+            System.out.println(followingResponse);
+            return Response.status(200).entity(followingResponse).build();
         } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -510,4 +641,92 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+
+    private List<UserEntity> getUsersResponse(List<UserEntity> users) {
+        List<UserEntity> usersResponse = new ArrayList<>();
+        for (UserEntity user : users) {
+            UserEntity temp = new UserEntity();
+            temp.setUserId(user.getUserId());
+            temp.setFirstName(user.getFirstName());
+            temp.setLastName(user.getLastName());
+            temp.setEmail(user.getEmail());
+            temp.setDob(user.getDob());
+            temp.setGender(user.getGender());
+            temp.setJoinedDate(user.getJoinedDate());
+            temp.setProfilePicture(user.getProfilePicture());
+            temp.setSkills(user.getSkills());
+            temp.setSdgs(user.getSdgs());
+            temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
+            temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            usersResponse.add(temp);
+        }
+        return usersResponse;
+    }
+
+    private List<UserEntity> getUsersResponseWithFollowersAndFollowing(List<UserEntity> users) {
+        List<UserEntity> usersResponse = new ArrayList<>();
+        for (UserEntity user : users) {
+            UserEntity temp = new UserEntity();
+            temp.setUserId(user.getUserId());
+            temp.setFirstName(user.getFirstName());
+            temp.setLastName(user.getLastName());
+            temp.setEmail(user.getEmail());
+            temp.setDob(user.getDob());
+            temp.setGender(user.getGender());
+            temp.setJoinedDate(user.getJoinedDate());
+            temp.setProfilePicture(user.getProfilePicture());
+            temp.setSkills(user.getSkills());
+            temp.setSdgs(user.getSdgs());
+            temp.setFollowers(getUsersResponse(user.getFollowers()));
+            temp.setFollowing(getUsersResponse(user.getFollowing()));
+            temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
+            temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            usersResponse.add(temp);
+        }
+        return usersResponse;
+    }
+
+    private List<FollowRequestEntity> getFollowRequestsResponse(List<FollowRequestEntity> followRequests) {
+        List<FollowRequestEntity> followRequestsResponse = new ArrayList<>();
+        for (FollowRequestEntity followRequestEntity : followRequests) {
+            UserEntity to = new UserEntity();
+            to.setUserId(followRequestEntity.getTo().getUserId());
+            to.setFirstName(followRequestEntity.getTo().getFirstName());
+            to.setLastName(followRequestEntity.getTo().getLastName());
+            to.setProfilePicture(followRequestEntity.getTo().getProfilePicture());
+            UserEntity from = new UserEntity();
+            from.setUserId(followRequestEntity.getFrom().getUserId());
+            from.setFirstName(followRequestEntity.getFrom().getFirstName());
+            from.setLastName(followRequestEntity.getFrom().getLastName());
+            from.setProfilePicture(followRequestEntity.getFrom().getProfilePicture());
+            FollowRequestEntity temp = new FollowRequestEntity();
+            temp.setId(followRequestEntity.getId());
+            temp.setTo(to);
+            temp.setFrom(from);
+            followRequestsResponse.add(temp);
+        }
+        return followRequestsResponse;
+    }
+    //    @POST
+//    @Path("ResetPassword")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response changePassword(@PathParam("password") String password) {
+////            try {
+////                userSessionBeanLocal.customerLogin(changePasswordReq.getUsername(), changePasswordReq.getPassword());
+////                
+////                userSessionBeanLocal.changePassword(changePasswordReq.getUsername(), changePasswordReq.getOldPassword(), changePasswordReq.getNewPassword());
+////                
+////                return Response.status(Response.Status.OK).build();
+////            } catch (InvalidLoginCredentialException | ChangePasswordException ex) {
+////                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+////
+////                return Response.status(Response.Status.UNAUTHORIZED).entity(errorRsp).build();
+////            } catch (Exception ex) {
+////                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+////
+////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+////            }
+//    }
+    
 }

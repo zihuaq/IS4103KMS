@@ -3,6 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxPayPalModule } from 'ngx-paypal';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { MomentModule } from 'angular2-moment';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,11 +27,17 @@ import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
 import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
 import { CreateNewProjectComponent } from './project/create-new-project/create-new-project.component';
-import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
+import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
+import { AccountVerificationComponent } from './account-verification/account-verification.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { AppPasswordDirective } from './app-password.directive';
+import { SearchbarComponent } from './searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
-import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
-
+import { NotificationsComponent } from './notifications/notifications.component';
+import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
+import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -48,10 +58,17 @@ import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platfo
     ProfileTabpanelComponent,
     ViewAllProjectComponent,
     CreateNewProjectComponent,
+    DonateToPlatformComponent,
+    AccountVerificationComponent,
+    LoadingSpinnerComponent,
+    AppPasswordDirective,
     SearchbarComponent,
     SearchUsersComponent,
     EditProfileComponent,
-    DonateToPlatformComponent,
+    NotificationsComponent,
+    FollowRequestsComponent,
+    ReportProfileComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +76,11 @@ import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platfo
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxPayPalModule
+    NgxPayPalModule,
+    GoogleMapsModule,
+    NgIdleKeepaliveModule.forRoot(),
+    MomentModule,
+    ModalModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

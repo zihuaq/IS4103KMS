@@ -1,2 +1,19 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="content-fluid">
+            <div *ngFor="let project of projects">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                        <h1 class="display-4">{{project.name}}</h1>
+                        <p class="lead">{{project.description}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

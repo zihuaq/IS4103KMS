@@ -72,22 +72,31 @@ public class UserEntity implements Serializable {
     @Column
     private String profilePicture;
     private int reputationPoints;
+
+    private String verificationCode;
+    
+    private Boolean isVerified;
+
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
     @OneToMany(mappedBy = "to")
     private List<ReviewEntity> reviewsReceived;
     @OneToMany(mappedBy = "projectOwner")
     private List<ProjectEntity> projectsOwned;
-    @ManyToMany(mappedBy = "projectMembers")
+    @JoinTable(name = "projectMembers")
+    @ManyToMany
     private List<ProjectEntity> projectsJoined;
-    @ManyToMany(mappedBy = "projectAdmins")
+    @JoinTable(name = "projectAdmins")
+    @ManyToMany
     private List<ProjectEntity> projectAdmins;
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
+    @JoinTable(name= "groupMembers")
     @ManyToMany(mappedBy = "groupMembers")
     private List<GroupEntity> groupsJoined;  
+    @JoinTable(name= "groupAdmins")
     @ManyToMany(mappedBy = "groupAdmins")
     private List<GroupEntity> groupAdmins;
     @OneToMany
@@ -106,16 +115,21 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "sdgs")
     @OneToMany
     private List<TagEntity> sdgs;
-    @JoinTable(name = "followRequestMade")
     @OneToMany(mappedBy = "from")
     private List<FollowRequestEntity> followRequestMade;
-    @JoinTable(name = "followRequestReceived")
     @OneToMany(mappedBy = "to")
     private List<FollowRequestEntity> followRequestReceived;
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountPrivacySettingEnum accountPrivacySetting;
+    
+    @JoinTable(name = "affiliatedInstitutes")
+    @OneToMany
+    private List<UserEntity> affiliatedInstitutes;
+    @JoinTable(name = "affiliatedIndividuals")
+    @OneToMany
+    private List<UserEntity> affiliatedIndividuals;
 
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
@@ -138,6 +152,8 @@ public class UserEntity implements Serializable {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.userType = UserTypeEnum.INDIVIDUAL;
         this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
+        this.affiliatedInstitutes = new ArrayList<>();
+        this.affiliatedIndividuals = new ArrayList<>();
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
@@ -195,6 +211,7 @@ public class UserEntity implements Serializable {
     public String toString() {
         return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", userType=" + userType + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
+    
 
     public String getFirstName() {
         return firstName;
@@ -278,6 +295,22 @@ public class UserEntity implements Serializable {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public Boolean getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Boolean isVerified) {
+        this.isVerified = isVerified;
     }
 
     public List<ReviewEntity> getReviewsGiven() {
@@ -438,5 +471,21 @@ public class UserEntity implements Serializable {
 
     public void setUserType(UserTypeEnum userType) {
         this.userType = userType;
+    }
+
+    public List<UserEntity> getAffiliatedInstitutes() {
+        return affiliatedInstitutes;
+    }
+
+    public void setAffiliatedInstitutes(List<UserEntity> affiliatedInstitutes) {
+        this.affiliatedInstitutes = affiliatedInstitutes;
+    }
+
+    public List<UserEntity> getAffiliatedIndividuals() {
+        return affiliatedIndividuals;
+    }
+
+    public void setAffiliatedIndividuals(List<UserEntity> affiliatedIndividuals) {
+        this.affiliatedIndividuals = affiliatedIndividuals;
     }
 }

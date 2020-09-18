@@ -49,7 +49,9 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             user.getProjectsOwned().add(newProject);
             newProject.setProjectOwner(user);
             newProject.getProjectAdmins().add(user);
+            user.getProjectAdmins().add(newProject);
             newProject.getProjectMembers().add(user);
+            user.getProjectsJoined().add(newProject);
             
             return newProject.getProjectId();
         } catch (NoResultException ex) {
