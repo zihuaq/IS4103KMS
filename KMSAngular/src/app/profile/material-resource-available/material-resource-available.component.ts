@@ -66,6 +66,12 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         }),
         allowClear: true,
       });
+      $('#editmraselect2').select2({
+        data: this.mraTags.map((item) => {
+          return item.name;
+        }),
+        allowClear: true,
+      });
     });
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = {
@@ -75,7 +81,6 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     });
     $("input[data-bootstrap-switch]").each(function () {
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
-
     });
   }
 
@@ -83,6 +88,12 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     this.tagService.getAllMaterialResourceTags().subscribe((response) => {
       this.mraTags = response;
       $('#mraselect2').select2({
+        data: this.mraTags.map((item) => {
+          return item.name;
+        }),
+        allowClear: true,
+      });
+      $('#editmraselect2').select2({
         data: this.mraTags.map((item) => {
           return item.name;
         }),
@@ -100,7 +111,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
 
   createMaterialResourceRequest(mraForm: NgForm) {
     this.selectedTags = [];
-    this.selectedTagNames = $('.select2').val();
+    this.selectedTagNames = $('#mraselect2').val();
     if (this.selectedTagNames.length == 0) {
       $(document).Toasts('create', {
         class: 'bg-warning',
@@ -155,11 +166,11 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
 
   editMaterialResourceRequest(mraForm: NgForm) {
     this.selectedTags = [];
-    this.selectedTagNames = $('.select2').val();
+    this.selectedTagNames = $('#editmraselect2').val();
     if (this.selectedTagNames.length == 0) {
       $(document).Toasts('create', {
         class: 'bg-warning',
-        title: 'Unable to submit Material Resource Available',
+        title: 'Unable to edit Material Resource Available',
         autohide: true,
         delay: 2500,
         body: 'Please select at least one Material Resource tags',
@@ -184,7 +195,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         if (new Date(mraForm.value.startDate).toJSON().slice(0, 10) > new Date(mraForm.value.endDate).toJSON().slice(0, 10)) {
           $(document).Toasts('create', {
             class: 'bg-warning',
-            title: 'Unable to submit Material Resource Available',
+            title: 'Unable to edit Material Resource Available',
             autohide: true,
             delay: 2500,
             body: 'End date should not come before the Start Date',
@@ -206,7 +217,6 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
 
       $('#editMraModalCloseBtn').click();
     }
-    console.log();
   }
 
   deleteMra(mraId: number) {
@@ -226,5 +236,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       this.editingMraId = response.materialResourceAvailableOwner.userId;
     });
     this.editingMra = mra;
+    console.log(this.editingMra);
+    console.log(this.editingMraId);
   }
 }

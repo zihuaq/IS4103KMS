@@ -82,11 +82,13 @@ public class MraResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateMaterialResourceRequest(MaterialResourceAvailableEntity mra) {
         try {
-            MaterialResourceAvailableEntity materialResourceAvailable = materialResourceAvailableSessionBean.updateMaterialResourceAvailable(mra);
+            List<MaterialResourceAvailableEntity> materialResourceAvailable = materialResourceAvailableSessionBean.updateMaterialResourceAvailable(mra);
             long mraOwnerId = mra.getMaterialResourceAvailableOwner().getUserId();
             UserEntity user = new UserEntity();
             user.setUserId(mraOwnerId);
-            materialResourceAvailable.setMaterialResourceAvailableOwner(user);
+            for(int i=0; i<materialResourceAvailable.size(); i++){
+                materialResourceAvailable.get(i).setMaterialResourceAvailableOwner(user);
+            }
             return Response.status(200).entity(materialResourceAvailable).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
