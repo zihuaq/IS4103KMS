@@ -35,7 +35,7 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
     }
     
     @Override
-    public MaterialResourceAvailableEntity updateMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException {
+    public List<MaterialResourceAvailableEntity> updateMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException {
         UserEntity materialResourceAvailableOwner = em.find(UserEntity.class, materialResourceAvailable.getMaterialResourceAvailableOwner().getUserId());
         MaterialResourceAvailableEntity mra = em.find(MaterialResourceAvailableEntity.class, materialResourceAvailable.getMraId());
         if (materialResourceAvailableOwner != null && mra != null) {
@@ -54,7 +54,7 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
             mra.setLongitude(materialResourceAvailable.getLongitude());
             mra.setStartDate(materialResourceAvailable.getStartDate());
             mra.setEndDate(materialResourceAvailable.getEndDate());
-            return materialResourceAvailable;
+            return materialResourceAvailableOwner.getMras();
         } else {
             throw new NoResultException("User not found");
         }
