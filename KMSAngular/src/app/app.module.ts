@@ -30,6 +30,7 @@ import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     SearchUsersComponent,
     EditProfileComponent,
     ForgotPasswordComponent,
+    CreateNewInstitutionComponent,
   ],
   imports: [
     BrowserModule,

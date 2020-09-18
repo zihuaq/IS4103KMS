@@ -9,42 +9,23 @@
             <app-loading-spinner></app-loading-spinner>
           </div>
             <form (ngSubmit)="onCreateUser(signUpForm)" #signUpForm="ngForm">
-                <h1>Create An Account with KMS!</h1>
+                <h1>Create An Institution Account with KMS!</h1>
                 <hr>
-                <a href="/signupInstitution">Click here to create an industry account instead!</a>
+                <a href="/signup">Click here to create an user account instead!</a>
                 <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" class="form-control" ngModel name="firstName" required>
+                  <label for="istitutionName">Name of Institution</label>
+                  <input type="text" id="istitutionName" class="form-control" ngModel name="istitutionName" required>
                 </div>
-                <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" class="form-control" ngModel name="lastName" required>
-                </div>
+                <!-- <div class="form-group">
+                    <label for="address">Business Address</label>
+                    <input type="text" id="address" class="form-control" ngModel name="address" required>
+                </div> -->
+
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" class="form-control" ngModel name="email" required email
                         #email="ngModel">
                     <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
-                </div>
-                <div class="form-group">
-                    <label for="dob">Date of Birth</label>
-                    <input
-                    type="date"
-                    id="dob"
-                    class="form-control"
-                    ngModel
-                    name = "dob"
-                    required
-                    [max] = "maxDate">
-                    <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid Date of Birth!</span>
-                </div>
-                <div>
-                    <label>Gender</label>
-                    <div class="radio" *ngFor = "let gender of genders">
-                        <label>
-                            <input type="radio" name="gender" ngModel [value] = "gender"> {{gender}}
-                        </label>
-                    </div>
                 </div>
 
                 <div class="form-group">
