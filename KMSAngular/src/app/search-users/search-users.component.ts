@@ -49,7 +49,8 @@ export class SearchUsersComponent implements OnInit {
           this.loggedInUserFollowing = result[1];
           this.loggedInUserFollowRequestMade = result[2];
           this.user = result[3];
-          if (this.loggedInUserId != userId &&
+          if (
+            this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
               AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
@@ -143,15 +144,26 @@ export class SearchUsersComponent implements OnInit {
     forkJoin([
       this.userService.getFollowers(userId),
       this.userService.getFollowing(userId),
+      this.userService.getFollowers(this.loggedInUserId),
       this.userService.getFollowing(this.loggedInUserId),
       this.userService.getFollowRequestMade(this.loggedInUserId),
     ]).subscribe((result) => {
-      this.loggedInUserFollowing = result[2];
-      this.loggedInUserFollowRequestMade = result[3];
+      this.loggedInUserFollowing = result[3];
+      this.loggedInUserFollowRequestMade = result[4];
+      let userUpdated = false;
+      let loggedInUserUpdated = false;
       for (var user of this.filteredUsers) {
         if (user.userId == userId) {
           user.followers = result[0];
           user.following = result[1];
+          userUpdated = true
+        }
+        if (user.userId == this.loggedInUserId) {
+          user.followers = result[2];
+          user.following = result[3];
+          loggedInUserUpdated = true;
+        }
+        if(userUpdated && loggedInUserUpdated){
           return;
         }
       }
