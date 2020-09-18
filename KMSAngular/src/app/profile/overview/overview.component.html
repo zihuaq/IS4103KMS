@@ -27,8 +27,12 @@
       </li>
     </ul>
     <div *ngIf="profile.userId != loggedInUser.userId">
-      <a class="btn btn-primary btn-block" *ngIf="canFollow" (click)="follow()"><b>Follow</b></a>
+      <a class="btn btn-primary btn-block" *ngIf="canFollow && !hasSentFollowRequest"
+        (click)="follow()"><b>Follow</b></a>
       <a class="btn btn-primary btn-block" *ngIf="!canFollow" (click)="unfollow()"><b>Unfollow</b></a>
+      <a class="btn bg-gradient-info btn-block" *ngIf="canFollow && hasSentFollowRequest" disabled=true>
+        <i class="fas fa-check"></i> Follow Request Sent
+      </a>
     </div>
   </div>
   <!-- /.card-body -->

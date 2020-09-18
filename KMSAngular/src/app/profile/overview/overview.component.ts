@@ -17,6 +17,7 @@ export class OverviewComponent implements OnInit {
   @Output() profileChanged = new EventEmitter<User>();
   @Output() userChanged = new EventEmitter<User>();
   canFollow: boolean;
+  hasSentFollowRequest: boolean;
 
   constructor(private userService: UserService) {}
 
@@ -71,12 +72,18 @@ export class OverviewComponent implements OnInit {
       this.userService.getFollowers(this.profile.userId),
       this.userService.getFollowing(this.profile.userId),
       this.userService.getFollowing(this.loggedInUser.userId),
+      this.userService.getFollowRequestMade(this.loggedInUser.userId),
     ]).subscribe((result) => {
       this.profile = { ...this.profile, followers: result[0] };
       this.profile = { ...this.profile, following: result[1] };
       this.loggedInUser = { ...this.loggedInUser, following: result[2] };
       this.canFollow = !this.loggedInUser.following
         .map((user) => user.userId)
+        .includes(this.profile.userId);
+      this.hasSentFollowRequest = result[3]
+        .map((followRequestMade: FollowRequest) => {
+          return followRequestMade.to.userId;
+        })
         .includes(this.profile.userId);
     });
   }

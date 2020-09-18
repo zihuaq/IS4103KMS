@@ -1,6 +1,10 @@
 .SDGTags {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 80%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 80%;
+}
+
+.edit-sdg {
+  cursor: pointer;
 }
