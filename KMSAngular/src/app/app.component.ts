@@ -43,7 +43,7 @@ export class AppComponent {
       this.idleState = 'Timed out!';
       this.timedOut = true;
       console.log(this.idleState);
-      this.router.navigate(['/']);
+      this.userService.logout();
     });
 
     idle.onIdleStart.subscribe(() => {

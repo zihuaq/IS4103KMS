@@ -41,15 +41,15 @@ public class UserEntity implements Serializable {
     @NotNull
     @Column(nullable = false)
     private String firstName;
-    @NotNull
-    @Column(nullable = false)
+    //@NotNull
+    //@Column(nullable = false)
     private String lastName;
-    @NotNull
-    @Column(nullable = false)
+    //@NotNull
+    //@Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dob;
-    @NotNull
-    @Column(nullable = false)
+    //@NotNull
+    //@Column(nullable = false)
     private String gender;
     @NotNull
     @Column(nullable = false, unique = true)

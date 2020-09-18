@@ -38,6 +38,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
 import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     FollowRequestsComponent,
     ReportProfileComponent,
     ForgotPasswordComponent,
+    CreateNewInstitutionComponent,
   ],
   imports: [
     BrowserModule,
