@@ -31,34 +31,38 @@ public class MaterialResourceAvailableEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mraId;
-    
+
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String name;
-    
+
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private Integer quantity;
-    
+
     private String description;
-    
+
     @NotNull
-    @Column(nullable=false)
-    private String country;
-    
+    @Column(nullable = false)
+    private String latitude;
+
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
+    private String longitude;
+
+    @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
-    
+
     @ManyToOne
     private UserEntity materialResourceAvailableOwner;
-    
+
     @ManyToMany
     private List<TagEntity> tags;
 
@@ -66,18 +70,18 @@ public class MaterialResourceAvailableEntity implements Serializable {
         this.tags = new ArrayList<>();
     }
 
-    public MaterialResourceAvailableEntity(String name, Integer quantity, String description, Date startDate, Date endDate, String country, List<TagEntity> tags) {
+    public MaterialResourceAvailableEntity(String name, Integer quantity, String description, Date startDate, Date endDate, String latitude, String longitude, List<TagEntity> tags) {
         this();
         this.name = name;
         this.quantity = quantity;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.country = country;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.tags = tags;
     }
-    
-    
+
     public Long getMraId() {
         return mraId;
     }
@@ -167,12 +171,20 @@ public class MaterialResourceAvailableEntity implements Serializable {
         this.tags = tags;
     }
 
-    public String getCountry() {
-        return country;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
-    
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
 }

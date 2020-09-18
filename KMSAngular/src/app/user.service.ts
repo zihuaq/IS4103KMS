@@ -136,11 +136,10 @@ export class UserService {
   }
 
   createMaterialResourceAvailable(
-    userId: number,
     mra: MaterialResourceAvailable
   ): Observable<any> {
     return this.http
-      .post<any>(this.baseUrl + '/mra/' + userId, mra, httpOptions)
+      .post<any>(this.baseUrl + '/mra', mra, httpOptions)
       .pipe(catchError(this.handleError));
   }
 

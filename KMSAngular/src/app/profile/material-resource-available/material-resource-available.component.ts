@@ -29,8 +29,16 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   newMra: MaterialResourceAvailable;
   minDate = new Date().toISOString().slice(0, 10);
   minEndDate = new Date().toISOString().slice(0, 10);
-  lat = 51.678418;
-  lng = 7.809007;
+  zoom = 12;
+  center: google.maps.LatLngLiteral;
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: true,
+  };
+  lat: string;
+  lng: string;
 
   constructor(
     private tagService: TagService,
@@ -46,6 +54,12 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     this.tagService.getAllMaterialResourceTags().subscribe((response) => {
       this.mraTags = response;
     });
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.center = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -55,18 +69,26 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     this.profile = changes.profile.currentValue;
   }
 
+  click(event: google.maps.MouseEvent) {
+    console.log(event);
+    this.lat = event.latLng.lat().toString();
+    this.lng = event.latLng.lng().toString();
+  }
+
   createMaterialResourceRequest(mraForm: NgForm) {
     if (mraForm.valid) {
       this.newMra = new MaterialResourceAvailable();
-      this.newMra.mraOwner = this.profile;
+      this.newMra.materialResourceAvailableOwner = this.profile;
       this.newMra.name = mraForm.value.mraName;
       this.newMra.quantity = mraForm.value.quantity;
       this.newMra.description = mraForm.value.description;
-      this.newMra.country = mraForm.value.country;
+      this.newMra.latitude = this.lat;
+      this.newMra.longitude = this.lng;
       this.newMra.startDate = new Date(mraForm.value.startDate);
       this.newMra.endDate = new Date(mraForm.value.endDate);
+      console.log(this.newMra);
       this.userService
-        .createMaterialResourceAvailable(this.profile.userId, this.newMra)
+        .createMaterialResourceAvailable(this.newMra)
         .subscribe((responsedata) => {
           this.profile.mras = responsedata;
         });
