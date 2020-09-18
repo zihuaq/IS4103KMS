@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import Exception.AffiliatedUserExistException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
@@ -30,6 +31,12 @@ public interface UserSessionBeanLocal {
     public UserEntity getUserById(long userId) throws NoResultException;
     
     public List<UserEntity> getAllUsers() throws NoResultException;
+    
+    public List<UserEntity> getAffiliatedUsers(Long userId) throws UserNotFoundException;
+    
+    public void addAffiliatedUser(Long userId, Long affiliatedToAddUserId) throws AffiliatedUserExistException, UserNotFoundException;
+    
+    public void removeAffiliatedUser(Long userId, Long affiliatedToRemoveUserId) throws NoResultException, UserNotFoundException;
 
     public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
 

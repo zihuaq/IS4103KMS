@@ -5,6 +5,7 @@
  */
 package ws.restful.resources;
 
+import Exception.AffiliatedUserExistException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
@@ -135,6 +136,51 @@ public class UserResource {
             List<TagEntity> updatedSkills = userSessionBeanLocal.removeSkillFromProfile(userId, tagId);
             return Response.status(200).entity(updatedSkills).build();
         } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @GET
+    @Path("/affiliated/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAffiliatedUsers(@PathParam("userId") Long userId) {
+        try {
+            List<UserEntity> affiliatedUsers = userSessionBeanLocal.getAffiliatedUsers(userId);
+            return Response.status(200).entity(affiliatedUsers).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @PUT
+    @Path("/addaffiliated/{userId}/{affiliatedToAddUserIdId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addAffiliatedUser(@PathParam("userId") Long userId, @PathParam("affiliatedToAddUserIdId") Long affiliatedToAddUserId) {
+        try {
+            userSessionBeanLocal.addAffiliatedUser(userId, affiliatedToAddUserId);
+            return Response.status(204).build();
+        } catch (AffiliatedUserExistException | UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/removeaffiliated/{userId}/{affiliatedToRemoveUserId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response removeAffiliatedUser(@PathParam("userId") Long userId, @PathParam("affiliatedToRemoveUserId") Long affiliatedToRemoveUserId) {
+        try {
+            userSessionBeanLocal.removeAffiliatedUser(userId, affiliatedToRemoveUserId);
+            return Response.status(204).build();
+        } catch (NoResultException |UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();

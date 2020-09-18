@@ -147,6 +147,24 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  getAffiliatedUsers(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/affiliated/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  addAffiliatedUser(userId: number, affiliatedUserToAddId: number): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/addaffiliated/' + userId + '/' + affiliatedUserToAddId, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  removeAffiliatedUser(userId: number, affiliatedUserToRemoveId: number): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/removeaffiliated/' + userId + '/' + affiliatedUserToRemoveId, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   updateUser(updatedUser: User) {
     return this.http
       .post<any>(this.baseUrl + '/update', updatedUser, httpOptions)
