@@ -83,16 +83,20 @@ public class UserEntity implements Serializable {
     private List<ReviewEntity> reviewsReceived;
     @OneToMany(mappedBy = "projectOwner")
     private List<ProjectEntity> projectsOwned;
-    @ManyToMany(mappedBy = "projectMembers")
+    @JoinTable(name = "projectMembers")
+    @ManyToMany
     private List<ProjectEntity> projectsJoined;
-    @ManyToMany(mappedBy = "projectAdmins")
+    @JoinTable(name = "projectAdmins")
+    @ManyToMany
     private List<ProjectEntity> projectAdmins;
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
+    @JoinTable(name= "groupMembers")
     @ManyToMany(mappedBy = "groupMembers")
     private List<GroupEntity> groupsJoined;  
+    @JoinTable(name= "groupAdmins")
     @ManyToMany(mappedBy = "groupAdmins")
     private List<GroupEntity> groupAdmins;
     @OneToMany
@@ -164,7 +168,7 @@ public class UserEntity implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password) {
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, UserTypeEnum usertype) {
         this();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -173,6 +177,7 @@ public class UserEntity implements Serializable {
         this.email = email;
         this.password = password;
         this.joinedDate = new Date();
+        this.userType = usertype;
     }
 
     public Long getUserId() {

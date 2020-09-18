@@ -23,6 +23,7 @@ import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import util.enumeration.TagTypeEnum;
+import util.enumeration.UserTypeEnum;
 
 /**
  *
@@ -85,6 +86,18 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("SDG 15", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 16", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 17", TagTypeEnum.SDG));
+        
+        
+        userSessionBean.createNewUser(new UserEntity("Yi", "Tan", new Date(), "Female", "1@1.com", "pw1", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Er", "Lim", new Date(), "Male", "2@2.com", "pw2", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("San", "Chew", new Date(), "Female", "3@3.com", "pw3", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Si", "Chua", new Date(), "Male", "4@4.com", "pw4", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Wu", "Ang", new Date(), "Female", "5@5.com", "pw5", UserTypeEnum.INDIVIDUAL));
+        userSessionBean.createNewUser(new UserEntity("Liu", "Choo", new Date(), "Male", "6@6.com", "pw6", UserTypeEnum.INDIVIDUAL));
+        userSessionBean.createNewUser(new UserEntity("Qi", "Chia", new Date(), "Female", "7@7.com", "pw7", UserTypeEnum.INDIVIDUAL));
+        userSessionBean.createNewUser(new UserEntity("Ba", "Chu", new Date(), "Male", "8@8.com", "pw8", UserTypeEnum.INSTITUTE));
+        userSessionBean.createNewUser(new UserEntity("Jiu", "Xie", new Date(), "Female", "9@9.com", "pw9", UserTypeEnum.INSTITUTE));
+        userSessionBean.createNewUser(new UserEntity("Shi", "Chow", new Date(), "Male", "10@10.com", "pw10", UserTypeEnum.INSTITUTE));
         tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORT));
         tagSessionBean.createNewTag(new TagEntity("Harassment or bullying", TagTypeEnum.REPORT));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORT));

@@ -1,0 +1,11 @@
+.hidetext { -webkit-text-security: disc; /* Default */ }
+.button {background-color: #f44336;
+        color: white;
+        text-align: center;
+        display: inline-block;
+        cursor: pointer;
+        margin: auto;
+        height: 30px;
+        top: 45%;
+        left: 50%} /* Red */ 
+        

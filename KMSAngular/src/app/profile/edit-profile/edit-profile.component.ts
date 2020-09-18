@@ -120,6 +120,14 @@ export class EditProfileComponent implements OnInit, OnChanges {
       $('#modal-default').modal('hide');
     }
   }
+  
+  
+  deActivateAcc() {
+
+
+    
+  }
+  
 
   checkIfTagSelectedByUser(tag: Tag) {
     return this.selectedTags.map((tag) => tag.tagId).includes(tag.tagId);

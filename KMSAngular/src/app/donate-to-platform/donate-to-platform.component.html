@@ -1,0 +1,54 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Donate to Platform</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Donate</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+        <!-- general form elements -->
+        <div class="card card-default width: w-50">
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form role="form">
+            <div class="card-body">
+                <label for="donationAmount">Donation Amount</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input name="donation" type="text" class="form-control" id="donationAmount" [(ngModel)]="donationAmount" placeholder="Amount (to the nearest dollar)">
+                    <div class="input-group-append">
+                        <span class="input-group-text">.00</span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <div id="paypal-checkout-btn"></div>
+            </div>
+            
+        </form>
+        </div>
+        <!-- /.card -->
+    </div>
+    
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
