@@ -259,6 +259,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return users;
     }
     
+    @Override
     public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException {
         UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
         if (user == null) {
