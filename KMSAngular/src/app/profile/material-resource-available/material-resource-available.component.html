@@ -19,8 +19,12 @@
                         <input type="text" id="mraName" class="form-control" ngModel name="mraName" required>
                     </div>
                     <div class="form-group">
-                        <label for="quantity">Quantity *</label>
+                        <label for="quantity"> Quantity *</label>
                         <input type="text" id="quantity" class="form-control" ngModel name="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="units"> Units *</label>
+                        <input type="text" id="units" class="form-control" ngModel name="units" required>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
@@ -118,7 +122,7 @@
                             <a *ngIf="mra.startDate != null" class="product-title">Available from
                                 {{mra.startDate.toString().slice(0,10) | date }} to
                                 {{mra.endDate.toString().slice(0,10) | date}}
-                                <span class="badge badge-warning float-right">
+                                <span class="badge badge-secondary float-right">
                                     At location
                                     {{mra.latitude | number:'1.1-6'}},
                                     {{mra.longitude | number:'1.1-6'}}
@@ -126,13 +130,15 @@
                             </a>
                             <a *ngIf="mra.startDate == null" class="product-title">
                                 No Expiry Date
-                                <span class="badge badge-warning float-right">
+                                <span class="badge badge-secondary float-right">
                                     At location
                                     {{mra.latitude | number:'1.1-6'}},
                                     {{mra.longitude | number:'1.1-6'}}
                                 </span>
                             </a>
                             <span class="product-description">
+                                {{mra.quantity}} {{mra.units}} {{mra.name}}
+                                <br/>
                                 {{mra.description}}
                                 <span *ngIf="mra.tags.length > 0">
                                     <div *ngFor="let tag of mra.tags">

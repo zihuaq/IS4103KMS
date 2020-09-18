@@ -40,6 +40,10 @@ public class MaterialResourceAvailableEntity implements Serializable {
     @NotNull
     @Column(nullable = false)
     private Integer quantity;
+    
+    @NotNull
+    @Column(nullable = false)
+    private String units;
 
     private String description;
 
@@ -72,10 +76,11 @@ public class MaterialResourceAvailableEntity implements Serializable {
         this.tags = new ArrayList<>();
     }
 
-    public MaterialResourceAvailableEntity(String name, Integer quantity, String description, Date startDate, Date endDate, String latitude, String longitude, List<TagEntity> tags) {
+    public MaterialResourceAvailableEntity(String name, Integer quantity, String units, String description, Date startDate, Date endDate, String latitude, String longitude, List<TagEntity> tags) {
         this();
         this.name = name;
         this.quantity = quantity;
+        this.units = units;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -187,6 +192,14 @@ public class MaterialResourceAvailableEntity implements Serializable {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
     }
 
 }
