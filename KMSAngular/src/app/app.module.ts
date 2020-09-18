@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxPayPalModule } from 'ngx-paypal';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +26,7 @@ import { CreateNewProjectComponent } from './project/create-new-project/create-n
 import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
+import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
 
 
 @NgModule({
@@ -49,6 +51,7 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
     SearchbarComponent,
     SearchUsersComponent,
     EditProfileComponent,
+    DonateToPlatformComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,7 @@ import { EditProfileComponent } from './profile/edit-profile/edit-profile.compon
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    NgxPayPalModule
   ],
   providers: [],
   bootstrap: [AppComponent],

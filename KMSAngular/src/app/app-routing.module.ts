@@ -7,6 +7,8 @@ import { UserLoginPageComponent } from './user-login-page/user-login-page.compon
 import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { CreateNewProjectComponent } from './project/create-new-project/create-new-project.component';
+import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
+
 
 
 const routes: Routes = [
@@ -18,7 +20,8 @@ const routes: Routes = [
   { path: 'searchUsers', component: SearchUsersComponent },
   { path: '', component: IndexComponent },
   { path: 'viewAllProjects', component: ViewAllProjectComponent},
-  { path: 'createNewProject', component: CreateNewProjectComponent }
+  { path: 'createNewProject', component: CreateNewProjectComponent },
+  { path: 'donateToPlatform', component: DonateToPlatformComponent}
 ];
 
 @NgModule({
