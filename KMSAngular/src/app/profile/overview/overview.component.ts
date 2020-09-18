@@ -3,6 +3,7 @@ import { forkJoin } from 'rxjs';
 import { UserService } from 'src/app/user.service';
 import { User } from '../../classes/user';
 import { FollowRequest } from '../../classes/follow-request';
+import { AccountPrivacySettingEnum } from '../../classes/privacy-settings.enum';
 
 declare var $: any;
 
@@ -16,7 +17,7 @@ export class OverviewComponent implements OnInit {
   @Input() loggedInUser: User;
   @Output() profileChanged = new EventEmitter<User>();
   @Output() userChanged = new EventEmitter<User>();
-  canFollow: boolean;
+  isFollowing: boolean;
   hasSentFollowRequest: boolean;
 
   constructor(private userService: UserService) {}
@@ -67,6 +68,12 @@ export class OverviewComponent implements OnInit {
       });
   }
 
+  isPublic() {
+    return (
+      this.profile.accountPrivacySetting == AccountPrivacySettingEnum.PUBLIC
+    );
+  }
+
   getFollowersAndFollowing() {
     forkJoin([
       this.userService.getFollowers(this.profile.userId),
@@ -77,7 +84,7 @@ export class OverviewComponent implements OnInit {
       this.profile = { ...this.profile, followers: result[0] };
       this.profile = { ...this.profile, following: result[1] };
       this.loggedInUser = { ...this.loggedInUser, following: result[2] };
-      this.canFollow = !this.loggedInUser.following
+      this.isFollowing = this.loggedInUser.following
         .map((user) => user.userId)
         .includes(this.profile.userId);
       this.hasSentFollowRequest = result[3]

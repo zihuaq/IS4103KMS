@@ -42,7 +42,6 @@ const routes: Routes = [
     component: ProfileComponent,
   },
   { path: 'profile', canActivate: [RouteGuard], component: ProfileComponent },
-  // { path: 'viewAllUsers', canActivate:[RouteGuard], component: ViewAllUsersComponent },
   {
     path: 'accountVerification/:email/:uuid',
     component: AccountVerificationComponent,

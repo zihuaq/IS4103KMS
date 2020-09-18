@@ -5,6 +5,8 @@ import { FollowRequest } from '../classes/follow-request';
 import { User } from '../classes/user';
 import { SessionService } from '../session.service';
 import { UserService } from '../user.service';
+import { AccountPrivacySettingEnum } from '../classes/privacy-settings.enum';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -26,7 +28,8 @@ export class SearchUsersComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +49,15 @@ export class SearchUsersComponent implements OnInit {
           this.loggedInUserFollowing = result[1];
           this.loggedInUserFollowRequestMade = result[2];
           this.user = result[3];
+          if (this.loggedInUserId != userId &&
+            this.user.accountPrivacySetting ==
+              AccountPrivacySettingEnum.PRIVATE &&
+            !this.loggedInUserFollowing
+              .map((user) => user.userId)
+              .includes(this.user.userId)
+          ) {
+            this.router.navigate(['/index']);
+          }
         });
       } else if (this.query == 'following') {
         forkJoin([

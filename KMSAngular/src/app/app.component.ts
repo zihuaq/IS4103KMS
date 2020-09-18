@@ -1,17 +1,15 @@
-import { Component,ViewChild, TemplateRef, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
 import { Keepalive } from '@ng-idle/keepalive';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { SessionService } from './session.service';
 import { UserService } from './user.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   idleState = 'Not started.';
@@ -23,8 +21,12 @@ export class AppComponent {
 
   @ViewChild('childModal') childModal: ModalDirective;
 
-  constructor(private idle: Idle, private keepalive: Keepalive,
-    private router: Router, private modalService: BsModalService, private sessionService: SessionService, private userService: UserService ) {
+  constructor(
+    private idle: Idle,
+    keepalive: Keepalive,
+    private router: Router,
+    private userService: UserService
+  ) {
     // sets an idle timeout of 5 seconds, for testing purposes.
     idle.setIdle(5);
     // sets a timeout period of 5 seconds. after 10 seconds of inactivity, the user will be considered timed out.
@@ -33,7 +35,7 @@ export class AppComponent {
     idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
     idle.onIdleEnd.subscribe(() => {
-      this.idleState = 'No longer idle.'
+      this.idleState = 'No longer idle.';
       console.log(this.idleState);
       this.reset();
     });
@@ -47,29 +49,29 @@ export class AppComponent {
     });
 
     idle.onIdleStart.subscribe(() => {
-        this.idleState = 'You\'ve gone idle!'
-        console.log(this.idleState);
-        this.childModal.show();
+      this.idleState = "You've gone idle!";
+      console.log(this.idleState);
+      this.childModal.show();
     });
 
     idle.onTimeoutWarning.subscribe((countdown) => {
-      this.idleState = 'You will time out in ' + countdown + ' seconds!'
+      this.idleState = 'You will time out in ' + countdown + ' seconds!';
       console.log(this.idleState);
     });
 
     // sets the ping interval to 15 seconds
     keepalive.interval(15);
 
-    keepalive.onPing.subscribe(() => this.lastPing = new Date());
+    keepalive.onPing.subscribe(() => (this.lastPing = new Date()));
 
     this.userService.user.subscribe((user) => {
       if (user) {
-        idle.watch()
+        idle.watch();
         this.timedOut = false;
       } else {
         idle.stop();
       }
-    })
+    });
 
     // this.reset();
   }
@@ -93,5 +95,4 @@ export class AppComponent {
     this.childModal.hide();
     this.userService.logout();
   }
-
 }

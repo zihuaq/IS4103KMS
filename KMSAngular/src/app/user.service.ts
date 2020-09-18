@@ -60,9 +60,7 @@ export class UserService {
 
   resetPassword(email: String) {
     return this.http
-      .post<any>(
-        this.baseUrl + '/resetPassword?email=' + email, null
-      )
+      .post<any>(this.baseUrl + '/resetPassword?email=' + email, null)
       .pipe(catchError(this.handleError));
   }
 
@@ -165,15 +163,31 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  addAffiliatedUser(userId: number, affiliatedUserToAddId: number): Observable<any> {
+  addAffiliatedUser(
+    userId: number,
+    affiliatedUserToAddId: number
+  ): Observable<any> {
     return this.http
-      .put<any>(this.baseUrl + '/addaffiliated/' + userId + '/' + affiliatedUserToAddId, httpOptions)
+      .put<any>(
+        this.baseUrl + '/addaffiliated/' + userId + '/' + affiliatedUserToAddId,
+        httpOptions
+      )
       .pipe(catchError(this.handleError));
   }
 
-  removeAffiliatedUser(userId: number, affiliatedUserToRemoveId: number): Observable<any> {
+  removeAffiliatedUser(
+    userId: number,
+    affiliatedUserToRemoveId: number
+  ): Observable<any> {
     return this.http
-      .put<any>(this.baseUrl + '/removeaffiliated/' + userId + '/' + affiliatedUserToRemoveId, httpOptions)
+      .put<any>(
+        this.baseUrl +
+          '/removeaffiliated/' +
+          userId +
+          '/' +
+          affiliatedUserToRemoveId,
+        httpOptions
+      )
       .pipe(catchError(this.handleError));
   }
 
@@ -295,34 +309,28 @@ export class UserService {
     }
   }
 
-  verifyEmail(email: String, uuid: String){
+  verifyEmail(email: String, uuid: String) {
     return this.http
-      .get<any>(
-        this.baseUrl + '/verifyEmail?email=' + email + '&uuid=' + uuid
-      )
+      .get<any>(this.baseUrl + '/verifyEmail?email=' + email + '&uuid=' + uuid)
       .pipe(catchError(this.handleError));
   }
 
   isAuthenticated() {
-    const promise = new Promise(
-      (resolve, reject) => {
-          resolve(this.loggedIn);
-      }
-    );
-    return promise
+    const promise = new Promise((resolve, reject) => {
+      resolve(this.sessionService.getIsLogin);
+    });
+    return promise;
   }
 
   logout(): void {
-    this.cleanup()
-    this.router.navigate(["/login"]);
+    this.cleanup();
+    this.router.navigate(['/login']);
   }
 
   private cleanup(): void {
-
     this.sessionService.setIsLogin(false);
     this.sessionService.setCurrentUser(null);
     this.user.next(null);
-    this.loggedIn = false
+    this.loggedIn = false;
   }
 }
-
