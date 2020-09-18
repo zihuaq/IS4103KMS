@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AccountPrivacySettingEnum } from 'src/app/classes/privacy-settings.enum';
 import { Tag } from 'src/app/classes/tag';
@@ -25,12 +33,15 @@ export class EditProfileComponent implements OnInit, OnChanges {
   allSDGTags: Tag[];
   selectedTags: Tag[] = [];
 
-  constructor(private userService: UserService, private tagService: TagService) { }
+  constructor(
+    private userService: UserService,
+    private tagService: TagService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.userService.getSDGsForProfile(this.user.userId).subscribe((sdgs) => {
       this.selectedTags = sdgs;
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -45,7 +56,6 @@ export class EditProfileComponent implements OnInit, OnChanges {
       this.allSDGTags = response;
     });
   }
-
 
   getFiles(event) {
     if (event.target.files[0] != undefined) {
@@ -88,7 +98,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
             email: responsedata.email,
             dob: responsedata.dob,
             profilePicture: responsedata.profilePicture,
-            sdgs: responsedata.sdgs
+            sdgs: responsedata.sdgs,
           };
           this.profilePictureFile = responsedata.profilePicture;
           this.userChanged.emit(this.user);
@@ -120,14 +130,8 @@ export class EditProfileComponent implements OnInit, OnChanges {
       $('#modal-default').modal('hide');
     }
   }
-  
-  
-  deActivateAcc() {
 
-
-    
-  }
-  
+  deActivateAcc() {}
 
   checkIfTagSelectedByUser(tag: Tag) {
     return this.selectedTags.map((tag) => tag.tagId).includes(tag.tagId);

@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="card-body pt-0">
                                     <div class="row">
-                                        <div class="col-7">
+                                        <div class="col-7 ">
                                             <h2 class="lead" *ngIf="user.userId == loggedInUserId"><b> Me </b></h2>
                                             <h2 class="lead" *ngIf="user.userId != loggedInUserId">
                                                 <b>{{user.firstName}} {{user.lastName}}</b></h2>
@@ -51,8 +51,8 @@
                                             </p>
                                             <p class="text-muted text-sm">
                                                 <span *ngIf="user.sdgs.length == 0"> User has no SDG indicated</span>
-                                                <span *ngIf="user.sdgs.length > 0">
-                                                    <div *ngFor="let sdg of user.sdgs" class="small">
+                                                <span class="d-flex flex-wrap" *ngIf="user.sdgs.length > 0">
+                                                    <div *ngFor="let sdg of user.sdgs" class="col-3">
                                                         <small class="badge badge-dark">
                                                             {{sdg.name}}
                                                         </small>

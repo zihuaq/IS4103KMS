@@ -6,11 +6,13 @@
   <!-- /.card-header -->
   <div class="card-body">
     <strong *ngIf="userSdgs.length > 0">Interested SDGs</strong>
-    <p class="SDGs" *ngFor="let sdg of userSdgs">
-      <small class="badge badge-dark">
-        {{sdg.name}}
-      </small>
-    </p>
+    <div class="d-flex flex-wrap">
+      <p class="SDGs col-3" *ngFor="let sdg of userSdgs">
+        <small class="badge badge-dark">
+          {{sdg.name}}
+        </small>
+      </p>
+    </div>
     <hr *ngIf="profile.sdgs.length > 0">
     <strong><i class="fas fa-map-marker-alt mr-1"></i>Joined Date</strong>
     <p class="text-muted">{{profile.joinedDate | date}}</p>
