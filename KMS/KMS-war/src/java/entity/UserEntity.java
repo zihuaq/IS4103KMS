@@ -73,22 +73,29 @@ public class UserEntity implements Serializable {
     @Column
     private String profilePicture;
     private int reputationPoints;
+
+    private String verificationCode;
+    
+    private Boolean isVerified;
+
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
     @OneToMany(mappedBy = "to")
     private List<ReviewEntity> reviewsReceived;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "projectOwner")
     private List<ProjectEntity> projectsOwned;
-    @ManyToMany(mappedBy = "groupMembers")
-    private List<ProjectEntity> projectsContributed;
-    @ManyToMany(mappedBy = "admins")
+    @ManyToMany(mappedBy = "projectMembers")
+    private List<ProjectEntity> projectsJoined;
+    @ManyToMany(mappedBy = "projectAdmins")
     private List<ProjectEntity> projectAdmins;
-    @ManyToMany(mappedBy = "users")
-    private List<GroupEntity> groups;
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
+    @ManyToMany(mappedBy = "groupMembers")
+    private List<GroupEntity> groupsJoined;  
+    @ManyToMany(mappedBy = "groupAdmins")
+    private List<GroupEntity> groupAdmins;
     @OneToMany
     private List<BadgeEntity> badges;
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
@@ -125,14 +132,15 @@ public class UserEntity implements Serializable {
         this.reviewsGiven = new ArrayList<>();
         this.reviewsReceived = new ArrayList<>();
         this.projectsOwned = new ArrayList<>();
-        this.groups = new ArrayList<>();
+        this.groupsJoined = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.groupsOwned = new ArrayList<>();
+        this.groupAdmins = new ArrayList<>();
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
         this.skills = new ArrayList<>();
         this.projectAdmins = new ArrayList<>();
-        this.projectsContributed = new ArrayList<>();
+        this.projectsJoined = new ArrayList<>();
         this.following = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.sdgs = new ArrayList<>();
@@ -200,6 +208,7 @@ public class UserEntity implements Serializable {
     public String toString() {
         return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", userType=" + userType + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
+    
 
     public String getFirstName() {
         return firstName;
@@ -285,6 +294,22 @@ public class UserEntity implements Serializable {
         this.profilePicture = profilePicture;
     }
 
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public Boolean getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Boolean isVerified) {
+        this.isVerified = isVerified;
+    }
+
     public List<ReviewEntity> getReviewsGiven() {
         return reviewsGiven;
     }
@@ -301,12 +326,12 @@ public class UserEntity implements Serializable {
         this.projectsOwned = projectsOwned;
     }
 
-    public List<GroupEntity> getGroups() {
-        return groups;
+    public List<GroupEntity> getGroupsJoined() {
+        return groupsJoined;
     }
 
-    public void setGroups(List<GroupEntity> groups) {
-        this.groups = groups;
+    public void setGroupsJoined(List<GroupEntity> groupsJoined) {
+        this.groupsJoined = groupsJoined;
     }
 
     public List<PostEntity> getPosts() {
@@ -323,6 +348,14 @@ public class UserEntity implements Serializable {
 
     public void setGroupsOwned(List<GroupEntity> groupsOwned) {
         this.groupsOwned = groupsOwned;
+    }
+
+    public List<GroupEntity> getGroupAdmins() {
+        return groupAdmins;
+    }
+
+    public void setGroupAdmins(List<GroupEntity> groupAdmins) {
+        this.groupAdmins = groupAdmins;
     }
 
     public List<BadgeEntity> getBadges() {
@@ -349,12 +382,12 @@ public class UserEntity implements Serializable {
         this.skills = skills;
     }
 
-    public List<ProjectEntity> getProjectsContributed() {
-        return projectsContributed;
+    public List<ProjectEntity> getProjectsJoined() {
+        return projectsJoined;
     }
 
-    public void setProjectsContributed(List<ProjectEntity> projectsContributed) {
-        this.projectsContributed = projectsContributed;
+    public void setProjectsJoined(List<ProjectEntity> projectsJoined) {
+        this.projectsJoined = projectsJoined;
     }
 
     public List<ProjectEntity> getProjectAdmins() {

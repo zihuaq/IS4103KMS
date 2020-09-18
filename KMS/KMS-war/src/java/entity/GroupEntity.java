@@ -41,10 +41,14 @@ public class GroupEntity implements Serializable {
     private UserEntity groupOwner;
     
     @ManyToMany
-    private List<UserEntity> users;
+    private List<UserEntity> groupMembers;
+    
+    @ManyToMany
+    private List<UserEntity> groupAdmins;
     
     public GroupEntity() {
-        users = new ArrayList<>();
+        groupMembers = new ArrayList<>();
+        groupAdmins = new ArrayList<>();
     }
 
     public GroupEntity(String name, String country, String profilePicture) {
@@ -120,12 +124,20 @@ public class GroupEntity implements Serializable {
         this.groupOwner = groupOwner;
     }
 
-    public List<UserEntity> getUsers() {
-        return users;
+    public List<UserEntity> getGroupMembers() {
+        return groupMembers;
     }
 
-    public void setUsers(List<UserEntity> users) {
-        this.users = users;
+    public void setGroupMembers(List<UserEntity> groupMembers) {
+        this.groupMembers = groupMembers;
+    }
+
+    public List<UserEntity> getGroupAdmins() {
+        return groupAdmins;
+    }
+
+    public void setGroupAdmins(List<UserEntity> groupAdmins) {
+        this.groupAdmins = groupAdmins;
     }
     
 }

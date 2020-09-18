@@ -3,6 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { MomentModule } from 'angular2-moment';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,12 +24,16 @@ import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
-import { SearchbarComponent } from './top-navbar/searchbar/searchbar.component';
+import { AccountVerificationComponent } from './account-verification/account-verification.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { AppPasswordDirective } from './app-password.directive';
+import { SearchbarComponent } from './searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
 import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -45,12 +52,16 @@ import { ReportProfileComponent } from './profile/report-profile/report-profile.
     SideNavbarComponent,
     FooterComponent,
     ProfileTabpanelComponent,
+    AccountVerificationComponent,
+    LoadingSpinnerComponent,
+    AppPasswordDirective,
     SearchbarComponent,
     SearchUsersComponent,
     EditProfileComponent,
     NotificationsComponent,
     FollowRequestsComponent,
     ReportProfileComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +70,9 @@ import { ReportProfileComponent } from './profile/report-profile/report-profile.
     BrowserAnimationsModule,
     HttpClientModule,
     GoogleMapsModule,
+    NgIdleKeepaliveModule.forRoot(),
+    MomentModule,
+    ModalModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

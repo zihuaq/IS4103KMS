@@ -6,6 +6,7 @@
 package ws.restful.resources;
 
 import Exception.CreateProjectException;
+import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import entity.ActivityEntity;
@@ -20,18 +21,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import ws.restful.model.CreateProjectReq;
 import ws.restful.model.CreateProjectRsp;
 import ws.restful.model.ErrorRsp;
@@ -62,9 +64,9 @@ public class ProjectResource {
     public Response getAllProject() {
         List<ProjectEntity> projects = projectSessionBeanLocal.retrieveAllProject();
         for (ProjectEntity p : projects) {
-            p.getOwner().getProjectsOwned().clear();
-            p.getGroupMembers().clear();
-            p.getAdmins().clear();
+            p.getProjectOwner().getProjectsOwned().clear();
+            p.getProjectMembers().clear();
+            p.getProjectAdmins().clear();
             p.getActivities().clear();
             p.getHumanResourcePostings().clear();
             p.getMaterialResourcePostings().clear();
@@ -102,30 +104,30 @@ public class ProjectResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProject(@PathParam("projectId") Long projectId) {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
-        project.getOwner().getGroupsOwned().clear();
-        project.getOwner().getReviewsGiven().clear();
-        project.getOwner().getReviewsReceived().clear();
-        project.getOwner().getProjectsOwned().clear();
-        project.getOwner().getProjectsContributed().clear();
-        project.getOwner().getProjectAdmins().clear();
-        project.getOwner().getGroups().clear();
-        project.getOwner().getPosts().clear();
-        project.getOwner().getBadges().clear();
-        project.getOwner().getMras().clear();
-        project.getOwner().getSkills().clear();
-        project.getOwner().getFollowers().clear();
-        project.getOwner().getFollowing().clear();
-        project.getOwner().getSdgs().clear();
-        project.getOwner().getFollowRequestMade().clear();
-        project.getOwner().getFollowRequestReceived().clear();
-        for (UserEntity member : project.getGroupMembers()) {
+        project.getProjectOwner().getGroupsOwned().clear();
+        project.getProjectOwner().getReviewsGiven().clear();
+        project.getProjectOwner().getReviewsReceived().clear();
+        project.getProjectOwner().getProjectsOwned().clear();
+        project.getProjectOwner().getProjectsJoined().clear();
+        project.getProjectOwner().getProjectAdmins().clear();
+        project.getProjectOwner().getGroupsJoined().clear();
+        project.getProjectOwner().getPosts().clear();
+        project.getProjectOwner().getBadges().clear();
+        project.getProjectOwner().getMras().clear();
+        project.getProjectOwner().getSkills().clear();
+        project.getProjectOwner().getFollowers().clear();
+        project.getProjectOwner().getFollowing().clear();
+        project.getProjectOwner().getSdgs().clear();
+        project.getProjectOwner().getFollowRequestMade().clear();
+        project.getProjectOwner().getFollowRequestReceived().clear();
+        for (UserEntity member : project.getProjectMembers()) {
             member.getGroupsOwned().clear();
             member.getReviewsGiven().clear();
             member.getReviewsReceived().clear();
             member.getProjectsOwned().clear();
-            member.getProjectsContributed().clear();
+            member.getProjectsJoined().clear();
             member.getProjectAdmins().clear();
-            member.getGroups().clear();
+            member.getGroupsJoined().clear();
             member.getPosts().clear();
             member.getBadges().clear();
             member.getMras().clear();
@@ -136,14 +138,14 @@ public class ProjectResource {
             member.getFollowRequestMade().clear();
             member.getFollowRequestReceived().clear();
         }
-        for (UserEntity admin : project.getAdmins()) {
+        for (UserEntity admin : project.getProjectAdmins()) {
             admin.getGroupsOwned().clear();
             admin.getReviewsGiven().clear();
             admin.getReviewsReceived().clear();
             admin.getProjectsOwned().clear();
-            admin.getProjectsContributed().clear();
+            admin.getProjectsJoined().clear();
             admin.getProjectAdmins().clear();
-            admin.getGroups().clear();
+            admin.getGroupsJoined().clear();
             admin.getPosts().clear();
             admin.getBadges().clear();
             admin.getMras().clear();
@@ -181,19 +183,19 @@ public class ProjectResource {
     @Path("joinProject/{projectId}/{userId}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addMember(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+    public Response joinProject(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
         try {
-            projectSessionBeanLocal.addMember(projectId, userId);
+            projectSessionBeanLocal.joinProject(projectId, userId);
 
             return Response.status(Status.OK).build();
-        } catch (NoResultException ex) {
-            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
             
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
-        }
+        } 
     }
     
-    @Path("leaveProject/{projectId}/{userId}")
+    @Path("removeMember/{projectId}/{userId}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeMember(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
@@ -201,8 +203,29 @@ public class ProjectResource {
             projectSessionBeanLocal.removeMember(projectId, userId);
 
             return Response.status(Status.OK).build();
+        
+        } catch (InvalidRoleException ex) {
+                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorRsp).build();
+            
         } catch (NoResultException ex) {
-            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("updateStatus/{projectId}")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateStatus(@PathParam("projectId") Long projectId, @QueryParam("status") String status) {
+        try {
+            projectSessionBeanLocal.updateStatus(projectId, status);
+
+            return Response.status(Status.OK).build();
+        
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
@@ -216,8 +239,9 @@ public class ProjectResource {
             projectSessionBeanLocal.addAdmin(projectId, userId);
 
             return Response.status(Status.OK).build();
+            
         } catch (NoResultException ex) {
-            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
@@ -231,8 +255,9 @@ public class ProjectResource {
             projectSessionBeanLocal.removeAdmin(projectId, userId);
 
             return Response.status(Status.OK).build();
+            
         } catch (NoResultException ex) {
-            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
@@ -246,8 +271,9 @@ public class ProjectResource {
             projectSessionBeanLocal.changeOwner(projectId, userId);
 
             return Response.status(Status.OK).build();
+            
         } catch (NoResultException ex) {
-            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }

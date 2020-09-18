@@ -10,6 +10,7 @@ import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
+import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
@@ -30,15 +31,17 @@ import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -294,14 +297,16 @@ public class UserResource {
     public Response getUser(@PathParam("userId") Long userId) {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
+
             user.getReviewsGiven().clear();
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
-            user.getProjectsContributed().clear();
+            user.getProjectsJoined().clear();
             user.getProjectAdmins().clear();
-            user.getGroups().clear();
-            user.getPosts().clear();
+            user.getGroupsJoined().clear();
+            user.getGroupAdmins().clear();
             user.getGroupsOwned().clear();
+            user.getPosts().clear();
             user.getBadges().clear();
             user.getMras().clear();
             user.getSkills().clear();
@@ -311,6 +316,7 @@ public class UserResource {
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
             user.setPassword("");
+
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -344,10 +350,26 @@ public class UserResource {
         UserEntity newUser;
         try {
             newUser = userSessionBeanLocal.createNewUser(user);
+            userSessionBeanLocal.sendVerificationEmail(newUser.getEmail(), newUser.getVerificationCode());
         } catch (DuplicateEmailException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
         return Response.status(Response.Status.OK).entity(newUser).build();
+    }
+    
+    @Path("resetPassword")
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response forgotPassword(@QueryParam("email") String email) {
+        try {
+            System.out.println("forgot password for " + email);
+            UserEntity user = userSessionBeanLocal.retrieveUserByEmail(email);
+            userSessionBeanLocal.resetPassword(email);
+        } catch (UserNotFoundException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 
     @Path("userLogin")
@@ -358,12 +380,15 @@ public class UserResource {
         try {
             UserEntity user = this.userSessionBeanLocal.userLogin(email, password);
             System.out.println("here");
+
+
             user.getReviewsGiven().clear();
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
-            user.getProjectsContributed().clear();
+            user.getProjectsJoined().clear();
             user.getProjectAdmins().clear();
-            user.getGroups().clear();
+            user.getGroupsJoined().clear();
+            user.getGroupAdmins().clear();
             user.getPosts().clear();
             user.getGroupsOwned().clear();
             user.getBadges().clear();
@@ -375,8 +400,10 @@ public class UserResource {
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
             user.setPassword("");
+
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
+            System.out.println(ex.getMessage());
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
 
@@ -476,6 +503,21 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+    
+    @GET
+    @Path("verifyEmail")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response verifyEmail(@QueryParam("email") String email, @QueryParam("uuid") String uuid) {
+        try {
+            Boolean isVerified = userSessionBeanLocal.verifyEmail(email, uuid);
+            return Response.status(Response.Status.OK).entity(isVerified).build();
+        } catch (UserNotFoundException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        } catch (InvalidUUIDException ex){
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
 
     @GET
     @Path("/followrequestreceived/{userId}")
@@ -519,9 +561,10 @@ public class UserResource {
             user.getReviewsGiven().clear();
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
-            user.getProjectsContributed().clear();
+            user.getProjectsJoined().clear();
             user.getProjectAdmins().clear();
-            user.getGroups().clear();
+            user.getGroupsJoined().clear();
+            user.getGroupAdmins().clear();
             user.getPosts().clear();
             user.getGroupsOwned().clear();
             user.getBadges().clear();
@@ -645,4 +688,42 @@ public class UserResource {
         }
         return followRequestsResponse;
     }
+    //    @POST
+//    @Path("ResetPassword")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response changePassword(@PathParam("password") String password) {
+////            try {
+////                userSessionBeanLocal.customerLogin(changePasswordReq.getUsername(), changePasswordReq.getPassword());
+////                
+////                userSessionBeanLocal.changePassword(changePasswordReq.getUsername(), changePasswordReq.getOldPassword(), changePasswordReq.getNewPassword());
+////                
+////                return Response.status(Response.Status.OK).build();
+////            } catch (InvalidLoginCredentialException | ChangePasswordException ex) {
+////                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+////
+////                return Response.status(Response.Status.UNAUTHORIZED).entity(errorRsp).build();
+////            } catch (Exception ex) {
+////                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+////
+////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+////            }
+//    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllRecords()
+    {
+        try {
+            List<UserEntity> UserEntities = userSessionBeanLocal.retrieveAllUser();
+            GenericEntity<List<UserEntity>> genericEntities = new GenericEntity<List<UserEntity>>(UserEntities) {
+            };
+            
+            return Response.status(Status.OK).entity(genericEntities).build();
+        } catch (UserNotFoundException ex) {
+            Logger.getLogger(UserResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
 }

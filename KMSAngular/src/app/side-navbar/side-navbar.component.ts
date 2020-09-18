@@ -1,6 +1,8 @@
+import { Router } from '@angular/router';
+import { SessionService } from '../session.service';
+import { UserService } from '../user.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../classes/user';
-import { SessionService } from '../session.service';
 
 @Component({
   selector: 'app-side-navbar',
@@ -9,9 +11,14 @@ import { SessionService } from '../session.service';
 })
 export class SideNavbarComponent implements OnInit {
   loggedInUser: User;
-  constructor(private sessionService: SessionService) {}
+
+  constructor(private userService: UserService, private sessionService: SessionService) { }
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
+  }
+
+  logout(){
+    this.userService.logout();
   }
 }
