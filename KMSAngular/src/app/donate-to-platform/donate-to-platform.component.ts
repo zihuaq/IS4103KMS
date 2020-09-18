@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
 
 declare let paypal: any;
+declare let $: any;
 
 @Component({
   selector: 'app-donate-to-platform',
@@ -31,9 +32,16 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
     },
     onApprove: (data, actions) =>  {
       return actions.order.capture().then((details) => {
-        alert('Transaction completed by ' + details.payer.name.given_name + '!');
-        //Console.log('Pay)
-        //Redirect user after successful transaction
+        //alert('Transaction completed by ' + details.payer.name.given_name + '!');
+        console.log(details.payer.name.given_name);
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Donation Successful',
+          autohide: true,
+          delay: 3000,
+          body: 'Thank you for your donation, ' + details.payer.name.given_name + '!',
+        });
+        //Actions taken after successful transaction
       });
     },
 
