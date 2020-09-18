@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Tag } from 'src/app/classes/tag';
+import { UserService } from 'src/app/user.service';
 import { User } from '../../classes/user';
 import { UserType } from '../../classes/user-type.enum';
 
@@ -10,16 +12,24 @@ declare var $: any;
   templateUrl: './basic-details.component.html',
   styleUrls: ['./basic-details.component.css'],
 })
-export class BasicDetailsComponent implements OnInit {
+export class BasicDetailsComponent implements OnInit, OnChanges {
   @Input() profile: User;
+  userSdgs: Tag[];
   UserType = UserType;
   profileUrl: string;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     const parsedUrl = new URL(window.location.href);
     this.profileUrl = parsedUrl.origin + '/profile/' + this.profile.userId;
+    this.userSdgs = this.profile.sdgs;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.userService.getSDGsForProfile(this.profile.userId).subscribe((sdgs) => {
+      this.userSdgs = sdgs;
+    })
   }
 
   copyProfileUrl() {

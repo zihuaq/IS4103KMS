@@ -36,6 +36,8 @@ public interface UserSessionBeanLocal {
     public List<TagEntity> getSkillsForProfile(long userId) throws UserNotFoundException;
 
     public List<TagEntity> removeSkillFromProfile(long userId, long tagId) throws NoResultException;
+    
+    public List<TagEntity> getSDGsForProfile(long userId) throws UserNotFoundException;
 
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
 
@@ -55,7 +57,7 @@ public interface UserSessionBeanLocal {
 
     public void unfollowUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
 
-    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException;
+    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException, NoResultException;
 
     public List<UserEntity> getFollowers(long userId) throws UserNotFoundException;
 

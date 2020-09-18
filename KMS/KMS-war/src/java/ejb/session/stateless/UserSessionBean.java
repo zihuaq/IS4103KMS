@@ -138,6 +138,16 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
+    public List<TagEntity> getSDGsForProfile(long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found.");
+        }
+        return user.getSdgs();
+    }
+    
+    @Override
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
         UserEntity user = em.find(UserEntity.class, userId);
         TagEntity tag = em.find(TagEntity.class, tagId);
@@ -303,7 +313,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return users;
     }
 
-    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException {
+    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException, NoResultException {
         UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -321,6 +331,14 @@ public class UserSessionBean implements UserSessionBeanLocal {
         System.out.println(updatedUser);
         user.setProfilePicture(updatedUser.getProfilePicture());
         user.setAccountPrivacySetting(updatedUser.getAccountPrivacySetting());
+        
+        for (int i = 0; i < updatedUser.getSdgs().size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, updatedUser.getSdgs().get(i).getTagId());
+            if (tag == null) {
+                throw new NoResultException("SDG tag not found.");
+            }
+        }
+        user.setSdgs(updatedUser.getSdgs());
 
         return user;
     }

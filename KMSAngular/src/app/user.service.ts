@@ -125,7 +125,25 @@ export class UserService {
 
   getSkillsForProfile(userId: number): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + /skills/ + userId)
+      .get<any>(this.baseUrl + '/skills/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getSDGsForProfile(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/getSDG/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  addSDGToProfile(userId: number, sdgTags: Tag[]): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/addSDG/' + userId, sdgTags, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  removeSDGFromProfile(userId: number, tagId: number): Observable<any> {
+    return this.http
+      .delete<any>(this.baseUrl + '/removeSDG/' + userId + '/' + tagId)
       .pipe(catchError(this.handleError));
   }
 
