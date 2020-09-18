@@ -98,5 +98,8 @@ public class DataInitializationSessionBean {
         userSessionBean.createNewUser(new UserEntity("Ba", "Chu", new Date(), "Male", "8@8.com", "pw8", UserTypeEnum.INSTITUTE));
         userSessionBean.createNewUser(new UserEntity("Jiu", "Xie", new Date(), "Female", "9@9.com", "pw9", UserTypeEnum.INSTITUTE));
         userSessionBean.createNewUser(new UserEntity("Shi", "Chow", new Date(), "Male", "10@10.com", "pw10", UserTypeEnum.INSTITUTE));
+        tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or bullying", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORT));
     }
 }

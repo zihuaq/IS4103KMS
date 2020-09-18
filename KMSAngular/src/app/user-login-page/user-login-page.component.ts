@@ -15,6 +15,7 @@ import { SessionService } from '../session.service';
 export class UserLoginPageComponent implements OnInit {
   email: string;
   password: string;
+  isLoading = false;
   loginError: boolean = false;
   errorMessage: string;
 
@@ -38,6 +39,7 @@ export class UserLoginPageComponent implements OnInit {
       this.password = loginForm.value.password;
       // console.log(this.email)
       // console.log(this.password)
+      this.isLoading = true;
 
       this.userService.login(this.email, this.password).subscribe(
         (response) => {
@@ -47,17 +49,23 @@ export class UserLoginPageComponent implements OnInit {
           if (user != null) {
             this.sessionService.setIsLogin(true);
             this.sessionService.setCurrentUser(user);
+            this.userService.user.next(user);
+            this.userService.loggedIn = true;
             this.loginError = false;
+            this.isLoading = false;
             this.router.navigate(['profile/' + user.userId]);
           } else {
             this.loginError = true;
-            this.errorMessage = 'Null user error';
+            this.isLoading = false;
+            this.errorMessage = 'User does not exist, please try again';
           }
         },
         (error) => {
+          this.isLoading = false;
           this.loginError = true;
+          this.errorMessage = error;
           console.log('********** UserLoginComponent.ts UserLogin(): ' + error);
-          this.errorMessage = 'Error: ' + error.slice(37);
+          this.errorMessage = 'Error: ' + error;
         }
       );
     }

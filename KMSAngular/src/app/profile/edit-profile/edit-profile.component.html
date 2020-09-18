@@ -43,8 +43,23 @@
           <label class="custom-file-label" for="profilePictureFile">Choose file</label>
         </div>
         <div class="input-group-append" style="cursor: pointer" *ngIf="profilePictureFile">
-          <span class="input-group-text" (click)="removePic()">Remove</span>
+          <span class="input-group-text" data-toggle="modal" data-target="#modal-default">Remove
+            existing</span>
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="sdgs" class="col-sm-2 col-form-label">Interested SDGs</label>
+    <div class="SDGTags">
+      <div *ngFor="let sdg of allSDGTags">
+        <small *ngIf="checkIfTagSelectedByUser(sdg)" class="edit-sdg badge badge-dark" (click)="removeSDG(sdg)">
+          {{sdg.name}}
+          <i class="far fa-times-circle"></i>
+        </small>
+        <small *ngIf="!checkIfTagSelectedByUser(sdg)" class="edit-sdg badge badge-light" (click)="addSDG(sdg)">
+          {{sdg.name}}
+        </small>
       </div>
     </div>
   </div>
@@ -62,13 +77,27 @@
       <button type="submit" class="btn btn-danger" [disabled]="!editForm.valid">Submit</button>
     </div>
   </div>
-  <hr>
-  <hr>
-
-
-  <h6>De-Activating My Acount</h6>
-   <div>
-     <button class="button button3" (click)="deActivateAcc()">De-Activate</button>
-  </div>
-  
 </form>
+
+<div class="modal fade" id="modal-default">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Removing existing photo</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to remove your existing photo?</p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="removePic()">Confirm</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

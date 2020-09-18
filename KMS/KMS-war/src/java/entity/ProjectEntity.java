@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -63,10 +64,12 @@ public class ProjectEntity implements Serializable {
     @ManyToOne
     private UserEntity projectOwner;
 
-    @ManyToMany
+    @JoinTable(name = "projectMembers")
+    @ManyToMany(mappedBy="projectsJoined")
     private List<UserEntity> projectMembers;
     
-    @ManyToMany
+    @JoinTable(name = "projectAdmins")
+    @ManyToMany(mappedBy="projectAdmins")
     private List<UserEntity> projectAdmins;
     
     private Double monetaryFundingRequired;
@@ -97,9 +100,10 @@ public class ProjectEntity implements Serializable {
         this.tasks = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.status = ProjectStatusEnum.ACTIVE;
+        this.monetaryFundingObtained = 0.0;
     }
 
-    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, Double monetaryFundingRequired, Double monetaryFundingObtained) {
+    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, Double monetaryFundingRequired) {
         this();
         this.projectId = projectId;
         this.name = name;
@@ -109,7 +113,6 @@ public class ProjectEntity implements Serializable {
         this.country = country;
         this.location = location;
         this.monetaryFundingRequired = monetaryFundingRequired;
-        this.monetaryFundingObtained = monetaryFundingObtained;
     } 
 
     public Long getProjectId() {

@@ -62,9 +62,10 @@ public class ProjectResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProject() {
+        System.out.println("******** ProjectResource: getAllProject()");
         List<ProjectEntity> projects = projectSessionBeanLocal.retrieveAllProject();
         for (ProjectEntity p : projects) {
-            p.getProjectOwner().getProjectsOwned().clear();
+            p.setProjectOwner(null);
             p.getProjectMembers().clear();
             p.getProjectAdmins().clear();
             p.getActivities().clear();
@@ -81,11 +82,13 @@ public class ProjectResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewProject(CreateProjectReq createProjectReq) {
+        System.out.println("******** ProjectResource: createNewProject()");
         if (createProjectReq != null) {
+            System.out.println("Project: " + createProjectReq.getNewProject());
             try {
                 Long projectId = projectSessionBeanLocal.createNewProject(createProjectReq.getNewProject(), createProjectReq.getOwnerId());
                 CreateProjectRsp createProjectRsp = new CreateProjectRsp(projectId);
-                System.out.println("******** Customer created");
+                System.out.println("******** Project created");
                 return Response.status(Status.OK).entity(createProjectRsp).build();
             } catch (CreateProjectException ex) {
                 ErrorRsp errorRsp = new ErrorRsp("Invalid request");
@@ -99,10 +102,11 @@ public class ProjectResource {
         }
     }
     
-    @Path("/{projectId}")
+    @Path("{projectId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProject(@PathParam("projectId") Long projectId) {
+        System.out.println("******** ProjectResource: createNewProject()");
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         project.getProjectOwner().getGroupsOwned().clear();
         project.getProjectOwner().getReviewsGiven().clear();
@@ -184,6 +188,7 @@ public class ProjectResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response joinProject(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+        System.out.println("******** ProjectResource: joinProject()");
         try {
             projectSessionBeanLocal.joinProject(projectId, userId);
 
@@ -199,6 +204,7 @@ public class ProjectResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeMember(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+        System.out.println("******** ProjectResource: removeMember()");
         try {
             projectSessionBeanLocal.removeMember(projectId, userId);
 
@@ -219,6 +225,7 @@ public class ProjectResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateStatus(@PathParam("projectId") Long projectId, @QueryParam("status") String status) {
+        System.out.println("******** ProjectResource: updateStatus()");
         try {
             projectSessionBeanLocal.updateStatus(projectId, status);
 
@@ -235,6 +242,7 @@ public class ProjectResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAdmin(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+        System.out.println("******** ProjectResource: addAdmin()");
         try {
             projectSessionBeanLocal.addAdmin(projectId, userId);
 
@@ -251,6 +259,7 @@ public class ProjectResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeAdmin(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+        System.out.println("******** ProjectResource: removeAdmin()");
         try {
             projectSessionBeanLocal.removeAdmin(projectId, userId);
 
@@ -267,6 +276,7 @@ public class ProjectResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeOwner(@PathParam("projectId") Long projectId, @PathParam("userId") Long userId) {
+        System.out.println("******** ProjectResource: changeOwner()");
         try {
             projectSessionBeanLocal.changeOwner(projectId, userId);
 

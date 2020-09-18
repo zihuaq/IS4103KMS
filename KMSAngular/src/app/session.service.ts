@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { User } from './classes/user';
 
 @Injectable({
@@ -33,6 +34,7 @@ export class SessionService {
 
   setCurrentUser(currentUser: User): void {
     localStorage.currentUser = JSON.stringify(currentUser);
+    localStorage.userSubject = JSON.stringify(new Subject<User>());
   }
 
   getUsername(): string {
@@ -50,4 +52,8 @@ export class SessionService {
   setPassword(password: string): void {
     localStorage.password = password;
   }
+  getUserSubject(){
+    return JSON.parse(localStorage.userSubject);
+  }
+
 }

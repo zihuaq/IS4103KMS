@@ -2,9 +2,19 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+          <div class="alert alert-danger" *ngIf = "accountCreationError">
+            <p>{{ errorMessage }}</p>
+          </div>
+          <div class="alert alert-success" *ngIf = "accountCreated">
+            <p>{{ successMessage }}</p>
+          </div>
+          <div *ngIf ='isLoading' style="text-align: center;">
+            <app-loading-spinner></app-loading-spinner>
+          </div>
             <form (ngSubmit)="onCreateUser(signUpForm)" #signUpForm="ngForm">
                 <h1>Create An Account with KMS!</h1>
                 <hr>
+                <a href="/signupInstitution">Click here to create an industry account instead!</a>
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     <input type="text" id="firstName" class="form-control" ngModel name="firstName" required>
@@ -21,7 +31,7 @@
                 </div>
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input 
+                    <input
                     type="date"
                     id="dob"
                     class="form-control"
@@ -42,21 +52,25 @@
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="text" id="password" class="form-control" ngModel name="password" required
+                    <input type="password" appAppPassword id="password" class="form-control" ngModel name="password" required
                         #password="ngModel">
                 </div>
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="text" id="confirmPassword" class="form-control" ngModel name="confirmPassword" required
+                    <input type="password" appAppPassword id="confirmPassword" class="form-control" ngModel name="confirmPassword" required
                         #confirmPassword="ngModel">
                     <span class="help-block"
                         *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not
                         match</span>
                 </div>
+                <hr>
+                <div>
+                  <a href="/login">Already have an Account?</a>
 
-                <button class="btn btn-primary" type="submit"
+                  <button class="btn btn-primary" type="submit" style="float: right;"
                     [disabled]="!signUpForm.valid || password.value != confirmPassword.value">Create New
                     Account</button>
+                </div>
             </form>
         </div>
     </div>

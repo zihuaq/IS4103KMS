@@ -15,10 +15,7 @@ export class ProfileTabpanelComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.profile.userId);
-    console.log(this.loggedInUser.userId);
-  }
+  ngOnInit(): void {}
 
   handleProfileChanged(event) {
     this.profile = event;
@@ -28,5 +25,7 @@ export class ProfileTabpanelComponent implements OnInit {
   handleUserChanged(event) {
     this.loggedInUser = event;
     this.userChanged.emit(this.loggedInUser);
+    this.profile = event;
+    this.profileChanged.emit(this.profile);
   }
 }
