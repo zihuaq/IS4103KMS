@@ -55,7 +55,7 @@ public interface UserSessionBeanLocal {
 
     public void unfollowUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
 
-    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException;
+    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException, NoResultException;
 
     public List<UserEntity> getFollowers(long userId) throws UserNotFoundException;
 

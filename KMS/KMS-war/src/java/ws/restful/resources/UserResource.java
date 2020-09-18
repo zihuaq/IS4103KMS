@@ -468,12 +468,11 @@ public class UserResource {
             user.getSkills().clear();
             user.getFollowing().clear();
             user.getFollowers().clear();
-            user.getSdgs().clear();
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
             user.setPassword("");
             return Response.status(200).entity(user).build();
-        } catch (UserNotFoundException ex) {
+        } catch (UserNotFoundException|NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();

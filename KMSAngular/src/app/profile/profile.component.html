@@ -26,7 +26,7 @@
           <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
             (userChanged)="loggedInUser=$event">
           </app-overview>
-          <app-report-profile [profile]="profile" [loggedInUser]="loggedInUser"></app-report-profile>
+          <app-report-profile *ngIf="profile.userId != loggedInUser.userId" [profile]="profile" [loggedInUser]="loggedInUser"></app-report-profile>
           <app-basic-details [profile]="profile"></app-basic-details>
         </div>
         <div class="col-md-9">

@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AccountPrivacySettingEnum } from 'src/app/classes/privacy-settings.enum';
+import { Tag } from 'src/app/classes/tag';
 import { User } from 'src/app/classes/user';
+import { TagService } from 'src/app/tag.service';
 import { UserService } from 'src/app/user.service';
 
 declare var $: any;
@@ -20,7 +22,10 @@ export class EditProfileComponent implements OnInit {
   selectedFile: string | ArrayBuffer;
   updatedUser: User;
   privacySettings = AccountPrivacySettingEnum;
-  constructor(private userService: UserService) {}
+  allSDGTags: Tag[];
+  selectedTags: Tag[] = [];
+  
+  constructor(private userService: UserService, private tagService: TagService) {}
 
   ngOnInit(): void {
     $('#datetimepicker').datetimepicker({
@@ -28,7 +33,11 @@ export class EditProfileComponent implements OnInit {
     });
     bsCustomFileInput.init();
     this.profilePictureFile = this.user.profilePicture;
+    this.selectedTags = Object.assign([], this.user.sdgs);
     $('#datetimepicker').datetimepicker('date', moment(this.user.dob));
+    this.tagService.getAllSDGTags().subscribe((response) => {
+      this.allSDGTags = response;
+    });
   }
 
   getFiles(event) {
@@ -60,6 +69,7 @@ export class EditProfileComponent implements OnInit {
       } else {
         this.updatedUser.profilePicture = this.selectedFile;
       }
+      this.updatedUser.sdgs = this.selectedTags;
       this.updatedUser.accountPrivacySetting = editForm.value.privacySettings;
       this.userService.updateUser(this.updatedUser).subscribe(
         (responsedata: User) => {
@@ -71,6 +81,7 @@ export class EditProfileComponent implements OnInit {
             email: responsedata.email,
             dob: responsedata.dob,
             profilePicture: responsedata.profilePicture,
+            sdgs: responsedata.sdgs
           };
           this.profilePictureFile = responsedata.profilePicture;
           this.userChanged.emit(this.user);
@@ -101,5 +112,17 @@ export class EditProfileComponent implements OnInit {
       this.selectedFile = undefined;
       $('#modal-default').modal('hide');
     }
+  }
+
+  checkIfTagSelectedByUser(tag: Tag) {
+    return this.selectedTags.includes(tag);
+  }
+
+  removeSDG(tag: Tag) {
+    this.selectedTags.splice(this.selectedTags.indexOf(tag),1);
+  }
+
+  addSDG(tag: Tag) {
+    this.selectedTags.push(tag);
   }
 }

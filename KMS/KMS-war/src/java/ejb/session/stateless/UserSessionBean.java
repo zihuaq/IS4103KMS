@@ -303,7 +303,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return users;
     }
 
-    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException {
+    public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException, NoResultException {
         UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -321,6 +321,14 @@ public class UserSessionBean implements UserSessionBeanLocal {
         System.out.println(updatedUser);
         user.setProfilePicture(updatedUser.getProfilePicture());
         user.setAccountPrivacySetting(updatedUser.getAccountPrivacySetting());
+        
+        for (int i = 0; i < updatedUser.getSdgs().size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, updatedUser.getSdgs().get(i).getTagId());
+            if (tag == null) {
+                throw new NoResultException("SDG tag not found.");
+            }
+        }
+        user.setSdgs(updatedUser.getSdgs());
 
         return user;
     }

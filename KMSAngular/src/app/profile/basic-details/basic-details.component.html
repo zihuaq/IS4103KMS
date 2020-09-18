@@ -7,7 +7,7 @@
   <div class="card-body">
     <strong *ngIf="profile.sdgs.length > 0">Interested SDGs</strong>
     <p class="text-muted" *ngFor="let sdg of profile.sdgs">
-      {{sdg}}
+      {{sdg.name}}
     </p>
     <hr *ngIf="profile.sdgs.length > 0">
     <strong><i class="fas fa-map-marker-alt mr-1"></i>Joined Date</strong>

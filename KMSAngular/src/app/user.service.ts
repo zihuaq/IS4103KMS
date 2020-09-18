@@ -129,6 +129,18 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  addSDGToProfile(userId: number, sdgTags: Tag[]): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/addSDG/' + userId, sdgTags, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  removeSDGFromProfile(userId: number, tagId: number): Observable<any> {
+    return this.http
+      .delete<any>(this.baseUrl + '/removeSDG/' + userId + '/' + tagId)
+      .pipe(catchError(this.handleError));
+  }
+
   updateUser(updatedUser: User) {
     return this.http
       .post<any>(this.baseUrl + '/update', updatedUser, httpOptions)
