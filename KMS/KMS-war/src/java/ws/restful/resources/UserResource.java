@@ -347,7 +347,7 @@ public class UserResource {
     @Path("deleteUser/{userId}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("userId") Long userId) {
+    public Response deleteUser(@PathParam("userId") Long userId) throws NoResultException {
         userSessionBeanLocal.deleteUser(userId);
         System.out.println("deleteUser()");
         return Response.status(204).build();
