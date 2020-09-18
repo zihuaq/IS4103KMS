@@ -21,16 +21,16 @@ export class ProjectService {
   constructor(private sessionService: SessionService, private httpClient: HttpClient) { }
 
   getAllProject(): Observable<any> {
-    return this.httpClient.get<any>(this.baseUrl+"getAllProject").pipe();
+    return this.httpClient.get<any>(this.baseUrl+"/getAllProject").pipe();
   }
 
   createNewProject(newProject: Project, ownerId: number): Observable<any> {
     let createProjectReq = {
-      "newProject": Project,
+      "newProject": newProject,
       "ownerId": ownerId
     }
 
-    return this.httpClient.put<any>(this.baseUrl+"createNewProject", createProjectReq, httpOptions).pipe(
+    return this.httpClient.put<any>(this.baseUrl+"/createNewProject", createProjectReq, httpOptions).pipe(
       catchError(this.handleError)
     );
   }

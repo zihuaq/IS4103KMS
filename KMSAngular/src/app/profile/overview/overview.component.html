@@ -14,11 +14,19 @@
     <p class="text-muted text-center">{{profile.email}}</p>
 
     <ul class="list-group list-group-unbordered mb-3">
-      <li class="list-group-item">
+      <li class="list-group-item" *ngIf="isPublic() || isFollowing || profile.userId == loggedInUser.userId">
         <b>Followers</b> <a class="float-right"
           [routerLink]="['/searchUsers/followers/', profile.userId]">{{profile.followers.length}}</a>
       </li>
-      <li class="list-group-item">
+      <li class="list-group-item" *ngIf="isPublic() || isFollowing || profile.userId == loggedInUser.userId">
+        <b>Following</b> <a class="float-right"
+          [routerLink]="['/searchUsers/following/', profile.userId]">{{profile.following.length}}</a>
+      </li>
+      <li class="list-group-item" *ngIf="!isPublic() && !isFollowing && profile.userId != loggedInUser.userId">
+        <b>Followers</b> <a class="float-right"
+          [routerLink]="['/searchUsers/followers/', profile.userId]">{{profile.followers.length}}</a>
+      </li>
+      <li class="list-group-item" *ngIf="!isPublic() && !isFollowing && profile.userId != loggedInUser.userId">
         <b>Following</b> <a class="float-right"
           [routerLink]="['/searchUsers/following/', profile.userId]">{{profile.following.length}}</a>
       </li>
@@ -27,10 +35,10 @@
       </li>
     </ul>
     <div *ngIf="profile.userId != loggedInUser.userId">
-      <a class="btn btn-primary btn-block" *ngIf="canFollow && !hasSentFollowRequest"
+      <a class="btn btn-primary btn-block" *ngIf="!isFollowing && !hasSentFollowRequest"
         (click)="follow()"><b>Follow</b></a>
-      <a class="btn btn-primary btn-block" *ngIf="!canFollow" (click)="unfollow()"><b>Unfollow</b></a>
-      <a class="btn bg-gradient-info btn-block" *ngIf="canFollow && hasSentFollowRequest" disabled=true>
+      <a class="btn btn-primary btn-block" *ngIf="isFollowing" (click)="unfollow()"><b>Unfollow</b></a>
+      <a class="btn bg-gradient-info btn-block" *ngIf="!isFollowing && hasSentFollowRequest" disabled=true>
         <i class="fas fa-check"></i> Follow Request Sent
       </a>
     </div>

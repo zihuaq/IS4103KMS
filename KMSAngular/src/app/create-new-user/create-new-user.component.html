@@ -1,16 +1,20 @@
 <app-header></app-header>
 <div class="container">
-    <div class="row">
+    <div class="row" >
         <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
           <div class="alert alert-danger" *ngIf = "accountCreationError">
             <p>{{ errorMessage }}</p>
+          </div>
+          <div class="alert alert-success" *ngIf = "accountCreated">
+            <p>{{ successMessage }}</p>
           </div>
           <div *ngIf ='isLoading' style="text-align: center;">
             <app-loading-spinner></app-loading-spinner>
           </div>
             <form (ngSubmit)="onCreateUser(signUpForm)" #signUpForm="ngForm">
-                <h1>Create An Account with KMS!</h1>
+                <h1>Create An Individual Account with KMS!</h1>
                 <hr>
+                <a href="/signupInstitution">Click here to create an institution account instead!</a>
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     <input type="text" id="firstName" class="form-control" ngModel name="firstName" required>

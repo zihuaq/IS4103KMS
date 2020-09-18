@@ -38,11 +38,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import ws.restful.model.ErrorRsp;
+import ws.restful.model.UpdateUserPasswordReq;
 
 /**
  * REST Web Service
@@ -145,7 +146,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/affiliated/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -160,7 +161,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/addaffiliated/{userId}/{affiliatedToAddUserIdId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -183,7 +184,7 @@ public class UserResource {
         try {
             userSessionBeanLocal.removeAffiliatedUser(userId, affiliatedToRemoveUserId);
             return Response.status(204).build();
-        } catch (NoResultException |UserNotFoundException ex) {
+        } catch (NoResultException | UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -332,7 +333,27 @@ public class UserResource {
     public Response getAllUsers() {
         try {
             List<UserEntity> users = userSessionBeanLocal.getAllUsers();
+            for (int i = 0; i < users.size(); i++) {
+                users.get(i).getFollowRequestMade().clear();
+                users.get(i).getFollowRequestReceived().clear();
+                users.get(i).getFollowers().clear();
+                users.get(i).getFollowing().clear();
+                users.get(i).getGroupsJoined().clear();
+                users.get(i).getGroupsOwned().clear();
+                users.get(i).getGroupAdmins().clear();
+                users.get(i).getMras().clear();
+                users.get(i).getSkills().clear();
+                users.get(i).getPosts().clear();
+                users.get(i).getProjectAdmins().clear();
+                users.get(i).getProjectsJoined().clear();
+                users.get(i).getProjectsOwned().clear();
+                users.get(i).getReviewsGiven().clear();
+                users.get(i).getReviewsReceived().clear();
+                users.get(i).getBadges().clear();
+                users.get(i).getSdgs().clear();
+            }
             users = getUsersResponseWithFollowersAndFollowing(users);
+
             return Response.status(200).entity(users).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -357,7 +378,7 @@ public class UserResource {
         }
         return Response.status(Response.Status.OK).entity(newUser).build();
     }
-    
+
     @Path("resetPassword")
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
@@ -410,26 +431,25 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("deleteUser")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Path("deleteUser/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("userId") Long userId, UserEntity user) {
+    public Response deleteUser(@PathParam("userId") Long userId) {
         try {
-            userSessionBeanLocal.deleteUser(userId, user);
-
+            userSessionBeanLocal.deleteUser(userId);
             return Response.status(204).build();
-        } catch (NoResultException ex) {
+        } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
             return Response.status(404).entity(exception).build();
         }
+
     }
 
     @POST
     @Path("/follow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) throws DuplicateFollowRequestException {
+    public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
         try {
             FollowRequestEntity followRequestEntity = userSessionBeanLocal.followUser(toUserId, fromUserId);
             if (followRequestEntity != null) {
@@ -503,7 +523,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("verifyEmail")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -514,7 +534,7 @@ public class UserResource {
             return Response.status(Response.Status.OK).entity(isVerified).build();
         } catch (UserNotFoundException ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-        } catch (InvalidUUIDException ex){
+        } catch (InvalidUUIDException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
@@ -688,6 +708,20 @@ public class UserResource {
         }
         return followRequestsResponse;
     }
+    @Path("updateUserPassword")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCustomerPassword(UpdateUserPasswordReq updateUserPasswordReq) {
+        try {
+            //UserEntity userToUpdate = userSessionBeanLocal.retrieveUserByEmail(updateUserPasswordReq.getEmail());
+            userSessionBeanLocal.changePassword(updateUserPasswordReq.getEmail(), updateUserPasswordReq.getOldPassword(), updateUserPasswordReq.getNewPassword());
+            return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
     //    @POST
 //    @Path("ResetPassword")
 //    @Consumes(MediaType.APPLICATION_JSON)
@@ -709,5 +743,5 @@ public class UserResource {
 ////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
 ////            }
 //    }
-    
+
 }

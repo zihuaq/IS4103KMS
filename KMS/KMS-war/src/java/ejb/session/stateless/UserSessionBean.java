@@ -9,6 +9,11 @@ import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.FollowRequestEntity;
+import entity.GroupEntity;
+import entity.MaterialResourceAvailableEntity;
+import entity.PostEntity;
+import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
@@ -212,6 +217,27 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
 
     }
+    
+  
+    @Override
+    public Boolean changePassword(String email, String oldPassword, String newPassword) throws InvalidLoginCredentialException{
+        try {
+            UserEntity user = retrieveUserByEmail(email);
+            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(oldPassword + user.getSalt()));
+            if (user.getPassword().equals(passwordHash)) {
+                System.out.println("change password  if()");
+                user.setPassword(newPassword);
+                em.merge(user);
+                em.flush();
+                return true;
+            } else {
+                System.out.println("change password else()");
+                throw new InvalidLoginCredentialException("Email does not exist of invalid password");
+            }
+        } catch (UserNotFoundException ex) {
+            throw new InvalidLoginCredentialException("Email does not exist or invalid password!");
+        }
+    }
 
     @Override
     public List<TagEntity> getSDGsForProfile(long userId) throws UserNotFoundException {
@@ -309,10 +335,98 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return user.getIsVerified();
     }
 
+    //TODO: how to delete if user is group owner/project owner
+    //ReviewsGiven will not be deleted when user is deleted
+    //ReviewsReceived will be deleted when user is deleted
+    //FollowRequests and posts will be deleted when user is deleted
     @Override
-    public void deleteUser(long userId, UserEntity user) throws NoResultException {
-        UserEntity userEntityToRemove = getUserById(userId);
-        em.remove(userEntityToRemove);
+    public void deleteUser(long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if(user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getAffiliatedIndividuals().clear();
+        user.getAffiliatedInstitutes().clear();
+        List<FollowRequestEntity> followRequestMade = user.getFollowRequestMade();
+        for(int i = 0; i < followRequestMade.size(); i++){
+            UserEntity to = followRequestMade.get(i).getTo();
+            to.getFollowRequestReceived().remove(followRequestMade.get(i));
+            followRequestMade.get(i).setTo(null);
+            followRequestMade.get(i).setFrom(null);
+            em.remove(followRequestMade.get(i));
+        }
+        followRequestMade.clear();
+        
+        List<FollowRequestEntity> followRequestReceived = user.getFollowRequestReceived();
+        for(int i = 0; i < followRequestReceived.size(); i++){
+            UserEntity from = followRequestReceived.get(i).getFrom();
+            from.getFollowRequestReceived().remove(followRequestReceived.get(i));
+            followRequestReceived.get(i).setTo(null);
+            followRequestReceived.get(i).setFrom(null);
+            em.remove(followRequestReceived.get(i));
+        }
+        followRequestReceived.clear();
+        user.getFollowers().clear();
+        user.getFollowing().clear();
+        List<GroupEntity> groupAdmins = user.getGroupAdmins();
+        for(int i = 0; i < groupAdmins.size(); i++){
+            groupAdmins.get(i).getGroupAdmins().remove(user);
+        }
+        groupAdmins.clear();
+        List<GroupEntity> groupsJoined = user.getGroupsJoined();
+        for(int i = 0; i < groupsJoined.size(); i++){
+            groupsJoined.get(i).getGroupMembers().remove(user);
+        }
+        groupsJoined.clear();
+        List<GroupEntity> groupsOwned = user.getGroupsOwned();
+        for(int i = 0; i < groupsOwned.size(); i++){
+            groupsOwned.get(i).setGroupOwner(null);
+        }
+        groupsOwned.clear();
+        List<MaterialResourceAvailableEntity> mras = user.getMras();
+        for(int i = 0; i < mras.size(); i++){
+            mras.get(i).setMaterialResourceAvailableOwner(null);
+            em.remove(mras.get(i));
+        }
+        mras.clear();
+        List<PostEntity> posts = user.getPosts();
+        for(int i = 0; i < posts.size(); i++){
+            posts.get(i).setPostOwner(null);
+            posts.get(i).setProject(null);
+            em.remove(posts.get(i));
+        }
+        posts.clear();
+        List<ProjectEntity> projectAdmins = user.getProjectAdmins();
+        for(int i = 0; i < projectAdmins.size(); i++){
+            projectAdmins.get(i).getProjectAdmins().remove(user);
+        }
+        projectAdmins.clear();
+        List<ProjectEntity> projectsJoined = user.getProjectsJoined();
+        for(int i = 0; i < projectsJoined.size(); i++){
+            projectsJoined.get(i).getProjectMembers().remove(user);
+        }
+        projectsJoined.clear();
+        List<ProjectEntity> projectsOwned = user.getProjectsOwned();
+        for(int i = 0; i < projectsOwned.size(); i++){
+            projectsOwned.get(i).setProjectOwner(null);
+        }
+        projectsOwned.clear();
+        List<ReviewEntity> reviewsGiven = user.getReviewsGiven();
+        for(int i = 0; i < reviewsGiven.size(); i++){
+            reviewsGiven.get(i).setFrom(null);
+        }
+        reviewsGiven.clear();
+        List<ReviewEntity> reviewsReceived = user.getReviewsReceived();
+        for(int i = 0; i < reviewsReceived.size(); i++){
+            reviewsReceived.get(i).setTo(null);
+            reviewsReceived.get(i).getFrom().getReviewsGiven().remove(reviewsReceived.get(i));
+            reviewsReceived.get(i).setFrom(null);
+            em.remove(reviewsReceived.get(i));
+        }
+        reviewsReceived.clear();
+        user.getSdgs().clear();
+        user.getSkills().clear();
+        em.remove(user);
 
     }
 
@@ -505,6 +619,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
     }
 
+    @Override
     public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException, NoResultException {
         UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
         if (user == null) {

@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxPayPalModule } from 'ngx-paypal';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MomentModule } from 'angular2-moment';
@@ -24,6 +25,9 @@ import { SkillsComponent } from './profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
+import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
+import { CreateNewProjectComponent } from './project/create-new-project/create-new-project.component';
+import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AppPasswordDirective } from './app-password.directive';
@@ -34,6 +38,8 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
 import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
+import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +58,9 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     SideNavbarComponent,
     FooterComponent,
     ProfileTabpanelComponent,
+    ViewAllProjectComponent,
+    CreateNewProjectComponent,
+    DonateToPlatformComponent,
     AccountVerificationComponent,
     LoadingSpinnerComponent,
     AppPasswordDirective,
@@ -62,6 +71,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     FollowRequestsComponent,
     ReportProfileComponent,
     ForgotPasswordComponent,
+    CreateNewInstitutionComponent,
+    CreateNewUserSelectorComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,6 +80,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    NgxPayPalModule,
     GoogleMapsModule,
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,

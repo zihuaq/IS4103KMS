@@ -8,18 +8,6 @@ import { User } from './classes/user';
 export class SessionService {
   constructor() {}
 
-  getUsers(): User[] {
-    try {
-      return JSON.parse(sessionStorage.users);
-    } catch {
-      return null;
-    }
-  }
-
-  setUsers(users: User[]): void {
-    sessionStorage.users = JSON.stringify(users);
-  }
-
   getIsLogin(): boolean {
     return localStorage.isLogin == 'true';
   }
@@ -37,8 +25,22 @@ export class SessionService {
     localStorage.userSubject = JSON.stringify(new Subject<User>());
   }
 
-  getUserSubject(){
-    return JSON.parse(localStorage.userSubject);
+  getUsername(): string {
+    return localStorage.username;
   }
 
+  setUsername(username: string) {
+    localStorage.username = username;
+  }
+
+  getPassword(): string {
+    return localStorage.password;
+  }
+
+  setPassword(password: string): void {
+    localStorage.password = password;
+  }
+  getUserSubject() {
+    return JSON.parse(localStorage.userSubject);
+  }
 }
