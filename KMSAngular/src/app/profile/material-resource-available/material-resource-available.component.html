@@ -115,7 +115,7 @@
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     <li class="item">
                         <div class="product-info">
-                            <a *ngIf="hasExpiry" class="product-title">Available from
+                            <a *ngIf="mra.startDate != null" class="product-title">Available from
                                 {{mra.startDate.toString().slice(0,10) | date }} to
                                 {{mra.endDate.toString().slice(0,10) | date}}
                                 <span class="badge badge-warning float-right">
@@ -124,7 +124,7 @@
                                     {{mra.longitude | number:'1.1-6'}}
                                 </span>
                             </a>
-                            <a *ngIf="!hasExpiry" class="product-title">
+                            <a *ngIf="mra.startDate == null" class="product-title">
                                 No Expiry Date
                                 <span class="badge badge-warning float-right">
                                     At location
