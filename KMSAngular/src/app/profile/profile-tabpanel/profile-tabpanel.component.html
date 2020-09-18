@@ -29,7 +29,7 @@
                 aria-labelledby="profile-tab-projects-tabname">
                 <app-projects [user]="profile" (profileChanged)="handleProfileChanged($event)"></app-projects>
             </div> -->
-            <div class="tab-pane fade" id="profile-tab-material-resource-available" role="tabpanel"
+            <div class="tab-pane fade show active" id="profile-tab-material-resource-available" role="tabpanel"
                 aria-labelledby="profile-tab-material-resource-available-tabname">
                 <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser"
                     (profileChanged)="handleProfileChanged($event)">

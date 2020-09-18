@@ -56,7 +56,7 @@
                             disabled>
                     </div>
                     <div class="form-group my-checkbox">
-                        <label for="my-checkbox"> Does your resource expire? </label>
+                        <label> Does your resource expire? </label>
                         <input type="checkbox" id="my-checkbox" name="my-checkbox" data-bootstrap-switch
                             (change)="handleHasExpiryChange()">
                     </div>
@@ -106,9 +106,10 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" (click)="setEditingMra(mra)" data-toggle="modal" data-target="#modal-default">
+                    <!-- <button type="button" class="btn btn-tool" (click)="setEditingMra(mra)" data-toggle="modal"
+                        data-target="#modal-default">
                         <i class="fas fa-edit"></i>
-                    </button>
+                    </button> -->
                     <button type="button" class="btn btn-tool" data-card-widget="remove" (click)="deleteMra(mra.mraId)">
                         <i class="fas fa-times"></i>
                     </button>
@@ -138,7 +139,7 @@
                             </a>
                             <span class="product-description">
                                 {{mra.quantity}} {{mra.units}} {{mra.name}}
-                                <br/>
+                                <br />
                                 {{mra.description}}
                                 <span *ngIf="mra.tags.length > 0">
                                     <div *ngFor="let tag of mra.tags">
@@ -158,9 +159,9 @@
     </div>
 </span>
 
-<div class="modal fade" id="modal-default" *ngIf="loggedInUser.userId == profile.userId">
+<!-- <div class="modal fade" id="modal-info" *ngIf="loggedInUser.userId == profile.userId">
     <div class="modal-dialog">
-        <div class="modal-content bg-default">
+        <div class="modal-content bg-info">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Material Resource Available</h4>
                 <button type="button" id="editMraModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
@@ -171,19 +172,23 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="mraName">Material Resource Name *</label>
-                        <input type="text" id="mraName" class="form-control" [ngModel]="editingMra.name" name="mraName" required>
+                        <input type="text" id="mraName" class="form-control" [ngModel]="editingMra.name" name="mraName"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="quantity"> Quantity *</label>
-                        <input type="text" id="quantity" class="form-control" [ngModel]="editingMra.quantity" name="quantity" required>
+                        <input type="text" id="quantity" class="form-control" [ngModel]="editingMra.quantity"
+                            name="quantity" required>
                     </div>
                     <div class="form-group">
                         <label for="units"> Units *</label>
-                        <input type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units" required>
+                        <input type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control" [ngModel]="editingMra.description" name="description">
+                        <input type="text" id="description" class="form-control" [ngModel]="editingMra.description"
+                            name="description">
                     </div>
                     <div class="form-group">
                         <label>Material Resource Tags *</label>
@@ -231,8 +236,8 @@
                         [disabled]="!mraForm.valid">Submit</button>
                 </div>
             </form>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
+        </div> -->
+<!-- /.modal-content -->
+<!-- </div> -->
+<!-- /.modal-dialog -->
+<!-- </div> -->
