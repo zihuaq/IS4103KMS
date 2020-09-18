@@ -8,9 +8,10 @@ import {
   HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Tag } from './classes/tag';
+import { Router } from '@angular/router';
 import { MaterialResourceAvailable } from './classes/material-resource-available';
 
 const httpOptions = {
@@ -23,10 +24,13 @@ const httpOptions = {
 export class UserService {
   users: User[];
   baseUrl: string = '/api/user';
+  loggedIn = false;
+  user = new Subject<User>();
 
   constructor(
     private sessionService: SessionService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {
     this.users = this.sessionService.getUsers();
 
@@ -50,6 +54,14 @@ export class UserService {
     return this.http
       .get<any>(
         this.baseUrl + '/userLogin?email=' + email + '&password=' + password
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  resetPassword(email: String) {
+    return this.http
+      .post<any>(
+        this.baseUrl + '/resetPassword?email=' + email, null
       )
       .pipe(catchError(this.handleError));
   }
@@ -228,4 +240,35 @@ export class UserService {
       };
     }
   }
+
+  verifyEmail(email: String, uuid: String){
+    return this.http
+      .get<any>(
+        this.baseUrl + '/verifyEmail?email=' + email + '&uuid=' + uuid
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  isAuthenticated() {
+    const promise = new Promise(
+      (resolve, reject) => {
+          resolve(this.loggedIn);
+      }
+    );
+    return promise
+  }
+
+  logout(): void {
+    this.cleanup()
+    this.router.navigate(["/login"]);
+  }
+
+  private cleanup(): void {
+
+    this.sessionService.setIsLogin(false);
+    this.sessionService.setCurrentUser(null);
+    this.user.next(null);
+    this.loggedIn = false
+  }
 }
+

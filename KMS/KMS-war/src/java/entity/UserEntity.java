@@ -72,6 +72,11 @@ public class UserEntity implements Serializable {
     @Column
     private String profilePicture;
     private int reputationPoints;
+
+    private String verificationCode;
+    
+    private Boolean isVerified;
+
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
     @OneToMany(mappedBy = "to")
@@ -199,6 +204,7 @@ public class UserEntity implements Serializable {
     public String toString() {
         return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", userType=" + userType + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
+    
 
     public String getFirstName() {
         return firstName;
@@ -282,6 +288,22 @@ public class UserEntity implements Serializable {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public Boolean getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Boolean isVerified) {
+        this.isVerified = isVerified;
     }
 
     public List<ReviewEntity> getReviewsGiven() {

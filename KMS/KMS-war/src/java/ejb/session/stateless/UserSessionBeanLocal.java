@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
+import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.MaterialResourceAvailableEntity;
@@ -51,6 +52,10 @@ public interface UserSessionBeanLocal {
 
     public void unfollowUser(Long toUserId, Long fromUserId) throws UserNotFoundException;
 
+    public void sendVerificationEmail(String destinationEmail, String verificationCode);
+
+    public Boolean verifyEmail(String email, String uuid) throws UserNotFoundException, InvalidUUIDException;
+
     public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException;
 
     public List<UserEntity> getFollowers(long userId) throws UserNotFoundException;
@@ -58,6 +63,10 @@ public interface UserSessionBeanLocal {
     public List<UserEntity> getFollowing(long userId) throws UserNotFoundException;
 
     public List<MaterialResourceAvailableEntity> getMaterialRequestAvailable(long userId) throws UserNotFoundException;
+
+    public void resetPassword(String email)throws UserNotFoundException;
     
+    public List<UserEntity> retrieveAllUser() throws UserNotFoundException;
+
 
 }
