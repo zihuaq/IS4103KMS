@@ -27,9 +27,22 @@
                         <input type="text" id="description" class="form-control" ngModel name="description">
                     </div>
                     <div class="form-group">
-                        <label for="country">Country *</label>
-                        <input type="text" id="country" class="form-control" ngModel name="country" required>
+                        <label>Location of resource</label>
+                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
+                            (mapClick)="click($event)">
+                        </google-map>
                     </div>
+                    <div class="form-group">
+                        <label for="latitude">Latitude *</label>
+                        <input type="text" id="latitude" class="form-control " [ngModel]="lat" name="latitude" required
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="longitude">Longitude *</label>
+                        <input type="text" id="longitude" class="form-control" [ngModel]="lng" name="longitude" required
+                            disabled>
+                    </div>
+
                     <div class="form-group">
                         <label>Start Date:</label>
                         <input type="date" id="startDate" class="form-control" ngModel name="startDate" [min]="minDate"
@@ -70,8 +83,9 @@
         <div class="card">
             <!-- /.card-header -->
             <div class="card-header">
-                <div class="card-title"></div>
-                {{mra.name}}
+                <div class="card-title">
+                    <h5><b>{{mra.name}}</b></h5>
+                </div>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -86,10 +100,13 @@
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     <li class="item">
                         <div class="product-info">
-                            <a href="javascript:void(0)" class="product-title">Available from
-                                {{mra.startDate.toString().slice(0,10)}} to {{mra.endDate.toString().slice(0,10)}}
-                                <span class="badge badge-warning float-right">{{mra.country}}</span></a>
+                            <a class="product-title">Available from
+                                {{mra.startDate.toString().slice(0,10) | date }} to
+                                {{mra.endDate.toString().slice(0,10) | date}}
+                                <span class="badge badge-warning float-right">{{mra.latitude | number:'1.1-6'}},
+                                    {{mra.longitude | number:'1.1-6'}}</span></a>
                             <span class="product-description">
+                                <strong>Description: </strong>
                                 {{mra.description}}
                             </span>
                         </div>

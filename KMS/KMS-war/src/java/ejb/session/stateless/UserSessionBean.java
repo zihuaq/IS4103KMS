@@ -428,16 +428,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public List<MaterialResourceAvailableEntity> getMaterialRequestAvailable(long userId) throws UserNotFoundException {
-        UserEntity user = em.find(UserEntity.class, userId);
-        if (user == null) {
-            throw new UserNotFoundException("User not found");
-        }
-        user.getMras().size();
-        return user.getMras();
-    }
-
-    @Override
     public List<FollowRequestEntity> getFollowRequestReceived(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {

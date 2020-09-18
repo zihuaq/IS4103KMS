@@ -1,6 +1,7 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
+import Exception.UserNotFoundException;
 import entity.MaterialResourceAvailableEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -19,11 +20,11 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
     private EntityManager em;
 
     @Override
-    public List<MaterialResourceAvailableEntity> createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable, long userId) throws NoResultException {
-        UserEntity materialResourceAvailableOwner = em.find(UserEntity.class, userId);
+    public List<MaterialResourceAvailableEntity> createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException {
+        UserEntity materialResourceAvailableOwner = em.find(UserEntity.class, materialResourceAvailable.getMaterialResourceAvailableOwner().getUserId());
         if (materialResourceAvailableOwner != null) {
-            em.persist(materialResourceAvailable);
             materialResourceAvailable.setMaterialResourceAvailableOwner(materialResourceAvailableOwner);
+            em.persist(materialResourceAvailable);
             materialResourceAvailableOwner.getMras().add(materialResourceAvailable);
             return materialResourceAvailableOwner.getMras();
         } else {
@@ -32,13 +33,13 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
     }
 
     @Override
-    public List<MaterialResourceAvailableEntity> getMaterialResourceAvailableForUser(long userId) throws NoResultException {
+    public List<MaterialResourceAvailableEntity> getMaterialResourceAvailableForUser(long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
-        if (user != null) {
-            return user.getMras();
-        } else {
-            throw new NoResultException("User not found");
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
         }
+        user.getMras().size();
+        return user.getMras();
     }
 
     @Override

@@ -234,11 +234,11 @@ public class UserResource {
     }
 
     @POST
-    @Path("/mra/{userId}")
+    @Path("/mra")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createMaterialResourceAvailable(@PathParam("userId") Long userId, MaterialResourceAvailableEntity mra) {
+    public Response createMaterialResourceAvailable(MaterialResourceAvailableEntity mra) {
         try {
-            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra, userId);
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra);
             for (int i = 0; i < mras.size(); i++) {
                 mras.get(i).setMaterialResourceAvailableOwner(null);
             }
@@ -273,9 +273,9 @@ public class UserResource {
     @GET
     @Path("/mra/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMaterialRequestAvailable(@PathParam("userId") Long userId) {
+    public Response getMaterialResourceAvailable(@PathParam("userId") Long userId) {
         try {
-            List<MaterialResourceAvailableEntity> mras = userSessionBeanLocal.getMaterialRequestAvailable(userId);
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableForUser(userId);
             for (int i = 0; i < mras.size(); i++) {
                 mras.get(i).setMaterialResourceAvailableOwner(null);
             }
