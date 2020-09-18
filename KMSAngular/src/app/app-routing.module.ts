@@ -6,6 +6,7 @@ import { CreateNewUserComponent } from './create-new-user/create-new-user.compon
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
 import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
+import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'searchUsers', component: SearchUsersComponent },
   { path: '', component: IndexComponent },
-  { path: 'viewAllProjects', component: ViewAllProjectComponent}
+  { path: 'viewAllProjects', component: ViewAllProjectComponent},
+  { path: 'donateToPlatform', component: DonateToPlatformComponent}
 ];
 
 @NgModule({
