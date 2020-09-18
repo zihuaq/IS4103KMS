@@ -27,6 +27,15 @@
                         <input type="text" id="description" class="form-control" ngModel name="description">
                     </div>
                     <div class="form-group">
+                        <label>Material Resource Tags *</label>
+                        <div class="select2-blue">
+                            <select class="select2" id="mraselect2" multiple="multiple"
+                                data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue"
+                                style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label>Location of resource</label>
                         <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
                             (mapClick)="click($event)">
@@ -42,16 +51,19 @@
                         <input type="text" id="longitude" class="form-control" [ngModel]="lng" name="longitude" required
                             disabled>
                     </div>
-
-                    <div class="form-group">
+                    <div class="form-group my-checkbox">
+                        <label for="my-checkbox"> Does your resource expire? </label>
+                        <input type="checkbox" id="my-checkbox" name="my-checkbox" data-bootstrap-switch
+                            (change)="handleHasExpiryChange()">
+                    </div>
+                    <div *ngIf="hasExpiry" class="form-group">
                         <label>Start Date:</label>
                         <input type="date" id="startDate" class="form-control" ngModel name="startDate" [min]="minDate"
                             required />
                     </div>
-                    <div class="form-group">
+                    <div *ngIf="hasExpiry" class="form-group">
                         <label>End Date:</label>
-                        <input type="date" id="endDate" class="form-control" ngModel name="endDate" [min]="minEndDate"
-                            required />
+                        <input type="date" id="endDate" class="form-control" ngModel name="endDate" [min]="minDate" />
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -90,6 +102,9 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
+                    <button type="button" class="btn btn-tool">
+                        <i class="fas fa-edit"></i>
+                    </button>
                     <button type="button" class="btn btn-tool" data-card-widget="remove" (click)="deleteMra(mra.mraId)">
                         <i class="fas fa-times"></i>
                     </button>
@@ -100,14 +115,32 @@
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     <li class="item">
                         <div class="product-info">
-                            <a class="product-title">Available from
+                            <a *ngIf="hasExpiry" class="product-title">Available from
                                 {{mra.startDate.toString().slice(0,10) | date }} to
                                 {{mra.endDate.toString().slice(0,10) | date}}
-                                <span class="badge badge-warning float-right">{{mra.latitude | number:'1.1-6'}},
-                                    {{mra.longitude | number:'1.1-6'}}</span></a>
+                                <span class="badge badge-warning float-right">
+                                    At location
+                                    {{mra.latitude | number:'1.1-6'}},
+                                    {{mra.longitude | number:'1.1-6'}}
+                                </span>
+                            </a>
+                            <a *ngIf="!hasExpiry" class="product-title">
+                                No Expiry Date
+                                <span class="badge badge-warning float-right">
+                                    At location
+                                    {{mra.latitude | number:'1.1-6'}},
+                                    {{mra.longitude | number:'1.1-6'}}
+                                </span>
+                            </a>
                             <span class="product-description">
-                                <strong>Description: </strong>
                                 {{mra.description}}
+                                <span *ngIf="mra.tags.length > 0">
+                                    <div *ngFor="let tag of mra.tags">
+                                        <small class="badge badge-info">
+                                            {{tag.name}}
+                                        </small>
+                                    </div>
+                                </span>
                             </span>
                         </div>
                     </li>

@@ -23,9 +23,10 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
     public List<MaterialResourceAvailableEntity> createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException {
         UserEntity materialResourceAvailableOwner = em.find(UserEntity.class, materialResourceAvailable.getMaterialResourceAvailableOwner().getUserId());
         if (materialResourceAvailableOwner != null) {
-            materialResourceAvailable.setMaterialResourceAvailableOwner(materialResourceAvailableOwner);
             em.persist(materialResourceAvailable);
-            materialResourceAvailableOwner.getMras().add(materialResourceAvailable);
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableOwner.getMras();
+            mras.add(materialResourceAvailable);
+            materialResourceAvailableOwner.setMras(mras);
             return materialResourceAvailableOwner.getMras();
         } else {
             throw new NoResultException("User not found");

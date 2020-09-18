@@ -26,6 +26,8 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   @Input() loggedInUser: User;
   @Output() userChanged = new EventEmitter<User>();
   mraTags: Tag[];
+  selectedTags: Tag[];
+  selectedTagNames: string[];
   newMra: MaterialResourceAvailable;
   minDate = new Date().toISOString().slice(0, 10);
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -39,11 +41,12 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   };
   lat: string;
   lng: string;
+  hasExpiry = false;
 
   constructor(
     private tagService: TagService,
     private userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userService
@@ -53,6 +56,12 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       });
     this.tagService.getAllMaterialResourceTags().subscribe((response) => {
       this.mraTags = response;
+      $('#mraselect2').select2({
+        data: this.mraTags.map((item) => {
+          return item.name;
+        }),
+        allowClear: true,
+      });
     });
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = {
@@ -60,11 +69,21 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         lng: position.coords.longitude,
       };
     });
+    $("input[data-bootstrap-switch]").each(function () {
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+      
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.tagService.getAllMaterialResourceTags().subscribe((response) => {
       this.mraTags = response;
+      $('#mraselect2').select2({
+        data: this.mraTags.map((item) => {
+          return item.name;
+        }),
+        allowClear: true,
+      });
     });
     this.profile = changes.profile.currentValue;
   }
@@ -76,6 +95,23 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   }
 
   createMaterialResourceRequest(mraForm: NgForm) {
+    this.selectedTags = [];
+    this.selectedTagNames = $('.select2').val();
+    if (this.selectedTagNames.length == 0) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Material Resource Available',
+        autohide: true,
+        delay: 2500,
+        body: 'Please select at least one Material Resource tags',
+      });
+      return;
+    }
+    this.mraTags.forEach((element) => {
+      if (this.selectedTagNames.includes(element.name)) {
+        this.selectedTags.push(element);
+      }
+    });
     if (mraForm.valid) {
       this.newMra = new MaterialResourceAvailable();
       this.newMra.materialResourceAvailableOwner = this.profile;
@@ -84,8 +120,22 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       this.newMra.description = mraForm.value.description;
       this.newMra.latitude = this.lat;
       this.newMra.longitude = this.lng;
-      this.newMra.startDate = new Date(mraForm.value.startDate);
-      this.newMra.endDate = new Date(mraForm.value.endDate);
+      if (this.hasExpiry) {
+        if (new Date(mraForm.value.startDate).toJSON().slice(0, 10) > new Date(mraForm.value.endDate).toJSON().slice(0, 10)) {
+          $(document).Toasts('create', {
+            class: 'bg-warning',
+            title: 'Unable to submit Material Resource Available',
+            autohide: true,
+            delay: 2500,
+            body: 'End date should not come before the Start Date',
+          });
+          return;
+        } else {
+          this.newMra.startDate = new Date(mraForm.value.startDate);
+          this.newMra.endDate = new Date(mraForm.value.endDate);
+        }
+      }
+      this.newMra.tags = this.selectedTags;
       console.log(this.newMra);
       this.userService
         .createMaterialResourceAvailable(this.newMra)
@@ -95,6 +145,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
 
       $('#addMraModalCloseBtn').click();
     }
+    console.log();
   }
 
   deleteMra(mraId: number) {
@@ -104,4 +155,14 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         this.profile.mras = responsedata;
       });
   }
+
+  handleHasExpiryChange(){
+    this.hasExpiry = !this.hasExpiry;
+  }
+  // checkHasExpiry() {
+  //   this.hasExpiry = $('#my-checkbox:checked').val() == 'on';
+  //   console.log(this.hasExpiry);
+  //   console.log($('#my-checkbox:checked').val() == 'on');
+  //   return this.hasExpiry;
+  // }
 }

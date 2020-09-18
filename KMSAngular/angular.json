@@ -36,6 +36,7 @@
               "node_modules/admin-lte/plugins/moment/moment.min.js",
               "node_modules/admin-lte/plugins/jquery/jquery.min.js",
               "node_modules/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js",
+              "node_modules/admin-lte/plugins/bootstrap-switch/js/bootstrap-switch.min.js",
               "node_modules/admin-lte/dist/js/adminlte.js",
               "node_modules/admin-lte/plugins/select2/js/select2.full.min.js",
               "node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js",

@@ -348,6 +348,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response userRegistration(UserEntity user) {
         UserEntity newUser;
+        System.out.println("reached user resource");
         try {
             newUser = userSessionBeanLocal.createNewUser(user);
             userSessionBeanLocal.sendVerificationEmail(newUser.getEmail(), newUser.getVerificationCode());

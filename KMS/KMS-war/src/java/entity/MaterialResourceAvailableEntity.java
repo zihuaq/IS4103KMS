@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
@@ -50,16 +51,17 @@ public class MaterialResourceAvailableEntity implements Serializable {
     @Column(nullable = false)
     private String longitude;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @NotNull
-    @Column(nullable = false)
+    
+    @Column
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
+    @NotNull
+    @JoinTable(name = "mras")
     @ManyToOne
     private UserEntity materialResourceAvailableOwner;
 
