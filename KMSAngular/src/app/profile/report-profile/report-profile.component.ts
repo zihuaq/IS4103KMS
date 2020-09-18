@@ -8,11 +8,10 @@ import { ReportType } from 'src/app/classes/report-type.enum';
 
 declare var $: any;
 
-
 @Component({
   selector: 'app-report-profile',
   templateUrl: './report-profile.component.html',
-  styleUrls: ['./report-profile.component.css']
+  styleUrls: ['./report-profile.component.css'],
 })
 export class ReportProfileComponent implements OnInit {
   @Input() profile: User;
@@ -23,14 +22,19 @@ export class ReportProfileComponent implements OnInit {
   selectedTagNames: string[];
   report: Report;
 
-  constructor(private tagService: TagService, private reportService: ReportService) { }
+  constructor(
+    private tagService: TagService,
+    private reportService: ReportService
+  ) {}
 
   ngOnInit(): void {
     this.tagService.getAllReportTags().subscribe((response) => {
       this.reportTags = response;
       console.log(this.reportTags);
-      $('.select2').select2({
-        data: this.reportTags,
+      $('#reportselect2').select2({
+        data: this.reportTags.map((item) => {
+          return item.name;
+        }),
         allowClear: true,
       });
     });

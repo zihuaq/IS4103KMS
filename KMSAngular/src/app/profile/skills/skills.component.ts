@@ -49,7 +49,8 @@ export class SkillsComponent implements OnInit, OnChanges {
   submitSkills() {
     this.selectedTags = [];
     this.showError = false;
-    this.selectedTagNames = $('.select2').val();
+    console.log($('#skillselect2').val());
+    this.selectedTagNames = $('#skillselect2').val();
     this.skillTags.forEach((element) => {
       if (this.selectedTagNames.includes(element.name)) {
         this.selectedTags.push(element);
@@ -82,8 +83,10 @@ export class SkillsComponent implements OnInit, OnChanges {
   private initialiseTags() {
     this.tagService.getAllSkillTags().subscribe((response) => {
       this.skillTags = response;
-      $('.select2').select2({
-        data: this.skillTags,
+      $('#skillselect2').select2({
+        data: this.skillTags.map((item) => {
+          return item.name;
+        }),
         allowClear: true,
       });
     });
