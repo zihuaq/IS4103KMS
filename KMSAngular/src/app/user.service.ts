@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { User } from './classes/user';
-//import { getMaxListeners } from 'cluster';
-import { NgForm } from '@angular/forms';
 import {
   HttpClient,
   HttpErrorResponse,
@@ -22,31 +20,15 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class UserService {
-  users: User[];
   baseUrl: string = '/api/user';
-<<<<<<< HEAD
-  baseUrl2: string = '/api';
-=======
   loggedIn = false;
   user = new Subject<User>();
->>>>>>> origin/master
 
   constructor(
     private sessionService: SessionService,
     private http: HttpClient,
     private router: Router
-  ) {
-    this.users = this.sessionService.getUsers();
-
-    if (this.users == null) {
-      this.users = new Array();
-
-      let user: User;
-
-      //user = new User(1, "Yi", "Ren", date, "F", "yiren@gmail.com", password, "", "Singapore", 10, "", date, date);
-      //this.users.push(user);
-    }
-  }
+  ) {}
 
   userRegistration(newUser: User) {
     return this.http
@@ -64,9 +46,7 @@ export class UserService {
 
   resetPassword(email: String) {
     return this.http
-      .post<any>(
-        this.baseUrl + '/resetPassword?email=' + email, null
-      )
+      .post<any>(this.baseUrl + '/resetPassword?email=' + email, null)
       .pipe(catchError(this.handleError));
   }
 
@@ -78,7 +58,7 @@ export class UserService {
 
   getAllUsers(): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + '/allusers/')
+      .get<any>(this.baseUrl + '/allusers')
       .pipe(catchError(this.handleError));
   }
 
@@ -169,15 +149,31 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  addAffiliatedUser(userId: number, affiliatedUserToAddId: number): Observable<any> {
+  addAffiliatedUser(
+    userId: number,
+    affiliatedUserToAddId: number
+  ): Observable<any> {
     return this.http
-      .put<any>(this.baseUrl + '/addaffiliated/' + userId + '/' + affiliatedUserToAddId, httpOptions)
+      .put<any>(
+        this.baseUrl + '/addaffiliated/' + userId + '/' + affiliatedUserToAddId,
+        httpOptions
+      )
       .pipe(catchError(this.handleError));
   }
 
-  removeAffiliatedUser(userId: number, affiliatedUserToRemoveId: number): Observable<any> {
+  removeAffiliatedUser(
+    userId: number,
+    affiliatedUserToRemoveId: number
+  ): Observable<any> {
     return this.http
-      .put<any>(this.baseUrl + '/removeaffiliated/' + userId + '/' + affiliatedUserToRemoveId, httpOptions)
+      .put<any>(
+        this.baseUrl +
+          '/removeaffiliated/' +
+          userId +
+          '/' +
+          affiliatedUserToRemoveId,
+        httpOptions
+      )
       .pipe(catchError(this.handleError));
   }
 
@@ -239,20 +235,24 @@ export class UserService {
 
   changePassword(oldPassword: string, newPassword: string): Observable<any> {
     let changePasswordReq = {
-      'username': this.sessionService.getUsername(),
-      'password': this.sessionService.getPassword(),
-      'oldPassword': oldPassword,
-      'newPassword': newPassword
+      username: this.sessionService.getUsername(),
+      password: this.sessionService.getPassword(),
+      oldPassword: oldPassword,
+      newPassword: newPassword,
     };
 
-    return this.http.post<any>(this.baseUrl + "/PasswordReset", changePasswordReq, httpOptions).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .post<any>(
+        this.baseUrl + '/PasswordReset',
+        changePasswordReq,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
   }
 
   deleteUser(userId: number): Observable<any> {
     return this.http
-      .delete<any>(this.baseUrl + '/deleteUser/' + userId )
+      .delete<any>(this.baseUrl + '/deleteUser/' + userId)
       .pipe(catchError(this.handleError));
   }
 
@@ -318,34 +318,28 @@ export class UserService {
     }
   }
 
-  verifyEmail(email: String, uuid: String){
+  verifyEmail(email: String, uuid: String) {
     return this.http
-      .get<any>(
-        this.baseUrl + '/verifyEmail?email=' + email + '&uuid=' + uuid
-      )
+      .get<any>(this.baseUrl + '/verifyEmail?email=' + email + '&uuid=' + uuid)
       .pipe(catchError(this.handleError));
   }
 
   isAuthenticated() {
-    const promise = new Promise(
-      (resolve, reject) => {
-          resolve(this.loggedIn);
-      }
-    );
-    return promise
+    const promise = new Promise((resolve, reject) => {
+      resolve(this.loggedIn);
+    });
+    return promise;
   }
 
   logout(): void {
-    this.cleanup()
-    this.router.navigate(["/login"]);
+    this.cleanup();
+    this.router.navigate(['/login']);
   }
 
   private cleanup(): void {
-
     this.sessionService.setIsLogin(false);
     this.sessionService.setCurrentUser(null);
     this.user.next(null);
-    this.loggedIn = false
+    this.loggedIn = false;
   }
 }
-

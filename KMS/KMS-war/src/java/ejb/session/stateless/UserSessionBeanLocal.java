@@ -54,7 +54,7 @@ public interface UserSessionBeanLocal {
 
     public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
 
-    public void deleteUser(long userId, UserEntity user) throws NoResultException;
+    public void deleteUser(long userId) throws UserNotFoundException;
 
     public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException, DuplicateFollowRequestException;
 

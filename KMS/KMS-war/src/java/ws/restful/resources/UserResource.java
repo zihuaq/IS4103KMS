@@ -145,7 +145,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/affiliated/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -160,7 +160,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/addaffiliated/{userId}/{affiliatedToAddUserIdId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -183,7 +183,7 @@ public class UserResource {
         try {
             userSessionBeanLocal.removeAffiliatedUser(userId, affiliatedToRemoveUserId);
             return Response.status(204).build();
-        } catch (NoResultException |UserNotFoundException ex) {
+        } catch (NoResultException | UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -376,7 +376,7 @@ public class UserResource {
         }
         return Response.status(Response.Status.OK).entity(newUser).build();
     }
-    
+
     @Path("resetPassword")
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
@@ -430,18 +430,24 @@ public class UserResource {
 
     @DELETE
     @Path("deleteUser/{userId}")
-    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("userId") Long userId) throws NoResultException {
-        userSessionBeanLocal.deleteUser(userId);
-        System.out.println("deleteUser()");
-        return Response.status(204).build();
+    public Response deleteUser(@PathParam("userId") Long userId) {
+        try {
+            userSessionBeanLocal.deleteUser(userId);
+            return Response.status(204).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+
     }
 
     @POST
     @Path("/follow/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) throws DuplicateFollowRequestException {
+    public Response followUser(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
         try {
             FollowRequestEntity followRequestEntity = userSessionBeanLocal.followUser(toUserId, fromUserId);
             if (followRequestEntity != null) {
@@ -515,7 +521,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("verifyEmail")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -526,7 +532,7 @@ public class UserResource {
             return Response.status(Response.Status.OK).entity(isVerified).build();
         } catch (UserNotFoundException ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-        } catch (InvalidUUIDException ex){
+        } catch (InvalidUUIDException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
@@ -721,5 +727,5 @@ public class UserResource {
 ////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
 ////            }
 //    }
-    
+
 }
