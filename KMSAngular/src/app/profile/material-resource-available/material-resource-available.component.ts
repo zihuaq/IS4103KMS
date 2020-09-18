@@ -42,6 +42,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   lat: string;
   lng: string;
   hasExpiry = false;
+  editingMra : MaterialResourceAvailable;
 
   constructor(
     private tagService: TagService,
@@ -160,10 +161,8 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   handleHasExpiryChange(){
     this.hasExpiry = !this.hasExpiry;
   }
-  // checkHasExpiry() {
-  //   this.hasExpiry = $('#my-checkbox:checked').val() == 'on';
-  //   console.log(this.hasExpiry);
-  //   console.log($('#my-checkbox:checked').val() == 'on');
-  //   return this.hasExpiry;
-  // }
+
+  setEditingMra(mra : MaterialResourceAvailable){
+    this.editingMra = mra;
+  }
 }
