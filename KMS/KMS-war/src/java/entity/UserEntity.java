@@ -113,6 +113,13 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountPrivacySettingEnum accountPrivacySetting;
+    
+    @JoinTable(name = "affiliatedInstitutes")
+    @OneToMany
+    private List<UserEntity> affiliatedInstitutes;
+    @JoinTable(name = "affiliatedIndividuals")
+    @OneToMany
+    private List<UserEntity> affiliatedIndividuals;
 
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
@@ -134,6 +141,8 @@ public class UserEntity implements Serializable {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.userType = UserTypeEnum.INDIVIDUAL;
         this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
+        this.affiliatedInstitutes = new ArrayList<>();
+        this.affiliatedIndividuals = new ArrayList<>();
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
@@ -426,5 +435,21 @@ public class UserEntity implements Serializable {
 
     public void setUserType(UserTypeEnum userType) {
         this.userType = userType;
+    }
+
+    public List<UserEntity> getAffiliatedInstitutes() {
+        return affiliatedInstitutes;
+    }
+
+    public void setAffiliatedInstitutes(List<UserEntity> affiliatedInstitutes) {
+        this.affiliatedInstitutes = affiliatedInstitutes;
+    }
+
+    public List<UserEntity> getAffiliatedIndividuals() {
+        return affiliatedIndividuals;
+    }
+
+    public void setAffiliatedIndividuals(List<UserEntity> affiliatedIndividuals) {
+        this.affiliatedIndividuals = affiliatedIndividuals;
     }
 }

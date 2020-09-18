@@ -1,5 +1,6 @@
 package ejb.session.stateless;
 
+import Exception.AffiliatedUserExistException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
@@ -10,6 +11,7 @@ import entity.FollowRequestEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,6 +19,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccountPrivacySettingEnum;
+import util.enumeration.UserTypeEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -146,7 +149,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         return user.getSdgs();
     }
-    
+
     @Override
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException {
         UserEntity user = em.find(UserEntity.class, userId);
@@ -201,8 +204,10 @@ public class UserSessionBean implements UserSessionBeanLocal {
             Query q = em.createQuery("SELECT f FROM FollowRequestEntity AS f WHERE f.from.userId = :from AND f.to.userId = :to");
             q.setParameter("from", fromUserId);
             q.setParameter("to", toUserId);
-            FollowRequestEntity f = (FollowRequestEntity) q.getSingleResult();
-            if (f == null) {
+            try {
+                FollowRequestEntity f = (FollowRequestEntity) q.getSingleResult();
+                throw new DuplicateFollowRequestException("Follow request already sent!");
+            } catch (javax.persistence.NoResultException e) {
                 FollowRequestEntity followRequestEntity = new FollowRequestEntity();
                 followRequestEntity.setFrom(fromUser);
                 followRequestEntity.setTo(toUser);
@@ -212,8 +217,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
                 em.persist(followRequestEntity);
                 em.flush();
                 return followRequestEntity;
-            } else {
-                throw new DuplicateFollowRequestException("Follow request already sent!");
             }
         }
     }
@@ -306,11 +309,72 @@ public class UserSessionBean implements UserSessionBeanLocal {
     public List<UserEntity> getAllUsers() throws NoResultException {
         Query q = em.createQuery("SELECT u FROM UserEntity u");
         List<UserEntity> users = q.getResultList();
-        for(UserEntity userEntity : users) {
+        for (UserEntity userEntity : users) {
             userEntity.getFollowers().size();
             userEntity.getFollowing().size();
         }
         return users;
+    }
+
+    @Override
+    public List<UserEntity> getAffiliatedUsers(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        List<UserEntity> users = new ArrayList<>();
+        if (user.getUserType() == UserTypeEnum.INDIVIDUAL) {
+            users = user.getAffiliatedInstitutes();
+        } else if (user.getUserType() == UserTypeEnum.INSTITUTE) {
+            users = user.getAffiliatedIndividuals();
+        }
+        for (UserEntity userEntity : users) {
+            userEntity.getFollowers().size();
+            userEntity.getFollowing().size();
+        }
+        return users;
+    }
+
+    @Override
+    public void addAffiliatedUser(Long userId, Long affiliatedToAddUserId) throws AffiliatedUserExistException, UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        UserEntity affiliatedUserToAdd = em.find(UserEntity.class, affiliatedToAddUserId);
+        if (user == null || affiliatedUserToAdd == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        List<UserEntity> affiliatedUsers = new ArrayList<>();
+        if (user.getUserType() == UserTypeEnum.INDIVIDUAL) {
+            affiliatedUsers = user.getAffiliatedInstitutes();
+        } else if (user.getUserType() == UserTypeEnum.INSTITUTE) {
+            affiliatedUsers = user.getAffiliatedIndividuals();
+        }
+
+        if (!affiliatedUsers.contains(affiliatedUserToAdd)) {
+            affiliatedUsers.add(affiliatedUserToAdd);
+        } else{
+            throw new AffiliatedUserExistException("User is already affiliated.");
+        }
+    }
+    
+    @Override
+    public void removeAffiliatedUser(Long userId, Long affiliatedToRemoveUserId) throws NoResultException, UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        UserEntity affiliatedUserToRemove = em.find(UserEntity.class, affiliatedToRemoveUserId);
+        if (user == null || affiliatedUserToRemove == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        List<UserEntity> affiliatedUsers = new ArrayList<>();
+        if (user.getUserType() == UserTypeEnum.INDIVIDUAL) {
+            affiliatedUsers = user.getAffiliatedInstitutes();
+        } else if (user.getUserType() == UserTypeEnum.INSTITUTE) {
+            affiliatedUsers = user.getAffiliatedIndividuals();
+        }
+
+        if (affiliatedUsers.contains(affiliatedUserToRemove)) {
+            affiliatedUsers.remove(affiliatedUserToRemove);
+        } else{
+            throw new NoResultException("User is not affiliated.");
+        }
     }
 
     public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException, NoResultException {
@@ -331,7 +395,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         System.out.println(updatedUser);
         user.setProfilePicture(updatedUser.getProfilePicture());
         user.setAccountPrivacySetting(updatedUser.getAccountPrivacySetting());
-        
+
         for (int i = 0; i < updatedUser.getSdgs().size(); i++) {
             TagEntity tag = em.find(TagEntity.class, updatedUser.getSdgs().get(i).getTagId());
             if (tag == null) {
@@ -382,7 +446,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.getFollowRequestReceived().size();
         return user.getFollowRequestReceived();
     }
-    
+
     @Override
     public List<FollowRequestEntity> getFollowRequestMade(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
