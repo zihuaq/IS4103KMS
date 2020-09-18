@@ -24,12 +24,9 @@ const httpOptions = {
 export class UserService {
   users: User[];
   baseUrl: string = '/api/user';
-<<<<<<< HEAD
   baseUrl2: string = '/api';
-=======
   loggedIn = false;
   user = new Subject<User>();
->>>>>>> origin/master
 
   constructor(
     private sessionService: SessionService,
