@@ -23,6 +23,7 @@ const httpOptions = {
 export class UserService {
   users: User[];
   baseUrl: string = '/api/user';
+  baseUrl2: string = '/api';
 
   constructor(
     private sessionService: SessionService,
@@ -60,9 +61,9 @@ export class UserService {
       .pipe(map(this.parseDate), catchError(this.handleError));
   }
 
-  getAllUsers() {
+  getAllUsers(): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + '/allusers')
+      .get<any>(this.baseUrl + '/allusers/')
       .pipe(catchError(this.handleError));
   }
 
@@ -165,6 +166,25 @@ export class UserService {
     console.error(errorMessage);
 
     return throwError(errorMessage);
+  }
+
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    let changePasswordReq = {
+      'username': this.sessionService.getUsername(),
+      'password': this.sessionService.getPassword(),
+      'oldPassword': oldPassword,
+      'newPassword': newPassword
+    };
+
+    return this.http.post<any>(this.baseUrl + "/PasswordReset", changePasswordReq, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteUser(userId: number): Observable<any> {
+    return this.http
+      .delete<any>(this.baseUrl + '/deleteUser/' + userId )
+      .pipe(catchError(this.handleError));
   }
 
   private parseDate(data: any) {

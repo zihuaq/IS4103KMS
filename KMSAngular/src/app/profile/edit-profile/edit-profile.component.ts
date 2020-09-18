@@ -89,4 +89,12 @@ export class EditProfileComponent implements OnInit {
       $('#profilePictureFile').next('label').text('Choose file');
     }
   }
+  
+  
+  deActivateAcc() {
+
+
+    
+  }
+  
 }

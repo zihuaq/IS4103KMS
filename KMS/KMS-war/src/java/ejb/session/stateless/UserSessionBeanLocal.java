@@ -61,5 +61,6 @@ public interface UserSessionBeanLocal {
     
     public List<UserEntity> retrieveAllUser() throws UserNotFoundException;
 
+    public void deleteUser(Long userId);
 
 }

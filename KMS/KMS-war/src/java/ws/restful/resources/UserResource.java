@@ -344,20 +344,13 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("deleteUser")
+    @Path("deleteUser/{userId}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("userId") Long userId, UserEntity user) {
-        try {
-            userSessionBeanLocal.deleteUser(userId, user);
-
-            return Response.status(204).build();
-        } catch (NoResultException ex) {
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(exception).build();
-        }
+    public Response deleteUser(@PathParam("userId") Long userId) {
+        userSessionBeanLocal.deleteUser(userId);
+        System.out.println("deleteUser()");
+        return Response.status(204).build();
     }
 
     @POST
@@ -534,20 +527,5 @@ public class UserResource {
 ////            }
 //    }
     
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllRecords()
-    {
-        try {
-            List<UserEntity> UserEntities = userSessionBeanLocal.retrieveAllUser();
-            GenericEntity<List<UserEntity>> genericEntities = new GenericEntity<List<UserEntity>>(UserEntities) {
-            };
-            
-            return Response.status(Status.OK).entity(genericEntities).build();
-        } catch (UserNotFoundException ex) {
-            Logger.getLogger(UserResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
     
 }

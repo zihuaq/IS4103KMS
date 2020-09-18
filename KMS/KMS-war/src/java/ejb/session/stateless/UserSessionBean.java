@@ -169,8 +169,10 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void deleteUser(long userId, UserEntity user) throws NoResultException {
-        UserEntity userEntityToRemove = getUserById(userId);
+    public void deleteUser(long userId) throws NoResultException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        System.out.println("delete user session bean");
+        UserEntity userEntityToRemove = user;
         em.remove(userEntityToRemove);
 
     }

@@ -5,6 +5,7 @@ import { IndexComponent } from './index/index.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
+import { RetrieveAllUsersComponent } from './retrieve-all-users/retrieve-all-users.component';
 
 const routes: Routes = [
   { path: 'index', component: IndexComponent },
@@ -13,7 +14,9 @@ const routes: Routes = [
   { path: 'profile/:userid', component: ProfileComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'searchUsers', component: SearchUsersComponent },
-  { path: '', component: IndexComponent },
+  { path: 'retrieveAllUsers', component: RetrieveAllUsersComponent },
+  { path: '', component: IndexComponent }
+  
 ];
 
 @NgModule({

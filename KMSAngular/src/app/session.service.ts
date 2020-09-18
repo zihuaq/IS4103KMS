@@ -34,4 +34,20 @@ export class SessionService {
   setCurrentUser(currentUser: User): void {
     localStorage.currentUser = JSON.stringify(currentUser);
   }
+
+  getUsername(): string {
+    return localStorage.username;
+  }
+
+  setUsername(username: string) {
+    localStorage.username = username;
+  }
+
+  getPassword(): string {
+    return localStorage.password;
+  }
+  
+  setPassword(password: string): void {
+    localStorage.password = password;
+  }
 }

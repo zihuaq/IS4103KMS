@@ -89,7 +89,7 @@ public class UserEntity implements Serializable {
     @ManyToMany(mappedBy = "groupMembers")
     private List<GroupEntity> groupsJoined;  
     @ManyToMany(mappedBy = "groupAdmins")
-    private List<ProjectEntity> groupAdmins;
+    private List<GroupEntity> groupAdmins;
     @OneToMany
     private List<BadgeEntity> badges;
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
@@ -152,7 +152,7 @@ public class UserEntity implements Serializable {
         this.profilePicture = profilePicture;
     }
 
-    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password) {
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, UserTypeEnum usertype) {
         this();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -161,6 +161,7 @@ public class UserEntity implements Serializable {
         this.email = email;
         this.password = password;
         this.joinedDate = new Date();
+        this.userType = usertype;
     }
 
     public Long getUserId() {
@@ -320,11 +321,11 @@ public class UserEntity implements Serializable {
         this.groupsOwned = groupsOwned;
     }
 
-    public List<ProjectEntity> getGroupAdmins() {
+    public List<GroupEntity> getGroupAdmins() {
         return groupAdmins;
     }
 
-    public void setGroupAdmins(List<ProjectEntity> groupAdmins) {
+    public void setGroupAdmins(List<GroupEntity> groupAdmins) {
         this.groupAdmins = groupAdmins;
     }
 
