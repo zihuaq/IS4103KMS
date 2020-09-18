@@ -9,11 +9,8 @@
 <div class="form-group" *ngIf="loggedInUser.userId == profile.userId">
   <label>Select Skills</label>
   <div class="select2-purple">
-    <select class="select2" multiple="multiple" data-placeholder="Select skills"
+    <select class="select2" id="skillselect2" multiple="multiple" data-placeholder="Select skills"
       data-dropdown-css-class="select2-purple" style="width: 100%;">
-      <option *ngFor="let skill of skillTags">
-        {{skill.name}}
-      </option>
     </select>
   </div>
   <button type="button" class="btn btn-block btn-default" (click)="submitSkills()">Submit selections</button>

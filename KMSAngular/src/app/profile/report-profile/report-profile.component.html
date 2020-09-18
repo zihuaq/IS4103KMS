@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-default"> 
+<div class="modal fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -19,15 +19,13 @@
             <div class="modal-body">
                 <p>Help us understand what is happening, please select your concerns. </p>
                 <div class="select2-red">
-                  <select class="select2" multiple="multiple" data-placeholder="Select concerns"
-                    data-dropdown-css-class="select2-red" style="width: 100%;">
-                    <option *ngFor="let reportTag of reportTags">
-                      {{reportTag.name}}
-                    </option>
-                  </select>
+                    <select class="select2" id="reportselect2" multiple="multiple" data-placeholder="Select concerns"
+                        data-dropdown-css-class="select2-red" style="width: 100%;">
+                    </select>
                 </div>
-                <br/>
-                <textarea class="form-control" id="content" rows="3" placeholder="Elaboration if necessary" [(ngModel)]="content" ></textarea>
+                <br />
+                <textarea class="form-control" id="content" rows="3" placeholder="Elaboration if necessary"
+                    [(ngModel)]="content"></textarea>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
@@ -36,4 +34,4 @@
         </div>
         <!-- /.modal-content -->
     </div>
-</div> 
+</div>
