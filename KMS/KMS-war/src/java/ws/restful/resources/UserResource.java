@@ -333,25 +333,6 @@ public class UserResource {
     public Response getAllUsers() {
         try {
             List<UserEntity> users = userSessionBeanLocal.getAllUsers();
-            for (int i = 0; i < users.size(); i++) {
-                users.get(i).getFollowRequestMade().clear();
-                users.get(i).getFollowRequestReceived().clear();
-                users.get(i).getFollowers().clear();
-                users.get(i).getFollowing().clear();
-                users.get(i).getGroupsJoined().clear();
-                users.get(i).getGroupsOwned().clear();
-                users.get(i).getGroupAdmins().clear();
-                users.get(i).getMras().clear();
-                users.get(i).getSkills().clear();
-                users.get(i).getPosts().clear();
-                users.get(i).getProjectAdmins().clear();
-                users.get(i).getProjectsJoined().clear();
-                users.get(i).getProjectsOwned().clear();
-                users.get(i).getReviewsGiven().clear();
-                users.get(i).getReviewsReceived().clear();
-                users.get(i).getBadges().clear();
-                users.get(i).getSdgs().clear();
-            }
             users = getUsersResponseWithFollowersAndFollowing(users);
 
             return Response.status(200).entity(users).build();
