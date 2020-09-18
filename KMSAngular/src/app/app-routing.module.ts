@@ -17,6 +17,7 @@ import { SearchUsersComponent } from './search-users/search-users.component';
 import { RetrieveAllUsersComponent } from './retrieve-all-users/retrieve-all-users.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
+import { ProjectDetailsComponent } from './project/project-details/project-details.component';
 
 const routes: Routes = [
   { path: 'index', component: IndexComponent },
@@ -64,7 +65,8 @@ const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'viewAllProjects', component: ViewAllProjectComponent},
   { path: 'createNewProject', component: CreateNewProjectComponent },
-  { path: 'donateToPlatform', component: DonateToPlatformComponent}
+  { path: 'donateToPlatform', component: DonateToPlatformComponent },
+  { path: 'projectDetails/:projectId', component: ProjectDetailsComponent }
 ];
 
 @NgModule({

@@ -1,37 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Project } from '../../classes/project';
 import { ProjectService } from '../../project.service';
 import { SessionService } from '../../session.service';
 
 @Component({
-  selector: 'app-view-all-project',
-  templateUrl: './view-all-project.component.html',
-  styleUrls: ['./view-all-project.component.css']
+  selector: 'app-project-details',
+  templateUrl: './project-details.component.html',
+  styleUrls: ['./project-details.component.css']
 })
-export class ViewAllProjectComponent implements OnInit {
+export class ProjectDetailsComponent implements OnInit {
 
-  projects: Project[];
+  projectId: number;
+  projectToView: Project;
 
   constructor(public projectService: ProjectService,
     private sessionService: SessionService,
+    private activatedRoute: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit(): void {
     this.checkAccessRight();
-    
-    this.projectService.getAllProject().subscribe(
-      response => {
-        this.projects = response.projects;
-      }
-    )
-  }
-
-  navigateToPage(projectId: number) {
-    console.log("Project Id: " + projectId);
-    
+    this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+    console.log("Project ID: " + this.projectId);
   }
 
   checkAccessRight() {

@@ -5,11 +5,11 @@
     <div class="content-header">
         <div class="content-fluid">
             <div *ngFor="let project of projects">
-                <div class="jumbotron jumbotron-fluid">
-                    <div class="container">
-                        <h1 class="display-4">{{project.name}}</h1>
-                        <p class="lead">{{project.description}}</p>
-                    </div>
+                <div class="card p-2">
+                    <a class="card-block stretched-link text decoration-none" (click)="navigateToPage(project.projectId)">
+                        <h4 ckass="card-title">{{project.name}}</h4>
+                        <p class="card-text">{{project.description}}</p>
+                    </a>
                 </div>
             </div>
         </div>
