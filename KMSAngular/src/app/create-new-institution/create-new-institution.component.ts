@@ -17,6 +17,7 @@ export class CreateNewInstitutionComponent implements OnInit {
   accountCreated = false;
   accountCreationError = false;
   errorMessage: string;
+  successMessage = "Account Created successfully an verification email has been sent."
   isLoading = false;
 
   constructor(private userService: UserService) {
@@ -43,8 +44,10 @@ export class CreateNewInstitutionComponent implements OnInit {
         console.log(responsedata)
         this.isLoading = false;
         this.accountCreated = true;
+        this.accountCreationError = false;
       }, error => {
         this.isLoading = false;
+        this.accountCreated = false;
         this.accountCreationError = true;
         this.errorMessage = 'Error: ' + error;
       })

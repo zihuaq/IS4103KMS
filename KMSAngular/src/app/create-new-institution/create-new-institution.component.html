@@ -5,8 +5,8 @@
           <div class="alert alert-danger" *ngIf = "accountCreationError">
             <p>{{ errorMessage }}</p>
           </div>
-          <div class="alert alert-danger" *ngIf = "accountCreationError">
-            <p>{{ errorMessage }}</p>
+          <div class="alert alert-success" *ngIf = "accountCreated">
+            <p>{{ successMessage }}</p>
           </div>
           <div *ngIf ='isLoading' style="text-align: center;">
             <app-loading-spinner></app-loading-spinner>
