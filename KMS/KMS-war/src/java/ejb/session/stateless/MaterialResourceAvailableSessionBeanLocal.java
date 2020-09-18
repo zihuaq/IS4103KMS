@@ -20,6 +20,10 @@ public interface MaterialResourceAvailableSessionBeanLocal {
 
     public List<MaterialResourceAvailableEntity> createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException;
 
+    public MaterialResourceAvailableEntity updateMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException;
+    
+    public MaterialResourceAvailableEntity getMaterialResourceAvailableById(long mraId) throws NoResultException;
+    
     public List<MaterialResourceAvailableEntity> getMaterialResourceAvailableForUser(long userId) throws UserNotFoundException;
 
     public List<MaterialResourceAvailableEntity> deleteMaterialResourceAvailableForUser(long userId, long mraId) throws NoResultException;

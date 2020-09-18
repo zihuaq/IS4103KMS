@@ -12,6 +12,7 @@ import { TagService } from '../../tag.service';
 import { Tag } from '../../classes/tag';
 import { NgForm } from '@angular/forms';
 import { UserService } from 'src/app/user.service';
+import { MaterialResourceAvailableService } from 'src/app/mra.service'
 import { MaterialResourceAvailable } from 'src/app/classes/material-resource-available';
 
 declare var $: any;
@@ -42,10 +43,13 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   lat: string;
   lng: string;
   hasExpiry = false;
+  editingMra: MaterialResourceAvailable;
+  editingMraId : number;
 
   constructor(
     private tagService: TagService,
-    private userService: UserService
+    private userService: UserService,
+    private mraService: MaterialResourceAvailableService
   ) { }
 
   ngOnInit(): void {
@@ -71,7 +75,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     });
     $("input[data-bootstrap-switch]").each(function () {
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
-      
+
     });
   }
 
@@ -149,6 +153,62 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     console.log();
   }
 
+  editMaterialResourceRequest(mraForm: NgForm) {
+    this.selectedTags = [];
+    this.selectedTagNames = $('.select2').val();
+    if (this.selectedTagNames.length == 0) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Material Resource Available',
+        autohide: true,
+        delay: 2500,
+        body: 'Please select at least one Material Resource tags',
+      });
+      return;
+    }
+    this.mraTags.forEach((element) => {
+      if (this.selectedTagNames.includes(element.name)) {
+        this.selectedTags.push(element);
+      }
+    });
+    if (mraForm.valid) {
+      this.newMra = new MaterialResourceAvailable();
+      this.newMra.materialResourceAvailableOwner = this.profile;
+      this.newMra.name = mraForm.value.mraName;
+      this.newMra.quantity = mraForm.value.quantity;
+      this.newMra.units = mraForm.value.units;
+      this.newMra.description = mraForm.value.description;
+      this.newMra.latitude = this.lat;
+      this.newMra.longitude = this.lng;
+      if (this.hasExpiry) {
+        if (new Date(mraForm.value.startDate).toJSON().slice(0, 10) > new Date(mraForm.value.endDate).toJSON().slice(0, 10)) {
+          $(document).Toasts('create', {
+            class: 'bg-warning',
+            title: 'Unable to submit Material Resource Available',
+            autohide: true,
+            delay: 2500,
+            body: 'End date should not come before the Start Date',
+          });
+          return;
+        } else {
+          this.newMra.startDate = new Date(mraForm.value.startDate);
+          this.newMra.endDate = new Date(mraForm.value.endDate);
+        }
+      }
+      this.newMra.tags = this.selectedTags;
+      this.newMra.mraId = this.editingMraId;
+      console.log(this.newMra);
+      this.mraService
+        .updateMaterialResourceRequest(this.newMra)
+        .subscribe((responsedata) => {
+          this.profile.mras = responsedata;
+        });
+
+      $('#editMraModalCloseBtn').click();
+    }
+    console.log();
+  }
+
   deleteMra(mraId: number) {
     this.userService
       .deleteMaterialResourceAvailable(this.profile.userId, mraId)
@@ -157,13 +217,14 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       });
   }
 
-  handleHasExpiryChange(){
+  handleHasExpiryChange() {
     this.hasExpiry = !this.hasExpiry;
   }
-  // checkHasExpiry() {
-  //   this.hasExpiry = $('#my-checkbox:checked').val() == 'on';
-  //   console.log(this.hasExpiry);
-  //   console.log($('#my-checkbox:checked').val() == 'on');
-  //   return this.hasExpiry;
-  // }
+
+  setEditingMra(mra: MaterialResourceAvailable) {
+    this.mraService.getMaterialResourceAvailableById(mra.mraId).subscribe((response) => {
+      this.editingMraId = response.materialResourceAvailableOwner.userId;
+    });
+    this.editingMra = mra;
+  }
 }
