@@ -40,10 +40,11 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" appAppPassword id="confirmPassword" class="form-control" ngModel name="confirmPassword" required
                         #confirmPassword="ngModel">
-                    <span class="help-block"
-                        *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not
-                        match</span>
+                        <span class="help-block" style="float: right; color: red;"
+                        *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not match
+                    </span>
                 </div>
+
                 <hr>
                 <div>
                   <a href="/login">Already have an Account?</a>

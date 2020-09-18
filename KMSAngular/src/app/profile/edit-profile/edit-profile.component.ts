@@ -11,6 +11,7 @@ import { NgForm } from '@angular/forms';
 import { AccountPrivacySettingEnum } from 'src/app/classes/privacy-settings.enum';
 import { Tag } from 'src/app/classes/tag';
 import { User } from 'src/app/classes/user';
+import { SessionService } from 'src/app/session.service';
 import { TagService } from 'src/app/tag.service';
 import { UserService } from 'src/app/user.service';
 
@@ -32,16 +33,23 @@ export class EditProfileComponent implements OnInit, OnChanges {
   privacySettings = AccountPrivacySettingEnum;
   allSDGTags: Tag[];
   selectedTags: Tag[] = [];
+  loggedInUser: User;
+  passwordUpdated = false;
+  passwordError = false;
+  passwordErrorMessage: string;
+  passwordSuccessMessage = 'Password successfully changed';
 
   constructor(
     private userService: UserService,
-    private tagService: TagService
+    private tagService: TagService,
+    private sessionService: SessionService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.userService.getSDGsForProfile(this.user.userId).subscribe((sdgs) => {
       this.selectedTags = sdgs;
     });
+    this.loggedInUser = this.sessionService.getCurrentUser();
   }
 
   ngOnInit(): void {
@@ -143,5 +151,37 @@ export class EditProfileComponent implements OnInit, OnChanges {
 
   addSDG(tag: Tag) {
     this.selectedTags.push(tag);
+  }
+
+  changePassword(passwordForm: NgForm) {
+    if (passwordForm.valid) {
+      let email = this.loggedInUser.email;
+      let oldPassword = passwordForm.value.oldPassword;
+      let newPassword = passwordForm.value.newPassword;
+      let confirmNewPassword = passwordForm.value.confirmNewPassword;
+      if (confirmNewPassword == newPassword) {
+        this.userService
+          .updateCustomerPassword(email, oldPassword, newPassword)
+          .subscribe(
+            (responsedata) => {
+              this.passwordUpdated = true;
+              this.passwordError = false;
+              setTimeout(() => {
+                $('#changePasswordModalCloseBtn').click();
+              }, 2000);
+            },
+            (error) => {
+              this.passwordError = true;
+              this.passwordUpdated = false;
+              this.passwordErrorMessage = 'Incorrect passward';
+            }
+          );
+      } else {
+        this.passwordError = true;
+        this.passwordUpdated = false;
+        this.passwordErrorMessage = 'passwords do not match';
+      }
+      console.log(passwordForm);
+    }
   }
 }

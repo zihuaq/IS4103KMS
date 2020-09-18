@@ -79,6 +79,11 @@
   </div>
 </form>
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-pass"
+    *ngIf="loggedInUser.userId == user.userId">
+    Change Password
+</button>
+
 <div class="modal fade" id="modal-default">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -101,3 +106,49 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+<div class="modal fade" id="modal-pass">
+  <div class="modal-dialog">
+      <div class="modal-content bg-info">
+          <div class="modal-header">
+              <h4 class="modal-title">Change Password</h4>
+              <button type="button" id="changePasswordModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="alert alert-danger" *ngIf = "passwordError">
+            <p>{{ passwordErrorMessage }}</p>
+          </div>
+          <div class="alert alert-success" *ngIf = "passwordUpdated">
+            <p>{{ passwordSuccessMessage }}</p>
+          </div>
+          <form (ngSubmit)="changePassword(passwordForm)" #passwordForm="ngForm">
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="oldPassword">Old Password</label>
+                      <input type="password" id="mraName" appAppPassword class="form-control" ngModel name="oldPassword" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="newPassword">New Password</label>
+                      <input type="password" id="newPassword" appAppPassword class="form-control" ngModel name="newPassword" #newPassword="ngModel" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="confirmNewPassword">Confirm New Password</label>
+                      <input type="password" id="confirmNewPassword" appAppPassword class="form-control" ngModel name="confirmNewPassword" #confirmNewPassword="ngModel" required>
+                      <span class="help-block" style="float: right; color:brown;"
+                      *ngIf="newPassword.value != confirmNewPassword.value && confirmNewPassword.touched">Password does not
+                      match</span>
+                  </div>
+
+                </div>
+              <div class="modal-footer justify-content-between">
+                  <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                  <button type="button" type="submit" class="btn btn-outline-light"
+                      [disabled]="!passwordForm.valid">Submit</button>
+              </div>
+          </form>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
