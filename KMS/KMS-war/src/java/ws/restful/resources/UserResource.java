@@ -638,6 +638,7 @@ public class UserResource {
             temp.setProfilePicture(user.getProfilePicture());
             temp.setSkills(user.getSkills());
             temp.setSdgs(user.getSdgs());
+            temp.setUserType(user.getUserType());
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
             usersResponse.add(temp);
@@ -659,6 +660,7 @@ public class UserResource {
             temp.setProfilePicture(user.getProfilePicture());
             temp.setSkills(user.getSkills());
             temp.setSdgs(user.getSdgs());
+            temp.setUserType(user.getUserType());
             temp.setFollowers(getUsersResponse(user.getFollowers()));
             temp.setFollowing(getUsersResponse(user.getFollowing()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
