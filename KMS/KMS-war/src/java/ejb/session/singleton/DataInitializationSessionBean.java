@@ -63,9 +63,26 @@ public class DataInitializationSessionBean {
 
     private void initializeData() throws TagNameExistException, DuplicateEmailException, NoResultException  {
         tagSessionBean.createNewTag(new TagEntity("Project Management", TagTypeEnum.SKILL));
-        tagSessionBean.createNewTag(new TagEntity("HTML", TagTypeEnum.SKILL));
-        tagSessionBean.createNewTag(new TagEntity("Java", TagTypeEnum.SKILL));
-        tagSessionBean.createNewTag(new TagEntity("Food", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Content Marketing", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Digital Marketing", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Transalation", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Software Engineering", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("User Interface Design", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Tech Support", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Mobile Application Development", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Video Production", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Bricklaying", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Plumbing", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Paint and Painting Supplies", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Facilities", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Software", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Computer", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Vehicles", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Packaging Materials", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Marketing Materials", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Furniture", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Audiovisual", TagTypeEnum.MATERIALRESOURCE));
+        tagSessionBean.createNewTag(new TagEntity("Clothing", TagTypeEnum.MATERIALRESOURCE));
         tagSessionBean.createNewTag(new TagEntity("Construction Equipment", TagTypeEnum.MATERIALRESOURCE));
  //       userSessionBean.createNewUser(new UserEntity("test1", "last name", new Date(), "Female", "1@1.com", "pw"));
  //       materialResourceAvailableSessionBean.createMaterialResourceAvailable(new MaterialResourceAvailableEntity("name", 100, "description", new Date(), new Date(), "country", new ArrayList<TagEntity>()), 1);
@@ -99,7 +116,9 @@ public class DataInitializationSessionBean {
         userSessionBean.createNewUser(new UserEntity("Jiu", "Xie", new Date(), "Female", "9@9.com", "pw9", UserTypeEnum.INSTITUTE));
         userSessionBean.createNewUser(new UserEntity("Shi", "Chow", new Date(), "Male", "10@10.com", "pw10", UserTypeEnum.INSTITUTE));
         tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORT));
-        tagSessionBean.createNewTag(new TagEntity("Harassment or bullying", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORT));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORT));
     }
 }
