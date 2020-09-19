@@ -7,6 +7,7 @@ import { SessionService } from '../session.service';
 import { UserService } from '../user.service';
 import { AccountPrivacySettingEnum } from '../classes/privacy-settings.enum';
 import { Router } from '@angular/router';
+import { UserType } from '../classes/user-type.enum';
 
 declare var $: any;
 
@@ -92,13 +93,25 @@ export class SearchUsersComponent implements OnInit {
     this.searchString = event;
     this.filteredUsers = [];
     for (var user of this.allUsers) {
+      console.log(user);
       if (
-        user.firstName
-          .toLowerCase()
-          .includes(this.searchString.toLowerCase()) ||
-        user.lastName.toLowerCase().includes(this.searchString.toLowerCase())
+        user.userType == UserType.INDIVIDUAL ||
+        user.userType == UserType.ADMIN
       ) {
-        this.filteredUsers.push(user);
+        if (
+          user.firstName
+            .toLowerCase()
+            .includes(this.searchString.toLowerCase()) ||
+          user.lastName.toLowerCase().includes(this.searchString.toLowerCase())
+        ) {
+          this.filteredUsers.push(user);
+        }
+      } else if (user.userType == UserType.INSTITUTE) {
+        if (
+          user.firstName.toLowerCase().includes(this.searchString.toLowerCase())
+        ) {
+          this.filteredUsers.push(user);
+        }
       }
     }
   }
@@ -156,14 +169,14 @@ export class SearchUsersComponent implements OnInit {
         if (user.userId == userId) {
           user.followers = result[0];
           user.following = result[1];
-          userUpdated = true
+          userUpdated = true;
         }
         if (user.userId == this.loggedInUserId) {
           user.followers = result[2];
           user.following = result[3];
           loggedInUserUpdated = true;
         }
-        if(userUpdated && loggedInUserUpdated){
+        if (userUpdated && loggedInUserUpdated) {
           return;
         }
       }

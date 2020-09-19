@@ -82,7 +82,7 @@
     <!-- /.modal-dialog -->
 </div>
 
-<br />
+<br *ngIf="loggedInUser.userId == profile.userId" />
 <br *ngIf="loggedInUser.userId == profile.userId" />
 <label *ngIf="loggedInUser.userId == profile.userId">My Material Resources Available</label>
 <label *ngIf="loggedInUser.userId != profile.userId">{{profile.firstName}}
