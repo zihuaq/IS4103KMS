@@ -86,7 +86,7 @@ public class ProjectResource {
         if (createProjectReq != null) {
             System.out.println("Project: " + createProjectReq.getNewProject());
             try {
-                Long projectId = projectSessionBeanLocal.createNewProject(createProjectReq.getNewProject(), createProjectReq.getOwnerId());
+                Long projectId = projectSessionBeanLocal.createNewProject(createProjectReq.getNewProject(), createProjectReq.getOwnerId(), createProjectReq.getTagIds());
                 CreateProjectRsp createProjectRsp = new CreateProjectRsp(projectId);
                 System.out.println("******** Project created");
                 return Response.status(Status.OK).entity(createProjectRsp).build();

@@ -13,6 +13,7 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
+import entity.TagEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -38,9 +39,12 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @EJB(name = "PostSessionBeanLocal")
     private PostSessionBeanLocal postSessionBeanLocal;
+    
+    @EJB(name = "TagSessionBeanLocal")
+    private TagSessionBeanLocal tagSessionBeanLocal;
 
     @Override
-    public Long createNewProject(ProjectEntity newProject, Long userId) throws CreateProjectException {
+    public Long createNewProject(ProjectEntity newProject, Long userId, List<Long> tagIds) throws CreateProjectException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newProject);
@@ -52,6 +56,11 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             user.getProjectAdmins().add(newProject);
             newProject.getProjectMembers().add(user);
             user.getProjectsJoined().add(newProject);
+            
+            for (Long tagId : tagIds) {
+                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
+                newProject.getSdgs().add(tag);
+            }
             
             return newProject.getProjectId();
         } catch (NoResultException ex) {

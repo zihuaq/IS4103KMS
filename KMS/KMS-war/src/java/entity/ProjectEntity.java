@@ -89,6 +89,9 @@ public class ProjectEntity implements Serializable {
     
     @OneToMany(mappedBy = "project")
     private List<PostEntity> posts;
+    
+    @ManyToMany
+    private List<TagEntity> sdgs;
 
 
     public ProjectEntity() {
@@ -101,6 +104,7 @@ public class ProjectEntity implements Serializable {
         this.posts = new ArrayList<>();
         this.status = ProjectStatusEnum.ACTIVE;
         this.monetaryFundingObtained = 0.0;
+        this.sdgs = new ArrayList<>();
     }
 
     public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, Double monetaryFundingRequired) {
@@ -282,6 +286,14 @@ public class ProjectEntity implements Serializable {
 
     public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
+    }
+
+    public List<TagEntity> getSdgs() {
+        return sdgs;
+    }
+
+    public void setSdgs(List<TagEntity> sdgs) {
+        this.sdgs = sdgs;
     }
     
 }

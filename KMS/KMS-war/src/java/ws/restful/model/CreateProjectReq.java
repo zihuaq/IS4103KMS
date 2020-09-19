@@ -6,6 +6,8 @@
 package ws.restful.model;
 
 import entity.ProjectEntity;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -15,11 +17,14 @@ public class CreateProjectReq {
     
     private ProjectEntity newProject;
     private Long ownerId;
+    private List<Long> tagIds;
 
     public CreateProjectReq() {
+        this.tagIds = new ArrayList<>();
     }
 
     public CreateProjectReq(ProjectEntity newProject, Long ownerId) {
+        this();
         this.newProject = newProject;
         this.ownerId = ownerId;
     }
@@ -38,6 +43,14 @@ public class CreateProjectReq {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public List<Long> getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(List<Long> tagIds) {
+        this.tagIds = tagIds;
     }
     
     

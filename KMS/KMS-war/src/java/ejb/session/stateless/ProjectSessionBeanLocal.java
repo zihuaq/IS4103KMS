@@ -20,7 +20,7 @@ import util.enumeration.ProjectStatusEnum;
 @Local
 public interface ProjectSessionBeanLocal {
 
-    public Long createNewProject(ProjectEntity newProject, Long userId) throws CreateProjectException;
+    public Long createNewProject(ProjectEntity newProject, Long userId, List<Long> tagIds) throws CreateProjectException;
 
     public List<ProjectEntity> retrieveAllProject();
 
