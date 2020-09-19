@@ -1,4 +1,5 @@
-import {User} from './user';
+import { User } from './user';
+import { Tag } from './tag';
 
 export class Project {
     projectId: number;
@@ -8,13 +9,14 @@ export class Project {
     endDate: Date;
     country: string;
     location: string;
-    owner: User;
+    projectOwner: User;
     groupMembers: User[];
-    admins: User[];
+    projectAdmins: User[];
     monetaryFundingRequired: number;
     monetaryFundingObtained: number;
+    sdgs: Tag[];
 
-    constructor(projectId?: number, name?: string, description?: string, startDate?: Date, endDate?: Date, country?: string, location?: string, monetaryFundingRequired?: number, monetaryFundingObtained?: number) {
+    constructor(projectId?: number, name?: string, description?: string, startDate?: Date, endDate?: Date, country?: string, location?: string, monetaryFundingRequired?: number, monetaryFundingObtained?: number, projectOwner?: User, groupMembers?: User[], projectAdmins?: User[], sdgs?: Tag[]) {
         this.projectId = projectId;
         this.name = name;
         this.description = description;
@@ -22,7 +24,11 @@ export class Project {
         this.endDate = endDate;
         this.country = country;
         this.location = location;
+        this.projectOwner = projectOwner;
+        this.groupMembers = groupMembers;
+        this.projectAdmins = projectAdmins;
         this.monetaryFundingObtained = this.monetaryFundingObtained;
         this.monetaryFundingRequired = this.monetaryFundingRequired;
+        this.sdgs = sdgs;
     }
 }
