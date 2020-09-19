@@ -20,13 +20,12 @@ public class CreateProjectReq {
     private List<Long> tagIds;
 
     public CreateProjectReq() {
-        this.tagIds = new ArrayList<>();
     }
 
-    public CreateProjectReq(ProjectEntity newProject, Long ownerId) {
-        this();
+    public CreateProjectReq(ProjectEntity newProject, Long ownerId, List<Long> tagIds) {
         this.newProject = newProject;
         this.ownerId = ownerId;
+        this.tagIds = tagIds;
     }
 
     public ProjectEntity getNewProject() {
