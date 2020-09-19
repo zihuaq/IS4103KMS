@@ -17,9 +17,10 @@ import { RetrieveAllUsersComponent } from './retrieve-all-users/retrieve-all-use
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
+import { SdgInfoComponent } from './sdg-info/sdg-info.component';
 
 const routes: Routes = [
-  { path: 'index', component: IndexComponent },
+  { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
   { path: 'signup', component: CreateNewUserComponent },
   { path: 'signupInstitution', component: CreateNewInstitutionComponent },
   { path: 'signupSelection', component: CreateNewUserSelectorComponent },
@@ -75,7 +76,12 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: RetrieveAllUsersComponent,
   },
-  { path: '', component: IndexComponent },
+  {
+    path: 'sdgInfo',
+    canActivate: [RouteGuard],
+    component: SdgInfoComponent,
+  },
+  { path: '', canActivate: [RouteGuard], component: IndexComponent },
 ];
 
 @NgModule({

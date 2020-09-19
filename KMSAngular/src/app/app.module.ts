@@ -40,6 +40,7 @@ import { ReportProfileComponent } from './profile/report-profile/report-profile.
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
+import { SdgInfoComponent } from './sdg-info/sdg-info.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { CreateNewUserSelectorComponent } from './create-new-user-selector/creat
     ForgotPasswordComponent,
     CreateNewInstitutionComponent,
     CreateNewUserSelectorComponent,
+    SdgInfoComponent,
   ],
   imports: [
     BrowserModule,
