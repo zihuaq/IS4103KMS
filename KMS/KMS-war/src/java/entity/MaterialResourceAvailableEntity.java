@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
@@ -39,6 +40,10 @@ public class MaterialResourceAvailableEntity implements Serializable {
     @NotNull
     @Column(nullable = false)
     private Integer quantity;
+    
+    @NotNull
+    @Column(nullable = false)
+    private String units;
 
     private String description;
 
@@ -50,16 +55,17 @@ public class MaterialResourceAvailableEntity implements Serializable {
     @Column(nullable = false)
     private String longitude;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @NotNull
-    @Column(nullable = false)
+    
+    @Column
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
+    @NotNull
+    @JoinTable(name = "mras")
     @ManyToOne
     private UserEntity materialResourceAvailableOwner;
 
@@ -70,10 +76,11 @@ public class MaterialResourceAvailableEntity implements Serializable {
         this.tags = new ArrayList<>();
     }
 
-    public MaterialResourceAvailableEntity(String name, Integer quantity, String description, Date startDate, Date endDate, String latitude, String longitude, List<TagEntity> tags) {
+    public MaterialResourceAvailableEntity(String name, Integer quantity, String units, String description, Date startDate, Date endDate, String latitude, String longitude, List<TagEntity> tags) {
         this();
         this.name = name;
         this.quantity = quantity;
+        this.units = units;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -185,6 +192,14 @@ public class MaterialResourceAvailableEntity implements Serializable {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
     }
 
 }

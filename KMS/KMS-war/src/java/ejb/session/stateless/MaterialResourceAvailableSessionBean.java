@@ -3,6 +3,7 @@ package ejb.session.stateless;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.MaterialResourceAvailableEntity;
+import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -15,23 +16,60 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class MaterialResourceAvailableSessionBean implements MaterialResourceAvailableSessionBeanLocal {
-
+    
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
-
+    
     @Override
     public List<MaterialResourceAvailableEntity> createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException {
         UserEntity materialResourceAvailableOwner = em.find(UserEntity.class, materialResourceAvailable.getMaterialResourceAvailableOwner().getUserId());
         if (materialResourceAvailableOwner != null) {
-            materialResourceAvailable.setMaterialResourceAvailableOwner(materialResourceAvailableOwner);
             em.persist(materialResourceAvailable);
-            materialResourceAvailableOwner.getMras().add(materialResourceAvailable);
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableOwner.getMras();
+            mras.add(materialResourceAvailable);
+            materialResourceAvailableOwner.setMras(mras);
             return materialResourceAvailableOwner.getMras();
         } else {
             throw new NoResultException("User not found");
         }
     }
-
+    
+    @Override
+    public List<MaterialResourceAvailableEntity> updateMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException {
+        UserEntity materialResourceAvailableOwner = em.find(UserEntity.class, materialResourceAvailable.getMaterialResourceAvailableOwner().getUserId());
+        MaterialResourceAvailableEntity mra = em.find(MaterialResourceAvailableEntity.class, materialResourceAvailable.getMraId());
+        if (materialResourceAvailableOwner != null && mra != null) {
+            for (int i = 0; i < materialResourceAvailable.getTags().size(); i++) {
+                TagEntity tag = em.find(TagEntity.class, materialResourceAvailable.getTags().get(i).getTagId());
+                if (tag == null) {
+                    throw new NoResultException("SDG tag not found.");
+                }
+            }
+            mra.setTags(materialResourceAvailable.getTags());
+            mra.setName(materialResourceAvailable.getName());
+            mra.setDescription(materialResourceAvailable.getDescription());
+            mra.setQuantity(materialResourceAvailable.getQuantity());
+            mra.setUnits(materialResourceAvailable.getUnits());
+            mra.setLatitude(materialResourceAvailable.getLatitude());
+            mra.setLongitude(materialResourceAvailable.getLongitude());
+            mra.setStartDate(materialResourceAvailable.getStartDate());
+            mra.setEndDate(materialResourceAvailable.getEndDate());
+            return materialResourceAvailableOwner.getMras();
+        } else {
+            throw new NoResultException("User not found");
+        }
+    }
+    
+    @Override
+    public MaterialResourceAvailableEntity getMaterialResourceAvailableById(long mraId) throws NoResultException {
+        MaterialResourceAvailableEntity mra = em.find(MaterialResourceAvailableEntity.class, mraId);
+        if (mra == null) {
+            throw new NoResultException("Mra not found");
+        }
+        mra.getTags().size();
+        return mra;
+    }
+    
     @Override
     public List<MaterialResourceAvailableEntity> getMaterialResourceAvailableForUser(long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
@@ -41,12 +79,12 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
         user.getMras().size();
         return user.getMras();
     }
-
+    
     @Override
     public List<MaterialResourceAvailableEntity> deleteMaterialResourceAvailableForUser(long userId, long mraId) throws NoResultException {
         UserEntity user = em.find(UserEntity.class, userId);
         MaterialResourceAvailableEntity mra = em.find(MaterialResourceAvailableEntity.class, mraId);
-
+        
         if (user != null && mra != null) {
             List<MaterialResourceAvailableEntity> mras = user.getMras();
             System.out.println(mras);

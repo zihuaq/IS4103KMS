@@ -14,7 +14,7 @@
             <form (ngSubmit)="onCreateUser(signUpForm)" #signUpForm="ngForm">
                 <h1>Create An Institution Account with KMS!</h1>
                 <hr>
-                <a href="/signup">Click here to create an user account instead!</a>
+                <a href="/signup">Click here to create an individual account instead!</a>
                 <div class="form-group">
                   <label for="istitutionName">Name of Institution</label>
                   <input type="text" id="istitutionName" class="form-control" ngModel name="istitutionName" required>
@@ -40,10 +40,11 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" appAppPassword id="confirmPassword" class="form-control" ngModel name="confirmPassword" required
                         #confirmPassword="ngModel">
-                    <span class="help-block"
-                        *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not
-                        match</span>
+                        <span class="help-block" style="float: right; color: red;"
+                        *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not match
+                    </span>
                 </div>
+
                 <hr>
                 <div>
                   <a href="/login">Already have an Account?</a>

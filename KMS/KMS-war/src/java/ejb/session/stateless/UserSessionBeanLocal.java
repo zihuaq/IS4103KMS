@@ -54,7 +54,7 @@ public interface UserSessionBeanLocal {
 
     public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
 
-    public void deleteUser(long userId, UserEntity user) throws NoResultException;
+    public void deleteUser(long userId) throws UserNotFoundException;
 
     public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException, DuplicateFollowRequestException;
 
@@ -79,5 +79,7 @@ public interface UserSessionBeanLocal {
     public List<FollowRequestEntity> getFollowRequestMade(Long userId) throws UserNotFoundException;
 
     public void resetPassword(String email) throws UserNotFoundException;
+
+    public Boolean changePassword(String email, String oldPassword, String newPassword) throws InvalidLoginCredentialException;
 
 }

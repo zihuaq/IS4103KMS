@@ -5,6 +5,7 @@ export class MaterialResourceAvailable {
   mraId: number;
   name: string;
   quantity: number;
+  units: string;
   description: string;
   startDate: Date;
   endDate: Date;
@@ -17,6 +18,7 @@ export class MaterialResourceAvailable {
     mraId?: number,
     name?: string,
     quantity?: number,
+    units?: string,
     description?: string,
     startDate?: Date,
     endDate?: Date,
@@ -28,6 +30,7 @@ export class MaterialResourceAvailable {
     this.mraId = mraId;
     this.name = name;
     this.quantity = quantity;
+    this.units = units;
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;

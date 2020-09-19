@@ -10,6 +10,9 @@ import { UserService } from '../user.service';
 export class ForgotPasswordComponent implements OnInit {
   requestSent = false;
   isLoading = false;
+  requestSentError = false;
+  errorMessage: string;
+  successMessage = "New password sent please check your email"
 
   constructor(private userService: UserService) { }
 
@@ -24,8 +27,11 @@ export class ForgotPasswordComponent implements OnInit {
       this.userService.resetPassword(email).subscribe((Response) => {
         this.isLoading = false;
         this.requestSent = true;
+        this.requestSentError = false;
       }, error => {
         this.isLoading = false;
+        this.errorMessage = "There was an error sending the request, make sure your email address is correct."
+        this.requestSentError = true;
         this.requestSent = false;
       })
 

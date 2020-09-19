@@ -30,18 +30,6 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/signup">
-            <i class="far fa-circle nav-icon"></i>
-            <p>Create New User</p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login">
-            <i class="far fa-circle nav-icon"></i>
-            <p>User Login Page</p>
-          </a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" routerLink="/profile">
             <i class="fas fa-user nav-icon"></i>
             <p>User Profile</p>
@@ -53,15 +41,25 @@
             <p>Create New Project</p>
           </a>
         </li>
+        <li class="nav-item">
           <a class="nav-link" routerLink="/notifications">
             <i class="fas fa-bell nav-icon"></i>
             <p>Notifications</p>
           </a>
-          <a class="nav-link" (click)="logout()">
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/sdgInfo">
+            <i class="fas fa-bell nav-icon"></i>
+            <p>SDG Information</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="logout()" routerLink="/login">
             <i class="far fa-circle nav-icon"></i>
             <p>Logout</p>
           </a>
-          <button type="button" class="btn btn-warning" routerLink="/donateToPlatform">Donate</button>
+        </li>
+        <button type="button" class="btn btn-warning" routerLink="/donateToPlatform">Donate</button>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
