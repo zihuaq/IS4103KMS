@@ -55,6 +55,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     $('#datetimepicker').datetimepicker({
       format: 'DD/MM/YYYY',
+      maxDate: new Date(),
     });
     bsCustomFileInput.init();
     this.profilePictureFile = this.user.profilePicture;
