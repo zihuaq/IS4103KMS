@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, NgModule, OnInit, Output, Pipe, PipeTransform } from '@angular/core';
+import { SelectMultipleControlValueAccessor } from '@angular/forms';
 
 import { Router } from '@angular/router';
+import { AppComponent } from 'src/app/app.component';
 
 import { Project } from '../../classes/project';
 import { ProjectService } from '../../project.service';
@@ -13,7 +15,12 @@ import { SessionService } from '../../session.service';
 })
 export class ViewAllProjectComponent implements OnInit {
 
+  @Input() searchModel;
+
+  @Output() searchModelChange: EventEmitter<any> = new EventEmitter();
+
   projects: Project[];
+  filteredProject: Project[];
 
   constructor(public projectService: ProjectService,
     private sessionService: SessionService,
@@ -25,8 +32,14 @@ export class ViewAllProjectComponent implements OnInit {
     this.projectService.getAllProject().subscribe(
       response => {
         this.projects = response.projects;
+        this.filteredProject = response.projects;
       }
-    )
+    );
+  }
+
+  updateSearchModel(value) {
+    this.searchModel = value;
+    this.searchModelChange.emit(this.searchModel);
   }
 
   navigateToPage(projectId: number) {
@@ -41,3 +54,4 @@ export class ViewAllProjectComponent implements OnInit {
   }
 
 }
+

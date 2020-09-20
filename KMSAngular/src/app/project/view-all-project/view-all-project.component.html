@@ -4,18 +4,19 @@
 <div class="content-wrapper">
     <div class="content-header">
         <div class="content-fluid">
-            <div *ngFor="let project of projects">
+            <div class="card card-solid">
+                <input placeholder="Search projects" [(ngModel)]="searchModel" (ngModelChange)="updateSearchModel($event)">
+            </div>
+            <div *ngFor="let project of projects | listFilter: searchModel">
                 <div class="card p-2">
                     <a class="card-block stretched-link text decoration-none" (click)="navigateToPage(project.projectId)">
                         <h4 ckass="card-title">{{project.name}}</h4>
                         <p class="card-text">{{project.description}}</p>
                     </a>
                 </div>
-            </div>
+            </div>        
         </div>
     </div>
 </div>
 
 <app-footer></app-footer>
-
-<!-- TEST -->

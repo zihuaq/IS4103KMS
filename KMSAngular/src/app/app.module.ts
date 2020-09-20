@@ -42,7 +42,8 @@ import { CreateNewInstitutionComponent } from './create-new-institution/create-n
 import { ProjectDetailsComponent } from './project/project-details/project-details.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
-
+import { ListFilterPipe } from './project/view-all-project/list-filter.pipe';
+ 
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,6 +78,7 @@ import { SdgInfoComponent } from './sdg-info/sdg-info.component';
     ProjectDetailsComponent,
     CreateNewUserSelectorComponent,
     SdgInfoComponent,
+    ListFilterPipe
   ],
   imports: [
     BrowserModule,

@@ -95,7 +95,7 @@ export class CreateNewProjectComponent implements OnInit {
         response => {
           this.infoMessage = "Project created successfully."
           this.errorMessage = null;
-          this.router.navigate(["/projectDetails/:" + response.projectId]);
+          this.router.navigate(["/projectDetails/" + response.projectId]);
           this.projectCreated = true;
           this.projectCreationError = false;
         },

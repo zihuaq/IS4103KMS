@@ -57,10 +57,6 @@ public class ProjectEntity implements Serializable {
     @Column(nullable=false)
     private String country;
     
-    @NotNull
-    @Column(nullable=false)
-    private String location;
-    
     @ManyToOne
     private UserEntity projectOwner;
 
@@ -107,7 +103,7 @@ public class ProjectEntity implements Serializable {
         this.sdgs = new ArrayList<>();
     }
 
-    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, Double monetaryFundingRequired) {
+    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, Double monetaryFundingRequired) {
         this();
         this.projectId = projectId;
         this.name = name;
@@ -115,7 +111,6 @@ public class ProjectEntity implements Serializable {
         this.startDate = startDate;
         this.endDate = endDate;
         this.country = country;
-        this.location = location;
         this.monetaryFundingRequired = monetaryFundingRequired;
     } 
 
@@ -222,14 +217,6 @@ public class ProjectEntity implements Serializable {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public List<ActivityEntity> getActivities() {
