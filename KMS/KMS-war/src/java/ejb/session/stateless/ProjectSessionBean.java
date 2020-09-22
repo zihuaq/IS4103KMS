@@ -111,6 +111,9 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             throw new InvalidRoleException("Owner cannot leave the project");
             
         } else {
+            if (project.getProjectAdmins().contains(user)) {
+                project.getProjectAdmins().remove(user);
+            }
             user.getProjectsJoined().remove(project);
             project.getProjectMembers().remove(user);
         }
