@@ -93,7 +93,7 @@ export class CreateNewProjectComponent implements OnInit {
       this.newProject.endDate = new Date(this.newProject.endDate);
       this.projectService.createNewProject(this.newProject, this.ownerId, this.tagIdsSelected).subscribe(
         response => {
-          this.infoMessage = "Project created successfully."
+          this.infoMessage = "Project created successfully";
           this.errorMessage = null;
           this.router.navigate(["/projectDetails/" + response.projectId]);
           this.projectCreated = true;
