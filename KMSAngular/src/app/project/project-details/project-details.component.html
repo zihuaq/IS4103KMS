@@ -4,36 +4,89 @@
 <div class="content-wrapper">
     <div class="content-header">
         <div class="content-fluid">
-            <div class="card text-center">
+            <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{projectToView.name}}</h5>
-                    <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}</p>
-                    <button type="button" class="btn btn-light">Join</button>
+                    <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}
+                        <span *ngIf="!isMember">
+                            <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
+                            <button type="button" class="btn btn-light float-right" (click)="joinProject()">Join Project</button>  
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item">Report Project</a>
+                            </div>
+                        </span>
+                        <span *ngIf="isMember">
+                            <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
+                            <button type="button" [disabled] class="btn btn-light float-right">Joined</button>   
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Project</a>
+                                <a class="dropdown-item" (click)="leaveProject()">Leave Project</a>
+                            </div>                       
+                        </span>
+                    </p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="card">
-                        <div class="card-body">
+
+            <div class="card card-primary card-outline card-tabs">
+                <div class="card-header p-0 pt-1 border-bottom-0">
+                    <ul class="nav nav-tabs" id="details-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" role="tab">Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body" id="custom-tabs-four-tabContent">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
                             <p>Description: {{projectToView.description}}</p>
                             <p>Country: {{projectToView.country}}</p>
                             <p>Start date: {{startDate}}</p>
                             <p>End date: {{endDate}}</p>
                             <p>Monetary Funding Required: ${{projectToView.monetaryFundingRequired}}</p>
                             <p>Monetary Funding Obtained: ${{projectToView.monetaryFundingObtained}}</p>
+                            <p>SDGs: 
+                                <span *ngFor="let tag of projectToView.sdgs">
+                                    {{tag.name}}&nbsp;
+                                </span>  
+                            </p>                              
                         </div>
-                    </div>
-                </div>                
-                <div class="col-sm-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <p>Members:</p>
+                        <div class="tab-pane fade" id="members-tab" role="tabpanel">
+                            <div class="row">
+                                <div class="col-4">
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectMembers">
+                                        <li class="list-group-item">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-primary badge-pill" *ngIf="owner.userId == member.userId">Owner</span>
+                                            <span class="badge badge-primary badge-pill" *ngIf="checkAdmin(member)  && owner.userId != member.userId">Admin</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
+                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
+                            <p>review-tab works</p>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+                      
+            <!--<div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Members:</p>
+                        <span *ngFor="let member of projectToView.projectMembers">
+                            <p>{{member.firstName}} {{member.lastName}}</p>
+                        </span>
                     </div>
                 </div>
-            </div>          
-        </div>
-    </div>
+            </div> -->
+        </div>          
+    </div>  
 </div>
 
 <app-footer></app-footer>

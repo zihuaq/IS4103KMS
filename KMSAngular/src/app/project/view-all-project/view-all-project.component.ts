@@ -20,7 +20,6 @@ export class ViewAllProjectComponent implements OnInit {
   @Output() searchModelChange: EventEmitter<any> = new EventEmitter();
 
   projects: Project[];
-  filteredProject: Project[];
 
   constructor(public projectService: ProjectService,
     private sessionService: SessionService,
@@ -32,7 +31,6 @@ export class ViewAllProjectComponent implements OnInit {
     this.projectService.getAllProject().subscribe(
       response => {
         this.projects = response.projects;
-        this.filteredProject = response.projects;
       }
     );
   }
@@ -42,9 +40,8 @@ export class ViewAllProjectComponent implements OnInit {
     this.searchModelChange.emit(this.searchModel);
   }
 
-  navigateToPage(projectId: number) {
-    console.log("Project Id: " + projectId);
-    
+  onSelect(project: Project): void {
+    this.router.navigate(["/projectDetails/" + project.projectId]);
   }
 
   checkAccessRight() {

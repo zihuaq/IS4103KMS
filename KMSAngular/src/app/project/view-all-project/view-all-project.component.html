@@ -9,7 +9,7 @@
             </div>
             <div *ngFor="let project of projects | listFilter: searchModel">
                 <div class="card p-2">
-                    <a class="card-block stretched-link text decoration-none" (click)="navigateToPage(project.projectId)">
+                    <a class="card-block stretched-link text decoration-none" (click)="onSelect(project)">
                         <h4 ckass="card-title">{{project.name}}</h4>
                         <p class="card-text">{{project.description}}</p>
                     </a>
