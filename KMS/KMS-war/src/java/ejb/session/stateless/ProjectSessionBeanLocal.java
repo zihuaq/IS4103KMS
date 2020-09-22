@@ -32,7 +32,7 @@ public interface ProjectSessionBeanLocal {
 
     public void removeMember(Long projectId, Long userId) throws NoResultException, InvalidRoleException;
 
-    public void updateProject(ProjectEntity projectToUpdate);
+    public void updateProject(ProjectEntity projectToUpdate) throws NoResultException;
 
     public void updateStatus(Long projectId, String status);
 
@@ -41,5 +41,7 @@ public interface ProjectSessionBeanLocal {
     public void removeAdmin(Long projectId, Long userId) throws NoResultException;
 
     public void changeOwner(Long projectId, Long newOwnerId) throws NoResultException;
+
+    public void deleteProject(Long projectId);
     
 }

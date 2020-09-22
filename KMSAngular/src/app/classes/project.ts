@@ -11,13 +11,13 @@ export class Project {
     endDate: Date;
     country: string;
     projectOwner: User;
-    groupMembers: User[];
+    projectMembers: User[];
     projectAdmins: User[];
     monetaryFundingRequired: number;
     monetaryFundingObtained: number;
     sdgs: Tag[];
 
-    constructor(projectId?: number, name?: string, description?: string, status?: ProjectType, startDate?: Date, endDate?: Date, country?: string, monetaryFundingRequired?: number, monetaryFundingObtained?: number, projectOwner?: User, groupMembers?: User[], projectAdmins?: User[], sdgs?: Tag[]) {
+    constructor(projectId?: number, name?: string, description?: string, status?: ProjectType, startDate?: Date, endDate?: Date, country?: string, monetaryFundingRequired?: number, monetaryFundingObtained?: number, projectOwner?: User, projectMembers?: User[], projectAdmins?: User[], sdgs?: Tag[]) {
         this.projectId = projectId;
         this.name = name;
         this.description = description;
@@ -26,7 +26,7 @@ export class Project {
         this.endDate = endDate;
         this.country = country;
         this.projectOwner = projectOwner;
-        this.groupMembers = groupMembers;
+        this.projectMembers = projectMembers;
         this.projectAdmins = projectAdmins;
         this.monetaryFundingObtained = this.monetaryFundingObtained;
         this.monetaryFundingRequired = this.monetaryFundingRequired;

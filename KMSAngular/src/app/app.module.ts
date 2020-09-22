@@ -43,6 +43,9 @@ import { ProjectDetailsComponent } from './project/project-details/project-detai
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
 import { ListFilterPipe } from './project/view-all-project/list-filter.pipe';
+import { EditProjectComponent } from './project/edit-project/edit-project.component';
+import { DetailsTabComponent } from './project/details-tab/details-tab.component';
+import { MembersTabComponent } from './project/members-tab/members-tab.component';
  
 @NgModule({
   declarations: [
@@ -78,7 +81,10 @@ import { ListFilterPipe } from './project/view-all-project/list-filter.pipe';
     ProjectDetailsComponent,
     CreateNewUserSelectorComponent,
     SdgInfoComponent,
-    ListFilterPipe
+    ListFilterPipe,
+    EditProjectComponent,
+    DetailsTabComponent,
+    MembersTabComponent
   ],
   imports: [
     BrowserModule,

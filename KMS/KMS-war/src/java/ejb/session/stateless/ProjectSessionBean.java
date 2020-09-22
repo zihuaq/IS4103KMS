@@ -118,9 +118,22 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public void updateProject(ProjectEntity projectToUpdate) {
-        em.merge(projectToUpdate);
-        em.flush();
+    public void updateProject(ProjectEntity projectToUpdate) throws NoResultException {
+        ProjectEntity project = getProjectById(projectToUpdate.getProjectId());
+        
+        project.setName(projectToUpdate.getName());
+        project.setDescription(projectToUpdate.getDescription());
+        project.setCountry(projectToUpdate.getCountry());
+        project.setStartDate(projectToUpdate.getStartDate());
+        project.setEndDate(projectToUpdate.getEndDate());
+        for (int i = 0; i < projectToUpdate.getSdgs().size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, projectToUpdate.getSdgs().get(i).getTagId());
+           if (tag == null) {
+               throw new NoResultException("SDG tag not found.");
+           }
+        }
+        project.setSdgs(projectToUpdate.getSdgs());
+        
     }
     
     //Change project status
@@ -162,6 +175,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         user.getProjectsOwned().add(project);
     }
     
+    @Override
     public void deleteProject(Long projectId) {
         ProjectEntity projectToDelete = getProjectById(projectId);
         

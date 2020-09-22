@@ -19,6 +19,7 @@ import { CreateNewInstitutionComponent } from './create-new-institution/create-n
 import { ProjectDetailsComponent } from './project/project-details/project-details.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
+import { EditProjectComponent } from './project/edit-project/edit-project.component';
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -90,9 +91,13 @@ const routes: Routes = [
   canActivate: [RouteGuard], 
   component: IndexComponent 
   },
-    { path: 'projectDetails/:projectId', 
+  { path: 'projectDetails/:projectId', 
     canActivate: [RouteGuard], 
     component: ProjectDetailsComponent 
+  },
+  { path: 'editProject/:projectId',
+    canActivate: [RouteGuard], 
+    component: EditProjectComponent
   }
 
 ];

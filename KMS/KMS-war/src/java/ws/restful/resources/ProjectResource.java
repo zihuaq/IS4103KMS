@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -289,6 +290,29 @@ public class ProjectResource {
         }
     }
     
+    @Path("deleteProject/{projectId}")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteProject(@PathParam("projectId") Long projectId) {
+        projectSessionBeanLocal.deleteProject(projectId);
+        
+        return Response.status(Status.OK).build();
+    }
+    
+    @Path("/update")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProject(ProjectEntity project) {
+        try {
+            projectSessionBeanLocal.updateProject(project);
+            return Response.status(204).build();
+        } catch(NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
 
     private ProjectSessionBeanLocal lookupProjectSessionBeanLocal() {
         try {

@@ -43,25 +43,46 @@ export class ProjectService {
   }
 
   joinProject(projectId: number, userId: number) {
-    return this.httpClient.post<any>(this.baseUrl+"/joinProject/"+projectId+"/"+"/userId", null).pipe();
+    return this.httpClient.post<any>(this.baseUrl+"/joinProject/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
   }
 
   removeMember(projectId: number, userId: number) {
-    return this.httpClient.post<any>(this.baseUrl+"/removeMember/"+projectId+"/"+"/userId", null).pipe();
+    return this.httpClient.post<any>(this.baseUrl+"/removeMember/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
   }
 
   addAdmin(projectId: number, userId: number) {
-    return this.httpClient.post<any>(this.baseUrl+"/addAdmin/"+projectId+"/"+"/userId", null).pipe();
+    return this.httpClient.post<any>(this.baseUrl+"/addAdmin/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
   }
 
   removeAdmin(projectId: number, userId: number) {
-    return this.httpClient.post<any>(this.baseUrl+"/removeAdmin/"+projectId+"/"+"/userId", null).pipe();
+    return this.httpClient.post<any>(this.baseUrl+"/removeAdmin/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
   }
 
   changeOwner(projectId: number, userId: number) {
-    return this.httpClient.post<any>(this.baseUrl+"/changeOwner/"+projectId+"/"+"/userId", null).pipe();
+    return this.httpClient.post<any>(this.baseUrl+"/changeOwner/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
   }
 
+  deleteProject(projectId: number): Observable<any> {
+    return this.httpClient.delete<any>(this.baseUrl + "/deleteProject/"+projectId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateProject(projectToUpdate: Project) {
+    return this.httpClient.post<any>(this.baseUrl + "/update", projectToUpdate, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
