@@ -59,10 +59,39 @@
                         <div class="tab-pane fade" id="members-tab" role="tabpanel">
                             <div class="row">
                                 <div class="col-4">
+                                    <h5>Admins</h5>
+                                    <!--Owner-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
+                                        <li class="list-group-item" *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-dark badge-pill" *ngIf="owner.userId == member.userId">Owner</span>
+                                            <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">You</span>
+                                        </li>
+                                    </ul>
+                                    <!--If you are an admin but not an owner-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId == member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
+                                            <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">You</span>
+                                        </li>
+                                    </ul>
+                                    <!--Admins except you-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId != member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-4">
+                                    <h5>Members</h5>
+                                    <!--If you are a member-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectMembers">
-                                        <li class="list-group-item">{{member.firstName}} {{member.lastName}}
-                                            <span class="badge badge-primary badge-pill" *ngIf="owner.userId == member.userId">Owner</span>
-                                            <span class="badge badge-primary badge-pill" *ngIf="checkAdmin(member)  && owner.userId != member.userId">Admin</span>
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId == member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-primary badge-pill">You</span>
+                                        </li>
+                                    </ul>
+                                    <!--Members except you-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectMembers">
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId != member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
                                         </li>
                                     </ul>
                                 </div>

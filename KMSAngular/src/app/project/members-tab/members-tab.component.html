@@ -1,9 +1,46 @@
 <div class="row">
     <div class="col-4">
+        <h5>Admins</h5>
+        <!--Owner-->
+        <ul class="list-group" *ngFor="let member of projectToEdit.projectAdmins">
+            <li class="list-group-item" *ngIf="projectToEdit.projectOwner.userId == member.userId" style="height: 56px;">{{member.firstName}} {{member.lastName}}
+                <span class="badge badge-dark badge-pill" *ngIf="projectToEdit.projectOwner.userId == member.userId">Owner</span>
+                <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">You</span>
+            </li>
+        </ul>
+        <!--If you are an admin but not an owner-->
+        <ul class="list-group" *ngFor="let member of projectToEdit.projectAdmins">
+            <li class="list-group-item" *ngIf="loggedInUser.userId == member.userId && projectToEdit.projectOwner.userId != member.userId" style="height: 56px;">{{member.firstName}} {{member.lastName}}
+                <span class="badge badge-secondary badge-pill" *ngIf="projectToEdit.projectOwner.userId != member.userId">Admin</span>
+                <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">You</span>
+            </li>
+        </ul>
+        <!--Admins except you-->
+        <ul class="list-group" *ngFor="let member of projectToEdit.projectAdmins">
+            <li class="list-group-item" *ngIf="loggedInUser.userId != member.userId && projectToEdit.projectOwner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                <span class="badge badge-secondary badge-pill" *ngIf="projectToEdit.projectOwner.userId != member.userId">Admin</span>
+                <span *ngIf="loggedInUser.userId != member.userId && projectToEdit.projectOwner.userId != member.userId">
+                    <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 30px;">...</button>  
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" *ngIf="isOwner" (click)="passOwnerStatus(member)">Pass Owner Status</a>
+                        <a class="dropdown-item" *ngIf="isOwner" (click)="removeAsAdmin(member)">Remove as Admin</a>
+                        <a class="dropdown-item" (click)="removeFromProject(member)">Remove From Project</a>
+                    </div>                       
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-4">
+        <h5>Members</h5>
         <ul class="list-group" *ngFor="let member of projectToEdit.projectMembers">
-            <li class="list-group-item">{{member.firstName}} {{member.lastName}}
-                <span class="badge badge-primary badge-pill" *ngIf="projectToEdit.projectOwner.userId == member.userId">Owner</span>
-                <span class="badge badge-primary badge-pill" *ngIf="isAdmin(member) && projectToEdit.projectOwner.userId != member.userId">Admin</span>
+            <li class="list-group-item" *ngIf="!isAdmin(member) && projectToEdit.projectOwner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                <span>
+                    <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 30px;">...</button>  
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" *ngIf="isOwner" (click)="promoteToAdmin(member)">Promote to Admin</a>
+                        <a class="dropdown-item" (click)="removeFromProject(member)">Remove From Project</a>
+                    </div>                       
+                </span>
             </li>
         </ul>
     </div>

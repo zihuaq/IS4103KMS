@@ -19,6 +19,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   projectId: number;
   projectToView: Project;
+  loggedInUser: User
   owner: User;
   startDate: string;
   endDate: string;
@@ -36,6 +37,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkAccessRight();
+    this.loggedInUser = this.sessionService.getCurrentUser();
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
     console.log("Project ID: " + this.projectId);
 
@@ -72,7 +74,7 @@ export class ProjectDetailsComponent implements OnInit {
       response => {
         $(document).Toasts('create', {
           class: 'bg-sucess',
-          title: 'Sucess',
+          title: 'Success',
           autohide: true,
           delay: 2500,
           body: 'Welcome to the project',
@@ -95,7 +97,7 @@ export class ProjectDetailsComponent implements OnInit {
       response => {
       $(document).Toasts('create', {
         class: 'bg-sucess',
-        title: 'Sucess',
+        title: 'Success',
         autohide: true,
         delay: 2500,
         body: 'Goodbye',

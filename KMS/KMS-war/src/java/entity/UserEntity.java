@@ -175,7 +175,7 @@ public class UserEntity implements Serializable {
         this.dob = dob;
         this.gender = gender;
         this.email = email;
-        this.password = password;
+        this.setPassword(password);
         this.joinedDate = new Date();
         this.userType = usertype;
     }
