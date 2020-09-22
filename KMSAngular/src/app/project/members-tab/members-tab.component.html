@@ -1,0 +1,10 @@
+<div class="row">
+    <div class="col-4">
+        <ul class="list-group" *ngFor="let member of projectToEdit.projectMembers">
+            <li class="list-group-item">{{member.firstName}} {{member.lastName}}
+                <span class="badge badge-primary badge-pill" *ngIf="projectToEdit.projectOwner.userId == member.userId">Owner</span>
+                <span class="badge badge-primary badge-pill" *ngIf="isAdmin(member) && projectToEdit.projectOwner.userId != member.userId">Admin</span>
+            </li>
+        </ul>
+    </div>
+</div>
