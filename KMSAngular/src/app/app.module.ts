@@ -41,6 +41,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
+import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { SdgInfoComponent } from './sdg-info/sdg-info.component';
     CreateNewInstitutionComponent,
     CreateNewUserSelectorComponent,
     SdgInfoComponent,
+    AffiliationRequestsComponent,
   ],
   imports: [
     BrowserModule,

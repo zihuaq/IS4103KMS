@@ -7,7 +7,9 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0 text-dark" *ngIf="!query">Search Users</h1>
-                    <h1 class="m-0 text-dark" *ngIf="query && user">{{user.firstName}} {{user.lastName}} {{query}}</h1>
+                    <h1 class="m-0 text-dark" *ngIf="query && user && user.userId == loggedInUserId"> My {{query}} </h1>
+                    <h1 class="m-0 text-dark" *ngIf="query && user && user.userId != loggedInUserId">{{user.firstName}}
+                        {{user.lastName}}'s {{query}}</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -24,6 +26,12 @@
     <!-- Main content -->
     <section class="content">
         <div class="card card-solid">
+            <!-- <button type="button" class="btn btn-block bg-gradient-info" data-toggle="modal" data-target="#modal-default"
+                *ngIf="query=='affiliated' && user.userId == loggedInUserId">
+                Request to Add Affiliated Users
+                <i class="fas fa-plus"></i>
+            </button>
+            <br/> -->
             <div class=searchBar>
                 <app-searchbar [searchString]="searchString" [query]="query"
                     (searchStringChanged)="handleSearchStringChanged($event)">
@@ -103,4 +111,29 @@
     </section>
     <!-- /.content -->
 </div>
+
+<!-- <div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Request to Add Affiliated Users</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="select2-blue">
+                    <select class="select2" id="affiliatedselect2" multiple="multiple" data-placeholder="Select users"
+                        data-dropdown-css-class="select2-blue" style="width: 100%;">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>  -->
+
 <app-footer></app-footer>

@@ -23,12 +23,21 @@
           [routerLink]="['/searchUsers/following/', profile.userId]">{{profile.following.length}}</a>
       </li>
       <li class="list-group-item" *ngIf="!isPublic() && !isFollowing && profile.userId != loggedInUser.userId">
-        <b>Followers</b> <a class="float-right"
-          [routerLink]="['/searchUsers/followers/', profile.userId]">{{profile.followers.length}}</a>
+        <b>Followers</b> <a class="float-right">{{profile.followers.length}}</a>
       </li>
       <li class="list-group-item" *ngIf="!isPublic() && !isFollowing && profile.userId != loggedInUser.userId">
-        <b>Following</b> <a class="float-right"
-          [routerLink]="['/searchUsers/following/', profile.userId]">{{profile.following.length}}</a>
+        <b>Following</b> <a class="float-right">{{profile.following.length}}</a>
+      </li>
+      <li class="list-group-item" *ngIf="isPublic() || isFollowing || profile.userId == loggedInUser.userId">
+        <b *ngIf="profile.userType == UserType.INSTITUTE">Affiliated Individuals</b> 
+        <b *ngIf="profile.userType != UserType.INSTITUTE">Affiliated Institutes</b> 
+        <a class="float-right"
+          [routerLink]="['/searchUsers/affiliated/', profile.userId]"> {{profile.affiliatedUsers.length}}</a>
+      </li>
+      <li class="list-group-item" *ngIf="!isPublic() && !isFollowing && profile.userId != loggedInUser.userId">
+        <b *ngIf="profile.userType == UserType.INSTITUTE">Affiliated Individuals</b> 
+        <b *ngIf="profile.userType != UserType.INSTITUTE">Affiliated Institutes</b> 
+        <a class="float-right"> {{profile.affiliatedUsers.length}}</a>
       </li>
       <li class="list-group-item">
         <b>Reputation points</b> <a class="float-right">{{profile.reputationPoints}}</a>
@@ -40,6 +49,12 @@
       <a class="btn btn-primary btn-block" *ngIf="isFollowing" (click)="unfollow()"><b>Unfollow</b></a>
       <a class="btn bg-gradient-info btn-block" *ngIf="!isFollowing && hasSentFollowRequest" disabled=true>
         <i class="fas fa-check"></i> Follow Request Sent
+      </a>
+      <a class="btn btn-primary btn-block" *ngIf="!isAffiliated && !hasSentAffiliationRequest"
+        (click)="sendAffiliationRequest()"><b>Send Affiliation Request</b></a>
+      <a class="btn btn-primary btn-block" *ngIf="isAffiliated" (click)="removeAffiliation()"><b>Remove Affiliation</b></a>
+      <a class="btn bg-gradient-info btn-block" *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true>
+        <i class="fas fa-check"></i> Affiliation Request Sent
       </a>
     </div>
   </div>

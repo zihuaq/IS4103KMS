@@ -25,13 +25,17 @@ export class SearchUsersComponent implements OnInit {
   loggedInUserFollowRequestMade: FollowRequest[];
   user: User;
   query: string;
+  // allUsersForSelection: User[];
+  // selectedUsers: User[];
+  // selectedUserIds: number[];
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private sessionService: SessionService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     let userId = this.activatedRoute.snapshot.params.userid;
@@ -53,7 +57,7 @@ export class SearchUsersComponent implements OnInit {
           if (
             this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
-              AccountPrivacySettingEnum.PRIVATE &&
+            AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
               .map((user) => user.userId)
               .includes(this.user.userId)
@@ -73,6 +77,36 @@ export class SearchUsersComponent implements OnInit {
           this.loggedInUserFollowing = result[1];
           this.loggedInUserFollowRequestMade = result[2];
           this.user = result[3];
+        });
+      } else if (this.query == 'affiliated') {
+        forkJoin([
+          this.userService.getAffiliatedUsers(parseInt(userId)),
+          this.userService.getUser(userId),
+         // this.userService.getAllUsers()
+        ]).subscribe((result) => {
+          this.allUsers = result[0];
+          this.filteredUsers = this.allUsers;
+          this.user = result[1];
+          //this.allUsersForSelection = result[2];
+          // $('#affiliatedselect2').select2({
+          //   data: this.allUsersForSelection,
+          //   escapeMarkup: function(markup) {
+          //     return markup;
+          //   },
+          //   templateSelection: function formatState(d) {
+          //     var $state = $(
+          //        '<span><img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="img-fluid img-circle" /> ' + d.firstName + '</span>'
+          //       );
+          //     return $state;
+          //   },
+          //   templateResult: function formatState(d) {
+          //     var $state = $(
+          //        '<span><img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="img-fluid img-circle" /> ' + d.firstName + '</span>'
+          //     );
+          //     return $state;
+          //   },
+          //   allowClear: true,
+          // });
         });
       }
     } else {
@@ -152,6 +186,31 @@ export class SearchUsersComponent implements OnInit {
       .map((f) => f.to.userId)
       .includes(userId);
   }
+
+  // onSubmit() {
+  //   this.selectedUsers = $('.select2').val();
+  //   console.log(this.selectedUsers)
+  //   if (this.selectedUsers.length == 0) {
+  //     $(document).Toasts('create', {
+  //       class: 'bg-warning',
+  //       title: 'Unable to submit Report',
+  //       autohide: true,
+  //       delay: 2500,
+  //       body: 'Please select at least one user',
+  //     });
+  //     return;
+  //   }
+    // var userIds = getUserIds(this.selectedUserNames);
+    // this.userService.makeAffiliationRequests(this.loggedInUserId, userIds).subscribe(() => {
+    //   $(document).Toasts('create', {
+    //     class: 'bg-success',
+    //     title: 'Affiliation Requests Sent Successfully',
+    //     autohide: true,
+    //     delay: 2500,
+    //   });
+    //   $('#modal-default').modal('hide');
+    // });
+  //}
 
   private updateLoginUserAndUser(userId: number) {
     forkJoin([
