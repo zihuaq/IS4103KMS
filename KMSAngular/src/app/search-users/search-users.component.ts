@@ -25,9 +25,6 @@ export class SearchUsersComponent implements OnInit {
   loggedInUserFollowRequestMade: FollowRequest[];
   user: User;
   query: string;
-  // allUsersForSelection: User[];
-  // selectedUsers: User[];
-  // selectedUserIds: number[];
 
 
   constructor(
@@ -80,33 +77,16 @@ export class SearchUsersComponent implements OnInit {
         });
       } else if (this.query == 'affiliated') {
         forkJoin([
+          this.userService.getFollowing(this.loggedInUserId),
+          this.userService.getFollowRequestMade(this.loggedInUserId),
           this.userService.getAffiliatedUsers(parseInt(userId)),
-          this.userService.getUser(userId),
-         // this.userService.getAllUsers()
+          this.userService.getUser(userId)
         ]).subscribe((result) => {
-          this.allUsers = result[0];
+          this.loggedInUserFollowing = result[0];
+          this.loggedInUserFollowRequestMade = result[1];
+          this.allUsers = result[2];
           this.filteredUsers = this.allUsers;
-          this.user = result[1];
-          //this.allUsersForSelection = result[2];
-          // $('#affiliatedselect2').select2({
-          //   data: this.allUsersForSelection,
-          //   escapeMarkup: function(markup) {
-          //     return markup;
-          //   },
-          //   templateSelection: function formatState(d) {
-          //     var $state = $(
-          //        '<span><img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="img-fluid img-circle" /> ' + d.firstName + '</span>'
-          //       );
-          //     return $state;
-          //   },
-          //   templateResult: function formatState(d) {
-          //     var $state = $(
-          //        '<span><img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="img-fluid img-circle" /> ' + d.firstName + '</span>'
-          //     );
-          //     return $state;
-          //   },
-          //   allowClear: true,
-          // });
+          this.user = result[3];
         });
       }
     } else {
@@ -186,31 +166,6 @@ export class SearchUsersComponent implements OnInit {
       .map((f) => f.to.userId)
       .includes(userId);
   }
-
-  // onSubmit() {
-  //   this.selectedUsers = $('.select2').val();
-  //   console.log(this.selectedUsers)
-  //   if (this.selectedUsers.length == 0) {
-  //     $(document).Toasts('create', {
-  //       class: 'bg-warning',
-  //       title: 'Unable to submit Report',
-  //       autohide: true,
-  //       delay: 2500,
-  //       body: 'Please select at least one user',
-  //     });
-  //     return;
-  //   }
-    // var userIds = getUserIds(this.selectedUserNames);
-    // this.userService.makeAffiliationRequests(this.loggedInUserId, userIds).subscribe(() => {
-    //   $(document).Toasts('create', {
-    //     class: 'bg-success',
-    //     title: 'Affiliation Requests Sent Successfully',
-    //     autohide: true,
-    //     delay: 2500,
-    //   });
-    //   $('#modal-default').modal('hide');
-    // });
-  //}
 
   private updateLoginUserAndUser(userId: number) {
     forkJoin([

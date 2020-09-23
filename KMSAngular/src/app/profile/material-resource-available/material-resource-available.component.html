@@ -106,10 +106,10 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <!-- <button type="button" class="btn btn-tool" (click)="setEditingMra(mra)" data-toggle="modal"
+                    <button type="button" class="btn btn-tool" (click)="setEditingMra(mra)" data-toggle="modal"
                         data-target="#modal-default">
                         <i class="fas fa-edit"></i>
-                    </button> -->
+                    </button>
                     <button type="button" class="btn btn-tool" data-card-widget="remove" (click)="deleteMra(mra.mraId)">
                         <i class="fas fa-times"></i>
                     </button>
@@ -159,7 +159,7 @@
     </div>
 </span>
 
-<!-- <div class="modal fade" id="modal-info" *ngIf="loggedInUser.userId == profile.userId">
+<div class="modal fade" id="modal-default" *ngIf="loggedInUser.userId == profile.userId && editingMra">
     <div class="modal-dialog">
         <div class="modal-content bg-info">
             <div class="modal-header">
@@ -171,24 +171,24 @@
             <form (ngSubmit)="editMaterialResourceRequest(editMraForm)" #editMraForm="ngForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="mraName">Material Resource Name *</label>
-                        <input type="text" id="mraName" class="form-control" [ngModel]="editingMra.name" name="mraName"
+                        <label for="editMraName">Material Resource Name *</label>
+                        <input type="text" id="editMraName" class="form-control" [ngModel]="editingMra.name" name="editMraName"
                             required>
                     </div>
                     <div class="form-group">
-                        <label for="quantity"> Quantity *</label>
-                        <input type="text" id="quantity" class="form-control" [ngModel]="editingMra.quantity"
-                            name="quantity" required>
+                        <label for="editQuantity"> Quantity *</label>
+                        <input type="text" id="editQuantity" class="form-control" [ngModel]="editingMra.quantity"
+                            name="editQuantity" required>
                     </div>
                     <div class="form-group">
-                        <label for="units"> Units *</label>
-                        <input type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units"
+                        <label for="editUnits"> Units *</label>
+                        <input type="text" id="editUnits" class="form-control" [ngModel]="editingMra.units" name="editUnits"
                             required>
                     </div>
                     <div class="form-group">
-                        <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control" [ngModel]="editingMra.description"
-                            name="description">
+                        <label for="editDescription">Description</label>
+                        <input type="text" id="editDescription" class="form-control" [ngModel]="editingMra.description"
+                            name="editDescription">
                     </div>
                     <div class="form-group">
                         <label>Material Resource Tags *</label>
@@ -206,38 +206,38 @@
                         </google-map>
                     </div>
                     <div class="form-group">
-                        <label for="latitude">Latitude *</label>
-                        <input type="text" id="latitude" class="form-control " [ngModel]="lat" name="latitude" required
+                        <label for="editLatitude">Latitude *</label>
+                        <input type="text" id="editLatitude" class="form-control " [ngModel]="editingMra.latitude" name="editLatitude" required
                             disabled>
                     </div>
                     <div class="form-group">
-                        <label for="longitude">Longitude *</label>
-                        <input type="text" id="longitude" class="form-control" [ngModel]="lng" name="longitude" required
+                        <label for="editLongitude">Longitude *</label>
+                        <input type="text" id="editLongitude" class="form-control" [ngModel]="editingMra.longitude" name="editLongitude" required
                             disabled>
                     </div>
-                    <div class="form-group my-checkbox">
-                        <label for="my-checkbox"> Does your resource expire? </label>
-                        <input type="checkbox" id="my-checkbox" name="my-checkbox" data-bootstrap-switch
-                            (change)="handleHasExpiryChange()">
+                    <div class="form-group my-checkbox-edit">
+                        <label for="my-checkbox-edit"> Does your resource expire? </label>
+                        <input type="checkbox" id="my-checkbox-edit" name="my-checkbox-edit" data-bootstrap-switch
+                            (change)="handleHasExpiryChangeForEdit()">
                     </div>
-                    <div *ngIf="hasExpiry" class="form-group">
+                    <div *ngIf="hasExpiryForEdit" class="form-group">
                         <label>Start Date:</label>
-                        <input type="date" id="startDate" class="form-control" ngModel name="startDate" [min]="minDate"
+                        <input type="date" id="startDateEdit" class="form-control" ngModel name="startDateEdit" [min]="minDate"
                             required />
                     </div>
-                    <div *ngIf="hasExpiry" class="form-group">
+                    <div *ngIf="hasExpiryForEdit" class="form-group">
                         <label>End Date:</label>
-                        <input type="date" id="endDate" class="form-control" ngModel name="endDate" [min]="minDate" />
+                        <input type="date" id="endDateEdit" class="form-control" ngModel name="endDateEdit" [min]="minDate" />
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
                     <button type="button" type="submit" class="btn btn-outline-light"
-                        [disabled]="!mraForm.valid">Submit</button>
+                        [disabled]="!editMraForm.valid">Submit</button>
                 </div>
             </form>
-        </div> -->
-<!-- /.modal-content -->
-<!-- </div> -->
-<!-- /.modal-dialog -->
-<!-- </div> -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

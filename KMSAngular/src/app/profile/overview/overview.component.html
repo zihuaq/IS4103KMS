@@ -29,13 +29,13 @@
         <b>Following</b> <a class="float-right">{{profile.following.length}}</a>
       </li>
       <li class="list-group-item" *ngIf="isPublic() || isFollowing || profile.userId == loggedInUser.userId">
-        <b *ngIf="profile.userType == UserType.INSTITUTE">Affiliated Individuals</b> 
+        <b *ngIf="profile.userType == UserType.INSTITUTE">Affiliated Users</b> 
         <b *ngIf="profile.userType != UserType.INSTITUTE">Affiliated Institutes</b> 
         <a class="float-right"
           [routerLink]="['/searchUsers/affiliated/', profile.userId]"> {{profile.affiliatedUsers.length}}</a>
       </li>
       <li class="list-group-item" *ngIf="!isPublic() && !isFollowing && profile.userId != loggedInUser.userId">
-        <b *ngIf="profile.userType == UserType.INSTITUTE">Affiliated Individuals</b> 
+        <b *ngIf="profile.userType == UserType.INSTITUTE">Affiliated Users</b> 
         <b *ngIf="profile.userType != UserType.INSTITUTE">Affiliated Institutes</b> 
         <a class="float-right"> {{profile.affiliatedUsers.length}}</a>
       </li>
@@ -50,7 +50,7 @@
       <a class="btn bg-gradient-info btn-block" *ngIf="!isFollowing && hasSentFollowRequest" disabled=true>
         <i class="fas fa-check"></i> Follow Request Sent
       </a>
-      <a class="btn btn-primary btn-block" *ngIf="!isAffiliated && !hasSentAffiliationRequest"
+      <a class="btn btn-primary btn-block" *ngIf="!(loggedInUser.userType != UserType.INSTITUTE && profile.userType != UserType.INSTITUTE) && !isAffiliated && !hasSentAffiliationRequest"
         (click)="sendAffiliationRequest()"><b>Send Affiliation Request</b></a>
       <a class="btn btn-primary btn-block" *ngIf="isAffiliated" (click)="removeAffiliation()"><b>Remove Affiliation</b></a>
       <a class="btn bg-gradient-info btn-block" *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true>

@@ -43,6 +43,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   lat: string;
   lng: string;
   hasExpiry = false;
+  hasExpiryForEdit;
   editingMra: MaterialResourceAvailable;
   editingMraId: number;
 
@@ -167,7 +168,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     console.log();
   }
 
-  editMaterialResourceRequest(mraForm: NgForm) {
+  editMaterialResourceRequest(editMraForm: NgForm) {
     this.selectedTags = [];
     this.selectedTagNames = $('#editmraselect2').val();
     if (this.selectedTagNames.length == 0) {
@@ -185,19 +186,19 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         this.selectedTags.push(element);
       }
     });
-    if (mraForm.valid) {
+    if (editMraForm.valid) {
       this.newMra = new MaterialResourceAvailable();
       this.newMra.materialResourceAvailableOwner = this.profile;
-      this.newMra.name = mraForm.value.mraName;
-      this.newMra.quantity = mraForm.value.quantity;
-      this.newMra.units = mraForm.value.units;
-      this.newMra.description = mraForm.value.description;
-      this.newMra.latitude = this.lat;
-      this.newMra.longitude = this.lng;
-      if (this.hasExpiry) {
+      this.newMra.name = editMraForm.value.editMraName;
+      this.newMra.quantity = editMraForm.value.edituantity;
+      this.newMra.units = editMraForm.value.editUnits;
+      this.newMra.description = editMraForm.value.editDescription;
+      this.newMra.latitude = this.editingMra.latitude;
+      this.newMra.longitude = this.editingMra.longitude;
+      if (this.hasExpiryForEdit) {
         if (
-          new Date(mraForm.value.startDate).toJSON().slice(0, 10) >
-          new Date(mraForm.value.endDate).toJSON().slice(0, 10)
+          new Date(editMraForm.value.editStartDate).toJSON().slice(0, 10) >
+          new Date(editMraForm.value.editEndDate).toJSON().slice(0, 10)
         ) {
           $(document).Toasts('create', {
             class: 'bg-warning',
@@ -208,13 +209,14 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
           });
           return;
         } else {
-          this.newMra.startDate = new Date(mraForm.value.startDate);
-          this.newMra.endDate = new Date(mraForm.value.endDate);
+          this.newMra.startDate = new Date(editMraForm.value.editStartDate);
+          this.newMra.endDate = new Date(editMraForm.value.editEndDate);
         }
       }
       this.newMra.tags = this.selectedTags;
       this.newMra.mraId = this.editingMraId;
       console.log(this.newMra);
+      console.log(this.editingMra);
       this.mraService
         .updateMaterialResourceRequest(this.newMra)
         .subscribe((responsedata) => {
@@ -237,13 +239,19 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     this.hasExpiry = !this.hasExpiry;
   }
 
+  handleHasExpiryChangeForEdit(){
+    this.hasExpiryForEdit = !this.hasExpiryForEdit;
+  }
+
   setEditingMra(mra: MaterialResourceAvailable) {
+    console.log(mra)
     this.mraService
       .getMaterialResourceAvailableById(mra.mraId)
       .subscribe((response) => {
         this.editingMraId = response.materialResourceAvailableOwner.userId;
       });
     this.editingMra = mra;
+    this.hasExpiryForEdit = mra.endDate == null ? true: false;
     console.log(this.editingMra);
     console.log(this.editingMraId);
   }
