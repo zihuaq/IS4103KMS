@@ -25,8 +25,6 @@ export class CreateNewProjectComponent implements OnInit {
   tags: Tag[];
   projectCreated = false;
   projectCreationError = false;
-  minDate = new Date().toISOString().slice(0, 10);
-  minEndDate = new Date().toISOString().slice(0, 10);
   tagIdsSelected: number[];
   selectedTagNames: string[];
 
@@ -89,12 +87,16 @@ export class CreateNewProjectComponent implements OnInit {
 
     if (createProjectForm.valid) {
       console.log(this.newProject);
-      this.newProject.startDate = new Date(this.newProject.startDate);
-      this.newProject.endDate = new Date(this.newProject.endDate);
+      this.newProject.dateCreated = new Date();
       this.projectService.createNewProject(this.newProject, this.ownerId, this.tagIdsSelected).subscribe(
         response => {
-          this.infoMessage = "Project created successfully";
-          this.errorMessage = null;
+          $(document).Toasts('create', {
+            class: 'bg-sucess',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Project created successfully',
+          })
           this.router.navigate(["/projectDetails/" + response.projectId]);
           this.projectCreated = true;
           this.projectCreationError = false;

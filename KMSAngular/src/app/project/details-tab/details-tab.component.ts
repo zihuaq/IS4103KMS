@@ -1,8 +1,11 @@
 import { Component, Input, OnInit, OnChanges, Output, EventEmitter, SimpleChanges} from '@angular/core';
 import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 
+import { ActivatedRoute} from '@angular/router';
+
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from '../../project.service';
+import { ProjectType } from '../../classes/project-type.enum';
 import { Tag } from '../../classes/tag';
 import { TagService } from '../../tag.service';
 
@@ -17,19 +20,43 @@ export class DetailsTabComponent implements OnInit, OnChanges {
 
   @Input() projectToEdit: Project;
   @Output() projectChanged = new EventEmitter<Project>();
+  projectId: number;
   tags: Tag[];
   selectedTags: Tag[];
   selectedTagNames: string[];
   infoMessage: string;
   errorMessage: string;
+  projectStatusList: ProjectType[];
 
   constructor(public projectService: ProjectService,
-    private tagService: TagService) { }
+    private tagService: TagService,
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.tagService.getAllSDGTags().subscribe(
+      response => {
+        this.tags = response;
+      }
+    )
+    this.projectService.getProjectStatusList().subscribe(
+      response => {
+        this.projectStatusList = response;
+      }
+    )
+    this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+    this.selectedTagNames = [];
+    this.projectService.getProjectById(this.projectId).subscribe(
+      response => {
+        this.projectToEdit = response;
+        this.selectedTagNames = [];
+        for (let tag of this.projectToEdit.sdgs) {
+          this.selectedTagNames.push(tag.name);
+        }
+      }
+    );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {   
     this.tagService.getAllSDGTags().subscribe(
       response => {
         this.tags = response;
@@ -45,6 +72,7 @@ export class DetailsTabComponent implements OnInit, OnChanges {
   }
 
   edit(editProjectForm: NgForm) {
+    console.log("******** edit()");
     this.selectedTags = [];
     this.selectedTagNames = $('#sdgselect2').val();
     if (this.selectedTagNames.length == 0) {
@@ -53,7 +81,7 @@ export class DetailsTabComponent implements OnInit, OnChanges {
         title: 'Unable to edit Sdg tags',
         autohide: true,
         delay: 2500,
-        body: 'Please select at least one Sgf tags',
+        body: 'Please select at least one Sdg tags',
       });
       return;
     }
@@ -66,12 +94,21 @@ export class DetailsTabComponent implements OnInit, OnChanges {
       this.projectToEdit.sdgs = this.selectedTags;
       this.projectService.updateProject(this.projectToEdit).subscribe(
         response => {
-          this.infoMessage = "project updated successfully";
-          this.errorMessage = null;
+          $(document).Toasts('create', {
+            class: 'bg-sucess',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Project updated successfully',
+          })
         },
         error => {
-          this.infoMessage = null;
-          this.errorMessage = "Error has occurred while updating the project";
+          $(document).Toasts('create', {
+            class: 'bg-warning',
+            autohide: true,
+            delay: 2500,
+            body: error,
+          });
         }
       );
     }

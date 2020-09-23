@@ -84,6 +84,10 @@ export class ProjectService {
     );
   }
 
+  getProjectStatusList(): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl+"/getProjectStatusList").pipe();
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
     

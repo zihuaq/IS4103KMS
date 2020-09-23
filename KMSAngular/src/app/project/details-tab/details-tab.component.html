@@ -7,16 +7,6 @@
     <div class='form-group'>
         <label for="description">Description:</label>
         <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="projectToEdit.description"></textarea>
-    </div>
-    <div class="form-group">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" class="form-control" min="minDate" #startDate="ngModel" name="startDate" [(ngModel)]="projectToEdit.startDate" required="true">
-        <span class="help-block" style="color: red" *ngIf="!startDate.valid && startDate.touched">Please enter a valid date</span>
-    </div>
-    <div class="form-group">
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" class="form-control" #endDate="ngModel" name="endDate" [(ngModel)]="projectToEdit.endDate" required="true">
-        <span class="help-block" style="color: red" *ngIf="!endDate.valid && endDate.touched">Please enter a valid date</span>
     </div> 
     <div class="form-group">
         <label for="country">Country:</label>
@@ -281,6 +271,13 @@
                 style="width: 100%;">
             </select>
         </div>
+    </div>
+    <div class="form-group">
+        <label for="status">Project Status:</label>
+        <select class="form-control" id="status" #status="ngModel" name="status" [(ngModel)]="projectToEdit.status">
+            <option *ngFor="let status of projectStatusList" [value]='status'>{{status}}</option>
+        </select>
+        
     </div>
     <button class="btn btn-primary" type="submit" [disabled]="!editProjectForm.valid">Update Project</button>
 </form>

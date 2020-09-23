@@ -21,8 +21,7 @@ export class ProjectDetailsComponent implements OnInit {
   projectToView: Project;
   loggedInUser: User
   owner: User;
-  startDate: string;
-  endDate: string;
+  dateCreated: string;
   isMember: boolean = false;
   isAdmin: boolean = false;
 
@@ -39,12 +38,10 @@ export class ProjectDetailsComponent implements OnInit {
     this.checkAccessRight();
     this.loggedInUser = this.sessionService.getCurrentUser();
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
-    console.log("Project ID: " + this.projectId);
 
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToView = response;
-        console.log(this.projectToView.name);
         this.owner = this.projectToView.projectOwner;
 
         for (let admin of this.projectToView.projectAdmins) {
@@ -61,9 +58,17 @@ export class ProjectDetailsComponent implements OnInit {
             }
           }
         }
-        console.log(this.projectToView.projectMembers);
-        this.startDate = this.projectToView.startDate.toString().substring(0,10);
-        this.endDate = this.projectToView.endDate.toString().substring(0,10);
+        this.dateCreated = this.projectToView.dateCreated.toString().substring(0,10);
+      }, 
+      error => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        })
+        this.router.navigate(["/error"]);
       }
     )
   }
