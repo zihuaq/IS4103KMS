@@ -20,6 +20,7 @@ import { ProjectDetailsComponent } from './project/project-details/project-detai
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
 import { EditProjectComponent } from './project/edit-project/edit-project.component';
+import { ErrorPageComponent } from './project/error-page/error-page.component';
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'signupInstitution', component: CreateNewInstitutionComponent },
   { path: 'signupSelection', component: CreateNewUserSelectorComponent },
   { path: 'login', component: UserLoginPageComponent },
+  { path: 'error', component: ErrorPageComponent },
   {
     path: 'notifications',
     canActivate: [RouteGuard],

@@ -46,6 +46,7 @@ import { ListFilterPipe } from './project/view-all-project/list-filter.pipe';
 import { EditProjectComponent } from './project/edit-project/edit-project.component';
 import { DetailsTabComponent } from './project/details-tab/details-tab.component';
 import { MembersTabComponent } from './project/members-tab/members-tab.component';
+import { ErrorPageComponent } from './project/error-page/error-page.component';
  
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { MembersTabComponent } from './project/members-tab/members-tab.component
     ListFilterPipe,
     EditProjectComponent,
     DetailsTabComponent,
-    MembersTabComponent
+    MembersTabComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
