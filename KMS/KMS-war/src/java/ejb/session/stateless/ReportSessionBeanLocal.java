@@ -17,5 +17,7 @@ import javax.ejb.Local;
 public interface ReportSessionBeanLocal {
     
     public ReportEntity createNewReport(ReportEntity report) throws NoResultException;
+
+    public ReportEntity reportProject(ReportEntity report) throws NoResultException;
     
 }

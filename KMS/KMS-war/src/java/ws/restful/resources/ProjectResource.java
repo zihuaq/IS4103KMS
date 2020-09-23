@@ -107,7 +107,7 @@ public class ProjectResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProject(@PathParam("projectId") Long projectId) {
-        System.out.println("******** ProjectResource: createNewProject()");
+        System.out.println("******** ProjectResource: getProject()");
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         project.getProjectOwner().getGroupsOwned().clear();
         project.getProjectOwner().getReviewsGiven().clear();

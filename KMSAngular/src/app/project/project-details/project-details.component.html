@@ -12,7 +12,7 @@
                             <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
                             <button type="button" class="btn btn-light float-right" (click)="joinProject()">Join Project</button>  
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item">Report Project</a>
+                                <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView"></app-report-project>
                             </div>
                         </span>
                         <span *ngIf="isMember">
