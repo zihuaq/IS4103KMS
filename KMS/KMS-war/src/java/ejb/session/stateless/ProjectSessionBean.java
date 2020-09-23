@@ -84,10 +84,13 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public ProjectEntity getProjectById(Long projectId) {
+    public ProjectEntity getProjectById(Long projectId) throws NoResultException {
         ProjectEntity project = em.find(ProjectEntity.class, projectId);
-        
-        return project;
+        if (project != null) {
+            return project;
+        } else {
+            throw new NoResultException("Project does not exists");
+        }
     }
     
     //User join project
@@ -128,8 +131,6 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         project.setName(projectToUpdate.getName());
         project.setDescription(projectToUpdate.getDescription());
         project.setCountry(projectToUpdate.getCountry());
-        project.setStartDate(projectToUpdate.getStartDate());
-        project.setEndDate(projectToUpdate.getEndDate());
         for (int i = 0; i < projectToUpdate.getSdgs().size(); i++) {
             TagEntity tag = em.find(TagEntity.class, projectToUpdate.getSdgs().get(i).getTagId());
            if (tag == null) {
@@ -137,12 +138,13 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
            }
         }
         project.setSdgs(projectToUpdate.getSdgs());
+        project.setStatus(projectToUpdate.getStatus());
         
     }
     
     //Change project status
     @Override
-    public void updateStatus(Long projectId, String status) {
+    public void updateStatus(Long projectId, String status) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
 
         project.setStatus(ProjectStatusEnum.valueOf(status));
@@ -180,7 +182,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public void deleteProject(Long projectId) {
+    public void deleteProject(Long projectId)  throws NoResultException {
         ProjectEntity projectToDelete = getProjectById(projectId);
         
         projectToDelete.getProjectOwner().getProjectsOwned().remove(projectToDelete);

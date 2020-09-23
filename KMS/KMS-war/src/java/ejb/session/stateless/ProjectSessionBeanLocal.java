@@ -26,7 +26,7 @@ public interface ProjectSessionBeanLocal {
 
     public List<ProjectEntity> retrieveProjectByStatus(ProjectStatusEnum status);
 
-    public ProjectEntity getProjectById(Long projectId);
+    public ProjectEntity getProjectById(Long projectId) throws NoResultException;
 
     public void joinProject(Long projectId, Long userId) throws NoResultException;
 
@@ -34,7 +34,7 @@ public interface ProjectSessionBeanLocal {
 
     public void updateProject(ProjectEntity projectToUpdate) throws NoResultException;
 
-    public void updateStatus(Long projectId, String status);
+    public void updateStatus(Long projectId, String status) throws NoResultException;
 
     public void addAdmin(Long projectId, Long userId) throws NoResultException;
 
@@ -42,6 +42,6 @@ public interface ProjectSessionBeanLocal {
 
     public void changeOwner(Long projectId, Long newOwnerId) throws NoResultException;
 
-    public void deleteProject(Long projectId);
+    public void deleteProject(Long projectId) throws NoResultException;
     
 }
