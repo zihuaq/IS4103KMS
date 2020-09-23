@@ -36,6 +36,10 @@ public class MaterialResourcePostingEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
+    private String unit;
+    
+    @NotNull
+    @Column(nullable=false)
     private Double totalQuantity;
     
     @NotNull
@@ -66,7 +70,7 @@ public class MaterialResourcePostingEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
-    private Double lontitude;
+    private Double longitude;
     
     @ManyToOne
     private ActivityEntity activity;
@@ -78,10 +82,11 @@ public class MaterialResourcePostingEntity implements Serializable {
     public MaterialResourcePostingEntity() {
     }
 
-    public MaterialResourcePostingEntity(Long materialResourcePostingId, String name, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
+    public MaterialResourcePostingEntity(Long materialResourcePostingId, String name, String unit, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
         this();
         this.materialResourcePostingId = materialResourcePostingId;
         this.name = name;
+        this.unit = unit;
         this.totalQuantity = totalQuantity;
         this.obtainedQuantity = obtainedQuantity;
         this.lackingQuantity = lackingQuantity;
@@ -89,7 +94,7 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.startDate = startDate;
         this.endDate = endDate;
         this.latitude = latitude;
-        this.lontitude = lontitude;
+        this.longitude = lontitude;
     }
     
     
@@ -191,12 +196,12 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.latitude = latitude;
     }
 
-    public Double getLontitude() {
-        return lontitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLontitude(Double lontitude) {
-        this.lontitude = lontitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public ActivityEntity getActivity() {
@@ -213,6 +218,14 @@ public class MaterialResourcePostingEntity implements Serializable {
 
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
     
 }

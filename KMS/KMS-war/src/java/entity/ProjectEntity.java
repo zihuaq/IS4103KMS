@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,17 +43,13 @@ public class ProjectEntity implements Serializable {
     
     private String description;
     
+    @Enumerated(EnumType.STRING)
     private ProjectStatusEnum status;
     
     @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
-    private Date startDate;
-    
-    @NotNull
-    @Column(nullable=false)
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private Date dateCreated;
     
     @NotNull
     @Column(nullable=false)
@@ -103,13 +101,12 @@ public class ProjectEntity implements Serializable {
         this.sdgs = new ArrayList<>();
     }
 
-    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, Double monetaryFundingRequired) {
+    public ProjectEntity(Long projectId, String name, String description, Date startDate, String country, Double monetaryFundingRequired) {
         this();
         this.projectId = projectId;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.dateCreated = startDate;
         this.country = country;
         this.monetaryFundingRequired = monetaryFundingRequired;
     } 
@@ -195,20 +192,12 @@ public class ProjectEntity implements Serializable {
         this.monetaryFundingObtained = monetaryFundingObtained;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public String getCountry() {
