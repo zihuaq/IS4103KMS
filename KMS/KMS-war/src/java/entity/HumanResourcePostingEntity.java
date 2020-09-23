@@ -66,7 +66,7 @@ public class HumanResourcePostingEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
-    private Double lontitude;
+    private Double longitude;
     
     @ManyToOne
     private ActivityEntity activity;
@@ -74,8 +74,23 @@ public class HumanResourcePostingEntity implements Serializable {
     @ManyToOne
     @JoinColumn
     private ProjectEntity project;
-    
-    
+
+    public HumanResourcePostingEntity() {
+    }
+
+    public HumanResourcePostingEntity(Long humanResourcePostingId, String name, Integer totalSlots, Integer obtainedSlots, Integer lackingSlots, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
+        this();
+        this.humanResourcePostingId = humanResourcePostingId;
+        this.name = name;
+        this.totalSlots = totalSlots;
+        this.obtainedSlots = obtainedSlots;
+        this.lackingSlots = lackingSlots;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.latitude = latitude;
+        this.longitude = lontitude;
+    }  
 
     public Long getHumanResourcePostingId() {
         return humanResourcePostingId;
@@ -174,12 +189,12 @@ public class HumanResourcePostingEntity implements Serializable {
         this.latitude = latitude;
     }
 
-    public Double getLontitude() {
-        return lontitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLontitude(Double lontitude) {
-        this.lontitude = lontitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public ActivityEntity getActivity() {

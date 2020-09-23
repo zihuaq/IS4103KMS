@@ -35,6 +35,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import util.enumeration.ProjectStatusEnum;
 import ws.restful.model.CreateProjectReq;
 import ws.restful.model.CreateProjectRsp;
 import ws.restful.model.ErrorRsp;
@@ -92,7 +93,7 @@ public class ProjectResource {
                 System.out.println("******** Project created");
                 return Response.status(Status.OK).entity(createProjectRsp).build();
             } catch (CreateProjectException ex) {
-                ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
                 return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
             }
@@ -108,80 +109,85 @@ public class ProjectResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProject(@PathParam("projectId") Long projectId) {
         System.out.println("******** ProjectResource: getProject()");
-        ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
-        project.getProjectOwner().getGroupsOwned().clear();
-        project.getProjectOwner().getReviewsGiven().clear();
-        project.getProjectOwner().getReviewsReceived().clear();
-        project.getProjectOwner().getProjectsOwned().clear();
-        project.getProjectOwner().getProjectsJoined().clear();
-        project.getProjectOwner().getProjectAdmins().clear();
-        project.getProjectOwner().getGroupsJoined().clear();
-        project.getProjectOwner().getPosts().clear();
-        project.getProjectOwner().getBadges().clear();
-        project.getProjectOwner().getMras().clear();
-        project.getProjectOwner().getSkills().clear();
-        project.getProjectOwner().getFollowers().clear();
-        project.getProjectOwner().getFollowing().clear();
-        project.getProjectOwner().getSdgs().clear();
-        project.getProjectOwner().getFollowRequestMade().clear();
-        project.getProjectOwner().getFollowRequestReceived().clear();
-        for (UserEntity member : project.getProjectMembers()) {
-            member.getGroupsOwned().clear();
-            member.getReviewsGiven().clear();
-            member.getReviewsReceived().clear();
-            member.getProjectsOwned().clear();
-            member.getProjectsJoined().clear();
-            member.getProjectAdmins().clear();
-            member.getGroupsJoined().clear();
-            member.getPosts().clear();
-            member.getBadges().clear();
-            member.getMras().clear();
-            member.getSkills().clear();
-            member.getFollowers().clear();
-            member.getFollowing().clear();
-            member.getSdgs().clear();
-            member.getFollowRequestMade().clear();
-            member.getFollowRequestReceived().clear();
+        try {
+            ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
+            project.getProjectOwner().getGroupsOwned().clear();
+            project.getProjectOwner().getReviewsGiven().clear();
+            project.getProjectOwner().getReviewsReceived().clear();
+            project.getProjectOwner().getProjectsOwned().clear();
+            project.getProjectOwner().getProjectsJoined().clear();
+            project.getProjectOwner().getProjectAdmins().clear();
+            project.getProjectOwner().getGroupsJoined().clear();
+            project.getProjectOwner().getPosts().clear();
+            project.getProjectOwner().getBadges().clear();
+            project.getProjectOwner().getMras().clear();
+            project.getProjectOwner().getSkills().clear();
+            project.getProjectOwner().getFollowers().clear();
+            project.getProjectOwner().getFollowing().clear();
+            project.getProjectOwner().getSdgs().clear();
+            project.getProjectOwner().getFollowRequestMade().clear();
+            project.getProjectOwner().getFollowRequestReceived().clear();
+            for (UserEntity member : project.getProjectMembers()) {
+                member.getGroupsOwned().clear();
+                member.getReviewsGiven().clear();
+                member.getReviewsReceived().clear();
+                member.getProjectsOwned().clear();
+                member.getProjectsJoined().clear();
+                member.getProjectAdmins().clear();
+                member.getGroupsJoined().clear();
+                member.getPosts().clear();
+                member.getBadges().clear();
+                member.getMras().clear();
+                member.getSkills().clear();
+                member.getFollowers().clear();
+                member.getFollowing().clear();
+                member.getSdgs().clear();
+                member.getFollowRequestMade().clear();
+                member.getFollowRequestReceived().clear();
+            }
+            for (UserEntity admin : project.getProjectAdmins()) {
+                admin.getGroupsOwned().clear();
+                admin.getReviewsGiven().clear();
+                admin.getReviewsReceived().clear();
+                admin.getProjectsOwned().clear();
+                admin.getProjectsJoined().clear();
+                admin.getProjectAdmins().clear();
+                admin.getGroupsJoined().clear();
+                admin.getPosts().clear();
+                admin.getBadges().clear();
+                admin.getMras().clear();
+                admin.getSkills().clear();
+                admin.getFollowers().clear();
+                admin.getFollowing().clear();
+                admin.getSdgs().clear();
+                admin.getFollowRequestMade().clear();
+                admin.getFollowRequestReceived().clear();
+            }
+            for (ActivityEntity ae : project.getActivities()) {
+                ae.setProject(null);
+                ae.getHumanResourcePostings().clear();
+                ae.getMaterialResourcePostings().clear();
+            }
+            for (HumanResourcePostingEntity hrp : project.getHumanResourcePostings()) {
+                hrp.setActivity(null);
+                hrp.setProject(null);
+            }
+            for (MaterialResourcePostingEntity mrp : project.getMaterialResourcePostings()) {
+                mrp.setActivity(null);
+                mrp.setProject(null);
+            }
+            for (TaskEntity task : project.getTasks()) {
+                task.setProject(null);
+            }
+            for (PostEntity post : project.getPosts()) {
+                post.setPostOwner(null);
+                post.setProject(null);
+            }
+            return Response.status(Status.OK).entity(project).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
-        for (UserEntity admin : project.getProjectAdmins()) {
-            admin.getGroupsOwned().clear();
-            admin.getReviewsGiven().clear();
-            admin.getReviewsReceived().clear();
-            admin.getProjectsOwned().clear();
-            admin.getProjectsJoined().clear();
-            admin.getProjectAdmins().clear();
-            admin.getGroupsJoined().clear();
-            admin.getPosts().clear();
-            admin.getBadges().clear();
-            admin.getMras().clear();
-            admin.getSkills().clear();
-            admin.getFollowers().clear();
-            admin.getFollowing().clear();
-            admin.getSdgs().clear();
-            admin.getFollowRequestMade().clear();
-            admin.getFollowRequestReceived().clear();
-        }
-        for (ActivityEntity ae : project.getActivities()) {
-            ae.setProject(null);
-            ae.getHumanResourcePostings().clear();
-            ae.getMaterialResourcePostings().clear();
-        }
-        for (HumanResourcePostingEntity hrp : project.getHumanResourcePostings()) {
-            hrp.setActivity(null);
-            hrp.setProject(null);
-        }
-        for (MaterialResourcePostingEntity mrp : project.getMaterialResourcePostings()) {
-            mrp.setActivity(null);
-            mrp.setProject(null);
-        }
-        for (TaskEntity task : project.getTasks()) {
-            task.setProject(null);
-        }
-        for (PostEntity post : project.getPosts()) {
-            post.setPostOwner(null);
-            post.setProject(null);
-        }
-        return Response.status(Status.OK).entity(project).build();
 
     }
     
@@ -294,9 +300,15 @@ public class ProjectResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteProject(@PathParam("projectId") Long projectId) {
-        projectSessionBeanLocal.deleteProject(projectId);
-        
-        return Response.status(Status.OK).build();
+        System.out.println("******** ProjectResource: deleteProject()");
+        try {
+            projectSessionBeanLocal.deleteProject(projectId);
+
+            return Response.status(Status.OK).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
     }
     
     @Path("/update")
@@ -304,6 +316,7 @@ public class ProjectResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateProject(ProjectEntity project) {
+        System.out.println("******** ProjectResource: updateProject()");
         try {
             projectSessionBeanLocal.updateProject(project);
             return Response.status(204).build();
@@ -312,6 +325,16 @@ public class ProjectResource {
             
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
+    }
+    
+    @Path("/getProjectStatusList")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectStatusList() {
+        System.out.println("******** ProjectResource: getProjectStatusList()");
+        ProjectStatusEnum[] enumList = ProjectStatusEnum.values();
+        
+        return Response.status(Response.Status.OK).entity(enumList).build();
     }
 
     private ProjectSessionBeanLocal lookupProjectSessionBeanLocal() {

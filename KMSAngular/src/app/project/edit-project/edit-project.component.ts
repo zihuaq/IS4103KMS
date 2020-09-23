@@ -32,7 +32,6 @@ export class EditProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
-    console.log("Project ID: " + this.projectId);
 
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
@@ -40,8 +39,15 @@ export class EditProjectComponent implements OnInit {
         if (this.projectToEdit.projectOwner.userId == this.sessionService.getCurrentUser().userId) {
           this.isOwner = true;
         }
+      }, 
+      error => {
+        this.router.navigate(["/error"]);
       }
     );
+  }
+
+  back() {
+    this.router.navigate(["/projectDetails/" + this.projectToEdit.projectId]);
   }
 
   handleProjectChanged(event) {
@@ -71,5 +77,30 @@ export class EditProjectComponent implements OnInit {
         });
       }
     )
+  }
+
+  deleteProject() {
+    if (this.isOwner) {
+      this.projectService.deleteProject(this.projectId).subscribe(
+        response => {
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Project deleted successfully',
+          });
+          this.router.navigate(["/viewAllProjects"]);
+        }
+      );
+    } else {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: "Only owner of project can delete this project",
+      });
+    }
   }
 }

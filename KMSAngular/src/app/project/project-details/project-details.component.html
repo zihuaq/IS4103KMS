@@ -46,15 +46,15 @@
                         <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
                             <p>Description: {{projectToView.description}}</p>
                             <p>Country: {{projectToView.country}}</p>
-                            <p>Start date: {{startDate}}</p>
-                            <p>End date: {{endDate}}</p>
+                            <p>Date created: {{dateCreated}}</p>
                             <p>Monetary Funding Required: ${{projectToView.monetaryFundingRequired}}</p>
                             <p>Monetary Funding Obtained: ${{projectToView.monetaryFundingObtained}}</p>
                             <p>SDGs: 
                                 <span *ngFor="let tag of projectToView.sdgs">
                                     {{tag.name}}&nbsp;
                                 </span>  
-                            </p>                              
+                            </p>
+                            <p>Project status: {{projectToView.status}}</p>                      
                         </div>
                         <div class="tab-pane fade" id="members-tab" role="tabpanel">
                             <div class="row">

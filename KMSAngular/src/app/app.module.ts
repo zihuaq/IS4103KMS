@@ -47,6 +47,7 @@ import { EditProjectComponent } from './project/edit-project/edit-project.compon
 import { DetailsTabComponent } from './project/details-tab/details-tab.component';
 import { MembersTabComponent } from './project/members-tab/members-tab.component';
 import { ReportProjectComponent } from './project/report-project/report-project.component';
+import { ErrorPageComponent } from './project/error-page/error-page.component';
  
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { ReportProjectComponent } from './project/report-project/report-project.
     EditProjectComponent,
     DetailsTabComponent,
     MembersTabComponent,
-    ReportProjectComponent
+    ReportProjectComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,

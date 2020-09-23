@@ -30,7 +30,9 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(ws.restful.resources.CorsFilter.class);
+        resources.add(ws.restful.resources.HrpResource.class);
         resources.add(ws.restful.resources.MraResource.class);
+        resources.add(ws.restful.resources.MrpResource.class);
         resources.add(ws.restful.resources.ProjectResource.class);
         resources.add(ws.restful.resources.ReportResource.class);
         resources.add(ws.restful.resources.TagResource.class);
