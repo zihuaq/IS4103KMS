@@ -9,11 +9,8 @@
                     <h5 class="card-title">{{projectToView.name}}</h5>
                     <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}
                         <span *ngIf="!isMember">
-                            <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
+                            <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView"></app-report-project>
                             <button type="button" class="btn btn-light float-right" (click)="joinProject()">Join Project</button>  
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView"></app-report-project>
-                            </div>
                         </span>
                         <span *ngIf="isMember">
                             <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>

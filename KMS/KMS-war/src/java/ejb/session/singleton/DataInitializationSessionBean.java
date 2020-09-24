@@ -11,16 +11,13 @@ import Exception.TagNameExistException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
-import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
+import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
@@ -65,7 +62,7 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Project Management", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Content Marketing", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Digital Marketing", TagTypeEnum.SKILL));
-        tagSessionBean.createNewTag(new TagEntity("Transalation", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Translation", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Software Engineering", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("User Interface Design", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Tech Support", TagTypeEnum.SKILL));
@@ -120,5 +117,6 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORT));
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORT));
     }
 }

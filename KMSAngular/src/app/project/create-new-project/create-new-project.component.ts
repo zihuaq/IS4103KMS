@@ -91,7 +91,7 @@ export class CreateNewProjectComponent implements OnInit {
       this.projectService.createNewProject(this.newProject, this.ownerId, this.tagIdsSelected).subscribe(
         response => {
           $(document).Toasts('create', {
-            class: 'bg-sucess',
+            class: 'bg-success',
             title: 'Success',
             autohide: true,
             delay: 2500,
