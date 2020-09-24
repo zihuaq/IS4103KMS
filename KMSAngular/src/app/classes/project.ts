@@ -9,6 +9,7 @@ export class Project {
     status: ProjectType;
     dateCreated: Date;
     country: string;
+    profilePicture: string | ArrayBuffer;
     projectOwner: User;
     projectMembers: User[];
     projectAdmins: User[];
@@ -16,13 +17,14 @@ export class Project {
     monetaryFundingObtained: number;
     sdgs: Tag[];
 
-    constructor(projectId?: number, name?: string, description?: string, status?: ProjectType, dateCreated?: Date, country?: string, monetaryFundingRequired?: number, monetaryFundingObtained?: number, projectOwner?: User, projectMembers?: User[], projectAdmins?: User[], sdgs?: Tag[]) {
+    constructor(projectId?: number, name?: string, description?: string, status?: ProjectType, dateCreated?: Date, country?: string, profilePicture?: string | ArrayBuffer, monetaryFundingRequired?: number, monetaryFundingObtained?: number, projectOwner?: User, projectMembers?: User[], projectAdmins?: User[], sdgs?: Tag[]) {
         this.projectId = projectId;
         this.name = name;
         this.description = description;
         this.status = status;
         this.dateCreated = dateCreated;
         this.country = country;
+        this.profilePicture = profilePicture;
         this.projectOwner = projectOwner;
         this.projectMembers = projectMembers;
         this.projectAdmins = projectAdmins;

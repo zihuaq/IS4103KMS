@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -54,6 +55,9 @@ public class ProjectEntity implements Serializable {
     @NotNull
     @Column(nullable=false)
     private String country;
+    
+    @Lob
+    private String profilePicture;
     
     @ManyToOne
     private UserEntity projectOwner;
@@ -101,13 +105,14 @@ public class ProjectEntity implements Serializable {
         this.sdgs = new ArrayList<>();
     }
 
-    public ProjectEntity(Long projectId, String name, String description, Date startDate, String country, Double monetaryFundingRequired) {
+    public ProjectEntity(Long projectId, String name, String description, Date startDate, String country, String profilePicture, Double monetaryFundingRequired) {
         this();
         this.projectId = projectId;
         this.name = name;
         this.description = description;
         this.dateCreated = startDate;
         this.country = country;
+        this.profilePicture = profilePicture;
         this.monetaryFundingRequired = monetaryFundingRequired;
     } 
 
@@ -270,6 +275,14 @@ public class ProjectEntity implements Serializable {
 
     public void setSdgs(List<TagEntity> sdgs) {
         this.sdgs = sdgs;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
     
 }

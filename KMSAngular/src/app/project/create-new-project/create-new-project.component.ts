@@ -27,6 +27,8 @@ export class CreateNewProjectComponent implements OnInit {
   projectCreationError = false;
   tagIdsSelected: number[];
   selectedTagNames: string[];
+  selectedProfilePicture: string | ArrayBuffer;
+  selectedProfilePictureName: string;
 
   constructor(public projectService: ProjectService,
     private tagService: TagService,
@@ -64,6 +66,25 @@ export class CreateNewProjectComponent implements OnInit {
     });
     this.newProject = changes.profile.currentValue;
   }
+
+  getFiles(event) {
+    if (event.target.files[0] != undefined) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.selectedProfilePicture = e.target.result;
+        console.log(this.selectedProfilePicture);
+      };
+      this.selectedProfilePictureName = event.target.files[0].name;
+      console.log(event.target.files[0].name);
+      reader.readAsDataURL(event.target.files[0]);
+    } else {
+      this.selectedProfilePicture = undefined;
+    }
+  }
+
+  removePicture() {
+    this.selectedProfilePicture = undefined;
+  }
   
   create(createProjectForm: NgForm) {
     this.ownerId = this.sessionService.getCurrentUser().userId;
@@ -88,6 +109,7 @@ export class CreateNewProjectComponent implements OnInit {
     if (createProjectForm.valid) {
       console.log(this.newProject);
       this.newProject.dateCreated = new Date();
+      this.newProject.profilePicture = this.selectedProfilePicture;
       this.projectService.createNewProject(this.newProject, this.ownerId, this.tagIdsSelected).subscribe(
         response => {
           $(document).Toasts('create', {

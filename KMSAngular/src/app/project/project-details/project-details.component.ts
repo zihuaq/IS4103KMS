@@ -42,6 +42,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToView = response;
+        console.log(this.projectToView.profilePicture);
         this.owner = this.projectToView.projectOwner;
 
         for (let admin of this.projectToView.projectAdmins) {

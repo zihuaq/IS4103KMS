@@ -5,8 +5,16 @@
     <div class="content-header">
         <div class="content-fluid">
             <div class="card">
+                <div class="image" *ngIf="projectToView.profilePicture" style="height: 300px; overflow: hidden; position: relative;">
+                    <img class="card-img-top" style="margin: -15% 0 0 0; cursor: pointer; display: block;" [src]="projectToView.profilePicture" data-toggle="modal" data-target="#modal-profilePicture" alt="Project Profile Picture">
+                    <!--
+                    <div class="after">
+                        <i class="fas fa-expand-alt" style="position: absolute; background-color: darkgrey; bottom:0; right:0;">Click image to enlarge</i>
+                    </div>
+                -->
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{projectToView.name}}</h5>
+                    <h5 class="card-title" style="font-size: x-large; font-weight: bold;">{{projectToView.name}}</h5>
                     <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}
                         <span *ngIf="!isMember">
                             <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView"></app-report-project>
@@ -114,5 +122,21 @@
         </div>          
     </div>  
 </div>
+
+<div class="modal fade" id="modal-profilePicture">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-body" style="margin-top: -1.5%;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          <img style="width: 100%; padding-top: 1%;" [src]="projectToView.profilePicture" alt="Project Profile Picture">
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 
 <app-footer></app-footer>
