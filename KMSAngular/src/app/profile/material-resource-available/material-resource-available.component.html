@@ -1,5 +1,5 @@
 <button type="button" class="btn btn-block bg-gradient-info" data-toggle="modal" data-target="#modal-info"
-    *ngIf="loggedInUser.userId == profile.userId">
+    data-backdrop="static" *ngIf="loggedInUser.userId == profile.userId">
     Add Material Resource Available
     <i class="fas fa-plus"></i>
 </button>
@@ -8,7 +8,8 @@
         <div class="modal-content bg-info">
             <div class="modal-header">
                 <h4 class="modal-title">Add Material Resource Available</h4>
-                <button type="button" id="addMraModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" id="addMraModalCloseBtn" class="close" data-dismiss="modal"
+                    (click)="clear(mraForm)" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -16,19 +17,23 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="mraName">Material Resource Name *</label>
-                        <input type="text" id="mraName" class="form-control" ngModel name="mraName" required>
+                        <input type="text" id="mraName" class="form-control" [ngModel]="editingMra.name" name="mraName"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="quantity"> Quantity *</label>
-                        <input type="text" id="quantity" class="form-control" ngModel name="quantity" required>
+                        <input type="text" id="quantity" class="form-control" [ngModel]="editingMra.quantity"
+                            name="quantity" required>
                     </div>
                     <div class="form-group">
                         <label for="units"> Units *</label>
-                        <input type="text" id="units" class="form-control" ngModel name="units" required>
+                        <input type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control" ngModel name="description">
+                        <input type="text" id="description" class="form-control" [ngModel]="editingMra.description"
+                            name="description">
                     </div>
                     <div class="form-group">
                         <label>Material Resource Tags *</label>
@@ -47,31 +52,33 @@
                     </div>
                     <div class="form-group">
                         <label for="latitude">Latitude *</label>
-                        <input type="text" id="latitude" class="form-control " [ngModel]="lat" name="latitude" required
-                            disabled>
+                        <input type="text" id="latitude" class="form-control " [ngModel]="editingMra.latitude"
+                            name="latitude" required disabled>
                     </div>
                     <div class="form-group">
                         <label for="longitude">Longitude *</label>
-                        <input type="text" id="longitude" class="form-control" [ngModel]="lng" name="longitude" required
-                            disabled>
+                        <input type="text" id="longitude" class="form-control" [ngModel]="editingMra.longitude"
+                            name="longitude" required disabled>
                     </div>
                     <div class="form-group my-checkbox">
                         <label> Does your resource expire? </label>
                         <input type="checkbox" id="my-checkbox" name="my-checkbox" data-bootstrap-switch
-                            (change)="handleHasExpiryChange()">
+                            [checked]="hasExpiry" (change)="handleHasExpiryChange()">
                     </div>
                     <div *ngIf="hasExpiry" class="form-group">
                         <label>Start Date:</label>
-                        <input type="date" id="startDate" class="form-control" ngModel name="startDate" [min]="minDate"
-                            required />
+                        <input type="date" id="startDate" class="form-control" [ngModel]="editingMraStartDate"
+                            name="startDate" [min]="minDate" required />
                     </div>
                     <div *ngIf="hasExpiry" class="form-group">
                         <label>End Date:</label>
-                        <input type="date" id="endDate" class="form-control" ngModel name="endDate" [min]="minDate" />
+                        <input type="date" id="endDate" class="form-control" [ngModel]="editingMraEndDate"
+                            name="endDate" [min]="minDate" />
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal"
+                        (click)="clear(mraForm)">Close</button>
                     <button type="button" type="submit" class="btn btn-outline-light"
                         [disabled]="!mraForm.valid">Submit</button>
                 </div>
@@ -89,12 +96,13 @@
     {{profile.lastName}}'s Material Resources Available</label>
 <br />
 
-<span *ngIf="profile.mras.length == 0 && loggedInUser.userId == profile.userId"> You have no material resource available
+<span *ngIf="profile.mras && profile.mras.length == 0 && loggedInUser.userId == profile.userId"> You have no material
+    resource available
     at the moment.</span>
-<span *ngIf="profile.mras.length == 0 && loggedInUser.userId != profile.userId"> {{profile.firstName}}
+<span *ngIf="profile.mras && profile.mras.length == 0 && loggedInUser.userId != profile.userId"> {{profile.firstName}}
     {{profile.lastName}} has no material resource available at the moment.</span>
 
-<span *ngIf="profile.mras.length > 0">
+<span *ngIf="profile.mras && profile.mras.length > 0">
     <div *ngFor="let mra of profile.mras">
         <div class="card">
             <!-- /.card-header -->
@@ -106,8 +114,8 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" (click)="setEditingMra(mra)" data-toggle="modal"
-                        data-target="#modal-default">
+                    <button type="button" class="btn btn-tool" (click)="editMra(mra)" data-toggle="modal"
+                        data-backdrop="static" data-target="#modal-info">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button type="button" class="btn btn-tool" data-card-widget="remove" (click)="deleteMra(mra.mraId)">
@@ -158,86 +166,3 @@
         </div>
     </div>
 </span>
-
-<div class="modal fade" id="modal-default" *ngIf="loggedInUser.userId == profile.userId && editingMra">
-    <div class="modal-dialog">
-        <div class="modal-content bg-info">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Material Resource Available</h4>
-                <button type="button" id="editMraModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form (ngSubmit)="editMaterialResourceRequest(editMraForm)" #editMraForm="ngForm">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="editMraName">Material Resource Name *</label>
-                        <input type="text" id="editMraName" class="form-control" [ngModel]="editingMra.name" name="editMraName"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editQuantity"> Quantity *</label>
-                        <input type="text" id="editQuantity" class="form-control" [ngModel]="editingMra.quantity"
-                            name="editQuantity" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editUnits"> Units *</label>
-                        <input type="text" id="editUnits" class="form-control" [ngModel]="editingMra.units" name="editUnits"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editDescription">Description</label>
-                        <input type="text" id="editDescription" class="form-control" [ngModel]="editingMra.description"
-                            name="editDescription">
-                    </div>
-                    <div class="form-group">
-                        <label>Material Resource Tags *</label>
-                        <div class="select2-blue">
-                            <select class="select2" id="editmraselect2" multiple="multiple"
-                                data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue"
-                                style="width: 100%;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Location of resource</label>
-                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
-                            (mapClick)="click($event)">
-                        </google-map>
-                    </div>
-                    <div class="form-group">
-                        <label for="editLatitude">Latitude *</label>
-                        <input type="text" id="editLatitude" class="form-control " [ngModel]="editingMra.latitude" name="editLatitude" required
-                            disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="editLongitude">Longitude *</label>
-                        <input type="text" id="editLongitude" class="form-control" [ngModel]="editingMra.longitude" name="editLongitude" required
-                            disabled>
-                    </div>
-                    <div class="form-group my-checkbox-edit">
-                        <label for="my-checkbox-edit"> Does your resource expire? </label>
-                        <input type="checkbox" id="my-checkbox-edit" name="my-checkbox-edit" data-bootstrap-switch
-                            (change)="handleHasExpiryChangeForEdit()">
-                    </div>
-                    <div *ngIf="hasExpiryForEdit" class="form-group">
-                        <label>Start Date:</label>
-                        <input type="date" id="startDateEdit" class="form-control" ngModel name="startDateEdit" [min]="minDate"
-                            required />
-                    </div>
-                    <div *ngIf="hasExpiryForEdit" class="form-group">
-                        <label>End Date:</label>
-                        <input type="date" id="endDateEdit" class="form-control" ngModel name="endDateEdit" [min]="minDate" />
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                    <button type="button" type="submit" class="btn btn-outline-light"
-                        [disabled]="!editMraForm.valid">Submit</button>
-                </div>
-            </form>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>

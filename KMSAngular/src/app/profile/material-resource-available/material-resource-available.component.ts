@@ -11,7 +11,6 @@ import { User } from '../../classes/user';
 import { TagService } from '../../tag.service';
 import { Tag } from '../../classes/tag';
 import { NgForm } from '@angular/forms';
-import { UserService } from 'src/app/user.service';
 import { MaterialResourceAvailableService } from 'src/app/mra.service';
 import { MaterialResourceAvailable } from 'src/app/classes/material-resource-available';
 
@@ -40,21 +39,19 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     scrollwheel: true,
     disableDoubleClickZoom: true,
   };
-  lat: string;
-  lng: string;
   hasExpiry = false;
-  hasExpiryForEdit;
   editingMra: MaterialResourceAvailable;
-  editingMraId: number;
+  editingMraStartDate: string;
+  editingMraEndDate: string;
 
   constructor(
     private tagService: TagService,
-    private userService: UserService,
     private mraService: MaterialResourceAvailableService
   ) {}
 
   ngOnInit(): void {
-    this.userService
+    this.editingMra = new MaterialResourceAvailable();
+    this.mraService
       .getMaterialResourceAvailable(this.profile.userId)
       .subscribe((mras) => {
         this.profile = { ...this.profile, mras };
@@ -62,12 +59,6 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     this.tagService.getAllMaterialResourceTags().subscribe((response) => {
       this.mraTags = response;
       $('#mraselect2').select2({
-        data: this.mraTags.map((item) => {
-          return item.name;
-        }),
-        allowClear: true,
-      });
-      $('#editmraselect2').select2({
         data: this.mraTags.map((item) => {
           return item.name;
         }),
@@ -94,20 +85,13 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         }),
         allowClear: true,
       });
-      $('#editmraselect2').select2({
-        data: this.mraTags.map((item) => {
-          return item.name;
-        }),
-        allowClear: true,
-      });
     });
     this.profile = changes.profile.currentValue;
   }
 
   click(event: google.maps.MouseEvent) {
-    console.log(event);
-    this.lat = event.latLng.lat().toString();
-    this.lng = event.latLng.lng().toString();
+    this.editingMra.latitude = event.latLng.lat().toString();
+    this.editingMra.longitude = event.latLng.lng().toString();
   }
 
   createMaterialResourceRequest(mraForm: NgForm) {
@@ -130,13 +114,14 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     });
     if (mraForm.valid) {
       this.newMra = new MaterialResourceAvailable();
+      this.newMra.mraId = this.editingMra.mraId;
       this.newMra.materialResourceAvailableOwner = this.profile;
       this.newMra.name = mraForm.value.mraName;
       this.newMra.quantity = mraForm.value.quantity;
       this.newMra.units = mraForm.value.units;
       this.newMra.description = mraForm.value.description;
-      this.newMra.latitude = this.lat;
-      this.newMra.longitude = this.lng;
+      this.newMra.latitude = this.editingMra.latitude;
+      this.newMra.longitude = this.editingMra.longitude;
       if (this.hasExpiry) {
         if (
           new Date(mraForm.value.startDate).toJSON().slice(0, 10) >
@@ -156,79 +141,32 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         }
       }
       this.newMra.tags = this.selectedTags;
-      console.log(this.newMra);
-      this.userService
-        .createMaterialResourceAvailable(this.newMra)
-        .subscribe((responsedata) => {
-          this.profile.mras = responsedata;
-        });
-
-      $('#addMraModalCloseBtn').click();
-    }
-    console.log();
-  }
-
-  editMaterialResourceRequest(editMraForm: NgForm) {
-    this.selectedTags = [];
-    this.selectedTagNames = $('#editmraselect2').val();
-    if (this.selectedTagNames.length == 0) {
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Unable to edit Material Resource Available',
-        autohide: true,
-        delay: 2500,
-        body: 'Please select at least one Material Resource tags',
-      });
-      return;
-    }
-    this.mraTags.forEach((element) => {
-      if (this.selectedTagNames.includes(element.name)) {
-        this.selectedTags.push(element);
-      }
-    });
-    if (editMraForm.valid) {
-      this.newMra = new MaterialResourceAvailable();
-      this.newMra.materialResourceAvailableOwner = this.profile;
-      this.newMra.name = editMraForm.value.editMraName;
-      this.newMra.quantity = editMraForm.value.edituantity;
-      this.newMra.units = editMraForm.value.editUnits;
-      this.newMra.description = editMraForm.value.editDescription;
-      this.newMra.latitude = this.editingMra.latitude;
-      this.newMra.longitude = this.editingMra.longitude;
-      if (this.hasExpiryForEdit) {
-        if (
-          new Date(editMraForm.value.editStartDate).toJSON().slice(0, 10) >
-          new Date(editMraForm.value.editEndDate).toJSON().slice(0, 10)
-        ) {
-          $(document).Toasts('create', {
-            class: 'bg-warning',
-            title: 'Unable to edit Material Resource Available',
-            autohide: true,
-            delay: 2500,
-            body: 'End date should not come before the Start Date',
+      if (!this.editingMra.mraId) {
+        this.mraService
+          .createMaterialResourceAvailable(this.newMra)
+          .subscribe((responsedata) => {
+            this.profile.mras = responsedata;
           });
-          return;
-        } else {
-          this.newMra.startDate = new Date(editMraForm.value.editStartDate);
-          this.newMra.endDate = new Date(editMraForm.value.editEndDate);
-        }
+      } else {
+        this.mraService
+          .updateMaterialResourceAvailable(this.newMra)
+          .subscribe((responsedata) => {
+            this.profile.mras = responsedata;
+          });
       }
-      this.newMra.tags = this.selectedTags;
-      this.newMra.mraId = this.editingMraId;
-      console.log(this.newMra);
-      console.log(this.editingMra);
-      this.mraService
-        .updateMaterialResourceRequest(this.newMra)
-        .subscribe((responsedata) => {
-          this.profile.mras = responsedata;
-        });
-
-      $('#editMraModalCloseBtn').click();
+      $('#addMraModalCloseBtn').click();
+      mraForm.reset();
+      this.selectedTags = [];
+      $('#mraselect2').val(null).trigger('change');
+      this.editingMra = new MaterialResourceAvailable();
+      this.editingMraStartDate = null;
+      this.editingMraEndDate = null;
+      this.hasExpiry = false;
     }
   }
 
   deleteMra(mraId: number) {
-    this.userService
+    this.mraService
       .deleteMaterialResourceAvailable(this.profile.userId, mraId)
       .subscribe((responsedata) => {
         this.profile.mras = responsedata;
@@ -239,20 +177,24 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     this.hasExpiry = !this.hasExpiry;
   }
 
-  handleHasExpiryChangeForEdit(){
-    this.hasExpiryForEdit = !this.hasExpiryForEdit;
+  editMra(mra: MaterialResourceAvailable) {
+    this.selectedTags = mra.tags;
+    $('#mraselect2')
+      .val(mra.tags.map((tag) => tag.name))
+      .trigger('change');
+    this.editingMra = mra;
+    this.hasExpiry = mra.endDate == null ? false : true;
+    this.editingMraStartDate = this.editingMra.startDate.toJSON().slice(0, 10);
+    this.editingMraEndDate = this.editingMra.endDate.toJSON().slice(0, 10);
   }
 
-  setEditingMra(mra: MaterialResourceAvailable) {
-    console.log(mra)
-    this.mraService
-      .getMaterialResourceAvailableById(mra.mraId)
-      .subscribe((response) => {
-        this.editingMraId = response.materialResourceAvailableOwner.userId;
-      });
-    this.editingMra = mra;
-    this.hasExpiryForEdit = mra.endDate == null ? true: false;
-    console.log(this.editingMra);
-    console.log(this.editingMraId);
+  clear(mraForm: NgForm) {
+    mraForm.reset();
+    this.selectedTags = [];
+    $('#mraselect2').val(null).trigger('change');
+    this.editingMra = new MaterialResourceAvailable();
+    this.editingMraStartDate = null;
+    this.editingMraEndDate = null;
+    this.hasExpiry = false;
   }
 }

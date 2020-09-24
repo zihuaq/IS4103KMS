@@ -22,10 +22,12 @@
         <span class="badge badge-warning navbar-badge"
           *ngIf="followRequests && followRequests.length > 0 || affiliationRequests && affiliationRequests.length > 0">{{followRequests.length + affiliationRequests.length}}</span>
       </a>
-      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" *ngIf="followRequests || affiliationRequests">
-        <span class="dropdown-item dropdown-header" *ngIf="followRequests.length > 0 || affiliationRequests.length > 0">{{followRequests.length + affiliationRequests.length}}
+      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" *ngIf="followRequests && affiliationRequests">
+        <span class="dropdown-item dropdown-header"
+          *ngIf="followRequests.length > 0 || affiliationRequests.length > 0">{{followRequests.length + affiliationRequests.length}}
           Notifications</span>
-        <span class="dropdown-item dropdown-header" *ngIf="followRequests.length == 0 && affiliationRequests.length == 0">No Notifications</span>
+        <span class="dropdown-item dropdown-header"
+          *ngIf="followRequests.length == 0 && affiliationRequests.length == 0">No Notifications</span>
         <div class="dropdown-divider"></div>
         <!-- <a href="#" class="dropdown-item">
           <i class="fas fa-envelope mr-2"></i> 4 new messages

@@ -10,7 +10,6 @@ import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Tag } from './classes/tag';
 import { Router } from '@angular/router';
-import { MaterialResourceAvailable } from './classes/material-resource-available';
 import { UserType } from './classes/user-type.enum';
 
 const httpOptions = {
@@ -54,7 +53,7 @@ export class UserService {
   getUser(userId: String) {
     return this.http
       .get<any>(this.baseUrl + '/' + userId)
-      .pipe(map(this.parseDate), catchError(this.handleError));
+      .pipe(map(this.parseUserDate), catchError(this.handleError));
   }
 
   getAllUsers(): Observable<any> {
@@ -150,17 +149,24 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  makeAffiliationRequests(userId: number, toUserIds: number[]): Observable<any> {
+  makeAffiliationRequests(
+    userId: number,
+    toUserIds: number[]
+  ): Observable<any> {
     return this.http
       .post<any>(this.baseUrl + '/affiliated/' + userId, toUserIds)
       .pipe(catchError(this.handleError));
   }
 
-  sendAffiliateReqToUser(userId: number, affiliatedUserToAddId: number): Observable<any> {
+  sendAffiliateReqToUser(
+    userId: number,
+    affiliatedUserToAddId: number
+  ): Observable<any> {
     return this.http
       .put<any>(
         this.baseUrl + '/addaffiliated/' + userId + '/' + affiliatedUserToAddId,
-        httpOptions)
+        httpOptions
+      )
       .pipe(catchError(this.handleError));
   }
 
@@ -213,31 +219,7 @@ export class UserService {
   updateUser(updatedUser: User) {
     return this.http
       .post<any>(this.baseUrl + '/update', updatedUser, httpOptions)
-      .pipe(map(this.parseDate), catchError(this.handleError));
-  }
-
-  createMaterialResourceAvailable(
-    mra: MaterialResourceAvailable
-  ): Observable<any> {
-    return this.http
-      .post<any>(this.baseUrl + '/mra', mra, httpOptions)
-      .pipe(catchError(this.handleError));
-  }
-
-  deleteMaterialResourceAvailable(
-    userId: number,
-    mraId: number
-  ): Observable<any> {
-    console.log('delete method called');
-    return this.http
-      .delete<any>(this.baseUrl + '/mra/' + userId + '/' + mraId)
-      .pipe(catchError(this.handleError));
-  }
-
-  getMaterialResourceAvailable(userId: number): Observable<any> {
-    return this.http
-      .get<any>(this.baseUrl + '/mra/' + userId)
-      .pipe(catchError(this.handleError));
+      .pipe(map(this.parseUserDate), catchError(this.handleError));
   }
 
   getFollowers(userId: number): Observable<any> {
@@ -289,7 +271,7 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  private parseDate(data: any) {
+  private parseUserDate(data: any) {
     if (data.userType == UserType.ADMIN) {
       return {
         ...data,
@@ -324,7 +306,7 @@ export class UserService {
         //   )
         // ),
       };
-    } else if(data.userType == UserType.INDIVIDUAL) {
+    } else if (data.userType == UserType.INDIVIDUAL) {
       return {
         ...data,
         joinedDate: new Date(
@@ -347,8 +329,8 @@ export class UserService {
             data.dob.substring(17, 19)
           )
         ),
-      } 
-    } else if(data.userType == UserType.INSTITUTE) {
+      };
+    } else if (data.userType == UserType.INSTITUTE) {
       return {
         ...data,
         joinedDate: new Date(
@@ -360,7 +342,7 @@ export class UserService {
             data.joinedDate.substring(14, 16),
             data.joinedDate.substring(17, 19)
           )
-        )
+        ),
       };
     }
   }

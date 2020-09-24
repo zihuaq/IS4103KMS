@@ -14,12 +14,10 @@ import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
-import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
-import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
@@ -59,8 +57,6 @@ public class UserResource {
 
     TagSessionBeanLocal tagSessionBeanLocal = lookupTagSessionBeanLocal();
 
-    MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBeanLocal = lookupMaterialResourceAvailableSessionBeanLocal();
-
     @Context
     private UriInfo context;
 
@@ -68,16 +64,6 @@ public class UserResource {
      * Creates a new instance of UserResource
      */
     public UserResource() {
-    }
-
-    private MaterialResourceAvailableSessionBeanLocal lookupMaterialResourceAvailableSessionBeanLocal() {
-        try {
-            javax.naming.Context c = new InitialContext();
-            return (MaterialResourceAvailableSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/MaterialResourceAvailableSessionBean!ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
-        }
     }
 
     private TagSessionBeanLocal lookupTagSessionBeanLocal() {
@@ -311,61 +297,6 @@ public class UserResource {
             userSessionBeanLocal.removeSDGFromProfile(userId, tagId);
             return Response.status(204).build();
         } catch (NoResultException ex) {
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(exception).build();
-        }
-    }
-
-    @POST
-    @Path("/mra")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createMaterialResourceAvailable(MaterialResourceAvailableEntity mra) {
-        try {
-            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra);
-            for (int i = 0; i < mras.size(); i++) {
-                mras.get(i).setMaterialResourceAvailableOwner(null);
-            }
-            return Response.status(200).entity(mras).build();
-        } catch (NoResultException ex) {
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(exception).build();
-        }
-    }
-
-    @DELETE
-    @Path("/mra/{userId}/{mraId}")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMaterialRequestFromProfile(@PathParam("userId") Long userId, @PathParam("mraId") Long mraId) {
-        try {
-            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.deleteMaterialResourceAvailableForUser(userId, mraId);
-            for (int i = 0; i < mras.size(); i++) {
-                mras.get(i).setMaterialResourceAvailableOwner(null);
-            }
-            return Response.status(200).entity(mras).build();
-        } catch (NoResultException ex) {
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(exception).build();
-        }
-    }
-
-    @GET
-    @Path("/mra/{userId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMaterialResourceAvailable(@PathParam("userId") Long userId) {
-        try {
-            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableForUser(userId);
-            for (int i = 0; i < mras.size(); i++) {
-                mras.get(i).setMaterialResourceAvailableOwner(null);
-            }
-            return Response.status(200).entity(mras).build();
-        } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
