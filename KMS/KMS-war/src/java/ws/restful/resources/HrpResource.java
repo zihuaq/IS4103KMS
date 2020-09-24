@@ -8,6 +8,7 @@ package ws.restful.resources;
 import Exception.NoResultException;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import entity.HumanResourcePostingEntity;
+import entity.MaterialResourcePostingEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,9 +54,14 @@ public class HrpResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getHrpByProject(@PathParam("projectId") Long projectId) {
         System.out.println("******** HrpResource: getHrpByProject()");
-        List<HumanResourcePostingEntity> mrpList = humanResourcePostingSessionBean.getListOfHumanResourcePostingByProjectId(projectId);
+        List<HumanResourcePostingEntity> hrpList = humanResourcePostingSessionBean.getListOfHumanResourcePostingByProjectId(projectId);
         
-        return Response.status(Status.OK).entity(mrpList).build();
+        for (HumanResourcePostingEntity hrp : hrpList) {
+            hrp.setProject(null);
+            hrp.setActivity(null);
+        }
+        
+        return Response.status(Status.OK).entity(hrpList).build();
     }
     
     @Path("{hrpId}")
@@ -75,9 +81,9 @@ public class HrpResource {
             hrp.getProject().getTasks().clear();
             hrp.getProject().getPosts().clear();
             hrp.getProject().getSdgs().clear();
-            hrp.getActivity().getHumanResourcePostings().clear();
-            hrp.getActivity().getMaterialResourcePostings().clear();
-            hrp.getActivity().setProject(null);
+//            hrp.getActivity().getHumanResourcePostings().clear();
+//            hrp.getActivity().getMaterialResourcePostings().clear();
+//            hrp.getActivity().setProject(null);
             
             return Response.status(Status.OK).entity(hrp).build();
             
