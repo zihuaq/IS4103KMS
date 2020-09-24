@@ -26,6 +26,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import ws.restful.model.CreateMrpReq;
 import ws.restful.model.ErrorRsp;
 
 /**
@@ -55,6 +56,11 @@ public class MrpResource {
         System.out.println("******** MrpResource: getMrpByProject()");
         List<MaterialResourcePostingEntity> mrpList = materialResourcePostingSessionBean.getListOfMaterialResourcePostingByProjectId(projectId);
         
+        for (MaterialResourcePostingEntity mrp : mrpList) {
+            mrp.setProject(null);
+            mrp.setActivity(null);
+        }
+        
         return Response.status(Status.OK).entity(mrpList).build();
     }
 
@@ -75,9 +81,9 @@ public class MrpResource {
             mrp.getProject().getTasks().clear();
             mrp.getProject().getPosts().clear();
             mrp.getProject().getSdgs().clear();
-            mrp.getActivity().getHumanResourcePostings().clear();
-            mrp.getActivity().getMaterialResourcePostings().clear();
-            mrp.getActivity().setProject(null);
+//            mrp.getActivity().getHumanResourcePostings().clear();
+//            mrp.getActivity().getMaterialResourcePostings().clear();
+//            mrp.getActivity().setProject(null);
             
             return Response.status(Status.OK).entity(mrp).build();
             
@@ -92,11 +98,12 @@ public class MrpResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewMrp(MaterialResourcePostingEntity mrp) {
+    public Response createNewMrp(CreateMrpReq createMrpReq) {
         System.out.println("******** MrpResource: createNewMrp()");
-        if (mrp != null) {
+        if (createMrpReq != null) {
             try {
-                Long mrpId = materialResourcePostingSessionBean.createMaterialResourcePosting(mrp, mrp.getProject().getProjectId());
+                System.out.println("Name: " + createMrpReq.getNewMrp().getName());
+                Long mrpId = materialResourcePostingSessionBean.createMaterialResourcePosting(createMrpReq.getNewMrp(), createMrpReq.getProjectId());
                 
                 return Response.status(Status.OK).entity(mrpId).build();
             } catch (NoResultException ex) {

@@ -30,7 +30,9 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
 
     @Override
     public Long createMaterialResourcePosting(MaterialResourcePostingEntity newMrp, Long projectId) throws NoResultException {
+        System.out.println("******** MrpSessionBean: createMrp()");
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
+        
         em.persist(newMrp);
         em.flush();
         
