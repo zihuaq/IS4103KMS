@@ -6,12 +6,13 @@
         <div class="content-fluid">
             <div class="card">
                 <div class="image" *ngIf="projectToView.profilePicture" style="height: 300px; overflow: hidden; position: relative;">
-                    <img class="card-img-top" style="margin: -15% 0 0 0; cursor: pointer; display: block;" [src]="projectToView.profilePicture" data-toggle="modal" data-target="#modal-profilePicture" alt="Project Profile Picture">
-                    <!--
-                    <div class="after">
-                        <i class="fas fa-expand-alt" style="position: absolute; background-color: darkgrey; bottom:0; right:0;">Click image to enlarge</i>
+                    <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
+                    <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
+                        <img class="card-img-top" style="margin: -20% 0 0 0; display: block;" [src]="projectToView.profilePicture"  alt="Project Profile Picture"> 
+                        <div class="after">
+                            <i class="fas fa-search-plus" style="font-size: 25px;"></i>
+                        </div>
                     </div>
-                -->
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" style="font-size: x-large; font-weight: bold;">{{projectToView.name}}</h5>
@@ -24,6 +25,7 @@
                             <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
                             <button type="button" [disabled] class="btn btn-light float-right">Joined</button>   
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" *ngIf="isAdmin && !projectToView.profilePicture" data-toggle="modal" data-target="#modal-addPicture">Add Profile Picture</a>
                                 <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Project</a>
                                 <a class="dropdown-item" (click)="leaveProject()">Leave Project</a>
                             </div>                       
@@ -122,6 +124,71 @@
         </div>          
     </div>  
 </div>
+
+<div class="modal fade" id="modal-addPicture" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Add Profile Picture</h4>
+            <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" [src]="profilePicture" alt="Project Profile Picture">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Project Profile Picture">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
+                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
+                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
+                </div>
+            </div>
+            <div style="padding-top: 3%; display: flex; justify-content: center;">
+                <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" data-dismiss="modal" aria-label="Close">Save Changes</button>
+                <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+<div class="modal fade" id="modal-editPicture" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Edit Profile Picture</h4>
+            <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" [src]="profilePicture" alt="Project Profile Picture">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Project Profile Picture">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
+                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
+                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
+                </div>
+                <div class="input-group-append" style="cursor: pointer" *ngIf="profilePicture">
+                    <span class="input-group-text" (click)="removePicture()">Remove Current</span>
+                </div>
+            </div>
+            <div style="padding-top: 3%; display: flex; justify-content: center;">
+                <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" data-dismiss="modal" aria-label="Close">Save Changes</button>
+                <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 
 <div class="modal fade" id="modal-profilePicture">
     <div class="modal-dialog modal-dialog-centered modal-lg">

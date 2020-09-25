@@ -24,6 +24,9 @@ export class ProjectDetailsComponent implements OnInit {
   dateCreated: string;
   isMember: boolean = false;
   isAdmin: boolean = false;
+  profilePicture: string | ArrayBuffer;
+  selectedProfilePicture: string | ArrayBuffer;
+  selectedProfilePictureName: string;
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
@@ -42,7 +45,8 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToView = response;
-        console.log(this.projectToView.profilePicture);
+        this.profilePicture = this.projectToView.profilePicture;
+        console.log(this.profilePicture);
         this.owner = this.projectToView.projectOwner;
 
         for (let admin of this.projectToView.projectAdmins) {
@@ -138,5 +142,57 @@ export class ProjectDetailsComponent implements OnInit {
     if(!this.sessionService.getIsLogin) {
       this.router.navigate(["/login"]);
     }
+  }
+
+  getFiles(event) {
+    if (event.target.files[0] != undefined) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.selectedProfilePicture = e.target.result;
+        console.log(this.selectedProfilePicture);
+      };
+      this.selectedProfilePictureName = event.target.files[0].name;
+      console.log(event.target.files[0].name);
+      reader.readAsDataURL(event.target.files[0]);
+    } else {
+      this.selectedProfilePicture = undefined;
+    }
+  }
+
+  removePicture() {
+    if (this.profilePicture != undefined) {
+      this.profilePicture = undefined;
+      this.selectedProfilePicture = undefined;
+    }
+  }
+
+  saveChanges() {
+    this.projectToView.profilePicture = this.selectedProfilePicture;
+    this.projectService.updateProject(this.projectToView).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Profile picture updated successfully',
+        })
+      },
+      error => {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+      }
+    );
+    this.profilePicture = this.selectedProfilePicture;
+    this.selectedProfilePicture = undefined;
+  }
+
+  cancel() {
+    this.profilePicture = this.projectToView.profilePicture;
+    this.selectedProfilePicture = undefined;
   }
 }

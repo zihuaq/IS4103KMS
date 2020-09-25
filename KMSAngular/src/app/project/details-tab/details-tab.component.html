@@ -277,7 +277,6 @@
         <select class="form-control" id="status" #status="ngModel" name="status" [(ngModel)]="projectToEdit.status">
             <option *ngFor="let status of projectStatusList" [value]='status'>{{status}}</option>
         </select>
-        
     </div>
     <button class="btn btn-primary" type="submit" [disabled]="!editProjectForm.valid">Update Project</button>
 </form>

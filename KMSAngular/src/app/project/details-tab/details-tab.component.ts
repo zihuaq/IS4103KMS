@@ -95,7 +95,7 @@ export class DetailsTabComponent implements OnInit, OnChanges {
       this.projectService.updateProject(this.projectToEdit).subscribe(
         response => {
           $(document).Toasts('create', {
-            class: 'bg-sucess',
+            class: 'bg-success',
             title: 'Success',
             autohide: true,
             delay: 2500,
