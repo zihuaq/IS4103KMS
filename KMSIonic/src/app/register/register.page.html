@@ -1,0 +1,179 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!--<ion-content>
+    <ion-item lines="full">
+      <ion-label position="floating">First name</ion-label>
+      <ion-input type="text" required></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Last name</ion-label>
+      <ion-input type="text" required></ion-input>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="text" required></ion-input>
+    </ion-item>-->
+
+    <!--*&^%$ <ion-item lines="full">
+        <ion-label position="floating">Date of Birth</ion-label>
+        <ion-input type="text" required></ion-input>
+      </ion-item> -->
+    <!-- <ion-item lines="full">
+    <ion-label stacked class="my-label" position="floating">Date of Birth</ion-label>
+    <ion-datetime placeholder="Dob" [max]="today"></ion-datetime>  
+    </ion-item> -->
+       <!-- Radio Button in a List -->  
+    <!-- <ion-list>  
+    <ion-radio-group>  
+      <ion-list-header>  
+        Gender  
+      </ion-list-header>  
+    
+      <ion-item>  
+        <ion-label>Male</ion-label>  
+        <ion-radio value="male"></ion-radio>  
+      </ion-item>  
+    
+      <ion-item>  
+        <ion-label>Female</ion-label>  
+        <ion-radio value="female"></ion-radio>  
+    </ion-item>  
+    </ion-radio-group>
+    </ion-list>
+
+    <div class="form-group">
+    <ion-item lines="full">
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" appAppPassword id="password" class="form-control" ngModel name="password" required #password="ngModel"></ion-input>
+    </ion-item>
+  </div>
+  <div class="form-group">
+    <ion-item lines="full">
+        <ion-label position="floating">Confirm Password</ion-label>
+        <ion-input type="password" appAppPassword id="confirmPassword" class="form-control" ngModel name="confirmPassword" required
+        #confirmPassword="ngModel"></ion-input>
+      </ion-item>
+    </div>
+    <ion-row>
+        <span class="help-block" style="float: right; color: red;"
+        *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not
+        match</span>
+      <ion-col>
+        <ion-button type="submit" color="secondary" expand="block" (click)=>Sign Up</ion-button>
+      </ion-col>
+    </ion-row>
+</ion-content> -->
+<ion-content>
+<form (ngSubmit)="onCreateUser(signUpForm)" #signUpForm="ngForm">
+  <h1>Create An Individual Account with KMS!</h1>
+  <hr>
+  <ion-button (click)="directInst()">Create an Institution Account</ion-button>
+  <div class="form-group">
+      <ion-item lines="full">
+      <ion-label for="firstName">First Name</ion-label>
+      <ion-input type="text" id="firstName" class="form-control" ngModel name="firstName" required></ion-input>
+      </ion-item>
+  </div>
+  <div class="form-group">
+      <ion-item lines="full">
+      <ion-label for="lastName">Last Name</ion-label>
+      <ion-input type="text" id="lastName" class="form-control" ngModel name="lastName" required></ion-input>
+      </ion-item>
+  </div>
+  <div class="form-group">
+      <ion-item lines="full">
+      <ion-label for="email">Email Address</ion-label>
+      <ion-input type="email" id="email" class="form-control" ngModel name="email" required email
+          #email="ngModel"></ion-input>
+      <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
+      </ion-item>
+  </div>
+  <div class="form-group">
+      <ion-item lines="full">
+      <ion-label for="dob">Date of Birth</ion-label>
+      <ion-input
+      type="date"
+      id="dob"
+      class="form-control"
+      ngModel
+      name = "dob"
+      required
+      [max] = "maxDate"></ion-input>
+      <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid Date of Birth!</span>
+      </ion-item>
+    </div>
+
+  <div>
+
+  <ion-list>  
+      <ion-radio-group>  
+        <ion-list-header>  
+          Gender  
+        </ion-list-header>  
+      <!-- <ion-item lines="full">
+      <ion-label>Gender</ion-label> -->
+      <!-- <div class="radio" *ngFor = "let gender of genders">    -->
+      <ion-item *ngFor = "let gender of genders">
+          <ion-label>
+              <ion-input type="text" id="lastName" class="form-control" ngModel name="lastName" required></ion-input>
+              <input type="radio" name="gender" ngModel [value] = "gender"> {{gender}}
+          </ion-label>
+      <!-- </div> -->
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+  </div>
+  <!-- <ion-list>  
+    <ion-radio-group>  
+      <ion-list-header>  
+        Gender  
+      </ion-list-header>  
+    
+      <ion-item>  
+        <ion-label>Male</ion-label>  
+        <ion-radio value="male"></ion-radio>  
+      </ion-item>  
+    
+      <ion-item>  
+        <ion-label>Female</ion-label>  
+        <ion-radio value="female"></ion-radio>  
+    </ion-item>  
+    </ion-radio-group>
+    </ion-list> -->
+
+  
+
+  <div class="form-group">
+      <ion-item lines="full">
+      <ion-label for="password">Password</ion-label>
+      <ion-input type="password" appAppPassword id="password" class="form-control" ngModel name="password" required
+          #password="ngModel"></ion-input>
+          </ion-item>
+  </div>
+  <div class="form-group">
+      <ion-item lines="full">
+      <ion-label for="confirmPassword">Confirm Password</ion-label>
+      <ion-input type="password" appAppPassword id="confirmPassword" class="form-control" ngModel name="confirmPassword" required
+          #confirmPassword="ngModel"></ion-input>
+      <span class="help-block" style="float: right; color: red;"
+          *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not
+          match</span>
+        </ion-item>
+  </div>
+  <hr>
+  <div>
+    <ion-button href="/login">Login</ion-button>
+    <ion-col>
+    <ion-button class="btn btn-primary" color="secondary" expand="block" type="submit" style="float: right;"
+      [disabled]="!signUpForm.valid || password.value != confirmPassword.value" (click)="presentAlert()">Create New
+      Account</ion-button>
+      </ion-col>
+  </div>
+</form>
+</ion-content>
