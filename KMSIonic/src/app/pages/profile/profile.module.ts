@@ -8,6 +8,10 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 
+import { OverviewComponent } from './overview/overview.component';
+import { MaterialResourceAvailableComponent } from './material-resource-available/material-resource-available.component';
+import { SkillsComponent } from './skills/skills.component'
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +19,6 @@ import { ProfilePage } from './profile.page';
     IonicModule,
     ProfilePageRoutingModule
   ],
-  declarations: [ProfilePage]
+  declarations: [ProfilePage, OverviewComponent, MaterialResourceAvailableComponent, SkillsComponent]
 })
 export class ProfilePageModule {}
