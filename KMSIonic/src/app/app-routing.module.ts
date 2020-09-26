@@ -1,17 +1,44 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { NgModule } from "@angular/core"
+import { PreloadAllModules, RouterModule, Routes } from "@angular/router"
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'folder/Inbox',
-    pathMatch: 'full'
+    path: "",
+    redirectTo: "index",
+    pathMatch: "full"
   },
   {
-    path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
+    path: "profile",
+    loadChildren: () =>
+      import("./pages/profile/profile.module").then((m) => m.ProfilePageModule)
+  },
+  {
+    path: "search-users",
+    loadChildren: () =>
+      import("./pages/search-users/search-users.module").then(
+        (m) => m.SearchUsersPageModule
+      )
+  },
+  {
+    path: "notifications",
+    loadChildren: () =>
+      import("./pages/notifications/notifications.module").then(
+        (m) => m.NotificationsPageModule
+      )
+  },
+  {
+    path: "sdg-info",
+    loadChildren: () =>
+      import("./pages/sdg-info/sdg-info.module").then(
+        (m) => m.SdgInfoPageModule
+      )
+  },
+  {
+    path: "index",
+    loadChildren: () =>
+      import("./pages/index/index.module").then((m) => m.IndexPageModule)
   }
-];
+]
 
 @NgModule({
   imports: [
