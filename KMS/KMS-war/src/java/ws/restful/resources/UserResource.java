@@ -6,6 +6,7 @@
 package ws.restful.resources;
 
 import Exception.AffiliatedUserExistException;
+import Exception.DuplicateAffiliationRequestException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
@@ -13,11 +14,10 @@ import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
-import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
-import entity.MaterialResourceAvailableEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
@@ -57,8 +57,6 @@ public class UserResource {
 
     TagSessionBeanLocal tagSessionBeanLocal = lookupTagSessionBeanLocal();
 
-    MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBeanLocal = lookupMaterialResourceAvailableSessionBeanLocal();
-
     @Context
     private UriInfo context;
 
@@ -66,16 +64,6 @@ public class UserResource {
      * Creates a new instance of UserResource
      */
     public UserResource() {
-    }
-
-    private MaterialResourceAvailableSessionBeanLocal lookupMaterialResourceAvailableSessionBeanLocal() {
-        try {
-            javax.naming.Context c = new InitialContext();
-            return (MaterialResourceAvailableSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/MaterialResourceAvailableSessionBean!ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
-        }
     }
 
     private TagSessionBeanLocal lookupTagSessionBeanLocal() {
@@ -153,8 +141,24 @@ public class UserResource {
     public Response getAffiliatedUsers(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> affiliatedUsers = userSessionBeanLocal.getAffiliatedUsers(userId);
-            return Response.status(200).entity(affiliatedUsers).build();
+            List<UserEntity> affiliatedUsersResponse = getUsersResponseWithAffiliatedIndividualsOrInstitutes(affiliatedUsers);
+            return Response.status(200).entity(affiliatedUsersResponse).build();
         } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @POST
+    @Path("/affiliated/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response makeAffiliationRequests(@PathParam("userId") Long userId, List<Long> toUserIds) {
+        try {
+            userSessionBeanLocal.makeAffiliationRequest(userId, toUserIds);
+            return Response.status(204).build();
+        } catch (UserNotFoundException | DuplicateAffiliationRequestException | AffiliatedUserExistException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -164,12 +168,13 @@ public class UserResource {
 
     @PUT
     @Path("/addaffiliated/{userId}/{affiliatedToAddUserIdId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addAffiliatedUser(@PathParam("userId") Long userId, @PathParam("affiliatedToAddUserIdId") Long affiliatedToAddUserId) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sendAffiliateReqToUser(@PathParam("userId") Long userId, @PathParam("affiliatedToAddUserIdId") Long affiliatedToAddUserId) {
         try {
-            userSessionBeanLocal.addAffiliatedUser(userId, affiliatedToAddUserId);
-            return Response.status(204).build();
-        } catch (AffiliatedUserExistException | UserNotFoundException ex) {
+            AffiliationRequestEntity req = userSessionBeanLocal.sendAffiliateReqToUser(userId, affiliatedToAddUserId);
+            AffiliationRequestEntity reqResponse = getAffiliationRequestResponse(req);
+            return Response.status(200).entity(reqResponse).build();
+        } catch (AffiliatedUserExistException | UserNotFoundException | DuplicateAffiliationRequestException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -183,6 +188,68 @@ public class UserResource {
     public Response removeAffiliatedUser(@PathParam("userId") Long userId, @PathParam("affiliatedToRemoveUserId") Long affiliatedToRemoveUserId) {
         try {
             userSessionBeanLocal.removeAffiliatedUser(userId, affiliatedToRemoveUserId);
+            return Response.status(204).build();
+        } catch (NoResultException | UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/affiliationrequestmade/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAffiliationRequestMade(@PathParam("userId") Long userId) {
+        try {
+            List<AffiliationRequestEntity> affiliationRequestsMade = userSessionBeanLocal.getAffiliationRequestsMade(userId);
+            List<AffiliationRequestEntity> affiliationRequestsResponse = getAffiliationRequestsResponse(affiliationRequestsMade);
+            return Response.status(200).entity(affiliationRequestsResponse).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/affiliationrequestreceived/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAffiliationRequestReceived(@PathParam("userId") Long userId) {
+        try {
+            List<AffiliationRequestEntity> affiliationRequestsReceived = userSessionBeanLocal.getAffiliationRequestsReceived(userId);
+            List<AffiliationRequestEntity> affiliationRequestsResponse = getAffiliationRequestsResponse(affiliationRequestsReceived);
+            return Response.status(200).entity(affiliationRequestsResponse).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @POST
+    @Path("/acceptaffiliation/{toUserId}/{fromUserId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response acceptAffiliation(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
+        try {
+            userSessionBeanLocal.acceptAffiliationRequest(toUserId, fromUserId);
+            return Response.status(204).build();
+        } catch (NoResultException | UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @POST
+    @Path("/rejectaffiliation/{toUserId}/{fromUserId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response rejectAffiliation(@PathParam("toUserId") Long toUserId, @PathParam("fromUserId") Long fromUserId) {
+        try {
+            userSessionBeanLocal.rejectAffiliationRequest(toUserId, fromUserId);
             return Response.status(204).build();
         } catch (NoResultException | UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -237,61 +304,6 @@ public class UserResource {
         }
     }
 
-    @POST
-    @Path("/mra")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createMaterialResourceAvailable(MaterialResourceAvailableEntity mra) {
-        try {
-            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra);
-            for (int i = 0; i < mras.size(); i++) {
-                mras.get(i).setMaterialResourceAvailableOwner(null);
-            }
-            return Response.status(200).entity(mras).build();
-        } catch (NoResultException ex) {
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(exception).build();
-        }
-    }
-
-    @DELETE
-    @Path("/mra/{userId}/{mraId}")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMaterialRequestFromProfile(@PathParam("userId") Long userId, @PathParam("mraId") Long mraId) {
-        try {
-            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.deleteMaterialResourceAvailableForUser(userId, mraId);
-            for (int i = 0; i < mras.size(); i++) {
-                mras.get(i).setMaterialResourceAvailableOwner(null);
-            }
-            return Response.status(200).entity(mras).build();
-        } catch (NoResultException ex) {
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(exception).build();
-        }
-    }
-
-    @GET
-    @Path("/mra/{userId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMaterialResourceAvailable(@PathParam("userId") Long userId) {
-        try {
-            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableForUser(userId);
-            for (int i = 0; i < mras.size(); i++) {
-                mras.get(i).setMaterialResourceAvailableOwner(null);
-            }
-            return Response.status(200).entity(mras).build();
-        } catch (UserNotFoundException ex) {
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(exception).build();
-        }
-    }
-
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -317,6 +329,9 @@ public class UserResource {
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
             user.setPassword("");
+            user.getAffiliatedUsers().clear();
+            user.getAffiliationRequestMade().clear();
+            user.getAffiliationRequestReceived().clear();
 
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
@@ -401,6 +416,9 @@ public class UserResource {
             user.getSdgs().clear();
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
+            user.getAffiliationRequestMade().clear();
+            user.getAffiliationRequestReceived().clear();
+            user.getAffiliatedUsers().clear();
             user.setPassword("");
 
             return Response.status(Response.Status.OK).entity(user).build();
@@ -670,6 +688,29 @@ public class UserResource {
         return usersResponse;
     }
 
+    private List<UserEntity> getUsersResponseWithAffiliatedIndividualsOrInstitutes(List<UserEntity> users) {
+        List<UserEntity> usersResponse = new ArrayList<>();
+        for (UserEntity user : users) {
+            UserEntity temp = new UserEntity();
+            temp.setUserId(user.getUserId());
+            temp.setFirstName(user.getFirstName());
+            temp.setLastName(user.getLastName());
+            temp.setEmail(user.getEmail());
+            temp.setDob(user.getDob());
+            temp.setGender(user.getGender());
+            temp.setJoinedDate(user.getJoinedDate());
+            temp.setProfilePicture(user.getProfilePicture());
+            temp.setSkills(user.getSkills());
+            temp.setSdgs(user.getSdgs());
+            temp.setUserType(user.getUserType());
+            temp.setAffiliatedUsers(getUsersResponse(user.getAffiliatedUsers()));
+            temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
+            temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            usersResponse.add(temp);
+        }
+        return usersResponse;
+    }
+
     private List<FollowRequestEntity> getFollowRequestsResponse(List<FollowRequestEntity> followRequests) {
         List<FollowRequestEntity> followRequestsResponse = new ArrayList<>();
         for (FollowRequestEntity followRequestEntity : followRequests) {
@@ -691,6 +732,48 @@ public class UserResource {
         }
         return followRequestsResponse;
     }
+
+    private List<AffiliationRequestEntity> getAffiliationRequestsResponse(List<AffiliationRequestEntity> affiliationRequests) {
+        List<AffiliationRequestEntity> affiliationRequestsResponse = new ArrayList<>();
+        for (AffiliationRequestEntity affiliationRequestEntity : affiliationRequests) {
+            UserEntity to = new UserEntity();
+            to.setUserId(affiliationRequestEntity.getTo().getUserId());
+            to.setFirstName(affiliationRequestEntity.getTo().getFirstName());
+            to.setLastName(affiliationRequestEntity.getTo().getLastName());
+            to.setProfilePicture(affiliationRequestEntity.getTo().getProfilePicture());
+            UserEntity from = new UserEntity();
+            from.setUserId(affiliationRequestEntity.getFrom().getUserId());
+            from.setFirstName(affiliationRequestEntity.getFrom().getFirstName());
+            from.setLastName(affiliationRequestEntity.getFrom().getLastName());
+            from.setProfilePicture(affiliationRequestEntity.getFrom().getProfilePicture());
+            AffiliationRequestEntity temp = new AffiliationRequestEntity();
+            temp.setId(affiliationRequestEntity.getId());
+            temp.setTo(to);
+            temp.setFrom(from);
+            affiliationRequestsResponse.add(temp);
+        }
+        return affiliationRequestsResponse;
+    }
+
+    private AffiliationRequestEntity getAffiliationRequestResponse(AffiliationRequestEntity affiliationRequestEntity) {
+        UserEntity to = new UserEntity();
+        to.setUserId(affiliationRequestEntity.getTo().getUserId());
+        to.setFirstName(affiliationRequestEntity.getTo().getFirstName());
+        to.setLastName(affiliationRequestEntity.getTo().getLastName());
+        to.setProfilePicture(affiliationRequestEntity.getTo().getProfilePicture());
+        UserEntity from = new UserEntity();
+        from.setUserId(affiliationRequestEntity.getFrom().getUserId());
+        from.setFirstName(affiliationRequestEntity.getFrom().getFirstName());
+        from.setLastName(affiliationRequestEntity.getFrom().getLastName());
+        from.setProfilePicture(affiliationRequestEntity.getFrom().getProfilePicture());
+        AffiliationRequestEntity temp = new AffiliationRequestEntity();
+        temp.setId(affiliationRequestEntity.getId());
+        temp.setTo(to);
+        temp.setFrom(from);
+
+        return temp;
+    }
+
     @Path("updateUserPassword")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

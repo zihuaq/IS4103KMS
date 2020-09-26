@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.AffiliatedUserExistException;
+import Exception.DuplicateAffiliationRequestException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
@@ -13,6 +14,7 @@ import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
 import entity.TagEntity;
 import entity.UserEntity;
@@ -34,9 +36,13 @@ public interface UserSessionBeanLocal {
 
     public List<UserEntity> getAffiliatedUsers(Long userId) throws UserNotFoundException;
 
-    public void addAffiliatedUser(Long userId, Long affiliatedToAddUserId) throws AffiliatedUserExistException, UserNotFoundException;
-
+    public AffiliationRequestEntity sendAffiliateReqToUser(Long userId, Long affiliatedToAddUserId) throws AffiliatedUserExistException, DuplicateAffiliationRequestException, UserNotFoundException;
+        
     public void removeAffiliatedUser(Long userId, Long affiliatedToRemoveUserId) throws NoResultException, UserNotFoundException;
+    
+    public List<AffiliationRequestEntity> getAffiliationRequestsReceived(Long userId) throws UserNotFoundException;
+    
+    public List<AffiliationRequestEntity> getAffiliationRequestsMade(Long userId) throws UserNotFoundException;
 
     public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
 
@@ -55,6 +61,12 @@ public interface UserSessionBeanLocal {
     public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
 
     public void deleteUser(long userId) throws UserNotFoundException;
+    
+    public void makeAffiliationRequest (Long fromUserId, List<Long> toUserIds) throws UserNotFoundException, DuplicateAffiliationRequestException, AffiliatedUserExistException;
+    
+    public void acceptAffiliationRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
+    
+    public void rejectAffiliationRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
 
     public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException, DuplicateFollowRequestException;
 
