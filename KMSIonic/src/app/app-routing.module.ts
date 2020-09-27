@@ -39,9 +39,13 @@ const routes: Routes = [
       import("./pages/index/index.module").then((m) => m.IndexPageModule)
   },
   {
-    path: 'skills',
-    loadChildren: () => import('./pages/skills/skills.module').then( m => m.SkillsPageModule)
+    path: 'addskills',
+    loadChildren: () => import('./pages/add-skills/add-skills.module').then( m => m.AddSkillsPageModule)
+  },  {
+    path: 'view-skills',
+    loadChildren: () => import('./pages/view-skills/view-skills.module').then( m => m.ViewSkillsPageModule)
   }
+
 
 ]
 
