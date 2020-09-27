@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing"
+import { IonicModule } from "@ionic/angular"
 
-import { ForgetpasswordPage } from './forgetpassword.page';
+import { ForgetpasswordPage } from "./forgetpassword.page"
 
-describe('ForgetpasswordPage', () => {
-  let component: ForgetpasswordPage;
-  let fixture: ComponentFixture<ForgetpasswordPage>;
+describe("ForgetpasswordPage", () => {
+  let component: ForgetpasswordPage
+  let fixture: ComponentFixture<ForgetpasswordPage>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgetpasswordPage ],
+      declarations: [ForgetpasswordPage],
       imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    }).compileComponents()
 
-    fixture = TestBed.createComponent(ForgetpasswordPage);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+    fixture = TestBed.createComponent(ForgetpasswordPage)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  }))
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  it("should create", () => {
+    expect(component).toBeTruthy()
+  })
+})

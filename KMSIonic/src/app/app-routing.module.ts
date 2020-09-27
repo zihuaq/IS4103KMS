@@ -1,15 +1,11 @@
 import { NgModule } from "@angular/core"
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router"
-import { AuthGuardService } from "./services/auth-guard.service"
-import { ProfileComponent } from "./profile/profile.component"
-import { AccountVerificationComponent } from "./account-verification/account-verification.component"
-import { RouteGuard } from "./route-guard.service"
-import { LIFECYCLE_DID_ENTER } from "@ionic/core"
+import { AuthGuard } from "./services/auth.guard"
 
 const routes: Routes = [
   {
     path: "",
-    redirectTo: "login",
+    redirectTo: "index",
     pathMatch: "full"
   },
   {
@@ -44,6 +40,58 @@ const routes: Routes = [
       import("./pages/registerinstitution/registerinstitution.module").then(
         (m) => m.RegisterinstitutionPageModule
       )
+  },
+  {
+    path: "profile",
+    loadChildren: () =>
+      import("./pages/profile/profile.module").then((m) => m.ProfilePageModule)
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "search-users",
+    loadChildren: () =>
+      import("./pages/search-users/search-users.module").then(
+        (m) => m.SearchUsersPageModule
+      )
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "notifications",
+    loadChildren: () =>
+      import("./pages/notifications/notifications.module").then(
+        (m) => m.NotificationsPageModule
+      )
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "sdg-info",
+    loadChildren: () =>
+      import("./pages/sdg-info/sdg-info.module").then(
+        (m) => m.SdgInfoPageModule
+      )
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "index",
+    loadChildren: () =>
+      import("./pages/index/index.module").then((m) => m.IndexPageModule)
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "addskills",
+    loadChildren: () =>
+      import("./pages/add-skills/add-skills.module").then(
+        (m) => m.AddSkillsPageModule
+      )
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "view-skills",
+    loadChildren: () =>
+      import("./pages/view-skills/view-skills.module").then(
+        (m) => m.ViewSkillsPageModule
+      )
+    // canActivate: [AuthGuard]
   }
 ]
 
