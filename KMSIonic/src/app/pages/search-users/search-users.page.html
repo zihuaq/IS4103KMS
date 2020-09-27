@@ -1,7 +1,12 @@
 <ion-header>
-  <ion-searchbar showCancelButton="always" inputmode="text" (ionCancel)="goBack()" #searchBar>
+  <ion-searchbar showCancelButton="always" inputmode="text" [(ngModel)]="searchTerm"
+    (ionChange)="setFilteredItems(searchTerm)" (ionCancel)="goBack()" #searchBar>
   </ion-searchbar>
 </ion-header>
 <ion-content>
-  <!-- <ion-searchbar></ion-searchbar> -->
+  <ion-item *ngFor="let user of filteredUsers">
+    <ion-label>
+      {{user.firstName}}
+    </ion-label>
+  </ion-item>
 </ion-content>

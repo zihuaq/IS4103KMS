@@ -4,80 +4,47 @@
   </ion-toolbar>
 </ion-header>
 
-<!-- <ion-content >
-
-    <ion-item>
-        <ion-label color="primary" fixed>UserName</ion-label>
-        <ion-input type="tel" placeholder="Jeffery"></ion-input>
-    </ion-item>
-    
-    <ion-item>
-          <ion-label color="primary" fixed>Password</ion-label>
-          <ion-input type="tel" placeholder="P@ssw0rd"></ion-input>
-    </ion-item>
-
-  <ion-button (click)="login()" expand="block"> Login </ion-button>
-<hr>
-
-  <ion-row>
-      <ion-col width-50 style="text-align: right">
-      <ion-button (click)="userSelector()" color="warning" class="ion-text-center">Register</ion-button>
-    </ion-col>
-      <ion-col width-50 style="text-align: left">
-      <ion-button (click)= "forgetPassword()" color= "danger" >Forget Password</ion-button>
-    </ion-col>
-    </ion-row>
-
-</ion-content> -->
 <ion-content>
-<div class="container">
+  <div class="container">
     <div class="row">
-        <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-          <div class="alert alert-danger" *ngIf = "loginError">
-            <p>{{ errorMessage }}</p>
-          </div>
-          <div *ngIf ='isLoading' style="text-align: center;">
-            <app-loading-spinner></app-loading-spinner>
-          </div>
-            <form (ngSubmit)="login(loginForm)" #loginForm="ngForm" *ngIf = "!isLoading">
-                <hr>
-
-                <div class="form-group">
-                    <ion-item>
-                    <ion-label for="email">Email Address</ion-label>
-                    <ion-input type="email" id="email" class="form-control" ngModel name="email" required email
-                        #email="ngModel"></ion-input>
-                    <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid
-                        email!</span>
-                        </ion-item>
-                </div>
-
-                <div class="form-group">
-                    <ion-item>
-                    <ion-label for="password">Password</ion-label>
-                    <ion-input type="password" appAppPassword id="password" class="form-control" ngModel name="password" required
-                        #password="ngModel"></ion-input>
-                      </ion-item>
-                      </div>
-                <hr>
-                <div>
-                  <div>
-                    <ion-button (click)="userSelector()" color="warning">Register</ion-button>
-                    <ion-button class="btn btn-success" type="submit" style="float:right;">Login</ion-button>
-                  </div>
-                  <div>
-                    <ion-button (click)="forgetPassword()" color="danger">forget password</ion-button>
-                  </div>
-                </div>
-            </form>
+      <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+        <div class="alert alert-danger" *ngIf="loginError">
+          <p>{{ errorMessage }}</p>
         </div>
+        <div *ngIf='isLoading' style="text-align: center;">
+        </div>
+        <form (ngSubmit)="login(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
+          <hr>
+
+          <div class="form-group">
+            <ion-item>
+              <ion-label for="email">Email Address</ion-label>
+              <ion-input type="email" id="email" class="form-control" ngModel name="email" required email
+                #email="ngModel"></ion-input>
+              <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid
+                email!</span>
+            </ion-item>
+          </div>
+
+          <div class="form-group">
+            <ion-item>
+              <ion-label for="password">Password</ion-label>
+              <ion-input type="password" appAppPassword id="password" class="form-control" ngModel name="password"
+                required #password="ngModel"></ion-input>
+            </ion-item>
+          </div>
+          <hr>
+          <div>
+            <div>
+              <ion-button (click)="userSelector()" color="warning">Register</ion-button>
+              <ion-button class="btn btn-success" type="submit" style="float:right;">Login</ion-button>
+            </div>
+            <div>
+              <ion-button (click)="forgetPassword()" color="danger">forget password</ion-button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
+  </div>
 </ion-content>
-
-
-
-
-
-
-

@@ -35,6 +35,12 @@ export class AuthenticationService {
     return this.authenticationState.value
   }
 
+  getCurrentUser(): Promise<User> {
+    return this.storage.get(LOGGED_IN_USER).then((value) => {
+      return JSON.parse(value)
+    })
+  }
+
   checkToken() {
     return this.storage.get(LOGGED_IN_USER).then((res) => {
       if (res) {

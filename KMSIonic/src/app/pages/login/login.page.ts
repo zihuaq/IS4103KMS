@@ -48,7 +48,7 @@ export class LoginPage implements OnInit {
             this.authenticationService.login(user).then(() => {
               this.loginError = false
               this.isLoading = false
-              this.route.navigate(["/profile/" + user.userId])
+              this.route.navigate([""])
             })
           } else {
             this.isLoading = false
