@@ -248,23 +248,6 @@ export class UserService {
     return throwError(errorMessage);
   }
 
-  changePassword(oldPassword: string, newPassword: string): Observable<any> {
-    let changePasswordReq = {
-      username: this.sessionService.getUsername(),
-      password: this.sessionService.getPassword(),
-      oldPassword: oldPassword,
-      newPassword: newPassword,
-    };
-
-    return this.http
-      .post<any>(
-        this.baseUrl + '/PasswordReset',
-        changePasswordReq,
-        httpOptions
-      )
-      .pipe(catchError(this.handleError));
-  }
-
   deleteUser(userId: number): Observable<any> {
     return this.http
       .delete<any>(this.baseUrl + '/deleteUser/' + userId)

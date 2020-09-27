@@ -1,44 +1,45 @@
-import { Platform } from '@Ionic/angular'
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Storage } from '@ionic/storage';
+import { Platform } from "@Ionic/angular"
+import { Injectable } from "@angular/core"
+import { BehaviorSubject } from "rxjs"
+import { Storage } from "@ionic/storage"
+import { User } from "../classes/user"
 
-const TOKEN_KEY = 'auth-token';
+const LOGGED_IN_USER = "loggedInUser"
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class AuthenticationService {
-
-  authenticationState = new BehaviorSubject(false);
-  constructor(private storage: Storage, private plt: Platform) { 
+  authenticationState = new BehaviorSubject(false)
+  constructor(private storage: Storage, private plt: Platform) {
     this.plt.ready().then(() => {
-      this.checkToken();
-    });
+      this.checkToken()
+    })
   }
 
-  login() {
-    return this.storage.set(TOKEN_KEY, 'BEARER 123456').then(res => {
-      this.authenticationState.next(true);
-    });
+  login(user: User) {
+    return this.storage
+      .set(LOGGED_IN_USER, JSON.stringify(user))
+      .then((res) => {
+        this.authenticationState.next(true)
+      })
   }
 
   logout() {
-    return this.storage.remove(TOKEN_KEY).then(() => {
-      this.authenticationState.next(false);
-    });
+    return this.storage.remove(LOGGED_IN_USER).then(() => {
+      this.authenticationState.next(false)
+    })
   }
 
-  isAuthenticated() {
-    return this.authenticationState.value;
+  async isAuthenticated() {
+    return this.authenticationState.value
   }
 
   checkToken() {
-    return this.storage.get(TOKEN_KEY).then(res => {
-      if(res){
-      this.authenticationState.next(true);
+    return this.storage.get(LOGGED_IN_USER).then((res) => {
+      if (res) {
+        this.authenticationState.next(true)
       }
-    });
-
+    })
   }
 }
