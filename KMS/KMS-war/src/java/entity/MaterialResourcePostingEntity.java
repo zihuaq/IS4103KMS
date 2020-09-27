@@ -53,11 +53,9 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Column(nullable=false)
     private Double lackingQuantity;
     
-    @NotNull
-    @Column(nullable=false)
     private String description;
     
-     @NotNull
+    @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
