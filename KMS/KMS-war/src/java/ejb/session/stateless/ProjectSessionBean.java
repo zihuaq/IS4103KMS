@@ -53,7 +53,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             user.getProjectsOwned().add(newProject);
             newProject.setProjectOwner(user);
             newProject.getProjectAdmins().add(user);
-            user.getProjectAdmins().add(newProject);
+            user.getProjectsManaged().add(newProject);
             newProject.getProjectMembers().add(user);
             user.getProjectsJoined().add(newProject);
             
@@ -116,7 +116,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         } else {
             if (project.getProjectAdmins().contains(user)) {
                 project.getProjectAdmins().remove(user);
-                user.getProjectAdmins().remove(project);
+                user.getProjectsManaged().remove(project);
             }
             user.getProjectsJoined().remove(project);
             project.getProjectMembers().remove(user);
@@ -158,7 +158,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         project.getProjectAdmins().add(user);
-        user.getProjectAdmins().add(project);
+        user.getProjectsManaged().add(project);
     }
     
     //Demote Admin to Member
@@ -168,7 +168,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         project.getProjectAdmins().remove(user);
-        user.getProjectAdmins().remove(project);
+        user.getProjectsManaged().remove(project);
     }
     
     //Pass Owner status to Admin
@@ -190,7 +190,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         projectToDelete.setProjectOwner(null);
         
         for (UserEntity user : projectToDelete.getProjectAdmins()) {
-            user.getProjectAdmins().remove(projectToDelete);
+            user.getProjectsManaged().remove(projectToDelete);
         }
         projectToDelete.getProjectAdmins().clear();
         

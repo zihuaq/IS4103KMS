@@ -5,6 +5,7 @@ import { IndexComponent } from './index/index.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
 import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
+import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-projects.component';
 import { CreateNewProjectComponent } from './project/create-new-project/create-new-project.component';
 import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
 
@@ -21,6 +22,7 @@ import { CreateNewUserSelectorComponent } from './create-new-user-selector/creat
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
 import { EditProjectComponent } from './project/edit-project/edit-project.component';
 import { ErrorPageComponent } from './project/error-page/error-page.component';
+
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -63,11 +65,15 @@ const routes: Routes = [
     path: 'accountVerification/:email/:uuid',
     component: AccountVerificationComponent,
   },
-
   {
     path: 'viewAllProjects',
     canActivate: [RouteGuard],
     component: ViewAllProjectComponent,
+  },
+  {
+    path: 'viewOwnProjects/:userid',
+    canActivate: [RouteGuard],
+    component: ViewOwnProjectsComponent,
   },
   {
     path: 'createNewProject',
