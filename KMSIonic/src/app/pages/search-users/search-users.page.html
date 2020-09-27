@@ -1,12 +1,7 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>SearchUsers</ion-title>
-  </ion-toolbar>
+  <ion-searchbar showCancelButton="always" inputmode="text" (ionCancel)="goBack()" #searchBar>
+  </ion-searchbar>
 </ion-header>
-
 <ion-content>
-
+  <!-- <ion-searchbar></ion-searchbar> -->
 </ion-content>

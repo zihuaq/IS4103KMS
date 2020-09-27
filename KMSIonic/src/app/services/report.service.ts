@@ -1,40 +1,50 @@
-import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { Report } from '../classes/report';
-import { catchError } from 'rxjs/operators';
+import {
+  HttpHeaders,
+  HttpClient,
+  HttpErrorResponse
+} from "@angular/common/http"
+import { Injectable } from "@angular/core"
+import { Observable, throwError } from "rxjs"
+import { Report } from "../classes/report"
+import { catchError } from "rxjs/operators"
+import { UtilityService } from "./utility.service"
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-};
+  headers: new HttpHeaders({ "Content-Type": "application/json" })
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ReportService {
-  baseUrl: string = '/api/report';
+  baseUrl: string
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private utilityService: UtilityService
+  ) {
+    this.baseUrl = this.utilityService.getRootPath() + "report"
+  }
 
   createReport(report: Report): Observable<any> {
     return this.http
-      .post<any>(this.baseUrl + '/create', report, httpOptions)
-      .pipe(catchError(this.handleError));
+      .post<any>(this.baseUrl + "/create", report, httpOptions)
+      .pipe(catchError(this.handleError))
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage: string = '';
+    let errorMessage: string = ""
 
     if (error.error instanceof ErrorEvent) {
-      errorMessage = 'An unknown error has occurred: ' + error.error.message;
+      errorMessage = "An unknown error has occurred: " + error.error.message
     } else {
       errorMessage =
-        'A HTTP error has occurred: ' +
-        `HTTP ${error.status}: ${error.error.error}`;
+        "A HTTP error has occurred: " +
+        `HTTP ${error.status}: ${error.error.error}`
     }
 
-    console.error(errorMessage);
+    console.error(errorMessage)
 
-    return throwError(errorMessage);
+    return throwError(errorMessage)
   }
 }
