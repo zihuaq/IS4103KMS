@@ -8,7 +8,10 @@
 </ion-header>
 
 <ion-content>
-  <app-overview></app-overview>
-  <app-material-resource-available></app-material-resource-available>
-  <app-skills></app-skills>
+  <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+  (userChanged)="loggedInUser=$event"></app-overview>
+  <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+  (userchanged)="loggedInUser=$event"></app-material-resource-available>
+  <app-skills [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+  (userchanged)="loggedInUser=$event"></app-skills>
 </ion-content>
