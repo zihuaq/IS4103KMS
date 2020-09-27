@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="image"  style="height: 350px; overflow: hidden; position: relative;">
                     <span *ngIf="projectToView.profilePicture">
-                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
+                        <button type="button" *ngIf="isAdmin" class="btn bg-gradient-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
                         <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
                             <img class="card-img-top" style="display: block;" [src]="projectToView.profilePicture"  alt="Project Profile Picture"> 
                             <div class="after">
@@ -16,7 +16,7 @@
                         </div>
                     </span>
                     <span *ngIf="!projectToView.profilePicture">
-                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-addPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Add</button>
+                        <button type="button" *ngIf="isAdmin" class="btn bg-gradient-secondary float-right" data-toggle="modal" data-target="#modal-addPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Add</button>
                         <div class="image-layer">
                             <img class="card-img-top" style="margin: -10% 0 0 0; display: block;" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Project Profile Picture"> 
                         </div>
@@ -61,12 +61,12 @@
                 <div class="card-body" id="custom-tabs-four-tabContent">
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
-                            <p>Description: {{projectToView.description}}</p>
-                            <p>Country: {{projectToView.country}}</p>
-                            <p>Date created: {{dateCreated}}</p>
-                            <p>Monetary Funding Required: ${{projectToView.monetaryFundingRequired}}</p>
-                            <p>Monetary Funding Obtained: ${{projectToView.monetaryFundingObtained}}</p>
-                            <p>SDGs: 
+                            <p><b>Description:</b> {{projectToView.description}}</p>
+                            <p><b>Country:</b> {{projectToView.country}}</p>
+                            <p><b>Date created:</b> {{dateCreated}}</p>
+                            <p><b>Monetary Funding Required:</b> ${{projectToView.monetaryFundingRequired}}</p>
+                            <p><b>Monetary Funding Obtained:</b> ${{projectToView.monetaryFundingObtained}}</p>
+                            <p><b>SDGs:</b> 
                                 <span *ngFor="let tag of projectToView.sdgs">
                                     {{tag.name}}&nbsp;
                                 </span>  
