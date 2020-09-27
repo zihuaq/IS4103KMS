@@ -42,6 +42,7 @@ public class ProjectEntity implements Serializable {
     @Column(nullable=false)
     private String name;
     
+    @Column(length = 2000)
     private String description;
     
     @Enumerated(EnumType.STRING)
@@ -67,7 +68,7 @@ public class ProjectEntity implements Serializable {
     private List<UserEntity> projectMembers;
     
     @JoinTable(name = "projectAdmins")
-    @ManyToMany(mappedBy="projectAdmins")
+    @ManyToMany(mappedBy="projectsManaged")
     private List<UserEntity> projectAdmins;
     
     private Double monetaryFundingRequired;
@@ -105,9 +106,8 @@ public class ProjectEntity implements Serializable {
         this.sdgs = new ArrayList<>();
     }
 
-    public ProjectEntity(Long projectId, String name, String description, Date startDate, String country, String profilePicture, Double monetaryFundingRequired) {
+    public ProjectEntity(String name, String description, Date startDate, String country, String profilePicture, Double monetaryFundingRequired) {
         this();
-        this.projectId = projectId;
         this.name = name;
         this.description = description;
         this.dateCreated = startDate;
