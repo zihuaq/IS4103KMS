@@ -5,36 +5,34 @@
  */
 package ws.restful.model;
 
-import entity.MaterialResourcePostingEntity;
+import entity.HumanResourcePostingEntity;
 import java.util.List;
 
 /**
  *
  * @author chai
  */
-public class CreateMrpReq {
+public class CreateHrpReq {
     
-    private MaterialResourcePostingEntity newMrp;
+    private HumanResourcePostingEntity newHrp;
     private Long projectId;
     private List<Long> tagIds;
-    
-    public CreateMrpReq() {
+
+    public CreateHrpReq() {
     }
 
-    public CreateMrpReq(MaterialResourcePostingEntity newMrp, Long projectId, List<Long> tagIds) {
-        this.newMrp = newMrp;
+    public CreateHrpReq(HumanResourcePostingEntity newHrp, Long projectId, List<Long> tagIds) {
+        this.newHrp = newHrp;
         this.projectId = projectId;
         this.tagIds = tagIds;
     }
 
-    
-
-    public MaterialResourcePostingEntity getNewMrp() {
-        return newMrp;
+    public HumanResourcePostingEntity getNewHrp() {
+        return newHrp;
     }
 
-    public void setNewMrp(MaterialResourcePostingEntity newMrp) {
-        this.newMrp = newMrp;
+    public void setNewHrp(HumanResourcePostingEntity newHrp) {
+        this.newHrp = newHrp;
     }
 
     public Long getProjectId() {
@@ -52,5 +50,6 @@ public class CreateMrpReq {
     public void setTagIds(List<Long> tagIds) {
         this.tagIds = tagIds;
     }
+    
     
 }

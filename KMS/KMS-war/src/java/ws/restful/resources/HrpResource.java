@@ -8,7 +8,6 @@ package ws.restful.resources;
 import Exception.NoResultException;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import entity.HumanResourcePostingEntity;
-import entity.MaterialResourcePostingEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +26,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import ws.restful.model.CreateHrpReq;
 import ws.restful.model.ErrorRsp;
 
 /**
@@ -98,11 +98,11 @@ public class HrpResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewHrp(HumanResourcePostingEntity hrp) {
+    public Response createNewHrp(CreateHrpReq createHrpReq) {
         System.out.println("******** HrpResource: createNewHrp()");
-        if (hrp!= null) {
+        if (createHrpReq != null) {
             try {
-                Long hrpId = humanResourcePostingSessionBean.createHumanResourcePostingEntity(hrp, hrp.getProject().getProjectId());
+                Long hrpId = humanResourcePostingSessionBean.createHumanResourcePostingEntity(createHrpReq.getNewHrp(), createHrpReq.getProjectId(), createHrpReq.getTagIds());
                 
                 return Response.status(Status.OK).entity(hrpId).build();
             } catch (NoResultException ex) {

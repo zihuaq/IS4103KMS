@@ -17,7 +17,7 @@ import javax.ejb.Local;
 @Local
 public interface HumanResourcePostingSessionBeanLocal {
 
-    public Long createHumanResourcePostingEntity(HumanResourcePostingEntity newHrp, Long projectId) throws NoResultException;
+    public Long createHumanResourcePostingEntity(HumanResourcePostingEntity newHrp, Long projectId, List<Long> tagIds) throws NoResultException;
 
     public HumanResourcePostingEntity getMrpById(Long mrpId) throws NoResultException;
 

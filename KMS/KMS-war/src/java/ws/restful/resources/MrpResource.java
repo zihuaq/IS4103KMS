@@ -103,7 +103,7 @@ public class MrpResource {
         if (createMrpReq != null) {
             try {
                 System.out.println("Name: " + createMrpReq.getNewMrp().getName());
-                Long mrpId = materialResourcePostingSessionBean.createMaterialResourcePosting(createMrpReq.getNewMrp(), createMrpReq.getProjectId());
+                Long mrpId = materialResourcePostingSessionBean.createMaterialResourcePosting(createMrpReq.getNewMrp(), createMrpReq.getProjectId(), createMrpReq.getTagIds());
                 
                 return Response.status(Status.OK).entity(mrpId).build();
             } catch (NoResultException ex) {
