@@ -7,6 +7,7 @@ import { Project } from '../../classes/project';
 import { ProjectService } from '../../project.service';
 import { SessionService } from '../../session.service';
 import { UserService } from '../../user.service';
+import { ProjectType } from '../../classes/project-type.enum';
 
 declare var $: any;
 
@@ -83,7 +84,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.joinProject(this.projectId, this.sessionService.getCurrentUser().userId).subscribe(
       response => {
         $(document).Toasts('create', {
-          class: 'bg-sucess',
+          class: 'bg-success',
           title: 'Success',
           autohide: true,
           delay: 2500,
@@ -106,7 +107,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.removeMember(this.projectId, this.sessionService.getCurrentUser().userId).subscribe(
       response => {
       $(document).Toasts('create', {
-        class: 'bg-sucess',
+        class: 'bg-success',
         title: 'Success',
         autohide: true,
         delay: 2500,
@@ -194,5 +195,9 @@ export class ProjectDetailsComponent implements OnInit {
   cancel() {
     this.profilePicture = this.projectToView.profilePicture;
     this.selectedProfilePicture = undefined;
+  }
+
+  get projectType(): typeof ProjectType{
+    return ProjectType;
   }
 }
