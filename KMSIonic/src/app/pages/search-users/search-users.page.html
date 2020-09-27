@@ -4,9 +4,21 @@
   </ion-searchbar>
 </ion-header>
 <ion-content>
-  <ion-item *ngFor="let user of filteredUsers">
-    <ion-label>
-      {{user.firstName}}
-    </ion-label>
+  <ion-virtual-scroll [items]="preliminarySearchUser">
+    <ion-item *virtualItem="let user" routerLink="/profile/{{user.userId}}">
+      <ion-avatar slot="start">
+        <img *ngIf="!user.profilePicture"
+          src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+        <img *ngIf="user.profilePicture" [src]="user.profilePicture">
+      </ion-avatar>
+      <ion-label>
+        <ion-text style="font-size: large;">{{user.firstName}} {{user.lastName}}</ion-text>
+        <ion-text style="font-size: small;" color="medium"> · {{user.email}}</ion-text>
+      </ion-label>
+    </ion-item>
+
+  </ion-virtual-scroll>
+  <ion-item [routerLink]="['/search-users/details']" [state]="filteredUsers" routerDirection="forward">
+    <a>See all results</a>
   </ion-item>
 </ion-content>

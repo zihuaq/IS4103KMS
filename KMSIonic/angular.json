@@ -72,9 +72,16 @@
               },
               {
                 "input": "src/theme/variables.css"
+              },
+              {
+                "input": "node_modules/@fortawesome/fontawesome-free/css/all.css"
               }
             ],
-            "scripts": []
+            "scripts": [
+              {
+                "input": "node_modules/@fortawesome/fontawesome-free/js/all.js"
+              }
+            ]
           },
           "configurations": {
             "production": {
@@ -164,9 +171,7 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
