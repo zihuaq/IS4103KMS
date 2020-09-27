@@ -105,13 +105,13 @@
     <div>
 
       <ion-list>
-        <ion-radio-group value="gender" name="gender" ngModel>
+        <ion-radio-group name="gender" ngModel>
           <ion-list-header>
             <ion-label>Gender</ion-label>
           </ion-list-header>
           <ion-item *ngFor="let gender of genders">
             <ion-label>{{gender}}</ion-label>
-            <ion-radio slot="start"></ion-radio>
+            <ion-radio slot="start" [value]="gender"></ion-radio>
           </ion-item>
         </ion-radio-group>
       </ion-list>

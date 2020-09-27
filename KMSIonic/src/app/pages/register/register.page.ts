@@ -16,16 +16,14 @@ export class RegisterPage implements OnInit {
   today
   newUser: User
   maxDate = new Date().toISOString().slice(0, 10)
-  genders = ["male", "female"]
+  genders = ["Male", "Female"]
   accountCreated = false
   accountCreationError = false
   errorMessage: string
   successMessage =
     "Account Created successfully an verification email has been sent."
   isLoading = false
-  // const httpOptions = {
-  //   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  // };
+
   constructor(
     private userService: UserService,
     public http: HttpClient,
@@ -52,7 +50,7 @@ export class RegisterPage implements OnInit {
   ngOnInit() {}
 
   onCreateUser(userRegistrationForm: NgForm) {
-    console.log(userRegistrationForm)
+    console.log(userRegistrationForm.value)
     if (userRegistrationForm.valid) {
       this.newUser.firstName = userRegistrationForm.value.firstName
       this.newUser.lastName = userRegistrationForm.value.lastName
@@ -83,9 +81,11 @@ export class RegisterPage implements OnInit {
       )
     }
   }
+
   createInstition() {
     this.route.navigate(["/registerinstitution"])
   }
+
   directInst() {
     this.route.navigate(["/registerinstitution"])
   }
