@@ -41,10 +41,6 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
-<<<<<<< HEAD
-import { IonicModule } from '@ionic/angular';
-=======
->>>>>>> origin/master
 import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
 
 @NgModule({
@@ -93,7 +89,6 @@ import { AffiliationRequestsComponent } from './notifications/affiliation-reques
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     ModalModule.forRoot(),
-    IonicModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
