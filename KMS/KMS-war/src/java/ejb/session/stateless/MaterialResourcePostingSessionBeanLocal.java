@@ -17,7 +17,7 @@ import javax.ejb.Local;
 @Local
 public interface MaterialResourcePostingSessionBeanLocal {
 
-    public Long createMaterialResourcePosting(MaterialResourcePostingEntity newMrp, Long projectId) throws NoResultException;
+    public Long createMaterialResourcePosting(MaterialResourcePostingEntity newMrp, Long projectId, List<Long> tagIds) throws NoResultException;
 
     public MaterialResourcePostingEntity getMrpById(Long mrpId) throws NoResultException;
 

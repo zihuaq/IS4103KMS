@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import Exception.NoResultException;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.TagEntity;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,6 +23,9 @@ import javax.persistence.Query;
 @Stateless
 public class MaterialResourcePostingSessionBean implements MaterialResourcePostingSessionBeanLocal {
 
+    @EJB(name = "TagSessionBeanLocal")
+    private TagSessionBeanLocal tagSessionBeanLocal;
+
     @EJB(name = "ProjectSessionBeanLocal")
     private ProjectSessionBeanLocal projectSessionBeanLocal;
 
@@ -29,7 +33,7 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
     private EntityManager em;
 
     @Override
-    public Long createMaterialResourcePosting(MaterialResourcePostingEntity newMrp, Long projectId) throws NoResultException {
+    public Long createMaterialResourcePosting(MaterialResourcePostingEntity newMrp, Long projectId, List<Long> tagIds) throws NoResultException {
         System.out.println("******** MrpSessionBean: createMrp()");
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
@@ -38,6 +42,10 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
         
         project.getMaterialResourcePostings().add(newMrp);
         newMrp.setProject(project);
+        for (Long id : tagIds) {
+            TagEntity tag = tagSessionBeanLocal.getTagById(id);
+            newMrp.getTags().add(tag);
+        }
         
         return newMrp.getMaterialResourcePostingId();
     }

@@ -6,13 +6,16 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -78,8 +81,12 @@ public class MaterialResourcePostingEntity implements Serializable {
     @ManyToOne
     @JoinColumn
     private ProjectEntity project;
+    
+    @ManyToMany
+    private List<TagEntity> tags;
 
     public MaterialResourcePostingEntity() {
+        this.tags = new ArrayList<>();
     }
 
     public MaterialResourcePostingEntity(Long materialResourcePostingId, String name, String unit, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
@@ -226,6 +233,14 @@ public class MaterialResourcePostingEntity implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public List<TagEntity> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagEntity> tags) {
+        this.tags = tags;
     }
     
 }

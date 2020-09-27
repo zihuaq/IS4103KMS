@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import Exception.NoResultException;
 import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.TagEntity;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,6 +23,9 @@ import javax.persistence.Query;
 @Stateless
 public class HumanResourcePostingSessionBean implements HumanResourcePostingSessionBeanLocal {
 
+    @EJB(name = "TagSessionBeanLocal")
+    private TagSessionBeanLocal tagSessionBeanLocal;
+
     @EJB(name = "ProjectSessionBeanLocal")
     private ProjectSessionBeanLocal projectSessionBeanLocal;
 
@@ -29,13 +33,18 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
     private EntityManager em;
            
     @Override
-    public Long createHumanResourcePostingEntity(HumanResourcePostingEntity newHrp, Long projectId) throws NoResultException {
+    public Long createHumanResourcePostingEntity(HumanResourcePostingEntity newHrp, Long projectId, List<Long> tagIds) throws NoResultException {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         em.persist(newHrp);
         em.flush();
         
         project.getHumanResourcePostings().add(newHrp);
         newHrp.setProject(project);
+        
+        for (Long id : tagIds) {
+            TagEntity tag = tagSessionBeanLocal.getTagById(id);
+            newHrp.getTags().add(tag);
+        }
         
         return newHrp.getHumanResourcePostingId();
     }

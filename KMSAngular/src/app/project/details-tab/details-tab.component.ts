@@ -52,6 +52,12 @@ export class DetailsTabComponent implements OnInit, OnChanges {
         for (let tag of this.projectToEdit.sdgs) {
           this.selectedTagNames.push(tag.name);
         }
+        $("#sdgselect2")
+        .val($("#sdgselect2")
+        .val()
+        .concat( this.selectedTagNames));
+        $("#sdgselect2")
+        .trigger("change");
       }
     );
   }
