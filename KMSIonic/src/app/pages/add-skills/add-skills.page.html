@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Skills</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        Save
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
+      placeholder="Search Skill Tags"></ion-searchbar>
+
+    <ion-list lines="none">
+      <ion-item *ngFor="let tag of filteredTags">
+        <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">
+          <ion-text color="primary">
+            <h3>{{tag.name}}</h3>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-list-header>Selected Skill Tags</ion-list-header>
+    <ion-list>
+      <ion-item *ngFor="let tag of chosenTags">
+        <ion-chip color="tertiary">
+          <ion-label>{{tag.name}} </ion-label>
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-chip>
+      </ion-item>
+    </ion-list>
+</ion-content>

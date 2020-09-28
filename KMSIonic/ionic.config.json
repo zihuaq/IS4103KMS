@@ -1,5 +1,7 @@
 {
   "name": "KMSIonic",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

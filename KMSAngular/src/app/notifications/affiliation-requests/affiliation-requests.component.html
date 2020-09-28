@@ -1,0 +1,38 @@
+<div class="card" style="height: 60vh;">
+    <div class="card-header">
+      <h3 class="card-title">Affiliation Requests</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+      <ul class="products-list product-list-in-card pl-2 pr-2">
+        <li class="item" *ngFor="let affiliationRequest of affiliationRequests">
+          <div class="product-img">
+            <img *ngIf="!affiliationRequest.from.profilePicture"
+              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+              alt="Product Image" class="img-size-50">
+            <img *ngIf="affiliationRequest.from.profilePicture" [src]="affiliationRequest.from.profilePicture" alt="Product Image"
+              class="img-size-50">
+          </div>
+          <div class="product-info">
+            <a class="product-title d-flex justify-content-around">{{affiliationRequest.from.firstName}}
+              {{affiliationRequest.from.lastName}} wants to be affiliated to you</a>
+            <div class="d-flex justify-content-around">
+              <button type="button" class="btn bg-gradient-primary btn-sm col-4"
+                (click)="acceptAffiliation(affiliationRequest.to.userId, affiliationRequest.from.userId)">Accept</button>
+              <button type="button" class="btn bg-gradient-primary btn-sm col-4"
+                (click)="rejectAffiliation(affiliationRequest.to.userId, affiliationRequest.from.userId)">Reject</button>
+            </div>
+          </div>
+        </li>
+        <li class="item" *ngIf="affiliationRequests.length == 0">
+          <h6 class="d-flex justify-content-around">No affiliation requests</h6>
+        </li>
+        <!-- /.item -->
+      </ul>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer text-center">
+    </div>
+    <!-- /.card-footer -->
+  </div>
+  <!-- /.card -->

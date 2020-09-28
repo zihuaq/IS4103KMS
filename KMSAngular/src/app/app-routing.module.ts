@@ -31,6 +31,11 @@ const routes: Routes = [
     component: NotificationsComponent,
   },
   {
+    path: 'searchUsers/affiliated/:userid',
+    canActivate: [RouteGuard],
+    component: SearchUsersComponent,
+  },
+  {
     path: 'searchUsers/followers/:userid',
     canActivate: [RouteGuard],
     component: SearchUsersComponent,

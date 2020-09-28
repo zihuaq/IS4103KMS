@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-searchbar showCancelButton="always" (click)="goBack()" (ionCancel)="goBack()">
+  </ion-searchbar>
+</ion-header>
+<ion-content>
+  <ion-virtual-scroll [items]="filteredUsers">
+    <ion-item *virtualItem="let user" (click)="goToProfile(user)">
+      <ion-avatar slot="start">
+        <img *ngIf="!user.profilePicture"
+          src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+        <img *ngIf="user.profilePicture" [src]="user.profilePicture">
+      </ion-avatar>
+      <ion-grid>
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <ion-label position="stacked">
+              <ion-text style="font-size: 22px">{{user.firstName}} {{user.lastName}}</ion-text>
+              <ion-text style="font-size: small !important;" color="medium"> · {{user.email}}</ion-text>
+            </ion-label>
+          </ion-col>
+          <ion-col class="ion-no-padding" *ngIf="loggedInUserFollowing && loggedInUserFollowRequestMade">
+            <ion-button
+              *ngIf="user.userId != loggedInUserId && !checkLoginUserHasFollowed(user.userId) && !checkLoginUserHaveSentFollowReq(user.userId)"
+              class="ion-float-right ion-activatable ripple-parent" fill="clear" size="small" shape="round"
+              (click)="follow(user.userId, $event)">
+              <ion-icon slot="icon-only" name="person-add-outline">
+                <ion-ripple-effect></ion-ripple-effect>
+              </ion-icon>
+            </ion-button>
+            <ion-button *ngIf="user.userId != loggedInUserId && checkLoginUserHasFollowed(user.userId)"
+              class="ion-float-right ion-activatable ripple-parent" fill="clear" size="small" shape="round"
+              (click)="unfollow(user.userId, $event)">
+              <ion-icon slot="icon-only" name="person-remove-outline">
+                <ion-ripple-effect></ion-ripple-effect>
+              </ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="user.userId != loggedInUserId && !checkLoginUserHasFollowed(user.userId) && checkLoginUserHaveSentFollowReq(user.userId)"
+              class="ion-float-right ion-activatable ripple-parent" fill="clear" size="small" shape="round"
+              disabled=true>
+              <ion-icon slot="icon-only" name="checkmark-outline">
+                <ion-ripple-effect></ion-ripple-effect>
+              </ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <ion-label>
+              <ion-text style="font-size: small;">{{user.followers.length}} Followers</ion-text>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <ion-label>
+              <ion-text style="font-size: small;" class="ion-no-padding">{{user.following.length}} Following</ion-text>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <ion-text *ngIf="user.sdgs.length == 0" style="font-size: small;">User has no SDG indicated</ion-text>
+            <ion-label *ngIf="user.sdgs.length > 0">Interested SDG</ion-label>
+            <ion-badge *ngFor="let sdg of user.sdgs" color="primary">{{sdg}}</ion-badge>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-virtual-scroll>
+</ion-content>
