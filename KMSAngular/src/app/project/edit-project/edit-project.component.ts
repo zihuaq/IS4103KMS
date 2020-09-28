@@ -22,7 +22,7 @@ export class EditProjectComponent implements OnInit {
   projectId: number;
   isOwner: boolean = false;
 
-  constructor(public projectService: ProjectService,
+  constructor(private projectService: ProjectService,
     private userService: UserService,
     private sessionService: SessionService,
     private activatedRoute: ActivatedRoute,
