@@ -18,7 +18,6 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
-import entity.MaterialResourceAvailableEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.UserEntity;

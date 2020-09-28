@@ -36,7 +36,6 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccountPrivacySettingEnum;
-import util.enumeration.UserTypeEnum;
 import util.security.CryptographicHelper;
 
 /**

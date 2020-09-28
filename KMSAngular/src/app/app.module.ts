@@ -96,7 +96,7 @@ import { AffiliationRequestsComponent } from './notifications/affiliation-reques
     EditHrpTabComponent,
     ViewOwnProjectsComponent,
     MaterialResourcePostingTabComponent,
-    AffiliationRequestsComponent,
+    AffiliationRequestsComponent
   ],
   imports: [
     BrowserModule,
