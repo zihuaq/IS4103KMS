@@ -33,7 +33,9 @@ export class ViewAllProjectComponent implements OnInit {
   constructor(public projectService: ProjectService,
     public userService: UserService,
     private sessionService: SessionService,
-    private router: Router) { }
+    private router: Router) {
+      this.projects = [];
+     }
 
   ngOnInit(): void {
     this.checkAccessRight();

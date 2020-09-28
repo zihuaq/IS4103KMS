@@ -10,7 +10,6 @@ import Exception.CreateProjectReviewException;
 import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
-import Exception.ProjectNotFoundException;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import entity.ActivityEntity;
 import entity.HumanResourcePostingEntity;
@@ -373,7 +372,7 @@ public class ProjectResource {
         }
     }
     
-    @Path("createNewProjectReview")
+    @Path("createNewUserReview")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

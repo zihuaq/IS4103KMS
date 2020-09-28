@@ -6,7 +6,6 @@
 package ws.restful.model;
 
 import entity.ProjectEntity;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
