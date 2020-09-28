@@ -1,6 +1,8 @@
 import { User } from './user';
 import { Tag } from './tag';
 import { ProjectType } from './project-type.enum';
+import { HumanResourcePosting } from './human-resource-posting';
+import { MaterialResourcePosting } from './material-resource-posting';
 
 export class Project {
     projectId: number;
@@ -16,8 +18,26 @@ export class Project {
     monetaryFundingRequired: number;
     monetaryFundingObtained: number;
     sdgs: Tag[];
+    humanResourcePostings: HumanResourcePosting[];
+    materialResourcePostings: MaterialResourcePosting[];
 
-    constructor(projectId?: number, name?: string, description?: string, status?: ProjectType, dateCreated?: Date, country?: string, profilePicture?: string | ArrayBuffer, monetaryFundingRequired?: number, monetaryFundingObtained?: number, projectOwner?: User, projectMembers?: User[], projectAdmins?: User[], sdgs?: Tag[]) {
+    constructor(
+        projectId?: number, 
+        name?: string, 
+        description?: string, 
+        status?: ProjectType, 
+        dateCreated?: Date, 
+        country?: string, 
+        profilePicture?: string | ArrayBuffer, 
+        monetaryFundingRequired?: number, 
+        monetaryFundingObtained?: number, 
+        projectOwner?: User, 
+        projectMembers?: User[], 
+        projectAdmins?: User[], 
+        sdgs?: Tag[],
+        humanResourcePostings?: HumanResourcePosting[],
+        materialResourcePostings?: MaterialResourcePosting[]) 
+        {
         this.projectId = projectId;
         this.name = name;
         this.description = description;
@@ -31,5 +51,7 @@ export class Project {
         this.monetaryFundingObtained = monetaryFundingObtained;
         this.monetaryFundingRequired = monetaryFundingRequired;
         this.sdgs = sdgs;
+        this.humanResourcePostings = humanResourcePostings;
+        this.materialResourcePostings = materialResourcePostings;
     }
 }

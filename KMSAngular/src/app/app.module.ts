@@ -96,7 +96,8 @@ import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp
     EditHrpTabComponent,
     ViewOwnProjectsComponent,
     EditMrpTabComponent,
-    AffiliationRequestsComponent
+    AffiliationRequestsComponent,
+    ViewHrpTabComponent
   ],
   imports: [
     BrowserModule,

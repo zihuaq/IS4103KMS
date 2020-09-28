@@ -56,6 +56,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab">Human Resoure Postings</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body" id="custom-tabs-four-tabContent">
@@ -63,11 +66,11 @@
                         <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
                             <p><b>Description:</b> {{projectToView.description}}</p>
                             <p><b>Country:</b> {{projectToView.country}}</p>
-                            <p><b>Date created:</b> {{dateCreated}}</p>
+                            <p><b>Date created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
                             <p><b>Monetary Funding Required:</b> ${{projectToView.monetaryFundingRequired}}</p>
                             <p><b>Monetary Funding Obtained:</b> ${{projectToView.monetaryFundingObtained}}</p>
-                            <p><b>SDGs:</b> 
-                                <span *ngFor="let tag of projectToView.sdgs">
+                            <p><b>SDGs: </b> 
+                                <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary">
                                     {{tag.name}}&nbsp;
                                 </span>  
                             </p>
@@ -116,6 +119,9 @@
                         </div>
                         <div class="tab-pane fade" id="review-tab" role="tabpanel">
                             <p>review-tab works</p>
+                        </div>
+                        <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
+                            <app-view-hrp-tab></app-view-hrp-tab>
                         </div>
                     </div>                    
                 </div>

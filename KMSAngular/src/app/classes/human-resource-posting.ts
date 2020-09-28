@@ -1,5 +1,6 @@
 import { Project } from './project';
 import { Tag } from './tag';
+import { User } from './user';
 
 export class HumanResourcePosting {
     humanResourcePostingId: number;
@@ -14,8 +15,10 @@ export class HumanResourcePosting {
     longitude: number;
     project: Project;
     tags: Tag[];
+    appliedUsers: User[];
 
-    constructor(humanResourcePostingId?: number, name?: string, totalSlots?: number, obtainedSlots?: number, lackingSlots?: number, description?: string, startDate?: Date, endDate?: Date, latitude?: number, longitude?: number, project?: Project, tags?: Tag[]) {
+
+    constructor(humanResourcePostingId?: number, name?: string, totalSlots?: number, obtainedSlots?: number, lackingSlots?: number, description?: string, startDate?: Date, endDate?: Date, latitude?: number, longitude?: number, project?: Project, tags?: Tag[], appliedUsers?: User[]) {
         this.humanResourcePostingId = humanResourcePostingId;
         this.name = name;
         this.totalSlots = totalSlots;
@@ -28,5 +31,6 @@ export class HumanResourcePosting {
         this.longitude = longitude;
         this.project = project;
         this.tags = tags;
+        this.appliedUsers = appliedUsers;
     }
 }

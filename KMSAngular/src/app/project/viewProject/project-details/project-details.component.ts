@@ -90,7 +90,7 @@ export class ProjectDetailsComponent implements OnInit {
           autohide: true,
           delay: 2500,
           body: 'Welcome to the project',
-        })
+        });
         location.reload();
       },
       error => {
@@ -100,7 +100,7 @@ export class ProjectDetailsComponent implements OnInit {
           autohide: true,
           delay: 2500,
           body: error,
-        })
+        });
       });  
   }
 
