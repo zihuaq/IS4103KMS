@@ -110,7 +110,7 @@ public class GroupResource {
         group.getGroupOwner().getReviewsReceived().clear();
         group.getGroupOwner().getProjectsOwned().clear();
         group.getGroupOwner().getProjectsJoined().clear();
-        group.getGroupOwner().getProjectAdmins().clear();
+        group.getGroupOwner().getProjectsManaged().clear();
         group.getGroupOwner().getGroupsJoined().clear();
         group.getGroupOwner().getPosts().clear();
         group.getGroupOwner().getBadges().clear();
@@ -127,7 +127,7 @@ public class GroupResource {
             member.getReviewsReceived().clear();
             member.getProjectsOwned().clear();
             member.getProjectsJoined().clear();
-            member.getProjectAdmins().clear();
+            member.getProjectsManaged().clear();
             member.getGroupsJoined().clear();
             member.getPosts().clear();
             member.getBadges().clear();
@@ -145,7 +145,7 @@ public class GroupResource {
             admin.getReviewsReceived().clear();
             admin.getProjectsOwned().clear();
             admin.getProjectsJoined().clear();
-            admin.getProjectAdmins().clear();
+            admin.getProjectsManaged().clear();
             admin.getGroupsJoined().clear();
             admin.getPosts().clear();
             admin.getBadges().clear();
