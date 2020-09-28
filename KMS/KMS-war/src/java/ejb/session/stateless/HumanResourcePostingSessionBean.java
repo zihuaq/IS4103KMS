@@ -68,8 +68,20 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
     }
     
     @Override
-    public void updateHumanResourcePosting(HumanResourcePostingEntity mrpToUpdate) {
-        em.merge(mrpToUpdate);
+    public void updateHumanResourcePosting(HumanResourcePostingEntity hrpToUpdate) throws NoResultException {
+        HumanResourcePostingEntity hrp = getHrpById(hrpToUpdate.getHumanResourcePostingId());
+        hrp.setName(hrpToUpdate.getName());
+        hrp.setDescription(hrpToUpdate.getDescription());
+        hrp.setStartDate(hrpToUpdate.getStartDate());
+        hrp.setEndDate(hrpToUpdate.getEndDate());
+        hrp.setTotalSlots(hrpToUpdate.getTotalSlots());
+        hrp.setLatitude(hrpToUpdate.getLatitude());
+        hrp.setLongitude(hrpToUpdate.getLongitude());
+        hrp.getTags().clear();
+        for (TagEntity tagToUpdate: hrpToUpdate.getTags()) {
+            TagEntity tag = tagSessionBeanLocal.getTagById(tagToUpdate.getTagId());
+            hrp.getTags().add(tag);
+        }
     }
     
     @Override

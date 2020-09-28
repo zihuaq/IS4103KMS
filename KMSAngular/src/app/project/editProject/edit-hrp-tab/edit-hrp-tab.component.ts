@@ -2,12 +2,12 @@ import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
-import { Project } from '../../classes/project';
-import { ProjectService } from '../../project.service';
-import { HumanResourcePosting } from '../../classes/human-resource-posting';
-import { Tag } from '../../classes/tag';
-import { TagService } from '../../tag.service';
-import { HrpService } from '../../hrp.service';
+import { Project } from 'src/app/classes/project';
+import { ProjectService } from 'src/app/project.service';
+import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
+import { Tag } from 'src/app/classes/tag';
+import { TagService } from 'src/app/tag.service';
+import { HrpService } from 'src/app/hrp.service';
 
 declare var $: any;
 
@@ -167,6 +167,7 @@ export class EditHrpTabComponent implements OnInit {
   }
 
   clickHrp(hrpId: number) {
+    $('#editskillselect2').val(null).trigger("change");
     this.selectedTagNames = [];
     this.hrpService.getHrp(hrpId).subscribe(
       response => {
@@ -198,14 +199,14 @@ export class EditHrpTabComponent implements OnInit {
 
   editHrp(editHrpForm: NgForm) {
     let selectedTags = [];
-    this.selectedTagNames = $('#sdgselect2').val();
+    this.selectedTagNames = $('#editskillselect2').val();
     if (this.selectedTagNames.length == 0) {
       $(document).Toasts('create', {
         class: 'bg-warning',
-        title: 'Unable to edit Sdg tags',
+        title: 'Unable to edit skills tags',
         autohide: true,
         delay: 2500,
-        body: 'Please select at least one Sdg tags',
+        body: 'Please select at least one skills tags',
       });
       return;
     }
@@ -215,8 +216,8 @@ export class EditHrpTabComponent implements OnInit {
       }
     });
     if (editHrpForm.valid) {
-      this.newHrp.startDate = new Date(this.startDate);
-      this.newHrp.endDate = new Date(this.endDate);
+      this.hrpToEdit.startDate = new Date(this.startDate);
+      this.hrpToEdit.endDate = new Date(this.endDate);
       this.hrpToEdit.tags = selectedTags;
       this.hrpService.updateHrp(this.hrpToEdit).subscribe(
         $(document).Toasts('create', {

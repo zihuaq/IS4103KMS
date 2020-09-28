@@ -68,12 +68,54 @@
 
 <span *ngIf="hrpList.length > 0">
     <div *ngFor="let hrp of hrpList">
-        <a class="card" style="width: 100%;" data-toggle="modal" href="#edit-modal" (click)="clickHrp(hrp.humanResourcePostingId)">
-            <div class="card-body">
-                <h5 class="card-title">{{hrp.name}}</h5>
-                
+        <div class="card" style="width: 100%;" >
+            <div class="card-header">
+                <h5 class="card-title">{{hrp.name}}</h5> 
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-toggle="modal" href="#edit-modal" (click)="clickHrp(hrp.humanResourcePostingId)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-toggle="modal" href="#delete-confirm-dialog" (click)="clickHrp(hrp.humanResourcePostingId)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
-        </a>
+            <div class="card-body" style="display: block;">
+                <ul class="products-list product-list-in-card pl-2 pr-2">
+                    <li class="item">
+                        <div class="product-info">
+                            <a class="product-title">
+                                {{startDate}} to {{endDate}}
+                                <span class="badge badge-secondary float-right">
+                                    At location
+                                    {{hrp.latitude | number:'1.1-6'}},
+                                    {{hrp.longitude | number:'1.1-6'}}
+                                </span>
+                            </a>
+                            <span class="product-description">
+                                Description: {{hrp.description}}
+                                <br/>
+                                Position needed: {{hrp.totalSlots}}
+                                <br/>
+                                Position filled: {{hrp.obtainedSlots}}
+                                <br/>
+                                Position lacked: {{hrp.lackingSlots}}
+                                <span *ngIf="hrp.tags.length > 0">
+                                    <div *ngFor="let tag of hrp.tags">
+                                        <small class="badge badge-info">
+                                            {{tag.name}}
+                                        </small>
+                                    </div>
+                                </span>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </span>
 

@@ -23,7 +23,7 @@ public interface HumanResourcePostingSessionBeanLocal {
 
     public List<HumanResourcePostingEntity> getListOfHumanResourcePostingByProjectId(Long projectId);
 
-    public void updateHumanResourcePosting(HumanResourcePostingEntity mrpToUpdate);
+    public void updateHumanResourcePosting(HumanResourcePostingEntity mrpToUpdate) throws NoResultException;
 
     public void deleteHumanResourcePosting(Long hrpId) throws NoResultException;
     

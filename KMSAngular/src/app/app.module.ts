@@ -38,20 +38,20 @@ import { FollowRequestsComponent } from './notifications/follow-requests/follow-
 import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
-import { ProjectDetailsComponent } from './project/project-details/project-details.component';
+import { ProjectDetailsComponent } from './project/viewProject/project-details/project-details.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
 import { ListFilterPipe } from './project/view-all-project/list-filter.pipe';
-import { EditProjectComponent } from './project/edit-project/edit-project.component';
-import { DetailsTabComponent } from './project/details-tab/details-tab.component';
-import { MembersTabComponent } from './project/members-tab/members-tab.component';
-import { ReportProjectComponent } from './project/report-project/report-project.component';
-import { ErrorPageComponent } from './project/error-page/error-page.component';
-import { EditHrpTabComponent } from './project/edit-hrp-tab/edit-hrp-tab.component';
+import { EditProjectComponent } from './project/editProject/edit-project/edit-project.component';
+import { EditDetailsTabComponent } from './project/editProject/edit-details-tab/edit-details-tab.component';
+import { MembersTabComponent } from './project/editProject/members-tab/members-tab.component';
+import { ReportProjectComponent } from './project/viewProject/report-project/report-project.component';
+import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
+import { EditHrpTabComponent } from './project/editProject/edit-hrp-tab/edit-hrp-tab.component';
 import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-projects.component';
-import { MaterialResourcePostingTabComponent } from './project/material-resource-posting-tab/material-resource-posting-tab.component';
- 
+import { EditMrpTabComponent } from './project/editProject/edit-mrp-tab/edit-mrp-tab.component';
 import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
+import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
 
 @NgModule({
   declarations: [
@@ -89,13 +89,13 @@ import { AffiliationRequestsComponent } from './notifications/affiliation-reques
     SdgInfoComponent,
     ListFilterPipe,
     EditProjectComponent,
-    DetailsTabComponent,
+    EditDetailsTabComponent,
     MembersTabComponent,
     ReportProjectComponent,
     ErrorPageComponent,
     EditHrpTabComponent,
     ViewOwnProjectsComponent,
-    MaterialResourcePostingTabComponent,
+    EditMrpTabComponent,
     AffiliationRequestsComponent
   ],
   imports: [
