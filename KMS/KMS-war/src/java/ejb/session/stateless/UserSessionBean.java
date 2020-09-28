@@ -733,6 +733,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.setLastName(updatedUser.getLastName());
         user.setEmail(updatedUser.getEmail());
         user.setDob(updatedUser.getDob());
+        user.setIsActive(updatedUser.getIsActive());
         System.out.println(updatedUser);
         user.setProfilePicture(updatedUser.getProfilePicture());
         user.setAccountPrivacySetting(updatedUser.getAccountPrivacySetting());
@@ -791,21 +792,36 @@ public class UserSessionBean implements UserSessionBeanLocal {
     @Override
     public List<ProjectEntity> getProjectsOwned(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
+        user.getProjectsOwned().size();
+        return user.getProjectsOwned();
+    }
+
+    public List<ReviewEntity> getUserWrittenReviews(Long userId) throws UserNotFoundException{
+        UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
-        user.getProjectsOwned().size();
-        return user.getProjectsOwned();
+        user.getReviewsGiven().size();
+        return user.getReviewsGiven();
     }
     
     @Override
     public List<ProjectEntity> getProjectsJoined(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
+        
+        user.getProjectsJoined().size();
+        return user.getProjectsJoined();
+    }
+    
+    @Override
+    public List<ReviewEntity> getUserRecievedReviews(Long userId) throws UserNotFoundException{
+
+        UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
-        user.getProjectsJoined().size();
-        return user.getProjectsJoined();
+        user.getReviewsReceived().size();
+        return user.getReviewsReceived();
     }
     
     @Override
@@ -816,5 +832,18 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         user.getProjectsManaged().size();
         return user.getProjectsManaged();
+        
+    }
+    
+    public Long editReview(Long reviewId, String title, String message, Integer rating) throws NoResultException{
+        ReviewEntity review = em.find(ReviewEntity.class, reviewId);
+        if(review == null){
+            throw new NoResultException("Review does not exist");
+        }
+        review.setTitle(title);
+        review.setReviewField(message);
+        review.setRating(rating);
+        
+        return review.getReviewId();
     }
 }

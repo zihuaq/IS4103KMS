@@ -6,9 +6,13 @@
 package ejb.session.stateless;
 
 import Exception.CreateProjectException;
+import Exception.CreateProjectReviewException;
+import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
+import Exception.ProjectNotFoundException;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.enumeration.ProjectStatusEnum;
@@ -43,5 +47,11 @@ public interface ProjectSessionBeanLocal {
     public void changeOwner(Long projectId, Long newOwnerId) throws NoResultException;
 
     public void deleteProject(Long projectId) throws NoResultException;
+
+    public List<ReviewEntity> getProjectReviews(Long projectId) throws NoResultException;
+
+    public Long createNewProjectReview(ReviewEntity newReview, Long projectId, Long fromUserId) throws CreateProjectReviewException;
+
+    public Long createNewUserReview(ReviewEntity newReview, Long projectId, Long fromUserId, Long toUserId) throws CreateUserReviewException;
     
 }

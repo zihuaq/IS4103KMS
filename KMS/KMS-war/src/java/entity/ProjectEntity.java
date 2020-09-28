@@ -92,6 +92,10 @@ public class ProjectEntity implements Serializable {
     @ManyToMany
     private List<TagEntity> sdgs;
 
+    @OneToMany(mappedBy = "project")
+    private List<ReviewEntity> reviews;
+
+
 
     public ProjectEntity() {
         this.projectMembers = new ArrayList<>();
@@ -252,6 +256,16 @@ public class ProjectEntity implements Serializable {
     public void setStatus(ProjectStatusEnum status) {
         this.status = status;
     }
+
+    public List<ReviewEntity> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewEntity> reviews) {
+        this.reviews = reviews;
+    }
+    
+    
 
     public List<UserEntity> getProjectAdmins() {
         return projectAdmins;

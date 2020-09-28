@@ -27,6 +27,7 @@ export class User {
   followRequestMade: FollowRequest[];
   followRequestReceived: FollowRequest[];
   accountPrivacySetting: AccountPrivacySettingEnum;
+  isActive: Boolean;
   affiliatedUsers: User[];
   affiliationRequestMade: AffiliationRequest[];
   affiliationRequestReceived: AffiliationRequest[];

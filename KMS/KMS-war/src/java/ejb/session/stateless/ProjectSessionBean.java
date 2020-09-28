@@ -6,14 +6,18 @@
 package ejb.session.stateless;
 
 import Exception.CreateProjectException;
+import Exception.CreateProjectReviewException;
+import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
+import Exception.ProjectNotFoundException;
 import entity.ActivityEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
+import entity.ReviewEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -65,6 +69,46 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             return newProject.getProjectId();
         } catch (NoResultException ex) {
             throw new CreateProjectException("User not found");
+        }
+    }
+    
+    @Override
+    public Long createNewProjectReview(ReviewEntity newReview, Long projectId, Long fromUserId)throws CreateProjectReviewException{
+        try {
+            UserEntity user = userSessionBeanLocal.getUserById(fromUserId);
+            ProjectEntity project = getProjectById(projectId);
+            em.persist(newReview);
+            em.flush();
+            
+            user.getReviewsGiven().add(newReview);
+            project.getReviews().add(newReview);
+            newReview.setFrom(user);
+            newReview.setProject(project);
+            
+            return newReview.getReviewId();
+        } catch (NoResultException ex) {
+            throw new CreateProjectReviewException("User not found");
+        }
+    }
+    
+    public Long createNewUserReview(ReviewEntity newReview, Long projectId, Long fromUserId, Long toUserId)throws CreateUserReviewException{
+        try {
+            UserEntity fromUser = userSessionBeanLocal.getUserById(fromUserId);
+            UserEntity toUser = userSessionBeanLocal.getUserById(toUserId);
+            ProjectEntity project = getProjectById(projectId);
+            em.persist(newReview);
+            em.flush();
+            
+            fromUser.getReviewsGiven().add(newReview);
+            toUser.getReviewsGiven().add(newReview);
+            project.getReviews().add(newReview);
+            newReview.setFrom(fromUser);
+            newReview.setTo(toUser);
+            newReview.setProject(project);
+            
+            return newReview.getReviewId();
+        } catch (NoResultException ex) {
+            throw new CreateUserReviewException("User not found");
         }
     }
     
@@ -228,5 +272,13 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         projectToDelete.getPosts().clear();
         
         em.remove(projectToDelete);
+    }
+    
+    @Override
+    public List<ReviewEntity> getProjectReviews(Long projectId) throws NoResultException {
+        ProjectEntity project = getProjectById(projectId);
+        project.getReviews().size();
+        return project.getReviews();
+        
     }
 }
