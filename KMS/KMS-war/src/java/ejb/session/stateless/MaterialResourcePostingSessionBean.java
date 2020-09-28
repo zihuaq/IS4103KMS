@@ -69,8 +69,22 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
     }
     
     @Override
-    public void updateMaterialResourcePosting(MaterialResourcePostingEntity mrpToUpdate) {
-        em.merge(mrpToUpdate);
+    public void updateMaterialResourcePosting(MaterialResourcePostingEntity mrpToUpdate) throws NoResultException {
+        MaterialResourcePostingEntity mrp = getMrpById(mrpToUpdate.getMaterialResourcePostingId());
+        mrp.setName(mrpToUpdate.getName());
+        mrp.setDescription(mrpToUpdate.getDescription());
+        mrp.setStartDate(mrpToUpdate.getStartDate());
+        mrp.setEndDate(mrpToUpdate.getEndDate());
+        mrp.setTotalQuantity(mrpToUpdate.getTotalQuantity());
+        mrp.setLackingQuantity(mrpToUpdate.getLackingQuantity());
+        mrp.setUnit(mrpToUpdate.getUnit());
+        mrp.setLatitude(mrpToUpdate.getLatitude());
+        mrp.setLongitude(mrpToUpdate.getLongitude());
+        mrp.getTags().clear();
+        for (TagEntity tagToUpdate: mrpToUpdate.getTags()) {
+            TagEntity tag = tagSessionBeanLocal.getTagById(tagToUpdate.getTagId());
+            mrp.getTags().add(tag);
+        }
     }
     
     @Override

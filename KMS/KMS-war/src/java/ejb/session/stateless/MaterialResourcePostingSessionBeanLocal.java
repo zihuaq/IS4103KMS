@@ -23,7 +23,7 @@ public interface MaterialResourcePostingSessionBeanLocal {
 
     public List<MaterialResourcePostingEntity> getListOfMaterialResourcePostingByProjectId(Long projectId);
 
-    public void updateMaterialResourcePosting(MaterialResourcePostingEntity mrpToUpdate);
+    public void updateMaterialResourcePosting(MaterialResourcePostingEntity mrpToUpdate) throws NoResultException;
 
     public void deleteMaterialResourcePosting(Long mrpId) throws NoResultException;
     
