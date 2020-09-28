@@ -19,8 +19,6 @@ import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
 import entity.ProjectEntity;
-import entity.MaterialResourceAvailableEntity;
-import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
@@ -841,7 +839,7 @@ public class UserResource {
     } 
     
     @GET
-    @Path("/writtenreviews/{userId}")
+    @Path("/receivedreviews/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRecievedReviews(@PathParam("userId") Long userId) {
         try {
