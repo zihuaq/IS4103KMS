@@ -9,6 +9,7 @@ import Exception.NoResultException;
 import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
+import entity.UserEntity;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,6 +23,9 @@ import javax.persistence.Query;
  */
 @Stateless
 public class HumanResourcePostingSessionBean implements HumanResourcePostingSessionBeanLocal {
+
+    @EJB(name = "UserSessionBeanLocal")
+    private UserSessionBeanLocal userSessionBeanLocal;
 
     @EJB(name = "TagSessionBeanLocal")
     private TagSessionBeanLocal tagSessionBeanLocal;
@@ -55,7 +59,7 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
         if (mrp != null) {
             return mrp;
         } else {
-            throw new NoResultException("Material Resource Posting does not exists.");
+            throw new NoResultException("Huaman Resource Posting does not exists.");
         }
     }
     
@@ -75,6 +79,7 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
         hrp.setStartDate(hrpToUpdate.getStartDate());
         hrp.setEndDate(hrpToUpdate.getEndDate());
         hrp.setTotalSlots(hrpToUpdate.getTotalSlots());
+        hrp.setLackingSlots(hrp.getTotalSlots() - hrp.getObtainedSlots());
         hrp.setLatitude(hrpToUpdate.getLatitude());
         hrp.setLongitude(hrpToUpdate.getLongitude());
         hrp.getTags().clear();
@@ -87,14 +92,45 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
     @Override
     public void deleteHumanResourcePosting(Long hrpId) throws NoResultException {
         HumanResourcePostingEntity hrp = getHrpById(hrpId);
-        
-//        hrp.getActivity().getHumanResourcePostings().remove(hrp);
-//        hrp.setActivity(null);
-        hrp.getProject().getHumanResourcePostings().remove(hrp);
-        hrp.setProject(null);
-        
+        if (hrp.getActivity() != null) {
+            hrp.getActivity().getHumanResourcePostings().remove(hrp);
+            hrp.setActivity(null);
+        }
+        if (hrp.getProject() != null) {
+            hrp.getProject().getHumanResourcePostings().remove(hrp);
+            hrp.setProject(null);
+        }
+        if (hrp.getAppliedUsers().size() > 0) {
+            for (UserEntity user : hrp.getAppliedUsers()) {
+                user.getHrpApplied().remove(hrp);           
+            }
+            hrp.getAppliedUsers().clear();
+        }
         em.remove(hrp);
     }
-
+    
+    @Override
+    public void joinHrp(Long userId, Long hrpId) throws NoResultException {
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
+        HumanResourcePostingEntity hrp = getHrpById(hrpId);
+        
+        hrp.getAppliedUsers().add(user);
+        user.getHrpApplied().add(hrp);
+        
+        hrp.setObtainedSlots(hrp.getObtainedSlots() + 1);
+        hrp.setLackingSlots(hrp.getLackingSlots() - 1);
+    }
+    
+    @Override
+    public void leaveHrp(Long userId, Long hrpId) throws NoResultException {
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
+        HumanResourcePostingEntity hrp = getHrpById(hrpId);
+        
+        hrp.getAppliedUsers().remove(user);
+        user.getHrpApplied().remove(hrp);
+        
+        hrp.setObtainedSlots(hrp.getObtainedSlots() - 1);
+        hrp.setLackingSlots(hrp.getLackingSlots() + 1);
+    }
     
 }
