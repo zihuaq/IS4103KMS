@@ -90,12 +90,14 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
     @Override
     public void deleteMaterialResourcePosting(Long mrpId) throws NoResultException {
         MaterialResourcePostingEntity mrp = getMrpById(mrpId);
-        
-        mrp.getActivity().getMaterialResourcePostings().remove(mrp);
-        mrp.setActivity(null);
-        mrp.getProject().getMaterialResourcePostings().remove(mrp);
-        mrp.setProject(null);
-        
+        if (mrp.getActivity() != null) {
+            mrp.getActivity().getMaterialResourcePostings().remove(mrp);
+            mrp.setActivity(null);
+        }
+        if (mrp.getProject() != null) {
+            mrp.getProject().getMaterialResourcePostings().remove(mrp);
+            mrp.setProject(null);
+        }
         em.remove(mrp);
     }
 }

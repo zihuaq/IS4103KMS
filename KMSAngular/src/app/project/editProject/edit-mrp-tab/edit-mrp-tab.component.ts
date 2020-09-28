@@ -21,6 +21,7 @@ export class EditMrpTabComponent implements OnInit {
 
   newMrp: MaterialResourcePosting;
   mrpToEdit: MaterialResourcePosting;
+  mrpToDelete: MaterialResourcePosting;
   mrpList: MaterialResourcePosting[];
   noMrp: boolean = true;
 
@@ -51,6 +52,7 @@ export class EditMrpTabComponent implements OnInit {
       this.newMrp.latitude = 35.929673;
       this.newMrp.longitude = -78.948237;
       this.mrpToEdit = new MaterialResourcePosting;
+      this.mrpToDelete = new MaterialResourcePosting;
       this.mrpList = [];
     }
 
@@ -136,6 +138,9 @@ export class EditMrpTabComponent implements OnInit {
           this.materialResourcePostingService.getMrpByProject(this.projectId).subscribe(
             response => {
               this.mrpList = response;
+              if (this.mrpList.length > 0) {
+                this.noMrp = false;
+              }
             }
           )
           $('#modal-create-mrp').modal('hide');
@@ -158,12 +163,8 @@ export class EditMrpTabComponent implements OnInit {
   clickEditMrp(mrp: MaterialResourcePosting) {
     this.mrpToEdit = mrp;
     $('#editmrpselect2').val(mrp.tags.map((tag) => tag.name)).trigger('change');
-    console.log(this.mrpToEdit.startDate);
-    console.log(this.mrpToEdit.endDate);
     this.editMrpStartDate = this.mrpToEdit.startDate.toString().substring(0, 10);
     this.editMrpEndDate = this.mrpToEdit.endDate.toString().substring(0, 10);
-    console.log(this.editMrpStartDate);
-    console.log(this.editMrpEndDate);
 
   }
 
@@ -193,15 +194,21 @@ export class EditMrpTabComponent implements OnInit {
     });
 
     if (editMrpForm.valid) {
-      this.mrpToEdit.startDate = new Date(editMrpForm.value.startDate);
-      this.mrpToEdit.endDate = new Date(editMrpForm.value.endDate);
+      this.mrpToEdit.startDate = new Date(this.editMrpStartDate);
+      this.mrpToEdit.endDate = new Date(this.editMrpEndDate);
       this.mrpToEdit.lackingQuantity = this.mrpToEdit.totalQuantity - this.mrpToEdit.obtainedQuantity;
       this.mrpToEdit.tags = selectedTags;
       this.materialResourcePostingService.updateMrp(this.mrpToEdit).subscribe(
         response => {
+          this.materialResourcePostingService.getMrpByProject(this.projectId).subscribe(
+            response => {
+              this.mrpList = response;
+              if (this.mrpList.length > 0) {
+                this.noMrp = false;
+              }
+            }
+          )
           $('#modal-edit-mrp').modal('hide');
-          console.log(this.mrpToEdit.startDate);
-          console.log(this.mrpToEdit.endDate);
           
           $(document).Toasts('create', {
           class: 'bg-success',
@@ -218,6 +225,38 @@ export class EditMrpTabComponent implements OnInit {
     this.selectedTagIds = [];
     $('#mrpselect2').val(null).trigger('change');
     this.newMrp = new MaterialResourcePosting();
+  }
+
+  clickDeleteMrp(mrp: MaterialResourcePosting) {
+    this.mrpToDelete = mrp;
+  }
+
+  deleteMrp() {
+    this.materialResourcePostingService.deleteMrp(this.mrpToDelete.materialResourcePostingId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Material resource posting deleted successfully',
+        });
+        this.materialResourcePostingService.getMrpByProject(this.projectId).subscribe(
+          response => {
+            this.mrpList = response;
+          }
+        );
+      },
+      error => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+      }
+    )
   }
 
 }

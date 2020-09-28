@@ -20,7 +20,7 @@
                     <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-edit-mrp" (click)="clickEditMrp(mrp)">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-toggle="modal" (click)="clickMrp(mrp.materialResourcePostingId)">
+                    <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-confirm-delete-mrp" (click)="clickDeleteMrp(mrp)">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
@@ -173,6 +173,26 @@
                     <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!editMrpForm.valid">Update</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-confirm-delete-mrp">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Delete Material Resource Posting</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this material resource posting?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="delete-mrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteMrp()">Delete</button>
+            </div>
         </div>
     </div>
 </div>
