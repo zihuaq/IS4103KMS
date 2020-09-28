@@ -50,6 +50,18 @@ export class HrpService {
     );
   }
 
+  joinHrp(hrpId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/joinHrp/" + hrpId + "/" + userId, null, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  leaveHrp(hrpId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/leaveHrp/" + hrpId + "/" + userId, null, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
     

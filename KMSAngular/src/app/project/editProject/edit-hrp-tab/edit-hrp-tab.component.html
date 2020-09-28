@@ -88,7 +88,7 @@
                     <li class="item">
                         <div class="product-info">
                             <a class="product-title">
-                                {{startDate}} to {{endDate}}
+                                {{hrp.startDate.toString().slice(0,10) | date}} to {{hrp.endDate.toString().slice(0,10) | date}}
                                 <span class="badge badge-secondary float-right">
                                     At location
                                     {{hrp.latitude | number:'1.1-6'}},

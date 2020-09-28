@@ -8,6 +8,7 @@ package ws.restful.resources;
 import Exception.NoResultException;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import entity.HumanResourcePostingEntity;
+import entity.UserEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,6 +60,7 @@ public class HrpResource {
         for (HumanResourcePostingEntity hrp : hrpList) {
             hrp.setProject(null);
             hrp.setActivity(null);
+            hrp.getAppliedUsers().clear();
         }
         
         return Response.status(Status.OK).entity(hrpList).build();
@@ -71,19 +73,44 @@ public class HrpResource {
         System.out.println("******** HrpResource: getHrp()");
         try {
             HumanResourcePostingEntity hrp = humanResourcePostingSessionBean.getHrpById(hrpId);
+            if (hrp.getProject() != null) {
+                hrp.getProject().setProjectOwner(null);
+                hrp.getProject().getProjectMembers().clear();
+                hrp.getProject().getProjectAdmins().clear();
+                hrp.getProject().getActivities().clear();
+                hrp.getProject().getHumanResourcePostings().clear();
+                hrp.getProject().getMaterialResourcePostings().clear();
+                hrp.getProject().getTasks().clear();
+                hrp.getProject().getPosts().clear();
+                hrp.getProject().getSdgs().clear();
+            }
+            if (hrp.getActivity() != null) {
+                hrp.getActivity().getHumanResourcePostings().clear();
+                hrp.getActivity().getMaterialResourcePostings().clear();
+                hrp.getActivity().setProject(null);
+            }
             
-            hrp.getProject().setProjectOwner(null);
-            hrp.getProject().getProjectMembers().clear();
-            hrp.getProject().getProjectAdmins().clear();
-            hrp.getProject().getActivities().clear();
-            hrp.getProject().getHumanResourcePostings().clear();
-            hrp.getProject().getMaterialResourcePostings().clear();
-            hrp.getProject().getTasks().clear();
-            hrp.getProject().getPosts().clear();
-            hrp.getProject().getSdgs().clear();
-//            hrp.getActivity().getHumanResourcePostings().clear();
-//            hrp.getActivity().getMaterialResourcePostings().clear();
-//            hrp.getActivity().setProject(null);
+            if (hrp.getAppliedUsers().size() > 0) {
+                for (UserEntity appliedUser : hrp.getAppliedUsers()) {
+                    appliedUser.getGroupsOwned().clear();
+                    appliedUser.getReviewsGiven().clear();
+                    appliedUser.getReviewsReceived().clear();
+                    appliedUser.getProjectsOwned().clear();
+                    appliedUser.getProjectsJoined().clear();
+                    appliedUser.getProjectsManaged().clear();
+                    appliedUser.getGroupsJoined().clear();
+                    appliedUser.getPosts().clear();
+                    appliedUser.getBadges().clear();
+                    appliedUser.getMras().clear();
+                    appliedUser.getSkills().clear();
+                    appliedUser.getFollowers().clear();
+                    appliedUser.getFollowing().clear();
+                    appliedUser.getSdgs().clear();
+                    appliedUser.getFollowRequestMade().clear();
+                    appliedUser.getFollowRequestReceived().clear();
+                    appliedUser.getHrpApplied().clear();
+                }
+            }
             
             return Response.status(Status.OK).entity(hrp).build();
             
@@ -122,12 +149,13 @@ public class HrpResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateMrp(HumanResourcePostingEntity hrp) {
+        System.out.println("******** HrpResource: updateHrp()");
         try {
-            System.out.println("******** HrpResource: updateHrp()");
             humanResourcePostingSessionBean.updateHumanResourcePosting(hrp);
 
             return Response.status(204).build();
-        } catch (NoResultException ex ) {
+        } catch(NoResultException ex) {
+
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
@@ -139,10 +167,41 @@ public class HrpResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteHrp(@PathParam("hrpId") Long hrpId) {
         System.out.println("******** HrpResource: deleteHrp()");
-        System.out.println("Hrp Id: " + hrpId);
         try {
             humanResourcePostingSessionBean.deleteHumanResourcePosting(hrpId);
 
+            return Response.status(204).build();
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("joinHrp/{hrpId}/{userId}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response joinHrp(@PathParam("hrpId") Long hrpId, @PathParam("userId") Long userId) {
+        System.out.println("******** HrpResource: joinHrp()");
+        try {
+            humanResourcePostingSessionBean.joinHrp(userId, hrpId);
+            
+            return Response.status(204).build();
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("leaveHrp/{hrpId}/{userId}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response leaveHrp(@PathParam("hrpId") Long hrpId, @PathParam("userId") Long userId) {
+        System.out.println("******** HrpResource: leaveHrp()");
+        try {
+            humanResourcePostingSessionBean.leaveHrp(userId, hrpId);
+            
             return Response.status(204).build();
         } catch (NoResultException ex ) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());

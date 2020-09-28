@@ -336,6 +336,7 @@ public class UserResource {
             user.getAffiliatedUsers().clear();
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
+            user.getHrpApplied().clear();
 
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
@@ -423,6 +424,7 @@ public class UserResource {
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
             user.getAffiliatedUsers().clear();
+            user.getHrpApplied().clear();
             user.setPassword("");
 
             return Response.status(Response.Status.OK).entity(user).build();
@@ -597,6 +599,7 @@ public class UserResource {
             user.getFollowers().clear();
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
+            user.getHrpApplied().clear();
             user.setPassword("");
             return Response.status(200).entity(user).build();
         } catch (UserNotFoundException | NoResultException ex) {
@@ -687,6 +690,7 @@ public class UserResource {
             temp.setFollowing(getUsersResponse(user.getFollowing()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
         return usersResponse;
@@ -710,6 +714,7 @@ public class UserResource {
             temp.setAffiliatedUsers(getUsersResponse(user.getAffiliatedUsers()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
         return usersResponse;

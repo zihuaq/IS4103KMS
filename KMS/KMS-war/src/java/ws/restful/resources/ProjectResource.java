@@ -154,6 +154,7 @@ public class ProjectResource {
                 member.getSdgs().clear();
                 member.getFollowRequestMade().clear();
                 member.getFollowRequestReceived().clear();
+                member.getHrpApplied().clear();
             }
             for (UserEntity admin : project.getProjectAdmins()) {
                 admin.getGroupsOwned().clear();
@@ -172,6 +173,7 @@ public class ProjectResource {
                 admin.getSdgs().clear();
                 admin.getFollowRequestMade().clear();
                 admin.getFollowRequestReceived().clear();
+                admin.getHrpApplied().clear();
             }
             for (ActivityEntity ae : project.getActivities()) {
                 ae.setProject(null);

@@ -130,7 +130,16 @@ export class EditHrpTabComponent implements OnInit {
         this.tagIdsSelected.push(element.tagId);
       }
     });
-
+    if (this.newHrp.startDate > this.newHrp.endDate) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: 'End Date cannot be earlier than Start Date',
+      });
+      return;
+    }
     if (hrpForm.valid) {
       this.newHrp.lackingSlots = this.newHrp.totalSlots;
       this.newHrp.obtainedSlots = 0;
@@ -144,12 +153,12 @@ export class EditHrpTabComponent implements OnInit {
             autohide: true,
             delay: 2500,
             body: 'Human Resource Posting created successfully',
-          })
+          });
           this.hrpService.getHrpByProject(this.projectId).subscribe(
             response => {
               this.hrpList = response;
             }
-          )
+          );
         },
         error => {
           $(document).Toasts('create', {
@@ -215,19 +224,46 @@ export class EditHrpTabComponent implements OnInit {
         selectedTags.push(element);
       }
     });
+    if (this.startDate > this.endDate) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: 'End Date cannot be earlier than Start Date',
+      });
+      return;
+    }
+    if (this.hrpToEdit.totalSlots < this.hrpToEdit.obtainedSlots) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to edit total slots',
+        autohide: true,
+        delay: 2500,
+        body: 'Please enter a number larger than the position filled',
+      });
+      return;
+    }
     if (editHrpForm.valid) {
       this.hrpToEdit.startDate = new Date(this.startDate);
       this.hrpToEdit.endDate = new Date(this.endDate);
       this.hrpToEdit.tags = selectedTags;
       this.hrpService.updateHrp(this.hrpToEdit).subscribe(
-        $(document).Toasts('create', {
-          class: 'bg-success',
-          title: 'Success',
-          autohide: true,
-          delay: 2500,
-          body: 'Human resource posting updated successfully',
-        })
-      )
+        response => {
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Human resource posting updated successfully',
+          });
+          this.hrpService.getHrpByProject(this.projectId).subscribe(
+            response => {
+              this.hrpList = response;
+            }
+          );
+        }
+      );
     }
   }
 
