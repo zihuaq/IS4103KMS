@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { NgxPayPalModule } from 'ngx-paypal';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MomentModule } from 'angular2-moment';
@@ -49,6 +48,8 @@ import { MembersTabComponent } from './project/members-tab/members-tab.component
 import { ReportProjectComponent } from './project/report-project/report-project.component';
 import { ErrorPageComponent } from './project/error-page/error-page.component';
 import { EditHrpTabComponent } from './project/edit-hrp-tab/edit-hrp-tab.component';
+import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-projects.component';
+import { MaterialResourcePostingTabComponent } from './project/material-resource-posting-tab/material-resource-posting-tab.component';
  
 @NgModule({
   declarations: [
@@ -90,7 +91,9 @@ import { EditHrpTabComponent } from './project/edit-hrp-tab/edit-hrp-tab.compone
     MembersTabComponent,
     ReportProjectComponent,
     ErrorPageComponent,
-    EditHrpTabComponent
+    EditHrpTabComponent,
+    ViewOwnProjectsComponent,
+    MaterialResourcePostingTabComponent
   ],
   imports: [
     BrowserModule,
@@ -98,7 +101,6 @@ import { EditHrpTabComponent } from './project/edit-hrp-tab/edit-hrp-tab.compone
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxPayPalModule,
     GoogleMapsModule,
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,

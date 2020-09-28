@@ -16,8 +16,8 @@ import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
-import java.util.ArrayList;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -179,7 +179,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getGroupsJoined().size();
             user.getGroupsOwned().size();
             user.getPosts().size();
-            user.getProjectAdmins().size();
+            user.getProjectsManaged().size();
             user.getProjectsJoined().size();
             user.getProjectsOwned().size();
             user.getReviewsGiven().size();
@@ -396,7 +396,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.remove(posts.get(i));
         }
         posts.clear();
-        List<ProjectEntity> projectAdmins = user.getProjectAdmins();
+        List<ProjectEntity> projectAdmins = user.getProjectsManaged();
         for(int i = 0; i < projectAdmins.size(); i++){
             projectAdmins.get(i).getProjectAdmins().remove(user);
         }
@@ -688,5 +688,35 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         user.getFollowRequestMade().size();
         return user.getFollowRequestMade();
+    }
+    
+    @Override
+    public List<ProjectEntity> getProjectsOwned(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getProjectsOwned().size();
+        return user.getProjectsOwned();
+    }
+    
+    @Override
+    public List<ProjectEntity> getProjectsJoined(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getProjectsJoined().size();
+        return user.getProjectsJoined();
+    }
+    
+    @Override
+    public List<ProjectEntity> getProjectsManaged(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getProjectsManaged().size();
+        return user.getProjectsManaged();
     }
 }

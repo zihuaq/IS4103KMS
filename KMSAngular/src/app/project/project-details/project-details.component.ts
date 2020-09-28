@@ -7,6 +7,7 @@ import { Project } from '../../classes/project';
 import { ProjectService } from '../../project.service';
 import { SessionService } from '../../session.service';
 import { UserService } from '../../user.service';
+import { ProjectType } from '../../classes/project-type.enum';
 
 declare var $: any;
 
@@ -27,6 +28,7 @@ export class ProjectDetailsComponent implements OnInit {
   profilePicture: string | ArrayBuffer;
   selectedProfilePicture: string | ArrayBuffer;
   selectedProfilePictureName: string;
+  noOfMembers: number;
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
@@ -45,6 +47,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToView = response;
+        this.noOfMembers = this.projectToView.projectMembers.length;
         this.profilePicture = this.projectToView.profilePicture;
         console.log(this.profilePicture);
         this.owner = this.projectToView.projectOwner;
@@ -83,7 +86,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.joinProject(this.projectId, this.sessionService.getCurrentUser().userId).subscribe(
       response => {
         $(document).Toasts('create', {
-          class: 'bg-sucess',
+          class: 'bg-success',
           title: 'Success',
           autohide: true,
           delay: 2500,
@@ -106,7 +109,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.removeMember(this.projectId, this.sessionService.getCurrentUser().userId).subscribe(
       response => {
       $(document).Toasts('create', {
-        class: 'bg-sucess',
+        class: 'bg-success',
         title: 'Success',
         autohide: true,
         delay: 2500,
@@ -194,5 +197,9 @@ export class ProjectDetailsComponent implements OnInit {
   cancel() {
     this.profilePicture = this.projectToView.profilePicture;
     this.selectedProfilePicture = undefined;
+  }
+
+  get projectType(): typeof ProjectType{
+    return ProjectType;
   }
 }

@@ -116,7 +116,7 @@ public class ProjectResource {
             project.getProjectOwner().getReviewsReceived().clear();
             project.getProjectOwner().getProjectsOwned().clear();
             project.getProjectOwner().getProjectsJoined().clear();
-            project.getProjectOwner().getProjectAdmins().clear();
+            project.getProjectOwner().getProjectsManaged().clear();
             project.getProjectOwner().getGroupsJoined().clear();
             project.getProjectOwner().getPosts().clear();
             project.getProjectOwner().getBadges().clear();
@@ -133,7 +133,7 @@ public class ProjectResource {
                 member.getReviewsReceived().clear();
                 member.getProjectsOwned().clear();
                 member.getProjectsJoined().clear();
-                member.getProjectAdmins().clear();
+                member.getProjectsManaged().clear();
                 member.getGroupsJoined().clear();
                 member.getPosts().clear();
                 member.getBadges().clear();
@@ -151,7 +151,7 @@ public class ProjectResource {
                 admin.getReviewsReceived().clear();
                 admin.getProjectsOwned().clear();
                 admin.getProjectsJoined().clear();
-                admin.getProjectAdmins().clear();
+                admin.getProjectsManaged().clear();
                 admin.getGroupsJoined().clear();
                 admin.getPosts().clear();
                 admin.getBadges().clear();

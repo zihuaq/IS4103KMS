@@ -20,7 +20,7 @@
                             <a class="nav-link" id="project-tab-members-tabname" data-toggle="pill" href="#members-tab" role="tab">Members</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="project-tab-material-resource-tabname" data-toggle="pill" href="#mra-tab" role="tab">Material Resource</a>
+                            <a class="nav-link" id="project-tab-material-resource-postings-tabname" data-toggle="pill" href="#mra-tab" role="tab">Material Resource Postings</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="project-tab-human-resource-tabname" data-toggle="pill" href="#hrp-tab" role="tab">Human Resource</a>
@@ -39,7 +39,7 @@
                             <app-members-tab [projectToEdit]="projectToEdit" (projectChanged)="handleProjectChanged($event)"></app-members-tab>
                         </div>
                         <div class="tab-pane fade" id="mra-tab" role="tabpanel">
-                            <p>MRA tab works!</p>
+                            <app-material-resource-posting-tab [projectToEdit]="projectToEdit" (projectChanged)="handleProjectChanged($event)"></app-material-resource-posting-tab>
                         </div>
                         <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
                             <app-edit-hrp-tab></app-edit-hrp-tab>
