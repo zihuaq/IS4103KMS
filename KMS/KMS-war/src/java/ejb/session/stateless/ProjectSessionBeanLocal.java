@@ -24,21 +24,21 @@ import util.enumeration.ProjectStatusEnum;
 @Local
 public interface ProjectSessionBeanLocal {
 
-    public Long createNewProject(ProjectEntity newProject, Long userId) throws CreateProjectException;
+    public Long createNewProject(ProjectEntity newProject, Long userId, List<Long> tagIds) throws CreateProjectException;
 
     public List<ProjectEntity> retrieveAllProject();
 
     public List<ProjectEntity> retrieveProjectByStatus(ProjectStatusEnum status);
 
-    public ProjectEntity getProjectById(Long projectId);
+    public ProjectEntity getProjectById(Long projectId) throws NoResultException;
 
     public void joinProject(Long projectId, Long userId) throws NoResultException;
 
     public void removeMember(Long projectId, Long userId) throws NoResultException, InvalidRoleException;
 
-    public void updateProject(ProjectEntity projectToUpdate);
+    public void updateProject(ProjectEntity projectToUpdate) throws NoResultException;
 
-    public void updateStatus(Long projectId, String status);
+    public void updateStatus(Long projectId, String status) throws NoResultException;
 
     public void addAdmin(Long projectId, Long userId) throws NoResultException;
 
@@ -46,7 +46,9 @@ public interface ProjectSessionBeanLocal {
 
     public void changeOwner(Long projectId, Long newOwnerId) throws NoResultException;
 
-    public List<ReviewEntity> getProjectReviews(Long projectId) throws ProjectNotFoundException;
+    public void deleteProject(Long projectId) throws NoResultException;
+
+    public List<ReviewEntity> getProjectReviews(Long projectId) throws NoResultException;
 
     public Long createNewProjectReview(ReviewEntity newReview, Long projectId, Long fromUserId) throws CreateProjectReviewException;
 

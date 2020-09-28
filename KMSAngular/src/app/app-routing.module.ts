@@ -5,6 +5,7 @@ import { IndexComponent } from './index/index.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 import { UserLoginPageComponent } from './user-login-page/user-login-page.component';
 import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
+import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-projects.component';
 import { CreateNewProjectComponent } from './project/create-new-project/create-new-project.component';
 import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
 
@@ -16,8 +17,12 @@ import { SearchUsersComponent } from './search-users/search-users.component';
 import { RetrieveAllUsersComponent } from './retrieve-all-users/retrieve-all-users.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
+import { ProjectDetailsComponent } from './project/project-details/project-details.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
+import { EditProjectComponent } from './project/edit-project/edit-project.component';
+import { ErrorPageComponent } from './project/error-page/error-page.component';
+
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -25,6 +30,7 @@ const routes: Routes = [
   { path: 'signupInstitution', component: CreateNewInstitutionComponent },
   { path: 'signupSelection', component: CreateNewUserSelectorComponent },
   { path: 'login', component: UserLoginPageComponent },
+  { path: 'error', component: ErrorPageComponent },
   {
     path: 'notifications',
     canActivate: [RouteGuard],
@@ -56,7 +62,10 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: ProfileComponent,
   },
-  { path: 'profile', canActivate: [RouteGuard], component: ProfileComponent },
+  { path: 'profile', 
+    canActivate: [RouteGuard], 
+    component: ProfileComponent 
+  },
   {
     path: 'accountVerification/:email/:uuid',
     component: AccountVerificationComponent,
@@ -65,6 +74,11 @@ const routes: Routes = [
     path: 'viewAllProjects',
     canActivate: [RouteGuard],
     component: ViewAllProjectComponent,
+  },
+  {
+    path: 'viewOwnProjects/:userid',
+    canActivate: [RouteGuard],
+    component: ViewOwnProjectsComponent,
   },
   {
     path: 'createNewProject',
@@ -86,7 +100,19 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: SdgInfoComponent,
   },
-  { path: '', canActivate: [RouteGuard], component: IndexComponent },
+  { path: '', 
+  canActivate: [RouteGuard], 
+  component: IndexComponent 
+  },
+  { path: 'projectDetails/:projectId', 
+    canActivate: [RouteGuard], 
+    component: ProjectDetailsComponent 
+  },
+  { path: 'editProject/:projectId',
+    canActivate: [RouteGuard], 
+    component: EditProjectComponent
+  }
+
 ];
 
 @NgModule({

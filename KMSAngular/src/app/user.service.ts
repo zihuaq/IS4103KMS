@@ -374,4 +374,22 @@ export class UserService {
     this.user.next(null);
     this.loggedIn = false;
   }
+
+  getProjectsOwned(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /projectsOwned/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getProjectsJoined(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /viewOwnProjects/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getProjectsManaged(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /projectsManaged/ + userId)
+      .pipe(catchError(this.handleError));
+  }
 }

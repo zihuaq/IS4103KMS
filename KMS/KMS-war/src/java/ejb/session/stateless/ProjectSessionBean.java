@@ -16,6 +16,7 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
+import entity.TagEntity;
 import entity.ReviewEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
@@ -42,9 +43,12 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @EJB(name = "PostSessionBeanLocal")
     private PostSessionBeanLocal postSessionBeanLocal;
+    
+    @EJB(name = "TagSessionBeanLocal")
+    private TagSessionBeanLocal tagSessionBeanLocal;
 
     @Override
-    public Long createNewProject(ProjectEntity newProject, Long userId) throws CreateProjectException {
+    public Long createNewProject(ProjectEntity newProject, Long userId, List<Long> tagIds) throws CreateProjectException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newProject);
@@ -53,9 +57,14 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             user.getProjectsOwned().add(newProject);
             newProject.setProjectOwner(user);
             newProject.getProjectAdmins().add(user);
-            user.getProjectAdmins().add(newProject);
+            user.getProjectsManaged().add(newProject);
             newProject.getProjectMembers().add(user);
             user.getProjectsJoined().add(newProject);
+            
+            for (Long tagId : tagIds) {
+                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
+                newProject.getSdgs().add(tag);
+            }
             
             return newProject.getProjectId();
         } catch (NoResultException ex) {
@@ -119,10 +128,13 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public ProjectEntity getProjectById(Long projectId) {
+    public ProjectEntity getProjectById(Long projectId) throws NoResultException {
         ProjectEntity project = em.find(ProjectEntity.class, projectId);
-        
-        return project;
+        if (project != null) {
+            return project;
+        } else {
+            throw new NoResultException("Project does not exists");
+        }
     }
     
     //User join project
@@ -144,8 +156,12 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         
         if (project.getProjectOwner().getUserId().equals(userId)) {
             throw new InvalidRoleException("Owner cannot leave the project");
-            
+
         } else {
+            if (project.getProjectAdmins().contains(user)) {
+                project.getProjectAdmins().remove(user);
+                user.getProjectsManaged().remove(project);
+            }
             user.getProjectsJoined().remove(project);
             project.getProjectMembers().remove(user);
         }
@@ -153,14 +169,27 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public void updateProject(ProjectEntity projectToUpdate) {
-        em.merge(projectToUpdate);
-        em.flush();
+    public void updateProject(ProjectEntity projectToUpdate) throws NoResultException {
+        ProjectEntity project = getProjectById(projectToUpdate.getProjectId());
+        
+        project.setName(projectToUpdate.getName());
+        project.setDescription(projectToUpdate.getDescription());
+        project.setCountry(projectToUpdate.getCountry());
+        for (int i = 0; i < projectToUpdate.getSdgs().size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, projectToUpdate.getSdgs().get(i).getTagId());
+           if (tag == null) {
+               throw new NoResultException("SDG tag not found.");
+           }
+        }
+        project.setSdgs(projectToUpdate.getSdgs());
+        project.setStatus(projectToUpdate.getStatus());
+        project.setProfilePicture(projectToUpdate.getProfilePicture());
+        
     }
     
     //Change project status
     @Override
-    public void updateStatus(Long projectId, String status) {
+    public void updateStatus(Long projectId, String status) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
 
         project.setStatus(ProjectStatusEnum.valueOf(status));
@@ -173,7 +202,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         project.getProjectAdmins().add(user);
-        user.getProjectAdmins().add(project);
+        user.getProjectsManaged().add(project);
     }
     
     //Demote Admin to Member
@@ -183,7 +212,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         project.getProjectAdmins().remove(user);
-        user.getProjectAdmins().remove(project);
+        user.getProjectsManaged().remove(project);
     }
     
     //Pass Owner status to Admin
@@ -197,14 +226,15 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         user.getProjectsOwned().add(project);
     }
     
-    public void deleteProject(Long projectId) {
+    @Override
+    public void deleteProject(Long projectId)  throws NoResultException {
         ProjectEntity projectToDelete = getProjectById(projectId);
         
         projectToDelete.getProjectOwner().getProjectsOwned().remove(projectToDelete);
         projectToDelete.setProjectOwner(null);
         
         for (UserEntity user : projectToDelete.getProjectAdmins()) {
-            user.getProjectAdmins().remove(projectToDelete);
+            user.getProjectsManaged().remove(projectToDelete);
         }
         projectToDelete.getProjectAdmins().clear();
         
@@ -245,11 +275,8 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     }
     
     @Override
-    public List<ReviewEntity> getProjectReviews(Long projectId) throws ProjectNotFoundException{
-         ProjectEntity project = getProjectById(projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException("Project not found");
-        }
+    public List<ReviewEntity> getProjectReviews(Long projectId) throws NoResultException {
+        ProjectEntity project = getProjectById(projectId);
         project.getReviews().size();
         return project.getReviews();
         

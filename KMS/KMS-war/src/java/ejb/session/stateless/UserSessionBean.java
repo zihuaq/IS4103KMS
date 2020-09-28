@@ -18,8 +18,8 @@ import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
-import java.util.ArrayList;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -36,7 +36,6 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccountPrivacySettingEnum;
-import util.enumeration.UserTypeEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -180,7 +179,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getGroupsJoined().size();
             user.getGroupsOwned().size();
             user.getPosts().size();
-            user.getProjectAdmins().size();
+            user.getProjectsManaged().size();
             user.getProjectsJoined().size();
             user.getProjectsOwned().size();
             user.getReviewsGiven().size();
@@ -394,8 +393,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.remove(posts.get(i));
         }
         posts.clear();
-        List<ProjectEntity> projectAdmins = user.getProjectAdmins();
-        for (int i = 0; i < projectAdmins.size(); i++) {
+
+        List<ProjectEntity> projectAdmins = user.getProjectsManaged();
+        for(int i = 0; i < projectAdmins.size(); i++){
             projectAdmins.get(i).getProjectAdmins().remove(user);
         }
         projectAdmins.clear();
@@ -790,6 +790,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
     
     @Override
+    public List<ProjectEntity> getProjectsOwned(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        user.getProjectsOwned().size();
+        return user.getProjectsOwned();
+    }
+
     public List<ReviewEntity> getUserWrittenReviews(Long userId) throws UserNotFoundException{
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
@@ -800,13 +806,33 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
     
     @Override
+    public List<ProjectEntity> getProjectsJoined(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        
+        user.getProjectsJoined().size();
+        return user.getProjectsJoined();
+    }
+    
+    @Override
     public List<ReviewEntity> getUserRecievedReviews(Long userId) throws UserNotFoundException{
+
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
         user.getReviewsReceived().size();
         return user.getReviewsReceived();
+    }
+    
+    @Override
+    public List<ProjectEntity> getProjectsManaged(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getProjectsManaged().size();
+        return user.getProjectsManaged();
+        
     }
     
     public Long editReview(Long reviewId, String title, String message, Integer rating) throws NoResultException{

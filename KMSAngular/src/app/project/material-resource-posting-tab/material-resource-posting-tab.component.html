@@ -1,0 +1,70 @@
+<button type="button" class="btn bg-gradient-info" data-toggle="modal" data-target="#modal-create-mrp"><i class="fas fa-plus"></i> Create Material Resource Posting</button>
+
+<div class="modal fade" id="modal-create-mrp">
+    <div class="modal-dialog">
+        <div class="modal-content bg-info">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Material Resource Posting</h4>
+                <button type="button" id="addMraModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (ngSubmit)="createMaterialResourcePosting(createMrpForm)" #createMrpForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="mrpName">Material Resource Name *</label>
+                        <input type="text" id="mrpName" class="form-control" ngModel name="mrpName" required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity"> Quantity Required *</label>
+                        <input type="number" id="quantity" class="form-control" ngModel name="quantity" required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="units"> Unit *</label>
+                        <input type="text" id="unit" class="form-control" ngModel name="unit" required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" class="form-control" ngModel name="description">
+                    </div>
+                    <div class="form-group">
+                        <label>Date Required From</label>
+                        <input type="date" id="startDate" class="form-control" ngModel name="startDate" [min]="minDate" required="true"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Required To</label>
+                        <input type="date" id="endDate" class="form-control" ngModel name="endDate" [min]="minDate" required="true"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Material Resource Tags *</label>
+                        <div class="select2-blue">
+                            <select class="select2" id="mrpselect2" multiple="multiple"
+                                data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue"
+                                style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Location of Resource</label>
+                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="click($event)">
+                        </google-map>
+                    </div>
+                    <div class="form-group">
+                        <label for="latitude">Latitude *</label>
+                        <input type="text" id="latitude" class="form-control" [ngModel]="selectedLatitude" name="latitude" required="true" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="longitude">Longitude *</label>
+                        <input type="text" id="longitude" class="form-control" [ngModel]="selectedLongitude" name="longitude" required="true" disabled>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!createMrpForm.valid">Submit</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

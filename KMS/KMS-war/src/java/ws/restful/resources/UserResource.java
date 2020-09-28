@@ -18,7 +18,6 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
-import entity.MaterialResourceAvailableEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -320,7 +319,7 @@ public class UserResource {
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
             user.getProjectsJoined().clear();
-            user.getProjectAdmins().clear();
+            user.getProjectsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
             user.getGroupsOwned().clear();
@@ -408,7 +407,7 @@ public class UserResource {
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
             user.getProjectsJoined().clear();
-            user.getProjectAdmins().clear();
+            user.getProjectsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
             user.getPosts().clear();
@@ -586,7 +585,7 @@ public class UserResource {
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
             user.getProjectsJoined().clear();
-            user.getProjectAdmins().clear();
+            user.getProjectsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
             user.getPosts().clear();
@@ -840,7 +839,7 @@ public class UserResource {
     } 
     
     @GET
-    @Path("/writtenreviews/{userId}")
+    @Path("/receivedreviews/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRecievedReviews(@PathParam("userId") Long userId) {
         try {
@@ -922,5 +921,80 @@ public class UserResource {
 ////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
 ////            }
 //    }
+    
+    @Path("/projectsOwned/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectsOwned(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getProjectsOwned()");
+        try {
+            List<ProjectEntity> projectsOwned = userSessionBeanLocal.getProjectsOwned(userId);
+            for (ProjectEntity p : projectsOwned) {
+                p.setProjectOwner(null);
+                p.getProjectMembers().clear();
+                p.getProjectAdmins().clear();
+                p.getActivities().clear();
+                p.getHumanResourcePostings().clear();
+                p.getMaterialResourcePostings().clear();
+                p.getTasks().clear();
+                p.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(projectsOwned).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/viewOwnProjects/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectsJoined(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getProjectsJoined()");
+        try {
+            List<ProjectEntity> projectsJoined = userSessionBeanLocal.getProjectsJoined(userId);
+            for (ProjectEntity p : projectsJoined) {
+                p.setProjectOwner(null);
+                p.getProjectMembers().clear();
+                p.getProjectAdmins().clear();
+                p.getActivities().clear();
+                p.getHumanResourcePostings().clear();
+                p.getMaterialResourcePostings().clear();
+                p.getTasks().clear();
+                p.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(projectsJoined).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/projectsManaged/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectsManaged(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getProjectsManaged()");
+        try {
+            List<ProjectEntity> projectsManaged = userSessionBeanLocal.getProjectsManaged(userId);
+            for (ProjectEntity p : projectsManaged) {
+                p.setProjectOwner(null);
+                p.getProjectMembers().clear();
+                p.getProjectAdmins().clear();
+                p.getActivities().clear();
+                p.getHumanResourcePostings().clear();
+                p.getMaterialResourcePostings().clear();
+                p.getTasks().clear();
+                p.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(projectsManaged).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
 
 }

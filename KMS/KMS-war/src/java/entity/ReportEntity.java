@@ -48,6 +48,9 @@ public class ReportEntity implements Serializable {
     @JoinColumn
     @ManyToOne
     private UserEntity reportedUser;
+    
+    @ManyToOne
+    private ProjectEntity reportedProject;
 
     @NotNull
     @JoinColumn(nullable=false)
@@ -58,12 +61,13 @@ public class ReportEntity implements Serializable {
         this.reportTags = new ArrayList<>();
     }
 
-    public ReportEntity(Long reportId, UserEntity reportOwner, ReportTypeEnum reportType, UserEntity reportedUser, String reportContent, List<TagEntity> tags) {
+    public ReportEntity(Long reportId, UserEntity reportOwner, ReportTypeEnum reportType, UserEntity reportedUser, ProjectEntity reportedProject, String reportContent, List<TagEntity> tags) {
         this();
         this.reportId = reportId;
         this.reportOwner = reportOwner;
         this.reportType = reportType;
         this.reportedUser = reportedUser;
+        this.reportedProject = reportedProject;
         this.reportContent = reportContent;
         this.reportTags = tags;
     }
@@ -139,6 +143,14 @@ public class ReportEntity implements Serializable {
 
     public void setReportedUser(UserEntity reportedUser) {
         this.reportedUser = reportedUser;
+    }
+
+    public ProjectEntity getReportedProject() {
+        return reportedProject;
+    }
+
+    public void setReportedProject(ProjectEntity reportedProject) {
+        this.reportedProject = reportedProject;
     }
     
 }

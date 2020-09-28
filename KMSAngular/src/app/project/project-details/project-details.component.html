@@ -1,0 +1,209 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="content-fluid">
+            <div class="card">
+                <div class="image" *ngIf="projectToView.profilePicture" style="height: 300px; overflow: hidden; position: relative;">
+                    <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
+                    <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
+                        <img class="card-img-top" style="margin: -20% 0 0 0; display: block;" [src]="projectToView.profilePicture"  alt="Project Profile Picture"> 
+                        <div class="after">
+                            <i class="fas fa-search-plus" style="font-size: 25px;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: x-large; font-weight: bold;">{{projectToView.name}}</h5>
+                    <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}
+                        <span *ngIf="!isMember">
+                            <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView"></app-report-project>
+                            <button type="button" class="btn btn-light float-right" (click)="joinProject()">Join Project</button>  
+                        </span>
+                        <span *ngIf="isMember">
+                            <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
+                            <button type="button" [disabled] class="btn btn-light float-right">Joined</button>   
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" *ngIf="isAdmin && !projectToView.profilePicture" data-toggle="modal" data-target="#modal-addPicture">Add Profile Picture</a>
+                                <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Project</a>
+                                <a class="dropdown-item" (click)="leaveProject()">Leave Project</a>
+                            </div>                       
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card card-primary card-outline card-tabs">
+                <div class="card-header p-0 pt-1 border-bottom-0">
+                    <ul class="nav nav-tabs" id="details-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" role="tab">Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body" id="custom-tabs-four-tabContent">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
+                            <p><b>Description:</b> {{projectToView.description}}</p>
+                            <p><b>Country:</b> {{projectToView.country}}</p>
+                            <p><b>Date created:</b> {{dateCreated}}</p>
+                            <p><b>Monetary Funding Required:</b> ${{projectToView.monetaryFundingRequired}}</p>
+                            <p><b>Monetary Funding Obtained:</b> ${{projectToView.monetaryFundingObtained}}</p>
+                            <p><b>SDGs:</b> 
+                                <span *ngFor="let tag of projectToView.sdgs">
+                                    {{tag.name}}&nbsp;
+                                </span>  
+                            </p>
+                            <!-- <p>Project status: {{projectToView.status}}</p> -->                      
+                        </div>
+                        <div class="tab-pane fade" id="members-tab" role="tabpanel">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h5>Admins</h5>
+                                    <!--Owner-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
+                                        <li class="list-group-item" *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-dark badge-pill" *ngIf="owner.userId == member.userId">Owner</span>
+                                            <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">Me</span>
+                                        </li>
+                                    </ul>
+                                    <!--If you are an admin but not an owner-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId == member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
+                                            <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">Me</span>
+                                        </li>
+                                    </ul>
+                                    <!--Admins except you-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId != member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-4">
+                                    <h5>Members</h5>
+                                    <!--If you are a member-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectMembers">
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId == member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-primary badge-pill">You</span>
+                                        </li>
+                                    </ul>
+                                    <!--Members except you-->
+                                    <ul class="list-group" *ngFor="let member of projectToView.projectMembers">
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId != member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
+                            <p>review-tab works</p>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+                      
+            <!--<div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Members:</p>
+                        <span *ngFor="let member of projectToView.projectMembers">
+                            <p>{{member.firstName}} {{member.lastName}}</p>
+                        </span>
+                    </div>
+                </div>
+            </div> -->
+        </div>          
+    </div>  
+</div>
+
+<div class="modal fade" id="modal-addPicture" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Add Profile Picture</h4>
+            <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" [src]="profilePicture" alt="Project Profile Picture">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Project Profile Picture">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
+                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
+                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
+                </div>
+            </div>
+            <div style="padding-top: 3%; display: flex; justify-content: center;">
+                <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" data-dismiss="modal" aria-label="Close">Save Changes</button>
+                <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+<div class="modal fade" id="modal-editPicture" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Edit Profile Picture</h4>
+            <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" [src]="profilePicture" alt="Project Profile Picture">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Project Profile Picture">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
+                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
+                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
+                </div>
+                <div class="input-group-append" style="cursor: pointer" *ngIf="profilePicture">
+                    <span class="input-group-text" (click)="removePicture()">Remove Current</span>
+                </div>
+            </div>
+            <div style="padding-top: 3%; display: flex; justify-content: center;">
+                <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" data-dismiss="modal" aria-label="Close">Save Changes</button>
+                <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+<div class="modal fade" id="modal-profilePicture">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-body" style="margin-top: -1.5%;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          <img style="width: 100%; padding-top: 1%;" [src]="projectToView.profilePicture" alt="Project Profile Picture">
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+<app-footer></app-footer>

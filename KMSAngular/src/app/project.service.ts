@@ -24,15 +24,68 @@ export class ProjectService {
     return this.httpClient.get<any>(this.baseUrl+"/getAllProject").pipe();
   }
 
-  createNewProject(newProject: Project, ownerId: number): Observable<any> {
+  createNewProject(newProject: Project, ownerId: number, tagIdsSelected: number[]): Observable<any> {
     let createProjectReq = {
       "newProject": newProject,
-      "ownerId": ownerId
+      "ownerId": ownerId,
+      "tagIds": tagIdsSelected
     }
 
     return this.httpClient.put<any>(this.baseUrl+"/createNewProject", createProjectReq, httpOptions).pipe(
       catchError(this.handleError)
     );
+  }
+
+  getProjectById(projectId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl+"/" + projectId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  joinProject(projectId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/joinProject/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  removeMember(projectId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/removeMember/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addAdmin(projectId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/addAdmin/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  removeAdmin(projectId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/removeAdmin/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  changeOwner(projectId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/changeOwner/"+projectId+"/"+userId, null).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteProject(projectId: number): Observable<any> {
+    return this.httpClient.delete<any>(this.baseUrl + "/deleteProject/"+projectId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateProject(projectToUpdate: Project) {
+    return this.httpClient.post<any>(this.baseUrl + "/update", projectToUpdate, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getProjectStatusList(): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl+"/getProjectStatusList").pipe();
   }
 
   private handleError(error: HttpErrorResponse) {
