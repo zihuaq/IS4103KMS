@@ -39,7 +39,7 @@
                             <app-members-tab [projectToEdit]="projectToEdit" (projectChanged)="handleProjectChanged($event)"></app-members-tab>
                         </div>
                         <div class="tab-pane fade" id="mra-tab" role="tabpanel">
-                            <app-material-resource-posting-tab [projectToEdit]="projectToEdit" (projectChanged)="handleProjectChanged($event)"></app-material-resource-posting-tab>
+                            <app-edit-mrp-tab [projectToEdit]="projectToEdit" (projectChanged)="handleProjectChanged($event)"></app-edit-mrp-tab>
                         </div>
                         <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
                             <app-edit-hrp-tab></app-edit-hrp-tab>

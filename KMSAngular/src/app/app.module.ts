@@ -49,8 +49,7 @@ import { ReportProjectComponent } from './project/viewProject/report-project/rep
 import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
 import { EditHrpTabComponent } from './project/editProject/edit-hrp-tab/edit-hrp-tab.component';
 import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-projects.component';
-import { MaterialResourcePostingTabComponent } from './project/editProject/material-resource-posting-tab/material-resource-posting-tab.component';
- 
+import { EditMrpTabComponent } from './project/editProject/edit-mrp-tab/edit-mrp-tab.component';
 import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
 import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
 
@@ -96,9 +95,8 @@ import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp
     ErrorPageComponent,
     EditHrpTabComponent,
     ViewOwnProjectsComponent,
-    MaterialResourcePostingTabComponent,
-    AffiliationRequestsComponent,
-    ViewHrpTabComponent
+    EditMrpTabComponent,
+    AffiliationRequestsComponent
   ],
   imports: [
     BrowserModule,

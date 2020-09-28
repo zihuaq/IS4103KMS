@@ -4,18 +4,18 @@ import { Project } from 'src/app/classes/project';
 import { Tag } from 'src/app/classes/tag';
 import { ProjectService } from 'src/app/project.service';
 import { SessionService } from 'src/app/session.service';
-import { TagService } from 'src/app/tag.service';
-import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
-import { MaterialResourcePostingService } from 'src/app/material-resource-posting.service';
+import { TagService } from '../../../tag.service';
+import { MaterialResourcePosting } from '../../../classes/material-resource-posting';
+import { MaterialResourcePostingService } from '../../../material-resource-posting.service';
 
 declare var $: any;
 
 @Component({
-  selector: 'app-material-resource-posting-tab',
-  templateUrl: './material-resource-posting-tab.component.html',
-  styleUrls: ['./material-resource-posting-tab.component.css']
+  selector: 'app-edit-mrp-tab',
+  templateUrl: './edit-mrp-tab.component.html',
+  styleUrls: ['./edit-mrp-tab.component.css']
 })
-export class MaterialResourcePostingTabComponent implements OnInit {
+export class EditMrpTabComponent implements OnInit {
 
   @Input() projectToEdit: Project;
   @Output() projectChanged = new EventEmitter<Project>();
