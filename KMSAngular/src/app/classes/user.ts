@@ -3,6 +3,7 @@ import { MaterialResourceAvailable } from './material-resource-available';
 import { AccountPrivacySettingEnum } from './privacy-settings.enum';
 import { UserType } from './user-type.enum';
 import { FollowRequest } from './follow-request';
+import { AffiliationRequest } from './affiliation-request';
 
 export class User {
   userId: number;
@@ -26,6 +27,9 @@ export class User {
   followRequestMade: FollowRequest[];
   followRequestReceived: FollowRequest[];
   accountPrivacySetting: AccountPrivacySettingEnum;
+  affiliatedUsers: User[];
+  affiliationRequestMade: AffiliationRequest[];
+  affiliationRequestReceived: AffiliationRequest[];
 
   constructor(
     userId?: number,
@@ -48,7 +52,10 @@ export class User {
     sdgs?: Tag[],
     followRequestMade?: FollowRequest[],
     followRequestReceived?: FollowRequest[],
-    accountPrivacySetting?: AccountPrivacySettingEnum
+    accountPrivacySetting?: AccountPrivacySettingEnum,
+    affiliatedUsers?: User[],
+    affiliationRequestMade?: AffiliationRequest[],
+    affiliationRequestReceived?: AffiliationRequest[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -71,5 +78,8 @@ export class User {
     this.followRequestMade = followRequestMade;
     this.followRequestReceived = followRequestReceived;
     this.accountPrivacySetting = accountPrivacySetting;
+    this.affiliatedUsers = affiliatedUsers;
+    this.affiliationRequestMade = affiliationRequestMade;
+    this.affiliationRequestReceived = affiliationRequestReceived;
   }
 }

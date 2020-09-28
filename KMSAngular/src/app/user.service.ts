@@ -10,7 +10,7 @@ import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Tag } from './classes/tag';
 import { Router } from '@angular/router';
-import { MaterialResourceAvailable } from './classes/material-resource-available';
+import { UserType } from './classes/user-type.enum';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -53,7 +53,7 @@ export class UserService {
   getUser(userId: String) {
     return this.http
       .get<any>(this.baseUrl + '/' + userId)
-      .pipe(map(this.parseDate), catchError(this.handleError));
+      .pipe(map(this.parseUserDate), catchError(this.handleError));
   }
 
   getAllUsers(): Observable<any> {
@@ -97,13 +97,13 @@ export class UserService {
 
   getFollowRequestMade(userId: number) {
     return this.http
-      .get<any>(this.baseUrl + /followrequestmade/ + userId)
+      .get<any>(this.baseUrl + '/followrequestmade/' + userId)
       .pipe(catchError(this.handleError));
   }
 
   getFollowRequestReceived(userId: number) {
     return this.http
-      .get<any>(this.baseUrl + /followrequestreceived/ + userId)
+      .get<any>(this.baseUrl + '/followrequestreceived/' + userId)
       .pipe(catchError(this.handleError));
   }
 
@@ -149,7 +149,16 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  addAffiliatedUser(
+  makeAffiliationRequests(
+    userId: number,
+    toUserIds: number[]
+  ): Observable<any> {
+    return this.http
+      .post<any>(this.baseUrl + '/affiliated/' + userId, toUserIds)
+      .pipe(catchError(this.handleError));
+  }
+
+  sendAffiliateReqToUser(
     userId: number,
     affiliatedUserToAddId: number
   ): Observable<any> {
@@ -177,45 +186,51 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  getAffiliationRequestMade(userId: number) {
+    return this.http
+      .get<any>(this.baseUrl + '/affiliationrequestmade/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getAffiliationRequestReceived(userId: number) {
+    return this.http
+      .get<any>(this.baseUrl + '/affiliationrequestreceived/' + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  acceptAffiliation(toUserId: number, fromUserId: number) {
+    return this.http
+      .post<any>(
+        this.baseUrl + '/acceptaffiliation/' + toUserId + '/' + fromUserId,
+        null
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  rejectAffiliation(toUserId: number, fromUserId: number) {
+    return this.http
+      .post<any>(
+        this.baseUrl + '/rejectaffiliation/' + toUserId + '/' + fromUserId,
+        null
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   updateUser(updatedUser: User) {
     return this.http
       .post<any>(this.baseUrl + '/update', updatedUser, httpOptions)
-      .pipe(map(this.parseDate), catchError(this.handleError));
-  }
-
-  createMaterialResourceAvailable(
-    mra: MaterialResourceAvailable
-  ): Observable<any> {
-    return this.http
-      .post<any>(this.baseUrl + '/mra', mra, httpOptions)
-      .pipe(catchError(this.handleError));
-  }
-
-  deleteMaterialResourceAvailable(
-    userId: number,
-    mraId: number
-  ): Observable<any> {
-    console.log('delete method called');
-    return this.http
-      .delete<any>(this.baseUrl + '/mra/' + userId + '/' + mraId)
-      .pipe(catchError(this.handleError));
-  }
-
-  getMaterialResourceAvailable(userId: number): Observable<any> {
-    return this.http
-      .get<any>(this.baseUrl + '/mra/' + userId)
-      .pipe(catchError(this.handleError));
+      .pipe(map(this.parseUserDate), catchError(this.handleError));
   }
 
   getFollowers(userId: number): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + /followers/ + userId)
+      .get<any>(this.baseUrl + '/followers/' + userId)
       .pipe(catchError(this.handleError));
   }
 
   getFollowing(userId: number): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + /following/ + userId)
+      .get<any>(this.baseUrl + '/following/' + userId)
       .pipe(catchError(this.handleError));
   }
 
@@ -233,31 +248,14 @@ export class UserService {
     return throwError(errorMessage);
   }
 
-  changePassword(oldPassword: string, newPassword: string): Observable<any> {
-    let changePasswordReq = {
-      username: this.sessionService.getUsername(),
-      password: this.sessionService.getPassword(),
-      oldPassword: oldPassword,
-      newPassword: newPassword,
-    };
-
-    return this.http
-      .post<any>(
-        this.baseUrl + '/PasswordReset',
-        changePasswordReq,
-        httpOptions
-      )
-      .pipe(catchError(this.handleError));
-  }
-
   deleteUser(userId: number): Observable<any> {
     return this.http
       .delete<any>(this.baseUrl + '/deleteUser/' + userId)
       .pipe(catchError(this.handleError));
   }
 
-  private parseDate(data: any) {
-    if (data.isAdmin) {
+  private parseUserDate(data: any) {
+    if (data.userType == UserType.ADMIN) {
       return {
         ...data,
         joinedDate: new Date(
@@ -280,18 +278,42 @@ export class UserService {
             data.dob.substring(17, 19)
           )
         ),
-        adminStartDate: new Date(
+        // adminStartDate: new Date(
+        //   Date.UTC(
+        //     data.adminStartDate.substring(0, 4),
+        //     data.adminStartDate.substring(5, 7) - 1,
+        //     data.adminStartDate.substring(8, 10),
+        //     data.adminStartDate.substring(11, 13),
+        //     data.adminStartDate.substring(14, 16),
+        //     data.adminStartDate.substring(17, 19)
+        //   )
+        // ),
+      };
+    } else if (data.userType == UserType.INDIVIDUAL) {
+      return {
+        ...data,
+        joinedDate: new Date(
           Date.UTC(
-            data.adminStartDate.substring(0, 4),
-            data.adminStartDate.substring(5, 7) - 1,
-            data.adminStartDate.substring(8, 10),
-            data.adminStartDate.substring(11, 13),
-            data.adminStartDate.substring(14, 16),
-            data.adminStartDate.substring(17, 19)
+            data.joinedDate.substring(0, 4),
+            data.joinedDate.substring(5, 7) - 1,
+            data.joinedDate.substring(8, 10),
+            data.joinedDate.substring(11, 13),
+            data.joinedDate.substring(14, 16),
+            data.joinedDate.substring(17, 19)
+          )
+        ),
+        dob: new Date(
+          Date.UTC(
+            data.dob.substring(0, 4),
+            data.dob.substring(5, 7) - 1,
+            data.dob.substring(8, 10),
+            data.dob.substring(11, 13),
+            data.dob.substring(14, 16),
+            data.dob.substring(17, 19)
           )
         ),
       };
-    } else {
+    } else if (data.userType == UserType.INSTITUTE) {
       return {
         ...data,
         joinedDate: new Date(
@@ -302,16 +324,6 @@ export class UserService {
             data.joinedDate.substring(11, 13),
             data.joinedDate.substring(14, 16),
             data.joinedDate.substring(17, 19)
-          )
-        ),
-        dob: new Date(
-          Date.UTC(
-            data.dob.substring(0, 4),
-            data.dob.substring(5, 7) - 1,
-            data.dob.substring(8, 10),
-            data.dob.substring(11, 13),
-            data.dob.substring(14, 16),
-            data.dob.substring(17, 19)
           )
         ),
       };

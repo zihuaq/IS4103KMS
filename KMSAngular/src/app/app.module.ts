@@ -51,6 +51,8 @@ import { EditHrpTabComponent } from './project/edit-hrp-tab/edit-hrp-tab.compone
 import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-projects.component';
 import { MaterialResourcePostingTabComponent } from './project/material-resource-posting-tab/material-resource-posting-tab.component';
  
+import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,7 +95,8 @@ import { MaterialResourcePostingTabComponent } from './project/material-resource
     ErrorPageComponent,
     EditHrpTabComponent,
     ViewOwnProjectsComponent,
-    MaterialResourcePostingTabComponent
+    MaterialResourcePostingTabComponent,
+    AffiliationRequestsComponent,
   ],
   imports: [
     BrowserModule,

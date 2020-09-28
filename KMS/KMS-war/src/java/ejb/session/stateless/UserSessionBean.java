@@ -1,6 +1,7 @@
 package ejb.session.stateless;
 
 import Exception.AffiliatedUserExistException;
+import Exception.DuplicateAffiliationRequestException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
 import Exception.DuplicateTagInProfileException;
@@ -8,6 +9,7 @@ import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
 import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
@@ -62,9 +64,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
         em.flush();
         return user;
     }
-    
+
     @Override
-    public void resetPassword(String email)throws UserNotFoundException{
+    public void resetPassword(String email) throws UserNotFoundException {
         String password = this.generateRandomPassword(10);
         UserEntity user = this.retrieveUserByEmail(email);
         user.setPassword(password);
@@ -72,26 +74,26 @@ public class UserSessionBean implements UserSessionBeanLocal {
         em.flush();
         this.sendResetPasswordEmail(user.getEmail(), password);
     }
-    
-    private String generateRandomPassword(int len){
-        
+
+    private String generateRandomPassword(int len) {
+
         final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder();
-        
-        for (int i = 0; i < len; i++){
+
+        for (int i = 0; i < len; i++) {
             int randomIndex = random.nextInt(chars.length());
             sb.append(chars.charAt(randomIndex));
         }
         return sb.toString();
     }
-    
-    private void sendResetPasswordEmail(String destinationEmail, String newPassword){
-        
+
+    private void sendResetPasswordEmail(String destinationEmail, String newPassword) {
+
         final String username = "4103kms";
         final String password = "4103kmsemail";
         final String host = "localhost";
-        
+
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -99,28 +101,27 @@ public class UserSessionBean implements UserSessionBeanLocal {
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         props.put("mail.smtp.user", username);
-        
+
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication(){
+            protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
-        
-        try{
+
+        try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("4103kms@gmail.com"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinationEmail));
             message.setSubject("Password Reset for KMS");
-            message.setText("Dear user, "+ 
-                    "\n" +
-                    "\n" + "Your password has been reset. New password: " + newPassword +
-                    "\n" + "Please login and change your password");
-            
+            message.setText("Dear user, "
+                    + "\n"
+                    + "\n" + "Your password has been reset. New password: " + newPassword
+                    + "\n" + "Please login and change your password");
+
             Transport.send(message);
-            
+
             System.out.println("reset password message sent");
-        }
-        catch(MessagingException ex){
+        } catch (MessagingException ex) {
             throw new RuntimeException(ex);
         }
 
@@ -129,7 +130,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     @Override
     public UserEntity getUserById(long userId) throws NoResultException {
         System.out.println(em);
-        System.out.println(userId);
+        System.out.println("UserId: " + userId);
         UserEntity user = em.find(UserEntity.class, userId);
         if (user != null) {
             user.getFollowers().size();
@@ -217,10 +218,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
 
     }
-    
-  
+
     @Override
-    public Boolean changePassword(String email, String oldPassword, String newPassword) throws InvalidLoginCredentialException{
+    public Boolean changePassword(String email, String oldPassword, String newPassword) throws InvalidLoginCredentialException {
         try {
             UserEntity user = retrieveUserByEmail(email);
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(oldPassword + user.getSalt()));
@@ -280,14 +280,14 @@ public class UserSessionBean implements UserSessionBeanLocal {
         sdgs.remove(tag);
         user.setSdgs(sdgs);
     }
-    
+
     @Override
-    public void sendVerificationEmail(String destinationEmail, String verificationCode){
-        
+    public void sendVerificationEmail(String destinationEmail, String verificationCode) {
+
         final String username = "4103kms";
         final String password = "4103kmsemail";
         final String host = "localhost";
-        
+
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -295,41 +295,40 @@ public class UserSessionBean implements UserSessionBeanLocal {
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         props.put("mail.smtp.user", username);
-        
+
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication(){
+            protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
-        
-        try{
+
+        try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("4103kms@gmail.com"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinationEmail));
             message.setSubject("Thank you for signing up with kms");
-            message.setText("Please verify your email address at http://localhost:4200//accountVerification/" + destinationEmail + "/"+ verificationCode);
-            
+            message.setText("Please verify your email address at http://localhost:4200//accountVerification/" + destinationEmail + "/" + verificationCode);
+
             Transport.send(message);
-            
+
             System.out.println("message sent");
-        }
-        catch(MessagingException ex){
+        } catch (MessagingException ex) {
             throw new RuntimeException(ex);
         }
 
     }
-    
-    public Boolean verifyEmail(String email, String uuid) throws UserNotFoundException, InvalidUUIDException{
-        
+
+    public Boolean verifyEmail(String email, String uuid) throws UserNotFoundException, InvalidUUIDException {
+
         UserEntity user = this.retrieveUserByEmail(email);
-        if(user.getIsVerified() == Boolean.TRUE){
+        if (user.getIsVerified() == Boolean.TRUE) {
             return user.getIsVerified();
         }
-        
-        if(user.getVerificationCode().equals(uuid)){
+
+        if (user.getVerificationCode().equals(uuid)) {
             user.setIsVerified(Boolean.TRUE);
             em.flush();
-        }else{
+        } else {
             throw new InvalidUUIDException("Invalid UUID");
         }
         return user.getIsVerified();
@@ -342,13 +341,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
     @Override
     public void deleteUser(long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
-        if(user == null) {
+        if (user == null) {
             throw new UserNotFoundException("User not found");
         }
-        user.getAffiliatedIndividuals().clear();
-        user.getAffiliatedInstitutes().clear();
+        user.getAffiliatedUsers().clear();
         List<FollowRequestEntity> followRequestMade = user.getFollowRequestMade();
-        for(int i = 0; i < followRequestMade.size(); i++){
+        for (int i = 0; i < followRequestMade.size(); i++) {
             UserEntity to = followRequestMade.get(i).getTo();
             to.getFollowRequestReceived().remove(followRequestMade.get(i));
             followRequestMade.get(i).setTo(null);
@@ -356,9 +354,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.remove(followRequestMade.get(i));
         }
         followRequestMade.clear();
-        
+
         List<FollowRequestEntity> followRequestReceived = user.getFollowRequestReceived();
-        for(int i = 0; i < followRequestReceived.size(); i++){
+        for (int i = 0; i < followRequestReceived.size(); i++) {
             UserEntity from = followRequestReceived.get(i).getFrom();
             from.getFollowRequestReceived().remove(followRequestReceived.get(i));
             followRequestReceived.get(i).setTo(null);
@@ -369,55 +367,56 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.getFollowers().clear();
         user.getFollowing().clear();
         List<GroupEntity> groupAdmins = user.getGroupAdmins();
-        for(int i = 0; i < groupAdmins.size(); i++){
+        for (int i = 0; i < groupAdmins.size(); i++) {
             groupAdmins.get(i).getGroupAdmins().remove(user);
         }
         groupAdmins.clear();
         List<GroupEntity> groupsJoined = user.getGroupsJoined();
-        for(int i = 0; i < groupsJoined.size(); i++){
+        for (int i = 0; i < groupsJoined.size(); i++) {
             groupsJoined.get(i).getGroupMembers().remove(user);
         }
         groupsJoined.clear();
         List<GroupEntity> groupsOwned = user.getGroupsOwned();
-        for(int i = 0; i < groupsOwned.size(); i++){
+        for (int i = 0; i < groupsOwned.size(); i++) {
             groupsOwned.get(i).setGroupOwner(null);
         }
         groupsOwned.clear();
         List<MaterialResourceAvailableEntity> mras = user.getMras();
-        for(int i = 0; i < mras.size(); i++){
+        for (int i = 0; i < mras.size(); i++) {
             mras.get(i).setMaterialResourceAvailableOwner(null);
             em.remove(mras.get(i));
         }
         mras.clear();
         List<PostEntity> posts = user.getPosts();
-        for(int i = 0; i < posts.size(); i++){
+        for (int i = 0; i < posts.size(); i++) {
             posts.get(i).setPostOwner(null);
             posts.get(i).setProject(null);
             em.remove(posts.get(i));
         }
         posts.clear();
+
         List<ProjectEntity> projectAdmins = user.getProjectsManaged();
         for(int i = 0; i < projectAdmins.size(); i++){
             projectAdmins.get(i).getProjectAdmins().remove(user);
         }
         projectAdmins.clear();
         List<ProjectEntity> projectsJoined = user.getProjectsJoined();
-        for(int i = 0; i < projectsJoined.size(); i++){
+        for (int i = 0; i < projectsJoined.size(); i++) {
             projectsJoined.get(i).getProjectMembers().remove(user);
         }
         projectsJoined.clear();
         List<ProjectEntity> projectsOwned = user.getProjectsOwned();
-        for(int i = 0; i < projectsOwned.size(); i++){
+        for (int i = 0; i < projectsOwned.size(); i++) {
             projectsOwned.get(i).setProjectOwner(null);
         }
         projectsOwned.clear();
         List<ReviewEntity> reviewsGiven = user.getReviewsGiven();
-        for(int i = 0; i < reviewsGiven.size(); i++){
+        for (int i = 0; i < reviewsGiven.size(); i++) {
             reviewsGiven.get(i).setFrom(null);
         }
         reviewsGiven.clear();
         List<ReviewEntity> reviewsReceived = user.getReviewsReceived();
-        for(int i = 0; i < reviewsReceived.size(); i++){
+        for (int i = 0; i < reviewsReceived.size(); i++) {
             reviewsReceived.get(i).setTo(null);
             reviewsReceived.get(i).getFrom().getReviewsGiven().remove(reviewsReceived.get(i));
             reviewsReceived.get(i).setFrom(null);
@@ -546,7 +545,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return skillTags;
     }
 
-
     @Override
     public List<UserEntity> getAllUsers() throws NoResultException {
         Query q = em.createQuery("SELECT u FROM UserEntity u");
@@ -565,39 +563,77 @@ public class UserSessionBean implements UserSessionBeanLocal {
             throw new UserNotFoundException("User not found");
         }
         List<UserEntity> users = new ArrayList<>();
-        if (user.getUserType() == UserTypeEnum.INDIVIDUAL) {
-            users = user.getAffiliatedInstitutes();
-        } else if (user.getUserType() == UserTypeEnum.INSTITUTE) {
-            users = user.getAffiliatedIndividuals();
-        }
-        for (UserEntity userEntity : users) {
-            userEntity.getFollowers().size();
-            userEntity.getFollowing().size();
-        }
+        users = user.getAffiliatedUsers();
+
         return users;
     }
 
     @Override
-    public void addAffiliatedUser(Long userId, Long affiliatedToAddUserId) throws AffiliatedUserExistException, UserNotFoundException {
-        UserEntity user = em.find(UserEntity.class, userId);
-        UserEntity affiliatedUserToAdd = em.find(UserEntity.class, affiliatedToAddUserId);
-        if (user == null || affiliatedUserToAdd == null) {
+    public void makeAffiliationRequest(Long fromUserId, List<Long> toUserIds) throws UserNotFoundException, DuplicateAffiliationRequestException, AffiliatedUserExistException {
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
+        if (fromUser == null) {
             throw new UserNotFoundException("User not found");
         }
-        List<UserEntity> affiliatedUsers = new ArrayList<>();
-        if (user.getUserType() == UserTypeEnum.INDIVIDUAL) {
-            affiliatedUsers = user.getAffiliatedInstitutes();
-        } else if (user.getUserType() == UserTypeEnum.INSTITUTE) {
-            affiliatedUsers = user.getAffiliatedIndividuals();
+        List<AffiliationRequestEntity> requests = new ArrayList<>();
+
+        for (int i = 0; i < toUserIds.size(); i++) {
+            UserEntity toUser = em.find(UserEntity.class, toUserIds.get(i));
+            Query q = em.createQuery("SELECT a FROM AffiliationRequestEntity AS a WHERE a.from.userId = :from AND a.to.userId = :to");
+            q.setParameter("from", fromUserId);
+            q.setParameter("to", toUserIds.get(i));
+            if (fromUser.getAffiliatedUsers().contains(toUser)) {
+                throw new AffiliatedUserExistException("User is already affiliated!");
+            }
+            try {
+                AffiliationRequestEntity a = (AffiliationRequestEntity) q.getSingleResult();
+                throw new DuplicateAffiliationRequestException("Affiliation request already sent!");
+            } catch (javax.persistence.NoResultException e) {
+                AffiliationRequestEntity affiliationRequestEntity = new AffiliationRequestEntity();
+                affiliationRequestEntity.setFrom(fromUser);
+                affiliationRequestEntity.setTo(toUser);
+                requests.add(affiliationRequestEntity);
+            }
         }
 
-        if (!affiliatedUsers.contains(affiliatedUserToAdd)) {
-            affiliatedUsers.add(affiliatedUserToAdd);
-        } else{
-            throw new AffiliatedUserExistException("User is already affiliated.");
+        for (int i = 0; i < requests.size(); i++) {
+            AffiliationRequestEntity req = requests.get(i);
+            fromUser.getAffiliationRequestMade().add(req);
+            UserEntity toUser = em.find(UserEntity.class, req.getTo());
+            toUser.getAffiliationRequestReceived().add(req);
+            em.persist(req);
+            em.flush();
         }
     }
-    
+
+    @Override
+    public AffiliationRequestEntity sendAffiliateReqToUser(Long userId, Long affiliatedToAddUserId) throws AffiliatedUserExistException, DuplicateAffiliationRequestException, UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        UserEntity toUser = em.find(UserEntity.class, affiliatedToAddUserId);
+        if (user == null || toUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        Query q = em.createQuery("SELECT a FROM AffiliationRequestEntity AS a WHERE a.from.userId = :from AND a.to.userId = :to");
+        q.setParameter("from", userId);
+        q.setParameter("to", affiliatedToAddUserId);
+        if (user.getAffiliatedUsers().contains(toUser)) {
+            throw new AffiliatedUserExistException("User is already affiliated!");
+        }
+        try {
+            AffiliationRequestEntity a = (AffiliationRequestEntity) q.getSingleResult();
+            throw new DuplicateAffiliationRequestException("Affiliation request already sent!");
+        } catch (javax.persistence.NoResultException e) {
+            AffiliationRequestEntity affiliationRequestEntity = new AffiliationRequestEntity();
+            affiliationRequestEntity.setFrom(user);
+            affiliationRequestEntity.setTo(toUser);
+            user.getAffiliationRequestMade().add(affiliationRequestEntity);
+            toUser.getAffiliationRequestReceived().add(affiliationRequestEntity);
+            em.persist(affiliationRequestEntity);
+            em.flush();
+            return affiliationRequestEntity;
+        }
+    }
+
     @Override
     public void removeAffiliatedUser(Long userId, Long affiliatedToRemoveUserId) throws NoResultException, UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
@@ -605,20 +641,83 @@ public class UserSessionBean implements UserSessionBeanLocal {
         if (user == null || affiliatedUserToRemove == null) {
             throw new UserNotFoundException("User not found");
         }
-        List<UserEntity> affiliatedUsers = new ArrayList<>();
-        if (user.getUserType() == UserTypeEnum.INDIVIDUAL) {
-            affiliatedUsers = user.getAffiliatedInstitutes();
-        } else if (user.getUserType() == UserTypeEnum.INSTITUTE) {
-            affiliatedUsers = user.getAffiliatedIndividuals();
-        }
 
-        if (affiliatedUsers.contains(affiliatedUserToRemove)) {
-            affiliatedUsers.remove(affiliatedUserToRemove);
-        } else{
+        if (user.getAffiliatedUsers().contains(affiliatedUserToRemove) && affiliatedUserToRemove.getAffiliatedUsers().contains(user)) {
+            user.getAffiliatedUsers().remove(affiliatedUserToRemove);
+            affiliatedUserToRemove.getAffiliatedUsers().remove(user);
+        } else {
             throw new NoResultException("User is not affiliated.");
         }
     }
 
+    @Override
+    public List<AffiliationRequestEntity> getAffiliationRequestsReceived(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getAffiliationRequestReceived().size();
+        return user.getAffiliationRequestReceived();
+    }
+
+    @Override
+    public List<AffiliationRequestEntity> getAffiliationRequestsMade(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getAffiliationRequestMade().size();
+        return user.getAffiliationRequestMade();
+    }
+    
+    @Override
+    public void acceptAffiliationRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException {
+        Query q = em.createQuery("SELECT a FROM AffiliationRequestEntity AS a WHERE a.from.userId = :from AND a.to.userId = :to");
+        q.setParameter("from", fromUserId);
+        q.setParameter("to", toUserId);
+        AffiliationRequestEntity a = (AffiliationRequestEntity) q.getSingleResult();
+        if (a == null) {
+            throw new NoResultException("Affiliation request not found");
+        }
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        fromUser.getAffiliationRequestMade().remove(a);
+        toUser.getAffiliationRequestReceived().remove(a);
+        a.setTo(null);
+        a.setFrom(null);
+        em.remove(a);
+        if (!fromUser.getAffiliatedUsers().contains(toUser)) {
+            fromUser.getAffiliatedUsers().add(toUser);
+        }
+        if (!toUser.getAffiliatedUsers().contains(fromUser)) {
+            toUser.getAffiliatedUsers().add(fromUser);
+        }
+    }
+
+    @Override
+    public void rejectAffiliationRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException {
+        Query q = em.createQuery("SELECT a FROM AffiliationRequestEntity AS a WHERE a.from.userId = :from AND a.to.userId = :to");
+        q.setParameter("from", fromUserId);
+        q.setParameter("to", toUserId);
+        AffiliationRequestEntity a = (AffiliationRequestEntity) q.getSingleResult();
+        if (a == null) {
+            throw new NoResultException("Affiliation request not found");
+        }
+        UserEntity toUser = em.find(UserEntity.class, toUserId);
+        UserEntity fromUser = em.find(UserEntity.class, fromUserId);
+        if (toUser == null || fromUser == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        fromUser.getAffiliationRequestMade().remove(a);
+        toUser.getAffiliationRequestReceived().remove(a);
+        a.setTo(null);
+        a.setFrom(null);
+        em.remove(a);
+    }
+    
     @Override
     public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException, NoResultException {
         UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
