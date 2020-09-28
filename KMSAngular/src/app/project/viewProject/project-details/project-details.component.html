@@ -54,10 +54,13 @@
                             <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                            <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab">Human Resource Postings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
                         </li>
                     </ul>
                 </div>
@@ -70,42 +73,42 @@
                             <p><b>Monetary Funding Required:</b> ${{projectToView.monetaryFundingRequired}}</p>
                             <p><b>Monetary Funding Obtained:</b> ${{projectToView.monetaryFundingObtained}}</p>
                             <p><b>SDGs: </b> 
-                                <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary">
-                                    {{tag.name}}&nbsp;
+                                <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary" style="margin-right: 5px;">
+                                    {{tag.name}}
                                 </span>  
                             </p>
                             <!-- <p>Project status: {{projectToView.status}}</p> -->                      
                         </div>
                         <div class="tab-pane fade" id="members-tab" role="tabpanel">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-6" style="padding-right: 40px">
                                     <h5>Admins</h5>
                                     <!--Owner-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
-                                        <li class="list-group-item" *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}}
+                                        <li class="list-group-item"  *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}}
                                             <span class="badge badge-dark badge-pill" *ngIf="owner.userId == member.userId">Owner</span>
                                             <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">Me</span>
                                         </li>
                                     </ul>
                                     <!--If you are an admin but not an owner-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
-                                        <li class="list-group-item" *ngIf="loggedInUser.userId == member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                        <li class="list-group-item"  *ngIf="loggedInUser.userId == member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
                                             <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
                                             <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">Me</span>
                                         </li>
                                     </ul>
                                     <!--Admins except you-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
-                                        <li class="list-group-item" *ngIf="loggedInUser.userId != member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                        <li class="list-group-item"  *ngIf="loggedInUser.userId != member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
                                             <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6" style="padding-right: 40px">
                                     <h5>Members</h5>
                                     <!--If you are a member-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectMembers">
-                                        <li class="list-group-item" *ngIf="loggedInUser.userId == member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                        <li class="list-group-item"  *ngIf="loggedInUser.userId == member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
                                             <span class="badge badge-primary badge-pill">You</span>
                                         </li>
                                     </ul>
@@ -117,11 +120,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
-                            <p>review-tab works</p>
+                        <div class="tab-pane fade" id="mrp-tab" role="tabpanel">
+                            <app-view-mrp-tab></app-view-mrp-tab>
                         </div>
                         <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
                             <app-view-hrp-tab></app-view-hrp-tab>
+                        </div>
+                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
+                            <p>review-tab works</p>
                         </div>
                     </div>                    
                 </div>

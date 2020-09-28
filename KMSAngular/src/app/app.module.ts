@@ -52,6 +52,7 @@ import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-p
 import { EditMrpTabComponent } from './project/editProject/edit-mrp-tab/edit-mrp-tab.component';
 import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
 import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
+import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp
     ViewOwnProjectsComponent,
     EditMrpTabComponent,
     AffiliationRequestsComponent,
-    ViewHrpTabComponent
+    ViewHrpTabComponent,
+    ViewMrpTabComponent
   ],
   imports: [
     BrowserModule,
