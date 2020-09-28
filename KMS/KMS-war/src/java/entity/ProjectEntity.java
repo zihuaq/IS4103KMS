@@ -89,6 +89,9 @@ public class ProjectEntity implements Serializable {
     
     @OneToMany(mappedBy = "project")
     private List<PostEntity> posts;
+    
+    @OneToMany(mappedBy = "project")
+    private List<ReviewEntity> reviews;
 
 
     public ProjectEntity() {
@@ -267,6 +270,16 @@ public class ProjectEntity implements Serializable {
     public void setStatus(ProjectStatusEnum status) {
         this.status = status;
     }
+
+    public List<ReviewEntity> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewEntity> reviews) {
+        this.reviews = reviews;
+    }
+    
+    
 
     public List<UserEntity> getProjectAdmins() {
         return projectAdmins;

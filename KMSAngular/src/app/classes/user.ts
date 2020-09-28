@@ -26,6 +26,7 @@ export class User {
   followRequestMade: FollowRequest[];
   followRequestReceived: FollowRequest[];
   accountPrivacySetting: AccountPrivacySettingEnum;
+  isActive: Boolean;
 
   constructor(
     userId?: number,

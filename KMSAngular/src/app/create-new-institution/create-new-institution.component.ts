@@ -38,6 +38,7 @@ export class CreateNewInstitutionComponent implements OnInit {
       this.newUser.password = userRegistrationForm.value.password
       this.newUser.joinedDate = new Date()
       this.newUser.userType = UserType.INSTITUTE
+      this.newUser.isActive = true;
       console.log(this.newUser)
       this.isLoading = true;
       this.userService.userRegistration(this.newUser).subscribe(responsedata => {

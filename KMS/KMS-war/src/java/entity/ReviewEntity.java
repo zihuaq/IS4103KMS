@@ -36,6 +36,9 @@ public class ReviewEntity implements Serializable {
     private Integer rating;
     
     @ManyToOne
+    private ProjectEntity project;
+    
+    @ManyToOne
     private UserEntity to;
     
     @ManyToOne
@@ -125,5 +128,15 @@ public class ReviewEntity implements Serializable {
     public void setFrom(UserEntity from) {
         this.from = from;
     }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
+    }
+    
+    
     
 }

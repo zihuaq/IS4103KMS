@@ -6,19 +6,26 @@
 package ws.restful.resources;
 
 import Exception.CreateProjectException;
+import Exception.CreateProjectReviewException;
+import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
+import Exception.ProjectNotFoundException;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import entity.ActivityEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
@@ -35,7 +42,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.CreateProjectReq;
+import ws.restful.model.CreateProjectReviewReq;
+import ws.restful.model.CreateProjectReviewRsp;
 import ws.restful.model.CreateProjectRsp;
+import ws.restful.model.CreateUserReviewReq;
+import ws.restful.model.CreateUserReviewRsp;
 import ws.restful.model.ErrorRsp;
 import ws.restful.model.RetrieveAllProjectRsp;
 
@@ -288,6 +299,106 @@ public class ProjectResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+    
+    @Path("createNewProjectReview")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewProjectReview(CreateProjectReviewReq createProjectReviewReq) {
+        System.out.println("******** ProjectResource: createNewProjectReview()");
+        if (createProjectReviewReq != null) {
+            System.out.println("Project: " + createProjectReviewReq.getReview());
+            try {
+                Long reviewId = projectSessionBeanLocal.createNewProjectReview(createProjectReviewReq.getReview(), createProjectReviewReq.getProject(),createProjectReviewReq.getFrom());
+                CreateProjectReviewRsp createProjectReviewRsp = new CreateProjectReviewRsp(reviewId);
+                System.out.println("******** Project created");
+                return Response.status(Status.OK).entity(createProjectReviewRsp).build();
+            } catch (CreateProjectReviewException ex) {
+                ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
+            }
+        } else {
+            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            
+            return Response.status(Status.BAD_REQUEST).entity(errorRsp).build(); 
+        }
+    }
+    
+    @Path("createNewProjectReview")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewUserReview(CreateUserReviewReq createUserReviewReq) {
+        System.out.println("******** ProjectResource: createNewProjectReview()");
+        if (createUserReviewReq != null) {
+            System.out.println("Project: " + createUserReviewReq.getReview());
+            try {
+                Long reviewId = projectSessionBeanLocal.createNewUserReview(createUserReviewReq.getReview(), createUserReviewReq.getProject(),createUserReviewReq.getFrom(), createUserReviewReq.getTo());
+                CreateUserReviewRsp createUserReviewRsp = new CreateUserReviewRsp(reviewId);
+                System.out.println("******** Project created");
+                return Response.status(Status.OK).entity(createUserReviewRsp).build();
+            } catch (CreateUserReviewException ex) {
+                ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
+            }
+        } else {
+            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            
+            return Response.status(Status.BAD_REQUEST).entity(errorRsp).build(); 
+        }
+    }
+    
+    @GET
+    @Path("/projectreviews/{projectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectReviews(@PathParam("projectId") Long projectId) {
+        try {
+            List<ReviewEntity> reviews = projectSessionBeanLocal.getProjectReviews(projectId);
+            List<ReviewEntity> projectReviewsResponse = getProjectReviewsResponse(reviews);
+            System.out.println(projectReviewsResponse);
+            return Response.status(200).entity(projectReviewsResponse).build();
+        } catch (ProjectNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    private List<ReviewEntity> getProjectReviewsResponse(List<ReviewEntity> reviews){
+         List<ReviewEntity> projectReviewsResponse = new ArrayList<>();
+        for (ReviewEntity reviewEntity : reviews) {
+            if(reviewEntity.getTo() == null){
+//            UserEntity to = new UserEntity();
+//            to.setUserId(reviewEntity.getTo().getUserId());
+//            to.setFirstName(reviewEntity.getTo().getFirstName());
+//            to.setLastName(reviewEntity.getTo().getLastName());
+//            to.setProfilePicture(reviewEntity.getTo().getProfilePicture());
+            UserEntity from = new UserEntity();
+            from.setUserId(reviewEntity.getFrom().getUserId());
+            from.setFirstName(reviewEntity.getFrom().getFirstName());
+            from.setLastName(reviewEntity.getFrom().getLastName());
+            from.setProfilePicture(reviewEntity.getFrom().getProfilePicture());
+            ReviewEntity temp = new ReviewEntity();
+            ProjectEntity project = new ProjectEntity();
+            project.setProjectId(reviewEntity.getProject().getProjectId());
+            project.setName(reviewEntity.getProject().getName());
+            temp.setReviewId(reviewEntity.getReviewId());
+            temp.setTitle(reviewEntity.getTitle());
+            temp.setReviewField(reviewEntity.getReviewField());
+            temp.setRating(reviewEntity.getRating());
+//            temp.setTo(to);
+            temp.setFrom(from);
+            temp.setProject(project);
+            projectReviewsResponse.add(temp);
+            }
+        }
+        return projectReviewsResponse;
+    }
+    
+    
     
 
     private ProjectSessionBeanLocal lookupProjectSessionBeanLocal() {

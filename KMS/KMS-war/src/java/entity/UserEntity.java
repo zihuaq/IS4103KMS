@@ -76,6 +76,8 @@ public class UserEntity implements Serializable {
     private String verificationCode;
     
     private Boolean isVerified;
+   
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
@@ -154,6 +156,7 @@ public class UserEntity implements Serializable {
         this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
         this.affiliatedInstitutes = new ArrayList<>();
         this.affiliatedIndividuals = new ArrayList<>();
+        this.isActive = true;
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
@@ -313,6 +316,16 @@ public class UserEntity implements Serializable {
     public void setIsVerified(Boolean isVerified) {
         this.isVerified = isVerified;
     }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    
 
     public List<ReviewEntity> getReviewsGiven() {
         return reviewsGiven;
