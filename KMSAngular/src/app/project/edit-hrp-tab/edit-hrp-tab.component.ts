@@ -167,13 +167,13 @@ export class EditHrpTabComponent implements OnInit {
   }
 
   clickHrp(hrpId: number) {
+    $('#editskillselect2').val(null).trigger("change");
     this.selectedTagNames = [];
     this.hrpService.getHrp(hrpId).subscribe(
       response => {
         this.hrpToEdit = response;
         for (let tag of this.hrpToEdit.tags) {
           this.selectedTagNames.push(tag.name);
-          console.log(tag.name);
         }
         $("#editskillselect2")
         .val($("#editskillselect2")
