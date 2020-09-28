@@ -13,19 +13,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import ws.restful.model.CreateHrpReq;
 import ws.restful.model.ErrorRsp;
 
@@ -122,10 +122,16 @@ public class HrpResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateMrp(HumanResourcePostingEntity hrp) {
-        System.out.println("******** HrpResource: updateHrp()");
-        humanResourcePostingSessionBean.updateHumanResourcePosting(hrp);
-        
-        return Response.status(204).build();
+        try {
+            System.out.println("******** HrpResource: updateHrp()");
+            humanResourcePostingSessionBean.updateHumanResourcePosting(hrp);
+
+            return Response.status(204).build();
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
     }
     
     @Path("deleteHrp/{hrpId}")
