@@ -42,9 +42,13 @@
                                     <img class="card-img-top" *ngIf="!project.profilePicture"  src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Project Profile Picture">
                                 </div>
                                 <div class="row pt-3 pl-2" >
-                                    <span class="badge badge-info" *ngIf="project.status == projectType.ACTIVE" style="font-size: 12px; vertical-align: 30%;">{{project.status}}</span>
-                                    <span class="badge badge-warning" *ngIf="project.status == projectType.INACTIVE" style="font-size: 12px; vertical-align: 30%;">{{project.status}}</span>
-                                    <span class="badge badge-success" *ngIf="project.status == projectType.COMPLETED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{project.status}}</span>
+                                    <span class="badge bg-gradient-secondary" *ngIf="!isAdmin(project.projectId) && !isOwner(project.projectId)" style="margin-right: 5px;">MEMBER</span>
+                                    <span class="badge bg-gradient-secondary" *ngIf="isAdmin(project.projectId) && !isOwner(project.projectId)" style="margin-right: 5px;">ADMIN</span>
+                                    <span class="badge bg-gradient-secondary" *ngIf="isOwner(project.projectId)" style="margin-right: 5px;">OWNER</span>
+
+                                    <span class="badge bg-gradient-info" *ngIf="project.status == projectType.ACTIVE">{{project.status}}</span>
+                                    <span class="badge bg-gradient-warning" *ngIf="project.status == projectType.INACTIVE">{{project.status}}</span>
+                                    <span class="badge bg-gradient-success" *ngIf="project.status == projectType.COMPLETED">{{project.status}}</span>
                                 </div>
                                 <p class="card-title" style="font-size: 20px; font-weight: bold; margin-top: 5px;">{{project.name}}</p>
                                 <p class="card-text" style="font-size: 15px; color: rgb(92, 92, 92);">{{project.description}}</p>
