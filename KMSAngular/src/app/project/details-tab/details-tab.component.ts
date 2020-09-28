@@ -48,7 +48,6 @@ export class DetailsTabComponent implements OnInit, OnChanges {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToEdit = response;
-        this.selectedTagNames = [];
         for (let tag of this.projectToEdit.sdgs) {
           this.selectedTagNames.push(tag.name);
         }

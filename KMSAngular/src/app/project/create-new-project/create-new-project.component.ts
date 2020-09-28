@@ -107,7 +107,6 @@ export class CreateNewProjectComponent implements OnInit {
     });
 
     if (createProjectForm.valid) {
-      console.log(this.newProject);
       this.newProject.dateCreated = new Date();
       this.newProject.profilePicture = this.selectedProfilePicture;
       this.projectService.createNewProject(this.newProject, this.ownerId, this.tagIdsSelected).subscribe(

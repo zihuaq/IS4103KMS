@@ -50,7 +50,7 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
     }
     
     @Override
-    public HumanResourcePostingEntity getMrpById(Long mrpId) throws NoResultException {
+    public HumanResourcePostingEntity getHrpById(Long mrpId) throws NoResultException {
         HumanResourcePostingEntity mrp = em.find(HumanResourcePostingEntity.class, mrpId);
         if (mrp != null) {
             return mrp;
@@ -68,16 +68,16 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
     }
     
     @Override
-    public void updateMaterialResourcePosting(HumanResourcePostingEntity mrpToUpdate) {
+    public void updateHumanResourcePosting(HumanResourcePostingEntity mrpToUpdate) {
         em.merge(mrpToUpdate);
     }
     
     @Override
-    public void deleteMaterialResourcePosting(Long hrpId) throws NoResultException {
-        HumanResourcePostingEntity hrp = getMrpById(hrpId);
+    public void deleteHumanResourcePosting(Long hrpId) throws NoResultException {
+        HumanResourcePostingEntity hrp = getHrpById(hrpId);
         
-        hrp.getActivity().getHumanResourcePostings().remove(hrp);
-        hrp.setActivity(null);
+//        hrp.getActivity().getHumanResourcePostings().remove(hrp);
+//        hrp.setActivity(null);
         hrp.getProject().getHumanResourcePostings().remove(hrp);
         hrp.setProject(null);
         

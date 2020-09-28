@@ -19,12 +19,12 @@ public interface HumanResourcePostingSessionBeanLocal {
 
     public Long createHumanResourcePostingEntity(HumanResourcePostingEntity newHrp, Long projectId, List<Long> tagIds) throws NoResultException;
 
-    public HumanResourcePostingEntity getMrpById(Long mrpId) throws NoResultException;
+    public HumanResourcePostingEntity getHrpById(Long mrpId) throws NoResultException;
 
     public List<HumanResourcePostingEntity> getListOfHumanResourcePostingByProjectId(Long projectId);
 
-    public void updateMaterialResourcePosting(HumanResourcePostingEntity mrpToUpdate);
+    public void updateHumanResourcePosting(HumanResourcePostingEntity mrpToUpdate);
 
-    public void deleteMaterialResourcePosting(Long hrpId) throws NoResultException;
+    public void deleteHumanResourcePosting(Long hrpId) throws NoResultException;
     
 }

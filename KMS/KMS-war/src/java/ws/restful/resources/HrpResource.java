@@ -70,7 +70,7 @@ public class HrpResource {
     public Response getHrp(@PathParam("hrpId") Long hrpId) {
         System.out.println("******** HrpResource: getHrp()");
         try {
-            HumanResourcePostingEntity hrp = humanResourcePostingSessionBean.getMrpById(hrpId);
+            HumanResourcePostingEntity hrp = humanResourcePostingSessionBean.getHrpById(hrpId);
             
             hrp.getProject().setProjectOwner(null);
             hrp.getProject().getProjectMembers().clear();
@@ -123,7 +123,7 @@ public class HrpResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateMrp(HumanResourcePostingEntity hrp) {
         System.out.println("******** HrpResource: updateHrp()");
-        humanResourcePostingSessionBean.updateMaterialResourcePosting(hrp);
+        humanResourcePostingSessionBean.updateHumanResourcePosting(hrp);
         
         return Response.status(204).build();
     }
@@ -133,8 +133,9 @@ public class HrpResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteHrp(@PathParam("hrpId") Long hrpId) {
         System.out.println("******** HrpResource: deleteHrp()");
+        System.out.println("Hrp Id: " + hrpId);
         try {
-            humanResourcePostingSessionBean.deleteMaterialResourcePosting(hrpId);
+            humanResourcePostingSessionBean.deleteHumanResourcePosting(hrpId);
 
             return Response.status(204).build();
         } catch (NoResultException ex ) {
