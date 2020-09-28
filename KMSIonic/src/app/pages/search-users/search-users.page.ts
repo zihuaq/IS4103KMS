@@ -18,7 +18,8 @@ export class SearchUsersPage implements OnInit {
   loggedInUserId: number
   allUsers: User[]
   filteredUsers: User[]
-  searchTerm
+  preliminarySearchUser: User[]
+  searchTerm: string
   constructor(
     private location: Location,
     private platform: Platform,
@@ -26,10 +27,9 @@ export class SearchUsersPage implements OnInit {
     private authenticationService: AuthenticationService
   ) {}
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.searchBar.setFocus()
-    }, 150)
+  ngOnInit() {}
+
+  ionViewWillEnter() {
     this.authenticationService.getCurrentUser().then((user: User) => {
       this.loggedInUserId = user.userId
       forkJoin([
@@ -39,10 +39,17 @@ export class SearchUsersPage implements OnInit {
       ]).subscribe((result) => {
         this.allUsers = result[0]
         this.filteredUsers = this.allUsers
+        this.preliminarySearchUser = this.filteredUsers.slice(0, 6)
         // this.loggedInUserFollowing = result[1]
         // this.loggedInUserFollowRequestMade = result[2]
       })
     })
+  }
+
+  ionViewDidEnter() {
+    setTimeout(() => {
+      this.searchBar.setFocus()
+    }, 150)
   }
 
   goBack() {
@@ -69,5 +76,6 @@ export class SearchUsersPage implements OnInit {
     } else {
       this.filteredUsers = this.allUsers
     }
+    this.preliminarySearchUser = this.filteredUsers.slice(0, 6)
   }
 }

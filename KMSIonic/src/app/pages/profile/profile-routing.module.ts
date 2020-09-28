@@ -1,17 +1,21 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core"
+import { Routes, RouterModule } from "@angular/router"
 
-import { ProfilePage } from './profile.page';
+import { ProfilePage } from "./profile.page"
 
 const routes: Routes = [
   {
-    path: '',
+    path: "",
+    component: ProfilePage
+  },
+  {
+    path: ":userid",
     component: ProfilePage
   }
-];
+]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class ProfilePageRoutingModule {}
