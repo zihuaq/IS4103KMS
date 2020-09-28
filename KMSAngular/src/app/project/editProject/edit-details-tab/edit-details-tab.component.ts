@@ -4,19 +4,19 @@ import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute} from '@angular/router';
 
 import { Project } from 'src/app/classes/project';
-import { ProjectService } from '../../project.service';
-import { ProjectType } from '../../classes/project-type.enum';
-import { Tag } from '../../classes/tag';
-import { TagService } from '../../tag.service';
+import { ProjectService } from 'src/app/project.service';
+import { ProjectType } from 'src/app/classes/project-type.enum';
+import { Tag } from 'src/app/classes/tag';
+import { TagService } from 'src/app/tag.service';
 
 declare var $: any;
 
 @Component({
-  selector: 'app-details-tab',
-  templateUrl: './details-tab.component.html',
-  styleUrls: ['./details-tab.component.css']
+  selector: 'app-edit-details-tab',
+  templateUrl: './edit-details-tab.component.html',
+  styleUrls: ['./edit-details-tab.component.css']
 })
-export class DetailsTabComponent implements OnInit, OnChanges {
+export class EditDetailsTabComponent implements OnInit, OnChanges {
 
   @Input() projectToEdit: Project;
   @Output() projectChanged = new EventEmitter<Project>();

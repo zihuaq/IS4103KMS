@@ -17,11 +17,11 @@ import { SearchUsersComponent } from './search-users/search-users.component';
 import { RetrieveAllUsersComponent } from './retrieve-all-users/retrieve-all-users.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
-import { ProjectDetailsComponent } from './project/project-details/project-details.component';
+import { ProjectDetailsComponent } from './project/viewProject/project-details/project-details.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
-import { EditProjectComponent } from './project/edit-project/edit-project.component';
-import { ErrorPageComponent } from './project/error-page/error-page.component';
+import { EditProjectComponent } from './project/editProject/edit-project/edit-project.component';
+import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
 
 
 const routes: Routes = [

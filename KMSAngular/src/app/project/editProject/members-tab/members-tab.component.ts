@@ -3,9 +3,9 @@ import { Component, OnInit, Input, OnChanges, Output, EventEmitter, SimpleChange
 import { ActivatedRoute} from '@angular/router';
 
 import { Project } from 'src/app/classes/project';
-import { ProjectService } from '../../project.service';
-import { SessionService } from '../../session.service';
-import { User } from '../../classes/user';
+import { ProjectService } from 'src/app/project.service';
+import { SessionService } from 'src/app/session.service';
+import { User } from 'src/app/classes/user';
 
 declare var $: any;
 

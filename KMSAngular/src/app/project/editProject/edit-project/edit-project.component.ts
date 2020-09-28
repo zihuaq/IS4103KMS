@@ -3,10 +3,10 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { User } from 'src/app/classes/user';
-import { Project } from '../../classes/project';
-import { ProjectService } from '../../project.service';
-import { SessionService } from '../../session.service';
-import { UserService } from '../../user.service';
+import { Project } from 'src/app/classes/project';
+import { ProjectService } from 'src/app/project.service';
+import { SessionService } from 'src/app/session.service';
+import { UserService } from 'src/app/user.service';
 
 declare var $: any;
 

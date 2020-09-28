@@ -33,7 +33,7 @@
                 <div class="card-body" id="custom-tabs-four-tabContent">
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="details-tab" role="tabpanel">
-                            <app-details-tab [projectToEdit]="projectToEdit" (projectChanged)="handleProjectChanged($event)"></app-details-tab>
+                            <app-edit-details-tab [projectToEdit]="projectToEdit" (projectChanged)="handleProjectChanged($event)"></app-edit-details-tab>
                         </div>
                         <div class="tab-pane fade" id="members-tab" role="tabpanel">
                             <app-members-tab [projectToEdit]="projectToEdit" (projectChanged)="handleProjectChanged($event)"></app-members-tab>

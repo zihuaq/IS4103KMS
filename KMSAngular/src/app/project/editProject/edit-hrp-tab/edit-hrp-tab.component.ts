@@ -2,12 +2,12 @@ import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
-import { Project } from '../../classes/project';
-import { ProjectService } from '../../project.service';
-import { HumanResourcePosting } from '../../classes/human-resource-posting';
-import { Tag } from '../../classes/tag';
-import { TagService } from '../../tag.service';
-import { HrpService } from '../../hrp.service';
+import { Project } from 'src/app/classes/project';
+import { ProjectService } from 'src/app/project.service';
+import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
+import { Tag } from 'src/app/classes/tag';
+import { TagService } from 'src/app/tag.service';
+import { HrpService } from 'src/app/hrp.service';
 
 declare var $: any;
 

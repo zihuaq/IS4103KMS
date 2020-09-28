@@ -4,9 +4,9 @@ import { Project } from 'src/app/classes/project';
 import { Tag } from 'src/app/classes/tag';
 import { ProjectService } from 'src/app/project.service';
 import { SessionService } from 'src/app/session.service';
-import { TagService } from '../../tag.service';
-import { MaterialResourcePosting } from '../../classes/material-resource-posting';
-import { MaterialResourcePostingService } from '../../material-resource-posting.service';
+import { TagService } from 'src/app/tag.service';
+import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
+import { MaterialResourcePostingService } from 'src/app/material-resource-posting.service';
 
 declare var $: any;
 
