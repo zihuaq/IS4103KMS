@@ -5,17 +5,28 @@
     <div class="content-header">
         <div class="content-fluid">
             <div class="card">
-                <div class="image" *ngIf="projectToView.profilePicture" style="height: 300px; overflow: hidden; position: relative;">
-                    <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
-                    <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
-                        <img class="card-img-top" style="margin: -20% 0 0 0; display: block;" [src]="projectToView.profilePicture"  alt="Project Profile Picture"> 
-                        <div class="after">
-                            <i class="fas fa-search-plus" style="font-size: 25px;"></i>
+                <div class="image"  style="height: 350px; overflow: hidden; position: relative;">
+                    <span *ngIf="projectToView.profilePicture">
+                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
+                        <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
+                            <img class="card-img-top" style="display: block;" [src]="projectToView.profilePicture"  alt="Project Profile Picture"> 
+                            <div class="after">
+                                <i class="fas fa-search-plus" style="font-size: 25px;"></i>
+                            </div>
                         </div>
-                    </div>
+                    </span>
+                    <span *ngIf="!projectToView.profilePicture">
+                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-addPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Add</button>
+                        <div class="image-layer">
+                            <img class="card-img-top" style="margin: -10% 0 0 0; display: block;" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Project Profile Picture"> 
+                        </div>
+                    </span>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title" style="font-size: x-large; font-weight: bold;">{{projectToView.name}}</h5>
+                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{projectToView.name}}</p>
+                    <span class="badge badge-info" *ngIf="projectToView.status == projectType.ACTIVE" style="margin-top: 10px;">{{projectToView.status}}</span>
+                    <span class="badge badge-warning" *ngIf="projectToView.status == projectType.INACTIVE" style="margin-top: 10px;">{{projectToView.status}}</span>
+                    <span class="badge badge-success" *ngIf="projectToView.status == projectType.COMPLETED" style="margin-top: 10px;">{{projectToView.status}}</span>
                     <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}
                         <span *ngIf="!isMember">
                             <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView"></app-report-project>
@@ -25,7 +36,6 @@
                             <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
                             <button type="button" [disabled] class="btn btn-light float-right">Joined</button>   
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" *ngIf="isAdmin && !projectToView.profilePicture" data-toggle="modal" data-target="#modal-addPicture">Add Profile Picture</a>
                                 <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Project</a>
                                 <a class="dropdown-item" (click)="leaveProject()">Leave Project</a>
                             </div>                       
@@ -41,7 +51,7 @@
                             <a class="nav-link active" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" role="tab">Details</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members</a>
+                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{projectToView.projectMembers.length}}</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
