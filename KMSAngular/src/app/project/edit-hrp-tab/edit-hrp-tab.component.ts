@@ -173,6 +173,7 @@ export class EditHrpTabComponent implements OnInit {
         this.hrpToEdit = response;
         for (let tag of this.hrpToEdit.tags) {
           this.selectedTagNames.push(tag.name);
+          console.log(tag.name);
         }
         $("#editskillselect2")
         .val($("#editskillselect2")
@@ -198,14 +199,14 @@ export class EditHrpTabComponent implements OnInit {
 
   editHrp(editHrpForm: NgForm) {
     let selectedTags = [];
-    this.selectedTagNames = $('#sdgselect2').val();
+    this.selectedTagNames = $('#editskillselect2').val();
     if (this.selectedTagNames.length == 0) {
       $(document).Toasts('create', {
         class: 'bg-warning',
-        title: 'Unable to edit Sdg tags',
+        title: 'Unable to edit skills tags',
         autohide: true,
         delay: 2500,
-        body: 'Please select at least one Sdg tags',
+        body: 'Please select at least one skills tags',
       });
       return;
     }
@@ -215,8 +216,8 @@ export class EditHrpTabComponent implements OnInit {
       }
     });
     if (editHrpForm.valid) {
-      this.newHrp.startDate = new Date(this.startDate);
-      this.newHrp.endDate = new Date(this.endDate);
+      this.hrpToEdit.startDate = new Date(this.startDate);
+      this.hrpToEdit.endDate = new Date(this.endDate);
       this.hrpToEdit.tags = selectedTags;
       this.hrpService.updateHrp(this.hrpToEdit).subscribe(
         $(document).Toasts('create', {
