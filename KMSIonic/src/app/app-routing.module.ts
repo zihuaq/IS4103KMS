@@ -1,17 +1,99 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { NgModule } from "@angular/core"
+import { PreloadAllModules, RouterModule, Routes } from "@angular/router"
+import { AuthGuard } from "./services/auth.guard"
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'folder/Inbox',
-    pathMatch: 'full'
+    path: "",
+    redirectTo: "index",
+    pathMatch: "full"
   },
   {
-    path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
+    path: "login",
+    loadChildren: () =>
+      import("./pages/login/login.module").then((m) => m.LoginPageModule)
+  },
+  {
+    path: "register",
+    loadChildren: () =>
+      import("./pages/register/register.module").then(
+        (m) => m.RegisterPageModule
+      )
+  },
+  {
+    path: "forgetpassword",
+    loadChildren: () =>
+      import("./pages/forgetpassword/forgetpassword.module").then(
+        (m) => m.ForgetpasswordPageModule
+      )
+  },
+  {
+    path: "userselector",
+    loadChildren: () =>
+      import("./pages/userselector/userselector.module").then(
+        (m) => m.UserselectorPageModule
+      )
+  },
+  {
+    path: "registerinstitution",
+    loadChildren: () =>
+      import("./pages/registerinstitution/registerinstitution.module").then(
+        (m) => m.RegisterinstitutionPageModule
+      )
+  },
+  {
+    path: "profile",
+    loadChildren: () =>
+      import("./pages/profile/profile.module").then((m) => m.ProfilePageModule)
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "search-users",
+    loadChildren: () =>
+      import("./pages/search-users/search-users.module").then(
+        (m) => m.SearchUsersPageModule
+      )
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "notifications",
+    loadChildren: () =>
+      import("./pages/notifications/notifications.module").then(
+        (m) => m.NotificationsPageModule
+      )
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "sdg-info",
+    loadChildren: () =>
+      import("./pages/sdg-info/sdg-info.module").then(
+        (m) => m.SdgInfoPageModule
+      )
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "index",
+    loadChildren: () =>
+      import("./pages/index/index.module").then((m) => m.IndexPageModule)
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "addskills",
+    loadChildren: () =>
+      import("./pages/add-skills/add-skills.module").then(
+        (m) => m.AddSkillsPageModule
+      )
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: "view-skills",
+    loadChildren: () =>
+      import("./pages/view-skills/view-skills.module").then(
+        (m) => m.ViewSkillsPageModule
+      )
+    // canActivate: [AuthGuard]
   }
-];
+]
 
 @NgModule({
   imports: [

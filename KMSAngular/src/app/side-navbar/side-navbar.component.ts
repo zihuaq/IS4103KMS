@@ -12,13 +12,16 @@ import { User } from '../classes/user';
 export class SideNavbarComponent implements OnInit {
   loggedInUser: User;
 
-  constructor(private userService: UserService, private sessionService: SessionService) { }
+  constructor(
+    private userService: UserService,
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
   }
 
-  logout(){
+  logout() {
     this.userService.logout();
   }
 }

@@ -44,7 +44,6 @@ export class UserLoginPageComponent implements OnInit {
       this.userService.login(this.email, this.password).subscribe(
         (response) => {
           let user: User = response;
-          user.password = '';
 
           if (user != null) {
             this.sessionService.setIsLogin(true);
@@ -63,7 +62,7 @@ export class UserLoginPageComponent implements OnInit {
         (error) => {
           this.isLoading = false;
           this.loginError = true;
-          this.errorMessage = "Email does not exist or Password is incorrect.";
+          this.errorMessage = 'Email does not exist or Password is incorrect.';
           console.log('********** UserLoginComponent.ts UserLogin(): ' + error);
           //this.errorMessage = 'Error: ' + error;
         }

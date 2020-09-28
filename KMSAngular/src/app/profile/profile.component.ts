@@ -32,9 +32,12 @@ export class ProfileComponent implements OnInit {
       this.userService
         .getUser(loggedInUserId.toString())
         .subscribe((data: User) => {
+          console.log(data)
           this.loggedInUser = data;
         });
+        
       this.userService.getUser(profileid).subscribe((data: User) => {
+        console.log(data)
         this.profile = data;
       });
     }

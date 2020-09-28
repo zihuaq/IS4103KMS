@@ -124,12 +124,14 @@ public class UserEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private AccountPrivacySettingEnum accountPrivacySetting;
     
-    @JoinTable(name = "affiliatedInstitutes")
+    @JoinTable(name = "affiliatedUsers")
     @OneToMany
-    private List<UserEntity> affiliatedInstitutes;
-    @JoinTable(name = "affiliatedIndividuals")
-    @OneToMany
-    private List<UserEntity> affiliatedIndividuals;
+    private List<UserEntity> affiliatedUsers;
+    
+    @OneToMany(mappedBy = "from")
+    private List<AffiliationRequestEntity> affiliationRequestMade;
+    @OneToMany(mappedBy = "to")
+    private List<AffiliationRequestEntity> affiliationRequestReceived;
 
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
@@ -152,8 +154,9 @@ public class UserEntity implements Serializable {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.userType = UserTypeEnum.INDIVIDUAL;
         this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
-        this.affiliatedInstitutes = new ArrayList<>();
-        this.affiliatedIndividuals = new ArrayList<>();
+        this.affiliatedUsers = new ArrayList<>();
+        this.affiliationRequestMade = new ArrayList<>();
+        this.affiliationRequestReceived = new ArrayList<>();
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
@@ -474,19 +477,27 @@ public class UserEntity implements Serializable {
         this.userType = userType;
     }
 
-    public List<UserEntity> getAffiliatedInstitutes() {
-        return affiliatedInstitutes;
+    public List<UserEntity> getAffiliatedUsers() {
+        return affiliatedUsers;
     }
 
-    public void setAffiliatedInstitutes(List<UserEntity> affiliatedInstitutes) {
-        this.affiliatedInstitutes = affiliatedInstitutes;
+    public void setAffiliatedUsers(List<UserEntity> affiliatedUsers) {
+        this.affiliatedUsers = affiliatedUsers;
     }
 
-    public List<UserEntity> getAffiliatedIndividuals() {
-        return affiliatedIndividuals;
+    public List<AffiliationRequestEntity> getAffiliationRequestMade() {
+        return affiliationRequestMade;
     }
 
-    public void setAffiliatedIndividuals(List<UserEntity> affiliatedIndividuals) {
-        this.affiliatedIndividuals = affiliatedIndividuals;
+    public void setAffiliationRequestMade(List<AffiliationRequestEntity> affiliationRequestMade) {
+        this.affiliationRequestMade = affiliationRequestMade;
+    }
+
+    public List<AffiliationRequestEntity> getAffiliationRequestReceived() {
+        return affiliationRequestReceived;
+    }
+
+    public void setAffiliationRequestReceived(List<AffiliationRequestEntity> affiliationRequestReceived) {
+        this.affiliationRequestReceived = affiliationRequestReceived;
     }
 }

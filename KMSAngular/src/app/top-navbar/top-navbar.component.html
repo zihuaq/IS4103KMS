@@ -20,12 +20,14 @@
       <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="far fa-bell"></i>
         <span class="badge badge-warning navbar-badge"
-          *ngIf="followRequests && followRequests.length > 0">{{followRequests.length}}</span>
+          *ngIf="followRequests && followRequests.length > 0 || affiliationRequests && affiliationRequests.length > 0">{{followRequests.length + affiliationRequests.length}}</span>
       </a>
-      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" *ngIf="followRequests">
-        <span class="dropdown-item dropdown-header" *ngIf="followRequests.length > 0">{{followRequests.length}}
+      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" *ngIf="followRequests && affiliationRequests">
+        <span class="dropdown-item dropdown-header"
+          *ngIf="followRequests.length > 0 || affiliationRequests.length > 0">{{followRequests.length + affiliationRequests.length}}
           Notifications</span>
-        <span class="dropdown-item dropdown-header" *ngIf="followRequests.length == 0">No Notifications</span>
+        <span class="dropdown-item dropdown-header"
+          *ngIf="followRequests.length == 0 && affiliationRequests.length == 0">No Notifications</span>
         <div class="dropdown-divider"></div>
         <!-- <a href="#" class="dropdown-item">
           <i class="fas fa-envelope mr-2"></i> 4 new messages
@@ -33,7 +35,12 @@
         </a> -->
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" routerLink="/notifications" *ngIf="followRequests.length > 0">
-          <i class="fas fa-users mr-2"></i>{{followRequests.length}} follow requests
+          <i class="fas fa-users mr-2"></i>{{followRequests.length}} Follow requests
+        </a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" routerLink="/notifications" *ngIf="affiliationRequests.length > 0">
+          <i class="fas fa-users mr-2"></i>{{affiliationRequests.length}} Affiliation requests
         </a>
         <div class="dropdown-divider"></div>
         <!-- <a href="#" class="dropdown-item">

@@ -20,8 +20,10 @@ import javax.naming.NamingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -36,7 +38,7 @@ import javax.ws.rs.core.Response;
 @Path("mra")
 public class MraResource {
 
-    MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBean = lookupMaterialResourceAvailableSessionBeanLocal();
+    MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBeanLocal = lookupMaterialResourceAvailableSessionBeanLocal();
 
     @Context
     private UriInfo context;
@@ -62,7 +64,7 @@ public class MraResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMaterialResourceAvailableById(@PathParam("mraId") Long mraId) {
         try {
-            MaterialResourceAvailableEntity mra = materialResourceAvailableSessionBean.getMaterialResourceAvailableById(mraId);
+            MaterialResourceAvailableEntity mra = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableById(mraId);
             long mraOwnerId = mra.getMaterialResourceAvailableOwner().getUserId();
             UserEntity user = new UserEntity();
             user.setUserId(mraOwnerId);
@@ -77,12 +79,11 @@ public class MraResource {
     }
     
     @PUT
-    @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateMaterialResourceRequest(MaterialResourceAvailableEntity mra) {
+    public Response updateMaterialResourceAvailable(MaterialResourceAvailableEntity mra) {
         try {
-            List<MaterialResourceAvailableEntity> materialResourceAvailable = materialResourceAvailableSessionBean.updateMaterialResourceAvailable(mra);
+            List<MaterialResourceAvailableEntity> materialResourceAvailable = materialResourceAvailableSessionBeanLocal.updateMaterialResourceAvailable(mra);
             long mraOwnerId = mra.getMaterialResourceAvailableOwner().getUserId();
             UserEntity user = new UserEntity();
             user.setUserId(mraOwnerId);
@@ -91,6 +92,63 @@ public class MraResource {
             }
             return Response.status(200).entity(materialResourceAvailable).build();
         } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createMaterialResourceAvailable(MaterialResourceAvailableEntity mra) {
+        try {
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.createMaterialResourceAvailable(mra);
+            long mraOwnerId = mra.getMaterialResourceAvailableOwner().getUserId();
+            UserEntity user = new UserEntity();
+            user.setUserId(mraOwnerId);
+            for (int i = 0; i < mras.size(); i++) {
+                mras.get(i).setMaterialResourceAvailableOwner(user);
+            }
+            return Response.status(200).entity(mras).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @DELETE
+    @Path("/{userId}/{mraId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteMaterialResourceAvailableForUser(@PathParam("userId") Long userId, @PathParam("mraId") Long mraId) {
+        try {
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.deleteMaterialResourceAvailableForUser(userId, mraId);
+            for (int i = 0; i < mras.size(); i++) {
+                mras.get(i).setMaterialResourceAvailableOwner(null);
+            }
+            return Response.status(200).entity(mras).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/user/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMaterialResourceAvailable(@PathParam("userId") Long userId) {
+        try {
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableForUser(userId);
+            for (int i = 0; i < mras.size(); i++) {
+                mras.get(i).setMaterialResourceAvailableOwner(null);
+            }
+            return Response.status(200).entity(mras).build();
+        } catch (UserNotFoundException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();

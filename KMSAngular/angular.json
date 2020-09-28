@@ -147,6 +147,30 @@
               "devServerTarget": "KMSAngular:serve:production"
             }
           }
+        },
+        "ionic-cordova-serve": {
+          "builder": "@ionic/angular-toolkit:cordova-serve",
+          "options": {
+            "cordovaBuildTarget": "KMSAngular:ionic-cordova-build",
+            "devServerTarget": "KMSAngular:serve"
+          },
+          "configurations": {
+            "production": {
+              "cordovaBuildTarget": "KMSAngular:ionic-cordova-build:production",
+              "devServerTarget": "KMSAngular:serve:production"
+            }
+          }
+        },
+        "ionic-cordova-build": {
+          "builder": "@ionic/angular-toolkit:cordova-build",
+          "options": {
+            "browserTarget": "KMSAngular:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "KMSAngular:build:production"
+            }
+          }
         }
       }
     }
