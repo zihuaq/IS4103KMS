@@ -50,8 +50,24 @@ export class AddSkillsPage implements OnInit {
     }
   }
 
+  removeTag(tag: Tag){
+    this.chosenTags.forEach((element, index) => {
+      if(element.name == tag.name){
+        this.chosenTags.splice(index,1)
+      }
+    });
+  }
+
   clearSearch(){
     this.searchValue = "";
     this.filteredTags = [];
+  }
+
+  save(){
+    // this.userService
+    // .addSkillsToProfile(this.profile.userId, this.selectedTags)
+    // .subscribe((responsedata) => {
+    //   this.profile.skills = responsedata;
+    // });
   }
 }

@@ -28,6 +28,8 @@ export class OverviewComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit() {
+    console.log("from overview" + this.profile)
+    console.log(this.loggedInUser)
     this.getFollowersFollowingAndAffiliatedUsers();
   }
 

@@ -78,7 +78,7 @@ const routes: Routes = [
     // canActivate: [AuthGuard]
   },
   {
-    path: "addskills",
+    path: "add-skills",
     loadChildren: () =>
       import("./pages/add-skills/add-skills.module").then(
         (m) => m.AddSkillsPageModule
