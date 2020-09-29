@@ -109,6 +109,8 @@ export class EditMrpTabComponent implements OnInit {
   
 
   createMrp(createMrpForm: NgForm) {
+    
+
     this.newMrp.lackingQuantity = this.newMrp.totalQuantity;
     this.newMrp.obtainedQuantity = 0;
     this.newMrp.startDate = new Date(createMrpForm.value.startDate);
@@ -116,6 +118,16 @@ export class EditMrpTabComponent implements OnInit {
 
     this.selectedTagIds = [];
     this.selectedTagNames = $('#mrpselect2').val();
+    if (!createMrpForm.valid) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Material Resource Posting',
+        autohide: true,
+        delay: 3000,
+        body: 'Please fill in required fields marked with *',
+      });
+    }
+    /*
     if (this.selectedTagNames.length == 0) {
       $(document).Toasts('create', {
         class: 'bg-warning',
@@ -125,6 +137,7 @@ export class EditMrpTabComponent implements OnInit {
         body: 'Please select at least one Material Resource tags',
       });
     }
+    */
     this.mrpTags.forEach((element) => {
       if (this.selectedTagNames.includes(element.name)) {
         this.selectedTagIds.push(element.tagId);
@@ -161,11 +174,24 @@ export class EditMrpTabComponent implements OnInit {
   }
 
   clickEditMrp(mrp: MaterialResourcePosting) {
-    this.mrpToEdit = mrp;
-    $('#editmrpselect2').val(mrp.tags.map((tag) => tag.name)).trigger('change');
-    this.editMrpStartDate = this.mrpToEdit.startDate.toString().substring(0, 10);
-    this.editMrpEndDate = this.mrpToEdit.endDate.toString().substring(0, 10);
+    this.materialResourcePostingService.getMrp(mrp.materialResourcePostingId).subscribe(
+      response => {
+        this.mrpToEdit = response;
 
+        $('#editmrpselect2').val(this.mrpToEdit.tags.map((tag) => tag.name)).trigger('change');
+        this.editMrpStartDate = this.mrpToEdit.startDate.toString().substring(0, 10);
+        this.editMrpEndDate = this.mrpToEdit.endDate.toString().substring(0, 10);
+      },
+      error => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        })
+      }
+    )
   }
 
   clickEditLocation(event: google.maps.MouseEvent) {
@@ -177,16 +203,26 @@ export class EditMrpTabComponent implements OnInit {
   editMrp(editMrpForm: NgForm) {
     let selectedTags = [];
     this.selectedTagNames = $('#editmrpselect2').val();
+    if (!editMrpForm.valid) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Material Resource Posting',
+        autohide: true,
+        delay: 3000,
+        body: 'Please fill in required fields marked with *',
+      });
+    }
+    /*
     if (this.selectedTagNames.length == 0) {
       $(document).Toasts('create', {
         class: 'bg-warning',
-        title: 'Unable to edit skills tags',
+        title: 'Unable to edit Material Resource Posting',
         autohide: true,
         delay: 2500,
-        body: 'Please select at least one skills tags',
+        body: 'Please select at least one Material Resource tags',
       });
     }
-
+    */
     this.mrpTags.forEach((element) => {
       if (this.selectedTagNames.includes(element.name)) {
         selectedTags.push(element);
@@ -194,8 +230,19 @@ export class EditMrpTabComponent implements OnInit {
     });
 
     if (editMrpForm.valid) {
-      this.mrpToEdit.startDate = new Date(this.editMrpStartDate);
-      this.mrpToEdit.endDate = new Date(this.editMrpEndDate);
+      if (this.editMrpStartDate > this.editMrpEndDate) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: 'End Date cannot be earlier than Start Date',
+        });
+        return;
+      } else {
+        this.mrpToEdit.startDate = new Date(this.editMrpStartDate);
+        this.mrpToEdit.endDate = new Date(this.editMrpEndDate);
+      }
       this.mrpToEdit.lackingQuantity = this.mrpToEdit.totalQuantity - this.mrpToEdit.obtainedQuantity;
       this.mrpToEdit.tags = selectedTags;
       this.materialResourcePostingService.updateMrp(this.mrpToEdit).subscribe(
