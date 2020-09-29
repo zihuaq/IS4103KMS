@@ -28,7 +28,7 @@ export class AppComponent {
     private userService: UserService
   ) {
     // sets an idle timeout of 5 seconds, for testing purposes.
-    idle.setIdle(50000);
+    idle.setIdle(5000);
     // sets a timeout period of 5 seconds. after 10 seconds of inactivity, the user will be considered timed out.
     idle.setTimeout(5);
     // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document

@@ -21,6 +21,12 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
 
   paypalConfig = {
 
+    style: {
+      shape:  'pill',
+      label:  'pay',
+      height: 50
+    },
+
     createOrder: (data, actions) => {
       return actions.order.create({
         purchase_units: [{

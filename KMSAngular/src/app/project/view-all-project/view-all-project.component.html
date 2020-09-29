@@ -2,18 +2,71 @@
 <app-side-navbar></app-side-navbar>
 
 <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
     <div class="content-header">
-        <div class="content-fluid">
-            <div *ngFor="let project of projects">
-                <div class="jumbotron jumbotron-fluid">
-                    <div class="container">
-                        <h1 class="display-4">{{project.name}}</h1>
-                        <p class="lead">{{project.description}}</p>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Discover Projects
+                        <span style="margin-right: 5px;"></span>
+                        <a type="button" class="btn btn-light" routerLink="/createNewProject" style="vertical-align: 20%; background-color: lightgray;"><i class="fas fa-plus"></i> Create New Project</a>
+                    </h1>
+                    
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+                        <li class="breadcrumb-item">Projects</li>
+                        <li class="breadcrumb-item active">Discover</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <section class="content">
+        <div class="card card-solid">
+            <div class="input-group" style="margin: 15px 20px; width: auto">
+                <input class="form-control" placeholder="Search projects" [(ngModel)]="searchModel" (ngModelChange)="updateSearchModel($event)">
+            </div>
+            <div class="card-body pb-0">
+                <span class="text-muted" *ngIf="noProjects"> 
+                    <p style="padding-bottom: 1em;">No projects found.</p>
+                </span>
+                <span *ngIf="!noProjects">
+                    <div class="row d-flex align-items-stretch" >
+                        <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" *ngFor="let project of projects | listFilter: searchModel">
+                            <div class="card p-3 bg-light" >
+                                <div class="image" style="height: 180px; overflow: hidden; position: relative;">
+                                    <img class="card-img-top" *ngIf="project.profilePicture" style="transform: scale(1.5)" [src]="project.profilePicture"  alt="Project Profile Picture">
+                                    <img class="card-img-top" *ngIf="!project.profilePicture"  src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Project Profile Picture">
+                                </div>
+                                <div class="row pt-3 pl-2" >
+                                    <span class="badge badge-info" style="width: min-content;" *ngIf="project.status == projectType.ACTIVE" style="font-size: 12px; vertical-align: 30%;">{{project.status}}</span>
+                                    <span class="badge badge-warning" *ngIf="project.status == projectType.INACTIVE" style="font-size: 12px; vertical-align: 30%;">{{project.status}}</span>
+                                    <span class="badge badge-success" *ngIf="project.status == projectType.COMPLETED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{project.status}}</span>
+                                </div>
+                                <p class="card-title" style="font-size: 20px; font-weight: bold; margin-top: 5px;">{{project.name}}</p>
+                                <p class="card-text" style="font-size: 15px; color: rgb(92, 92, 92);">{{project.description}}</p>
+                                <p class="text-muted text-sm" style="margin-left: -5px;">
+                                    <span class="d-flex flex-wrap">
+                                        <div *ngFor="let sdg of sortSDG(project.sdgs)" class="col-2">
+                                            <small class="badge badge-dark">
+                                                {{sdg.name}}
+                                            </small>
+                                        </div>
+                                    </span>
+                                </p>
+                                <button type="button" *ngIf="isMember(project.projectId) == false" class="btn btn-light btn-block mt-auto" style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); z-index: 2;" (click)="joinProject(project)"><i class="far fa-handshake"></i> Join</button> 
+                                <button type="button" *ngIf="isMember(project.projectId) == true" class="btn btn-light btn-block mt-auto" style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); z-index: 2;" (click)="leaveProject(project)"><i class="fas fa-handshake-slash"></i> Leave</button> 
+                                <a class="card-block stretched-link text decoration-none" style="cursor: pointer;" (click)="onSelect(project)"></a>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </span>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
 <app-footer></app-footer>

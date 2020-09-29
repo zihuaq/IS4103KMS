@@ -11,10 +11,13 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -39,27 +42,23 @@ public class ProjectEntity implements Serializable {
     @Column(nullable=false)
     private String name;
     
+    @Column(length = 2000)
     private String description;
     
+    @Enumerated(EnumType.STRING)
     private ProjectStatusEnum status;
     
     @NotNull
     @Column(nullable=false)
     @Temporal(TemporalType.DATE)
-    private Date startDate;
-    
-    @NotNull
-    @Column(nullable=false)
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private Date dateCreated;
     
     @NotNull
     @Column(nullable=false)
     private String country;
     
-    @NotNull
-    @Column(nullable=false)
-    private String location;
+    @Lob
+    private String profilePicture;
     
     @ManyToOne
     private UserEntity projectOwner;
@@ -69,7 +68,7 @@ public class ProjectEntity implements Serializable {
     private List<UserEntity> projectMembers;
     
     @JoinTable(name = "projectAdmins")
-    @ManyToMany(mappedBy="projectAdmins")
+    @ManyToMany(mappedBy="projectsManaged")
     private List<UserEntity> projectAdmins;
     
     private Double monetaryFundingRequired;
@@ -89,6 +88,13 @@ public class ProjectEntity implements Serializable {
     
     @OneToMany(mappedBy = "project")
     private List<PostEntity> posts;
+    
+    @ManyToMany
+    private List<TagEntity> sdgs;
+
+    @OneToMany(mappedBy = "project")
+    private List<ReviewEntity> reviews;
+
 
 
     public ProjectEntity() {
@@ -101,17 +107,16 @@ public class ProjectEntity implements Serializable {
         this.posts = new ArrayList<>();
         this.status = ProjectStatusEnum.ACTIVE;
         this.monetaryFundingObtained = 0.0;
+        this.sdgs = new ArrayList<>();
     }
 
-    public ProjectEntity(Long projectId, String name, String description, Date startDate, Date endDate, String country, String location, Double monetaryFundingRequired) {
+    public ProjectEntity(String name, String description, Date startDate, String country, String profilePicture, Double monetaryFundingRequired) {
         this();
-        this.projectId = projectId;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.dateCreated = startDate;
         this.country = country;
-        this.location = location;
+        this.profilePicture = profilePicture;
         this.monetaryFundingRequired = monetaryFundingRequired;
     } 
 
@@ -196,20 +201,12 @@ public class ProjectEntity implements Serializable {
         this.monetaryFundingObtained = monetaryFundingObtained;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public String getCountry() {
@@ -218,14 +215,6 @@ public class ProjectEntity implements Serializable {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public List<ActivityEntity> getActivities() {
@@ -268,6 +257,16 @@ public class ProjectEntity implements Serializable {
         this.status = status;
     }
 
+    public List<ReviewEntity> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewEntity> reviews) {
+        this.reviews = reviews;
+    }
+    
+    
+
     public List<UserEntity> getProjectAdmins() {
         return projectAdmins;
     }
@@ -282,6 +281,22 @@ public class ProjectEntity implements Serializable {
 
     public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
+    }
+
+    public List<TagEntity> getSdgs() {
+        return sdgs;
+    }
+
+    public void setSdgs(List<TagEntity> sdgs) {
+        this.sdgs = sdgs;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
     
 }
