@@ -15,10 +15,13 @@ export class ViewSkillsPage implements OnInit {
   loggedInUserId: number;
   isEdit: boolean;
 
-  constructor(private activatedRoute: ActivatedRoute, 
+  constructor(private activatedRoute: ActivatedRoute,
     private userService: UserService, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     let profileid = this.activatedRoute.snapshot.params.userid;
     this.authenticationService.getCurrentUser().then((user: User) => {
       this.loggedInUserId = user.userId
@@ -27,6 +30,12 @@ export class ViewSkillsPage implements OnInit {
         this.userService.getUser(profileid).subscribe((data: User) => {
           this.profile = data;
           this.loggedInUser = data;
+
+          this.userService
+            .getSkillsForProfile(this.profile.userId)
+            .subscribe((skills) => {
+              this.profile = { ...this.profile, skills };
+            });
           console.log(data);
         });
       } else {
@@ -40,16 +49,22 @@ export class ViewSkillsPage implements OnInit {
         this.userService.getUser(profileid).subscribe((data: User) => {
           console.log(data)
           this.profile = data;
+
+          this.userService
+            .getSkillsForProfile(this.profile.userId)
+            .subscribe((skills) => {
+              this.profile = { ...this.profile, skills };
+            });
         });
       }
     });
   }
 
-  onEdit(){
+  onEdit() {
     this.isEdit = !this.isEdit
   }
 
-  onSave(){
-    
+  onSave() {
+
   }
 }

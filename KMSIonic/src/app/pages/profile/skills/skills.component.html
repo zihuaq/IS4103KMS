@@ -1,25 +1,35 @@
 <ion-card>
   <ion-item>
     <ion-label>Skills</ion-label>
-    <ion-button fill="outline" slot="end" [routerLink]="['/view-skills']"> Edit </ion-button>
+    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" [routerLink]="['/view-skills']"> Edit </ion-button>
   </ion-item>
   <ion-card-content *ngIf="profile.skills.length == 0">
     No Skills Indicated
   </ion-card-content>
-  <ion-card-content *ngIf="profile.skills.length != 0">
-    <ion-list>
+  <ion-card-content>
+    <div class="d-flex flex-wrap" *ngIf="seeAll">
       <ion-item *ngFor="let tag of profile.skills">
         <ion-chip color="tertiary">
           <ion-label>{{tag.name}} </ion-label>
         </ion-chip>
       </ion-item>
-    </ion-list>
+    </div>
+    <div class="d-flex flex-wrap" *ngIf="!seeAll">
+      <ion-item *ngFor="let tag of top3Skills">
+        <ion-chip color="tertiary">
+          <ion-label>{{tag.name}} </ion-label>
+        </ion-chip>
+      </ion-item>
+    </div>
   </ion-card-content>
-  <ion-footer *ngIf="profile.skills.length != 0">
+  <ion-footer *ngIf="profile.skills.length>3">
     <ion-grid>
       <ion-row>
-        <ion-col size="12">
-          <div class="ion-text-center" [routerLink]="['/view-skills']"> See All </div>
+        <ion-col size="12" *ngIf="!seeAll">
+          <div class="ion-text-center" (click)="toggleSeeAll()" > See All </div>
+        </ion-col>
+        <ion-col size="12" *ngIf="seeAll">
+          <div class="ion-text-center" (click)="toggleSeeAll()" > See Less </div>
         </ion-col>
       </ion-row>
     </ion-grid>
