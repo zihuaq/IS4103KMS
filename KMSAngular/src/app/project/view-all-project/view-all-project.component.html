@@ -57,8 +57,8 @@
                                         </div>
                                     </span>
                                 </p>
-                                <button type="button" *ngIf="isMember(project.projectId) == false" class="btn btn-light btn-block mt-auto" style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); z-index: 2;" (click)="joinProject(project)"><i class="far fa-handshake"></i> Join</button> 
-                                <button type="button" *ngIf="isMember(project.projectId) == true" class="btn btn-light btn-block mt-auto" style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); z-index: 2;" (click)="leaveProject(project)"><i class="fas fa-handshake-slash"></i> Leave</button> 
+                                <button type="button" *ngIf="isMember(project.projectId) == false" class="btn btn-light btn-block mt-auto" (click)="joinProject(project)" style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); z-index: 2;" ><i class="far fa-handshake"></i> Join</button> 
+                                <button type="button" *ngIf="isMember(project.projectId) == true" class="btn btn-light btn-block mt-auto" (click)="clickLeaveProject(project)" data-toggle="modal" data-target="#modal-confirm-leave-project" style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); z-index: 2;"><i class="fas fa-handshake-slash"></i> Leave</button> 
                                 <a class="card-block stretched-link text decoration-none" style="cursor: pointer;" (click)="onSelect(project)"></a>
                             </div>
                         </div>
@@ -67,6 +67,26 @@
             </div>
         </div>
     </section>
+</div>
+
+<div class="modal fade" id="modal-confirm-leave-project">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Leave Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to leave this project?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="delete-mrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="leaveProject()">Leave</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <app-footer></app-footer>

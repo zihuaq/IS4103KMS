@@ -28,7 +28,7 @@ export class ViewAllProjectComponent implements OnInit {
   noProjects: boolean = true;
   projectsJoined: Project[];
   loggedInUser: User;
-
+  projectToLeaveId: number;
 
   constructor(public projectService: ProjectService,
     public userService: UserService,
@@ -88,9 +88,13 @@ export class ViewAllProjectComponent implements OnInit {
       });  
   }
 
-  leaveProject(project: Project) {
+  clickLeaveProject(project: Project) {
+    this.projectToLeaveId = project.projectId;
+  }
+
+  leaveProject() {
     console.log("******** leaveProject()");
-    this.projectService.removeMember(project.projectId, this.loggedInUser.userId).subscribe(
+    this.projectService.removeMember(this.projectToLeaveId, this.loggedInUser.userId).subscribe(
       response => {
       $(document).Toasts('create', {
         class: 'bg-success',
@@ -145,5 +149,7 @@ export class ViewAllProjectComponent implements OnInit {
       .map((project) => project.projectId)
       .includes(projectId);
   }
+
+  
 }
 
