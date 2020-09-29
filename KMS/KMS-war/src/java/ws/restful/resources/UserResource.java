@@ -18,6 +18,8 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
@@ -44,6 +46,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.ErrorRsp;
 import ws.restful.model.UpdateUserPasswordReq;
+import ws.restful.model.editReviewReq;
+import ws.restful.model.editReviewRsp;
 
 /**
  * REST Web Service
@@ -315,7 +319,7 @@ public class UserResource {
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
             user.getProjectsJoined().clear();
-            user.getProjectAdmins().clear();
+            user.getProjectsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
             user.getGroupsOwned().clear();
@@ -403,7 +407,7 @@ public class UserResource {
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
             user.getProjectsJoined().clear();
-            user.getProjectAdmins().clear();
+            user.getProjectsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
             user.getPosts().clear();
@@ -581,7 +585,7 @@ public class UserResource {
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
             user.getProjectsJoined().clear();
-            user.getProjectAdmins().clear();
+            user.getProjectsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
             user.getPosts().clear();
@@ -788,6 +792,114 @@ public class UserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+    @GET
+    @Path("/writtenreviews/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWrittenReviews(@PathParam("userId") Long userId) {
+        try {
+            List<ReviewEntity> reviews = userSessionBeanLocal.getUserWrittenReviews(userId);
+            List<ReviewEntity> reviewsWrittenResponse = getWrittenReviewsResponse(reviews);
+            System.out.println(reviewsWrittenResponse);
+            return Response.status(200).entity(reviewsWrittenResponse).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    private List<ReviewEntity> getWrittenReviewsResponse(List<ReviewEntity> reviews){
+         List<ReviewEntity> writtenReviewsResponse = new ArrayList<>();
+        for (ReviewEntity reviewEntity : reviews) {
+            UserEntity to = new UserEntity();
+            to.setUserId(reviewEntity.getTo().getUserId());
+            to.setFirstName(reviewEntity.getTo().getFirstName());
+            to.setLastName(reviewEntity.getTo().getLastName());
+            to.setProfilePicture(reviewEntity.getTo().getProfilePicture());
+            UserEntity from = new UserEntity();
+            from.setUserId(reviewEntity.getFrom().getUserId());
+            from.setFirstName(reviewEntity.getFrom().getFirstName());
+            from.setLastName(reviewEntity.getFrom().getLastName());
+            from.setProfilePicture(reviewEntity.getFrom().getProfilePicture());
+            ReviewEntity temp = new ReviewEntity();
+            ProjectEntity project = new ProjectEntity();
+            project.setProjectId(reviewEntity.getProject().getProjectId());
+            project.setName(reviewEntity.getProject().getName());
+            temp.setReviewId(reviewEntity.getReviewId());
+            temp.setTitle(reviewEntity.getTitle());
+            temp.setReviewField(reviewEntity.getReviewField());
+            temp.setRating(reviewEntity.getRating());
+            temp.setTo(to);
+            temp.setFrom(from);
+            temp.setProject(project);
+            writtenReviewsResponse.add(temp);
+        }
+        return writtenReviewsResponse;
+    } 
+    
+    @GET
+    @Path("/receivedreviews/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRecievedReviews(@PathParam("userId") Long userId) {
+        try {
+            List<ReviewEntity> reviews = userSessionBeanLocal.getUserRecievedReviews(userId);
+            List<ReviewEntity> reviewsRecievedResponse = getRecievedReviewsResponse(reviews);
+            System.out.println(reviewsRecievedResponse);
+            return Response.status(200).entity(reviewsRecievedResponse).build();
+        } catch (UserNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    private List<ReviewEntity> getRecievedReviewsResponse(List<ReviewEntity> reviews){
+         List<ReviewEntity> recievedReviewsResponse = new ArrayList<>();
+        for (ReviewEntity reviewEntity : reviews) {
+            UserEntity to = new UserEntity();
+            to.setUserId(reviewEntity.getTo().getUserId());
+            to.setFirstName(reviewEntity.getTo().getFirstName());
+            to.setLastName(reviewEntity.getTo().getLastName());
+            to.setProfilePicture(reviewEntity.getTo().getProfilePicture());
+            UserEntity from = new UserEntity();
+            from.setUserId(reviewEntity.getFrom().getUserId());
+            from.setFirstName(reviewEntity.getFrom().getFirstName());
+            from.setLastName(reviewEntity.getFrom().getLastName());
+            from.setProfilePicture(reviewEntity.getFrom().getProfilePicture());
+            ReviewEntity temp = new ReviewEntity();
+            ProjectEntity project = new ProjectEntity();
+            project.setProjectId(reviewEntity.getProject().getProjectId());
+            project.setName(reviewEntity.getProject().getName());
+            temp.setReviewId(reviewEntity.getReviewId());
+            temp.setTitle(reviewEntity.getTitle());
+            temp.setReviewField(reviewEntity.getReviewField());
+            temp.setRating(reviewEntity.getRating());
+            temp.setTo(to);
+            temp.setFrom(from);
+            temp.setProject(project);
+            recievedReviewsResponse.add(temp);
+        }
+        return recievedReviewsResponse;
+    } 
+    
+    @POST
+    @Path("/editReview")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editReview(editReviewReq edit) {
+        try {
+            Long reviewId = userSessionBeanLocal.editReview(edit.getReviewId(), edit.getTitle(), edit.getMessage(), edit.getRating());
+            editReviewRsp editReviewRsp = new editReviewRsp(reviewId);
+            return Response.status(200).entity(editReviewRsp).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        } 
+    }
     //    @POST
 //    @Path("ResetPassword")
 //    @Consumes(MediaType.APPLICATION_JSON)
@@ -809,5 +921,80 @@ public class UserResource {
 ////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
 ////            }
 //    }
+    
+    @Path("/projectsOwned/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectsOwned(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getProjectsOwned()");
+        try {
+            List<ProjectEntity> projectsOwned = userSessionBeanLocal.getProjectsOwned(userId);
+            for (ProjectEntity p : projectsOwned) {
+                p.setProjectOwner(null);
+                p.getProjectMembers().clear();
+                p.getProjectAdmins().clear();
+                p.getActivities().clear();
+                p.getHumanResourcePostings().clear();
+                p.getMaterialResourcePostings().clear();
+                p.getTasks().clear();
+                p.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(projectsOwned).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/viewOwnProjects/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectsJoined(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getProjectsJoined()");
+        try {
+            List<ProjectEntity> projectsJoined = userSessionBeanLocal.getProjectsJoined(userId);
+            for (ProjectEntity p : projectsJoined) {
+                p.setProjectOwner(null);
+                p.getProjectMembers().clear();
+                p.getProjectAdmins().clear();
+                p.getActivities().clear();
+                p.getHumanResourcePostings().clear();
+                p.getMaterialResourcePostings().clear();
+                p.getTasks().clear();
+                p.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(projectsJoined).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/projectsManaged/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectsManaged(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getProjectsManaged()");
+        try {
+            List<ProjectEntity> projectsManaged = userSessionBeanLocal.getProjectsManaged(userId);
+            for (ProjectEntity p : projectsManaged) {
+                p.setProjectOwner(null);
+                p.getProjectMembers().clear();
+                p.getProjectAdmins().clear();
+                p.getActivities().clear();
+                p.getHumanResourcePostings().clear();
+                p.getMaterialResourcePostings().clear();
+                p.getTasks().clear();
+                p.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(projectsManaged).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
 
 }

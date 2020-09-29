@@ -6,27 +6,27 @@
         <div class="content-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
+                    <div class="alert alert-danger" *ngIf = "projectCreationError">
+                        <p>{{ errorMessage }}</p>
+                    </div>
+                    <div class="alert alert-success" *ngIf = "projectCreated">
+                        <p>{{ successMessage }}</p>
+                    </div>
                     <h1 class="m-0 text-dark">New Project</h1>
                     <form (ngSubmit)="create(createProjectForm)" #createProjectForm="ngForm">
                         <div class="form-group">
                             <label for="name">Project Name:</label>
                             <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="newProject.name" required="true">
+                            <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project name cannot be empty!</span>
                         </div>
                         <div class='form-group'>
                             <label for="description">Description:</label>
                             <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="newProject.description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="startDate">Start Date:</label>
-                            <input type="date" id="startDate" class="form-control" #startDate="ngModel" name="startDate" [(ngModel)]="newProject.startDate" required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="endDate">End Date:</label>
-                            <input type="date" id="endDate" class="form-control" #endDate="ngModel" name="endDate" [(ngModel)]="newProject.endDate" required="true">
-                        </div>
-                        <div class="form-group">
                             <label for="country">Country:</label>
-                            <select id="country" name="country" class="form-control" #country="ngModel" name="country" [(ngModel)]="newProject.country" required="true"> 
+                            <input id="country" name="country" required list ="country-list" class="form-control" #country="ngModel" name="country" [(ngModel)]="newProject.country" required="true">
+                            <datalist id="country-list"> 
                                 <option value="" disabled selected hidden>Select a Country</option>
                                 <option value="Afghanistan">Afghanistan</option>
                                 <option value="Åland Islands">Åland Islands</option>
@@ -272,15 +272,33 @@
                                 <option value="Yemen">Yemen</option>
                                 <option value="Zambia">Zambia</option>
                                 <option value="Zimbabwe">Zimbabwe</option>
-                            </select>
+                            </datalist>
                         </div>
                         <div class="form-group">
-                            <label for="location">Location:</label>
-                            <textarea id="location" class="form-control" #description="ngModel" name="location" [(ngModel)]="newProject.location" required="true"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="amount">Monetary Funding Required:</label>
+                            <label for="amount">Monetary Funding Required(USD):</label>
                             <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>SDG Tags:</label>
+                            <div class="select2-blue">
+                                <select class="select2" id="sdgselect2" multiple="multiple"
+                                    data-placeholder="Select relevant SDG tags" data-dropdown-css-class="select2-blue"
+                                    style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePictureFile">Profile Picture:</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="selectedProfilePicture" accept="image/*" (change)="getFiles($event)">
+                                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="selectedProfilePicture">Choose file</label>
+                                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="selectedProfilePicture">{{selectedProfilePictureName}}</label>
+                                </div>
+                                <div class="input-group-append" style="cursor: pointer" *ngIf="selectedProfilePicture">
+                                    <span class="input-group-text" (click)="removePicture()">Remove Selected</span>
+                                </div>
+                            </div>
                         </div>
                         <button class="btn btn-primary" type="submit" [disabled]="!createProjectForm.valid">Create New Project</button>
                     </form>

@@ -33,6 +33,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
   privacySettings = AccountPrivacySettingEnum;
   allSDGTags: Tag[];
   selectedTags: Tag[] = [];
+  status = ['Active', 'Deactive'];
   loggedInUser: User;
   passwordUpdated = false;
   passwordError = false;
@@ -64,6 +65,8 @@ export class EditProfileComponent implements OnInit, OnChanges {
     this.tagService.getAllSDGTags().subscribe((response) => {
       this.allSDGTags = response;
     });
+    console.log(this.user)
+
   }
 
   getFiles(event) {
@@ -83,6 +86,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
   onEditProfile(editForm: NgForm) {
     this.updatedUser = new User();
     if (editForm.valid) {
+      console.log(editForm)
       this.updatedUser.userId = this.user.userId;
       this.updatedUser.firstName = editForm.value.firstName;
       this.updatedUser.lastName = editForm.value.lastName;
@@ -97,6 +101,12 @@ export class EditProfileComponent implements OnInit, OnChanges {
       }
       this.updatedUser.sdgs = this.selectedTags;
       this.updatedUser.accountPrivacySetting = editForm.value.privacySettings;
+      if(editForm.value.status == 'Active'){
+        this.updatedUser.isActive = true;
+      }
+      else{
+        this.updatedUser.isActive = false;
+      }
       this.userService.updateUser(this.updatedUser).subscribe(
         (responsedata: User) => {
           console.log(responsedata);
@@ -108,6 +118,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
             dob: responsedata.dob,
             profilePicture: responsedata.profilePicture,
             sdgs: responsedata.sdgs,
+            isActive: responsedata.isActive
           };
           this.profilePictureFile = responsedata.profilePicture;
           this.userChanged.emit(this.user);
@@ -131,6 +142,7 @@ export class EditProfileComponent implements OnInit, OnChanges {
       );
     }
   }
+
 
   removePic() {
     if (this.profilePictureFile != undefined) {

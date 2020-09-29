@@ -5,22 +5,24 @@
  */
 package ejb.session.singleton;
 
+import Exception.CreateProjectException;
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
+import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
-import entity.MaterialResourceAvailableEntity;
+import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
+import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
@@ -33,6 +35,9 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB
+    private ProjectSessionBeanLocal projectSessionBean;
 
     @EJB
     private MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBean;
@@ -65,7 +70,7 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Project Management", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Content Marketing", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Digital Marketing", TagTypeEnum.SKILL));
-        tagSessionBean.createNewTag(new TagEntity("Transalation", TagTypeEnum.SKILL));
+        tagSessionBean.createNewTag(new TagEntity("Translation", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Software Engineering", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("User Interface Design", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Tech Support", TagTypeEnum.SKILL));
@@ -120,5 +125,17 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORT));
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORT));
+        
+        try {
+            projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", 0.0), 1l, new ArrayList<Long>(Arrays.asList(36l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Improve Sanitation in Nigeria", "Inadequate sanitation is a leading cause of poverty, largely due to premature mortality. Less than one third of the Nigerian population has access to basic sanitation.", new Date(), "Nigeria", "", 5000.0), 3l, new ArrayList<Long>(Arrays.asList(23l, 25l, 28l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Educating Farmers", "Educate market gardeners and farmers on protecting land, soil degradation and more efficient agricultural techniques.", new Date(), "Viet Nam", "", 1000.0), 4l, new ArrayList<Long>(Arrays.asList(24l, 34l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", 0.0), 5l, new ArrayList<Long>(Arrays.asList(25l, 26l, 28l, 32l, 36l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Green City Solutions", "Create and implement new green inventions such as city trees that are plant-based air filters and smart street pathway that converts kinetic energy of footsteps into electricity.", new Date(), "United Kingdom", "", 10000.0), 5l, new ArrayList<Long>(Arrays.asList(29l, 31l, 33l, 35l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Resilience and Response Systems", "Promoting social cohesion and investing in community-led resilience and response systems. Helping people cope with adversity, through social protection and basic services.", new Date(), "Hong Kong", "", 0.0), 6l, new ArrayList<Long>(Arrays.asList(30l, 38l)));
+        } catch (CreateProjectException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }

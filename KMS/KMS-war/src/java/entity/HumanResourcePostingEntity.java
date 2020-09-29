@@ -6,13 +6,16 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -66,7 +69,7 @@ public class HumanResourcePostingEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
-    private Double lontitude;
+    private Double longitude;
     
     @ManyToOne
     private ActivityEntity activity;
@@ -75,7 +78,26 @@ public class HumanResourcePostingEntity implements Serializable {
     @JoinColumn
     private ProjectEntity project;
     
-    
+    @ManyToMany
+    private List<TagEntity> tags;
+
+    public HumanResourcePostingEntity() {
+        this.tags = new ArrayList<>();
+    }
+
+    public HumanResourcePostingEntity(Long humanResourcePostingId, String name, Integer totalSlots, Integer obtainedSlots, Integer lackingSlots, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
+        this();
+        this.humanResourcePostingId = humanResourcePostingId;
+        this.name = name;
+        this.totalSlots = totalSlots;
+        this.obtainedSlots = obtainedSlots;
+        this.lackingSlots = lackingSlots;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.latitude = latitude;
+        this.longitude = lontitude;
+    }  
 
     public Long getHumanResourcePostingId() {
         return humanResourcePostingId;
@@ -174,12 +196,12 @@ public class HumanResourcePostingEntity implements Serializable {
         this.latitude = latitude;
     }
 
-    public Double getLontitude() {
-        return lontitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLontitude(Double lontitude) {
-        this.lontitude = lontitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public ActivityEntity getActivity() {
@@ -196,6 +218,14 @@ public class HumanResourcePostingEntity implements Serializable {
 
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public List<TagEntity> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagEntity> tags) {
+        this.tags = tags;
     }
     
 }

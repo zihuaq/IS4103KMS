@@ -3,9 +3,10 @@
     <ion-item>
       <ion-avatar slot="start">
         <img *ngIf="profile.profilePicture" class="profile-user-img img-fluid img-circle" [src]="profile.profilePicture"
-        alt="User profile picture">
-        <img *ngIf="!profile.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-        alt="User profile picture">
+          alt="User profile picture">
+        <img *ngIf="!profile.profilePicture"
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          alt="User profile picture">
       </ion-avatar>
       <ion-label>
         <h3> {{profile.firstName}} {{profile.lastName}} </h3>
@@ -25,6 +26,8 @@
           <a [routerLink]="['/searchUsers/following/']"> {{profile.following.length}} </a>
         </ion-note>
       </ion-label>
+    </ion-item>
+    <ion-item  *ngIf="profile.userId != loggedInUser.userId">
       <ion-label *ngIf="profile.userId != loggedInUser.userId">
         <ion-button fill="outline" *ngIf="!isFollowing && !hasSentFollowRequest" (click)="follow()">
           Follow
@@ -34,6 +37,8 @@
           <i class="fas fa-check"></i>
           Follow Request Sent
         </ion-button>
+      </ion-label>
+      <ion-label>
         <ion-button fill="outline"
           *ngIf="!(loggedInUser.userType != UserType.INSTITUTE && profile.userType != UserType.INSTITUTE) && !isAffiliated && !hasSentAffiliationRequest"
           (click)="sendAffiliationRequest()">
@@ -41,7 +46,7 @@
         </ion-button>
         <ion-button *ngIf="isAffiliated" (click)="removeAffiliation()"> Remove Affiliation </ion-button>
         <ion-button *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true>
-          <i class="fas fa-check"></i> 
+          <i class="fas fa-check"></i>
           Affiliation Request Sent
         </ion-button>
       </ion-label>

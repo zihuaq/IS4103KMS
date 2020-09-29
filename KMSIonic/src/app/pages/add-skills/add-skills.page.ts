@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Tag } from 'src/app/classes/tag';
+import { User } from 'src/app/classes/user';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { TagService } from 'src/app/services/tag.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -14,12 +16,22 @@ export class AddSkillsPage implements OnInit {
   chosenTags: Tag[] = [];
   searchValue: string;
   hasSelected: boolean;
+  loggedInUser: User;
 
-  constructor(private tagService: TagService, private userService: UserService) { }
+  constructor(private tagService: TagService, private authenticationService: AuthenticationService, private userService: UserService) { }
 
   ngOnInit() {
     this.tagService.getAllSkillTags().subscribe((response) => {
       this.skillTags = response;
+      this.authenticationService.getCurrentUser().then((user: User) => {
+        this.loggedInUser = user;
+        this.userService
+          .getSkillsForProfile(this.loggedInUser.userId)
+          .subscribe((skills) => {
+            this.loggedInUser = { ...this.loggedInUser, skills };
+          });
+        this.skillTags = this.skillTags.filter(tag => !this.loggedInUser.skills.includes(tag));
+      });
     });
   }
 
@@ -37,37 +49,37 @@ export class AddSkillsPage implements OnInit {
     });
   }
 
-  selectTag(tag: Tag){
+  selectTag(tag: Tag) {
     this.hasSelected = false;
     this.chosenTags.forEach((element) => {
-      if(element.name == tag.name){
+      if (element.name == tag.name) {
         this.hasSelected = true;
       }
     });
-    if(!this.hasSelected){
+    if (!this.hasSelected) {
       this.chosenTags.push(tag);
       this.clearSearch();
     }
   }
 
-  removeTag(tag: Tag){
+  removeTag(tag: Tag) {
     this.chosenTags.forEach((element, index) => {
-      if(element.name == tag.name){
-        this.chosenTags.splice(index,1)
+      if (element.name == tag.name) {
+        this.chosenTags.splice(index, 1)
       }
     });
   }
 
-  clearSearch(){
+  clearSearch() {
     this.searchValue = "";
     this.filteredTags = [];
   }
 
-  save(){
-    // this.userService
-    // .addSkillsToProfile(this.profile.userId, this.selectedTags)
-    // .subscribe((responsedata) => {
-    //   this.profile.skills = responsedata;
-    // });
+  save() {
+    this.userService
+      .addSkillsToProfile(this.loggedInUser.userId, this.chosenTags)
+      .subscribe((responsedata) => {
+        this.loggedInUser.skills = responsedata;
+      });
   }
 }

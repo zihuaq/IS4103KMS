@@ -76,6 +76,8 @@ public class UserEntity implements Serializable {
     private String verificationCode;
     
     private Boolean isVerified;
+   
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
@@ -88,7 +90,7 @@ public class UserEntity implements Serializable {
     private List<ProjectEntity> projectsJoined;
     @JoinTable(name = "projectAdmins")
     @ManyToMany
-    private List<ProjectEntity> projectAdmins;
+    private List<ProjectEntity> projectsManaged;
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
     @OneToMany(mappedBy = "groupOwner")
@@ -144,7 +146,7 @@ public class UserEntity implements Serializable {
         this.badges = new ArrayList<>();
         this.mras = new ArrayList<>();
         this.skills = new ArrayList<>();
-        this.projectAdmins = new ArrayList<>();
+        this.projectsManaged = new ArrayList<>();
         this.projectsJoined = new ArrayList<>();
         this.following = new ArrayList<>();
         this.followers = new ArrayList<>();
@@ -154,6 +156,7 @@ public class UserEntity implements Serializable {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
         this.userType = UserTypeEnum.INDIVIDUAL;
         this.accountPrivacySetting = AccountPrivacySettingEnum.PUBLIC;
+        this.isActive = true;
         this.affiliatedUsers = new ArrayList<>();
         this.affiliationRequestMade = new ArrayList<>();
         this.affiliationRequestReceived = new ArrayList<>();
@@ -178,7 +181,7 @@ public class UserEntity implements Serializable {
         this.dob = dob;
         this.gender = gender;
         this.email = email;
-        this.password = password;
+        this.setPassword(password);
         this.joinedDate = new Date();
         this.userType = usertype;
     }
@@ -317,6 +320,16 @@ public class UserEntity implements Serializable {
         this.isVerified = isVerified;
     }
 
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    
+
     public List<ReviewEntity> getReviewsGiven() {
         return reviewsGiven;
     }
@@ -397,12 +410,12 @@ public class UserEntity implements Serializable {
         this.projectsJoined = projectsJoined;
     }
 
-    public List<ProjectEntity> getProjectAdmins() {
-        return projectAdmins;
+    public List<ProjectEntity> getProjectsManaged() {
+        return projectsManaged;
     }
 
-    public void setProjectAdmins(List<ProjectEntity> projectAdmins) {
-        this.projectAdmins = projectAdmins;
+    public void setProjectsManaged(List<ProjectEntity> projectsManaged) {
+        this.projectsManaged = projectsManaged;
     }
 
     public List<UserEntity> getFollowing() {

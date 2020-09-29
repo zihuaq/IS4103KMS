@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { NgxPayPalModule } from 'ngx-paypal';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MomentModule } from 'angular2-moment';
@@ -39,9 +38,20 @@ import { FollowRequestsComponent } from './notifications/follow-requests/follow-
 import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
+import { ProjectDetailsComponent } from './project/viewProject/project-details/project-details.component';
 import { CreateNewUserSelectorComponent } from './create-new-user-selector/create-new-user-selector.component';
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
+import { ListFilterPipe } from './project/view-all-project/list-filter.pipe';
+import { EditProjectComponent } from './project/editProject/edit-project/edit-project.component';
+import { EditDetailsTabComponent } from './project/editProject/edit-details-tab/edit-details-tab.component';
+import { MembersTabComponent } from './project/editProject/members-tab/members-tab.component';
+import { ReportProjectComponent } from './project/viewProject/report-project/report-project.component';
+import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
+import { EditHrpTabComponent } from './project/editProject/edit-hrp-tab/edit-hrp-tab.component';
+import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-projects.component';
+import { EditMrpTabComponent } from './project/editProject/edit-mrp-tab/edit-mrp-tab.component';
 import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
+import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
 
 @NgModule({
   declarations: [
@@ -74,9 +84,19 @@ import { AffiliationRequestsComponent } from './notifications/affiliation-reques
     ReportProfileComponent,
     ForgotPasswordComponent,
     CreateNewInstitutionComponent,
+    ProjectDetailsComponent,
     CreateNewUserSelectorComponent,
     SdgInfoComponent,
-    AffiliationRequestsComponent,
+    ListFilterPipe,
+    EditProjectComponent,
+    EditDetailsTabComponent,
+    MembersTabComponent,
+    ReportProjectComponent,
+    ErrorPageComponent,
+    EditHrpTabComponent,
+    ViewOwnProjectsComponent,
+    EditMrpTabComponent,
+    AffiliationRequestsComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +104,6 @@ import { AffiliationRequestsComponent } from './notifications/affiliation-reques
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxPayPalModule,
     GoogleMapsModule,
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,

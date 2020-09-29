@@ -1,28 +1,35 @@
-import {User} from './user';
+import { User } from './user';
+import { Tag } from './tag';
+import { ProjectType } from './project-type.enum';
 
 export class Project {
     projectId: number;
     name: string;
     description: string;
-    startDate: Date;
-    endDate: Date;
+    status: ProjectType;
+    dateCreated: Date;
     country: string;
-    location: string;
-    owner: User;
-    groupMembers: User[];
-    admins: User[];
+    profilePicture: string | ArrayBuffer;
+    projectOwner: User;
+    projectMembers: User[];
+    projectAdmins: User[];
     monetaryFundingRequired: number;
     monetaryFundingObtained: number;
+    sdgs: Tag[];
 
-    constructor(projectId?: number, name?: string, description?: string, startDate?: Date, endDate?: Date, country?: string, location?: string, monetaryFundingRequired?: number, monetaryFundingObtained?: number) {
+    constructor(projectId?: number, name?: string, description?: string, status?: ProjectType, dateCreated?: Date, country?: string, profilePicture?: string | ArrayBuffer, monetaryFundingRequired?: number, monetaryFundingObtained?: number, projectOwner?: User, projectMembers?: User[], projectAdmins?: User[], sdgs?: Tag[]) {
         this.projectId = projectId;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.status = status;
+        this.dateCreated = dateCreated;
         this.country = country;
-        this.location = location;
-        this.monetaryFundingObtained = this.monetaryFundingObtained;
-        this.monetaryFundingRequired = this.monetaryFundingRequired;
+        this.profilePicture = profilePicture;
+        this.projectOwner = projectOwner;
+        this.projectMembers = projectMembers;
+        this.projectAdmins = projectAdmins;
+        this.monetaryFundingObtained = monetaryFundingObtained;
+        this.monetaryFundingRequired = monetaryFundingRequired;
+        this.sdgs = sdgs;
     }
 }

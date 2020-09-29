@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
+import entity.ProjectEntity;
 import entity.ReportEntity;
 import entity.UserEntity;
 import javax.ejb.Stateless;
@@ -30,6 +31,23 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             em.persist(report);
             em.flush();
             return report;
+        } else {
+            throw new NoResultException("User not found");
+        }
+    }
+    
+    @Override
+    public ReportEntity reportProject (ReportEntity report) throws NoResultException {
+        UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
+        ProjectEntity reportedProject = em.find(ProjectEntity.class, report.getReportedProject().getProjectId());
+        if (reportOwner != null && reportedProject != null) {
+            em.persist(report);
+            em.flush();
+            return report;
+            
+        } else if (reportedProject == null) {
+            throw new NoResultException("Project not found");
+        
         } else {
             throw new NoResultException("User not found");
         }
