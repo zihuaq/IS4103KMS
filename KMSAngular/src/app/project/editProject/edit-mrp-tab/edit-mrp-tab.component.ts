@@ -306,4 +306,9 @@ export class EditMrpTabComponent implements OnInit {
     )
   }
 
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    window.open(url, '_blank');
+  }
+
 }

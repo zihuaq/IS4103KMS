@@ -28,7 +28,7 @@
             <div class="card-body" style="display: block; color: rgb(44, 44, 44);">
                 <p style="margin: 0 7px 0 7px;">
                     <b>Quantity:</b> {{mrp.lackingQuantity}} {{mrp.unit}} (required)<span class="text-muted"> / {{mrp.totalQuantity}} {{mrp.unit}} (total)</span>
-                    <span class="badge badge-secondary float-right"> At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</span>
+                    <span class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</span>
                     <br/>
                     <b>Date:</b> {{mrp.startDate.toString().slice(0,10) | date }} - {{mrp.endDate.toString().slice(0,10) | date }}
                     <br/>  

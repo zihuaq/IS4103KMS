@@ -14,13 +14,18 @@
                     </button>
                 </div>
             </div>
-            <div class="card-body" style="display: block; color: rgb(44, 44, 44);">
+            <div class="card-body" style="display: block;">
                 <p style="margin: 0 7px 0 7px;">
+                    <b>{{mrp.startDate.toString().slice(0,10) | date }} to {{mrp.endDate.toString().slice(0,10) | date }}</b> 
+                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
+                    <br/>
+                    {{mrp.lackingQuantity}} {{mrp.unit}} (required)<span class="text-muted"> / {{mrp.totalQuantity}} {{mrp.unit}} (total)</span>
+                    <br/><!--
                     <b>Quantity:</b> {{mrp.lackingQuantity}} {{mrp.unit}} (required)<span class="text-muted"> / {{mrp.totalQuantity}} {{mrp.unit}} (total)</span>
                     <span class="badge badge-secondary float-right"> At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</span>
                     <br/>
                     <b>Date:</b> {{mrp.startDate.toString().slice(0,10) | date }} - {{mrp.endDate.toString().slice(0,10) | date }}
-                    <br/>  
+                    <br/>  -->
                     <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
                         <div *ngFor="let tag of mrp.tags">
                             <small class="badge badge-info ml-2">{{tag.name}}</small>
