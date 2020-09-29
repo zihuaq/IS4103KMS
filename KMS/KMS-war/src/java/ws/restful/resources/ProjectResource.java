@@ -137,6 +137,8 @@ public class ProjectResource {
             project.getProjectOwner().getSdgs().clear();
             project.getProjectOwner().getFollowRequestMade().clear();
             project.getProjectOwner().getFollowRequestReceived().clear();
+            project.getProjectOwner().getHrpApplied().clear();
+            project.getProjectOwner().getFulfillments().clear();
             for (UserEntity member : project.getProjectMembers()) {
                 member.getGroupsOwned().clear();
                 member.getReviewsGiven().clear();
@@ -155,6 +157,7 @@ public class ProjectResource {
                 member.getFollowRequestMade().clear();
                 member.getFollowRequestReceived().clear();
                 member.getHrpApplied().clear();
+                member.getFulfillments().clear();
             }
             for (UserEntity admin : project.getProjectAdmins()) {
                 admin.getGroupsOwned().clear();
@@ -174,6 +177,7 @@ public class ProjectResource {
                 admin.getFollowRequestMade().clear();
                 admin.getFollowRequestReceived().clear();
                 admin.getHrpApplied().clear();
+                admin.getFulfillments().clear();
             }
             for (ActivityEntity ae : project.getActivities()) {
                 ae.setProject(null);
@@ -183,10 +187,12 @@ public class ProjectResource {
             for (HumanResourcePostingEntity hrp : project.getHumanResourcePostings()) {
                 hrp.setActivity(null);
                 hrp.setProject(null);
+                hrp.getAppliedUsers().clear();
             }
             for (MaterialResourcePostingEntity mrp : project.getMaterialResourcePostings()) {
                 mrp.setActivity(null);
                 mrp.setProject(null);
+                mrp.getFulfillments().clear();
             }
             for (TaskEntity task : project.getTasks()) {
                 task.setProject(null);

@@ -337,6 +337,7 @@ public class UserResource {
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
             user.getHrpApplied().clear();
+            user.getFulfillments().clear();
 
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
@@ -425,6 +426,7 @@ public class UserResource {
             user.getAffiliationRequestReceived().clear();
             user.getAffiliatedUsers().clear();
             user.getHrpApplied().clear();
+            user.getFulfillments().clear();
             user.setPassword("");
 
             return Response.status(Response.Status.OK).entity(user).build();
@@ -600,6 +602,7 @@ public class UserResource {
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
             user.getHrpApplied().clear();
+            user.getFulfillments().clear();
             user.setPassword("");
             return Response.status(200).entity(user).build();
         } catch (UserNotFoundException | NoResultException ex) {
