@@ -17,6 +17,9 @@ export class ProfilePage implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private userService: UserService, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     let profileid = this.activatedRoute.snapshot.params.userid;
     this.authenticationService.getCurrentUser().then((user: User) => {
       this.loggedInUserId = user.userId
@@ -26,6 +29,11 @@ export class ProfilePage implements OnInit {
           this.profile = data;
           this.loggedInUser = data;
           console.log(data);
+          this.userService
+            .getSkillsForProfile(this.profile.userId)
+            .subscribe((skills) => {
+              this.profile = { ...this.profile, skills };
+            });
         });
       } else {
         this.userService
@@ -38,6 +46,11 @@ export class ProfilePage implements OnInit {
         this.userService.getUser(profileid).subscribe((data: User) => {
           console.log(data)
           this.profile = data;
+          this.userService
+            .getSkillsForProfile(this.profile.userId)
+            .subscribe((skills) => {
+              this.profile = { ...this.profile, skills };
+            });
         });
       }
     });

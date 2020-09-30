@@ -31,8 +31,21 @@ export class AuthenticationService {
     })
   }
 
-  async isAuthenticated() {
-    return this.authenticationState.value
+  isAuthenticated() {
+    return this.storage.get(LOGGED_IN_USER).then(
+      (res) => {
+        console.log(res)
+        if (res) {
+          return true
+        } else {
+          return false
+        }
+      },
+      (err) => {
+        console.log(err)
+        return false
+      }
+    )
   }
 
   getCurrentUser(): Promise<User> {
