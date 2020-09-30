@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/classes/user';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
-import { AuthenticationService } from "./../../services/authentication.service";
 import { forkJoin } from 'rxjs';
 
+
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.page.html',
-  styleUrls: ['./profile.page.scss'],
+  selector: 'app-view-basic-info',
+  templateUrl: './view-basic-info.page.html',
+  styleUrls: ['./view-basic-info.page.scss'],
 })
-export class ProfilePage implements OnInit {
+export class ViewBasicInfoPage implements OnInit {
   profile: User;
   loggedInUser: User;
   loggedInUserId: number;
@@ -26,27 +27,17 @@ export class ProfilePage implements OnInit {
       this.loggedInUserId = user.userId
       if (!profileid || profileid == this.loggedInUserId) {
         profileid = this.loggedInUserId;
-        forkJoin([
-          this.userService.getUser(profileid),
-          this.userService.getSkillsForProfile(profileid),
-          this.userService.getSDGsForProfile(profileid)
-        ]).subscribe((result) => {
-          this.profile = result[0];
-          this.loggedInUser = result[0];
-          this.profile.skills = result[1];
-          this.profile.sdgs = result[2];
-        });
+        this.userService.getUser(profileid).subscribe((data) => {
+          this.profile = data;
+          this.loggedInUser = data;
+        })
       } else {
         forkJoin([
           this.userService.getUser(this.loggedInUserId.toString()),
-          this.userService.getUser(profileid),
-          this.userService.getSkillsForProfile(profileid),
-          this.userService.getSDGsForProfile(profileid)
+          this.userService.getUser(profileid)
         ]).subscribe((result) => {
           this.loggedInUser = result[0];
           this.profile = result[1];
-          this.profile.skills = result[2];
-          this.profile.sdgs = result[3];
         });
       }
     });

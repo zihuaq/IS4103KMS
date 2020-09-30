@@ -21,6 +21,9 @@ export class AddSkillsPage implements OnInit {
   constructor(private tagService: TagService, private authenticationService: AuthenticationService, private userService: UserService) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     this.tagService.getAllSkillTags().subscribe((response) => {
       this.skillTags = response;
       this.authenticationService.getCurrentUser().then((user: User) => {
@@ -31,6 +34,7 @@ export class AddSkillsPage implements OnInit {
             this.loggedInUser = { ...this.loggedInUser, skills };
           });
         this.skillTags = this.skillTags.filter(tag => !this.loggedInUser.skills.includes(tag));
+        console.log("add skills page" + this.skillTags)
       });
     });
   }

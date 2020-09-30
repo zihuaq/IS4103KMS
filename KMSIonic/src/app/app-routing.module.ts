@@ -92,7 +92,15 @@ const routes: Routes = [
         (m) => m.ViewSkillsPageModule
       ),
     canActivate: [AuthGuard]
+  },  {
+    path: 'view-basic-info',
+    loadChildren: () => import('./pages/view-basic-info/view-basic-info.module').then( m => m.ViewBasicInfoPageModule)
+  },
+  {
+    path: 'edit-basic-info',
+    loadChildren: () => import('./pages/edit-basic-info/edit-basic-info.module').then( m => m.EditBasicInfoPageModule)
   }
+
 ]
 
 @NgModule({
