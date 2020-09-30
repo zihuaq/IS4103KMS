@@ -10,6 +10,10 @@ const routes: Routes = [
     component: SearchUsersPage
   },
   {
+    path: "details/:searchTerm",
+    component: DetailedSearchPage
+  },
+  {
     path: "details",
     component: DetailedSearchPage
   }

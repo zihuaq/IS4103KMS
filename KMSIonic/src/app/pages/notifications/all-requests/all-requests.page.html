@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="requestType == 'all-follow'">Follow Requests</ion-title>
+    <ion-title *ngIf="requestType == 'all-affiliation'">Affiliation Requests</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-virtual-scroll *ngIf="requestType == 'all-follow'" [items]="followRequests">
+    <ion-item *virtualItem="let followRequest" lines="none" (click)="goToProfile(followRequest.from)">
+      <ion-avatar slot="start">
+        <img *ngIf="!followRequest.from.profilePicture"
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          alt="User profile Picture">
+        <img *ngIf="followRequest.from.profilePicture" [src]="followRequest.from.profilePicture"
+          alt="User profile Picture">
+      </ion-avatar>
+      <ion-label>
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-text>
+                <h6>{{followRequest.from.firstName}}
+                  {{followRequest.from.lastName}} wants to follow you</h6>
+              </ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button (click)="acceptFollow(followRequest.to.userId,followRequest.from.userId)">
+                Accept
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button (click)="rejectFollow(followRequest.to.userId,followRequest.from.userId)">
+                Reject
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+    </ion-item>
+  </ion-virtual-scroll>
+
+  <ion-virtual-scroll *ngIf="requestType == 'all-affiliation'" [items]="affiliationRequests">
+    <ion-item *virtualItem="let affiliationRequest" lines="none" (click)="goToProfile(affiliationRequest.from)">
+      <ion-avatar slot="start">
+        <img *ngIf="!affiliationRequest.from.profilePicture"
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          alt="User profile Picture">
+        <img *ngIf="affiliationRequest.from.profilePicture" [src]="affiliationRequest.from.profilePicture"
+          alt="User profile Picture">
+      </ion-avatar>
+      <ion-label>
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="12" class="ion-no-padding">
+              <ion-text>
+                <h6>{{affiliationRequest.from.firstName}}
+                  {{affiliationRequest.from.lastName}} wants to follow you</h6>
+              </ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button (click)="acceptFollow(affiliationRequest.to.userId,affiliationRequest.from.userId)">
+                Accept
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button (click)="rejectFollow(affiliationRequest.to.userId,affiliationRequest.from.userId)">
+                Reject
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+    </ion-item>
+  </ion-virtual-scroll>
+</ion-content>

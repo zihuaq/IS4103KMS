@@ -12,13 +12,13 @@
         <img *ngIf="user.profilePicture" [src]="user.profilePicture">
       </ion-avatar>
       <ion-label>
-        <ion-text style="font-size: large;">{{user.firstName}} {{user.lastName}}</ion-text>
-        <ion-text style="font-size: small;" color="medium"> · {{user.email}}</ion-text>
+        <ion-text class="ion-text-wrap" style="font-size: large;">{{user.firstName}} {{user.lastName}}</ion-text>
+        <ion-text class="ion-text-wrap" style="font-size: small;" color="medium"> · {{user.email}}</ion-text>
       </ion-label>
     </ion-item>
 
   </ion-virtual-scroll>
-  <ion-item [routerLink]="['/search-users/details']" [state]="filteredUsers" routerDirection="forward">
+  <ion-item [routerLink]="['/search-users/details',searchTerm?searchTerm:'']" routerDirection="forward">
     <a>See all results</a>
   </ion-item>
 </ion-content>

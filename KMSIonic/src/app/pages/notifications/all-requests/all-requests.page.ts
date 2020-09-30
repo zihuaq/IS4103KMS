@@ -1,46 +1,47 @@
-import { AffiliationRequest } from "./../../classes/affiliation-request"
-import { User } from "./../../classes/user"
-import { FollowRequest } from "./../../classes/follow-request"
-import { AuthenticationService } from "src/app/services/authentication.service"
-import { UserService } from "./../../services/user.service"
+import { AffiliationRequest } from "./../../../classes/affiliation-request"
+import { User } from "./../../../classes/user"
+import { FollowRequest } from "./../../../classes/follow-request"
 import { Component, OnInit } from "@angular/core"
-import { Router } from "@angular/router"
-
+import { ActivatedRoute, Router } from "@angular/router"
+import { Location } from "@angular/common"
+import { UserService } from "./../../../services/user.service"
+import { AuthenticationService } from "./../../../services/authentication.service"
 @Component({
-  selector: "app-notifications",
-  templateUrl: "./notifications.page.html",
-  styleUrls: ["./notifications.page.scss"]
+  selector: "app-all-requests",
+  templateUrl: "./all-requests.page.html",
+  styleUrls: ["./all-requests.page.scss"]
 })
-export class NotificationsPage implements OnInit {
+export class AllRequestsPage implements OnInit {
   loggedInUserId: number
   followRequests: FollowRequest[]
-  preliminaryFollowRequests: FollowRequest[]
   affiliationRequests: AffiliationRequest[]
-  preliminaryAffiliationRequests: AffiliationRequest[]
+  requestType: string //all-follow, all-affiliation
   constructor(
-    private userService: UserService,
+    private router: Router,
+    private location: Location,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private userService: UserService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.requestType = this.activatedRoute.snapshot.url[0].path
     this.authenticationService.getCurrentUser().then((user) => {
       this.loggedInUserId = user.userId
-      this.userService
-        .getFollowRequestReceived(this.loggedInUserId)
-        .subscribe((followRequests) => {
-          this.followRequests = followRequests
-          this.preliminaryFollowRequests = this.followRequests.slice(0, 3)
-        })
-      this.userService
-        .getAffiliationRequestReceived(this.loggedInUserId)
-        .subscribe((affiliationRequests) => {
-          this.affiliationRequests = affiliationRequests
-          this.preliminaryAffiliationRequests = this.affiliationRequests.slice(
-            0,
-            3
-          )
-        })
+      if (this.requestType == "all-follow") {
+        this.userService
+          .getFollowRequestReceived(this.loggedInUserId)
+          .subscribe((followRequests) => {
+            console.log(followRequests)
+            this.followRequests = followRequests
+          })
+      } else if (this.requestType == "all-affiliation") {
+        this.userService
+          .getAffiliationRequestReceived(this.loggedInUserId)
+          .subscribe((affiliationRequests) => {
+            this.affiliationRequests = affiliationRequests
+          })
+      }
     })
   }
 
@@ -55,7 +56,6 @@ export class NotificationsPage implements OnInit {
         .getFollowRequestReceived(this.loggedInUserId)
         .subscribe((followRequests) => {
           this.followRequests = followRequests
-          this.preliminaryFollowRequests = this.followRequests.slice(0, 3)
         })
     })
   }
@@ -67,7 +67,6 @@ export class NotificationsPage implements OnInit {
         .getFollowRequestReceived(this.loggedInUserId)
         .subscribe((followRequests) => {
           this.followRequests = followRequests
-          this.preliminaryFollowRequests = this.followRequests.slice(0, 3)
         })
     })
   }
@@ -79,10 +78,6 @@ export class NotificationsPage implements OnInit {
         .getAffiliationRequestReceived(this.loggedInUserId)
         .subscribe((affiliationRequests) => {
           this.affiliationRequests = affiliationRequests
-          this.preliminaryAffiliationRequests = this.affiliationRequests.slice(
-            0,
-            3
-          )
         })
     })
   }
@@ -94,10 +89,6 @@ export class NotificationsPage implements OnInit {
         .getAffiliationRequestReceived(this.loggedInUserId)
         .subscribe((affiliationRequests) => {
           this.affiliationRequests = affiliationRequests
-          this.preliminaryAffiliationRequests = this.affiliationRequests.slice(
-            0,
-            3
-          )
         })
     })
   }

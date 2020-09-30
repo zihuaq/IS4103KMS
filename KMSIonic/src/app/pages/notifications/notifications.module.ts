@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { AllRequestsPage } from "./all-requests/all-requests.page"
+import { NgModule } from "@angular/core"
+import { CommonModule } from "@angular/common"
+import { FormsModule } from "@angular/forms"
 
-import { IonicModule } from '@ionic/angular';
+import { IonicModule } from "@ionic/angular"
 
-import { NotificationsPageRoutingModule } from './notifications-routing.module';
+import { NotificationsPageRoutingModule } from "./notifications-routing.module"
 
-import { NotificationsPage } from './notifications.page';
+import { NotificationsPage } from "./notifications.page"
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { NotificationsPage } from './notifications.page';
     IonicModule,
     NotificationsPageRoutingModule
   ],
-  declarations: [NotificationsPage]
+  declarations: [NotificationsPage, AllRequestsPage]
 })
 export class NotificationsPageModule {}

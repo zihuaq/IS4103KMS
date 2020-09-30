@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-searchbar showCancelButton="always" (click)="goBack()" (ionCancel)="goBack()">
+  <ion-searchbar showCancelButton="always" (click)="goBack()" (ionCancel)="goBack()" #searchBar>
   </ion-searchbar>
 </ion-header>
 <ion-content>
@@ -11,11 +11,11 @@
         <img *ngIf="user.profilePicture" [src]="user.profilePicture">
       </ion-avatar>
       <ion-grid>
-        <ion-row>
+        <ion-row style="height: 35.3px;">
           <ion-col class="ion-no-padding">
             <ion-label position="stacked">
-              <ion-text style="font-size: 22px">{{user.firstName}} {{user.lastName}}</ion-text>
-              <ion-text style="font-size: small !important;" color="medium"> · {{user.email}}</ion-text>
+              <ion-text class="ion-text-wrap" style="font-size: 22px">{{user.firstName}} {{user.lastName}}</ion-text>
+              <!-- <ion-text style="font-size: small !important;" color="medium"> · {{user.email}}</ion-text> -->
             </ion-label>
           </ion-col>
           <ion-col class="ion-no-padding" *ngIf="loggedInUserFollowing && loggedInUserFollowRequestMade">
@@ -47,6 +47,13 @@
         <ion-row>
           <ion-col class="ion-no-padding">
             <ion-label>
+              <ion-text class="ion-text-wrap" style="font-size: small;">{{user.email}}</ion-text>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="ion-no-padding">
+            <ion-label>
               <ion-text style="font-size: small;">{{user.followers.length}} Followers</ion-text>
             </ion-label>
           </ion-col>
@@ -58,13 +65,13 @@
             </ion-label>
           </ion-col>
         </ion-row>
-        <ion-row>
+        <!-- <ion-row>
           <ion-col class="ion-no-padding">
             <ion-text *ngIf="user.sdgs.length == 0" style="font-size: small;">User has no SDG indicated</ion-text>
             <ion-label *ngIf="user.sdgs.length > 0">Interested SDG</ion-label>
             <ion-badge *ngFor="let sdg of user.sdgs" color="primary">{{sdg}}</ion-badge>
           </ion-col>
-        </ion-row>
+        </ion-row> -->
       </ion-grid>
     </ion-item>
   </ion-virtual-scroll>
