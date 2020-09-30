@@ -38,6 +38,12 @@ export class AppComponent implements OnInit {
       title: "SDG Info",
       url: "/sdg-info",
       icon: "information-circle"
+    },
+    {
+      title: "Log Out",
+      click:"logout()", 
+      url: "/login",
+      icon:"log-out"
     }
   ]
 
@@ -55,21 +61,33 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
-    })
+      this.authService.authenticationState.subscribe(state=> {
+        //console.log(state + "test");
+         console.log("Auth changed: ",  state)
+         if (state){
+           this.router.navigate(["index"])
+         } else {
+           this.router.navigate(["login"])
+         }
+       })
+     })
+   }
+
+  async ngOnInit() {}
+
+  logout(){
+    this.authService.logout();
+    this.authService.authenticationState.next(false);
   }
 
-  async ngOnInit() {
-    this.checkLoginStatus()
-  }
-
-  checkLoginStatus() {
-    return this.authService.authenticationState.subscribe((state) => {
-      console.log("Auth changed: ", state)
-      if (state) {
-        this.router.navigate(["index"])
-      } else {
-        this.router.navigate(["login"])
-      }
-    })
-  }
+  // checkLoginStatus() {
+  //   return this.authService.authenticationState.subscribe((state) => {
+  //     console.log("Auth changed: ", state)
+  //     if (state) {
+  //       this.router.navigate(["index"])
+  //     } else {
+  //       this.router.navigate(["login"])
+  //     }
+  //   })
+  // }
 }

@@ -11,6 +11,7 @@ const LOGGED_IN_USER = "loggedInUser"
 })
 export class AuthenticationService {
   authenticationState = new BehaviorSubject(false)
+
   constructor(private storage: Storage, private plt: Platform) {
     this.plt.ready().then(() => {
       this.checkToken()
@@ -28,6 +29,7 @@ export class AuthenticationService {
   logout() {
     return this.storage.remove(LOGGED_IN_USER).then(() => {
       this.authenticationState.next(false)
+      this.authenticationState = new BehaviorSubject(false)
     })
   }
 
@@ -44,7 +46,7 @@ export class AuthenticationService {
   checkToken() {
     return this.storage.get(LOGGED_IN_USER).then((res) => {
       if (res) {
-        this.authenticationState.next(true)
+        this.authenticationState.next(false)
       }
     })
   }
