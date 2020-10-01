@@ -1,8 +1,6 @@
-import { Component, EventEmitter, Input, NgModule, OnInit, Output, Pipe, PipeTransform } from '@angular/core';
-import { SelectMultipleControlValueAccessor } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { AppComponent } from 'src/app/app.component';
 import { ProjectType } from 'src/app/classes/project-type.enum';
 import { Tag } from 'src/app/classes/tag';
 import { User } from 'src/app/classes/user';

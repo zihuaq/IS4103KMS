@@ -24,10 +24,13 @@ export class OverviewComponent implements OnInit {
   isAffiliated: boolean;
   hasSentAffiliationRequest: boolean;
   UserType = UserType;
-  
+
   constructor(private userService: UserService) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     this.getFollowersFollowingAndAffiliatedUsers();
   }
 
@@ -77,30 +80,29 @@ export class OverviewComponent implements OnInit {
     this.userService.sendAffiliateReqToUser(
       this.loggedInUser.userId,
       this.profile.userId
-    )
-      .subscribe(
-        (affiliationRequest: AffiliationRequest) => {
-          if (affiliationRequest) {
-            $(document).Toasts('create', {
-              class: 'bg-success',
-              title: 'Sent Affiliation Request',
-              autohide: true,
-              delay: 2500,
-              body: 'Affiliation Request sent successfully',
-            });
-          }
-          this.getFollowersFollowingAndAffiliatedUsers();
-        },
-        (err: any) => {
+    ).subscribe(
+      (affiliationRequest: AffiliationRequest) => {
+        if (affiliationRequest) {
           $(document).Toasts('create', {
-            class: 'bg-danger',
-            title: 'Error',
+            class: 'bg-success',
+            title: 'Sent Affiliation Request',
             autohide: true,
             delay: 2500,
-            body: err,
+            body: 'Affiliation Request sent successfully',
           });
         }
-      );
+        this.getFollowersFollowingAndAffiliatedUsers();
+      },
+      (err: any) => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: err,
+        });
+      }
+    );
   }
 
   removeAffiliation() {

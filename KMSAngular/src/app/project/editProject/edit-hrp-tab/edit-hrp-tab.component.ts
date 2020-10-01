@@ -115,15 +115,22 @@ export class EditHrpTabComponent implements OnInit {
   createHrp(hrpForm: NgForm) {
     this.selectedTagNames = $('#hrpselect2').val();
     this.tagIdsSelected = [];
-    if (this.selectedTagNames.length == 0) {
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Unable to submit skill tags',
-        autohide: true,
-        delay: 2500,
-        body: 'Please select at least one skill tags',
+    // if (this.selectedTagNames.length == 0) {
+    //   $(document).Toasts('create', {
+    //     class: 'bg-warning',
+    //     title: 'Unable to submit skill tags',
+    //     autohide: true,
+    //     delay: 2500,
+    //     body: 'Please select at least one skill tags',
+    //   });
+    //   return;
+    // }
+    if (this.selectedTagNames.length > 0) {
+      this.tags.forEach((element) => {
+        if (this.selectedTagNames.includes(element.name)) {
+          this.tagIdsSelected.push(element.tagId);
+        }
       });
-      return;
     }
     this.tags.forEach((element) => {
       if (this.selectedTagNames.includes(element.name)) {
@@ -141,8 +148,6 @@ export class EditHrpTabComponent implements OnInit {
       return;
     }
     if (hrpForm.valid) {
-      this.newHrp.lackingSlots = this.newHrp.totalSlots;
-      this.newHrp.obtainedSlots = 0;
       this.newHrp.startDate = new Date(this.newHrp.startDate);
       this.newHrp.endDate = new Date(this.newHrp.endDate);
       this.hrpService.createNewHrp(this.newHrp, this.projectId, this.tagIdsSelected).subscribe(

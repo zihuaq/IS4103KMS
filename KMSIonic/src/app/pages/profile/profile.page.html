@@ -8,10 +8,12 @@
 </ion-header>
 
 <ion-content>
-  <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-  (userChanged)="loggedInUser=$event"></app-overview>
-  <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-  (userchanged)="loggedInUser=$event"></app-material-resource-available>
-  <app-skills [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-  (userchanged)="loggedInUser=$event"></app-skills>
+  <div *ngIf ="profile && loggedInUser">
+    <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+    (userChanged)="loggedInUser=$event"></app-overview>
+    <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+    (userchanged)="loggedInUser=$event"></app-material-resource-available>
+    <app-skills [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+    (userchanged)="loggedInUser=$event"></app-skills>
+  </div>
 </ion-content>

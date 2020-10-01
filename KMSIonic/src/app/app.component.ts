@@ -58,18 +58,5 @@ export class AppComponent implements OnInit {
     })
   }
 
-  async ngOnInit() {
-    this.checkLoginStatus()
-  }
-
-  checkLoginStatus() {
-    return this.authService.authenticationState.subscribe((state) => {
-      console.log("Auth changed: ", state)
-      if (state) {
-        this.router.navigate(["index"])
-      } else {
-        this.router.navigate(["login"])
-      }
-    })
-  }
+  ngOnInit() {}
 }

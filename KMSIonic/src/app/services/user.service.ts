@@ -355,4 +355,22 @@ export class UserService {
       .get<any>(this.baseUrl + "/verifyEmail?email=" + email + "&uuid=" + uuid)
       .pipe(catchError(this.handleError))
   }
+
+  getProjectsOwned(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /projectsOwned/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getProjectsJoined(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /viewOwnProjects/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getProjectsManaged(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /projectsManaged/ + userId)
+      .pipe(catchError(this.handleError));
+  }
 }

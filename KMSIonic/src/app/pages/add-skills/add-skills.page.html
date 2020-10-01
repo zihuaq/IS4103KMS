@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>Skills</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button (click)="save()" [routerLink]="['/view-skills']">
         Save
       </ion-button>
     </ion-buttons>
@@ -31,7 +31,7 @@
       <ion-item *ngFor="let tag of chosenTags">
         <ion-chip color="tertiary">
           <ion-label>{{tag.name}} </ion-label>
-          <ion-icon name="close-outline"></ion-icon>
+          <ion-icon name="close-outline" (click)="removeTag(tag)"></ion-icon>
         </ion-chip>
       </ion-item>
     </ion-list>

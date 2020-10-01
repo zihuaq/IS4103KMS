@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { User } from 'src/app/classes/user';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-view-skills',
@@ -6,10 +10,61 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./view-skills.page.scss'],
 })
 export class ViewSkillsPage implements OnInit {
+  profile: User;
+  loggedInUser: User;
+  loggedInUserId: number;
+  isEdit: boolean;
 
-  constructor() { }
+  constructor(private activatedRoute: ActivatedRoute,
+    private userService: UserService, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
   }
 
+  ionViewWillEnter() {
+    let profileid = this.activatedRoute.snapshot.params.userid;
+    this.authenticationService.getCurrentUser().then((user: User) => {
+      this.loggedInUserId = user.userId
+      if (!profileid || profileid == this.loggedInUserId) {
+        profileid = this.loggedInUserId;
+        this.userService.getUser(profileid).subscribe((data: User) => {
+          this.profile = data;
+          this.loggedInUser = data;
+
+          this.userService
+            .getSkillsForProfile(this.profile.userId)
+            .subscribe((skills) => {
+              this.profile = { ...this.profile, skills };
+            });
+          console.log(data);
+        });
+      } else {
+        this.userService
+          .getUser(this.loggedInUserId.toString())
+          .subscribe((data: User) => {
+            console.log(data)
+            this.loggedInUser = data;
+          });
+
+        this.userService.getUser(profileid).subscribe((data: User) => {
+          console.log(data)
+          this.profile = data;
+
+          this.userService
+            .getSkillsForProfile(this.profile.userId)
+            .subscribe((skills) => {
+              this.profile = { ...this.profile, skills };
+            });
+        });
+      }
+    });
+  }
+
+  onEdit() {
+    this.isEdit = !this.isEdit
+  }
+
+  onSave() {
+
+  }
 }

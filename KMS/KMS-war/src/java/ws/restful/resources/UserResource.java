@@ -18,6 +18,7 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -336,9 +337,22 @@ public class UserResource {
             user.getAffiliatedUsers().clear();
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
-            user.getHrpApplied().clear();
             user.getFulfillments().clear();
-
+            for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
+                hrp.setActivity(null);
+                hrp.getAppliedUsers().clear();
+                if (hrp.getProject() != null) {
+                    hrp.getProject().setProjectOwner(null);
+                    hrp.getProject().getProjectMembers().clear();
+                    hrp.getProject().getProjectAdmins().clear();
+                    hrp.getProject().getActivities().clear();
+                    hrp.getProject().getHumanResourcePostings().clear();
+                    hrp.getProject().getMaterialResourcePostings().clear();
+                    hrp.getProject().getTasks().clear();
+                    hrp.getProject().getPosts().clear();
+                    hrp.getProject().getSdgs().clear();
+                }
+            }
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -693,6 +707,11 @@ public class UserResource {
             temp.setFollowing(getUsersResponse(user.getFollowing()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
+                hrp.setActivity(null);
+                hrp.setProject(null);
+                hrp.getAppliedUsers().clear();
+            }
             temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
