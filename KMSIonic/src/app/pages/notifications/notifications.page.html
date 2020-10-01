@@ -8,6 +8,15 @@
 </ion-header>
 
 <ion-content>
+  <ion-item lines="none">
+    <ion-label class="ion-text-center">
+      <ion-text
+        *ngIf="preliminaryFollowRequests && preliminaryFollowRequests.length == 0 && preliminaryAffiliationRequests && preliminaryAffiliationRequests.length == 0">
+        You have no notifications
+      </ion-text>
+    </ion-label>
+  </ion-item>
+
   <ion-card *ngIf="preliminaryFollowRequests && preliminaryFollowRequests.length">
     <ion-card-header>
       <ion-card-title>Follow Requests</ion-card-title>
@@ -55,7 +64,7 @@
       </ion-list>
     </ion-card-content>
   </ion-card>
-  <ion-card>
+  <ion-card *ngIf="preliminaryAffiliationRequests && preliminaryAffiliationRequests.length">
     <ion-card-header>
       <ion-card-title>Affiliation Requests</ion-card-title>
     </ion-card-header>

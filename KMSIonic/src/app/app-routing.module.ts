@@ -92,9 +92,20 @@ const routes: Routes = [
         (m) => m.ViewSkillsPageModule
       ),
     canActivate: [AuthGuard]
-  },  {
-    path: 'view-basic-info',
-    loadChildren: () => import('./pages/view-basic-info/view-basic-info.module').then( m => m.ViewBasicInfoPageModule)
+  },
+  {
+    path: "view-users",
+    loadChildren: () =>
+      import("./pages/view-users/view-users.module").then(
+        (m) => m.ViewUsersPageModule
+      )
+  },
+  {
+    path: "view-basic-info",
+    loadChildren: () =>
+      import("./pages/view-basic-info/view-basic-info.module").then(
+        (m) => m.ViewBasicInfoPageModule
+      )
   },
   {
     path: 'edit-basic-info',
@@ -108,7 +119,6 @@ const routes: Routes = [
     path: 'add-sdgs',
     loadChildren: () => import('./pages/add-sdgs/add-sdgs.module').then( m => m.AddSdgsPageModule)
   }
-
 ]
 
 @NgModule({

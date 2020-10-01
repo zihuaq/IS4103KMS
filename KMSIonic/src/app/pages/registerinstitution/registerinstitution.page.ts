@@ -25,7 +25,7 @@ export class RegisterinstitutionPage implements OnInit {
   constructor(
     private userService: UserService,
     public alertController: AlertController,
-    private route: Router
+    private router: Router
   ) {
     this.newUser = new User()
   }
@@ -42,7 +42,7 @@ export class RegisterinstitutionPage implements OnInit {
     await alert.present()
     let result = await alert.onDidDismiss()
     console.log(result)
-    this.route.navigate(["/login"])
+    this.router.navigate(["/login"])
   }
 
   onCreateUser(userRegistrationForm: NgForm) {
@@ -76,6 +76,6 @@ export class RegisterinstitutionPage implements OnInit {
     }
   }
   directInd() {
-    this.route.navigate(["/register"])
+    this.router.navigate(["/register"])
   }
 }

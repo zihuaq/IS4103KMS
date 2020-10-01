@@ -18,7 +18,7 @@ export class LoginPage implements OnInit {
   errorMessage: string
 
   constructor(
-    private route: Router,
+    private router: Router,
     private userService: UserService,
     public authenticationService: AuthenticationService
   ) {}
@@ -26,11 +26,11 @@ export class LoginPage implements OnInit {
   ngOnInit(): void {}
 
   userSelector() {
-    this.route.navigate(["/userselector"])
+    this.router.navigate(["/userselector"])
   }
 
   forgetPassword() {
-    this.route.navigate(["/forgetpassword"])
+    this.router.navigate(["/forgetpassword"])
   }
 
   login(loginForm: NgForm) {
@@ -48,7 +48,7 @@ export class LoginPage implements OnInit {
             this.authenticationService.login(user).then(() => {
               this.loginError = false
               this.isLoading = false
-              this.route.navigate([""])
+              this.router.navigate([""])
             })
           } else {
             this.isLoading = false
