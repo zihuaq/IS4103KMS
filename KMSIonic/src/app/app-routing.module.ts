@@ -44,63 +44,71 @@ const routes: Routes = [
   {
     path: "profile",
     loadChildren: () =>
-      import("./pages/profile/profile.module").then((m) => m.ProfilePageModule)
-    // canActivate: [AuthGuard]
+      import("./pages/profile/profile.module").then((m) => m.ProfilePageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: "search-users",
     loadChildren: () =>
       import("./pages/search-users/search-users.module").then(
         (m) => m.SearchUsersPageModule
-      )
-    // canActivate: [AuthGuard]
+      ),
+    canActivate: [AuthGuard]
   },
   {
     path: "notifications",
     loadChildren: () =>
       import("./pages/notifications/notifications.module").then(
         (m) => m.NotificationsPageModule
-      )
-    // canActivate: [AuthGuard]
+      ),
+    canActivate: [AuthGuard]
   },
   {
     path: "sdg-info",
     loadChildren: () =>
       import("./pages/sdg-info/sdg-info.module").then(
         (m) => m.SdgInfoPageModule
-      )
-    // canActivate: [AuthGuard]
+      ),
+    canActivate: [AuthGuard]
   },
   {
     path: "index",
     loadChildren: () =>
-      import("./pages/index/index.module").then((m) => m.IndexPageModule)
-    // canActivate: [AuthGuard]
+      import("./pages/index/index.module").then((m) => m.IndexPageModule),
+    canActivate: [AuthGuard]
   },
   {
-    path: "addskills",
+    path: "add-skills",
     loadChildren: () =>
       import("./pages/add-skills/add-skills.module").then(
         (m) => m.AddSkillsPageModule
-      )
-    // canActivate: [AuthGuard]
+      ),
+    canActivate: [AuthGuard]
   },
   {
     path: "view-skills",
     loadChildren: () =>
       import("./pages/view-skills/view-skills.module").then(
         (m) => m.ViewSkillsPageModule
-      )
-    // canActivate: [AuthGuard]
-  },  {
+      ),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'view-all-project',
-    loadChildren: () => import('./pages/project/view-all-project/view-all-project.module').then( m => m.ViewAllProjectPageModule)
+    loadChildren: () => 
+    import('./pages/project/view-all-project/view-all-project.module').then( 
+        (m) => m.ViewAllProjectPageModule
+      ),
+      canActivate: [AuthGuard]
   },
   {
     path: 'create-new-project',
-    loadChildren: () => import('./pages/project/create-new-project/create-new-project.module').then( m => m.CreateNewProjectPageModule)
+    loadChildren: () => 
+    import('./pages/project/create-new-project/create-new-project.module').then( 
+      (m) => m.CreateNewProjectPageModule
+    ),
+    canActivate: [AuthGuard]
   }
-
 ]
 
 @NgModule({
