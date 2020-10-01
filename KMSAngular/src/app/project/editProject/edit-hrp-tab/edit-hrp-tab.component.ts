@@ -115,15 +115,22 @@ export class EditHrpTabComponent implements OnInit {
   createHrp(hrpForm: NgForm) {
     this.selectedTagNames = $('#hrpselect2').val();
     this.tagIdsSelected = [];
-    if (this.selectedTagNames.length == 0) {
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Unable to submit skill tags',
-        autohide: true,
-        delay: 2500,
-        body: 'Please select at least one skill tags',
+    // if (this.selectedTagNames.length == 0) {
+    //   $(document).Toasts('create', {
+    //     class: 'bg-warning',
+    //     title: 'Unable to submit skill tags',
+    //     autohide: true,
+    //     delay: 2500,
+    //     body: 'Please select at least one skill tags',
+    //   });
+    //   return;
+    // }
+    if (this.selectedTagNames.length > 0) {
+      this.tags.forEach((element) => {
+        if (this.selectedTagNames.includes(element.name)) {
+          this.tagIdsSelected.push(element.tagId);
+        }
       });
-      return;
     }
     this.tags.forEach((element) => {
       if (this.selectedTagNames.includes(element.name)) {

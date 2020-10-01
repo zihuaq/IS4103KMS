@@ -337,9 +337,22 @@ public class UserResource {
             user.getAffiliatedUsers().clear();
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
-            user.getHrpApplied().clear();
             user.getFulfillments().clear();
-
+            for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
+                hrp.setActivity(null);
+                hrp.getAppliedUsers().clear();
+                if (hrp.getProject() != null) {
+                    hrp.getProject().setProjectOwner(null);
+                    hrp.getProject().getProjectMembers().clear();
+                    hrp.getProject().getProjectAdmins().clear();
+                    hrp.getProject().getActivities().clear();
+                    hrp.getProject().getHumanResourcePostings().clear();
+                    hrp.getProject().getMaterialResourcePostings().clear();
+                    hrp.getProject().getTasks().clear();
+                    hrp.getProject().getPosts().clear();
+                    hrp.getProject().getSdgs().clear();
+                }
+            }
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
