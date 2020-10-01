@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="profile && loggedInUser">
+      <div class="ion-text-wrap">
+        About {{profile.firstName}} {{profile.lastName}}
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="profile">
+  <ion-button expand="block" color="dark" *ngIf="profile.userId == loggedInUserId" routerLink="/edit-basic-info/{{profile.userId}}">Edit Basic Information</ion-button>
+  <ion-card>
+    <ion-item>
+      <strong>
+        <ion-icon name="calendar-outline"></ion-icon> Joined Date
+      </strong>
+      <div class="text-muted ion-text-right">{{profile.joinedDate | date}}</div>
+    </ion-item>
+    <ion-item>
+      <strong>
+        <ion-icon name="body-outline"></ion-icon> Gender
+      </strong>
+      <div class="text-muted ion-text-right">{{profile.gender}}</div>
+    </ion-item>
+    <ion-item>
+      <strong>
+        <ion-icon name="today-sharp"></ion-icon> Date of Birth
+      </strong>
+      <div class="text-muted ion-text-right">{{profile.dob | date}}</div>
+    </ion-item>
+  </ion-card>
+</ion-content>

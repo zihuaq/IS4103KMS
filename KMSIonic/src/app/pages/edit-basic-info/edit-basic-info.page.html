@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Edit Basic Information</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="loggedInUser">
+  <ion-card>
+    <ion-card-header>
+      <strong> Edit Basic Information </strong>
+    </ion-card-header>
+    <ion-card-content>
+      <form class="form-horizontal" (ngSubmit)="onEditProfile(editForm)" #editForm="ngForm">
+        <ion-grid>
+          <ion-item>
+            <ion-label position="stacked">First Name</ion-label>
+            <ion-input type="text" class="form-control" id="inputFirstName" placeholder="First Name" required
+              [ngModel]="loggedInUser.firstName" name="firstName"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Last Name</ion-label>
+            <ion-input type="text" class="form-control" id="inputLastName" placeholder="Last Name" required
+              [ngModel]="loggedInUser.lastName" name="lastName"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input type="email" class="form-control" id="inputEmail" placeholder="Email" required
+              [ngModel]="loggedInUser.email" name="email" #inputEmail="ngModel" email></ion-input>
+            <span class="help-block" *ngIf="!inputEmail.valid && inputEmail.touched">Please enter a valid email!</span>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Date of Birth</ion-label>
+            <ion-datetime required [ngModel]="loggedInUser.dob | date" name="dob"
+              placeholder="Select Date" max="2020-09"></ion-datetime>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked" for="gender">Gender</ion-label>
+            <ion-radio-group name="gender" [ngModel]="loggedInUser.gender" required>
+              <ion-list>
+                <ion-item *ngFor="let gender of genders">
+                  <ion-label>{{gender}}</ion-label>
+                  <ion-radio slot="start" [value]="gender"></ion-radio>
+                </ion-item>
+              </ion-list>
+            </ion-radio-group>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Privacy Settings</ion-label>
+            <ion-select placeholder="Set Privacy Settings" [ngModel]="loggedInUser.accountPrivacySetting"
+              name="privacySettings" required>
+              <ion-select-option *ngFor="let enum of privacySettings | keyvalue">{{enum.value}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <div padding *ngIf="loggedInUser">
+            <ion-button type="submit" [disabled]="editForm.invalid" expand="block" routerLink="/view-basic-info/{{loggedInUser.userId}}"> Save </ion-button>
+          </div>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

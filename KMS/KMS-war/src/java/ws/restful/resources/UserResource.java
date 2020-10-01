@@ -580,25 +580,21 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(UserEntity updatedUser) {
         try {
+            System.out.println("reached update user");
             UserEntity user = userSessionBeanLocal.updateUser(updatedUser);
-            user.getReviewsGiven().clear();
-            user.getReviewsReceived().clear();
-            user.getProjectsOwned().clear();
-            user.getProjectsJoined().clear();
-            user.getProjectsManaged().clear();
-            user.getGroupsJoined().clear();
-            user.getGroupAdmins().clear();
-            user.getPosts().clear();
-            user.getGroupsOwned().clear();
-            user.getBadges().clear();
-            user.getMras().clear();
-            user.getSkills().clear();
-            user.getFollowing().clear();
-            user.getFollowers().clear();
-            user.getFollowRequestMade().clear();
-            user.getFollowRequestReceived().clear();
-            user.setPassword("");
-            return Response.status(200).entity(user).build();
+            System.out.println("got user");
+            UserEntity userResponse = new UserEntity();
+            userResponse.setFirstName(user.getFirstName());
+            userResponse.setLastName(user.getLastName());
+            userResponse.setGender(user.getGender());
+            userResponse.setIsActive(user.getIsActive());
+            userResponse.setDob(user.getDob());
+            userResponse.setEmail(user.getEmail());
+            userResponse.setProfilePicture(user.getProfilePicture());
+            userResponse.setSdgs(user.getSdgs());
+            userResponse.setAccountPrivacySetting(user.getAccountPrivacySetting());
+            System.out.println("userResponse: " + userResponse);
+            return Response.status(200).entity(userResponse).build();
         } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
