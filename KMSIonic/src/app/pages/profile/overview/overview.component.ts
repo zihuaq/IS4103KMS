@@ -6,8 +6,7 @@ import { User } from 'src/app/classes/user';
 import { AccountPrivacySettingEnum } from 'src/app/enum/account-privacy-setting.enum';
 import { UserType } from 'src/app/enum/user-type.enum';
 import { UserService } from 'src/app/services/user.service';
-
-declare var $: any;
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-overview',
@@ -25,12 +24,9 @@ export class OverviewComponent implements OnInit {
   hasSentAffiliationRequest: boolean;
   UserType = UserType;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, public toastController: ToastController) { }
 
   ngOnInit() {
-  }
-
-  ionViewWillEnter() {
     this.getFollowersFollowingAndAffiliatedUsers();
   }
 
@@ -41,26 +37,22 @@ export class OverviewComponent implements OnInit {
         this.loggedInUser.userId.toString()
       )
       .subscribe(
-        (followRequest: FollowRequest) => {
+        async (followRequest: FollowRequest) => {
           if (followRequest) {
-            $(document).Toasts('create', {
-              class: 'bg-success',
-              title: 'Sent Follow Request',
-              autohide: true,
-              delay: 2500,
-              body: 'Follow Request sent successfully',
+            const toast = await this.toastController.create({
+              message: 'Follow Request sent successfully.',
+              duration: 2000
             });
+            toast.present();
           }
           this.getFollowersFollowingAndAffiliatedUsers();
         },
-        (err: any) => {
-          $(document).Toasts('create', {
-            class: 'bg-danger',
-            title: 'Error',
-            autohide: true,
-            delay: 2500,
-            body: err,
+        async (err: any) => {
+          const toast = await this.toastController.create({
+            message: err,
+            duration: 2000
           });
+          toast.present();
         }
       );
   }
@@ -81,26 +73,22 @@ export class OverviewComponent implements OnInit {
       this.loggedInUser.userId,
       this.profile.userId
     ).subscribe(
-      (affiliationRequest: AffiliationRequest) => {
+      async (affiliationRequest: AffiliationRequest) => {
         if (affiliationRequest) {
-          $(document).Toasts('create', {
-            class: 'bg-success',
-            title: 'Sent Affiliation Request',
-            autohide: true,
-            delay: 2500,
-            body: 'Affiliation Request sent successfully',
+          const toast = await this.toastController.create({
+            message: 'Affiliation Request sent successfully.',
+            duration: 2000
           });
+          toast.present();
         }
         this.getFollowersFollowingAndAffiliatedUsers();
       },
-      (err: any) => {
-        $(document).Toasts('create', {
-          class: 'bg-danger',
-          title: 'Error',
-          autohide: true,
-          delay: 2500,
-          body: err,
+      async (err: any) => {
+        const toast = await this.toastController.create({
+          message: err,
+          duration: 2000
         });
+        toast.present();
       }
     );
   }
@@ -143,6 +131,7 @@ export class OverviewComponent implements OnInit {
         return affiliationRequestMade.to.userId;
       })
         .includes(this.profile.userId);
+      console.log("overview" + this.profile)
     });
   }
 }

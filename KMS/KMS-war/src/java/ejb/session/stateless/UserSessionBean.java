@@ -733,6 +733,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.setLastName(updatedUser.getLastName());
         user.setEmail(updatedUser.getEmail());
         user.setDob(updatedUser.getDob());
+        user.setGender(updatedUser.getGender());
         user.setIsActive(updatedUser.getIsActive());
         System.out.println(updatedUser);
         user.setProfilePicture(updatedUser.getProfilePicture());
