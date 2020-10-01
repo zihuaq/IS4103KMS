@@ -131,9 +131,9 @@ export class UserService {
       .pipe(catchError(this.handleError))
   }
 
-  addSDGToProfile(userId: number, sdgTags: Tag[]): Observable<any> {
+  addSDGsToProfile(userId: number, sdgTags: Tag[]): Observable<any> {
     return this.http
-      .put<any>(this.baseUrl + "/addSDG/" + userId, sdgTags, httpOptions)
+      .put<any>(this.baseUrl + "/addSDGs/" + userId, sdgTags, httpOptions)
       .pipe(catchError(this.handleError))
   }
 

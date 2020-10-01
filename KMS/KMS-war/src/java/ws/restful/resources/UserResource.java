@@ -292,6 +292,21 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+    
+    @PUT
+    @Path("/addSDGs/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addSDGsToProfile(@PathParam("userId") Long userId, List<TagEntity> tags) {
+        try {
+             List<TagEntity> updatedSDGs = userSessionBeanLocal.addSDGsToProfile(userId, tags);
+            return Response.status(200).entity(updatedSDGs).build();
+        } catch (NoResultException | DuplicateTagInProfileException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
 
     @PUT
     @Path("/removeSDG/{userId}/{tagId}")

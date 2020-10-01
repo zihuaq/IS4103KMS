@@ -1,28 +1,28 @@
 <ion-card>
   <ion-item>
-    <ion-label>Skills</ion-label>
-    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" [routerLink]="['/view-skills']"> Edit </ion-button>
+    <ion-label>SDGs</ion-label>
+    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" [routerLink]="['/view-sdgs']"> Edit </ion-button>
   </ion-item>
-  <ion-card-content *ngIf="profile.skills.length == 0">
-    No Skills Indicated
+  <ion-card-content *ngIf="profile.sdgs.length == 0">
+    No SDGs Indicated
   </ion-card-content>
   <ion-card-content>
     <div class="d-flex flex-wrap" *ngIf="seeAll">
-      <ion-item *ngFor="let tag of profile.skills" lines="none">
+      <ion-item *ngFor="let tag of profile.sdgs" lines="none">
         <ion-chip color="tertiary">
           <ion-label>{{tag.name}} </ion-label>
         </ion-chip>
       </ion-item>
     </div>
-    <div class="d-flex flex-wrap" *ngIf="!seeAll">
-      <ion-item *ngFor="let tag of top3Skills" lines="none">
+    <div class="d-flex flex-wrap" *ngIf="!seeAll" lines="none">
+      <ion-item *ngFor="let tag of top3SDGs">
         <ion-chip color="tertiary">
           <ion-label>{{tag.name}} </ion-label>
         </ion-chip>
       </ion-item>
     </div>
   </ion-card-content>
-  <ion-footer *ngIf="profile.skills.length>3">
+  <ion-footer *ngIf="profile.sdgs.length>3">
     <ion-grid>
       <ion-row>
         <ion-col size="12" *ngIf="!seeAll">

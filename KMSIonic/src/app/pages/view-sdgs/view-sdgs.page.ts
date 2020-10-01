@@ -6,17 +6,17 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
-  selector: 'app-view-skills',
-  templateUrl: './view-skills.page.html',
-  styleUrls: ['./view-skills.page.scss'],
+  selector: 'app-view-sdgs',
+  templateUrl: './view-sdgs.page.html',
+  styleUrls: ['./view-sdgs.page.scss'],
 })
-export class ViewSkillsPage implements OnInit {
+export class ViewSdgsPage implements OnInit {
   profile: User;
-  displayedSkills: Tag[];
+  displayedSdgs: Tag[];
   loggedInUser: User;
   loggedInUserId: number;
   isEdit: boolean;
-  skillsToRemove: Tag[] = [];
+  sdgsToRemove: Tag[] = [];
 
   constructor(private activatedRoute: ActivatedRoute,
     private userService: UserService, private authenticationService: AuthenticationService) { }
@@ -35,10 +35,10 @@ export class ViewSkillsPage implements OnInit {
           this.loggedInUser = data;
 
           this.userService
-            .getSkillsForProfile(this.profile.userId)
-            .subscribe((skills) => {
-              this.profile = { ...this.profile, skills };
-              this.displayedSkills = skills;
+            .getSDGsForProfile(this.profile.userId)
+            .subscribe((sdgs) => {
+              this.profile = { ...this.profile, sdgs };
+              this.displayedSdgs = sdgs;
             });
           console.log(data);
         });
@@ -55,10 +55,10 @@ export class ViewSkillsPage implements OnInit {
           this.profile = data;
 
           this.userService
-            .getSkillsForProfile(this.profile.userId)
-            .subscribe((skills) => {
-              this.profile = { ...this.profile, skills };
-              this.displayedSkills = skills;
+            .getSDGsForProfile(this.profile.userId)
+            .subscribe((sdgs) => {
+              this.profile = { ...this.profile, sdgs };
+              this.displayedSdgs = sdgs;
             });
         });
       }
@@ -70,20 +70,20 @@ export class ViewSkillsPage implements OnInit {
   }
 
   deleteTag(tag: Tag){
-    this.displayedSkills = this.displayedSkills.filter(element => element.name != tag.name);
-    this.skillsToRemove.push(tag);
+    this.displayedSdgs = this.displayedSdgs.filter(element => element.name != tag.name);
+    this.sdgsToRemove.push(tag);
   }
 
   onSave() {
-    this.skillsToRemove.forEach((element) => {
+    this.sdgsToRemove.forEach((element) => {
       this.userService
       .removeSkillFromProfile(this.profile.userId, element.tagId)
       .subscribe((responsedata) => {
         this.profile.skills = responsedata;
-        this.displayedSkills = responsedata;
+        this.displayedSdgs = responsedata;
       });
     });
-    this.skillsToRemove = []
+    this.sdgsToRemove = []
     this.isEdit = !this.isEdit;
   }
 }

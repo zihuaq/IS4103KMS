@@ -7,6 +7,7 @@ import { AccountPrivacySettingEnum } from 'src/app/enum/account-privacy-setting.
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 import { ToastController } from '@ionic/angular';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-edit-basic-info',
@@ -20,7 +21,7 @@ export class EditBasicInfoPage implements OnInit {
   privacySettings = AccountPrivacySettingEnum;
   genders = ["Male", "Female"];
 
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserService, 
+  constructor(private location: Location, private activatedRoute: ActivatedRoute, private userService: UserService, 
     private authenticationService: AuthenticationService, public toastController: ToastController) { }
 
   ngOnInit() {
@@ -71,6 +72,7 @@ export class EditBasicInfoPage implements OnInit {
             duration: 2000
           });
           toast.present();
+          this.location.back();
         },
         async (err) => {
           const toast = await this.toastController.create({

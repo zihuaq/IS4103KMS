@@ -10,7 +10,8 @@ import { ProfilePage } from './profile.page';
 
 import { OverviewComponent } from './overview/overview.component';
 import { MaterialResourceAvailableComponent } from './material-resource-available/material-resource-available.component';
-import { SkillsComponent } from './skills/skills.component'
+import { SkillsComponent } from './skills/skills.component';
+import { SDGsComponent } from './sdgs/sdgs.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { SkillsComponent } from './skills/skills.component'
     IonicModule,
     ProfilePageRoutingModule
   ],
-  declarations: [ProfilePage, OverviewComponent, MaterialResourceAvailableComponent, SkillsComponent]
+  declarations: [ProfilePage, OverviewComponent, MaterialResourceAvailableComponent, 
+    SkillsComponent, SDGsComponent]
 })
 export class ProfilePageModule {}

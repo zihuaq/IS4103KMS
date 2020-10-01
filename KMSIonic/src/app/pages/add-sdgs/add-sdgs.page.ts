@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 import { Tag } from 'src/app/classes/tag';
 import { User } from 'src/app/classes/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { TagService } from 'src/app/services/tag.service';
 import { UserService } from 'src/app/services/user.service';
-import { ToastController } from '@ionic/angular';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-add-skills',
-  templateUrl: './add-skills.page.html',
-  styleUrls: ['./add-skills.page.scss'],
+  selector: 'app-add-sdgs',
+  templateUrl: './add-sdgs.page.html',
+  styleUrls: ['./add-sdgs.page.scss'],
 })
-export class AddSkillsPage implements OnInit {
-  skillTags: Tag[]
+export class AddSdgsPage implements OnInit {
+  sdgTags: Tag[]
   filteredTags: Tag[];
   chosenTags: Tag[] = [];
   searchValue: string;
@@ -27,15 +27,15 @@ export class AddSkillsPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.tagService.getAllSkillTags().subscribe((response) => {
-      this.skillTags = response;
+    this.tagService.getAllSDGTags().subscribe((response) => {
+      this.sdgTags = response;
       this.authenticationService.getCurrentUser().then((user: User) => {
         this.loggedInUser = user;
         this.userService
-          .getSkillsForProfile(this.loggedInUser.userId)
-          .subscribe((skills) => {
-            this.loggedInUser = { ...this.loggedInUser, skills };
-            this.skillTags = this.skillTags.filter(tag => !this.loggedInUser.skills.includes(tag));
+          .getSDGsForProfile(this.loggedInUser.userId)
+          .subscribe((sdgs) => {
+            this.loggedInUser = { ...this.loggedInUser, sdgs };
+            this.sdgTags = this.sdgTags.filter(tag => !this.loggedInUser.sdgs.includes(tag));
           });
        });
     });
@@ -45,10 +45,10 @@ export class AddSkillsPage implements OnInit {
     this.searchValue = evt.srcElement.value;
 
     if (!this.searchValue) {
-      this.filteredTags = this.skillTags;
+      this.filteredTags = this.sdgTags;
     }
 
-    this.filteredTags = this.skillTags.filter(tag => {
+    this.filteredTags = this.sdgTags.filter(tag => {
       if (tag.name && this.searchValue) {
         return (tag.name.toLowerCase().includes(this.searchValue.toLowerCase()));
       }
@@ -83,9 +83,9 @@ export class AddSkillsPage implements OnInit {
 
   save() {
     this.userService
-      .addSkillsToProfile(this.loggedInUser.userId, this.chosenTags)
+      .addSDGsToProfile(this.loggedInUser.userId, this.chosenTags)
       .subscribe((responsedata) => {
-        this.loggedInUser.skills = responsedata;
+        this.loggedInUser.sdgs = responsedata;
         this.location.back();
       },
       async (err: any) => {

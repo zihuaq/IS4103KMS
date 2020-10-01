@@ -55,7 +55,7 @@
             </ion-select>
           </ion-item>
           <div padding *ngIf="loggedInUser">
-            <ion-button type="submit" [disabled]="editForm.invalid" expand="block" routerLink="/view-basic-info/{{loggedInUser.userId}}"> Save </ion-button>
+            <ion-button type="submit" [disabled]="editForm.invalid" expand="block"> Save </ion-button>
           </div>
         </ion-grid>
       </form>

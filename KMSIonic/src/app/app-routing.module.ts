@@ -99,6 +99,14 @@ const routes: Routes = [
   {
     path: 'edit-basic-info',
     loadChildren: () => import('./pages/edit-basic-info/edit-basic-info.module').then( m => m.EditBasicInfoPageModule)
+  },
+  {
+    path: 'view-sdgs',
+    loadChildren: () => import('./pages/view-sdgs/view-sdgs.module').then( m => m.ViewSdgsPageModule)
+  },
+  {
+    path: 'add-sdgs',
+    loadChildren: () => import('./pages/add-sdgs/add-sdgs.module').then( m => m.AddSdgsPageModule)
   }
 
 ]
