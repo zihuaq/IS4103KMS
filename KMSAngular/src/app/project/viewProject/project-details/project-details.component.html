@@ -1,9 +1,14 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
+
+
 <div class="content-wrapper">
-    <div class="content-header">
-        <div class="content-fluid">
+    <div class="loading" *ngIf="!loaded">
+        <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
+    </div>
+    <div class="content-header" *ngIf="loaded">
+        <div class="content-fluid"> 
             <div class="card">
                 <div class="image"  style="height: 350px; overflow: hidden; position: relative;">
                     <span *ngIf="projectToView.profilePicture">

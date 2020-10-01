@@ -70,12 +70,69 @@
                         <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity" name="quantity" [(ngModel)]="newMrp.totalQuantity" required>
                     </div>
                     <div class="form-group">
-                        <label for="units"> Unit *</label>
-                        <input type="text" id="unit" class="form-control" placeholder="Enter Unit" name="unit" [(ngModel)]="newMrp.unit" required>
+                        <label for="unit"> Unit *</label>
+                        <div>
+                            <select id="unit" class="form-control" name="unit" [(ngModel)]="newMrp.unit" required>
+                                <optgroup label="General">
+                                    <option value="item(s)">item(s)</option>
+                                </optgroup>
+                                <optgroup label="Length">
+                                    <option value="mm">mm</option>
+                                    <option value="cm">cm</option>
+                                    <option value="m">m</option>
+                                    <option value="in">in</option>
+                                    <option value="ft-us">ft-us</option>
+                                    <option value="ft">ft</option>
+                                    <option value="fathom">fathom</option>
+                                    <option value="mi">mi</option>
+                                    <option value="nMi">nMi</option>
+                                </optgroup>
+                                <optgroup label="Area">
+                                    <option value="mm2">mm2</option>
+                                    <option value="cm2">cm2</option>
+                                    <option value="m2">m2</option>
+                                    <option value="ha">ha</option>
+                                    <option value="km2">km2</option>
+                                    <option value="in2">in2</option>
+                                    <option value="ft2">ft2</option>
+                                    <option value="ac">ac</option>
+                                    <option value="mi2">mi2</option>
+                                </optgroup>
+                                <optgroup label="Mass">
+                                    <option value="mcg">mcg</option>
+                                    <option value="mg">mg</option>
+                                    <option value="g">g</option>
+                                    <option value="kg">kg</option>
+                                    <option value="oz">oz</option>
+                                    <option value="lb">lb</option>
+                                    <option value="mt">mt</option>
+                                    <option value="t">t</option>
+                                </optgroup>
+                                <optgroup label="Volume">
+                                    <option value="mm3">mm3</option>
+                                    <option value="cm3">cm3</option>
+                                    <option value="ml">ml</option>
+                                    <option value="l">l</option>
+                                    <option value="kl">kl</option>
+                                    <option value="m3">m3</option>
+                                    <option value="km3">km3</option>
+                                    <option value="tsp">tsp</option>
+                                    <option value="Tbs">Tbs</option>
+                                    <option value="in3">in3</option>
+                                    <option value="fl-oz">fl-oz</option>
+                                    <option value="cup">cup</option>
+                                    <option value="pnt">pnt</option>
+                                    <option value="qt">qt</option>
+                                    <option value="gal">gal</option>
+                                    <option value="ft3">ft3</option>
+                                    <option value="yd3">yd3</option>
+                                </optgroup>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="newMrp.description">
+                        <input type="text" id="description" class="form-control" placeholder="Enter Description (eg. specific measurements)" name="description" [(ngModel)]="newMrp.description">
                     </div>
                     <div class="form-group">
                         <label>Date Required From *</label>

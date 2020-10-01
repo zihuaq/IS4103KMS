@@ -18,6 +18,7 @@ declare var $: any;
 })
 export class ProjectDetailsComponent implements OnInit {
 
+  loaded: boolean = false;
   projectId: number;
   projectToView: Project;
   loggedInUser: User
@@ -47,6 +48,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToView = response;
+        this.loaded = true;
         this.noOfMembers = this.projectToView.projectMembers.length;
         this.profilePicture = this.projectToView.profilePicture;
         //console.log(this.profilePicture);
@@ -202,4 +204,5 @@ export class ProjectDetailsComponent implements OnInit {
   get projectType(): typeof ProjectType{
     return ProjectType;
   }
+  
 }
