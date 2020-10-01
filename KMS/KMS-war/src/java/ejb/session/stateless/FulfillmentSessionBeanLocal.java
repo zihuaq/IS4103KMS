@@ -21,5 +21,7 @@ public interface FulfillmentSessionBeanLocal {
     public FulfillmentEntity getFulfillmentById(Long fulfillmentId) throws NoResultException;
 
     public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
+
+    public void deleteFulfillment(Long fulfillmentId) throws NoResultException;
     
 }

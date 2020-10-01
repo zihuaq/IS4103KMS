@@ -82,6 +82,7 @@ public class MrpResource {
             mrp.getProject().getTasks().clear();
             mrp.getProject().getPosts().clear();
             mrp.getProject().getSdgs().clear();
+            mrp.getFulfillments().clear();
 //            mrp.getActivity().getHumanResourcePostings().clear();
 //            mrp.getActivity().getMaterialResourcePostings().clear();
 //            mrp.getActivity().setProject(null);

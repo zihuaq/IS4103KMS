@@ -42,6 +42,12 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         MaterialResourcePostingEntity posting = materialResourcePostingSessionBeanLocal.getMrpById(postingId);
         MaterialResourceAvailableEntity mra = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableById(mraId);
         
+        newFulfillment.setReceivedQuantity(0.0);
+        newFulfillment.setUnreceivedQuantity(newFulfillment.getTotalPledgedQuantity());
+        mra.setQuantity(newFulfillment.getMra().getQuantity());
+        posting.setLackingQuantity(newFulfillment.getPosting().getLackingQuantity());
+        posting.setObtainedQuantity(newFulfillment.getPosting().getObtainedQuantity());
+        
         newFulfillment.setFulfillmentOwner(fulfillmentOwner);
         fulfillmentOwner.getFulfillments().add(newFulfillment);
         newFulfillment.setPosting(posting);
@@ -72,5 +78,25 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         fulfillment.setReceivedQuantity(fulfillmentToUpdate.getReceivedQuantity());
         fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity());
         fulfillment.setStatus(fulfillmentToUpdate.getStatus());
+    }
+    
+    @Override
+    public void deleteFulfillment(Long fulfillmentId) throws NoResultException {
+        FulfillmentEntity fulfillmentToDelete = getFulfillmentById(fulfillmentId);
+        
+        if (fulfillmentToDelete.getFulfillmentOwner()!= null) {
+            fulfillmentToDelete.getFulfillmentOwner().getFulfillments().remove(fulfillmentToDelete);
+            fulfillmentToDelete.setFulfillmentOwner(null);
+        }
+        
+        if (fulfillmentToDelete.getPosting()!= null) {
+            fulfillmentToDelete.getPosting().getFulfillments().remove(fulfillmentToDelete);
+            fulfillmentToDelete.setPosting(null);
+        }
+        
+        if (fulfillmentToDelete.getMra()!= null) {
+            fulfillmentToDelete.setMra(null);
+        }
+        em.remove(fulfillmentToDelete);
     }
 }
