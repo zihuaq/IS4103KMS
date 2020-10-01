@@ -109,6 +109,7 @@ public class HrpResource {
                     appliedUser.getFollowRequestMade().clear();
                     appliedUser.getFollowRequestReceived().clear();
                     appliedUser.getHrpApplied().clear();
+                    appliedUser.getFulfillments().clear();
                 }
             }
             

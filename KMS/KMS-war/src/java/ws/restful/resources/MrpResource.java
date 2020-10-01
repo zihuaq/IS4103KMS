@@ -59,6 +59,7 @@ public class MrpResource {
         for (MaterialResourcePostingEntity mrp : mrpList) {
             mrp.setProject(null);
             mrp.setActivity(null);
+            mrp.getFulfillments().clear();
         }
         
         return Response.status(Status.OK).entity(mrpList).build();

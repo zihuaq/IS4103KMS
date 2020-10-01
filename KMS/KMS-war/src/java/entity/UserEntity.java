@@ -138,6 +138,9 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "humanResourcePostingApplied")
     @ManyToMany
     private List<HumanResourcePostingEntity> hrpApplied;
+    
+    @OneToMany(mappedBy = "fulfillmentOwner")
+    private List<FulfillmentEntity> fulfillments;
 
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
@@ -165,6 +168,7 @@ public class UserEntity implements Serializable {
         this.affiliationRequestMade = new ArrayList<>();
         this.affiliationRequestReceived = new ArrayList<>();
         this.hrpApplied = new ArrayList<>();
+        this.fulfillments = new ArrayList<>();
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
@@ -526,5 +530,13 @@ public class UserEntity implements Serializable {
     public void setHrpApplied(List<HumanResourcePostingEntity> hrpApplied) {
         this.hrpApplied = hrpApplied;
     }
-    
+
+    public List<FulfillmentEntity> getFulfillments() {
+        return fulfillments;
+    }
+
+    public void setFulfillments(List<FulfillmentEntity> fulfillments) {
+        this.fulfillments = fulfillments;
+    }
+  
 }

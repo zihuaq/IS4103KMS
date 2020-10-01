@@ -71,7 +71,7 @@ public class MaterialResourceAvailableEntity implements Serializable {
 
     @ManyToMany
     private List<TagEntity> tags;
-
+    
     public MaterialResourceAvailableEntity() {
         this.tags = new ArrayList<>();
     }
@@ -201,5 +201,5 @@ public class MaterialResourceAvailableEntity implements Serializable {
     public void setUnits(String units) {
         this.units = units;
     }
-
+  
 }

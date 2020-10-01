@@ -17,16 +17,16 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import ws.restful.model.CreateGroupReq;
 import ws.restful.model.CreateGroupRsp;
 import ws.restful.model.ErrorRsp;
@@ -114,6 +114,8 @@ public class GroupResource {
         group.getGroupOwner().getSdgs().clear();
         group.getGroupOwner().getFollowRequestMade().clear();
         group.getGroupOwner().getFollowRequestReceived().clear();
+        group.getGroupOwner().getHrpApplied().clear();
+        group.getGroupOwner().getFulfillments().clear();
         for (UserEntity member : group.getGroupMembers()) {
             member.getGroupsOwned().clear();
             member.getReviewsGiven().clear();
@@ -131,6 +133,8 @@ public class GroupResource {
             member.getSdgs().clear();
             member.getFollowRequestMade().clear();
             member.getFollowRequestReceived().clear();
+            member.getHrpApplied().clear();
+            member.getFulfillments().clear();
         }
         for (UserEntity admin : group.getGroupAdmins()) {
             admin.getGroupsOwned().clear();
@@ -149,6 +153,8 @@ public class GroupResource {
             admin.getSdgs().clear();
             admin.getFollowRequestMade().clear();
             admin.getFollowRequestReceived().clear();
+            admin.getHrpApplied().clear();
+            admin.getFulfillments().clear();
         }
         
 //        for (PostEntity post : group.getPosts()) {
