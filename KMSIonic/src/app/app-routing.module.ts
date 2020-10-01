@@ -92,7 +92,15 @@ const routes: Routes = [
         (m) => m.ViewSkillsPageModule
       )
     // canActivate: [AuthGuard]
+  },  {
+    path: 'view-all-project',
+    loadChildren: () => import('./pages/project/view-all-project/view-all-project.module').then( m => m.ViewAllProjectPageModule)
+  },
+  {
+    path: 'create-new-project',
+    loadChildren: () => import('./pages/project/create-new-project/create-new-project.module').then( m => m.CreateNewProjectPageModule)
   }
+
 ]
 
 @NgModule({

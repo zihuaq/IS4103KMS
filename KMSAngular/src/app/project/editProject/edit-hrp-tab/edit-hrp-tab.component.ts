@@ -141,8 +141,6 @@ export class EditHrpTabComponent implements OnInit {
       return;
     }
     if (hrpForm.valid) {
-      this.newHrp.lackingSlots = this.newHrp.totalSlots;
-      this.newHrp.obtainedSlots = 0;
       this.newHrp.startDate = new Date(this.newHrp.startDate);
       this.newHrp.endDate = new Date(this.newHrp.endDate);
       this.hrpService.createNewHrp(this.newHrp, this.projectId, this.tagIdsSelected).subscribe(
