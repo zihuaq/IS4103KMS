@@ -101,18 +101,12 @@ export class DetailedSearchPage implements OnInit {
   }
 
   checkLoginUserHasFollowed(userId: number) {
-    console.log("checkLoginUserHasFollowed", this.loggedInUserFollowing, userId)
     return this.loggedInUserFollowing
       .map((user) => user.userId)
       .includes(userId)
   }
 
   checkLoginUserHaveSentFollowReq(userId: number) {
-    console.log(
-      "checkLoginUserHaveSentFollowReq",
-      this.loggedInUserFollowRequestMade,
-      userId
-    )
     return this.loggedInUserFollowRequestMade
       .map((f) => f.to.userId)
       .includes(userId)

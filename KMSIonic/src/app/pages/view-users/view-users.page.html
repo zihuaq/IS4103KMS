@@ -1,8 +1,14 @@
 <ion-header>
-  <ion-searchbar showCancelButton="always" (click)="goBack()" (ionCancel)="goBack()" #searchBar>
-  </ion-searchbar>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-capitalize">{{query}}</ion-title>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm" (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  </ion-searchbar>
   <ion-virtual-scroll [items]="filteredUsers">
     <ion-item *virtualItem="let user" (click)="goToProfile(user)">
       <ion-avatar slot="start">
@@ -66,12 +72,12 @@
           </ion-col>
         </ion-row>
         <!-- <ion-row>
-          <ion-col class="ion-no-padding">
-            <ion-text *ngIf="user.sdgs.length == 0" style="font-size: small;">User has no SDG indicated</ion-text>
-            <ion-label *ngIf="user.sdgs.length > 0">Interested SDG</ion-label>
-            <ion-badge *ngFor="let sdg of user.sdgs" color="primary">{{sdg}}</ion-badge>
-          </ion-col>
-        </ion-row> -->
+            <ion-col class="ion-no-padding">
+              <ion-text *ngIf="user.sdgs.length == 0" style="font-size: small;">User has no SDG indicated</ion-text>
+              <ion-label *ngIf="user.sdgs.length > 0">Interested SDG</ion-label>
+              <ion-badge *ngFor="let sdg of user.sdgs" color="primary">{{sdg}}</ion-badge>
+            </ion-col>
+          </ion-row> -->
       </ion-grid>
     </ion-item>
   </ion-virtual-scroll>

@@ -92,7 +92,11 @@ const routes: Routes = [
         (m) => m.ViewSkillsPageModule
       ),
     canActivate: [AuthGuard]
+  },  {
+    path: 'view-users',
+    loadChildren: () => import('./pages/view-users/view-users.module').then( m => m.ViewUsersPageModule)
   }
+
 ]
 
 @NgModule({
