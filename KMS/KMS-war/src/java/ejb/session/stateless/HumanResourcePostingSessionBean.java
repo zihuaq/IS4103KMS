@@ -39,6 +39,8 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
     @Override
     public Long createHumanResourcePostingEntity(HumanResourcePostingEntity newHrp, Long projectId, List<Long> tagIds) throws NoResultException {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
+        newHrp.setObtainedSlots(0);
+        newHrp.setLackingSlots(newHrp.getTotalSlots());
         em.persist(newHrp);
         em.flush();
         

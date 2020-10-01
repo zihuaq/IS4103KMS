@@ -18,6 +18,7 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -690,6 +691,11 @@ public class UserResource {
             temp.setFollowing(getUsersResponse(user.getFollowing()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
+                hrp.setActivity(null);
+                hrp.setProject(null);
+                hrp.getAppliedUsers().clear();
+            }
             temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
