@@ -1,7 +1,10 @@
-<button type="button" class="btn btn-block bg-gradient-info" data-toggle="modal" data-target=#hrp-modal>
-    Add Human Resource Posting
-    <i class="fas fa-plus"></i>
-</button>
+<div class="row mb-3">
+    <h5 style="margin-right: 10px;">Human Resource Postings</h5>
+    <button type="button" class="btn bg-gradient-info float-right" data-toggle="modal" data-target=#hrp-modal data-backdrop="static" style="margin-top: -8px;">
+        <i class="fas fa-plus"></i>
+        Create Posting
+    </button>
+</div>
 
 <div class="modal fade" id="hrp-modal">
     <div class="modal-dialog">
@@ -40,19 +43,19 @@
                         <label for="totalSlots">Total Slots Needed</label>
                         <input id="totalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="totalSlots" [(ngModel)]="newHrp.totalSlots" min="1" required>
                     </div>
-                    <!-- <div class="form-group">
+                    <div class="form-group">
                         <label>Location of resource</label>
                         <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
                             (mapClick)="click($event)">
                         </google-map>
-                    </div> -->
+                    </div>
                     <div class="form-group">
                         <label for="lat">Latitude</label>
-                        <input id="lat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="lat" [(ngModel)]="newHrp.latitude" required>
+                        <input id="lat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="lat" [(ngModel)]="newHrp.latitude" required disabled>
                     </div>
                     <div class="form-group">
                         <label for="long">Longitude</label>
-                        <input id="long" type=number steps="any" class="form-control" placeholder="Enter longitude" name="long" [(ngModel)]="newHrp.longitude" required>
+                        <input id="long" type=number steps="any" class="form-control" placeholder="Enter longitude" name="long" [(ngModel)]="newHrp.longitude" required disabled>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -70,7 +73,10 @@
     <div *ngFor="let hrp of hrpList">
         <div class="card" style="width: 100%;" >
             <div class="card-header">
-                <h5 class="card-title">{{hrp.name}}</h5> 
+                <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{hrp.name}}</b> 
+                    <br/>
+                    <span class="text-muted" style="font-size: 15px;">{{hrp.description}}</span>
+                </h5>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -79,41 +85,28 @@
                         <i class="fas fa-edit"></i>
                     </button>
                     <button type="button" class="btn btn-tool" data-toggle="modal" href="#delete-confirm-dialog" (click)="clickHrp(hrp.humanResourcePostingId)">
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
             </div>
             <div class="card-body" style="display: block;">
-                <ul class="products-list product-list-in-card pl-2 pr-2">
-                    <li class="item">
-                        <div class="product-info">
-                            <a class="product-title">
-                                {{hrp.startDate.toString().slice(0,10) | date}} to {{hrp.endDate.toString().slice(0,10) | date}}
-                                <span class="badge badge-secondary float-right">
-                                    At location
-                                    {{hrp.latitude | number:'1.1-6'}},
-                                    {{hrp.longitude | number:'1.1-6'}}
-                                </span>
-                            </a>
-                            <span class="product-description">
-                                Description: {{hrp.description}}
-                                <br/>
-                                Position needed: {{hrp.totalSlots}}
-                                <br/>
-                                Position filled: {{hrp.obtainedSlots}}
-                                <br/>
-                                Position lacked: {{hrp.lackingSlots}}
-                                <span *ngIf="hrp.tags.length > 0">
-                                    <div *ngFor="let tag of hrp.tags">
-                                        <small class="badge badge-info">
-                                            {{tag.name}}
-                                        </small>
-                                    </div>
-                                </span>
-                            </span>
+                <p style="margin: 0 7px 0 7px;">
+                    <b>{{hrp.startDate.toString().slice(0,10) | date}} to {{hrp.endDate.toString().slice(0,10) | date}}</b>
+                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(hrp.latitude, hrp.longitude)" target="_blank">
+                        At location
+                        {{hrp.latitude | number:'1.1-6'}},
+                        {{hrp.longitude | number:'1.1-6'}}
+                    </a>
+                    <br/>
+                    {{hrp.obtainedSlots}} (filled) / {{hrp.totalSlots}}  <span class="text-muted">({{hrp.lackingSlots}} needed)</span>
+                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="hrp.tags.length > 0">
+                        <div *ngFor="let tag of hrp.tags">
+                            <small class="badge badge-info ml-2">
+                                {{tag.name}}
+                            </small>
                         </div>
-                    </li>
-                </ul>
+                    </span>
+                </p>
             </div>
         </div>
     </div>
@@ -156,12 +149,12 @@
                         <label for="totalSlots">Total Slots Needed</label>
                         <input id="totalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="totalSlots" [(ngModel)]="hrpToEdit.totalSlots" min="1" required>
                     </div>
-                    <!-- <div class="form-group">
+                    <div class="form-group">
                         <label>Location of resource</label>
                         <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
                             (mapClick)="click($event)">
                         </google-map>
-                    </div> -->
+                    </div>
                     <div class="form-group">
                         <label for="lat">Latitude</label>
                         <input id="lat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="lat" [(ngModel)]="hrpToEdit.latitude" required>

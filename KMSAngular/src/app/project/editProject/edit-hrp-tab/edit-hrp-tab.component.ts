@@ -214,21 +214,23 @@ export class EditHrpTabComponent implements OnInit {
   editHrp(editHrpForm: NgForm) {
     let selectedTags = [];
     this.selectedTagNames = $('#editskillselect2').val();
-    if (this.selectedTagNames.length == 0) {
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Unable to edit skills tags',
-        autohide: true,
-        delay: 2500,
-        body: 'Please select at least one skills tags',
+    // if (this.selectedTagNames.length == 0) {
+    //   $(document).Toasts('create', {
+    //     class: 'bg-warning',
+    //     title: 'Unable to edit skills tags',
+    //     autohide: true,
+    //     delay: 2500,
+    //     body: 'Please select at least one skills tags',
+    //   });
+    //   return;
+    // }
+    if (this.selectedTagNames.length > 0) {
+      this.tags.forEach((element) => {
+        if (this.selectedTagNames.includes(element.name)) {
+          selectedTags.push(element);
+        }
       });
-      return;
-    }
-    this.tags.forEach((element) => {
-      if (this.selectedTagNames.includes(element.name)) {
-        selectedTags.push(element);
-      }
-    });
+    } 
     if (this.startDate > this.endDate) {
       $(document).Toasts('create', {
         class: 'bg-danger',
@@ -300,5 +302,10 @@ export class EditHrpTabComponent implements OnInit {
         });
       }
     )
+  }
+
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    window.open(url, '_blank');
   }
 }
