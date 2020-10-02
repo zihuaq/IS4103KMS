@@ -86,7 +86,7 @@
       <ion-label>
         <ion-button fill="outline"
           *ngIf="!(loggedInUser.userType != UserType.INSTITUTE && profile.userType != UserType.INSTITUTE) && !isAffiliated && !hasSentAffiliationRequest"
-          (click)="sendAffiliationRequest()" class="ion-text-wrap ion-no-margin">
+          (click)="sendAffiliationRequest()" class="ion-text-wrap">
           Send Affiliation Request
         </ion-button>
         <ion-button *ngIf="isAffiliated" (click)="removeAffiliation()" class="ion-text-wrap ion-no-margin"> Remove

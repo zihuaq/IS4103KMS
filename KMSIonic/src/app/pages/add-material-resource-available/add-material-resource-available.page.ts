@@ -1,4 +1,4 @@
-import { BehaviorSubject, forkJoin, Subscription } from "rxjs"
+import { forkJoin, Subscription } from "rxjs"
 import { UserService } from "src/app/services/user.service"
 import { AuthenticationService } from "src/app/services/authentication.service"
 import { ActivatedRoute, Router } from "@angular/router"
@@ -9,10 +9,9 @@ import { TagService } from "./../../services/tag.service"
 import { Tag } from "./../../classes/tag"
 import { MaterialResourceAvailable } from "./../../classes/material-resource-available"
 import { User } from "./../../classes/user"
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core"
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core"
 import {
   CameraPosition,
-  Environment,
   GoogleMap,
   GoogleMaps,
   GoogleMapsAnimation,
@@ -32,6 +31,8 @@ import { NgForm } from "@angular/forms"
 export class AddMaterialResourceAvailablePage implements OnInit {
   profile: User
   mraTags: Tag[]
+  filteredTags: Tag[] = []
+  hasSelected: boolean
   newMra: MaterialResourceAvailable
   minDate = new Date().toISOString().slice(0, 10)
   hasExpiry = false
@@ -40,21 +41,23 @@ export class AddMaterialResourceAvailablePage implements OnInit {
   editingMraStartDate: string
   editingMraEndDate: string
   mapSubscription: Subscription
+  searchValue: string
+  chosenTags: Tag[] = []
+  @ViewChild("map", { read: ElementRef, static: false }) mapRef: ElementRef
 
   constructor(
     private tagService: TagService,
     private mraService: MaterialResourceAvailableService,
     private platform: Platform,
     private toastController: ToastController,
-    private location: Location,
     private activatedRoute: ActivatedRoute,
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private router: Router
   ) {}
 
-  async ngOnInit() {
-    await this.platform.ready()
+  ngOnInit() {
+    this.platform.ready()
   }
 
   ionViewWillEnter() {
@@ -70,6 +73,7 @@ export class AddMaterialResourceAvailablePage implements OnInit {
           this.mraTags = result[0]
           this.profile = result[1]
           this.editingMra = result[2]
+          this.chosenTags = this.editingMra.tags
           this.hasExpiry = this.editingMra.endDate == null ? false : true
           this.editingMraStartDate = this.editingMra.startDate
             .toISOString()
@@ -152,44 +156,57 @@ export class AddMaterialResourceAvailablePage implements OnInit {
     this.mapSubscription.unsubscribe()
   }
 
-  createMaterialResourceRequest(mraForm: NgForm) {
-    console.log(mraForm.value)
-    console.log(this.editingMra)
+  async createMaterialResourceRequest(mraForm: NgForm) {
+    console.log("mra form" + mraForm.value)
+    console.log("editing mra" + this.editingMra)
     console.log(this.editingMraStartDate)
     console.log(this.editingMraEndDate)
     console.log(this.profile)
+    console.log("editing mra tags" + this.editingMra.tags)
+    console.log("mraForm tags" + mraForm.value.mraTags)
     if (mraForm.valid) {
-      this.newMra = new MaterialResourceAvailable()
-      this.newMra.mraId = this.editingMra.mraId
-      this.newMra.materialResourceAvailableOwner = this.profile
-      this.newMra.name = mraForm.value.mraName
-      this.newMra.quantity = mraForm.value.quantity
-      this.newMra.units = mraForm.value.units
-      this.newMra.description = mraForm.value.description
-      this.newMra.latitude = this.editingMra.latitude
-      this.newMra.longitude = this.editingMra.longitude
-      this.newMra.startDate = new Date(mraForm.value.startDate)
-      this.newMra.endDate = new Date(mraForm.value.endDate)
-      this.newMra.tags = mraForm.value.mraTags
-      if (!this.editingMra.mraId) {
-        this.mraService
-          .createMaterialResourceAvailable(this.newMra)
-          .subscribe((responsedata) => {
-            this.profile.mras = responsedata
-          })
+      if (this.chosenTags.length == 0) {
+        const toast = await this.toastController.create({
+          message: "Please select at least one tag.",
+          duration: 2000
+        })
+        toast.present()
       } else {
-        this.mraService
-          .updateMaterialResourceAvailable(this.newMra)
-          .subscribe((responsedata) => {
-            this.profile.mras = responsedata
-          })
+        this.newMra = new MaterialResourceAvailable()
+        this.newMra.mraId = this.editingMra.mraId
+        this.newMra.materialResourceAvailableOwner = this.profile
+        this.newMra.name = mraForm.value.mraName
+        this.newMra.quantity = mraForm.value.quantity
+        this.newMra.units = mraForm.value.units
+        this.newMra.description = mraForm.value.description
+        this.newMra.latitude = this.editingMra.latitude
+        this.newMra.longitude = this.editingMra.longitude
+        this.newMra.startDate = new Date(mraForm.value.startDate)
+        this.newMra.endDate = new Date(mraForm.value.endDate)
+        this.newMra.tags = this.chosenTags
+        if (!this.editingMra.mraId) {
+          this.mraService
+            .createMaterialResourceAvailable(this.newMra)
+            .subscribe((responsedata) => {
+              this.profile.mras = responsedata
+              this.router.navigate(["/profile"])
+            })
+        } else {
+          this.mraService
+            .updateMaterialResourceAvailable(this.newMra)
+            .subscribe((responsedata) => {
+              this.profile.mras = responsedata
+              this.router.navigate(["/profile"])
+            })
+        }
+        mraForm.reset()
+        this.chosenTags = []
+        this.searchValue = ""
+        this.editingMra = new MaterialResourceAvailable()
+        this.editingMraStartDate = null
+        this.editingMraEndDate = null
+        this.hasExpiry = false
       }
-      this.router.navigate(["/profile"])
-      mraForm.reset()
-      this.editingMra = new MaterialResourceAvailable()
-      this.editingMraStartDate = null
-      this.editingMraEndDate = null
-      this.hasExpiry = false
     }
   }
 
@@ -207,5 +224,45 @@ export class AddMaterialResourceAvailablePage implements OnInit {
     return mraTag1 && mraTag2
       ? mraTag1.name == mraTag2.name && mraTag1.tagType == mraTag2.tagType
       : mraTag1 === mraTag2
+  }
+
+  filterList(evt) {
+    this.searchValue = evt.srcElement.value
+
+    if (!this.searchValue) {
+      this.filteredTags = this.mraTags
+    }
+
+    this.filteredTags = this.mraTags.filter((tag) => {
+      if (tag.name && this.searchValue) {
+        return tag.name.toLowerCase().includes(this.searchValue.toLowerCase())
+      }
+    })
+  }
+
+  selectTag(tag: Tag) {
+    this.hasSelected = false
+    this.chosenTags.forEach((element) => {
+      if (element.name == tag.name) {
+        this.hasSelected = true
+      }
+    })
+    if (!this.hasSelected) {
+      this.chosenTags.push(tag)
+      this.clearSearch()
+    }
+  }
+
+  removeTag(tag: Tag) {
+    this.chosenTags.forEach((element, index) => {
+      if (element.name == tag.name) {
+        this.chosenTags.splice(index, 1)
+      }
+    })
+  }
+
+  clearSearch() {
+    this.searchValue = ""
+    this.filteredTags = []
   }
 }
