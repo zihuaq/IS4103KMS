@@ -171,6 +171,13 @@ export class AddMaterialResourceAvailablePage implements OnInit {
           duration: 2000
         })
         toast.present()
+      } else if (this.hasExpiry && 
+        new Date(mraForm.value.startDate).toJSON().slice(0, 10) > new Date(mraForm.value.endDate).toJSON().slice(0, 10)){
+          const toast = await this.toastController.create({
+            message: "End Date should not come before the Start Date.",
+            duration: 2000
+          })
+          toast.present()
       } else {
         this.newMra = new MaterialResourceAvailable()
         this.newMra.mraId = this.editingMra.mraId
