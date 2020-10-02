@@ -19,7 +19,7 @@
       (userchanged)="loggedInUser=$event"></app-sdgs>
     <ion-grid *ngIf="profile.userId != loggedInUser.userId">
       <ion-row class="ion-justify-content-center">
-        <ion-chip color="danger" (click)= "presentReportProfileModal()">
+        <ion-chip color="danger" (click)="presentReportProfileModal()">
           <ion-icon name="alert-outline"></ion-icon>
           <ion-label>Report Profile</ion-label>
         </ion-chip>
