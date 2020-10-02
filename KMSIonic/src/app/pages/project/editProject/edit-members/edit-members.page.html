@@ -22,7 +22,7 @@
     <ion-item *ngIf="owner.userId == member.userId">
       <ion-label >{{member.firstName}} {{member.lastName}} </ion-label>
       <ion-badge color="primary">Owner</ion-badge>
-      <ion-badge color="medium">Me</ion-badge>
+      <ion-badge *ngIf="owner.userId == member.userId" color="medium">Me</ion-badge>
     </ion-item>
   </ion-list>
   

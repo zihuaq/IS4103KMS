@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 import { User } from 'src/app/classes/user';
 import { Project } from 'src/app/classes/project';
@@ -26,6 +27,7 @@ export class ProjectDetailsPage implements OnInit {
   segment: string;
 
   constructor(public toastController: ToastController,
+    public alertController: AlertController,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private projectService: ProjectService,
@@ -138,6 +140,27 @@ export class ProjectDetailsPage implements OnInit {
 
   editProject() {
     this.router.navigate(["tab-panel/" + this.projectId]);
+  }
+
+  async leaveProjectDialog() {
+    const alert = await this.alertController.create({
+      header: "Leave Project",
+      message: "Are you sure you want to leave this project?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: 'cancel'
+        },
+        {
+          text: "Leave",
+          handler: () => {
+            this.leaveProject();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }
