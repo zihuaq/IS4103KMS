@@ -20,10 +20,11 @@ export class MaterialResourceAvailableComponent implements OnInit {
   constructor(private mraService: MaterialResourceAvailableService, public alertController: AlertController) {}
 
   ngOnInit() {
+    console.log("mra init called")
     this.top2Mras = this.profile.mras.slice(0, 2)
     this.profileIsLoggedInUser = this.profile.userId == this.loggedInUser.userId
   }
-
+  
   toggleSeeAll() {
     this.seeAll = !this.seeAll
   }

@@ -26,16 +26,19 @@
           </ion-item>
           <ion-item>
             <ion-label position="stacked"> Units *</ion-label>
-            <ion-input type="text" id="units" [ngModel]="editingMra.units" name="units" required>
-            </ion-input>
+            <ion-select [ngModel]="editingMra.units" name="units" required>
+              <ion-select-option value="item(s)"> item(s) </ion-select-option>
+              <ion-select-option value="kg"> kg </ion-select-option>
+              <ion-select-option value="m"> m </ion-select-option>
+            </ion-select>
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Description</ion-label>
             <ion-input type="text" id="description" [ngModel]="editingMra.description" name="description"></ion-input>
           </ion-item>
           <ion-label position="stacked">Material Resource Tags *</ion-label>
-          <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)" [ngModelOptions]="{standalone: true}"
-            placeholder="Search tags"></ion-searchbar>
+          <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
+            [ngModelOptions]="{standalone: true}" placeholder="Search tags"></ion-searchbar>
           <ion-list lines="none" *ngIf="filteredTags.length > 0">
             <ion-item *ngFor="let tag of filteredTags">
               <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">
@@ -58,7 +61,7 @@
           </ion-item>
           <div id="map_canvas">
           </div>
-          <!-- <ion-item>
+          <ion-item>
             <ion-label position="stacked">Latitude *</ion-label>
             <ion-input type="text" id="latitude" [ngModel]="editingMra.latitude" name="latitude" required disabled>
             </ion-input>
@@ -67,7 +70,7 @@
             <ion-label position="stacked">Longitude *</ion-label>
             <ion-input type="text" id="longitude" [ngModel]="editingMra.longitude" name="longitude" required disabled>
             </ion-input>
-          </ion-item> -->
+          </ion-item>
           <ion-item>
             <ion-label position="stacked">Does your resource expire?</ion-label>
             <ion-toggle [(ngModel)]="hasExpiry" name="hasExpiry" (change)="handleHasExpiryChange()"></ion-toggle>
