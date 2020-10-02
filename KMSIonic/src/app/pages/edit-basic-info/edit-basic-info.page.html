@@ -12,15 +12,16 @@
     <ion-card-header>
       <strong> Edit Basic Information </strong>
     </ion-card-header>
-    <ion-card-content>
+    <ion-card-content *ngIf="loggedInUser">
       <form class="form-horizontal" (ngSubmit)="onEditProfile(editForm)" #editForm="ngForm">
         <ion-grid>
           <ion-item>
-            <ion-label position="stacked">First Name</ion-label>
+            <ion-label *ngIf="loggedInUser.userType != UserType.INSTITUTE" position="stacked">First Name</ion-label>
+            <ion-label *ngIf="loggedInUser.userType == UserType.INSTITUTE" position="stacked">Institute Name</ion-label>
             <ion-input type="text" class="form-control" id="inputFirstName" placeholder="First Name" required
               [ngModel]="loggedInUser.firstName" name="firstName"></ion-input>
           </ion-item>
-          <ion-item>
+          <ion-item *ngIf="loggedInUser.userType != UserType.INSTITUTE">
             <ion-label position="stacked">Last Name</ion-label>
             <ion-input type="text" class="form-control" id="inputLastName" placeholder="Last Name" required
               [ngModel]="loggedInUser.lastName" name="lastName"></ion-input>
@@ -31,12 +32,12 @@
               [ngModel]="loggedInUser.email" name="email" #inputEmail="ngModel" email></ion-input>
             <span class="help-block" *ngIf="!inputEmail.valid && inputEmail.touched">Please enter a valid email!</span>
           </ion-item>
-          <ion-item>
+          <ion-item *ngIf="loggedInUser.userType != UserType.INSTITUTE">
             <ion-label position="stacked">Date of Birth</ion-label>
             <ion-datetime required [ngModel]="loggedInUser.dob | date" name="dob"
               placeholder="Select Date" max="2020-09"></ion-datetime>
           </ion-item>
-          <ion-item>
+          <ion-item *ngIf="loggedInUser.userType != UserType.INSTITUTE">
             <ion-label position="stacked" for="gender">Gender</ion-label>
             <ion-radio-group name="gender" [ngModel]="loggedInUser.gender" required>
               <ion-list>

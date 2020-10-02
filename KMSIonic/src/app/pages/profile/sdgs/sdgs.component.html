@@ -14,8 +14,8 @@
         </ion-chip>
       </ion-item>
     </div>
-    <div class="d-flex flex-wrap" *ngIf="!seeAll" lines="none">
-      <ion-item *ngFor="let tag of top3SDGs">
+    <div class="d-flex flex-wrap" *ngIf="!seeAll">
+      <ion-item *ngFor="let tag of top3SDGs" lines="none">
         <ion-chip color="tertiary">
           <ion-label>{{tag.name}} </ion-label>
         </ion-chip>

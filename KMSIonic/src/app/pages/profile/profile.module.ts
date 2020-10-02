@@ -12,6 +12,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { MaterialResourceAvailableComponent } from './material-resource-available/material-resource-available.component';
 import { SkillsComponent } from './skills/skills.component';
 import { SDGsComponent } from './sdgs/sdgs.component';
+import { ReportProfileComponent } from './report-profile/report-profile.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { SDGsComponent } from './sdgs/sdgs.component';
     ProfilePageRoutingModule
   ],
   declarations: [ProfilePage, OverviewComponent, MaterialResourceAvailableComponent, 
-    SkillsComponent, SDGsComponent]
+    SkillsComponent, SDGsComponent, ReportProfileComponent]
 })
 export class ProfilePageModule {}

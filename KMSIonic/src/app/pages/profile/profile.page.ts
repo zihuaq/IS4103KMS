@@ -1,10 +1,12 @@
-import { MaterialResourceAvailableService } from "./../../services/material-resource-available.service"
 import { Component, OnInit } from "@angular/core"
 import { ActivatedRoute } from "@angular/router"
 import { User } from "src/app/classes/user"
 import { UserService } from "src/app/services/user.service"
 import { AuthenticationService } from "./../../services/authentication.service"
 import { forkJoin } from "rxjs"
+import { ModalController } from "@ionic/angular"
+import { ReportProfileComponent } from "./report-profile/report-profile.component"
+import { MaterialResourceAvailableService } from "./../../services/material-resource-available.service"
 
 @Component({
   selector: "app-profile",
@@ -20,7 +22,8 @@ export class ProfilePage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private authenticationService: AuthenticationService,
-    private mraService: MaterialResourceAvailableService
+    private mraService: MaterialResourceAvailableService,
+    public modalController: ModalController
   ) {}
 
   ngOnInit() {}
@@ -60,5 +63,16 @@ export class ProfilePage implements OnInit {
         })
       }
     })
+  }
+
+  async presentReportProfileModal() {
+    const modal = await this.modalController.create({
+      component: ReportProfileComponent,
+      componentProps: {
+        profileId: this.profile.userId,
+        loggedInUserId: this.loggedInUserId
+      }
+    })
+    return await modal.present()
   }
 }
