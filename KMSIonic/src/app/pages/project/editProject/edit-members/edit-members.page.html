@@ -49,7 +49,11 @@
   </ion-list>
   
   <ion-list *ngFor="let member of project.projectAdmins">
-    <ion-item button *ngIf="owner.userId != member.userId">
+    <ion-item button *ngIf="owner.userId != member.userId && currentUserId != member.userId">
+      <ion-label>{{member.firstName}} {{member.lastName}} </ion-label>
+      <ion-badge color="secondary">Admin</ion-badge>
+    </ion-item>
+    <ion-item *ngIf="owner.userId != member.userId && currentUserId == member.userId">
       <ion-label>{{member.firstName}} {{member.lastName}} </ion-label>
       <ion-badge color="secondary">Admin</ion-badge>
       <ion-badge *ngIf="currentUserId == member.userId && owner.userId != member.userId" color="medium">Me</ion-badge>

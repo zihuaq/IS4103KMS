@@ -140,7 +140,11 @@ const routes: Routes = [
   {
     path: 'logout',
     loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
+  },  {
+    path: 'view-own-projects',
+    loadChildren: () => import('./pages/project/view-own-projects/view-own-projects.module').then( m => m.ViewOwnProjectsPageModule)
   },
+
 ]
 
 @NgModule({

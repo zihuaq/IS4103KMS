@@ -145,7 +145,7 @@ export class EditMembersPage implements OnInit {
     this.projectService.addAdmin(this.projectId, user.userId).subscribe(
       async response => {
         const toast = await this.toastController.create({
-          message: "Successfully promoted ' + user.firstName + ' ' + user.lastName + ' to Admin!",
+          message: 'Successfully promoted ' + user.firstName + ' ' + user.lastName + ' to Admin!',
           duration: 2000
         });
         toast.present();
@@ -192,7 +192,7 @@ export class EditMembersPage implements OnInit {
     this.projectService.removeAdmin(this.projectId, user.userId).subscribe(
       async response => {
         const toast = await this.toastController.create({
-          message: "Successfully removed ' + user.firstName + ' ' + user.lastName + ' to Admin!",
+          message: 'Successfully removed ' + user.firstName + ' ' + user.lastName + ' to Admin!',
           duration: 2000
         });
         toast.present();
