@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core"
+import { ApplicationRef, Component, OnInit } from "@angular/core"
 import { ActivatedRoute } from "@angular/router"
 import { User } from "src/app/classes/user"
 import { UserService } from "src/app/services/user.service"
@@ -23,7 +23,8 @@ export class ProfilePage implements OnInit {
     private userService: UserService,
     private authenticationService: AuthenticationService,
     private mraService: MaterialResourceAvailableService,
-    public modalController: ModalController
+    private modalController: ModalController,
+    private app: ApplicationRef
   ) {}
 
   ngOnInit() {}
@@ -46,6 +47,7 @@ export class ProfilePage implements OnInit {
           this.profile.skills = result[1]
           this.profile.sdgs = result[2]
           this.profile.mras = result[3]
+          this.app.tick()
         })
       } else {
         forkJoin([
@@ -60,6 +62,7 @@ export class ProfilePage implements OnInit {
           this.profile.skills = result[2]
           this.profile.sdgs = result[3]
           this.profile.mras = result[4]
+          this.app.tick()
         })
       }
     })

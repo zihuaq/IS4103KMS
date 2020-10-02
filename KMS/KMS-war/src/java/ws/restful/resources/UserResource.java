@@ -604,6 +604,8 @@ public class UserResource {
             userResponse.setGender(user.getGender());
             userResponse.setIsActive(user.getIsActive());
             userResponse.setDob(user.getDob());
+            userResponse.setJoinedDate(user.getJoinedDate());
+            userResponse.setAdminStartDate(user.getAdminStartDate());
             userResponse.setEmail(user.getEmail());
             userResponse.setProfilePicture(user.getProfilePicture());
             userResponse.setSdgs(user.getSdgs());

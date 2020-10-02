@@ -255,6 +255,7 @@ export class UserService {
   }
 
   private parseUserDate(data: any) {
+    console.log(data)
     if (data.userType == UserType.ADMIN) {
       return {
         ...data,

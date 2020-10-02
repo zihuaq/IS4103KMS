@@ -9,7 +9,13 @@ import { TagService } from "./../../services/tag.service"
 import { Tag } from "./../../classes/tag"
 import { MaterialResourceAvailable } from "./../../classes/material-resource-available"
 import { User } from "./../../classes/user"
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core"
+import {
+  ApplicationRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from "@angular/core"
 import {
   CameraPosition,
   GoogleMap,
@@ -53,7 +59,8 @@ export class AddMaterialResourceAvailablePage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private app: ApplicationRef
   ) {}
 
   ngOnInit() {
@@ -81,6 +88,7 @@ export class AddMaterialResourceAvailablePage implements OnInit {
           this.editingMraEndDate = this.editingMra.endDate
             .toISOString()
             .slice(0, 10)
+          this.app.tick()
         })
       } else {
         forkJoin([
@@ -90,6 +98,7 @@ export class AddMaterialResourceAvailablePage implements OnInit {
           this.mraTags = result[0]
           this.profile = result[1]
           this.editingMra = new MaterialResourceAvailable()
+          this.app.tick()
         })
       }
     })
@@ -119,6 +128,7 @@ export class AddMaterialResourceAvailablePage implements OnInit {
         })
         this.editingMra.latitude = location.latLng.lat.toString()
         this.editingMra.longitude = location.latLng.lng.toString()
+        this.app.tick()
       })
     } else {
       let marker: Marker = this.map.addMarkerSync({
@@ -149,6 +159,7 @@ export class AddMaterialResourceAvailablePage implements OnInit {
         })
         this.editingMra.latitude = latLng.lat.toString()
         this.editingMra.longitude = latLng.lng.toString()
+        this.app.tick()
       })
   }
 
@@ -171,13 +182,16 @@ export class AddMaterialResourceAvailablePage implements OnInit {
           duration: 2000
         })
         toast.present()
-      } else if (this.hasExpiry && 
-        new Date(mraForm.value.startDate).toJSON().slice(0, 10) > new Date(mraForm.value.endDate).toJSON().slice(0, 10)){
-          const toast = await this.toastController.create({
-            message: "End Date should not come before the Start Date.",
-            duration: 2000
-          })
-          toast.present()
+      } else if (
+        this.hasExpiry &&
+        new Date(mraForm.value.startDate).toJSON().slice(0, 10) >
+          new Date(mraForm.value.endDate).toJSON().slice(0, 10)
+      ) {
+        const toast = await this.toastController.create({
+          message: "End Date should not come before the Start Date.",
+          duration: 2000
+        })
+        toast.present()
       } else {
         this.newMra = new MaterialResourceAvailable()
         this.newMra.mraId = this.editingMra.mraId

@@ -1,6 +1,6 @@
 import { ApplicationRef, Component, NgZone, OnInit } from "@angular/core"
 import { NgForm } from "@angular/forms"
-import { ActivatedRoute } from "@angular/router"
+import { ActivatedRoute, Router } from "@angular/router"
 import { User } from "src/app/classes/user"
 import { AccountPrivacySettingEnum } from "src/app/enum/account-privacy-setting.enum"
 import { AuthenticationService } from "src/app/services/authentication.service"
@@ -29,6 +29,7 @@ export class EditBasicInfoPage implements OnInit {
     private authenticationService: AuthenticationService,
     private toastController: ToastController,
     private actionSheetController: ActionSheetController,
+    private router: Router,
     private app: ApplicationRef
   ) {}
 
@@ -153,7 +154,7 @@ export class EditBasicInfoPage implements OnInit {
             duration: 2000
           })
           toast.present()
-          this.location.back()
+          this.router.navigate(["/profile"])
         },
         async (err) => {
           const toast = await this.toastController.create({
