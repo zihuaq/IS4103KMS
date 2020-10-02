@@ -20,9 +20,13 @@
                 </ion-label>
               </ion-col>
               <ion-col size="4">
-                <ion-button [routerLink]="['/add-material-resource-available', mra.mraId]" expand="block" fill="outline"
-                  shape="round">
+                <ion-button *ngIf="profileIsLoggedInUser" [routerLink]="['/add-material-resource-available', mra.mraId]"
+                  expand="block" fill="outline" shape="round">
                   Edit
+                </ion-button>
+                <ion-button *ngIf="profileIsLoggedInUser" (click)="deleteClicked(mra.mraId)" expand="block" fill="outline"
+                  shape="round">
+                  Delete
                 </ion-button>
               </ion-col>
             </ion-row>
@@ -54,6 +58,10 @@
                 <ion-button [routerLink]="['/add-material-resource-available', mra.mraId]" expand="block" fill="outline"
                   shape="round">
                   Edit
+                </ion-button>
+                <ion-button *ngIf="profileIsLoggedInUser" (click)="deleteClicked(mra.mraId)" expand="block" fill="outline"
+                  shape="round">
+                  Delete
                 </ion-button>
               </ion-col>
             </ion-row>
