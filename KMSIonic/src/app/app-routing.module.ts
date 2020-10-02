@@ -92,7 +92,23 @@ const routes: Routes = [
         (m) => m.ViewSkillsPageModule
       ),
     canActivate: [AuthGuard]
-  }
+  },
+  {
+    path: 'changepassword',
+    loadChildren: () => import('./changepassword/changepassword.module').then( m => m.ChangepasswordPageModule)
+  },
+  {
+    path: 'user-setting',
+    loadChildren: () => import('./user-setting/user-setting.module').then( m => m.UserSettingPageModule)
+  },
+  {
+    path: 'deactivate-account',
+    loadChildren: () => import('./deactivate-account/deactivate-account.module').then( m => m.DeactivateAccountPageModule)
+  },
+  {
+    path: 'logout',
+    loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
+  },
 ]
 
 @NgModule({

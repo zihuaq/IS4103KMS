@@ -33,15 +33,17 @@
                 required #password="ngModel"></ion-input>
             </ion-item>
           </div>
-          <hr>
           <div>
+              <ion-button class="btn btn-success" type="submit" style="float:right">Login</ion-button>
+              <ion-button (click)="forgetPassword()" color="danger">forget password</ion-button> 
             <div>
+            <hr>
+            </div>
+          </div>
+
+          <div style ="text-align: center">
+              <h6>Have an Account Yet?</h6>
               <ion-button (click)="userSelector()" color="warning">Register</ion-button>
-              <ion-button class="btn btn-success" type="submit" style="float:right;">Login</ion-button>
-            </div>
-            <div>
-              <ion-button (click)="forgetPassword()" color="danger">forget password</ion-button>
-            </div>
           </div>
         </form>
       </div>

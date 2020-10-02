@@ -6,6 +6,8 @@ import { User } from 'src/app/classes/user';
 import { AccountPrivacySettingEnum } from 'src/app/enum/account-privacy-setting.enum';
 import { UserType } from 'src/app/enum/user-type.enum';
 import { UserService } from 'src/app/services/user.service';
+import { Router } from "@angular/router"
+
 
 declare var $: any;
 
@@ -25,7 +27,8 @@ export class OverviewComponent implements OnInit {
   hasSentAffiliationRequest: boolean;
   UserType = UserType;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+    private route: Router) { }
 
   ngOnInit() {
   }
@@ -144,5 +147,9 @@ export class OverviewComponent implements OnInit {
       })
         .includes(this.profile.userId);
     });
+  }
+  goToSetting() {
+    this.route.navigate(["/user-setting"])
+
   }
 }

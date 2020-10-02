@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div style ="text-align: center">
+    <ion-button color="secondary" (click)="changePassword()">Change Password</ion-button>
+    </div>
+    <hr> 
+  
+    <div style ="text-align: center">
+    <ion-button color="secondary" (click)="activateAndDeactivate()">Deactivate Account</ion-button>
+   </div>
+
+   <div style ="text-align: center">
+    <h6>Once Account deleted, you will not be able to access to your account again</h6>
+      <ion-button color="danger" (click)="alertUserOnDelete()&&runDelete()" >Delete Account</ion-button>
+    </div>
+
+</ion-content>

@@ -40,9 +40,8 @@ export class AppComponent implements OnInit {
       icon: "information-circle"
     },
     {
-      title: "Log Out",
-      click:"logout()", 
-      url: "/login",
+      title: "Log Out", 
+      url: "/logout",
       icon:"log-out"
     }
   ]
