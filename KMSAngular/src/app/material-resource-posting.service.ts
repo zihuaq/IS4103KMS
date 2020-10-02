@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Project } from './classes/project';
 import { SessionService } from './session.service';
 import { MaterialResourcePosting } from './classes/material-resource-posting';
@@ -21,6 +21,29 @@ export class MaterialResourcePostingService {
 
   getMrpByProject(projectId: number): Observable<any> {
     return this.httpClient.get<any>(this.baseUrl + "/getMrpByProject/" + projectId).pipe(
+      map((data) => {
+        return data.map((mrp: MaterialResourcePosting) => {
+          return {
+            ...mrp,
+            startDate: new Date(
+              parseInt(mrp.startDate.toString().substring(0, 4)),
+              parseInt(mrp.startDate.toString().substring(5, 7)) - 1,
+              parseInt(mrp.startDate.toString().substring(8, 10)),
+              parseInt(mrp.startDate.toString().substring(11, 13)),
+              parseInt(mrp.startDate.toString().substring(14, 16)),
+              parseInt(mrp.startDate.toString().substring(17, 19))
+            ),
+            endDate: new Date(
+              parseInt(mrp.endDate.toString().substring(0, 4)),
+              parseInt(mrp.endDate.toString().substring(5, 7)) - 1,
+              parseInt(mrp.endDate.toString().substring(8, 10)),
+              parseInt(mrp.endDate.toString().substring(11, 13)),
+              parseInt(mrp.endDate.toString().substring(14, 16)),
+              parseInt(mrp.endDate.toString().substring(17, 19))
+            ),
+          }
+        });
+      }),
       catchError(this.handleError)
     );
   }

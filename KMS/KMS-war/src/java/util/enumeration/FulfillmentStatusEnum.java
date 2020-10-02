@@ -12,6 +12,7 @@ package util.enumeration;
 public enum FulfillmentStatusEnum {
     PLEDGED,
     PARTIALLYFULFILLED,
-    FULFILLED
+    FULFILLED,
+    REJECTED
     
 }

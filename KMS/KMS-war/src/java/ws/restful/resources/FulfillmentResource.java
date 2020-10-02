@@ -8,6 +8,7 @@ package ws.restful.resources;
 import Exception.NoResultException;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import entity.FulfillmentEntity;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
@@ -110,6 +111,29 @@ public class FulfillmentResource {
         }
     }
     
+    @Path("getFulfillmentsByMrp/{mrpId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFulfillmentsByMrp(@PathParam("mrpId") Long mrpId) {
+        System.out.println("******** FulfillmentResource: getFulfillmentsByMrp()");
+        try {
+            List<FulfillmentEntity> fulfillmentList = fulfillmentSessionBeanLocal.getListOfFulfillmentsByMrp(mrpId);
+
+            for (FulfillmentEntity fulfillment : fulfillmentList) {
+                fulfillment.setFulfillmentOwner(null);
+                fulfillment.setPosting(null);
+                fulfillment.setMra(null);
+            }
+            return Response.status(Response.Status.OK).entity(fulfillmentList).build();
+        
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
     @Path("deleteFulfillment/{fulfillmentId}")
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
@@ -120,6 +144,74 @@ public class FulfillmentResource {
 
             return Response.status(204).build();
             
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("getListOfMaterialResourceAvailableUnitsByMrp/{mrpId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOfMaterialResourceAvailableUnitsByMrp(@PathParam("mrpId") Long mrpId) {
+        System.out.println("******** FulfillmentResource: getListOfMaterialResourceAvailableUnitsByMrp()");
+        try {
+            List<String> mraUnitsList = fulfillmentSessionBeanLocal.getListOfMaterialResourceAvailableUnitsByMrp(mrpId);
+
+            return Response.status(Response.Status.OK).entity(mraUnitsList).build();
+        
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("getListOfFulfillmentsByUserAndProject/{userId}/{projectId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOfFulfillmentsByUserAndProject(@PathParam("userId") Long userId, @PathParam("projectId") Long projectId) {
+        System.out.println("******** FulfillmentResource: getListOfFulfillmentsByUserAndProject()");
+        try {
+            List<FulfillmentEntity> fulfillmentList = fulfillmentSessionBeanLocal.getListOfFulfillmentsByUserAndProject(userId, projectId);
+
+            for (FulfillmentEntity fulfillment : fulfillmentList) {
+                fulfillment.setFulfillmentOwner(null);
+                fulfillment.getPosting().setProject(null);
+                fulfillment.getPosting().setActivity(null);
+                fulfillment.getPosting().getFulfillments().clear();
+                fulfillment.setMra(null);
+            }
+            return Response.status(Response.Status.OK).entity(fulfillmentList).build();
+        
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("getListOfFulfillmentsByProject/{projectId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOfFulfillmentsByProject(@PathParam("projectId") Long projectId) {
+        System.out.println("******** FulfillmentResource: getListOfFulfillmentsByProject()");
+        try {
+            List<FulfillmentEntity> fulfillmentList = fulfillmentSessionBeanLocal.getListOfFulfillmentsByProject(projectId);
+
+            for (FulfillmentEntity fulfillment : fulfillmentList) {
+                fulfillment.setFulfillmentOwner(null);
+                fulfillment.getPosting().setProject(null);
+                fulfillment.getPosting().setActivity(null);
+                fulfillment.getPosting().getFulfillments().clear();
+                fulfillment.setMra(null);
+            }
+            return Response.status(Response.Status.OK).entity(fulfillmentList).build();
+        
         } catch (NoResultException ex ) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             

@@ -37,6 +37,9 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
         System.out.println("******** MrpSessionBean: createMrp()");
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
+        newMrp.setLackingQuantity(newMrp.getTotalQuantity());
+        newMrp.setObtainedQuantity(0.0);
+        
         em.persist(newMrp);
         em.flush();
         

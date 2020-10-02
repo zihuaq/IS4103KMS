@@ -36,6 +36,12 @@ export class FulfillmentService {
     );
   }
 
+  getFulfillmentsByMrp(mrpId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getFulfillmentsByMrp/" + mrpId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   updateFulfillment(fulfillmentToUpdate: Fulfillment) {
     return this.httpClient.post<any>(this.baseUrl + "/updateFulfillment", fulfillmentToUpdate, httpOptions).pipe(
       catchError(this.handleError)
@@ -44,6 +50,24 @@ export class FulfillmentService {
 
   deleteFulfillment(fulfillmentId: number): Observable<any> {
     return this.httpClient.delete<any>(this.baseUrl + "/deleteFulfillment/" + fulfillmentId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getListOfMaterialResourceAvailableUnitsByMrp(mrpId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getListOfMaterialResourceAvailableUnitsByMrp/" + mrpId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getListOfFulfillmentsByUserAndProject(userId: number, projectId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getListOfFulfillmentsByUserAndProject/" + userId + "/" + projectId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getListOfFulfillmentsByProject(projectId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getListOfFulfillmentsByProject/" + projectId).pipe(
       catchError(this.handleError)
     );
   }

@@ -10,10 +10,13 @@ import entity.FulfillmentEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -46,7 +49,6 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         newFulfillment.setUnreceivedQuantity(newFulfillment.getTotalPledgedQuantity());
         mra.setQuantity(newFulfillment.getMra().getQuantity());
         posting.setLackingQuantity(newFulfillment.getPosting().getLackingQuantity());
-        posting.setObtainedQuantity(newFulfillment.getPosting().getObtainedQuantity());
         
         newFulfillment.setFulfillmentOwner(fulfillmentOwner);
         fulfillmentOwner.getFulfillments().add(newFulfillment);
@@ -71,6 +73,16 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
     }
     
     @Override
+    public List<FulfillmentEntity> getListOfFulfillmentsByMrp(Long mrpId) throws NoResultException {
+        MaterialResourcePostingEntity mrp = materialResourcePostingSessionBeanLocal.getMrpById(mrpId);
+
+        List<FulfillmentEntity> fulfillmentList = new ArrayList<>();
+        fulfillmentList = mrp.getFulfillments();
+
+        return fulfillmentList;
+    }
+    
+    @Override
     public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
         
@@ -90,6 +102,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         }
         
         if (fulfillmentToDelete.getPosting()!= null) {
+            fulfillmentToDelete.getPosting().setLackingQuantity(fulfillmentToDelete.getPosting().getLackingQuantity() + fulfillmentToDelete.getTotalPledgedQuantity());
             fulfillmentToDelete.getPosting().getFulfillments().remove(fulfillmentToDelete);
             fulfillmentToDelete.setPosting(null);
         }
@@ -98,5 +111,36 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
             fulfillmentToDelete.setMra(null);
         }
         em.remove(fulfillmentToDelete);
+    }
+    
+    @Override
+    public List<String> getListOfMaterialResourceAvailableUnitsByMrp(Long mrpId) throws NoResultException {
+        List<FulfillmentEntity> fulfillmentList = getListOfFulfillmentsByMrp(mrpId);
+        List<String> mraUnitsList = new ArrayList<>();
+        
+        for(FulfillmentEntity f: fulfillmentList) {
+            if(!mraUnitsList.contains(f.getMra().getUnits())) {
+                mraUnitsList.add(f.getMra().getUnits()); 
+            }
+        }
+        
+        return mraUnitsList;
+    }
+    
+    @Override
+    public List<FulfillmentEntity> getListOfFulfillmentsByUserAndProject(Long userId, Long projectId) throws NoResultException {
+        Query query = em.createQuery("SELECT f FROM FulfillmentEntity f WHERE f.fulfillmentOwner.userId = :inUserId AND f.posting.project.projectId = :inProjectId");
+        query.setParameter("inUserId", userId);
+        query.setParameter("inProjectId", projectId);
+        
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<FulfillmentEntity> getListOfFulfillmentsByProject(Long projectId) throws NoResultException {
+        Query query = em.createQuery("SELECT f FROM FulfillmentEntity f WHERE f.posting.project.projectId = :inProjectId");
+        query.setParameter("inProjectId", projectId);
+        
+        return query.getResultList();
     }
 }

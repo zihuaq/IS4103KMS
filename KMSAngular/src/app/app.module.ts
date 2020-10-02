@@ -54,6 +54,7 @@ import { AffiliationRequestsComponent } from './notifications/affiliation-reques
 import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
 import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
 import { JobAppliedComponent } from './profile/job-applied/job-applied.component';
+import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { JobAppliedComponent } from './profile/job-applied/job-applied.component
     AffiliationRequestsComponent,
     ViewHrpTabComponent,
     ViewMrpTabComponent,
-    JobAppliedComponent
+    JobAppliedComponent,
+    MyFulfillmentsComponent
   ],
   imports: [
     BrowserModule,
