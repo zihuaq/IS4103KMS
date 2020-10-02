@@ -27,8 +27,12 @@
                     </div>
                     <div class="form-group">
                         <label for="units"> Units *</label>
-                        <input type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units"
-                            required>
+                        <select type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units" required>
+                            <option disabled value="Select Unit">Select Unit</option>
+                            <option value="item(s)">item(s)</option>
+                            <option value="kg">kg</option>
+                            <option value="m">m</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
