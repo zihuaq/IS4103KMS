@@ -76,36 +76,48 @@ export class AddMaterialResourceAvailablePage implements OnInit {
           this.tagService.getAllMaterialResourceTags(),
           this.userService.getUser(user.userId.toString()),
           this.mraService.getMaterialResourceAvailableById(mraid)
-        ]).subscribe((result) => {
-          this.mraTags = result[0]
-          this.profile = result[1]
-          this.editingMra = result[2]
-          this.chosenTags = this.editingMra.tags
-          this.hasExpiry = this.editingMra.endDate == null ? false : true
-          this.editingMraStartDate = this.editingMra.startDate
-            .toISOString()
-            .slice(0, 10)
-          this.editingMraEndDate = this.editingMra.endDate
-            .toISOString()
-            .slice(0, 10)
-          this.app.tick()
-        })
+        ]).subscribe(
+          (result) => {
+            this.mraTags = result[0]
+            this.profile = result[1]
+            this.editingMra = result[2]
+            this.chosenTags = this.editingMra.tags
+            this.hasExpiry = this.editingMra.endDate == null ? false : true
+            this.editingMraStartDate = this.editingMra.startDate
+              .toISOString()
+              .slice(0, 10)
+            this.editingMraEndDate = this.editingMra.endDate
+              .toISOString()
+              .slice(0, 10)
+            this.app.tick()
+          },
+          (err) => {
+            console.log(err)
+          },
+          () => {
+            this.loadMap()
+          }
+        )
       } else {
         forkJoin([
           this.tagService.getAllMaterialResourceTags(),
           this.userService.getUser(user.userId.toString())
-        ]).subscribe((result) => {
-          this.mraTags = result[0]
-          this.profile = result[1]
-          this.editingMra = new MaterialResourceAvailable()
-          this.app.tick()
-        })
+        ]).subscribe(
+          (result) => {
+            this.mraTags = result[0]
+            this.profile = result[1]
+            this.editingMra = new MaterialResourceAvailable()
+            this.app.tick()
+          },
+          (err) => {
+            console.log(err)
+          },
+          () => {
+            this.loadMap()
+          }
+        )
       }
     })
-  }
-
-  ionViewDidEnter() {
-    this.loadMap()
   }
 
   loadMap() {
