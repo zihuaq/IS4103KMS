@@ -1,4 +1,4 @@
-import { forkJoin } from "rxjs"
+import { BehaviorSubject, forkJoin, Subscription } from "rxjs"
 import { UserService } from "src/app/services/user.service"
 import { AuthenticationService } from "src/app/services/authentication.service"
 import { ActivatedRoute, Router } from "@angular/router"
@@ -9,19 +9,20 @@ import { TagService } from "./../../services/tag.service"
 import { Tag } from "./../../classes/tag"
 import { MaterialResourceAvailable } from "./../../classes/material-resource-available"
 import { User } from "./../../classes/user"
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core"
 import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from "@angular/core"
-import { Environment, GoogleMap, GoogleMaps } from "@ionic-native/google-maps"
+  CameraPosition,
+  Environment,
+  GoogleMap,
+  GoogleMaps,
+  GoogleMapsAnimation,
+  GoogleMapsEvent,
+  GoogleMapsMapTypeId,
+  ILatLng,
+  LatLng,
+  Marker
+} from "@ionic-native/google-maps"
 import { NgForm } from "@angular/forms"
-
-declare var google: any
 
 @Component({
   selector: "app-add-material-resource-available",
@@ -35,10 +36,10 @@ export class AddMaterialResourceAvailablePage implements OnInit {
   minDate = new Date().toISOString().slice(0, 10)
   hasExpiry = false
   editingMra: MaterialResourceAvailable
-  map: any
+  map: GoogleMap
   editingMraStartDate: string
   editingMraEndDate: string
-  @ViewChild("map", { read: ElementRef, static: false }) mapRef: ElementRef
+  mapSubscription: Subscription
 
   constructor(
     private tagService: TagService,
@@ -48,21 +49,17 @@ export class AddMaterialResourceAvailablePage implements OnInit {
     private location: Location,
     private activatedRoute: ActivatedRoute,
     private authenticationService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
-  ngOnInit() {}
+  async ngOnInit() {
+    await this.platform.ready()
+  }
 
   ionViewWillEnter() {
     console.log("ionViewWillEnter")
     let mraid = this.activatedRoute.snapshot.params.mraId
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position.coords.latitude)
-      // this.center = {
-      //   lat: position.coords.latitude,
-      //   lng: position.coords.longitude
-      // }
-    })
     this.authenticationService.getCurrentUser().then((user: User) => {
       if (mraid) {
         forkJoin([
@@ -99,14 +96,60 @@ export class AddMaterialResourceAvailablePage implements OnInit {
   }
 
   loadMap() {
-    const location = new google.maps.LatLng(-17.824858, 31.053028)
-    const options = {
-      center: location,
-      zoom: 15,
-      disableDefaultUI: true
-    }
+    this.map = GoogleMaps.create("map_canvas")
 
-    this.map = new google.maps.Map(this.mapRef.nativeElement, options)
+    if (!this.editingMra.latitude) {
+      this.map.getMyLocation().then((location) => {
+        let marker: Marker = this.map.addMarkerSync({
+          position: location.latLng
+        })
+
+        let position: CameraPosition<ILatLng> = {
+          target: marker.getPosition(),
+          zoom: 16
+        }
+
+        this.map.setOptions({
+          mapType: GoogleMapsMapTypeId.HYBRID,
+          camera: position
+        })
+        this.editingMra.latitude = location.latLng.lat.toString()
+        this.editingMra.longitude = location.latLng.lng.toString()
+      })
+    } else {
+      let marker: Marker = this.map.addMarkerSync({
+        position: new LatLng(
+          Number(this.editingMra.latitude),
+          Number(this.editingMra.longitude)
+        )
+      })
+
+      let position: CameraPosition<ILatLng> = {
+        target: marker.getPosition(),
+        zoom: 16
+      }
+
+      this.map.setOptions({
+        mapType: GoogleMapsMapTypeId.HYBRID,
+        camera: position
+      })
+    }
+    this.mapSubscription = this.map
+      .on(GoogleMapsEvent.MAP_CLICK)
+      .subscribe((params: any[]) => {
+        let latLng: LatLng = params[0]
+        this.map.clear()
+        this.map.addMarkerSync({
+          position: latLng,
+          animation: GoogleMapsAnimation.DROP
+        })
+        this.editingMra.latitude = latLng.lat.toString()
+        this.editingMra.longitude = latLng.lng.toString()
+      })
+  }
+
+  ionViewDidLeave() {
+    this.mapSubscription.unsubscribe()
   }
 
   createMaterialResourceRequest(mraForm: NgForm) {
@@ -123,8 +166,8 @@ export class AddMaterialResourceAvailablePage implements OnInit {
       this.newMra.quantity = mraForm.value.quantity
       this.newMra.units = mraForm.value.units
       this.newMra.description = mraForm.value.description
-      this.newMra.latitude = "this.editingMra.latitude"
-      this.newMra.longitude = "this.editingMra.longitude"
+      this.newMra.latitude = this.editingMra.latitude
+      this.newMra.longitude = this.editingMra.longitude
       this.newMra.startDate = new Date(mraForm.value.startDate)
       this.newMra.endDate = new Date(mraForm.value.endDate)
       this.newMra.tags = mraForm.value.mraTags
@@ -141,7 +184,7 @@ export class AddMaterialResourceAvailablePage implements OnInit {
             this.profile.mras = responsedata
           })
       }
-      this.location.back()
+      this.router.navigate(["/profile"])
       mraForm.reset()
       this.editingMra = new MaterialResourceAvailable()
       this.editingMraStartDate = null

@@ -44,9 +44,9 @@
           <ion-item>
             <ion-label position="stacked">Location of resource</ion-label>
           </ion-item>
-          <div #map id="map">
+          <div id="map_canvas">
           </div>
-          <ion-item>
+          <!-- <ion-item>
             <ion-label position="stacked">Latitude *</ion-label>
             <ion-input type="text" id="latitude" [ngModel]="editingMra.latitude" name="latitude" required disabled>
             </ion-input>
@@ -55,7 +55,7 @@
             <ion-label position="stacked">Longitude *</ion-label>
             <ion-input type="text" id="longitude" [ngModel]="editingMra.longitude" name="longitude" required disabled>
             </ion-input>
-          </ion-item>
+          </ion-item> -->
           <ion-item>
             <ion-label position="stacked">Does your resource expire?</ion-label>
             <ion-toggle [(ngModel)]="hasExpiry" name="hasExpiry" (change)="handleHasExpiryChange()"></ion-toggle>
