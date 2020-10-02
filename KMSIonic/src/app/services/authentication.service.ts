@@ -64,7 +64,7 @@ export class AuthenticationService {
   checkToken() {
     return this.storage.get(LOGGED_IN_USER).then((res) => {
       if (res) {
-        this.authenticationState.next(false)
+        this.authenticationState.next(true)
       }
     })
   }

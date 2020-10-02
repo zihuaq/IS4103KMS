@@ -1,5 +1,5 @@
 import { ApplicationRef, Component, OnInit } from "@angular/core"
-import { ActivatedRoute } from "@angular/router"
+import { ActivatedRoute, Router } from "@angular/router"
 import { User } from "src/app/classes/user"
 import { UserService } from "src/app/services/user.service"
 import { AuthenticationService } from "./../../services/authentication.service"
@@ -30,7 +30,8 @@ export class ProfilePage implements OnInit {
     private authenticationService: AuthenticationService,
     private mraService: MaterialResourceAvailableService,
     private modalController: ModalController,
-    private app: ApplicationRef
+    private app: ApplicationRef,
+    private router: Router
   ) {}
 
   ngOnInit() {}
@@ -83,6 +84,10 @@ export class ProfilePage implements OnInit {
       }
     })
     return await modal.present()
+  }
+
+  goToSetting() {
+    this.router.navigate(["/user-setting"])
   }
 
   // changePassword(passwordForm: NgForm) {

@@ -62,15 +62,6 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
-      this.authService.authenticationState.subscribe((state) => {
-        //console.log(state + "test");
-        console.log("Auth changed: ", state)
-        if (state) {
-          this.router.navigate(["index"])
-        } else {
-          this.router.navigate(["login"])
-        }
-      })
     })
   }
 
