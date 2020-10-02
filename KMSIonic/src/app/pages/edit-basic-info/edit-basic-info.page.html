@@ -34,19 +34,31 @@
           </ion-item>
           <ion-item *ngIf="loggedInUser.userType != UserType.INSTITUTE">
             <ion-label position="stacked">Date of Birth</ion-label>
-            <ion-datetime required [ngModel]="loggedInUser.dob | date" name="dob"
-              placeholder="Select Date" max="2020-09"></ion-datetime>
+            <ion-datetime required [ngModel]="loggedInUser.dob | date" name="dob" placeholder="Select Date"
+              max="2020-09"></ion-datetime>
           </ion-item>
           <ion-item *ngIf="loggedInUser.userType != UserType.INSTITUTE">
             <ion-label position="stacked" for="gender">Gender</ion-label>
-            <ion-radio-group name="gender" [ngModel]="loggedInUser.gender" required>
+            <ion-radio-group style="margin-top: 4px;" name="gender" [ngModel]="loggedInUser.gender" required>
               <ion-list>
-                <ion-item *ngFor="let gender of genders">
+                <ion-item *ngFor="let gender of genders" lines="none">
                   <ion-label>{{gender}}</ion-label>
                   <ion-radio slot="start" [value]="gender"></ion-radio>
                 </ion-item>
               </ion-list>
             </ion-radio-group>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
+                alt="User profile picture">
+              <img *ngIf="!loggedInUser.profilePicture" class="ion-border"
+                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                alt="User profile picture">
+            </ion-avatar>
+            <ion-button (click)="choosePictureActionSheet()" expand="block" shape="round">
+              Choose Profile Picture
+            </ion-button>
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Privacy Settings</ion-label>
