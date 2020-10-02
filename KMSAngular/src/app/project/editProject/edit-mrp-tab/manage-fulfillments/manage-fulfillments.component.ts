@@ -136,6 +136,8 @@ export class ManageFulfillmentsComponent implements OnInit {
       this.fulfillmentToUpdate.totalPledgedQuantity = this.newTotalPledgedQuantity;
       if (this.fulfillmentToUpdate.totalPledgedQuantity == this.fulfillmentToUpdate.receivedQuantity) {
         this.fulfillmentToUpdate.status = FulfillmentStatus.FULFILLED;
+      } else if(this.fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED && this.fulfillmentToUpdate.totalPledgedQuantity > this.fulfillmentToUpdate.receivedQuantity) {
+        this.fulfillmentToUpdate.status = FulfillmentStatus.PARTIALLYFULFILLED;
       }
       this.fulfillmentService.updateQuantity(this.fulfillmentToUpdate).subscribe(
         response => {
@@ -194,6 +196,11 @@ export class ManageFulfillmentsComponent implements OnInit {
 
   cancel() {
     $('#modal-fulfillments').show();
+  }
+
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    window.open(url, '_blank');
   }
 
 }

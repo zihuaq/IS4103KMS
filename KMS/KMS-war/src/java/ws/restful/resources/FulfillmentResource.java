@@ -164,7 +164,7 @@ public class FulfillmentResource {
                 owner.setLastName(fulfillment.getFulfillmentOwner().getLastName());
                 fulfillment.setFulfillmentOwner(owner);
                 fulfillment.setPosting(null);
-                fulfillment.setMra(null);
+                fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }
             return Response.status(Response.Status.OK).entity(fulfillmentList).build();
         

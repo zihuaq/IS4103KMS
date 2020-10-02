@@ -3,7 +3,7 @@
 </button>
 
 <div class="modal fade" id="modal-fulfillments">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content bg-gradient-info">
             <div class="modal-header">
                 <h4 class="modal-title">Fulfillments</h4>
@@ -23,9 +23,6 @@
                                     <span class="badge badge-success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{fulfillment.status}}</span>
                                     <span class="badge badge-danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</span>
                                 </h6>
-                            </div>
-                            <div class="card-body" style="display: block;">
-                                {{fulfillment.receivedQuantity}} {{mrp.unit}} received<span class="text-muted"> / {{fulfillment.totalPledgedQuantity}} {{mrp.unit}} pledged</span>
                                 <button type="button" class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 10px;"><i class="fas fa-ellipsis-h"></i></button> 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" class="dropdown-item" data-toggle="modal" data-target="#modal-receive" (click)="clickReceive(fulfillment)">Receive Resources</a>
@@ -33,6 +30,20 @@
                                     <a class="dropdown-item" data-toggle="modal" data-target="#modal-update" (click)="clickUpdate(fulfillment)">Update Quantity</a>
                                     <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-reject-fulfillment" (click)="clickReject(fulfillment)">Reject</a>
                                   </div>
+                            </div>
+                            <div class="card-body" style="display: block;">
+                                <b>{{fulfillment.mra.name}}</b>
+                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> View location at {{fulfillment.mra.latitude | number:'1.1-6'}}, {{fulfillment.mra.longitude | number:'1.1-6'}}</a>
+                                <br/>
+                                {{fulfillment.receivedQuantity}} {{mrp.unit}} received / {{fulfillment.totalPledgedQuantity}} {{mrp.unit}} pledged
+                                <br/>
+                                <span class="text-muted">{{fulfillment.mra.description}}</span>
+                                <br/>
+                                <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
+                                    <div *ngFor="let tag of fulfillment.mra.tags">
+                                        <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                                    </div>
+                                </span>
                             </div> 
                         </div>
                     </div>

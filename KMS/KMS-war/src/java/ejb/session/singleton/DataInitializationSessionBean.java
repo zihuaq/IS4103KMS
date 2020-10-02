@@ -134,6 +134,8 @@ public class DataInitializationSessionBean {
             projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", 0.0), 5l, new ArrayList<Long>(Arrays.asList(25l, 26l, 28l, 32l, 36l)));
             projectSessionBean.createNewProject(new ProjectEntity("Green City Solutions", "Create and implement new green inventions such as city trees that are plant-based air filters and smart street pathway that converts kinetic energy of footsteps into electricity.", new Date(), "United Kingdom", "", 10000.0), 5l, new ArrayList<Long>(Arrays.asList(29l, 31l, 33l, 35l)));
             projectSessionBean.createNewProject(new ProjectEntity("Resilience and Response Systems", "Promoting social cohesion and investing in community-led resilience and response systems. Helping people cope with adversity, through social protection and basic services.", new Date(), "Hong Kong", "", 0.0), 6l, new ArrayList<Long>(Arrays.asList(30l, 38l)));
+            projectSessionBean.joinProject(4l, 3l);
+            projectSessionBean.joinProject(4l, 1l);
         } catch (CreateProjectException ex) {
             System.out.println(ex.getMessage());
         }

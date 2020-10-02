@@ -234,7 +234,9 @@ export class ViewMrpTabComponent implements OnInit {
   }
 
   cancel(){
+    this.newFulFillment = new Fulfillment();
     this.mraToDonate = null;
+    this.totalPledgedQuantity = null;
   }
 
   submit() {
@@ -271,6 +273,9 @@ export class ViewMrpTabComponent implements OnInit {
               }
             }
           );
+          this.newFulFillment = new Fulfillment();
+          this.mraToDonate = null;
+          this.totalPledgedQuantity = null;
           $('#modal-fulfill-posting').hide();
           $('.modal-backdrop').remove();
           $(document).Toasts('create', {
