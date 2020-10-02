@@ -1,9 +1,32 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>viewAllProject</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Discover Projects      
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="createProject()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm"
+    (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  </ion-searchbar>
 </ion-header>
 
 <ion-content>
-
+  <span *ngFor="let project of filteredProjects">
+    <ion-card tappable (click)="viewProjectDetails($event, project)">
+      <ion-card-header>
+        <b>{{project.name}}</b>&nbsp;
+        <ion-badge color="primary">{{project.status}}</ion-badge>
+      </ion-card-header>
+      <ion-card-content>
+        {{project.description}}    
+      </ion-card-content>
+    </ion-card>
+  </span>
 </ion-content>
