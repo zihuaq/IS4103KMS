@@ -38,6 +38,11 @@ export class AppComponent implements OnInit {
       title: "SDG Info",
       url: "/sdg-info",
       icon: "information-circle"
+    },
+    {
+      title: "Discover Project",
+      url: "/view-all-project",
+      icon: "search"
     }
   ]
 

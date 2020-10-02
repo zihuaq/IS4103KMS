@@ -108,6 +108,22 @@ const routes: Routes = [
       (m) => m.CreateNewProjectPageModule
     ),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'project-details/:projectId',
+    loadChildren: () => import('./pages/project/viewProject/project-details/project-details.module').then( m => m.ProjectDetailsPageModule)
+  },
+  {
+    path: 'edit-project-details/:projectId',
+    loadChildren: () => import('./pages/project/editProject/edit-project-details/edit-project-details.module').then( m => m.EditProjectDetailsPageModule)
+  },
+  {
+    path: 'tab-panel/:projectId',
+    loadChildren: () => import('./pages/project/editProject/tab-panel/tab-panel.module').then( m => m.TabPanelPageModule)
+  },
+  {
+    path: 'edit-members',
+    loadChildren: () => import('./pages/project/editProject/edit-members/edit-members.module').then( m => m.EditMembersPageModule)
   }
 ]
 
