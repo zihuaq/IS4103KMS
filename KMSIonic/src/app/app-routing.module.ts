@@ -118,7 +118,11 @@ const routes: Routes = [
   {
     path: 'add-sdgs',
     loadChildren: () => import('./pages/add-sdgs/add-sdgs.module').then( m => m.AddSdgsPageModule)
+  },  {
+    path: 'add-material-resource-available',
+    loadChildren: () => import('./pages/add-material-resource-available/add-material-resource-available.module').then( m => m.AddMaterialResourceAvailablePageModule)
   }
+
 ]
 
 @NgModule({

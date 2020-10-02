@@ -55,11 +55,11 @@
           <ion-col size="8" class="ion-align-self-start">
             <ion-label *ngIf="profile.userType == UserType.INSTITUTE">
               <ion-text>Affiliated Users</ion-text>
-              <p>{{profile.following.length}} Affiliated Users</p>
+              <p>{{profile.affiliatedUsers.length}} Affiliated Users</p>
             </ion-label>
             <ion-label *ngIf="profile.userType != UserType.INSTITUTE">
               <ion-text>Affiliated Institutes</ion-text>
-              <p>{{profile.following.length}} Affiliated Institutes</p>
+              <p>{{profile.affiliatedUsers.length}} Affiliated Institutes</p>
             </ion-label>
           </ion-col>
           <ion-col size="4" class="ion-align-self-end">
