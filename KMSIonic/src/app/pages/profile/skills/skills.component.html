@@ -1,7 +1,7 @@
 <ion-card>
   <ion-item>
     <ion-label>Skills</ion-label>
-    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" [routerLink]="['/view-skills']"> Edit </ion-button>
+    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" style="font-size: 12px;" [routerLink]="['/view-skills']"> Edit </ion-button>
   </ion-item>
   <ion-card-content *ngIf="profile.skills.length == 0">
     No Skills Indicated
