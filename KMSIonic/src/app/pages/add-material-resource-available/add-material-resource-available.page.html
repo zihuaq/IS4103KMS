@@ -33,14 +33,26 @@
             <ion-label position="stacked">Description</ion-label>
             <ion-input type="text" id="description" [ngModel]="editingMra.description" name="description"></ion-input>
           </ion-item>
-          <ion-item>
-            <ion-label position="stacked">Material Resource Tags *</ion-label>
-            <ion-select multiple="true" placeholder="Select relevant tags" [ngModel]="editingMra.tags" name="mraTags"
-              required>
-              <ion-select-option *ngFor="let mraTag of mraTags" [value]="mraTag">{{mraTag.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <ion-label position="stacked">Material Resource Tags *</ion-label>
+          <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)" [ngModelOptions]="{standalone: true}"
+            placeholder="Search tags"></ion-searchbar>
+          <ion-list lines="none" *ngIf="filteredTags.length > 0">
+            <ion-item *ngFor="let tag of filteredTags">
+              <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">
+                <ion-text>
+                  <h3>{{tag.name}}</h3>
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+          <ion-list>
+            <ion-item *ngFor="let tag of chosenTags" lines="none">
+              <ion-chip>
+                <ion-label>{{tag.name}} </ion-label>
+                <ion-icon name="close-outline" (click)="removeTag(tag)"></ion-icon>
+              </ion-chip>
+            </ion-item>
+          </ion-list>
           <ion-item>
             <ion-label position="stacked">Location of resource</ion-label>
           </ion-item>
