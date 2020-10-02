@@ -45,6 +45,11 @@ export class AppComponent implements OnInit {
       icon: "search"
     },
     {
+      title: "My Project",
+      url: "/view-own-projects",
+      icon: "person"
+    },
+    {
       title: "Log Out", 
       url: "/logout",
       icon:"log-out"
