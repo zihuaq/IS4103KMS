@@ -1,15 +1,15 @@
 <ion-card>
   <ion-item>
     <ion-label>Material Resource Available</ion-label>
-    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" routerLink="/add-material-resource-available">
+    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" style="font-size: 12px;" routerLink="/add-material-resource-available">
       Add
     </ion-button>
   </ion-item>
-  <ion-card-content>
+  <ion-card-content *ngIf="profile.mras && profile.mras.length == 0">
+    No Material Resources Available Indicated
+  </ion-card-content>
+  <ion-card-content *ngIf="profile.mras && profile.mras.length > 0">
     <ion-list>
-      <ion-item *ngIf="profile.mras.length == 0">
-        No Material Resources Available Indicated
-      </ion-item>
       <div *ngIf="seeAll">
         <ion-card *ngFor="let mra of profile.mras" class="ion-no-padding ion-no-margin">
           <ion-grid>

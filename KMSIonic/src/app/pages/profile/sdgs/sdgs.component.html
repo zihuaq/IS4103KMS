@@ -1,7 +1,7 @@
 <ion-card>
   <ion-item>
     <ion-label>SDGs</ion-label>
-    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" [routerLink]="['/view-sdgs']"> Edit </ion-button>
+    <ion-button *ngIf="profileIsLoggedInUser" fill="outline" slot="end" style="font-size: 12px;" [routerLink]="['/view-sdgs']"> Edit </ion-button>
   </ion-item>
   <ion-card-content *ngIf="profile.sdgs.length == 0">
     No SDGs Indicated
