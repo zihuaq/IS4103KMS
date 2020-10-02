@@ -7,11 +7,6 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-        <!-- <div class="radio" *ngFor = "let s of status"  style="display: inline; position:relative; left:30px;">
-            <ion-label style="padding-right: 10px;">
-                <ion-input type="radio"  name="status" [ngModel] = "user.isActive ? 'Active':'Deactive'" [value] = "s"> {{s}}
-        </ion-input>        
-      </div> -->
       <form (ngSubmit)="changeStatus()">
         <ion-list>
           <ion-radio-group [(ngModel)]="log.status" name="status">
