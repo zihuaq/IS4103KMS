@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -99,6 +100,23 @@ public class FulfillmentResource {
         try { 
             System.out.println("******** FulfillmentResource: updateFulfillment()");
             fulfillmentSessionBeanLocal.updateFulfillment(fulfillmentToUpdate);
+
+            return Response.status(204).build();
+            
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("deleteFulfillment/{fulfillmentId}")
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteFulfillment(@PathParam("fulfillmentId") Long fulfillmentId) {
+        System.out.println("******** FulfillmentResource: deleteFulfillment()");
+        try {
+            fulfillmentSessionBeanLocal.deleteFulfillment(fulfillmentId);
 
             return Response.status(204).build();
             

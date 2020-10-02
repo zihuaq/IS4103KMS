@@ -57,6 +57,14 @@ export class EditMrpTabComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    /*
+    $(document).ready(function() {
+      $('#unitselect2').select2({
+        placeholder: 'Select a Unit'
+      });
+    });
+    */
+  
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
 
     this.projectService.getProjectById(this.projectId).subscribe(

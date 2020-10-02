@@ -54,14 +54,14 @@ public class FulfillmentEntity implements Serializable {
     private MaterialResourceAvailableEntity mra;
 
     public FulfillmentEntity() {
+        this.status = FulfillmentStatusEnum.PLEDGED;
     }
 
-    public FulfillmentEntity(Double totalPledgedQuantity, Double receivedQuantity, Double unreceivedQuantity, FulfillmentStatusEnum status) {
+    public FulfillmentEntity(Double totalPledgedQuantity, Double receivedQuantity, Double unreceivedQuantity) {
         this();
         this.totalPledgedQuantity = totalPledgedQuantity;
         this.receivedQuantity = receivedQuantity;
         this.unreceivedQuantity = unreceivedQuantity;
-        this.status = status;
     }
 
     public Long getFulfillmentId() {
