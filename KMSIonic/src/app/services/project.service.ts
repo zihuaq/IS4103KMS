@@ -22,7 +22,7 @@ export class ProjectService {
     private httpClient: HttpClient,
     private utilityService: UtilityService
   ) {
-    this.baseUrl = this.utilityService.getRootPath() + "tag"
+    this.baseUrl = this.utilityService.getRootPath() + "project"
   }
 
   getAllProject(): Observable<any> {

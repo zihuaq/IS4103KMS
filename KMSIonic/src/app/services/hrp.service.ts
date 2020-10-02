@@ -22,7 +22,7 @@ export class HrpService {
     private httpClient: HttpClient,
     private utilityService: UtilityService
   ) {
-    this.baseUrl = this.utilityService.getRootPath() + "tag"
+    this.baseUrl = this.utilityService.getRootPath() + "hrp"
   }
 
   getHrpByProject(projectId: number): Observable<any> {

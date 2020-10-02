@@ -27,6 +27,9 @@
         </ion-note>
       </ion-label>
     </ion-item>
+    <div style ="text-align: right">
+    <ion-button icon="setting" (click)="goToSetting()">Setting</ion-button>
+    </div>
     <ion-item  *ngIf="profile.userId != loggedInUser.userId">
       <ion-label *ngIf="profile.userId != loggedInUser.userId">
         <ion-button fill="outline" *ngIf="!isFollowing && !hasSentFollowRequest" (click)="follow()">

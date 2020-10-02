@@ -91,9 +91,8 @@ public class HumanResourcePostingEntity implements Serializable {
         this.appliedUsers = new ArrayList<>();
     }
 
-    public HumanResourcePostingEntity(Long humanResourcePostingId, String name, Integer totalSlots, Integer obtainedSlots, Integer lackingSlots, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
+    public HumanResourcePostingEntity(String name, Integer totalSlots, Integer obtainedSlots, Integer lackingSlots, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
         this();
-        this.humanResourcePostingId = humanResourcePostingId;
         this.name = name;
         this.totalSlots = totalSlots;
         this.obtainedSlots = obtainedSlots;

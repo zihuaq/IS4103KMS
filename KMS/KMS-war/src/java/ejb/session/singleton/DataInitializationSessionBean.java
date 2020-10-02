@@ -9,21 +9,26 @@ import Exception.CreateProjectException;
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
+import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.UserEntity;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.mail.internet.ParseException;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
 
@@ -35,6 +40,9 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB
+    private HumanResourcePostingSessionBeanLocal humanResourcePostingSessionBean;
 
     @EJB
     private ProjectSessionBeanLocal projectSessionBean;
@@ -66,7 +74,7 @@ public class DataInitializationSessionBean {
         }
     }
 
-    private void initializeData() throws TagNameExistException, DuplicateEmailException, NoResultException  {
+    private void initializeData() throws TagNameExistException, DuplicateEmailException, NoResultException, java.text.ParseException  {
         tagSessionBean.createNewTag(new TagEntity("Project Management", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Content Marketing", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Digital Marketing", TagTypeEnum.SKILL));
@@ -139,5 +147,21 @@ public class DataInitializationSessionBean {
         } catch (CreateProjectException ex) {
             System.out.println(ex.getMessage());
         }
+        
+        try {
+            Date startDate = new Date();
+            Date endDate = new Date();
+            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-10");
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-20");
+            List<Long> tagIds = new ArrayList<>();
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.4491, 103.8185), 1l, tagIds);
+            
+            tagIds.add(9l);
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.4491, 103.8185), 1l, tagIds);
+            
+            humanResourcePostingSessionBean.joinHrp(3l, 2l);
+        } catch(NoResultException ex) {
+           System.out.println(ex.getMessage()); 
+        } 
     }
 }
