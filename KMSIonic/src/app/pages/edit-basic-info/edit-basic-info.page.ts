@@ -8,6 +8,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 import { ToastController } from '@ionic/angular';
 import { Location } from '@angular/common';
+import { UserType } from 'src/app/enum/user-type.enum';
 
 @Component({
   selector: 'app-edit-basic-info',
@@ -20,6 +21,7 @@ export class EditBasicInfoPage implements OnInit {
   updatedUser: User;
   privacySettings = AccountPrivacySettingEnum;
   genders = ["Male", "Female"];
+  UserType = UserType;
 
   constructor(private location: Location, private activatedRoute: ActivatedRoute, private userService: UserService, 
     private authenticationService: AuthenticationService, public toastController: ToastController) { }

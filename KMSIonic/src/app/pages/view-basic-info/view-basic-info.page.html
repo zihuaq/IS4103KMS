@@ -12,25 +12,40 @@
 </ion-header>
 
 <ion-content *ngIf="profile">
-  <ion-button expand="block" color="dark" *ngIf="profile.userId == loggedInUserId" routerLink="/edit-basic-info/{{profile.userId}}">Edit Basic Information</ion-button>
+  <ion-button expand="block" color="dark" *ngIf="profile.userId == loggedInUserId" [routerLink]="['/edit-basic-info', profile.userId]">Edit
+    Basic Information</ion-button>
   <ion-card>
-    <ion-item>
-      <strong>
-        <ion-icon name="calendar-outline"></ion-icon> Joined Date
-      </strong>
-      <div class="text-muted ion-text-right">{{profile.joinedDate | date}}</div>
-    </ion-item>
-    <ion-item>
-      <strong>
-        <ion-icon name="body-outline"></ion-icon> Gender
-      </strong>
-      <div class="text-muted ion-text-right">{{profile.gender}}</div>
-    </ion-item>
-    <ion-item>
-      <strong>
-        <ion-icon name="today-sharp"></ion-icon> Date of Birth
-      </strong>
-      <div class="text-muted ion-text-right">{{profile.dob | date}}</div>
-    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <strong>
+            <ion-icon name="calendar-outline"></ion-icon> Joined Date
+          </strong>
+        </ion-col>
+        <ion-col>
+          <div class="text-muted ion-text-right">{{profile.joinedDate | date}}</div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <strong>
+            <ion-icon name="body-outline"></ion-icon> Gender
+          </strong>
+        </ion-col>
+        <ion-col>
+          <div class="text-muted ion-text-right">{{profile.gender}}</div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <strong>
+            <ion-icon name="today-sharp"></ion-icon> Date of Birth
+          </strong>
+        </ion-col>
+        <ion-col>
+          <div class="text-muted ion-text-right">{{profile.dob | date}}</div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-card>
 </ion-content>

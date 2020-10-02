@@ -4,6 +4,8 @@ import { User } from 'src/app/classes/user';
 import { UserService } from 'src/app/services/user.service';
 import { AuthenticationService } from "./../../services/authentication.service";
 import { forkJoin } from 'rxjs';
+import { ModalController } from '@ionic/angular';
+import { ReportProfileComponent } from './report-profile/report-profile.component';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +17,8 @@ export class ProfilePage implements OnInit {
   loggedInUser: User;
   loggedInUserId: number;
 
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserService, private authenticationService: AuthenticationService) { }
+  constructor(private activatedRoute: ActivatedRoute, private userService: UserService,
+    private authenticationService: AuthenticationService, public modalController: ModalController) { }
 
   ngOnInit() {
   }
@@ -50,5 +53,16 @@ export class ProfilePage implements OnInit {
         });
       }
     });
+  }
+
+  async presentReportProfileModal() {
+    const modal = await this.modalController.create({
+      component: ReportProfileComponent,
+      componentProps: {
+        'profileId': this.profile.userId,
+        'loggedInUserId': this.loggedInUserId
+      }
+    });
+    return await modal.present();
   }
 }
