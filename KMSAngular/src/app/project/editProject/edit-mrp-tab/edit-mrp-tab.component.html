@@ -20,28 +20,22 @@
                     <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-edit-mrp" (click)="clickEditMrp(mrp)">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-confirm-delete-mrp" (click)="clickDeleteMrp(mrp)">
+                    <button type="button" class="btn btn-tool" (click)="clickDeleteMrp(mrp)">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
             </div>
             <div class="card-body" style="display: block; color: rgb(44, 44, 44);">
                 <p style="margin: 0 7px 0 7px;">
-                    <b>{{mrp.startDate.toString().slice(0,10) | date }} to {{mrp.endDate.toString().slice(0,10) | date }}</b> 
+                    <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b> 
                     <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
                     <br/>
-                    {{mrp.lackingQuantity}} {{mrp.unit}} (required)<span class="text-muted"> / {{mrp.totalQuantity}} {{mrp.unit}} (total)</span>
+                    <button type="button" class="btn btn-info float-right" style="margin-right: 2%; font-size: 15px;"><i class="fas fa-eye"></i> Fulfillments</button>
+                    {{mrp.lackingQuantity}} {{mrp.unit}} required<span class="text-muted"> / {{mrp.totalQuantity}} {{mrp.unit}} total</span>
                     <br/>
-                    <!--
-                    <b>Quantity:</b> {{mrp.lackingQuantity}} {{mrp.unit}} (required)<span class="text-muted"> / {{mrp.totalQuantity}} {{mrp.unit}} (total)</span>
-                    <span class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</span>
-                    <br/>
-                    <b>Date:</b> {{mrp.startDate.toString().slice(0,10) | date }} - {{mrp.endDate.toString().slice(0,10) | date }}
-                    <br/>
-                    -->  
                     <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
                         <div *ngFor="let tag of mrp.tags">
-                            <small class="badge badge-info ml-2">{{tag.name}}</small>
+                            <small class="badge badge-dark ml-2">{{tag.name}}</small>
                         </div>
                     </span>
                 </p>
@@ -71,64 +65,12 @@
                     </div>
                     <div class="form-group">
                         <label for="unit"> Unit *</label>
-                        <div>
-                            <select id="unit" class="form-control" name="unit" [(ngModel)]="newMrp.unit" required>
-                                <optgroup label="General">
-                                    <option value="item(s)">item(s)</option>
-                                </optgroup>
-                                <optgroup label="Length">
-                                    <option value="mm">mm</option>
-                                    <option value="cm">cm</option>
-                                    <option value="m">m</option>
-                                    <option value="in">in</option>
-                                    <option value="ft-us">ft-us</option>
-                                    <option value="ft">ft</option>
-                                    <option value="fathom">fathom</option>
-                                    <option value="mi">mi</option>
-                                    <option value="nMi">nMi</option>
-                                </optgroup>
-                                <optgroup label="Area">
-                                    <option value="mm2">mm2</option>
-                                    <option value="cm2">cm2</option>
-                                    <option value="m2">m2</option>
-                                    <option value="ha">ha</option>
-                                    <option value="km2">km2</option>
-                                    <option value="in2">in2</option>
-                                    <option value="ft2">ft2</option>
-                                    <option value="ac">ac</option>
-                                    <option value="mi2">mi2</option>
-                                </optgroup>
-                                <optgroup label="Mass">
-                                    <option value="mcg">mcg</option>
-                                    <option value="mg">mg</option>
-                                    <option value="g">g</option>
-                                    <option value="kg">kg</option>
-                                    <option value="oz">oz</option>
-                                    <option value="lb">lb</option>
-                                    <option value="mt">mt</option>
-                                    <option value="t">t</option>
-                                </optgroup>
-                                <optgroup label="Volume">
-                                    <option value="mm3">mm3</option>
-                                    <option value="cm3">cm3</option>
-                                    <option value="ml">ml</option>
-                                    <option value="l">l</option>
-                                    <option value="kl">kl</option>
-                                    <option value="m3">m3</option>
-                                    <option value="km3">km3</option>
-                                    <option value="tsp">tsp</option>
-                                    <option value="Tbs">Tbs</option>
-                                    <option value="in3">in3</option>
-                                    <option value="fl-oz">fl-oz</option>
-                                    <option value="cup">cup</option>
-                                    <option value="pnt">pnt</option>
-                                    <option value="qt">qt</option>
-                                    <option value="gal">gal</option>
-                                    <option value="ft3">ft3</option>
-                                    <option value="yd3">yd3</option>
-                                </optgroup>
-                            </select>
-                        </div>
+                        <select id="unit" class="form-control" placeholder="Select Unit" name="unit" [(ngModel)]="newMrp.unit" required>
+                            <option disabled value="Select Unit">Select Unit</option>
+                            <option value="item(s)">item(s)</option>
+                            <option value="kg">kg</option>
+                            <option value="m">m</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
@@ -148,13 +90,10 @@
                             <select class="select2" id="mrpselect2" multiple="multiple" data-placeholder="Select Relevant Tags" data-dropdown-css-class="select2-blue" style="width: 100%;"></select>
                         </div>
                     </div>
-                    <!--
                     <div class="form-group">
                         <label>Location of Resource</label>
-                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="clickNewLocation($event)">
-                        </google-map>
+                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="clickNewLocation($event)"></google-map>
                     </div>
-                    -->
                     <div class="form-group">
                         <label for="latitude">Latitude *</label>
                         <input type="text" id="latitude" class="form-control" name="latitude" [(ngModel)]="newMrp.latitude" required disabled>
@@ -194,9 +133,18 @@
                         <label for="quantity"> Quantity Required *</label>
                         <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity" name="quantity" [(ngModel)]="mrpToEdit.totalQuantity" [min]="mrpToEdit.obtainedQuantity" required>
                     </div>
-                    <div class="form-group">
-                        <label for="units"> Unit *</label>
-                        <input type="text" id="unit" class="form-control" placeholder="Enter Unit" name="unit" [(ngModel)]="mrpToEdit.unit" required>
+                    <div *ngIf="mrpToEdit.fulfillments.length != 0" class="form-group">
+                        <label for="units"> Unit</label>
+                        <input type="text" id="unit" class="form-control" name="unit" [(ngModel)]="mrpToEdit.unit" disabled>
+                    </div>
+                    <div *ngIf="mrpToEdit.fulfillments.length == 0" class="form-group">
+                        <label for="unit"> Unit *</label>
+                        <select id="unit" class="form-control" placeholder="Select Unit" name="unit" [(ngModel)]="mrpToEdit.unit" required>
+                            <option disabled value="Select Unit">Select Unit</option>
+                            <option value="item(s)">item(s)</option>
+                            <option value="kg">kg</option>
+                            <option value="m">m</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
@@ -216,13 +164,10 @@
                             <select class="select2" id="editmrpselect2" multiple="multiple" data-placeholder="Select Relevant Tags" data-dropdown-css-class="select2-blue" style="width: 100%;"></select>
                         </div>
                     </div>
-                    <!--
                     <div class="form-group">
                         <label>Location of Resource</label>
-                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="clickEditLocation($event)">
-                        </google-map>
+                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="clickEditLocation($event)"></google-map>
                     </div>
-                    -->
                     <div class="form-group">
                         <label for="latitude">Latitude *</label>
                         <input type="text" id="latitude" class="form-control" name="latitude" [(ngModel)]="mrpToEdit.latitude" required disabled>

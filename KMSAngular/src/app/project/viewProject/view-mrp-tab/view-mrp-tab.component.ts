@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import * as convert from 'convert-units';
 
 import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
 import { Project } from 'src/app/classes/project';
@@ -15,6 +14,7 @@ import { MaterialResourcePostingService } from '../../../material-resource-posti
 import { MaterialResourceAvailableService } from '../../../mra.service';
 import { Fulfillment } from '../../../classes/fulfillment';
 import { FulfillmentService } from '../../../fulfillment.service';
+import { NgForm } from '@angular/forms';
 
 declare var $: any;
 
@@ -36,13 +36,24 @@ export class ViewMrpTabComponent implements OnInit {
   mrpToFulfill: MaterialResourcePosting;
   mraList: MaterialResourceAvailable[];
   noMra: boolean = true;
-  mraToDonate: MaterialResourceAvailable;
-  isValid: boolean = false;
 
-  standardConversion: number;
+  newMra: MaterialResourceAvailable;
+  mraTags: Tag[];
+  hasExpiry = false;
+  zoom = 12;
+  center: google.maps.LatLngLiteral;
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: true,
+  };
+  minDate = new Date().toISOString().slice(0, 10);
+  startDate: string;
+  endDate: string;
+
+  mraToDonate: MaterialResourceAvailable;
   maxQuantity: number;
-  quantityToDonate: number;
-  convertedQuantityToDonate: number;
   
 
   constructor(private sessionService: SessionService,
@@ -53,7 +64,9 @@ export class ViewMrpTabComponent implements OnInit {
     private fulfillmentService: FulfillmentService,
     private router: Router,
     private activatedRouter: ActivatedRoute) {
-      this.newFulFillment = new Fulfillment;
+      this.newFulFillment = new Fulfillment();
+      this.mraList = new Array();
+      this.newMra = new MaterialResourceAvailable();
     }
 
   ngOnInit(): void {
@@ -68,22 +81,20 @@ export class ViewMrpTabComponent implements OnInit {
         this.router.navigate(["/error"]);
       }
     );
-
     this.tagService.getAllMaterialResourceTags().subscribe(
       response => {
         this.tags = response;
       }
     );
-
     this.mrpService.getMrpByProject(this.projectId).subscribe(
       response => {
         this.mrpList = response;
+        this.mrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
         if (this.mrpList.length > 0) {
           this.noMrp = false;
         }
       }
     );
-
     this.mraService.getMaterialResourceAvailable(this.loggedInUser.userId).subscribe(
       response => {
         this.mraList = response;
@@ -91,7 +102,22 @@ export class ViewMrpTabComponent implements OnInit {
           this.noMra = false;
         }
       }
-    )
+    );
+    this.tagService.getAllMaterialResourceTags().subscribe((response) => {
+      this.mraTags = response;
+      $('#mraselect2').select2({
+        data: this.mraTags.map((item) => {
+          return item.name;
+        }),
+        allowClear: true,
+      });
+    });
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.center = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+    });
   }
 
   changehref(lat: number, long: number) {
@@ -103,56 +129,116 @@ export class ViewMrpTabComponent implements OnInit {
     this.mrpToFulfill = mrpToFulfill;
   }
 
-  clickSelect(mraToDonate: MaterialResourceAvailable) {
-    var mrpEndDate = new Date(
-      parseInt(this.mrpToFulfill.endDate.toString().substring(0, 4)),
-      parseInt(this.mrpToFulfill.endDate.toString().substring(5, 7)) - 1,
-      parseInt(this.mrpToFulfill.endDate.toString().substring(8, 10)),
-      parseInt(this.mrpToFulfill.endDate.toString().substring(11, 13)),
-      parseInt(this.mrpToFulfill.endDate.toString().substring(14, 16)),
-      parseInt(this.mrpToFulfill.endDate.toString().substring(17, 19))
-    )
-    try {
-      if (mraToDonate.units != this.mrpToFulfill.unit) {
-        this.standardConversion = convert(1).from(mraToDonate.units).to(this.mrpToFulfill.unit);
-        this.maxQuantity = Math.min(mraToDonate.quantity, convert(this.mrpToFulfill.lackingQuantity).from(this.mrpToFulfill.unit).to(mraToDonate.units));
-      } else {
-        this.maxQuantity = Math.min(mraToDonate.quantity, this.mrpToFulfill.lackingQuantity);
-      }
-      if(mraToDonate.startDate != null && mraToDonate.endDate < mrpEndDate) {
+  clickAddMra(){
+    this.newMra = new MaterialResourceAvailable();
+    console.log(this.newMra.quantity)
+    this.newMra.name = this.mrpToFulfill.name;
+    this.newMra.units = this.mrpToFulfill.unit;
+    this.newMra.tags = this.mrpToFulfill.tags;
+    $('#mraselect2').val(this.mrpToFulfill.tags.map((tag) => tag.name)).trigger('change');
+    $('#modal-fulfill-posting').hide();
+  }
+
+  click(event: google.maps.MouseEvent) {
+    this.newMra.latitude = event.latLng.lat().toString();
+    this.newMra.longitude = event.latLng.lng().toString();
+  }
+
+  handleHasExpiryChange() {
+    this.hasExpiry = !this.hasExpiry;
+  }
+
+  createMaterialResourceRequest(mraForm: NgForm) {
+    if (mraForm.valid) {
+      this.newMra.materialResourceAvailableOwner = this.loggedInUser;
+      if (this.hasExpiry) {
+        if (new Date(this.startDate) > new Date(this.endDate)) {
           $(document).Toasts('create', {
             class: 'bg-warning',
-            title: 'Expired Resource',
+            title: 'Unable to submit Material Resource Available',
             autohide: true,
-            delay: 5000,
-            body: 'The resource donated will expire before the end date of Material Resource Posting',
+            delay: 2500,
+            body: 'End date should not come before the Start Date',
           });
-      } else {
-        this.mraToDonate = mraToDonate;
+          return;
+        } else {
+          this.newMra.startDate = new Date(this.startDate);
+          this.newMra.endDate = new Date(this.endDate);
+        }
       }
-      
-    } catch (Error) { 
+      this.mraService.createMaterialResourceAvailable(this.newMra).subscribe((
+        response) => {
+          this.mraService.getMaterialResourceAvailable(this.loggedInUser.userId).subscribe(
+            response => {
+              this.mraList = response;
+              if (this.mraList.length > 0) {
+                this.noMra = false;
+              }
+            }
+          );
+          $('#modal-create-mra').hide();
+          $('#modal-fulfill-posting').show();
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Material Resource Available is successfully created',
+          })
+        });
+      this.startDate = null;
+      this.endDate = null;
+      this.hasExpiry = false;
+    }
+  }
+
+  clearCreateForm() {
+    $('#modal-fulfill-posting').show();
+    this.startDate = null;
+    this.endDate = null;
+    this.hasExpiry = false;
+  }
+
+  clickSelect(mraToDonate: MaterialResourceAvailable) {
+    if (mraToDonate.units != this.mrpToFulfill.unit) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Incompatible Units',
         autohide: true,
         delay: 5000,
-        body: 'Please change the units of your Material Resource Available to match the Material Resource Posting',
+        body: 'Please change the units of the resource or create a new Material Resource Available',
       });
+      return;
+    } else {
+      this.maxQuantity = Math.min(mraToDonate.quantity, this.mrpToFulfill.lackingQuantity);
+    }
+    if(mraToDonate.endDate != null && mraToDonate.endDate < this.mrpToFulfill.startDate) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Expired Resource',
+        autohide: true,
+        delay: 5000,
+        body: 'The donated resource will expire before the start date of Material Resource Posting',
+      });
+    } if(mraToDonate.startDate != null && mraToDonate.startDate > this.mrpToFulfill.endDate) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Resource Unavailable',
+        autohide: true,
+        delay: 5000,
+        body: 'The donated resource is only available after the end date of Material Resource Posting',
+      });
+    } else {
+      this.mraToDonate = mraToDonate;
     }
   }
 
   cancel(){
     this.mraToDonate = null;
-    this.standardConversion = null;
-  }
-
-  onChange(quantity: number): void {  
-    this.convertedQuantityToDonate = convert(quantity).from(this.mraToDonate.units).to(this.mrpToFulfill.unit);
   }
 
   submit() {
-    if(this.convertedQuantityToDonate > this.mrpToFulfill.lackingQuantity){
+    if(this.newFulFillment.totalPledgedQuantity > this.mrpToFulfill.lackingQuantity){
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
@@ -160,7 +246,7 @@ export class ViewMrpTabComponent implements OnInit {
         delay: 3200,
         body: 'Donated quantity cannot be more than required quantity',
       });
-    } else if(this.quantityToDonate > this.mraToDonate.quantity) {
+    } else if(this.newFulFillment.totalPledgedQuantity > this.mraToDonate.quantity) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
@@ -169,12 +255,10 @@ export class ViewMrpTabComponent implements OnInit {
         body: 'Donated quantity cannot be more than the quantity stated in your Material Resource Available',
       });
     } else {
-      this.newFulFillment.totalPledgedQuantity = this.convertedQuantityToDonate; //using mrp's units
       this.newFulFillment.mra = new MaterialResourceAvailable();
       this.newFulFillment.posting = new MaterialResourcePosting();
-      this.newFulFillment.mra.quantity = this.mraToDonate.quantity - this.quantityToDonate;
-      this.newFulFillment.posting.lackingQuantity = this.mrpToFulfill.lackingQuantity - this.convertedQuantityToDonate;
-      this.newFulFillment.posting.obtainedQuantity = this.mrpToFulfill.obtainedQuantity + this.convertedQuantityToDonate;
+      this.newFulFillment.mra.quantity = this.mraToDonate.quantity - this.newFulFillment.totalPledgedQuantity;
+      this.newFulFillment.posting.lackingQuantity = this.mrpToFulfill.lackingQuantity - this.newFulFillment.totalPledgedQuantity;
       this.fulfillmentService.createNewFulfillment(this.newFulFillment, this.loggedInUser.userId, this.mrpToFulfill.materialResourcePostingId, this.mraToDonate.mraId).subscribe(
         response => {
           $('#modal-fulfill-posting').modal('hide');
@@ -182,6 +266,7 @@ export class ViewMrpTabComponent implements OnInit {
           this.mrpService.getMrpByProject(this.projectId).subscribe(
             response => {
               this.mrpList = response;
+              this.mrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
               if (this.mrpList.length > 0) {
                 this.noMrp = false;
               }
@@ -193,7 +278,7 @@ export class ViewMrpTabComponent implements OnInit {
             title: 'Success',
             autohide: true,
             delay: 2500,
-            body: 'Fulfill Posting is created successfully',
+            body: 'Fulfillment is succesfully created',
           })
         },
         error => {

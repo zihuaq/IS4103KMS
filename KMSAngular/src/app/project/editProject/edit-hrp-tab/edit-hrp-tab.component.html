@@ -91,7 +91,7 @@
             </div>
             <div class="card-body" style="display: block;">
                 <p style="margin: 0 7px 0 7px;">
-                    <b>{{hrp.startDate.toString().slice(0,10) | date}} to {{hrp.endDate.toString().slice(0,10) | date}}</b>
+                    <b>Required from {{hrp.startDate.toString().slice(0,10) | date}} to {{hrp.endDate.toString().slice(0,10) | date}}</b>
                     <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(hrp.latitude, hrp.longitude)" target="_blank">
                         At location
                         {{hrp.latitude | number:'1.1-6'}},
@@ -101,7 +101,7 @@
                     {{hrp.obtainedSlots}} (filled) / {{hrp.totalSlots}}  <span class="text-muted">({{hrp.lackingSlots}} needed)</span>
                     <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="hrp.tags.length > 0">
                         <div *ngFor="let tag of hrp.tags">
-                            <small class="badge badge-info ml-2">
+                            <small class="badge badge-dark ml-2">
                                 {{tag.name}}
                             </small>
                         </div>

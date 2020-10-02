@@ -7,6 +7,8 @@ import { TagService } from '../../../tag.service';
 import { MaterialResourcePosting } from '../../../classes/material-resource-posting';
 import { MaterialResourcePostingService } from '../../../material-resource-posting.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FulfillmentService } from '../../../fulfillment.service';
+import { Fulfillment } from '../../../classes/fulfillment';
 
 declare var $: any;
 
@@ -44,14 +46,14 @@ export class EditMrpTabComponent implements OnInit {
 
   constructor(public projectService: ProjectService,
     public materialResourcePostingService: MaterialResourcePostingService,
+    private fulfillmentService: FulfillmentService,
     public tagService: TagService,
     private activatedRoute: ActivatedRoute,
     private router: Router) {
       this.projectToEdit = new Project();
       this.newMrp = new MaterialResourcePosting();
-      this.newMrp.latitude = 35.929673;
-      this.newMrp.longitude = -78.948237;
       this.mrpToEdit = new MaterialResourcePosting;
+      this.mrpToEdit.fulfillments = new Array();
       this.mrpToDelete = new MaterialResourcePosting;
       this.mrpList = [];
     }
@@ -102,6 +104,7 @@ export class EditMrpTabComponent implements OnInit {
     this.materialResourcePostingService.getMrpByProject(this.projectId).subscribe(
       response => {
         this.mrpList = response;
+        this.mrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
         if (this.mrpList.length > 0) {
           this.noMrp = false;
         }
@@ -117,13 +120,6 @@ export class EditMrpTabComponent implements OnInit {
   
 
   createMrp(createMrpForm: NgForm) {
-    
-
-    this.newMrp.lackingQuantity = this.newMrp.totalQuantity;
-    this.newMrp.obtainedQuantity = 0;
-    this.newMrp.startDate = new Date(createMrpForm.value.startDate);
-    this.newMrp.endDate = new Date(createMrpForm.value.endDate);
-
     this.selectedTagIds = [];
     this.selectedTagNames = $('#mrpselect2').val();
     if (!createMrpForm.valid) {
@@ -154,11 +150,25 @@ export class EditMrpTabComponent implements OnInit {
 
     if (createMrpForm.valid) {
       console.log(this.newMrp);
+      if (this.newMrp.startDate > this.newMrp.endDate) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: 'End Date cannot be earlier than Start Date',
+        });
+        return;
+      } else {
+        this.newMrp.startDate = new Date(this.newMrp.startDate);
+        this.newMrp.endDate = new Date(this.newMrp.endDate);
+      }
       this.materialResourcePostingService.createNewMrp(this.newMrp, this.projectToEdit.projectId, this.selectedTagIds).subscribe(
         response => {
           this.materialResourcePostingService.getMrpByProject(this.projectId).subscribe(
             response => {
               this.mrpList = response;
+              this.mrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
               if (this.mrpList.length > 0) {
                 this.noMrp = false;
               }
@@ -189,6 +199,13 @@ export class EditMrpTabComponent implements OnInit {
         $('#editmrpselect2').val(this.mrpToEdit.tags.map((tag) => tag.name)).trigger('change');
         this.editMrpStartDate = this.mrpToEdit.startDate.toString().substring(0, 10);
         this.editMrpEndDate = this.mrpToEdit.endDate.toString().substring(0, 10);
+
+        this.fulfillmentService.getFulfillmentsByMrp(this.mrpToEdit.materialResourcePostingId).subscribe(
+          response => {
+            this.mrpToEdit.fulfillments = response;
+            console.log(this.mrpToEdit.fulfillments.length);
+          }
+        )
       },
       error => {
         $(document).Toasts('create', {
@@ -251,13 +268,30 @@ export class EditMrpTabComponent implements OnInit {
         this.mrpToEdit.startDate = new Date(this.editMrpStartDate);
         this.mrpToEdit.endDate = new Date(this.editMrpEndDate);
       }
-      this.mrpToEdit.lackingQuantity = this.mrpToEdit.totalQuantity - this.mrpToEdit.obtainedQuantity;
+
+      var totalPledgedQuantity: number = 0;
+        this.mrpToEdit.fulfillments.forEach((element) => {
+          totalPledgedQuantity += element.totalPledgedQuantity;
+        });
+      if(this.mrpToEdit.totalQuantity < totalPledgedQuantity) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: 'Quantity required cannot be less than total pledged quantity',
+        });
+        return;
+      } else {
+        this.mrpToEdit.lackingQuantity = this.mrpToEdit.totalQuantity - totalPledgedQuantity;
+      }
       this.mrpToEdit.tags = selectedTags;
       this.materialResourcePostingService.updateMrp(this.mrpToEdit).subscribe(
         response => {
           this.materialResourcePostingService.getMrpByProject(this.projectId).subscribe(
             response => {
               this.mrpList = response;
+              this.mrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
               if (this.mrpList.length > 0) {
                 this.noMrp = false;
               }
@@ -284,6 +318,28 @@ export class EditMrpTabComponent implements OnInit {
 
   clickDeleteMrp(mrp: MaterialResourcePosting) {
     this.mrpToDelete = mrp;
+    this.fulfillmentService.getFulfillmentsByMrp(this.mrpToDelete.materialResourcePostingId).subscribe(
+      response => {
+        this.mrpToDelete.fulfillments = response;
+
+        var unreceivedQuantity: number = 0;
+        this.mrpToDelete.fulfillments.forEach((element) => {
+          unreceivedQuantity += element.unreceivedQuantity;
+        });
+
+        if(this.mrpToDelete.fulfillments.length > 0 && unreceivedQuantity > 0) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'Error',
+            autohide: true,
+            delay: 3500,
+            body: 'Material Resource Posting cannot be deleted as there are ongoing fulfillments',
+          });
+        } else {
+          $('#modal-confirm-delete-mrp').modal('show');
+        }
+      }
+    )
   }
 
   deleteMrp() {

@@ -3,29 +3,38 @@
 <span *ngIf="!noMrp">
     <div style="margin-bottom: 15px;">
         <!-- <button type="button" class="btn bg-gradient-info mr-2"><i class="fas fa-check"></i> Fulfill Posting</button> -->
-        <button type="button" class="btn bg-gradient-info"><i class="fas fa-user-alt"></i> My Fulfillments</button>
+        <button type="button" class="btn bg-gradient-info" [routerLink]="[ '/myFulfillments', projectId ]"><i class="fas fa-user-alt"></i> My Fulfillments</button>
     </div>
     <div id="list" *ngFor="let mrp of mrpList">
         <div class="card" style="width: 100%;">
             <div class="card-header" >
-                <div class="row">
+                <div *ngIf="mrp.description" class="row">
                     <div class="col-11" style="cursor: pointer; " data-target="#collapsedBody" data-toggle="collapse">
-                        <h5 class="card-title" style="font-size: 20px; margin-top: 10px;"><b>{{mrp.name}}</b></h5> 
+                        <h5 class="card-title" style="font-size: 20px; margin-top: 5px;"><b>{{mrp.name}}</b>
+                            <br/>
+                            <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
+                        </h5>  
                     </div>
                     <div class="col-1">
-                    <button type="button" class="btn bg-gradient-primary float-right" (click)="clickFulfill(mrp)" data-toggle="modal" data-target="#modal-fulfill-posting" data-backdrop="static" style="margin-top: 5px; margin-right: 10px; z-index: 10;">Fulfill</button> 
+                        <button type="button" class="btn bg-gradient-primary float-right" (click)="clickFulfill(mrp)" data-toggle="modal" data-target="#modal-fulfill-posting" data-backdrop="static" style="margin-top: 10px; margin-right: 10px; z-index: 10;">Fulfill</button> 
                     </div>
                 </div> 
+                <div *ngIf="!mrp.description" class="row">
+                    <div class="col-11" style="cursor: pointer; " data-target="#collapsedBody" data-toggle="collapse">
+                        <h5 class="card-title" style="font-size: 20px; margin-top: 10px;"><b>{{mrp.name}}</b></h5>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn bg-gradient-primary float-right" (click)="clickFulfill(mrp)" data-toggle="modal" data-target="#modal-fulfill-posting" data-backdrop="static" style="margin-top: 5px; margin-right: 10px; z-index: 10;">Fulfill</button> 
+                    </div>
+                </div>
             </div>
             <div id="collapsedBody" class="collapse show" data-parent="#list">
                 <div class="card-body" style="display: block;">
                     <p style="margin: 0 7px 0 7px;">
-                        <b>Required from {{mrp.startDate.toString().slice(0,10) | date }} to {{mrp.endDate.toString().slice(0,10) | date }}</b> 
+                        <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b> 
                         <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> View Location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
                         <br/>
                         {{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total
-                        <br/>
-                        <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
                         <br/>
                         <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
                             <div *ngFor="let tag of mrp.tags">
@@ -40,7 +49,7 @@
 </span>
 
 <div class="modal fade" id="modal-fulfill-posting">
-    <div class="modal-dialog " role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content bg-gradient-info">
             <div class="modal-header">
                 <h4 class="modal-title">Fulfill Posting</h4>
@@ -50,30 +59,43 @@
             </div>
             <div *ngIf="!mraToDonate" class="select-mra">
                 <div class="modal-body">
-                    <b style="font-size: 18px;">Select Material Resource Available to Donate</b>
-                    <div style="margin-top: 5px; max-height: 500px; overflow-y: scroll;">
+                    <h5 style="font-size: 18px;">Select Material Resource Available to Donate</h5>
+                    <button type="button" class="btn btn-block btn-outline-light" data-toggle="modal" data-target="#modal-create-mra" (click)="clickAddMra()" data-backdrop="static">
+                        <i class="fas fa-plus"></i> Add Material Resource Available
+                    </button>
+                    <div *ngIf="mraList.length == 0" style="margin-top: 10px;"> No Material Resource Available at the moment</div>
+                    <div *ngIf="mraList.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: scroll;">
                         <div id="mralist" *ngFor="let mra of mraList; let i = index">
-                            <div class="card" style="width: 100%;">
+                            <div *ngIf="mra.quantity > 0" class="card" style="width: 100%;">
                                 <div class="card-header">
-                                    <div class="row">
+                                    <div *ngIf="mra.description" class="row">
                                         <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openPanel'+ i" data-toggle="collapse">
-                                            <h6 class="card-title" style="font-size: 20px; margin-top: 10px; color: black;"><b>{{mra.name}}</b></h6> 
+                                            <h6 class="card-title" style="font-size: 20px; margin-top: 5px; color: black;"><b>{{mra.name}}</b> 
+                                                <br/>
+                                                <span class="text-muted" style="font-size: 15px;">{{mra.description}}</span>
+                                            </h6>
+                                        </div>
+                                        <div class="col-1">
+                                        <button type="button" class="btn bg-gradient-primary float-right" (click)="clickSelect(mra)" style="margin-top: 10px; margin-right: 10px; z-index: 10;">Select</button> 
+                                        </div>
+                                    </div> 
+                                    <div *ngIf="!mra.description" class="row">
+                                        <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openPanel'+ i" data-toggle="collapse">
+                                            <h6 class="card-title" style="font-size: 20px; margin-top: 10px; color: black;"><b>{{mra.name}}</b></h6>
                                         </div>
                                         <div class="col-1">
                                         <button type="button" class="btn bg-gradient-primary float-right" (click)="clickSelect(mra)" style="margin-top: 5px; margin-right: 10px; z-index: 10;">Select</button> 
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                                 <div id="openPanel{{i}}" class="collapse" data-parent="#mralist">
                                     <div class="card-body" style="display: block;">
                                         <p style="margin: 0 7px 0 7px; color: black;">
-                                            <b *ngIf="mra.startDate != null">Available from {{mra.startDate.toString().slice(0,10) | date }} to {{mra.endDate.toString().slice(0,10) | date }}</b> 
+                                            <b *ngIf="mra.startDate != null">Available from {{mra.startDate.toString().slice(0,15) | date }} to {{mra.endDate.toString().slice(0,15) | date }}</b> 
                                             <b *ngIf="mra.startDate == null">No Expiry Date</b> 
-                                            <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" > At location {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}</a>
+                                            <span class="badge badge-secondary float-right" style="color: white;" > At location {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}</span>
                                             <br/>
                                             {{mra.quantity | number:'1.0-2'}} {{mra.units}} available
-                                            <br/>
-                                            <span class="text-muted" style="font-size: 15px;">{{mra.description}}</span>
                                             <br/>
                                             <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mra.tags.length > 0">
                                                 <div *ngFor="let tag of mra.tags">
@@ -96,18 +118,19 @@
                     <b style="font-size: 18px">Selected Material Resource Available</b>
                     <div class="card" style="width: 100%; margin-top: 5px;">
                         <div class="card-header" style="cursor: pointer;" data-target="#selectedBody" data-toggle="collapse">
-                            <h6 class="card-title" style="font-size: 20px; margin-top: 5px; color: black;"><b>{{mraToDonate.name}}</b></h6> 
+                            <h6 class="card-title" style="font-size: 20px; margin-top: 5px; color: black;"><b>{{mraToDonate.name}}</b> 
+                                <br/>
+                                <span class="text-muted" style="font-size: 15px;">{{mraToDonate.description}}</span>
+                            </h6>
                         </div>
                         <div id="selectedBody" class="collapse" data-parent="#selectedMra">
                             <div class="card-body" style="display: block;">
                                 <p style="margin: 0 7px 0 7px; color: black;">
-                                    <b *ngIf="mraToDonate.startDate != null">Available from {{mraToDonate.startDate.toString().slice(0,10) | date }} to {{mraToDonate.endDate.toString().slice(0,10) | date }}</b> 
+                                    <b *ngIf="mraToDonate.startDate != null">Available from {{mraToDonate.startDate.toString().slice(0,15) | date }} to {{mraToDonate.endDate.toString().slice(0,15) | date }}</b> 
                                     <b *ngIf="mraToDonate.startDate == null">No Expiry Date</b> 
                                     <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" > At location {{mraToDonate.latitude | number:'1.1-6'}}, {{mraToDonate.longitude | number:'1.1-6'}}</a>
                                     <br/>
                                     {{mraToDonate.quantity | number:'1.0-2'}} {{mraToDonate.units}} available
-                                    <br/>
-                                    <span class="text-muted" style="font-size: 15px;">{{mraToDonate.description}}</span>
                                     <br/>
                                     <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mraToDonate.tags.length > 0">
                                         <div *ngFor="let tag of mraToDonate.tags">
@@ -120,15 +143,10 @@
                     </div>
                     <b style="font-size: 18px">Quantity To Donate</b>
                     <br/>
-                    <input type="number" id="quantity" name="quantity" [max]="maxQuantity" [(ngModel)]="quantityToDonate" (input)="onChange($event.target.value)" required>
+                    <input type="number" id="quantity" name="quantity" [max]="maxQuantity" [(ngModel)]="newFulfillment.totalPledgedQuantity" required>
                     <b> {{mraToDonate.units}}</b>
-                    <span *ngIf="!standardConversion">
+                    <span>
                         <b> / {{mrpToFulfill.lackingQuantity | number:'1.0-2'}} {{mrpToFulfill.unit}} required</b>
-                    </span>
-                    <span *ngIf="standardConversion">
-                        <b> = {{convertedQuantityToDonate | number:'1.0-2'}} {{mrpToFulfill.unit}} / {{mrpToFulfill.lackingQuantity | number:'1.0-2'}} {{mrpToFulfill.unit}} required</b> 
-                        <br/>   
-                        (1 {{this.mraToDonate.units}} = {{standardConversion | number:'1.0-2'}} {{this.mrpToFulfill.unit}})
                     </span>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -138,4 +156,73 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="modal-create-mra">
+    <div class="modal-dialog">
+        <div class="modal-content bg-info">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Material Resource Available</h4>
+                <button type="button" class="close" data-dismiss="modal" (click)="clearCreateForm()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (ngSubmit)="createMaterialResourceRequest(mraForm)" #mraForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="mraName">Material Resource Name</label>
+                        <input type="text" id="mraName" class="form-control" [(ngModel)]="newMra.name" name="mraName" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity"> Quantity *</label>
+                        <input type="text" id="quantity" class="form-control" [(ngModel)]="newMra.quantity" name="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="units"> Units</label>
+                        <input type="text" id="units" class="form-control" [(ngModel)]="newMra.units" name="units" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" class="form-control" [(ngModel)]="newMra.description" name="description">
+                    </div>
+                    <div class="form-group">
+                        <label>Material Resource Tags</label>
+                        <div class="select2-blue">
+                            <select class="select2" id="mraselect2" multiple="multiple" data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue" style="width: 100%;" disabled></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Location of Resource</label>
+                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="click($event)"></google-map>
+                    </div>
+                    <div class="form-group">
+                        <label for="latitude">Latitude *</label>
+                        <input type="text" id="latitude" class="form-control " [(ngModel)]="newMra.latitude" name="latitude" required disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="longitude">Longitude *</label>
+                        <input type="text" id="longitude" class="form-control" [(ngModel)]="newMra.longitude" name="longitude" required disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="gridCheck">Does your resource expire? </label>
+                        <input type="checkbox" id="gridCheck" [checked]="hasExpiry" (change)="handleHasExpiryChange()">
+                    </div>
+                    <div *ngIf="hasExpiry" class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate" name="startDate" [min]="minDate" required />
+                    </div>
+                    <div *ngIf="hasExpiry" class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="endDate" class="form-control" [(ngModel)]="endDate" name="endDate" [min]="startDate" required />
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal" (click)="clearCreateForm()">Close</button>
+                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!mraForm.valid">Submit</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
