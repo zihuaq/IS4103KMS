@@ -1,74 +1,11 @@
 <ion-header>
   <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
     <ion-title>Register</ion-title>
   </ion-toolbar>
 </ion-header>
-
-<!--<ion-content>
-    <ion-item lines="full">
-      <ion-label position="floating">First name</ion-label>
-      <ion-input type="text" required></ion-input>
-    </ion-item>
-
-    <ion-item lines="full">
-      <ion-label position="floating">Last name</ion-label>
-      <ion-input type="text" required></ion-input>
-    </ion-item>
-
-    <ion-item lines="full">
-      <ion-label position="floating">Email</ion-label>
-      <ion-input type="text" required></ion-input>
-    </ion-item>-->
-
-<!--*&^%$ <ion-item lines="full">
-        <ion-label position="floating">Date of Birth</ion-label>
-        <ion-input type="text" required></ion-input>
-      </ion-item> -->
-<!-- <ion-item lines="full">
-    <ion-label stacked class="my-label" position="floating">Date of Birth</ion-label>
-    <ion-datetime placeholder="Dob" [max]="today"></ion-datetime>  
-    </ion-item> -->
-<!-- Radio Button in a List -->
-<!-- <ion-list>  
-    <ion-radio-group>  
-      <ion-list-header>  
-        Gender  
-      </ion-list-header>  
-    
-      <ion-item>  
-        <ion-label>Male</ion-label>  
-        <ion-radio value="male"></ion-radio>  
-      </ion-item>  
-    
-      <ion-item>  
-        <ion-label>Female</ion-label>  
-        <ion-radio value="female"></ion-radio>  
-    </ion-item>  
-    </ion-radio-group>
-    </ion-list>
-
-    <div class="form-group">
-    <ion-item lines="full">
-      <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" appAppPassword id="password" class="form-control" ngModel name="password" required #password="ngModel"></ion-input>
-    </ion-item>
-  </div>
-  <div class="form-group">
-    <ion-item lines="full">
-        <ion-label position="floating">Confirm Password</ion-label>
-        <ion-input type="password" appAppPassword id="confirmPassword" class="form-control" ngModel name="confirmPassword" required
-        #confirmPassword="ngModel"></ion-input>
-      </ion-item>
-    </div>
-    <ion-row>
-        <span class="help-block" style="float: right; color: red;"
-        *ngIf="password.value != confirmPassword.value && confirmPassword.touched">Password does not
-        match</span>
-      <ion-col>
-        <ion-button type="submit" color="secondary" expand="block" (click)=>Sign Up</ion-button>
-      </ion-col>
-    </ion-row>
-</ion-content> -->
 <ion-content>
   <form (ngSubmit)="onCreateUser(signUpForm)" #signUpForm="ngForm">
     <h1>Create An Individual Account with KMS!</h1>
@@ -103,7 +40,6 @@
     </div>
 
     <div>
-
       <ion-list>
         <ion-radio-group name="gender" ngModel>
           <ion-list-header>

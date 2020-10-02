@@ -124,7 +124,23 @@ const routes: Routes = [
   {
     path: 'edit-members',
     loadChildren: () => import('./pages/project/editProject/edit-members/edit-members.module').then( m => m.EditMembersPageModule)
-  }
+  },
+  {
+    path: 'changepassword',
+    loadChildren: () => import('./changepassword/changepassword.module').then( m => m.ChangepasswordPageModule)
+  },
+  {
+    path: 'user-setting',
+    loadChildren: () => import('./user-setting/user-setting.module').then( m => m.UserSettingPageModule)
+  },
+  {
+    path: 'deactivate-account',
+    loadChildren: () => import('./deactivate-account/deactivate-account.module').then( m => m.DeactivateAccountPageModule)
+  },
+  {
+    path: 'logout',
+    loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
+  },
 ]
 
 @NgModule({
