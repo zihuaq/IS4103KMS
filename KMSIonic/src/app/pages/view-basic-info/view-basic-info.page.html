@@ -26,7 +26,7 @@
           <div class="text-muted ion-text-right">{{profile.joinedDate | date}}</div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="profile.userType != UserType.INSTITUTE">
         <ion-col>
           <strong>
             <ion-icon name="body-outline"></ion-icon> Gender
@@ -36,7 +36,7 @@
           <div class="text-muted ion-text-right">{{profile.gender}}</div>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row *ngIf="profile.userType != UserType.INSTITUTE">
         <ion-col>
           <strong>
             <ion-icon name="today-sharp"></ion-icon> Date of Birth

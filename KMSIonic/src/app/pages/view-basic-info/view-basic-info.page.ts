@@ -4,6 +4,7 @@ import { User } from 'src/app/classes/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 import { forkJoin } from 'rxjs';
+import { UserType } from 'src/app/enum/user-type.enum';
 
 
 @Component({
@@ -15,6 +16,7 @@ export class ViewBasicInfoPage implements OnInit {
   profile: User;
   loggedInUser: User;
   loggedInUserId: number;
+  UserType = UserType;
 
   constructor(private activatedRoute: ActivatedRoute, private userService: UserService, private authenticationService: AuthenticationService) { }
 
