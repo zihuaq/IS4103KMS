@@ -84,7 +84,7 @@ export class MyFulfillmentsComponent implements OnInit {
           title: 'Success',
           autohide: true,
           delay: 2500,
-          body: 'Material resource posting deleted successfully',
+          body: 'Fulfillment deleted successfully',
         });
         this.fulfillmentService.getListOfFulfillmentsByUserAndProject(this.loggedInUser.userId, this.projectId).subscribe(
           response => {

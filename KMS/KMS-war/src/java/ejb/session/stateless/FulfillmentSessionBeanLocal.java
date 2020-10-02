@@ -23,7 +23,11 @@ public interface FulfillmentSessionBeanLocal {
     
     public List<FulfillmentEntity> getListOfFulfillmentsByMrp(Long mrpId) throws NoResultException;
 
-    public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
+    public void receiveResource(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
+    
+    public void updateQuantity(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
+    
+    public void rejectFulfillment(Long fulfillmentId) throws NoResultException;
 
     public void deleteFulfillment(Long fulfillmentId) throws NoResultException;
 
@@ -32,5 +36,7 @@ public interface FulfillmentSessionBeanLocal {
     public List<FulfillmentEntity> getListOfFulfillmentsByUserAndProject(Long userId, Long projectId) throws NoResultException;
 
     public List<FulfillmentEntity> getListOfFulfillmentsByProject(Long projectId) throws NoResultException;
+
+    
 
 }

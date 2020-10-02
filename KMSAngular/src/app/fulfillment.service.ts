@@ -42,8 +42,20 @@ export class FulfillmentService {
     );
   }
 
-  updateFulfillment(fulfillmentToUpdate: Fulfillment) {
-    return this.httpClient.post<any>(this.baseUrl + "/updateFulfillment", fulfillmentToUpdate, httpOptions).pipe(
+  receiveResource(fulfillmentToUpdate: Fulfillment) {
+    return this.httpClient.post<any>(this.baseUrl + "/receiveResource", fulfillmentToUpdate, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateQuantity(fulfillmentToUpdate: Fulfillment) {
+    return this.httpClient.post<any>(this.baseUrl + "/updateQuantity", fulfillmentToUpdate, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  rejectFulfillment(fulfillmentId: number) {
+    return this.httpClient.post<any>(this.baseUrl + "/rejectFulfillment", fulfillmentId, httpOptions).pipe(
       catchError(this.handleError)
     );
   }

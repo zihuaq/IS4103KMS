@@ -17,6 +17,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.FulfillmentStatusEnum;
 
 /**
  *
@@ -83,13 +84,32 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
     }
     
     @Override
-    public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
+    public void receiveResource(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
         
+        fulfillment.getPosting().setObtainedQuantity(fulfillment.getPosting().getObtainedQuantity() + fulfillmentToUpdate.getReceivedQuantity());
         fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
         fulfillment.setReceivedQuantity(fulfillmentToUpdate.getReceivedQuantity());
         fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity());
         fulfillment.setStatus(fulfillmentToUpdate.getStatus());
+    }
+    
+    @Override
+    public void updateQuantity(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
+        FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
+        
+        fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + (fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity()));
+        fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
+        fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity() - fulfillmentToUpdate.getReceivedQuantity());
+        fulfillment.setStatus(fulfillmentToUpdate.getStatus());
+    }
+    
+    @Override
+    public void rejectFulfillment(Long fulfillmentId) throws NoResultException {
+        FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentId);
+        
+        fulfillment.setStatus(FulfillmentStatusEnum.REJECTED);
+        fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + fulfillment.getTotalPledgedQuantity());
     }
     
     @Override
@@ -102,7 +122,9 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         }
         
         if (fulfillmentToDelete.getPosting()!= null) {
-            fulfillmentToDelete.getPosting().setLackingQuantity(fulfillmentToDelete.getPosting().getLackingQuantity() + fulfillmentToDelete.getTotalPledgedQuantity());
+            if (fulfillmentToDelete.getStatus() != FulfillmentStatusEnum.REJECTED) {
+                fulfillmentToDelete.getPosting().setLackingQuantity(fulfillmentToDelete.getPosting().getLackingQuantity() + fulfillmentToDelete.getTotalPledgedQuantity());
+            }
             fulfillmentToDelete.getPosting().getFulfillments().remove(fulfillmentToDelete);
             fulfillmentToDelete.setPosting(null);
         }

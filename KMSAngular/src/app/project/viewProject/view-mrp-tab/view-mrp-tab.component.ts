@@ -54,7 +54,7 @@ export class ViewMrpTabComponent implements OnInit {
 
   mraToDonate: MaterialResourceAvailable;
   maxQuantity: number;
-  
+  totalPledgedQuantity: number;
 
   constructor(private sessionService: SessionService,
     private mrpService: MaterialResourcePostingService,
@@ -238,7 +238,7 @@ export class ViewMrpTabComponent implements OnInit {
   }
 
   submit() {
-    if(this.newFulFillment.totalPledgedQuantity > this.mrpToFulfill.lackingQuantity){
+    if(this.totalPledgedQuantity > this.mrpToFulfill.lackingQuantity){
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
@@ -246,23 +246,22 @@ export class ViewMrpTabComponent implements OnInit {
         delay: 3200,
         body: 'Donated quantity cannot be more than required quantity',
       });
-    } else if(this.newFulFillment.totalPledgedQuantity > this.mraToDonate.quantity) {
+    } else if(this.totalPledgedQuantity > this.mraToDonate.quantity) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
         autohide: true,
         delay: 4000,
-        body: 'Donated quantity cannot be more than the quantity stated in your Material Resource Available',
+        body: 'Donated quantity cannot be more than your available quantity',
       });
     } else {
       this.newFulFillment.mra = new MaterialResourceAvailable();
       this.newFulFillment.posting = new MaterialResourcePosting();
+      this.newFulFillment.totalPledgedQuantity = this.totalPledgedQuantity;
       this.newFulFillment.mra.quantity = this.mraToDonate.quantity - this.newFulFillment.totalPledgedQuantity;
       this.newFulFillment.posting.lackingQuantity = this.mrpToFulfill.lackingQuantity - this.newFulFillment.totalPledgedQuantity;
       this.fulfillmentService.createNewFulfillment(this.newFulFillment, this.loggedInUser.userId, this.mrpToFulfill.materialResourcePostingId, this.mraToDonate.mraId).subscribe(
         response => {
-          $('#modal-fulfill-posting').modal('hide');
-
           this.mrpService.getMrpByProject(this.projectId).subscribe(
             response => {
               this.mrpList = response;
@@ -272,13 +271,14 @@ export class ViewMrpTabComponent implements OnInit {
               }
             }
           );
-          
+          $('#modal-fulfill-posting').hide();
+          $('.modal-backdrop').remove();
           $(document).Toasts('create', {
             class: 'bg-success',
             title: 'Success',
             autohide: true,
             delay: 2500,
-            body: 'Fulfillment is succesfully created',
+            body: 'Fulfillment is successfully created',
           })
         },
         error => {

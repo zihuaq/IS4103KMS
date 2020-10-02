@@ -8,6 +8,7 @@ package ws.restful.resources;
 import Exception.NoResultException;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import entity.FulfillmentEntity;
+import entity.UserEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,14 +94,50 @@ public class FulfillmentResource {
         }
     }
     
-    @Path("updateFulfillment")
+    @Path("receiveResource")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateFulfillment(FulfillmentEntity fulfillmentToUpdate) {
+    public Response receiveResource(FulfillmentEntity fulfillmentToUpdate) {
         try { 
-            System.out.println("******** FulfillmentResource: updateFulfillment()");
-            fulfillmentSessionBeanLocal.updateFulfillment(fulfillmentToUpdate);
+            System.out.println("******** FulfillmentResource: receiveResource()");
+            fulfillmentSessionBeanLocal.receiveResource(fulfillmentToUpdate);
+
+            return Response.status(204).build();
+            
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("updateQuantity")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateQuantity(FulfillmentEntity fulfillmentToUpdate) {
+        try { 
+            System.out.println("******** FulfillmentResource: updateQuantity()");
+            fulfillmentSessionBeanLocal.updateQuantity(fulfillmentToUpdate);
+
+            return Response.status(204).build();
+            
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("rejectFulfillment")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response rejectFulfillment(Long fulfillmentId) {
+        try { 
+            System.out.println("******** FulfillmentResource: rejectFulfillment()");
+            fulfillmentSessionBeanLocal.rejectFulfillment(fulfillmentId);
 
             return Response.status(204).build();
             
@@ -121,7 +158,11 @@ public class FulfillmentResource {
             List<FulfillmentEntity> fulfillmentList = fulfillmentSessionBeanLocal.getListOfFulfillmentsByMrp(mrpId);
 
             for (FulfillmentEntity fulfillment : fulfillmentList) {
-                fulfillment.setFulfillmentOwner(null);
+                UserEntity owner = new UserEntity();
+                owner.setUserId(fulfillment.getFulfillmentOwner().getUserId());
+                owner.setFirstName(fulfillment.getFulfillmentOwner().getFirstName());
+                owner.setLastName(fulfillment.getFulfillmentOwner().getLastName());
+                fulfillment.setFulfillmentOwner(owner);
                 fulfillment.setPosting(null);
                 fulfillment.setMra(null);
             }

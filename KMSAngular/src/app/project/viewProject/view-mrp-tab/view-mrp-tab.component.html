@@ -5,11 +5,11 @@
         <!-- <button type="button" class="btn bg-gradient-info mr-2"><i class="fas fa-check"></i> Fulfill Posting</button> -->
         <button type="button" class="btn bg-gradient-info" [routerLink]="[ '/myFulfillments', projectId ]"><i class="fas fa-user-alt"></i> My Fulfillments</button>
     </div>
-    <div id="list" *ngFor="let mrp of mrpList">
+    <div id="list" *ngFor="let mrp of mrpList; let i = index">
         <div class="card" style="width: 100%;">
             <div class="card-header" >
                 <div *ngIf="mrp.description" class="row">
-                    <div class="col-11" style="cursor: pointer; " data-target="#collapsedBody" data-toggle="collapse">
+                    <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openMrpBody'+ i" data-toggle="collapse">
                         <h5 class="card-title" style="font-size: 20px; margin-top: 5px;"><b>{{mrp.name}}</b>
                             <br/>
                             <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
@@ -20,7 +20,7 @@
                     </div>
                 </div> 
                 <div *ngIf="!mrp.description" class="row">
-                    <div class="col-11" style="cursor: pointer; " data-target="#collapsedBody" data-toggle="collapse">
+                    <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openMrpBody'+ i" data-toggle="collapse">
                         <h5 class="card-title" style="font-size: 20px; margin-top: 10px;"><b>{{mrp.name}}</b></h5>
                     </div>
                     <div class="col-1">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <div id="collapsedBody" class="collapse show" data-parent="#list">
+            <div id="openMrpBody{{i}}" class="collapse show" data-parent="#list">
                 <div class="card-body" style="display: block;">
                     <p style="margin: 0 7px 0 7px;">
                         <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b> 
@@ -49,7 +49,7 @@
 </span>
 
 <div class="modal fade" id="modal-fulfill-posting">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content bg-gradient-info">
             <div class="modal-header">
                 <h4 class="modal-title">Fulfill Posting</h4>
@@ -143,7 +143,7 @@
                     </div>
                     <b style="font-size: 18px">Quantity To Donate</b>
                     <br/>
-                    <input type="number" id="quantity" name="quantity" [max]="maxQuantity" [(ngModel)]="newFulfillment.totalPledgedQuantity" required>
+                    <input type="number" id="quantity" name="quantity" [max]="maxQuantity" [(ngModel)]="totalPledgedQuantity" required>
                     <b> {{mraToDonate.units}}</b>
                     <span>
                         <b> / {{mrpToFulfill.lackingQuantity | number:'1.0-2'}} {{mrpToFulfill.unit}} required</b>

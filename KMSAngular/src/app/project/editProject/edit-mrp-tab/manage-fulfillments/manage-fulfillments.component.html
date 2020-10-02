@@ -1,0 +1,115 @@
+<button type="button" class="btn btn-info float-right" style="margin-right: 2%; font-size: 15px;" data-toggle="modal" data-target="#modal-fulfillments" (click)="clickFulfillment(mrp)" data-backdrop="static">
+    <i class="fas fa-tasks"></i> Fulfillments
+</button>
+
+<div class="modal fade" id="modal-fulfillments">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-gradient-info">
+            <div class="modal-header">
+                <h4 class="modal-title">Fulfillments</h4>
+                <button type="button" class="close" (click)="closeModal()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="noFulfillments || fulfillmentList.length == 0" > <b>No fulfillments at the moment</b></div>
+                <div *ngIf="!noFulfillments" style="max-height: 500px; overflow-y: scroll;">
+                    <div id="fulfillmentList" *ngFor="let fulfillment of fulfillmentList; let i = index">
+                        <div *ngIf="fulfillment.status != fulfillmentStatus.REJECTED" class="card" style="width: 100%; color: black;">
+                            <div class="card-header">
+                                <h6 class="card-title" style="font-size: 20px; margin-top: 5px;"><b>{{fulfillment.fulfillmentOwner.firstName}} {{fulfillment.fulfillmentOwner.lastName}}</b>&nbsp;
+                                    <span class="badge badge-primary" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</span>
+                                    <span class="badge badge-info" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px; vertical-align: 30%;">PARTIALLY FULFILLED</span>
+                                    <span class="badge badge-success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{fulfillment.status}}</span>
+                                    <span class="badge badge-danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</span>
+                                </h6>
+                            </div>
+                            <div class="card-body" style="display: block;">
+                                {{fulfillment.receivedQuantity}} {{mrp.unit}} received<span class="text-muted"> / {{fulfillment.totalPledgedQuantity}} {{mrp.unit}} pledged</span>
+                                <button type="button" class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 10px;"><i class="fas fa-ellipsis-h"></i></button> 
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" class="dropdown-item" data-toggle="modal" data-target="#modal-receive" (click)="clickReceive(fulfillment)">Receive Resources</a>
+                                    <div *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" class="dropdown-divider"></div>
+                                    <a class="dropdown-item" data-toggle="modal" data-target="#modal-update" (click)="clickUpdate(fulfillment)">Update Quantity</a>
+                                    <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-reject-fulfillment" (click)="clickReject(fulfillment)">Reject</a>
+                                  </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" (click)="closeModal()" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-receive">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Receive Resources</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="cancel()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <b style="font-size: 18px">Quantity Received</b>
+                <br/>
+                <input type="number" id="quantity" name="quantity" [max]="maxQuantity" [(ngModel)]="quantityReceived" required>
+                <b> {{mrp.unit}}</b>
+                <span>
+                    <b> / {{fulfillmentToUpdate.unreceivedQuantity}} {{mrp.unit}} unreceived</b>
+                </span>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">Cancel</button>
+                <button id="reject-fulfillment" type="button" class="btn btn-primary" data-dismiss="modal" (click)="receiveFulfillment()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-update">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Update Quantity</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="cancel()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <b style="font-size: 18px">Total Pledged Quantity</b>
+                <br/>
+                <input type="number" id="quantityPledged" name="quantityPledged" [max]="maxQuantity" [(ngModel)]="newTotalPledgedQuantity" required>
+                <b> {{mrp.unit}}</b>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">Cancel</button>
+                <button id="reject-fulfillment" type="button" class="btn btn-primary" data-dismiss="modal" (click)="updateQuantity()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-reject-fulfillment">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Reject Fulfillment</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="cancel()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to reject this fulfillment?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">Cancel</button>
+                <button id="reject-fulfillment" type="button" class="btn btn-danger" data-dismiss="modal" (click)="rejectFulfillment()">Reject</button>
+            </div>
+        </div>
+    </div>
+</div>
