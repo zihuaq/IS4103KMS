@@ -7,6 +7,7 @@ import { forkJoin } from "rxjs"
 import { ModalController } from "@ionic/angular"
 import { ReportProfileComponent } from "./report-profile/report-profile.component"
 import { MaterialResourceAvailableService } from "./../../services/material-resource-available.service"
+import { NgForm } from "@angular/forms"
 
 @Component({
   selector: "app-profile",
@@ -17,6 +18,11 @@ export class ProfilePage implements OnInit {
   profile: User
   loggedInUser: User
   loggedInUserId: number
+  status = ["Active", "Deactive"]
+  passwordUpdated = false
+  passwordError = false
+  passwordErrorMessage: string
+  passwordSuccessMessage = "Password successfully changed"
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -78,4 +84,36 @@ export class ProfilePage implements OnInit {
     })
     return await modal.present()
   }
+
+  // changePassword(passwordForm: NgForm) {
+  //   if (passwordForm.valid) {
+  //     let email = this.loggedInUser.email;
+  //     let oldPassword = passwordForm.value.oldPassword;
+  //     let newPassword = passwordForm.value.newPassword;
+  //     let confirmNewPassword = passwordForm.value.confirmNewPassword;
+  //     if (confirmNewPassword == newPassword) {
+  //       this.userService
+  //         .updateCustomerPassword(email, oldPassword, newPassword)
+  //         .subscribe(
+  //           (responsedata) => {
+  //             this.passwordUpdated = true;
+  //             this.passwordError = false;
+  //             setTimeout(() => {
+  //               $('#changePasswordModalCloseBtn').click();
+  //             }, 2000);
+  //           },
+  //           (error) => {
+  //             this.passwordError = true;
+  //             this.passwordUpdated = false;
+  //             this.passwordErrorMessage = 'Incorrect passward';
+  //           }
+  //         );
+  //     } else {
+  //       this.passwordError = true;
+  //       this.passwordUpdated = false;
+  //       this.passwordErrorMessage = 'passwords do not match';
+  //     }
+  //     console.log(passwordForm);
+  //   }
+  // }
 }

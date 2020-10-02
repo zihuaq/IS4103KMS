@@ -26,7 +26,7 @@ export class ForgetpasswordPage implements OnInit {
 
   async presentAlert() {
     const alert = await this.alertController.create({
-      header: "Alert",
+      header: "Action Required",
       message: "New password sent please check your email",
       buttons: ["OK"]
     })

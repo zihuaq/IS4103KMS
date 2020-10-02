@@ -7,6 +7,7 @@ import { AccountPrivacySettingEnum } from "src/app/enum/account-privacy-setting.
 import { UserType } from "src/app/enum/user-type.enum"
 import { UserService } from "src/app/services/user.service"
 import { ToastController } from "@ionic/angular"
+import { Router } from "@angular/router"
 
 @Component({
   selector: "app-overview",
@@ -26,7 +27,8 @@ export class OverviewComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private route: Router
   ) {}
 
   ngOnInit() {
@@ -140,5 +142,8 @@ export class OverviewComponent implements OnInit {
         .includes(this.profile.userId)
       console.log("overview" + this.profile)
     })
+  }
+  goToSetting() {
+    this.route.navigate(["/user-setting"])
   }
 }

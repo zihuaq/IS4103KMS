@@ -71,14 +71,19 @@
         </ion-row>
       </ion-grid>
     </ion-item>
+    <div style="text-align: right">
+      <ion-button icon="setting" (click)="goToSetting()">Setting</ion-button>
+    </div>
     <ion-item *ngIf="profile.userId != loggedInUser.userId" class="ion-text-wrap">
       <ion-label *ngIf="profile.userId != loggedInUser.userId">
         <ion-button fill="outline" *ngIf="!isFollowing && !hasSentFollowRequest" (click)="follow()"
           class="ion-text-wrap ion-no-margin" style="font-size: 12px;">
           Follow
         </ion-button>
-        <ion-button *ngIf="isFollowing" (click)="unfollow()" class="ion-text-wrap ion-no-margin" style="font-size: 12px;"> Unfollow </ion-button>
-        <ion-button *ngIf="!isFollowing && hasSentFollowRequest" disabled=true style="font-size: 12px;" class="ion-text-wrap ion-no-margin">
+        <ion-button *ngIf="isFollowing" (click)="unfollow()" class="ion-text-wrap ion-no-margin"
+          style="font-size: 12px;"> Unfollow </ion-button>
+        <ion-button *ngIf="!isFollowing && hasSentFollowRequest" disabled=true style="font-size: 12px;"
+          class="ion-text-wrap ion-no-margin">
           <i class="fas fa-check"></i>
           Follow Request Sent
         </ion-button>
@@ -86,12 +91,13 @@
       <ion-label>
         <ion-button fill="outline"
           *ngIf="!(loggedInUser.userType != UserType.INSTITUTE && profile.userType != UserType.INSTITUTE) && !isAffiliated && !hasSentAffiliationRequest"
-          (click)="sendAffiliationRequest()" class="ion-text-wrap" style="font-size: 12px;"> Send Affiliation Request 
+          (click)="sendAffiliationRequest()" class="ion-text-wrap" style="font-size: 12px;"> Send Affiliation Request
         </ion-button>
-        <ion-button *ngIf="isAffiliated" (click)="removeAffiliation()" class="ion-text-wrap ion-no-margin" style="font-size: 12px;"> Remove
+        <ion-button *ngIf="isAffiliated" (click)="removeAffiliation()" class="ion-text-wrap ion-no-margin"
+          style="font-size: 12px;"> Remove
           Affiliation </ion-button>
-        <ion-button *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true
-          class="ion-text-wrap ion-no-margin" style="font-size: 12px;">
+        <ion-button *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true class="ion-text-wrap ion-no-margin"
+          style="font-size: 12px;">
           <i class="fas fa-check"></i>
           Affiliation Request Sent
         </ion-button>
@@ -102,7 +108,8 @@
         <ion-button slot="start" class="ion-text-wrap ion-text-start ion-no-margin"
           routerLink="/view-basic-info/{{profile.userId}}">
           <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-          <ion-text style="font-size: 12px;"> See more information about {{profile.firstName}} {{profile.lastName}} </ion-text>
+          <ion-text style="font-size: 12px;"> See more information about {{profile.firstName}} {{profile.lastName}}
+          </ion-text>
         </ion-button>
       </ion-buttons>
     </ion-item>

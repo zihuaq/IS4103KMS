@@ -36,7 +36,7 @@ export class RegisterPage implements OnInit {
 
   async presentAlert() {
     const alert = await this.alertController.create({
-      header: "Alert",
+      header: "Action Required",
       message: "Please check your email for verification link",
       buttons: ["OK"]
     })

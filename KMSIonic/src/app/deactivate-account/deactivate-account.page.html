@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+    <ion-title>User Status</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+      <form (ngSubmit)="changeStatus()">
+        <ion-list>
+          <ion-radio-group [(ngModel)]="log.status" name="status">
+            <ion-list-header>
+              <ion-label>Status</ion-label>
+            </ion-list-header>
+        
+            <ion-item>
+              <ion-label>Activate</ion-label>
+              <ion-radio value="true"></ion-radio>
+            </ion-item>
+        
+            <ion-item>
+              <ion-label>Deactivate</ion-label>
+              <ion-radio value="false"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+        <ion-button type="submit" (click)="presentAlert()">Update Status</ion-button>
+      </form>
+</ion-content>

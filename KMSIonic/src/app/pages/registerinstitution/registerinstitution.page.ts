@@ -34,7 +34,7 @@ export class RegisterinstitutionPage implements OnInit {
 
   async presentAlert() {
     const alert = await this.alertController.create({
-      header: "Alert",
+      header: "Action Required",
       message: "Please check your email for verification link",
       buttons: ["OK"]
     })
@@ -49,11 +49,7 @@ export class RegisterinstitutionPage implements OnInit {
     console.log(userRegistrationForm)
     if (userRegistrationForm.valid) {
       this.newUser.firstName = userRegistrationForm.value.istitutionName
-      // this.newUser.lastName = userRegistrationForm.value.lastName
       this.newUser.email = userRegistrationForm.value.email
-      // let dobDate = new Date(userRegistrationForm.value.dob)
-      // this.newUser.dob = dobDate
-      // this.newUser.gender = userRegistrationForm.value.gender
       this.newUser.password = userRegistrationForm.value.password
       this.newUser.joinedDate = new Date()
       this.newUser.userType = UserType.INSTITUTE

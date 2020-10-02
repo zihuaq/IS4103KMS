@@ -108,21 +108,59 @@ const routes: Routes = [
       )
   },
   {
-    path: 'edit-basic-info',
-    loadChildren: () => import('./pages/edit-basic-info/edit-basic-info.module').then( m => m.EditBasicInfoPageModule)
+    path: "edit-basic-info",
+    loadChildren: () =>
+      import("./pages/edit-basic-info/edit-basic-info.module").then(
+        (m) => m.EditBasicInfoPageModule
+      )
   },
   {
-    path: 'view-sdgs',
-    loadChildren: () => import('./pages/view-sdgs/view-sdgs.module').then( m => m.ViewSdgsPageModule)
+    path: "view-sdgs",
+    loadChildren: () =>
+      import("./pages/view-sdgs/view-sdgs.module").then(
+        (m) => m.ViewSdgsPageModule
+      )
   },
   {
-    path: 'add-sdgs',
-    loadChildren: () => import('./pages/add-sdgs/add-sdgs.module').then( m => m.AddSdgsPageModule)
-  },  {
-    path: 'add-material-resource-available',
-    loadChildren: () => import('./pages/add-material-resource-available/add-material-resource-available.module').then( m => m.AddMaterialResourceAvailablePageModule)
+    path: "add-sdgs",
+    loadChildren: () =>
+      import("./pages/add-sdgs/add-sdgs.module").then(
+        (m) => m.AddSdgsPageModule
+      )
+  },
+  {
+    path: "add-material-resource-available",
+    loadChildren: () =>
+      import(
+        "./pages/add-material-resource-available/add-material-resource-available.module"
+      ).then((m) => m.AddMaterialResourceAvailablePageModule)
+  },
+  {
+    path: "changepassword",
+    loadChildren: () =>
+      import("./changepassword/changepassword.module").then(
+        (m) => m.ChangepasswordPageModule
+      )
+  },
+  {
+    path: "user-setting",
+    loadChildren: () =>
+      import("./user-setting/user-setting.module").then(
+        (m) => m.UserSettingPageModule
+      )
+  },
+  {
+    path: "deactivate-account",
+    loadChildren: () =>
+      import("./deactivate-account/deactivate-account.module").then(
+        (m) => m.DeactivateAccountPageModule
+      )
+  },
+  {
+    path: "logout",
+    loadChildren: () =>
+      import("./pages/logout/logout.module").then((m) => m.LogoutPageModule)
   }
-
 ]
 
 @NgModule({

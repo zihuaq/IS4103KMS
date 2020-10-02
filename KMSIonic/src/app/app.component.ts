@@ -40,6 +40,11 @@ export class AppComponent implements OnInit {
       title: "SDG Info",
       url: "/sdg-info",
       icon: "information-circle"
+    },
+    {
+      title: "Log Out",
+      url: "/logout",
+      icon: "log-out"
     }
   ]
 
@@ -57,14 +62,22 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
+      this.authService.authenticationState.subscribe((state) => {
+        //console.log(state + "test");
+        console.log("Auth changed: ", state)
+        if (state) {
+          this.router.navigate(["index"])
+        } else {
+          this.router.navigate(["login"])
+        }
+      })
     })
   }
 
-  ngOnInit() {}
+  async ngOnInit() {}
 
   logout() {
-    this.authService.logout().then(() => {
-      this.router.navigate(["/login"])
-    })
+    this.authService.logout()
+    this.authService.authenticationState.next(false)
   }
 }
