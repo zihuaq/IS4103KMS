@@ -26,5 +26,9 @@ public interface HumanResourcePostingSessionBeanLocal {
     public void updateHumanResourcePosting(HumanResourcePostingEntity mrpToUpdate) throws NoResultException;
 
     public void deleteHumanResourcePosting(Long hrpId) throws NoResultException;
+
+    public void joinHrp(Long userId, Long hrpId) throws NoResultException;
+
+    public void leaveHrp(Long userId, Long hrpId) throws NoResultException;
     
 }

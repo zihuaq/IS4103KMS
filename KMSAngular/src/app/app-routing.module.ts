@@ -22,6 +22,7 @@ import { CreateNewUserSelectorComponent } from './create-new-user-selector/creat
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
 import { EditProjectComponent } from './project/editProject/edit-project/edit-project.component';
 import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
+import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
 
 
 const routes: Routes = [
@@ -111,6 +112,10 @@ const routes: Routes = [
   { path: 'editProject/:projectId',
     canActivate: [RouteGuard], 
     component: EditProjectComponent
+  },
+  { path: 'myFulfillments/:projectId',
+    canActivate: [RouteGuard], 
+    component: MyFulfillmentsComponent
   }
 
 ];

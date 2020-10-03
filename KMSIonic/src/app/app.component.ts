@@ -42,7 +42,17 @@ export class AppComponent implements OnInit {
       icon: "information-circle"
     },
     {
-      title: "Log Out",
+      title: "Discover Project",
+      url: "/view-all-project",
+      icon: "search"
+    },
+    {
+      title: "My Project",
+      url: "/view-own-projects",
+      icon: "person"
+    },
+    {
+      title: "Log Out", 
       url: "/logout",
       icon: "log-out"
     }

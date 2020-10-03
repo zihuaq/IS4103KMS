@@ -18,6 +18,7 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -351,7 +352,22 @@ public class UserResource {
             user.getAffiliatedUsers().clear();
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
-
+            user.getFulfillments().clear();
+            for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
+                hrp.setActivity(null);
+                hrp.getAppliedUsers().clear();
+                if (hrp.getProject() != null) {
+                    hrp.getProject().setProjectOwner(null);
+                    hrp.getProject().getProjectMembers().clear();
+                    hrp.getProject().getProjectAdmins().clear();
+                    hrp.getProject().getActivities().clear();
+                    hrp.getProject().getHumanResourcePostings().clear();
+                    hrp.getProject().getMaterialResourcePostings().clear();
+                    hrp.getProject().getTasks().clear();
+                    hrp.getProject().getPosts().clear();
+                    hrp.getProject().getSdgs().clear();
+                }
+            }
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -438,6 +454,8 @@ public class UserResource {
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
             user.getAffiliatedUsers().clear();
+            user.getHrpApplied().clear();
+            user.getFulfillments().clear();
             user.setPassword("");
 
             return Response.status(Response.Status.OK).entity(user).build();
@@ -597,6 +615,7 @@ public class UserResource {
         try {
             System.out.println("reached update user");
             UserEntity user = userSessionBeanLocal.updateUser(updatedUser);
+
             System.out.println("got user");
             UserEntity userResponse = new UserEntity();
             userResponse.setFirstName(user.getFirstName());
@@ -612,6 +631,7 @@ public class UserResource {
             userResponse.setAccountPrivacySetting(user.getAccountPrivacySetting());
             System.out.println("userResponse: " + userResponse);
             return Response.status(200).entity(userResponse).build();
+
         } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -700,6 +720,12 @@ public class UserResource {
             temp.setFollowing(getUsersResponse(user.getFollowing()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
+                hrp.setActivity(null);
+                hrp.setProject(null);
+                hrp.getAppliedUsers().clear();
+            }
+            temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
         return usersResponse;
@@ -723,6 +749,7 @@ public class UserResource {
             temp.setAffiliatedUsers(getUsersResponse(user.getAffiliatedUsers()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
         return usersResponse;

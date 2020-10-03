@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
@@ -80,14 +81,18 @@ public class HumanResourcePostingEntity implements Serializable {
     
     @ManyToMany
     private List<TagEntity> tags;
+    
+    @JoinTable(name = "humanResourcePostingApplied")
+    @ManyToMany(mappedBy = "hrpApplied")
+    private List<UserEntity> appliedUsers;
 
     public HumanResourcePostingEntity() {
         this.tags = new ArrayList<>();
+        this.appliedUsers = new ArrayList<>();
     }
 
-    public HumanResourcePostingEntity(Long humanResourcePostingId, String name, Integer totalSlots, Integer obtainedSlots, Integer lackingSlots, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
+    public HumanResourcePostingEntity(String name, Integer totalSlots, Integer obtainedSlots, Integer lackingSlots, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
         this();
-        this.humanResourcePostingId = humanResourcePostingId;
         this.name = name;
         this.totalSlots = totalSlots;
         this.obtainedSlots = obtainedSlots;
@@ -226,6 +231,14 @@ public class HumanResourcePostingEntity implements Serializable {
 
     public void setTags(List<TagEntity> tags) {
         this.tags = tags;
+    }
+
+    public List<UserEntity> getAppliedUsers() {
+        return appliedUsers;
+    }
+
+    public void setAppliedUsers(List<UserEntity> appliedUsers) {
+        this.appliedUsers = appliedUsers;
     }
     
 }

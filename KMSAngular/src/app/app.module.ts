@@ -52,6 +52,10 @@ import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-p
 import { EditMrpTabComponent } from './project/editProject/edit-mrp-tab/edit-mrp-tab.component';
 import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
 import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
+import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
+import { JobAppliedComponent } from './profile/job-applied/job-applied.component';
+import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
+import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/manage-fulfillments/manage-fulfillments.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +100,12 @@ import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp
     EditHrpTabComponent,
     ViewOwnProjectsComponent,
     EditMrpTabComponent,
-    AffiliationRequestsComponent
+    AffiliationRequestsComponent,
+    ViewHrpTabComponent,
+    ViewMrpTabComponent,
+    JobAppliedComponent,
+    MyFulfillmentsComponent,
+    ManageFulfillmentsComponent
   ],
   imports: [
     BrowserModule,

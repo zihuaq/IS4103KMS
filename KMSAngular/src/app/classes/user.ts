@@ -4,6 +4,7 @@ import { AccountPrivacySettingEnum } from './privacy-settings.enum';
 import { UserType } from './user-type.enum';
 import { FollowRequest } from './follow-request';
 import { AffiliationRequest } from './affiliation-request';
+import { HumanResourcePosting } from './human-resource-posting';
 
 export class User {
   userId: number;
@@ -31,6 +32,7 @@ export class User {
   affiliatedUsers: User[];
   affiliationRequestMade: AffiliationRequest[];
   affiliationRequestReceived: AffiliationRequest[];
+  hrpApplied: HumanResourcePosting[];
 
   constructor(
     userId?: number,
@@ -56,7 +58,8 @@ export class User {
     accountPrivacySetting?: AccountPrivacySettingEnum,
     affiliatedUsers?: User[],
     affiliationRequestMade?: AffiliationRequest[],
-    affiliationRequestReceived?: AffiliationRequest[]
+    affiliationRequestReceived?: AffiliationRequest[],
+    hrpApplied?: HumanResourcePosting[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -82,5 +85,6 @@ export class User {
     this.affiliatedUsers = affiliatedUsers;
     this.affiliationRequestMade = affiliationRequestMade;
     this.affiliationRequestReceived = affiliationRequestReceived;
+    this.hrpApplied = hrpApplied;
   }
 }

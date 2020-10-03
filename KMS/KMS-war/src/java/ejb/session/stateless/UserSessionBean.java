@@ -11,6 +11,7 @@ import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.FulfillmentEntity;
 import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.PostEntity;
@@ -447,6 +448,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.remove(reviewsReceived.get(i));
         }
         reviewsReceived.clear();
+        List<FulfillmentEntity> fulfillments = user.getFulfillments();
+        for (int i = 0; i < fulfillments.size(); i++) {
+            fulfillments.get(i).setFulfillmentOwner(null);
+            fulfillments.get(i).setMra(null);
+        }
+        fulfillments.clear();
         user.getSdgs().clear();
         user.getSkills().clear();
         em.remove(user);

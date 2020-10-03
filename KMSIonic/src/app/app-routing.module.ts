@@ -94,6 +94,58 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'view-all-project',
+    loadChildren: () => 
+    import('./pages/project/view-all-project/view-all-project.module').then( 
+        (m) => m.ViewAllProjectPageModule
+      ),
+      canActivate: [AuthGuard]
+  },
+  {
+    path: 'create-new-project',
+    loadChildren: () => 
+    import('./pages/project/create-new-project/create-new-project.module').then( 
+      (m) => m.CreateNewProjectPageModule
+    ),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'project-details/:projectId',
+    loadChildren: () => import('./pages/project/viewProject/project-details/project-details.module').then( m => m.ProjectDetailsPageModule)
+  },
+  {
+    path: 'edit-project-details/:projectId',
+    loadChildren: () => import('./pages/project/editProject/edit-project-details/edit-project-details.module').then( m => m.EditProjectDetailsPageModule)
+  },
+  {
+    path: 'tab-panel/:projectId',
+    loadChildren: () => import('./pages/project/editProject/tab-panel/tab-panel.module').then( m => m.TabPanelPageModule)
+  },
+  {
+    path: 'edit-members',
+    loadChildren: () => import('./pages/project/editProject/edit-members/edit-members.module').then( m => m.EditMembersPageModule)
+  },
+  {
+    path: 'changepassword',
+    loadChildren: () => import('./changepassword/changepassword.module').then( m => m.ChangepasswordPageModule)
+  },
+  {
+    path: 'user-setting',
+    loadChildren: () => import('./user-setting/user-setting.module').then( m => m.UserSettingPageModule)
+  },
+  {
+    path: 'deactivate-account',
+    loadChildren: () => import('./deactivate-account/deactivate-account.module').then( m => m.DeactivateAccountPageModule)
+  },
+  {
+    path: 'logout',
+    loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
+  },
+  {
+    path: 'view-own-projects',
+    loadChildren: () => import('./pages/project/view-own-projects/view-own-projects.module').then( m => m.ViewOwnProjectsPageModule)
+  },
+  {
     path: "view-users",
     loadChildren: () =>
       import("./pages/view-users/view-users.module").then(
@@ -134,33 +186,8 @@ const routes: Routes = [
       import(
         "./pages/add-material-resource-available/add-material-resource-available.module"
       ).then((m) => m.AddMaterialResourceAvailablePageModule)
-  },
-  {
-    path: "changepassword",
-    loadChildren: () =>
-      import("./changepassword/changepassword.module").then(
-        (m) => m.ChangepasswordPageModule
-      )
-  },
-  {
-    path: "user-setting",
-    loadChildren: () =>
-      import("./user-setting/user-setting.module").then(
-        (m) => m.UserSettingPageModule
-      )
-  },
-  {
-    path: "deactivate-account",
-    loadChildren: () =>
-      import("./deactivate-account/deactivate-account.module").then(
-        (m) => m.DeactivateAccountPageModule
-      )
-  },
-  {
-    path: "logout",
-    loadChildren: () =>
-      import("./pages/logout/logout.module").then((m) => m.LogoutPageModule)
   }
+
 ]
 
 @NgModule({

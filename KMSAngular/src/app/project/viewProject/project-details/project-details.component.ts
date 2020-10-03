@@ -18,6 +18,7 @@ declare var $: any;
 })
 export class ProjectDetailsComponent implements OnInit {
 
+  loaded: boolean = false;
   projectId: number;
   projectToView: Project;
   loggedInUser: User
@@ -47,8 +48,10 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToView = response;
+        this.loaded = true;
+        this.noOfMembers = this.projectToView.projectMembers.length;
         this.profilePicture = this.projectToView.profilePicture;
-        console.log(this.profilePicture);
+        //console.log(this.profilePicture);
         this.owner = this.projectToView.projectOwner;
 
         for (let admin of this.projectToView.projectAdmins) {
@@ -90,7 +93,7 @@ export class ProjectDetailsComponent implements OnInit {
           autohide: true,
           delay: 2500,
           body: 'Welcome to the project',
-        })
+        });
         location.reload();
       },
       error => {
@@ -100,7 +103,7 @@ export class ProjectDetailsComponent implements OnInit {
           autohide: true,
           delay: 2500,
           body: error,
-        })
+        });
       });  
   }
 
@@ -151,10 +154,10 @@ export class ProjectDetailsComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.selectedProfilePicture = e.target.result;
-        console.log(this.selectedProfilePicture);
+        //console.log(this.selectedProfilePicture);
       };
       this.selectedProfilePictureName = event.target.files[0].name;
-      console.log(event.target.files[0].name);
+      //console.log(event.target.files[0].name);
       reader.readAsDataURL(event.target.files[0]);
     } else {
       this.selectedProfilePicture = undefined;
@@ -201,4 +204,5 @@ export class ProjectDetailsComponent implements OnInit {
   get projectType(): typeof ProjectType{
     return ProjectType;
   }
+  
 }
