@@ -9,12 +9,14 @@ import Exception.CreateProjectException;
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
+import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.MaterialResourcePostingSessionBeanLocal;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.FulfillmentEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
@@ -42,6 +44,9 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB
+    private FulfillmentSessionBeanLocal fulfillmentSessionBean;
 
     @EJB
     private MaterialResourcePostingSessionBeanLocal materialResourcePostingSessionBean;
@@ -170,7 +175,7 @@ public class DataInitializationSessionBean {
             
             humanResourcePostingSessionBean.joinHrp(3l, 2l);
             
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", startDate, endDate, 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(23l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-30"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(23l)));
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 10.0, 0.0, 10.0, "Any laptops", startDate, endDate, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
             
             List<TagEntity> tags = new ArrayList<>();
@@ -180,9 +185,11 @@ public class DataInitializationSessionBean {
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
             tags.clear();
             tags.add(tagSessionBean.getTagById(23l));
-            mra = new MaterialResourceAvailableEntity("Bricks", 10, "kg", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-11"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-2-20"), "1.384667", "103.770707", tags);
-            mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(5l));
+            mra = new MaterialResourceAvailableEntity("Wood", 10, "kg", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-11"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-2-20"), "1.384667", "103.770707", tags);
+            mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
+            
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 0.0, 5.0), 5l, 1l, 2l);
         } catch(NoResultException ex) {
            System.out.println(ex.getMessage()); 
         } 
