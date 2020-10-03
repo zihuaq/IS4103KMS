@@ -14,29 +14,73 @@
       </ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>
-        <p>Followers </p>
-        <ion-note>
-          <a [routerLink]="['/searchUsers/followers/']"> {{profile.followers.length}} </a>
-        </ion-note>
-      </ion-label>
-      <ion-label>
-        <p>Following </p>
-        <ion-note>
-          <a [routerLink]="['/searchUsers/following/']"> {{profile.following.length}} </a>
-        </ion-note>
-      </ion-label>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="8" class="ion-align-self-start">
+            <ion-label>
+              <ion-text>Followers</ion-text>
+              <p>{{profile.followers.length}} Followers</p>
+            </ion-label>
+          </ion-col>
+          <ion-col size="4" class="ion-align-self-end">
+            <ion-button size="small" style="font-size: 10px;" fill="outline"
+              [routerLink]="['/view-users/followers', profile.userId]">
+              <ion-text>View all</ion-text>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-item>
-    <div style ="text-align: right">
-    <ion-button icon="setting" (click)="goToSetting()">Setting</ion-button>
-    </div>
-    <ion-item  *ngIf="profile.userId != loggedInUser.userId">
+    <ion-item>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="8" class="ion-align-self-start">
+            <ion-label>
+              <ion-text>Following</ion-text>
+              <p>{{profile.following.length}} Following</p>
+            </ion-label>
+          </ion-col>
+          <ion-col size="4" class="ion-align-self-end">
+            <ion-button size="small" style="font-size: 10px;" fill="outline"
+              [routerLink]="['/view-users/following', profile.userId]">
+              <ion-text>View all</ion-text>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="8" class="ion-align-self-start">
+            <ion-label *ngIf="profile.userType == UserType.INSTITUTE">
+              <ion-text>Affiliated Users</ion-text>
+              <p>{{profile.affiliatedUsers.length}} Affiliated Users</p>
+            </ion-label>
+            <ion-label *ngIf="profile.userType != UserType.INSTITUTE">
+              <ion-text>Affiliated Institutes</ion-text>
+              <p>{{profile.affiliatedUsers.length}} Affiliated Institutes</p>
+            </ion-label>
+          </ion-col>
+          <ion-col size="4" class="ion-align-self-end">
+            <ion-button size="small" style="font-size: 10px;" fill="outline"
+              [routerLink]="['/view-users/affiliated/', profile.userId]">
+              <ion-text>View all</ion-text>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item *ngIf="profile.userId != loggedInUser.userId" class="ion-text-wrap">
       <ion-label *ngIf="profile.userId != loggedInUser.userId">
-        <ion-button fill="outline" *ngIf="!isFollowing && !hasSentFollowRequest" (click)="follow()">
+        <ion-button fill="outline" *ngIf="!isFollowing && !hasSentFollowRequest" (click)="follow()"
+          class="ion-text-wrap ion-no-margin" style="font-size: 12px;">
           Follow
         </ion-button>
-        <ion-button *ngIf="isFollowing" (click)="unfollow()"> Unfollow </ion-button>
-        <ion-button *ngIf="!isFollowing && hasSentFollowRequest" disabled=true>
+        <ion-button *ngIf="isFollowing" (click)="unfollow()" class="ion-text-wrap ion-no-margin"
+          style="font-size: 12px;"> Unfollow </ion-button>
+        <ion-button *ngIf="!isFollowing && hasSentFollowRequest" disabled=true style="font-size: 12px;"
+          class="ion-text-wrap ion-no-margin">
           <i class="fas fa-check"></i>
           Follow Request Sent
         </ion-button>
@@ -44,15 +88,27 @@
       <ion-label>
         <ion-button fill="outline"
           *ngIf="!(loggedInUser.userType != UserType.INSTITUTE && profile.userType != UserType.INSTITUTE) && !isAffiliated && !hasSentAffiliationRequest"
-          (click)="sendAffiliationRequest()">
-          Send Affiliation Request
+          (click)="sendAffiliationRequest()" class="ion-text-wrap" style="font-size: 12px;"> Send Affiliation Request
         </ion-button>
-        <ion-button *ngIf="isAffiliated" (click)="removeAffiliation()"> Remove Affiliation </ion-button>
-        <ion-button *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true>
+        <ion-button *ngIf="isAffiliated" (click)="removeAffiliation()" class="ion-text-wrap ion-no-margin"
+          style="font-size: 12px;"> Remove
+          Affiliation </ion-button>
+        <ion-button *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true class="ion-text-wrap ion-no-margin"
+          style="font-size: 12px;">
           <i class="fas fa-check"></i>
           Affiliation Request Sent
         </ion-button>
       </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-buttons>
+        <ion-button slot="start" class="ion-text-wrap ion-text-start ion-no-margin"
+          routerLink="/view-basic-info/{{profile.userId}}">
+          <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+          <ion-text style="font-size: 12px;"> See more information about {{profile.firstName}} {{profile.lastName}}
+          </ion-text>
+        </ion-button>
+      </ion-buttons>
     </ion-item>
   </ion-card-content>
 </ion-card>

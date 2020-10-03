@@ -1,25 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
+import { Component, OnInit } from "@angular/core"
+import { Router } from "@angular/router"
 
 @Component({
-  selector: 'app-userselector',
-  templateUrl: './userselector.page.html',
-  styleUrls: ['./userselector.page.scss'],
+  selector: "app-userselector",
+  templateUrl: "./userselector.page.html",
+  styleUrls: ["./userselector.page.scss"]
 })
 export class UserselectorPage implements OnInit {
+  constructor(private router: Router) {}
 
-  constructor(private route: Router) { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   directInst() {
-    this.route.navigate(['/registerinstitution']);
+    this.router.navigate(["/registerinstitution"])
   }
 
   directInd() {
-    this.route.navigate(['/register']);
+    this.router.navigate(["/register"])
   }
-
 }

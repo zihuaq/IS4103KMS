@@ -1,9 +1,7 @@
 import { UserType } from "./../../enum/user-type.enum"
-import { AuthenticationService } from "./../../services/authentication.service"
 import { UserService } from "./../../services/user.service"
 import { Component, OnInit, ViewChild } from "@angular/core"
 import { Location } from "@angular/common"
-import { Platform } from "@ionic/angular"
 import { IonSearchbar } from "@ionic/angular"
 import { forkJoin } from "rxjs"
 import { User } from "../../classes/user"
@@ -15,34 +13,41 @@ import { User } from "../../classes/user"
 })
 export class SearchUsersPage implements OnInit {
   @ViewChild("searchBar") searchBar: IonSearchbar
-  loggedInUserId: number
   allUsers: User[]
   filteredUsers: User[]
   preliminarySearchUser: User[]
   searchTerm: string
-  constructor(
-    private location: Location,
-    private platform: Platform,
-    private userService: UserService,
-    private authenticationService: AuthenticationService
-  ) {}
+  constructor(private location: Location, private userService: UserService) {}
 
   ngOnInit() {}
 
   ionViewWillEnter() {
-    this.authenticationService.getCurrentUser().then((user: User) => {
-      this.loggedInUserId = user.userId
-      forkJoin([
-        this.userService.getAllUsers()
-        // this.userService.getFollowing(this.loggedInUserId),
-        // this.userService.getFollowRequestMade(this.loggedInUserId)
-      ]).subscribe((result) => {
-        this.allUsers = result[0]
+    forkJoin([this.userService.getAllUsers()]).subscribe((result) => {
+      this.allUsers = result[0]
+      if (this.searchTerm && this.searchTerm != "") {
+        this.filteredUsers = this.allUsers.filter((user) => {
+          if (
+            user.userType == UserType.INDIVIDUAL ||
+            user.userType == UserType.ADMIN
+          ) {
+            return (
+              user.firstName
+                .toLowerCase()
+                .includes(this.searchTerm.toLowerCase()) ||
+              user.lastName
+                .toLowerCase()
+                .includes(this.searchTerm.toLowerCase())
+            )
+          } else if (user.userType == UserType.INSTITUTE) {
+            return user.firstName
+              .toLowerCase()
+              .includes(this.searchTerm.toLowerCase())
+          }
+        })
+      } else {
         this.filteredUsers = this.allUsers
-        this.preliminarySearchUser = this.filteredUsers.slice(0, 6)
-        // this.loggedInUserFollowing = result[1]
-        // this.loggedInUserFollowRequestMade = result[2]
-      })
+      }
+      this.preliminarySearchUser = this.filteredUsers.slice(0, 6)
     })
   }
 
@@ -57,8 +62,6 @@ export class SearchUsersPage implements OnInit {
   }
 
   setFilteredItems(searchTerm) {
-    console.log(searchTerm)
-
     if (searchTerm && searchTerm != "") {
       this.filteredUsers = this.allUsers.filter((user) => {
         if (

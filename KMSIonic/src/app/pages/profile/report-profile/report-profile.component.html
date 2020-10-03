@@ -1,0 +1,52 @@
+<ion-content fullscreen>
+  <ion-card>
+    <ion-card-header>
+      <ion-row>
+        <ion-col size="10">
+          <ion-card-title *ngIf="profile">
+            Report {{profile.firstName}} {{profile.lastName}}'s Profile
+          </ion-card-title>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon class="closeButton" (click)="dismissModal()" name="close-circle-outline"></ion-icon>
+        </ion-col>
+      </ion-row>
+      <ion-card-subtitle>
+        Help us understand what is happening
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-label>
+        Select your concerns
+      </ion-label>
+      <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
+        placeholder="Select your concerns"></ion-searchbar>
+      <ion-list lines="none" *ngIf="filteredTags.length > 0">
+        <ion-item *ngFor="let tag of filteredTags">
+          <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">
+            <ion-text color="danger">
+              <h3>{{tag.name}}</h3>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-item *ngFor="let tag of chosenTags" lines="none">
+          <ion-chip color="danger">
+            <ion-label>{{tag.name}} </ion-label>
+            <ion-icon name="close-outline" (click)="removeTag(tag)"></ion-icon>
+          </ion-chip>
+        </ion-item>
+      </ion-list>
+      <ion-label>
+        Elaboration if necessary
+      </ion-label>
+      <ion-textarea class="content" maxlength="200" placeholder="Elaboration" [(ngModel)]="content">
+      </ion-textarea>
+      <br/>
+      <ion-footer>
+        <ion-button expand="block" color="dark" (click)="onSubmit()">Submit</ion-button>
+      </ion-footer>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

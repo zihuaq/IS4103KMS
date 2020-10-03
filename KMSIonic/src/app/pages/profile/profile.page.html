@@ -4,16 +4,29 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Profile</ion-title>
+    <ion-button (click)="goToSetting()" slot="end" shape="round">
+      <ion-icon slot="icon-only" name="settings"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div *ngIf ="profile && loggedInUser">
+  <div *ngIf="profile && loggedInUser">
     <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-    (userChanged)="loggedInUser=$event"></app-overview>
+      (userChanged)="loggedInUser=$event"></app-overview>
     <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-    (userchanged)="loggedInUser=$event"></app-material-resource-available>
+      (userchanged)="loggedInUser=$event"></app-material-resource-available>
     <app-skills [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-    (userchanged)="loggedInUser=$event"></app-skills>
-  </div> 
+      (userchanged)="loggedInUser=$event"></app-skills>
+    <app-sdgs [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+      (userchanged)="loggedInUser=$event"></app-sdgs>
+    <ion-grid *ngIf="profile.userId != loggedInUser.userId">
+      <ion-row class="ion-justify-content-center">
+        <ion-chip color="danger" (click)="presentReportProfileModal()">
+          <ion-icon name="alert-outline"></ion-icon>
+          <ion-label>Report Profile</ion-label>
+        </ion-chip>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>

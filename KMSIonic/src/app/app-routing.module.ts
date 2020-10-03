@@ -140,10 +140,53 @@ const routes: Routes = [
   {
     path: 'logout',
     loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
-  },  {
+  },
+  {
     path: 'view-own-projects',
     loadChildren: () => import('./pages/project/view-own-projects/view-own-projects.module').then( m => m.ViewOwnProjectsPageModule)
   },
+  {
+    path: "view-users",
+    loadChildren: () =>
+      import("./pages/view-users/view-users.module").then(
+        (m) => m.ViewUsersPageModule
+      )
+  },
+  {
+    path: "view-basic-info",
+    loadChildren: () =>
+      import("./pages/view-basic-info/view-basic-info.module").then(
+        (m) => m.ViewBasicInfoPageModule
+      )
+  },
+  {
+    path: "edit-basic-info",
+    loadChildren: () =>
+      import("./pages/edit-basic-info/edit-basic-info.module").then(
+        (m) => m.EditBasicInfoPageModule
+      )
+  },
+  {
+    path: "view-sdgs",
+    loadChildren: () =>
+      import("./pages/view-sdgs/view-sdgs.module").then(
+        (m) => m.ViewSdgsPageModule
+      )
+  },
+  {
+    path: "add-sdgs",
+    loadChildren: () =>
+      import("./pages/add-sdgs/add-sdgs.module").then(
+        (m) => m.AddSdgsPageModule
+      )
+  },
+  {
+    path: "add-material-resource-available",
+    loadChildren: () =>
+      import(
+        "./pages/add-material-resource-available/add-material-resource-available.module"
+      ).then((m) => m.AddMaterialResourceAvailablePageModule)
+  }
 
 ]
 

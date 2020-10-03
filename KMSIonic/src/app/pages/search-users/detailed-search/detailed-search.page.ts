@@ -1,11 +1,13 @@
+import { UserType } from "./../../../enum/user-type.enum"
 import { FollowRequest } from "./../../../classes/follow-request"
 import { UserService } from "./../../../services/user.service"
 import { AuthenticationService } from "./../../../services/authentication.service"
 import { User } from "./../../../classes/user"
-import { Component, OnInit } from "@angular/core"
-import { Router } from "@angular/router"
+import { Component, OnInit, ViewChild } from "@angular/core"
+import { ActivatedRoute, Router } from "@angular/router"
 import { Location } from "@angular/common"
 import { forkJoin } from "rxjs"
+import { IonSearchbar } from "@ionic/angular"
 
 @Component({
   selector: "app-detailed-search",
@@ -13,6 +15,9 @@ import { forkJoin } from "rxjs"
   styleUrls: ["./detailed-search.page.scss"]
 })
 export class DetailedSearchPage implements OnInit {
+  @ViewChild("searchBar") searchBar: IonSearchbar
+  searchTerm: string
+  allUsers: User[]
   filteredUsers: User[]
   loggedInUserId: number
   loggedInUserFollowing: User[]
@@ -21,23 +26,53 @@ export class DetailedSearchPage implements OnInit {
     private router: Router,
     private location: Location,
     private authenticationService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.filteredUsers = <User[]>this.router.getCurrentNavigation().extras.state
+    this.searchTerm = this.activatedRoute.snapshot.paramMap.get("searchTerm")
     this.authenticationService.getCurrentUser().then((user: User) => {
       this.loggedInUserId = user.userId
       forkJoin([
+        this.userService.getAllUsers(),
         this.userService.getFollowing(this.loggedInUserId),
         this.userService.getFollowRequestMade(this.loggedInUserId)
       ]).subscribe((result) => {
-        this.loggedInUserFollowing = result[0]
-        this.loggedInUserFollowRequestMade = result[1]
-        console.log(this.loggedInUserFollowing)
-        console.log(this.loggedInUserFollowRequestMade)
+        this.allUsers = result[0]
+        this.loggedInUserFollowing = result[1]
+        this.loggedInUserFollowRequestMade = result[2]
+        if (this.searchTerm && this.searchTerm != "") {
+          this.filteredUsers = this.allUsers.filter((user) => {
+            if (
+              user.userType == UserType.INDIVIDUAL ||
+              user.userType == UserType.ADMIN
+            ) {
+              return (
+                user.firstName
+                  .toLowerCase()
+                  .includes(this.searchTerm.toLowerCase()) ||
+                user.lastName
+                  .toLowerCase()
+                  .includes(this.searchTerm.toLowerCase())
+              )
+            } else if (user.userType == UserType.INSTITUTE) {
+              return user.firstName
+                .toLowerCase()
+                .includes(this.searchTerm.toLowerCase())
+            }
+          })
+        } else {
+          this.filteredUsers = this.allUsers
+        }
       })
     })
+  }
+
+  ionViewDidEnter() {
+    setTimeout(() => {
+      this.searchBar.value = this.searchTerm
+    }, 150)
   }
 
   goBack() {
@@ -66,18 +101,12 @@ export class DetailedSearchPage implements OnInit {
   }
 
   checkLoginUserHasFollowed(userId: number) {
-    console.log("checkLoginUserHasFollowed", this.loggedInUserFollowing, userId)
     return this.loggedInUserFollowing
       .map((user) => user.userId)
       .includes(userId)
   }
 
   checkLoginUserHaveSentFollowReq(userId: number) {
-    console.log(
-      "checkLoginUserHaveSentFollowReq",
-      this.loggedInUserFollowRequestMade,
-      userId
-    )
     return this.loggedInUserFollowRequestMade
       .map((f) => f.to.userId)
       .includes(userId)

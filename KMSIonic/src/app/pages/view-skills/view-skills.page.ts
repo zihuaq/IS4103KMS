@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Tag } from 'src/app/classes/tag';
 import { User } from 'src/app/classes/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
@@ -11,9 +12,11 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class ViewSkillsPage implements OnInit {
   profile: User;
+  displayedSkills: Tag[];
   loggedInUser: User;
   loggedInUserId: number;
   isEdit: boolean;
+  skillsToRemove: Tag[] = [];
 
   constructor(private activatedRoute: ActivatedRoute,
     private userService: UserService, private authenticationService: AuthenticationService) { }
@@ -35,6 +38,7 @@ export class ViewSkillsPage implements OnInit {
             .getSkillsForProfile(this.profile.userId)
             .subscribe((skills) => {
               this.profile = { ...this.profile, skills };
+              this.displayedSkills = skills;
             });
           console.log(data);
         });
@@ -54,6 +58,7 @@ export class ViewSkillsPage implements OnInit {
             .getSkillsForProfile(this.profile.userId)
             .subscribe((skills) => {
               this.profile = { ...this.profile, skills };
+              this.displayedSkills = skills;
             });
         });
       }
@@ -64,7 +69,21 @@ export class ViewSkillsPage implements OnInit {
     this.isEdit = !this.isEdit
   }
 
-  onSave() {
+  deleteTag(tag: Tag){
+    this.displayedSkills = this.displayedSkills.filter(element => element.name != tag.name);
+    this.skillsToRemove.push(tag);
+  }
 
+  onSave() {
+    this.skillsToRemove.forEach((element) => {
+      this.userService
+      .removeSkillFromProfile(this.profile.userId, element.tagId)
+      .subscribe((responsedata) => {
+        this.profile.skills = responsedata;
+        this.displayedSkills = responsedata;
+      });
+    });
+    this.skillsToRemove = []
+    this.isEdit = !this.isEdit;
   }
 }

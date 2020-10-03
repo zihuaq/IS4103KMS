@@ -20,7 +20,6 @@ export class SkillsComponent implements OnInit {
 
   ngOnInit() {
     this.profileIsLoggedInUser = this.profile.userId == this.loggedInUser.userId
-    console.log("In skills oninit" + this.profileIsLoggedInUser)
     this.userService
       .getSkillsForProfile(this.profile.userId)
       .subscribe((skills) => {

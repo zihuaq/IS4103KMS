@@ -11,7 +11,8 @@ export class UtilityService {
     console.log('this.platform.is("hybrid"): ' + this.platform.is("hybrid"))
 
     if (this.platform.is("hybrid")) {
-      return "192.168.1.212:8080/KMS-war/Resources/" //change this to your local machine ip
+      // return "192.168.1.212:8080/KMS-war/Resources/" //change this to your local machine ip
+      return "/api/"
     } else {
       return "/api/"
     }

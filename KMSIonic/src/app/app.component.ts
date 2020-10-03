@@ -4,7 +4,8 @@ import { Platform } from "@ionic/angular"
 import { SplashScreen } from "@ionic-native/splash-screen/ngx"
 import { StatusBar } from "@ionic-native/status-bar/ngx"
 import { AuthenticationService } from "./services/authentication.service"
-import { Router } from "@angular/router"
+import { ActivatedRoute, Router } from "@angular/router"
+import { User } from "./classes/user"
 
 @Component({
   selector: "app-root",
@@ -12,8 +13,9 @@ import { Router } from "@angular/router"
   styleUrls: ["app.component.scss"]
 })
 export class AppComponent implements OnInit {
-  public selectedIndex = 0
-  public appPages = [
+  haveMenu: boolean
+  selectedIndex = 0
+  appPages = [
     {
       title: "Home",
       url: "/index",
@@ -52,7 +54,7 @@ export class AppComponent implements OnInit {
     {
       title: "Log Out", 
       url: "/logout",
-      icon:"log-out"
+      icon: "log-out"
     }
   ]
 
@@ -70,33 +72,13 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
-      this.authService.authenticationState.subscribe(state=> {
-        //console.log(state + "test");
-         console.log("Auth changed: ",  state)
-         if (state){
-           this.router.navigate(["index"])
-         } else {
-           this.router.navigate(["login"])
-         }
-       })
-     })
-   }
+    })
+  }
 
   async ngOnInit() {}
 
-  logout(){
-    this.authService.logout();
-    this.authService.authenticationState.next(false);
+  logout() {
+    this.authService.logout()
+    this.authService.authenticationState.next(false)
   }
-
-  // checkLoginStatus() {
-  //   return this.authService.authenticationState.subscribe((state) => {
-  //     console.log("Auth changed: ", state)
-  //     if (state) {
-  //       this.router.navigate(["index"])
-  //     } else {
-  //       this.router.navigate(["login"])
-  //     }
-  //   })
-  // }
 }
