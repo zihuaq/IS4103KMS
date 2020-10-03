@@ -92,9 +92,8 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.fulfillments = new ArrayList<>();
     }
 
-    public MaterialResourcePostingEntity(Long materialResourcePostingId, String name, String unit, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
+    public MaterialResourcePostingEntity(String name, String unit, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
         this();
-        this.materialResourcePostingId = materialResourcePostingId;
         this.name = name;
         this.unit = unit;
         this.totalQuantity = totalQuantity;

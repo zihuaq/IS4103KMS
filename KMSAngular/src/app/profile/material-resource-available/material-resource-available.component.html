@@ -133,8 +133,8 @@
                     <li class="item">
                         <div class="product-info">
                             <a *ngIf="mra.startDate != null" class="product-title">Available from
-                                {{mra.startDate.toString().slice(0,10) | date }} to
-                                {{mra.endDate.toString().slice(0,10) | date}}
+                                {{mra.startDate.toString().slice(0,15) | date }} to
+                                {{mra.endDate.toString().slice(0,15) | date}}
                                 <span class="badge badge-secondary float-right">
                                     At location
                                     {{mra.latitude | number:'1.1-6'}},
