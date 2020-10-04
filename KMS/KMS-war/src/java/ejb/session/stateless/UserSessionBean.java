@@ -846,4 +846,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
         
         return review.getReviewId();
     }
+    
+    
 }

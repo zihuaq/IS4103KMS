@@ -9,9 +9,12 @@ import Exception.NoResultException;
 import entity.ProjectEntity;
 import entity.ReportEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.enumeration.ReportTypeEnum;
 
 /**
  *
@@ -37,7 +40,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     }
     
     @Override
-    public ReportEntity reportProject (ReportEntity report) throws NoResultException {
+    public ReportEntity reportProject(ReportEntity report) throws NoResultException {
         UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
         ProjectEntity reportedProject = em.find(ProjectEntity.class, report.getReportedProject().getProjectId());
         if (reportOwner != null && reportedProject != null) {
@@ -51,5 +54,28 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         } else {
             throw new NoResultException("User not found");
         }
+    }
+    
+    public List<ReportEntity> getAllReports(){
+        List<ReportEntity> reports = em.createQuery("SELECT r FROM ReportEntity r").getResultList();
+        
+        return reports;
+    }
+    
+    public List<ReportEntity> getProfileReports() throws NoResultException{
+        List<ReportEntity> reports = getAllReports();
+        if(reports.size() < 1){
+            throw new NoResultException("No reports");
+        }
+        List<ReportEntity> profileReports = new ArrayList<>();
+        for(ReportEntity report: reports){
+            if(report.getReportType().equals(ReportTypeEnum.PROFILE)){
+                profileReports.add(report);
+            }
+        }
+        if(profileReports.size() < 1){
+            throw new NoResultException("No profile reports");
+        }
+        return profileReports;
     }
 }

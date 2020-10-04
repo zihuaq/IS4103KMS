@@ -814,18 +814,21 @@ public class UserResource {
     
     private List<ReviewEntity> getWrittenReviewsResponse(List<ReviewEntity> reviews){
          List<ReviewEntity> writtenReviewsResponse = new ArrayList<>();
+         ReviewEntity temp = new ReviewEntity();
         for (ReviewEntity reviewEntity : reviews) {
             UserEntity to = new UserEntity();
-            to.setUserId(reviewEntity.getTo().getUserId());
-            to.setFirstName(reviewEntity.getTo().getFirstName());
-            to.setLastName(reviewEntity.getTo().getLastName());
-            to.setProfilePicture(reviewEntity.getTo().getProfilePicture());
+            if(reviewEntity.getTo() != null){
+                to.setUserId(reviewEntity.getTo().getUserId());
+                to.setFirstName(reviewEntity.getTo().getFirstName());
+                to.setLastName(reviewEntity.getTo().getLastName());
+                to.setProfilePicture(reviewEntity.getTo().getProfilePicture());
+                temp.setTo(to);
+            }
             UserEntity from = new UserEntity();
             from.setUserId(reviewEntity.getFrom().getUserId());
             from.setFirstName(reviewEntity.getFrom().getFirstName());
             from.setLastName(reviewEntity.getFrom().getLastName());
             from.setProfilePicture(reviewEntity.getFrom().getProfilePicture());
-            ReviewEntity temp = new ReviewEntity();
             ProjectEntity project = new ProjectEntity();
             project.setProjectId(reviewEntity.getProject().getProjectId());
             project.setName(reviewEntity.getProject().getName());
@@ -833,7 +836,6 @@ public class UserResource {
             temp.setTitle(reviewEntity.getTitle());
             temp.setReviewField(reviewEntity.getReviewField());
             temp.setRating(reviewEntity.getRating());
-            temp.setTo(to);
             temp.setFrom(from);
             temp.setProject(project);
             writtenReviewsResponse.add(temp);

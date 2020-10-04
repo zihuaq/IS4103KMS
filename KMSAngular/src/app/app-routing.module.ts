@@ -13,6 +13,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 // import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { RouteGuard } from './route-guard.service';
+import { AdminGuard } from './admin-guard.service';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { RetrieveAllUsersComponent } from './retrieve-all-users/retrieve-all-users.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
@@ -22,6 +23,8 @@ import { CreateNewUserSelectorComponent } from './create-new-user-selector/creat
 import { SdgInfoComponent } from './sdg-info/sdg-info.component';
 import { EditProjectComponent } from './project/editProject/edit-project/edit-project.component';
 import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
+import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.component';
+import { AdministrationComponent } from './administration/administration.component';
 
 
 const routes: Routes = [
@@ -31,6 +34,11 @@ const routes: Routes = [
   { path: 'signupSelection', component: CreateNewUserSelectorComponent },
   { path: 'login', component: UserLoginPageComponent },
   { path: 'error', component: ErrorPageComponent },
+  { path: 'review', component: ReviewsItemComponent},
+  {
+    path: 'admin',
+    canActivate: [AdminGuard],
+    component: AdministrationComponent},
   {
     path: 'notifications',
     canActivate: [RouteGuard],
@@ -62,9 +70,9 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: ProfileComponent,
   },
-  { path: 'profile', 
-    canActivate: [RouteGuard], 
-    component: ProfileComponent 
+  { path: 'profile',
+    canActivate: [RouteGuard],
+    component: ProfileComponent
   },
   {
     path: 'accountVerification/:email/:uuid',
@@ -100,16 +108,16 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: SdgInfoComponent,
   },
-  { path: '', 
-  canActivate: [RouteGuard], 
-  component: IndexComponent 
+  { path: '',
+  canActivate: [RouteGuard],
+  component: IndexComponent
   },
-  { path: 'projectDetails/:projectId', 
-    canActivate: [RouteGuard], 
-    component: ProjectDetailsComponent 
+  { path: 'projectDetails/:projectId',
+    canActivate: [RouteGuard],
+    component: ProjectDetailsComponent
   },
   { path: 'editProject/:projectId',
-    canActivate: [RouteGuard], 
+    canActivate: [RouteGuard],
     component: EditProjectComponent
   }
 

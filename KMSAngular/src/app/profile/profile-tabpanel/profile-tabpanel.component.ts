@@ -1,5 +1,6 @@
 import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { review } from 'src/app/classes/review';
 import { User } from '../../classes/user';
 
 @Component({

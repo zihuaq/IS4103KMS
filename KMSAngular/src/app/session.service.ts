@@ -16,6 +16,14 @@ export class SessionService {
     localStorage.isLogin = isLogin;
   }
 
+  getIsAdmin(): boolean {
+    return localStorage.isAdmin == 'true';
+  }
+
+  setIsAdmin(isAdmin: boolean): void {
+    localStorage.isAdmin = isAdmin;
+  }
+
   getCurrentUser(): User {
     return JSON.parse(localStorage.currentUser);
   }

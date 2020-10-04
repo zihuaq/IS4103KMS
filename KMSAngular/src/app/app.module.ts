@@ -52,6 +52,12 @@ import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-p
 import { EditMrpTabComponent } from './project/editProject/edit-mrp-tab/edit-mrp-tab.component';
 import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
 import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
+import { ReviewsComponent } from './reviews/reviews.component';
+import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.component';
+import { ReviewsRecievedComponent } from './profile/reviews-recieved/reviews-recieved.component';
+import { ReviewsWrittenComponent } from './profile/reviews-written/reviews-written.component';
+import { AdministrationComponent } from './administration/administration.component';
+import { UserSettingComponent } from './profile/user-setting/user-setting.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +102,13 @@ import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp
     EditHrpTabComponent,
     ViewOwnProjectsComponent,
     EditMrpTabComponent,
-    AffiliationRequestsComponent
+    AffiliationRequestsComponent,
+    ReviewsComponent,
+    ReviewsItemComponent,
+    ReviewsRecievedComponent,
+    ReviewsWrittenComponent,
+    AdministrationComponent,
+    UserSettingComponent
   ],
   imports: [
     BrowserModule,

@@ -14,8 +14,10 @@ import javax.json.JsonObject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -63,6 +65,22 @@ public class ReportResource {
         System.out.println("******** ReportResource: reportProject()");
         try {
             reportSessionBean.reportProject(report);
+            
+            return Response.status(Response.Status.OK).entity(report).build();
+            
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @GET
+    @Path("/getProfileReports")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProfileReports() {
+        System.out.println("******** ReportResource: getProfileReports");
+        try {
+            List<ReportEntity>
             
             return Response.status(Response.Status.OK).entity(report).build();
             

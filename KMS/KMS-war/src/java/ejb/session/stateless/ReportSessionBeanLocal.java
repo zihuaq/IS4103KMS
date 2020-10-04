@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.ReportEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -19,5 +20,7 @@ public interface ReportSessionBeanLocal {
     public ReportEntity createNewReport(ReportEntity report) throws NoResultException;
 
     public ReportEntity reportProject(ReportEntity report) throws NoResultException;
+
+    public List<ReportEntity> getProfileReports() throws NoResultException;
     
 }

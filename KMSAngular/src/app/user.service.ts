@@ -350,6 +350,8 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+
+
   verifyEmail(email: String, uuid: String) {
     return this.http
       .get<any>(this.baseUrl + '/verifyEmail?email=' + email + '&uuid=' + uuid)
@@ -363,6 +365,13 @@ export class UserService {
     return promise;
   }
 
+  isAdmin() {
+    const promise = new Promise((resolve, reject) => {
+      resolve(this.sessionService.getIsLogin() && this.sessionService.getIsAdmin);
+    });
+    return promise;
+  }
+
   logout(): void {
     this.cleanup();
     this.router.navigate(['/login']);
@@ -370,6 +379,7 @@ export class UserService {
 
   private cleanup(): void {
     this.sessionService.setIsLogin(false);
+    this.sessionService.setIsAdmin(false);
     this.sessionService.setCurrentUser(null);
     this.user.next(null);
     this.loggedIn = false;
@@ -391,5 +401,15 @@ export class UserService {
     return this.http
       .get<any>(this.baseUrl + /projectsManaged/ + userId)
       .pipe(catchError(this.handleError));
+  }
+
+  getRecievedReviews(userId: number): Observable<any>{
+    return this.http.get<any>(this.baseUrl + /receivedreviews/ + userId)
+    .pipe(catchError(this.handleError));
+  }
+
+  getWrittenReviews(userId: number): Observable<any>{
+    return this.http.get<any>(this.baseUrl + /writtenreviews/ + userId)
+    .pipe(catchError(this.handleError));
   }
 }
