@@ -10,7 +10,7 @@ import { Location } from "@angular/common"
 import { UserType } from "src/app/enum/user-type.enum"
 
 declare var Camera: any
-declare var navigator: Navigator
+declare var navigator: any
 
 @Component({
   selector: "app-edit-basic-info",
