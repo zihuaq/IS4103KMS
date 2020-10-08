@@ -40,10 +40,12 @@ export class EditMembersPage implements OnInit {
     }
 
   ngOnInit() {
+    console.log('memberTab: ngOnInit ')
     this.refreshProject();
   }
 
   ionViewWillEnter() {
+    console.log('memberTab: ionViewWillEnter ')
     this.refreshProject();
   }
 

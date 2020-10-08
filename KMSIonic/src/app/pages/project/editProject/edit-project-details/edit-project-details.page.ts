@@ -27,7 +27,8 @@ export class EditProjectDetailsPage implements OnInit {
   currentUserId: number;  
   segment: string;
   tagList: Tag[];
-  selectedTagNames: string[];
+  tagListString: string[];
+  selectedTagNames: string[] = [];
   projectStatusList: ProjectType[];
 
   constructor(public toastController: ToastController,
@@ -43,18 +44,8 @@ export class EditProjectDetailsPage implements OnInit {
     }
 
   ngOnInit() {    
-    console.log('ngOnInit ')
+    console.log('detailsTab: ngOnInit ')
     this.refreshProject();
-  }
-
-  ionViewWillEnter() {
-    console.log('ionViewWillEnter ')
-    this.refreshProject();
-  }
-
-  ionViewDidEnter() {
-    this.refreshProject();
-    console.log('ionViewDidEnter ')
   }
 
   refreshProject() {
@@ -70,16 +61,20 @@ export class EditProjectDetailsPage implements OnInit {
       }
     );
 
-    this.tagService.getAllSDGTags().subscribe(
+    this.tagService.getAllSDGTags().subscribe(      
       response => {
+        this.tagListString = [];
         this.tagList = response;
+        for (let tag of this.tagList) {
+          this.tagListString.push(tag.name);
+        }
       }
     );
 
-    this.selectedTagNames = [];
+    // this.selectedTagNames = [];
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
     this.projectService.getProjectById(this.projectId).subscribe(
-      async response => {
+      response => {
         this.projectToEdit = response;
         this.noOfMembers = this.projectToEdit.projectMembers.length;
 
@@ -88,8 +83,7 @@ export class EditProjectDetailsPage implements OnInit {
         this.dateCreated = this.projectToEdit.dateCreated.toString().slice(0,10);
 
         for (let tag of this.projectToEdit.sdgs) {
-          this.selectedTagNames.push(tag.name);
-          console.log("Tags: " + tag.name);          
+          this.selectedTagNames.push(tag.name);       
         }
       }
     );
