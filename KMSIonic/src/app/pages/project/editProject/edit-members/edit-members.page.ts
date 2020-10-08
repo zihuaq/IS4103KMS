@@ -301,6 +301,9 @@ export class EditMembersPage implements OnInit {
         handler: () => {
           this.removeMember(user);
         }
+      }, {
+        text: 'Cancel',
+        role: 'cancel'
       }]
     })
     await actionSheet.present();
@@ -318,6 +321,9 @@ export class EditMembersPage implements OnInit {
         handler: () => {
           this.removeMember(user);
         }
+      }, {
+        text: 'Cancel',
+        role: 'cancel'
       }]
     })
     await actionSheet.present();

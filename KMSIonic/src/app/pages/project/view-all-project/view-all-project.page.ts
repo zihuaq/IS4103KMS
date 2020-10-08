@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from "@angular/common";
 import { Router } from '@angular/router';
-import { IonSearchbar } from "@ionic/angular";
+import { IonSearchbar, ModalController } from "@ionic/angular";
+
+import { CreateNewProjectPage } from '../create-new-project/create-new-project.page';
 
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/services/project.service';
@@ -19,7 +21,8 @@ export class ViewAllProjectPage implements OnInit {
   filteredProjects: Project[];
   preliminarySearchProject: Project[];
 
-  constructor(private location: Location,
+  constructor(public modalController: ModalController,
+    private location: Location,
     private projectService: ProjectService,
     private router: Router) { }
 
@@ -58,8 +61,12 @@ export class ViewAllProjectPage implements OnInit {
     this.router.navigate(["project-details/" + project.projectId]);
   }
 
-  createProject() {
-    this.router.navigate(["create-new-project"]);
+  async createProject() {
+    // this.router.navigate(["create-new-project"]);
+    const modal = await this.modalController.create({
+      component: CreateNewProjectPage,
+    });
+    return await modal.present();
   }
 
   sortSDG(sdgList: Tag[]): Tag[] {
