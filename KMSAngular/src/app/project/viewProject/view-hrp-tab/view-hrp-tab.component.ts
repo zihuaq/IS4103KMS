@@ -41,8 +41,8 @@ export class ViewHrpTabComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.project = response;
-        for (let admin of this.project.projectMembers) {
-          if (this.sessionService.getCurrentUser().userId == admin.userId) {
+        for (let member of this.project.projectMembers) {
+          if (this.sessionService.getCurrentUser().userId == member.userId) {
             this.isMember = true;
           }
         }
