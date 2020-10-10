@@ -1,0 +1,159 @@
+<div class="row text-center">
+    <div class="col-sm-4">
+        <div class="btn-group">
+            <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+                Previous
+            </div>
+            <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+                Today
+            </div>
+            <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+                Next
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <h3>{{ viewDate | date:'MMMM yyyy' }}</h3>
+    </div>
+    <!--<div class="col-sm-4">
+        <div class="btn-group">
+            <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
+                Month
+            </div>
+            <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
+                Week
+            </div>
+            <div class="btn btn-primary" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
+                Day
+            </div>
+        </div>
+    </div> -->
+</div>
+
+<div [ngSwitch]="view">
+    <mwl-calendar-month-view
+      *ngSwitchCase="CalendarView.Month"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+      [activeDayIsOpen]="activeDayIsOpen"
+      (dayClicked)="dayClicked($event.day)"
+    >
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+      *ngSwitchCase="CalendarView.Week"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+    >
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view
+      *ngSwitchCase="CalendarView.Day"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+    >
+    </mwl-calendar-day-view>
+</div>
+
+<br/><br/><br/>
+
+<h3>
+    Activities
+    <button class="btn btn-primary float-right" data-toggle="modal" data-target="#modal-create-activity" data-backdrop="static" (click)="clickCreate()"><i class="fas fa-plus"></i> New Activity</button>
+    <div class="clearfix"></div>
+</h3>
+
+<span *ngIf="activities.length == 0">
+    No activities
+</span>
+
+<span *ngIf="activities.length > 0">
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <th>Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Country</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Action</th>
+            </thead>
+    
+            <tbody>
+                <tr *ngFor="let activity of activities">
+                    <td>
+                    {{activity.name}}
+                    </td>
+                    <td>
+                    {{formatDate(activity.startDate) | date}}
+                    </td>
+                    <td>
+                    {{formatDate(activity.endDate) | date}}
+                    </td>
+                    <td>
+                    {{activity.country}}
+                    </td>
+                    <td>
+                    {{activity.location}}
+                    </td>
+                    <td>
+                    {{activity.description}}
+                    </td>
+                    <td>
+                        <button class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</span>
+
+
+
+<div class="modal fade" id="modal-create-activity">
+    <div class="modal-dialog">
+        <div class="modal-content bg-info">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Activity</h4>
+                <button type="button" id="addActivityModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (ngSubmit)="createActivity(newActivityForm)" #newActivityForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" [(ngModel)]="newActivity.name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input id="startDate" type="date" class="form-control" name="startDate" [(ngModel)]="newActivity.startDate" [min]="minDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input id="endDate" type="date" class="form-control" name="endDate" [(ngModel)]="newActivity.endDate" [min]="newActivity.startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" class="form-control" name="country" [(ngModel)]="newActivity.country" required disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" class="form-control" placeholder="Enter Location" name="location" [(ngModel)]="newActivity.location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="newActivity.description" required>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!newActivityForm.valid">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
