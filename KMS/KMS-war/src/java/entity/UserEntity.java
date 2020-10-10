@@ -142,7 +142,7 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "fulfillmentOwner")
     private List<FulfillmentEntity> fulfillments;
 
-    @JoinTable(name = "humanResourcePostingApplied")
+    @JoinTable(name = "activityJoined")
     @ManyToMany
     private List<ActivityEntity> activityJoined;
     
