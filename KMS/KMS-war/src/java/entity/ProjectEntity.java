@@ -95,7 +95,8 @@ public class ProjectEntity implements Serializable {
     @OneToMany(mappedBy = "project")
     private List<ReviewEntity> reviews;
 
-
+    @OneToMany(mappedBy = "project")
+    private List<DonationEntity> donations;
 
     public ProjectEntity() {
         this.projectMembers = new ArrayList<>();
@@ -108,6 +109,7 @@ public class ProjectEntity implements Serializable {
         this.status = ProjectStatusEnum.ACTIVE;
         this.monetaryFundingObtained = 0.0;
         this.sdgs = new ArrayList<>();
+        this.donations = new ArrayList<>();
     }
 
     public ProjectEntity(String name, String description, Date startDate, String country, String profilePicture, Double monetaryFundingRequired) {
@@ -297,6 +299,14 @@ public class ProjectEntity implements Serializable {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<DonationEntity> getDonations() {
+        return donations;
+    }
+
+    public void setDonations(List<DonationEntity> donations) {
+        this.donations = donations;
     }
     
 }

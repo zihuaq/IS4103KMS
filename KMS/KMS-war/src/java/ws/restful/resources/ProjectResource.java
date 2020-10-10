@@ -12,6 +12,7 @@ import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import entity.ActivityEntity;
+import entity.DonationEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
@@ -85,6 +86,8 @@ public class ProjectResource {
             p.getMaterialResourcePostings().clear();
             p.getTasks().clear();
             p.getPosts().clear();
+            p.getReviews().clear();
+            p.getDonations().clear();
         }
         return Response.status(Status.OK).entity(new RetrieveAllProjectRsp(projects)).build();
     }
@@ -139,6 +142,7 @@ public class ProjectResource {
             project.getProjectOwner().getFollowRequestReceived().clear();
             project.getProjectOwner().getHrpApplied().clear();
             project.getProjectOwner().getFulfillments().clear();
+            project.getProjectOwner().getDonations().clear();
             for (UserEntity member : project.getProjectMembers()) {
                 member.getGroupsOwned().clear();
                 member.getReviewsGiven().clear();
@@ -158,6 +162,7 @@ public class ProjectResource {
                 member.getFollowRequestReceived().clear();
                 member.getHrpApplied().clear();
                 member.getFulfillments().clear();
+                member.getDonations().clear();
             }
             for (UserEntity admin : project.getProjectAdmins()) {
                 admin.getGroupsOwned().clear();
@@ -178,6 +183,7 @@ public class ProjectResource {
                 admin.getFollowRequestReceived().clear();
                 admin.getHrpApplied().clear();
                 admin.getFulfillments().clear();
+                admin.getDonations().clear();
             }
             for (ActivityEntity ae : project.getActivities()) {
                 ae.setProject(null);
@@ -200,6 +206,14 @@ public class ProjectResource {
             for (PostEntity post : project.getPosts()) {
                 post.setPostOwner(null);
                 post.setProject(null);
+            }
+            for (ReviewEntity review: project.getReviews()) {
+                review.setProject(null);
+                review.setFrom(null);
+                review.setTo(null);
+            }
+            for (DonationEntity donation: project.getDonations()) {
+                donation.setProject(null);
             }
             return Response.status(Status.OK).entity(project).build();
         } catch (NoResultException ex) {
