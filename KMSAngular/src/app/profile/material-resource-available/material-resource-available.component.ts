@@ -24,6 +24,7 @@ declare var $: any;
 export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   @Input() profile: User;
   @Input() loggedInUser: User;
+  @Input() shared: boolean;
   @Output() userChanged = new EventEmitter<User>();
   mraTags: Tag[];
   selectedTags: Tag[];

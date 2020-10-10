@@ -1,5 +1,5 @@
-<app-top-navbar></app-top-navbar>
-<app-side-navbar></app-side-navbar>
+<app-top-navbar *ngIf="!shared"></app-top-navbar>
+<app-side-navbar *ngIf="!shared"></app-side-navbar>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <div class="content-header">
@@ -10,7 +10,7 @@
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a routerLink="/index">Home</a></li>
+            <li class="breadcrumb-item" *ngIf="!shared"><a routerLink="/index">Home</a></li>
             <li class="breadcrumb-item active">Profile</li>
           </ol>
         </div><!-- /.col -->
@@ -23,15 +23,16 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
-          <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-            (userChanged)="loggedInUser=$event">
+          <app-overview [shared]="shared" [profile]="profile" [loggedInUser]="loggedInUser"
+            (profileChanged)="profile=$event" (userChanged)="loggedInUser=$event">
           </app-overview>
-          <app-report-profile *ngIf="profile.userId != loggedInUser.userId" [profile]="profile" [loggedInUser]="loggedInUser"></app-report-profile>
+          <app-report-profile *ngIf="!shared && profile.userId != loggedInUser.userId" [profile]="profile"
+            [loggedInUser]="loggedInUser"></app-report-profile>
           <app-basic-details [profile]="profile"></app-basic-details>
         </div>
         <div class="col-md-9">
-          <app-profile-tabpanel [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-            (userchanged)="loggedInUser=$event">
+          <app-profile-tabpanel [shared]="shared" [profile]="profile" [loggedInUser]="loggedInUser"
+            (profileChanged)="profile=$event" (userchanged)="loggedInUser=$event">
           </app-profile-tabpanel>
         </div>
         <!-- /.col -->

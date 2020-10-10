@@ -105,7 +105,7 @@ import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/
     ViewMrpTabComponent,
     JobAppliedComponent,
     MyFulfillmentsComponent,
-    ManageFulfillmentsComponent
+    ManageFulfillmentsComponent,
   ],
   imports: [
     BrowserModule,

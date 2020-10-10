@@ -6,7 +6,8 @@ import { User } from "src/app/classes/user"
 import { AccountPrivacySettingEnum } from "src/app/enum/account-privacy-setting.enum"
 import { UserType } from "src/app/enum/user-type.enum"
 import { UserService } from "src/app/services/user.service"
-import { ToastController } from "@ionic/angular"
+import { ActionSheetController, ToastController } from "@ionic/angular"
+import { SocialSharing } from "@ionic-native/social-sharing/ngx"
 
 @Component({
   selector: "app-overview",
@@ -23,14 +24,19 @@ export class OverviewComponent implements OnInit {
   isAffiliated: boolean
   hasSentAffiliationRequest: boolean
   UserType = UserType
+  profileUrl: string
 
   constructor(
     private userService: UserService,
-    public toastController: ToastController
+    private toastController: ToastController,
+    private actionSheetController: ActionSheetController,
+    private socialSharing: SocialSharing
   ) {}
 
   ngOnInit() {
     this.getFollowersFollowingAndAffiliatedUsers()
+    this.profileUrl =
+      "http://localhost:4200/profile/shared/" + this.profile.userId
   }
 
   follow() {
@@ -140,5 +146,13 @@ export class OverviewComponent implements OnInit {
         .includes(this.profile.userId)
       console.log("overview" + this.profile)
     })
+  }
+
+  sShare() {
+    var options = {
+      message: "share this",
+      url: this.profileUrl
+    }
+    this.socialSharing.shareWithOptions(options)
   }
 }
