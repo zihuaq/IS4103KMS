@@ -11,6 +11,8 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.UserEntity;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -34,6 +36,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
 
+    @Override
     public Long createNewActivity(ActivityEntity newActivity, Long projectId) throws NoResultException {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
@@ -46,6 +49,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         return newActivity.getActivityId();
     }
     
+    @Override
     public ActivityEntity getActivityById(Long activityId) throws NoResultException {
         ActivityEntity activity = em.find(ActivityEntity.class, activityId);
         
@@ -56,17 +60,29 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         }
     }
     
-    public List<ActivityEntity> getAllActivities() {
-        Query query = em.createQuery("SELECT a FROM ActivityEntity");
+    @Override
+    public List<ActivityEntity> getActivitiesByProjectId(Long projectId, Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date fromDate = cal.getTime();
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date toDate = cal.getTime();
+        
+        Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.project.projectId = :inProjectId AND a.startDate <= :inToDate AND a.endDate >= :inFromDate");
+        query.setParameter("inProjectId", projectId);
+        query.setParameter("inToDate", toDate);
+        query.setParameter("inFromDate", fromDate);
         
         return query.getResultList();
     }
     
+    @Override
     public void updateActivity(ActivityEntity activityToUpdate) throws NoResultException {
         ActivityEntity activity = getActivityById(activityToUpdate.getActivityId());
         
         activity.setName(activityToUpdate.getName());
-        activity.setCoutry(activityToUpdate.getCoutry());
+        activity.setCountry(activityToUpdate.getCountry());
         activity.setStartDate(activityToUpdate.getStartDate());
         activity.setEndDate(activityToUpdate.getEndDate());
         activity.setLocation(activityToUpdate.getLocation());
@@ -78,6 +94,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         project.getActivities().add(activity);        
     }
     
+    @Override
     public void addMemberToActivity(Long activityId, Long userId) throws NoResultException {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         ActivityEntity activity = getActivityById(activityId);
@@ -86,6 +103,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         activity.getJoinedUsers().add(user);
     }
     
+    @Override
     public void removeMemberToActivity(Long activityId, Long userId) throws NoResultException {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         ActivityEntity activity = getActivityById(activityId);
@@ -94,6 +112,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         activity.getJoinedUsers().remove(user);
     }
     
+    @Override
     public void deleteActivity(Long activityId) throws NoResultException {
         ActivityEntity activityToDelete = getActivityById(activityId);
         

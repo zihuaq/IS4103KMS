@@ -5,6 +5,10 @@
  */
 package ejb.session.stateless;
 
+import Exception.NoResultException;
+import entity.ActivityEntity;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +17,19 @@ import javax.ejb.Local;
  */
 @Local
 public interface ActivitySessionBeanLocal {
+
+    public Long createNewActivity(ActivityEntity newActivity, Long projectId) throws NoResultException;
+
+    public ActivityEntity getActivityById(Long activityId) throws NoResultException;
     
+    public List<ActivityEntity> getActivitiesByProjectId(Long projectId, Date date);
+    
+    public void updateActivity(ActivityEntity activityToUpdate) throws NoResultException;
+
+    public void addMemberToActivity(Long activityId, Long userId) throws NoResultException;
+
+    public void removeMemberToActivity(Long activityId, Long userId) throws NoResultException;
+
+    public void deleteActivity(Long activityId) throws NoResultException;
+        
 }

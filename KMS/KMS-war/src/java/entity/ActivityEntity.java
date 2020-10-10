@@ -49,7 +49,7 @@ public class ActivityEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date endDate;
     
-    private String coutry;
+    private String country;
     
     @NotNull
     @Column(nullable=false)
@@ -78,6 +78,7 @@ public class ActivityEntity implements Serializable {
     public ActivityEntity() {
         this.humanResourcePostings = new ArrayList<>();
         this.materialResourcePostings = new ArrayList<>();
+        this.joinedUsers = new ArrayList<>();
     }
 
     public ActivityEntity(String name, Date startDate, Date endDate, String coutry, String location, String description, ProjectEntity project, List<HumanResourcePostingEntity> humanResourcePostings, List<MaterialResourcePostingEntity> materialResourcePostings) {
@@ -85,7 +86,7 @@ public class ActivityEntity implements Serializable {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.coutry = coutry;
+        this.country = coutry;
         this.location = location;
         this.description = description;
         this.project = project;
@@ -150,12 +151,12 @@ public class ActivityEntity implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getCoutry() {
-        return coutry;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCoutry(String coutry) {
-        this.coutry = coutry;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getLocation() {
