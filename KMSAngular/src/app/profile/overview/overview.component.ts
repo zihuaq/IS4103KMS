@@ -17,6 +17,7 @@ declare var $: any;
 export class OverviewComponent implements OnInit {
   @Input() profile: User;
   @Input() loggedInUser: User;
+  @Input() shared: boolean;
   @Output() profileChanged = new EventEmitter<User>();
   @Output() userChanged = new EventEmitter<User>();
   isFollowing: boolean;
@@ -25,7 +26,7 @@ export class OverviewComponent implements OnInit {
   hasSentAffiliationRequest: boolean;
   UserType = UserType;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.getFollowersFollowingAndAffiliatedUsers();
@@ -74,10 +75,8 @@ export class OverviewComponent implements OnInit {
   }
 
   sendAffiliationRequest() {
-    this.userService.sendAffiliateReqToUser(
-      this.loggedInUser.userId,
-      this.profile.userId
-    )
+    this.userService
+      .sendAffiliateReqToUser(this.loggedInUser.userId, this.profile.userId)
       .subscribe(
         (affiliationRequest: AffiliationRequest) => {
           if (affiliationRequest) {
@@ -104,9 +103,11 @@ export class OverviewComponent implements OnInit {
   }
 
   removeAffiliation() {
-    this.userService.removeAffiliatedUser(this.loggedInUser.userId, this.profile.userId).subscribe(() => {
-      this.getFollowersFollowingAndAffiliatedUsers();
-    });
+    this.userService
+      .removeAffiliatedUser(this.loggedInUser.userId, this.profile.userId)
+      .subscribe(() => {
+        this.getFollowersFollowingAndAffiliatedUsers();
+      });
   }
 
   isPublic() {
@@ -122,7 +123,7 @@ export class OverviewComponent implements OnInit {
       this.userService.getFollowing(this.loggedInUser.userId),
       this.userService.getFollowRequestMade(this.loggedInUser.userId),
       this.userService.getAffiliatedUsers(this.profile.userId),
-      this.userService.getAffiliationRequestMade(this.loggedInUser.userId)
+      this.userService.getAffiliationRequestMade(this.loggedInUser.userId),
     ]).subscribe((result) => {
       this.profile = { ...this.profile, followers: result[0] };
       this.profile = { ...this.profile, following: result[1] };
@@ -136,10 +137,13 @@ export class OverviewComponent implements OnInit {
         })
         .includes(this.profile.userId);
       this.profile = { ...this.profile, affiliatedUsers: result[4] };
-      this.isAffiliated = this.profile.affiliatedUsers.map((user) => user.userId).includes(this.loggedInUser.userId);
-      this.hasSentAffiliationRequest = result[5].map((affiliationRequestMade: AffiliationRequest) => {
-        return affiliationRequestMade.to.userId;
-      })
+      this.isAffiliated = this.profile.affiliatedUsers
+        .map((user) => user.userId)
+        .includes(this.loggedInUser.userId);
+      this.hasSentAffiliationRequest = result[5]
+        .map((affiliationRequestMade: AffiliationRequest) => {
+          return affiliationRequestMade.to.userId;
+        })
         .includes(this.profile.userId);
     });
   }

@@ -89,36 +89,4 @@ export class ProfilePage implements OnInit {
   goToSetting() {
     this.router.navigate(["/user-setting"])
   }
-
-  // changePassword(passwordForm: NgForm) {
-  //   if (passwordForm.valid) {
-  //     let email = this.loggedInUser.email;
-  //     let oldPassword = passwordForm.value.oldPassword;
-  //     let newPassword = passwordForm.value.newPassword;
-  //     let confirmNewPassword = passwordForm.value.confirmNewPassword;
-  //     if (confirmNewPassword == newPassword) {
-  //       this.userService
-  //         .updateCustomerPassword(email, oldPassword, newPassword)
-  //         .subscribe(
-  //           (responsedata) => {
-  //             this.passwordUpdated = true;
-  //             this.passwordError = false;
-  //             setTimeout(() => {
-  //               $('#changePasswordModalCloseBtn').click();
-  //             }, 2000);
-  //           },
-  //           (error) => {
-  //             this.passwordError = true;
-  //             this.passwordUpdated = false;
-  //             this.passwordErrorMessage = 'Incorrect passward';
-  //           }
-  //         );
-  //     } else {
-  //       this.passwordError = true;
-  //       this.passwordUpdated = false;
-  //       this.passwordErrorMessage = 'passwords do not match';
-  //     }
-  //     console.log(passwordForm);
-  //   }
-  // }
 }
