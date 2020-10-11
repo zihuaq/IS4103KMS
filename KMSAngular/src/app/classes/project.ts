@@ -17,6 +17,8 @@ export class Project {
     projectAdmins: User[];
     monetaryFundingRequired: number;
     monetaryFundingObtained: number;
+    currency: string;
+    paypalMerchantId: string;
     sdgs: Tag[];
     humanResourcePostings: HumanResourcePosting[];
     materialResourcePostings: MaterialResourcePosting[];
@@ -31,6 +33,8 @@ export class Project {
         profilePicture?: string | ArrayBuffer, 
         monetaryFundingRequired?: number, 
         monetaryFundingObtained?: number, 
+        currency?: string,
+        paypalMerchantId?: string,
         projectOwner?: User, 
         projectMembers?: User[], 
         projectAdmins?: User[], 
@@ -45,11 +49,13 @@ export class Project {
         this.dateCreated = dateCreated;
         this.country = country;
         this.profilePicture = profilePicture;
+        this.monetaryFundingObtained = monetaryFundingObtained;
+        this.monetaryFundingRequired = monetaryFundingRequired;
+        this.currency = currency;
+        this.paypalMerchantId = paypalMerchantId;
         this.projectOwner = projectOwner;
         this.projectMembers = projectMembers;
         this.projectAdmins = projectAdmins;
-        this.monetaryFundingObtained = monetaryFundingObtained;
-        this.monetaryFundingRequired = monetaryFundingRequired;
         this.sdgs = sdgs;
         this.humanResourcePostings = humanResourcePostings;
         this.materialResourcePostings = materialResourcePostings;

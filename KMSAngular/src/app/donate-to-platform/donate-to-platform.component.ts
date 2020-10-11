@@ -32,8 +32,7 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
 
   ngOnInit(): void {
     this.checkAccessRight();
-
-    var getSymbolFromCurrency = require('currency-symbol-map')
+ 
     //var cc = require('currency-codes');
     var cc = [
       {id: 'AUD', text: 'Australian Dollar (AUD)'},
@@ -76,6 +75,7 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
       this.addPaypalScript().then(() => {
         paypal.Buttons(this.paypalConfig).render('#paypal-checkout-btn');
       });
+      var getSymbolFromCurrency = require('currency-symbol-map')
       this.currencySymbol = getSymbolFromCurrency(this.selectedCurrency);
       if(this.selectedCurrency == "HUF" || this.selectedCurrency == "JPY" || this.selectedCurrency == "TWD") {
         this.noDecimal = true;
@@ -130,6 +130,9 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
         this.newDonation.dateDonated = new Date(details.create_time);
         this.newDonation.amount = details.purchase_units[0].amount.value;
         this.newDonation.currency = details.purchase_units[0].amount.currency_code;
+        //console.log("Seller Receivable Breakdown:" + details.purchase_units[0].payments.captures[0].seller_receivable_breakdown);
+        //console.log("Currency(Net):" + details.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount.currency_code);
+        //console.log("Currency(Receivable):" + details.purchase_units[0].payments.captures[0].seller_receivable_breakdown.receivable_amount.currency_code);
 
         this.donationService.createNewDonation(this.newDonation, this.sessionService.getCurrentUser().userId, null).subscribe(
           response => {

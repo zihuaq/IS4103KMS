@@ -10,6 +10,7 @@ import { UserService } from 'src/app/user.service';
 import { ProjectType } from 'src/app/classes/project-type.enum';
 
 declare var $: any;
+declare let require: any;
 
 @Component({
   selector: 'app-project-details',
@@ -30,6 +31,7 @@ export class ProjectDetailsComponent implements OnInit {
   selectedProfilePicture: string | ArrayBuffer;
   selectedProfilePictureName: string;
   noOfMembers: number;
+  currencySymbol: string;
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
@@ -69,6 +71,8 @@ export class ProjectDetailsComponent implements OnInit {
           }
         }
         this.dateCreated = this.projectToView.dateCreated.toString().substring(0,10);
+        var getSymbolFromCurrency = require('currency-symbol-map')
+        this.currencySymbol = getSymbolFromCurrency(this.projectToView.currency);
       }, 
       error => {
         $(document).Toasts('create', {
