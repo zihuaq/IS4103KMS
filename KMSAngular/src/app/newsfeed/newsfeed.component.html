@@ -1,0 +1,175 @@
+<form class="form-horizontal" (ngSubmit)="onCreatePost(createPostForm)" #createPostForm="ngForm">
+    <div class="card card-outline card-info">
+        <div class="card-header">
+            <h3 class="card-title">
+                Share Your Thoughts
+            </h3>
+        </div>
+        <div class="card-body pad">
+            <div class="mb-3">
+                <textarea class="form-control" rows="3" placeholder="What's on your mind?" [(ngModel)]="postContent"
+                    name="postContent"></textarea>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="postPictureFile" ngModel name="postPictureFile"
+                            accept="image/*" (change)="getFiles($event)">
+                        <label class="custom-file-label" for="postPictureFile">Choose File</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="float-right btn btn-primary" type="submit" [disabled]="!createPostForm.valid"> Post</button>
+        </div>
+    </div>
+</form>
+
+<span *ngIf="newsfeedPosts && newsfeedPosts.length > 0">
+    <div *ngFor="let post of newsfeedPosts">
+        <!-- Box Comment -->
+        <div class="card card-widget">
+            <div class="card-header">
+                <div class="user-block">
+                    <img *ngIf="post.postOwner.profilePicture" class="img-circle" [src]="post.postOwner.profilePicture"
+                        alt="User Image">
+                    <img *ngIf="!post.postOwner.profilePicture" class="img-circle"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="User Image">
+                    <span class="username"><a href="#">{{post.postOwner.firstName}}
+                            {{post.postOwner.lastName}}</a></span>
+                    <span class="description">{{post.postDate| date:'dd/MM/yyyy'}}</span>
+                </div>
+                <!-- /.user-block -->
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" *ngIf="loggedInUser.userId == post.postOwner.userId"><i
+                            class="fas fa-edit"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"
+                        *ngIf="loggedInUser.userId == post.postOwner.userId"><i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo">
+
+                <p>{{post.text}}</p>
+
+                <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like </button>
+                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i> Share </button>
+                <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}
+                    comments</span>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <form action="#" method="post">
+                    <img class="img-fluid img-circle img-sm" *ngIf="loggedInUser.profilePicture"
+                        [src]="loggedInUser.profilePicture" alt="Alt Text">
+                    <img class="img-fluid img-circle img-sm" *ngIf="!loggedInUser.profilePicture"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="Alt Text">
+                    <!-- .img-push is used to add margin to elements next to floating images -->
+                    <div class="img-push">
+                        <input type="text" class="form-control form-control-sm"
+                            placeholder="Press enter to post comment">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</span>
+
+<div class="row">
+    <div>
+        <!-- Box Comment -->
+        <div class="card card-widget">
+            <div class="card-header">
+                <div class="user-block">
+                    <img class="img-circle"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="User Image">
+                    <span class="username"><a href="#">Jonathan Burke Jr.</a></span>
+                    <span class="description">Shared publicly - 7:30 PM Today</span>
+                </div>
+                <!-- /.user-block -->
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Mark as read">
+                        <i class="far fa-circle"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <img class="img-fluid pad"
+                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                    alt="Photo">
+
+                <p>I took this photo this morning. What do you guys think?</p>
+                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i> Share</button>
+                <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i>
+                    Like</button>
+                <span class="float-right text-muted">127 likes - 3 comments</span>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer card-comments">
+                <div class="card-comment">
+                    <!-- User image -->
+                    <img class="img-circle img-sm"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="User Image">
+
+                    <div class="comment-text">
+                        <span class="username">
+                            Maria Gonzales
+                            <span class="text-muted float-right">8:03 PM Today</span>
+                        </span><!-- /.username -->
+                        It is a long established fact that a reader will be distracted
+                        by the readable content of a page when looking at its layout.
+                    </div>
+                    <!-- /.comment-text -->
+                </div>
+                <!-- /.card-comment -->
+                <div class="card-comment">
+                    <!-- User image -->
+                    <img class="img-circle img-sm"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="User Image">
+
+                    <div class="comment-text">
+                        <span class="username">
+                            Luna Stark
+                            <span class="text-muted float-right">8:03 PM Today</span>
+                        </span><!-- /.username -->
+                        It is a long established fact that a reader will be distracted
+                        by the readable content of a page when looking at its layout.
+                    </div>
+                    <!-- /.comment-text -->
+                </div>
+                <!-- /.card-comment -->
+            </div>
+            <!-- /.card-footer -->
+            <div class="card-footer">
+                <form action="#" method="post">
+                    <img class="img-fluid img-circle img-sm"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="Alt Text">
+                    <!-- .img-push is used to add margin to elements next to floating images -->
+                    <div class="img-push">
+                        <input type="text" class="form-control form-control-sm"
+                            placeholder="Press enter to post comment">
+                    </div>
+                </form>
+            </div>
+            <!-- /.card-footer -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>

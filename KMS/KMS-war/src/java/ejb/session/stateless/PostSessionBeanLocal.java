@@ -6,7 +6,9 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
+import Exception.UserNotFoundException;
 import entity.PostEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,12 +18,16 @@ import javax.ejb.Local;
 @Local
 public interface PostSessionBeanLocal {
 
-    public Long createNewPost(PostEntity newPost, Long projectId, Long userId) throws NoResultException;
+    public Long createNewPostInProjectFeed(PostEntity newPost, Long projectId, Long userId) throws NoResultException;
 
+    public PostEntity createPost(PostEntity post) throws UserNotFoundException, NoResultException;
+    
     public PostEntity getPostById(Long postId);
+    
+    public List<PostEntity> getPostForUserNewsfeed(Long userId) throws UserNotFoundException, NoResultException;
     
     public void updatePost(PostEntity postToUpdate);
 
-    public void deletePost(Long postId);
+    public void deletePostInProjectFeed(Long postId);
 
 }

@@ -267,7 +267,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         projectToDelete.getTasks().clear();
         
         for (PostEntity post : projectToDelete.getPosts()) {
-            postSessionBeanLocal.deletePost(post.getPostId());
+            postSessionBeanLocal.deletePostInProjectFeed(post.getPostId());
         }
         projectToDelete.getPosts().clear();
         
