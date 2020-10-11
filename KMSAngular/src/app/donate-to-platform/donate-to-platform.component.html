@@ -27,13 +27,30 @@
         <!-- form start -->
         <form role="form">
             <div class="card-body">
-                <label for="donationAmount">Donation Amount</label>
-                <div class="input-group mb-3">
+              <div class="form-group">
+                <label>Currency</label>
+                <select class="ccselect2 form-control" name="selectedCurrency" data-placeholder="Select Currency for Donation" style="width: 100%;">
+                  <option value=""></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="donationAmount">Amount</label>
+                <div *ngIf="!noDecimal" class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">$</span>
+                        <span class="input-group-text">{{currencySymbol}}</span>
                     </div>
                     <input name="donation" type="number" class="form-control" id="donationAmount" [(ngModel)]="donationAmount" placeholder="Enter Amount">
                 </div>
+                <div *ngIf="noDecimal" class="input-group mb-3">
+                  <div class="input-group-prepend">
+                      <span class="input-group-text">{{currencySymbol}}</span>
+                  </div>
+                  <input name="donation" type="text" class="form-control" id="donationAmount" [(ngModel)]="donationAmount" placeholder="Enter Amount (to the nearest dollar)" oninput="this.value|=0">
+                  <div class="input-group-append">
+                    <span class="input-group-text">.00</span>
+                  </div>
+              </div>
+              </div>
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
