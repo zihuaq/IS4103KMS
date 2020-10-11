@@ -31,7 +31,7 @@ public class DonationEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
-    private Long paypalOrderId;
+    private String paypalOrderId;
     
     @NotNull
     @Column(nullable=false)
@@ -52,7 +52,7 @@ public class DonationEntity implements Serializable {
     public DonationEntity() {
     }
 
-    public DonationEntity(Long paypalOrderId, Date dateDonated, Double amount, String currency) {
+    public DonationEntity(String paypalOrderId, Date dateDonated, Double amount, String currency) {
         this();
         this.paypalOrderId = paypalOrderId;
         this.dateDonated = dateDonated;
@@ -93,11 +93,11 @@ public class DonationEntity implements Serializable {
         return "entity.DonationEntity[ id=" + donationId + " ]";
     }
 
-    public Long getPaypalOrderId() {
+    public String getPaypalOrderId() {
         return paypalOrderId;
     }
 
-    public void setPaypalOrderId(Long paypalOrderId) {
+    public void setPaypalOrderId(String paypalOrderId) {
         this.paypalOrderId = paypalOrderId;
     }
 

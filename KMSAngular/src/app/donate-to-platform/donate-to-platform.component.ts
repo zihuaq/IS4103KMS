@@ -39,13 +39,32 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
     },
 
     createOrder: (data, actions) => {
-      return actions.order.create({
-        purchase_units: [{
-          amount: {
-            value: this.donationAmount
-          }
-        }]
-      });
+      if (this.donationAmount == undefined) {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          title: 'Empty Donation Amount',
+          autohide: true,
+          delay: 4000,
+          body: 'Please enter your donation amount',
+        });
+      } else if (this.donationAmount == 0) {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          title: 'Invalid Donation Amount',
+          autohide: true,
+          delay: 4000,
+          body: 'Please enter a donation amount more than $0',
+        });
+      } else {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: this.donationAmount
+            }
+          }]
+        });
+      }
+      
     },
     onApprove: (data, actions) =>  {
       return actions.order.capture().then((details) => {

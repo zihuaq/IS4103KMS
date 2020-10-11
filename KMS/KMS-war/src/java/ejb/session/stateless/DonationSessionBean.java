@@ -33,11 +33,12 @@ public class DonationSessionBean implements DonationSessionBeanLocal {
     @Override
     public Long createNewDonation(DonationEntity newDonation, Long userId, Long projectId) throws NoResultException {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
-        ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
         user.getDonations().add(newDonation);
         
-        if (project != null) {
+        if (projectId != null) {
+            ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
+            
             project.getDonations().add(newDonation);
             newDonation.setProject(project);  
         }
