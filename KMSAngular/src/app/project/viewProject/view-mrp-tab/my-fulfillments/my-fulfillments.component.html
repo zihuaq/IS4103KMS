@@ -1,0 +1,81 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="content-fluid">
+            <div class="card card-primary card-outline">
+                <div>                    
+                    <h5 class="card-header">
+                        My Fulfillments
+                        <button type="button" class="btn btn-default float-right" [routerLink]="[ '/projectDetails', projectId ]">Done</button>                        
+                    </h5>
+                </div>                             
+                <div class="card-body">
+                    <span *ngIf="noFulfillment">You have no fulfillments at the moment.</span>
+
+                    <span *ngIf="!noFulfillment">
+                        <div *ngFor="let fulfillment of fulfillmentList">
+                            <div class="card" style="width: 100%;" >
+                                <div class="card-header">
+                                    <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{fulfillment.posting.name}}</b>&nbsp;
+                                        <span class="badge badge-primary" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</span>
+                                        <span class="badge badge-info" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px; vertical-align: 30%;">PARTIALLY FULFILLED</span>
+                                        <span class="badge badge-success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{fulfillment.status}}</span>
+                                        <span class="badge badge-danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</span>
+                                    <br/>
+                                    <span class="text-muted" style="font-size: 15px;">{{fulfillment.posting.description}}</span>
+                                    </h5> 
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" (click)="clickDelete(fulfillment)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="display: block; color: rgb(44, 44, 44);">
+                                    <p style="margin: 0 7px 0 7px;">
+                                        <b>Required from {{fulfillment.posting.startDate.toString().slice(0,10) | date }} to {{fulfillment.posting.endDate.toString().slice(0,10) | date }}</b> 
+                                        <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(fulfillment.posting.latitude, fulfillment.posting.longitude)" target="_blank"> At location {{fulfillment.posting.latitude | number:'1.1-6'}}, {{fulfillment.posting.longitude | number:'1.1-6'}}</a>
+                                        <br/>
+                                        {{fulfillment.receivedQuantity}} {{fulfillment.posting.unit}} received<span class="text-muted"> / {{fulfillment.totalPledgedQuantity}} {{fulfillment.posting.unit}} pledged</span>
+                                        <br/>
+                                        <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="fulfillment.posting.tags.length > 0">
+                                            <div *ngFor="let tag of fulfillment.posting.tags">
+                                                <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                                            </div>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>                          
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-confirm-delete-fulfillment">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Delete Fulfillment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this fulfillment?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="delete-fulfillment" type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteFulfillment()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

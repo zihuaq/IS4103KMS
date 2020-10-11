@@ -58,6 +58,14 @@ import { ReviewsRecievedComponent } from './profile/reviews-recieved/reviews-rec
 import { ReviewsWrittenComponent } from './profile/reviews-written/reviews-written.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { UserSettingComponent } from './profile/user-setting/user-setting.component';
+import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
+import { JobAppliedComponent } from './profile/job-applied/job-applied.component';
+import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
+import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/manage-fulfillments/manage-fulfillments.component';
+import { ProfileReportsComponent } from './administration/profile-reports/profile-reports.component';
+import { ProjectReportsComponent } from './administration/project-reports/project-reports.component';
+import { ProjectReportItemComponent } from './administration/project-reports/project-report-item/project-report-item.component';
+import { ProfileReportItemComponent } from './administration/profile-reports/profile-report-item/profile-report-item.component';
 
 @NgModule({
   declarations: [
@@ -108,7 +116,16 @@ import { UserSettingComponent } from './profile/user-setting/user-setting.compon
     ReviewsRecievedComponent,
     ReviewsWrittenComponent,
     AdministrationComponent,
-    UserSettingComponent
+    UserSettingComponent,
+    ViewHrpTabComponent,
+    ViewMrpTabComponent,
+    JobAppliedComponent,
+    MyFulfillmentsComponent,
+    ManageFulfillmentsComponent,
+    ProfileReportsComponent,
+    ProjectReportsComponent,
+    ProjectReportItemComponent,
+    ProfileReportItemComponent
   ],
   imports: [
     BrowserModule,

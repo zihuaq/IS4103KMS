@@ -4,7 +4,8 @@ import { Platform } from "@ionic/angular"
 import { SplashScreen } from "@ionic-native/splash-screen/ngx"
 import { StatusBar } from "@ionic-native/status-bar/ngx"
 import { AuthenticationService } from "./services/authentication.service"
-import { Router } from "@angular/router"
+import { ActivatedRoute, Router } from "@angular/router"
+import { User } from "./classes/user"
 
 @Component({
   selector: "app-root",
@@ -12,8 +13,9 @@ import { Router } from "@angular/router"
   styleUrls: ["app.component.scss"]
 })
 export class AppComponent implements OnInit {
-  public selectedIndex = 0
-  public appPages = [
+  haveMenu: boolean
+  selectedIndex = 0
+  appPages = [
     {
       title: "Home",
       url: "/index",
@@ -38,6 +40,21 @@ export class AppComponent implements OnInit {
       title: "SDG Info",
       url: "/sdg-info",
       icon: "information-circle"
+    },
+    {
+      title: "Discover Project",
+      url: "/view-all-project",
+      icon: "search"
+    },
+    {
+      title: "My Project",
+      url: "/view-own-projects",
+      icon: "person"
+    },
+    {
+      title: "Log Out", 
+      url: "/logout",
+      icon: "log-out"
     }
   ]
 
@@ -58,5 +75,10 @@ export class AppComponent implements OnInit {
     })
   }
 
-  ngOnInit() {}
+  async ngOnInit() {}
+
+  logout() {
+    this.authService.logout()
+    this.authService.authenticationState.next(false)
+  }
 }

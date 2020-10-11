@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -82,14 +83,17 @@ public class MaterialResourcePostingEntity implements Serializable {
     
     @ManyToMany
     private List<TagEntity> tags;
+    
+    @OneToMany(mappedBy = "posting")
+    private List<FulfillmentEntity> fulfillments;
 
     public MaterialResourcePostingEntity() {
         this.tags = new ArrayList<>();
+        this.fulfillments = new ArrayList<>();
     }
 
-    public MaterialResourcePostingEntity(Long materialResourcePostingId, String name, String unit, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
+    public MaterialResourcePostingEntity(String name, String unit, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
         this();
-        this.materialResourcePostingId = materialResourcePostingId;
         this.name = name;
         this.unit = unit;
         this.totalQuantity = totalQuantity;
@@ -239,6 +243,14 @@ public class MaterialResourcePostingEntity implements Serializable {
 
     public void setTags(List<TagEntity> tags) {
         this.tags = tags;
+    }
+
+    public List<FulfillmentEntity> getFulfillments() {
+        return fulfillments;
+    }
+
+    public void setFulfillments(List<FulfillmentEntity> fulfillments) {
+        this.fulfillments = fulfillments;
     }
     
 }

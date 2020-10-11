@@ -1,6 +1,6 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu contentId="main-content" type="overlay" swipe-gesture=false>
       <ion-content>
         <ion-list id="inbox-list">
           <ion-list-header>KMS</ion-list-header>
@@ -13,6 +13,12 @@
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <!-- <ion-menu-toggle (click)="logout()">
+            <ion-item lines="none">
+              <ion-icon slot="start" ios="log-out-outline" md="log-out-sharp"></ion-icon>
+              <ion-label>Log out</ion-label>
+            </ion-item>
+          </ion-menu-toggle> -->
         </ion-list>
       </ion-content>
     </ion-menu>

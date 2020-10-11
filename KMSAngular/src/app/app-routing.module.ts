@@ -25,6 +25,7 @@ import { EditProjectComponent } from './project/editProject/edit-project/edit-pr
 import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
 import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.component';
 import { AdministrationComponent } from './administration/administration.component';
+import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
 
 
 const routes: Routes = [
@@ -119,6 +120,10 @@ const routes: Routes = [
   { path: 'editProject/:projectId',
     canActivate: [RouteGuard],
     component: EditProjectComponent
+  },
+  { path: 'myFulfillments/:projectId',
+    canActivate: [RouteGuard],
+    component: MyFulfillmentsComponent
   }
 
 ];

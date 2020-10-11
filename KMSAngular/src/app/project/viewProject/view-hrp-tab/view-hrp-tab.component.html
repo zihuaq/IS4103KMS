@@ -1,1 +1,47 @@
-<p>view-hrp-tab works!</p>
+<span *ngIf="hrpList.length == 0">There is no human resource posting at the moment.</span>
+
+<span *ngIf="hrpList.length > 0">
+    <div *ngFor="let hrp of hrpList">
+        <div class="card" style="width: 100%;" >
+            <div class="card-header">
+                <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{hrp.name}}</b> 
+                    <br/>
+                    <span class="text-muted" style="font-size: 15px;">{{hrp.description}}</span>
+                </h5> 
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: block;">
+                <p style="margin: 0 7px 0 7px;">
+                    <b>{{hrp.startDate.toString().slice(0,10) | date}} to {{hrp.endDate.toString().slice(0,10) | date}}</b>
+                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(hrp.latitude, hrp.longitude)" target="_blank">
+                        At location
+                        {{hrp.latitude | number:'1.1-6'}},
+                        {{hrp.longitude | number:'1.1-6'}}
+                    </a>
+                    <br/>
+                    <span *ngIf="isMember">                                    
+                        <button *ngIf="!hasApplied(hrp.humanResourcePostingId) && !hasFilled(hrp.humanResourcePostingId)" type="button" (click)="applyHrp(hrp.humanResourcePostingId)" class="btn btn-primary float-right" style="margin-right: 5%;">Apply</button>
+                        <button *ngIf="hasApplied(hrp.humanResourcePostingId)" type="button" class="btn btn-primary float-right" style="margin-right: 5%;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
+                        <button *ngIf="hasApplied(hrp.humanResourcePostingId)" type="button" class="btn btn-light float-right">Applied</button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" (click)="leaveHrp(hrp.humanResourcePostingId)">Leave</a>
+                        </div>
+                        <button *ngIf="!hasApplied(hrp.humanResourcePostingId) && hasFilled(hrp.humanResourcePostingId)" disabled type="button" class="btn btn-light float-right" style="margin-right: 5%;">Filled</button>
+                    </span>
+                    {{hrp.obtainedSlots}} (filled) / {{hrp.totalSlots}}  <span class="text-muted">({{hrp.lackingSlots}} needed)</span>
+                    <span *ngIf="hrp.tags.length > 0">
+                        <div *ngFor="let tag of hrp.tags">
+                            <small class="badge badge-info ml-2">
+                                {{tag.name}}
+                            </small>
+                        </div>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</span>

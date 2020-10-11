@@ -22,5 +22,15 @@ public interface ReportSessionBeanLocal {
     public ReportEntity reportProject(ReportEntity report) throws NoResultException;
 
     public List<ReportEntity> getProfileReports() throws NoResultException;
+
+    public List<ReportEntity> getAllReports();
+
+    public List<ReportEntity> getCommentReports() throws NoResultException;
+
+    public List<ReportEntity> getPostReports() throws NoResultException;
+
+    public List<ReportEntity> getGroupReports() throws NoResultException;
+
+    public List<ReportEntity> getProjectReports() throws NoResultException;
     
 }

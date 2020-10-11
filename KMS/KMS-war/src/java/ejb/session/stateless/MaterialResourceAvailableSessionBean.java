@@ -16,13 +16,14 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class MaterialResourceAvailableSessionBean implements MaterialResourceAvailableSessionBeanLocal {
-    
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
     
     @Override
     public List<MaterialResourceAvailableEntity> createMaterialResourceAvailable(MaterialResourceAvailableEntity materialResourceAvailable) throws NoResultException {
         UserEntity materialResourceAvailableOwner = em.find(UserEntity.class, materialResourceAvailable.getMaterialResourceAvailableOwner().getUserId());
+        System.out.println(materialResourceAvailableOwner);
         if (materialResourceAvailableOwner != null) {
             em.persist(materialResourceAvailable);
             List<MaterialResourceAvailableEntity> mras = materialResourceAvailableOwner.getMras();

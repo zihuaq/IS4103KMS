@@ -22,27 +22,26 @@
   <div class="card card-primary card-outline card-tabs">
     <div class="card-header p-0 pt-1 border-bottom-0">
         <ul class="nav nav-tabs" id="admin-tab" role="tablist">
-            <!-- <li class="nav-item">
-                <a class="nav-link active" id="profile-tab-projects-tabname" data-toggle="pill"
-                    href="#profile-tab-projects" role="tab" aria-controls="profile-tab-projects"
-                    aria-selected="true">Projects</a>
-            </li> -->
             <li class="nav-item">
                 <a class="nav-link active" id="admin-tab-profile-reports-tabname" data-toggle="pill"
-                    href="#admin-tab-profile-reports" role="tab"
-                    aria-controls="admin-tab-profile-reports" aria-selected="false">Profile Reports</a>
+                    href="#profile-reports" role="tab"
+                    >Profile Reports</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill"
+                  href="#project-reports" role="tab"
+                  >Project Reports</a>
             </li>
         </ul>
     </div>
 
     <div class="card-body">
         <div class="tab-content" id="custom-tabs-four-tabContent">
-
-            <div class="tab-pane fade show active" id="admin-tab-profile-reports" role="tabpanel"
-                aria-labelledby="admin-tab-profile-reports-tabname">
-                <!-- <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser"
-                    (profileChanged)="handleProfileChanged($event)">
-                </app-material-resource-available> -->
+            <div class="tab-pane fade show active" id="profile-reports" role="tabpanel">
+                <app-profile-reports></app-profile-reports>
+            </div>
+            <div class="tab-pane fade" id="project-reports" role="tabpanel">
+                <app-project-reports></app-project-reports>
             </div>
 
         </div>

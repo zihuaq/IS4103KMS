@@ -11,6 +11,7 @@ import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.FulfillmentEntity;
 import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.PostEntity;
@@ -263,6 +264,31 @@ public class UserSessionBean implements UserSessionBeanLocal {
         sdgs.add(tag);
         user.setSdgs(sdgs);
     }
+    
+    @Override
+    public List<TagEntity> addSDGsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (user == null) {
+            throw new NoResultException("User not found.");
+        }
+
+        List<TagEntity> sdgTags = user.getSdgs();
+
+        for (int i = 0; i < tags.size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, tags.get(i).getTagId());
+            if (tag == null) {
+                throw new NoResultException("Tag not found.");
+            }
+            if (sdgTags.contains(tag)) {
+                throw new DuplicateTagInProfileException("Tag is already present in user's profile");
+            }
+            sdgTags.add(tag);
+        }
+
+        user.setSdgs(sdgTags);
+        return sdgTags;
+    }
 
     @Override
     public void removeSDGFromProfile(long userId, long tagId) throws NoResultException {
@@ -422,6 +448,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.remove(reviewsReceived.get(i));
         }
         reviewsReceived.clear();
+        List<FulfillmentEntity> fulfillments = user.getFulfillments();
+        for (int i = 0; i < fulfillments.size(); i++) {
+            fulfillments.get(i).setFulfillmentOwner(null);
+            fulfillments.get(i).setMra(null);
+        }
+        fulfillments.clear();
         user.getSdgs().clear();
         user.getSkills().clear();
         em.remove(user);
@@ -733,6 +765,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.setLastName(updatedUser.getLastName());
         user.setEmail(updatedUser.getEmail());
         user.setDob(updatedUser.getDob());
+        user.setGender(updatedUser.getGender());
         user.setIsActive(updatedUser.getIsActive());
         System.out.println(updatedUser);
         user.setProfilePicture(updatedUser.getProfilePicture());

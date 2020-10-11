@@ -28,7 +28,7 @@ export class RegisterPage implements OnInit {
     private userService: UserService,
     public http: HttpClient,
     public alertController: AlertController,
-    private route: Router
+    private router: Router
   ) {
     this.today = new Date().toISOString()
     this.newUser = new User()
@@ -36,7 +36,7 @@ export class RegisterPage implements OnInit {
 
   async presentAlert() {
     const alert = await this.alertController.create({
-      header: "Alert",
+      header: "Action Required",
       message: "Please check your email for verification link",
       buttons: ["OK"]
     })
@@ -44,7 +44,7 @@ export class RegisterPage implements OnInit {
     await alert.present()
     let result = await alert.onDidDismiss()
     console.log(result)
-    this.route.navigate(["/login"])
+    this.router.navigate(["/login"])
   }
 
   ngOnInit() {}
@@ -83,10 +83,10 @@ export class RegisterPage implements OnInit {
   }
 
   createInstition() {
-    this.route.navigate(["/registerinstitution"])
+    this.router.navigate(["/registerinstitution"])
   }
 
   directInst() {
-    this.route.navigate(["/registerinstitution"])
+    this.router.navigate(["/registerinstitution"])
   }
 }

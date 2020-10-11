@@ -26,13 +26,12 @@ export class SearchUsersComponent implements OnInit {
   user: User;
   query: string;
 
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private sessionService: SessionService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     let userId = this.activatedRoute.snapshot.params.userid;
@@ -54,7 +53,7 @@ export class SearchUsersComponent implements OnInit {
           if (
             this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
-            AccountPrivacySettingEnum.PRIVATE &&
+              AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
               .map((user) => user.userId)
               .includes(this.user.userId)
@@ -74,19 +73,39 @@ export class SearchUsersComponent implements OnInit {
           this.loggedInUserFollowing = result[1];
           this.loggedInUserFollowRequestMade = result[2];
           this.user = result[3];
+          if (
+            this.loggedInUserId != userId &&
+            this.user.accountPrivacySetting ==
+              AccountPrivacySettingEnum.PRIVATE &&
+            !this.loggedInUserFollowing
+              .map((user) => user.userId)
+              .includes(this.user.userId)
+          ) {
+            this.router.navigate(['/index']);
+          }
         });
       } else if (this.query == 'affiliated') {
         forkJoin([
           this.userService.getFollowing(this.loggedInUserId),
           this.userService.getFollowRequestMade(this.loggedInUserId),
           this.userService.getAffiliatedUsers(parseInt(userId)),
-          this.userService.getUser(userId)
+          this.userService.getUser(userId),
         ]).subscribe((result) => {
           this.loggedInUserFollowing = result[0];
           this.loggedInUserFollowRequestMade = result[1];
           this.allUsers = result[2];
           this.filteredUsers = this.allUsers;
           this.user = result[3];
+          if (
+            this.loggedInUserId != userId &&
+            this.user.accountPrivacySetting ==
+              AccountPrivacySettingEnum.PRIVATE &&
+            !this.loggedInUserFollowing
+              .map((user) => user.userId)
+              .includes(this.user.userId)
+          ) {
+            this.router.navigate(['/index']);
+          }
         });
       }
     } else {

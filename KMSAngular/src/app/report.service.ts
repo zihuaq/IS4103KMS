@@ -32,6 +32,32 @@ export class ReportService {
       .pipe(catchError(this.handleError));
   }
 
+  getProfileReports():Observable<any>{
+    return this.http.get<any>(this.baseUrl+'/getProfileReports')
+    .pipe(catchError(this.handleError))
+
+  }
+
+  getProjectReports():Observable<any>{
+    return this.http.get<any>(this.baseUrl+'/getProjectReports')
+    .pipe(catchError(this.handleError))
+  }
+
+  getGroupReports():Observable<any>{
+    return this.http.get<any>(this.baseUrl+'/getGroupReports')
+    .pipe(catchError(this.handleError))
+  }
+
+  getPostReports():Observable<any>{
+    return this.http.get<any>(this.baseUrl+'/getPostReports')
+    .pipe(catchError(this.handleError))
+  }
+
+  getCommentReports():Observable<any>{
+    return this.http.get<any>(this.baseUrl+'/getCommentReports')
+    .pipe(catchError(this.handleError))
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
 
@@ -47,4 +73,6 @@ export class ReportService {
 
     return throwError(errorMessage);
   }
+
+
 }

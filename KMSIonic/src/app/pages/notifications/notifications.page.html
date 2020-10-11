@@ -8,15 +8,109 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
+  <ion-item lines="none">
+    <ion-label class="ion-text-center">
+      <ion-text
+        *ngIf="preliminaryFollowRequests && preliminaryFollowRequests.length == 0 && preliminaryAffiliationRequests && preliminaryAffiliationRequests.length == 0">
+        You have no notifications
+      </ion-text>
+    </ion-label>
+  </ion-item>
+
+  <ion-card *ngIf="preliminaryFollowRequests && preliminaryFollowRequests.length">
     <ion-card-header>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      <ion-card-title>Card Title</ion-card-title>
+      <ion-card-title>Follow Requests</ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
-      Keep close to Nature's heart... and break clear away, once in awhile,
-      and climb a mountain or spend a week in the woods. Wash your spirit clean.
+      <ion-list class="ion-no-padding">
+        <ion-item lines="none" (click)="goToProfile(followRequest.from)"
+          *ngFor="let followRequest of preliminaryFollowRequests">
+          <ion-avatar slot="start">
+            <img *ngIf="!followRequest.from.profilePicture"
+              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+              alt="User profile Picture">
+            <img *ngIf="followRequest.from.profilePicture" [src]="followRequest.from.profilePicture"
+              alt="User profile Picture">
+          </ion-avatar>
+          <ion-label>
+            <ion-grid class="ion-no-padding">
+              <ion-row>
+                <ion-col size="12" class="ion-no-padding">
+                  <ion-text>
+                    <h6>{{followRequest.from.firstName}}
+                      {{followRequest.from.lastName}} wants to follow you</h6>
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-button (click)="acceptFollow(followRequest.to.userId,followRequest.from.userId, $event)">
+                    Accept
+                  </ion-button>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-button (click)="rejectFollow(followRequest.to.userId,followRequest.from.userId, $event)">
+                    Reject
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-label>
+        </ion-item>
+        <ion-item [routerLink]="['/notifications/all-follow']" routerDirection="forward">
+          <a>See all follow requests</a>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="preliminaryAffiliationRequests && preliminaryAffiliationRequests.length">
+    <ion-card-header>
+      <ion-card-title>Affiliation Requests</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list class="ion-no-padding">
+        <ion-item lines="none" (click)="goToProfile(affiliationRequest.from)"
+          *ngFor="let affiliationRequest of preliminaryAffiliationRequests">
+          <ion-avatar slot="start">
+            <img *ngIf="!affiliationRequest.from.profilePicture"
+              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+              alt="User profile Picture">
+            <img *ngIf="affiliationRequest.from.profilePicture" [src]="affiliationRequest.from.profilePicture"
+              alt="User profile Picture">
+          </ion-avatar>
+          <ion-label>
+            <ion-grid class="ion-no-padding">
+              <ion-row>
+                <ion-col size="12" class="ion-no-padding">
+                  <ion-text>
+                    <h6>{{affiliationRequest.from.firstName}}
+                      {{affiliationRequest.from.lastName}} wants to be affiliated to you</h6>
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-button
+                    (click)="acceptAffiliation(affiliationRequest.to.userId,affiliationRequest.from.userId, $event)">
+                    Accept
+                  </ion-button>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-button
+                    (click)="rejectAffiliation(affiliationRequest.to.userId,affiliationRequest.from.userId, $event)">
+                    Reject
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-label>
+        </ion-item>
+        <ion-item [routerLink]="['/notifications/all-affiliation']" routerDirection="forward">
+          <a>See all affiliation requests</a>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
 </ion-content>

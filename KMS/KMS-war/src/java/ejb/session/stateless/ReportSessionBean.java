@@ -56,12 +56,14 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         }
     }
     
+    @Override
     public List<ReportEntity> getAllReports(){
         List<ReportEntity> reports = em.createQuery("SELECT r FROM ReportEntity r").getResultList();
         
         return reports;
     }
     
+    @Override
     public List<ReportEntity> getProfileReports() throws NoResultException{
         List<ReportEntity> reports = getAllReports();
         if(reports.size() < 1){
@@ -77,5 +79,78 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             throw new NoResultException("No profile reports");
         }
         return profileReports;
+    }
+    
+    
+    @Override
+    public List<ReportEntity> getProjectReports() throws NoResultException{
+        List<ReportEntity> reports = getAllReports();
+        if(reports.size() < 1){
+            throw new NoResultException("No reports");
+        }
+        List<ReportEntity> projectReports = new ArrayList<>();
+        for(ReportEntity report: reports){
+            if(report.getReportType().equals(ReportTypeEnum.PROJECT)){
+                projectReports.add(report);
+            }
+        }
+        if(projectReports.size() < 1){
+            throw new NoResultException("No profile reports");
+        }
+        return projectReports;
+    }
+    
+    @Override
+    public List<ReportEntity> getGroupReports() throws NoResultException{
+        List<ReportEntity> reports = getAllReports();
+        if(reports.size() < 1){
+            throw new NoResultException("No reports");
+        }
+        List<ReportEntity> groupReports = new ArrayList<>();
+        for(ReportEntity report: reports){
+            if(report.getReportType().equals(ReportTypeEnum.GROUP)){
+                groupReports.add(report);
+            }
+        }
+        if(groupReports.size() < 1){
+            throw new NoResultException("No profile reports");
+        }
+        return groupReports;
+    }
+    
+    @Override
+    public List<ReportEntity> getPostReports() throws NoResultException{
+        List<ReportEntity> reports = getAllReports();
+        if(reports.size() < 1){
+            throw new NoResultException("No reports");
+        }
+        List<ReportEntity> postReports = new ArrayList<>();
+        for(ReportEntity report: reports){
+            if(report.getReportType().equals(ReportTypeEnum.POST)){
+                postReports.add(report);
+            }
+        }
+        if(postReports.size() < 1){
+            throw new NoResultException("No profile reports");
+        }
+        return postReports;
+    }
+    
+    @Override
+    public List<ReportEntity> getCommentReports() throws NoResultException{
+        List<ReportEntity> reports = getAllReports();
+        if(reports.size() < 1){
+            throw new NoResultException("No reports");
+        }
+        List<ReportEntity> commentReports = new ArrayList<>();
+        for(ReportEntity report: reports){
+            if(report.getReportType().equals(ReportTypeEnum.COMMENT)){
+                commentReports.add(report);
+            }
+        }
+        if(commentReports.size() < 1){
+            throw new NoResultException("No profile reports");
+        }
+        return commentReports;
     }
 }

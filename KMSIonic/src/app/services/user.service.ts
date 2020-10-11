@@ -131,9 +131,9 @@ export class UserService {
       .pipe(catchError(this.handleError))
   }
 
-  addSDGToProfile(userId: number, sdgTags: Tag[]): Observable<any> {
+  addSDGsToProfile(userId: number, sdgTags: Tag[]): Observable<any> {
     return this.http
-      .put<any>(this.baseUrl + "/addSDG/" + userId, sdgTags, httpOptions)
+      .put<any>(this.baseUrl + "/addSDGs/" + userId, sdgTags, httpOptions)
       .pipe(catchError(this.handleError))
   }
 
@@ -255,6 +255,7 @@ export class UserService {
   }
 
   private parseUserDate(data: any) {
+    console.log(data)
     if (data.userType == UserType.ADMIN) {
       return {
         ...data,
@@ -354,5 +355,23 @@ export class UserService {
     return this.http
       .get<any>(this.baseUrl + "/verifyEmail?email=" + email + "&uuid=" + uuid)
       .pipe(catchError(this.handleError))
+  }
+
+  getProjectsOwned(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + "/projectsOwned/" + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getProjectsJoined(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + "/viewOwnProjects/" + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getProjectsManaged(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + "/projectsManaged/" + userId)
+      .pipe(catchError(this.handleError));
   }
 }

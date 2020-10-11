@@ -16,32 +16,32 @@
         <form (ngSubmit)="login(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
           <hr>
 
-          <div class="form-group">
-            <ion-item>
-              <ion-label for="email">Email Address</ion-label>
-              <ion-input type="email" id="email" class="form-control" ngModel name="email" required email
-                #email="ngModel"></ion-input>
-              <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid
-                email!</span>
-            </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Email Address
+              <ion-text *ngIf="!email.valid && email.touched" color="danger">Please enter a
+                valid
+                email!</ion-text>
+            </ion-label>
+            <ion-input type="email" id="email" ngModel name="email" required email #email="ngModel"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Password</ion-label>
+            <ion-input type="password" appAppPassword id="password" class="form-control" ngModel name="password"
+              required #password="ngModel"></ion-input>
+          </ion-item>
+
+          <div>
+            <ion-button type="submit" style="float:right">Login</ion-button>
+            <ion-button (click)="forgetPassword()" color="danger">forget password</ion-button>
+            <div>
+              <hr>
+            </div>
           </div>
 
-          <div class="form-group">
-            <ion-item>
-              <ion-label for="password">Password</ion-label>
-              <ion-input type="password" appAppPassword id="password" class="form-control" ngModel name="password"
-                required #password="ngModel"></ion-input>
-            </ion-item>
-          </div>
-          <hr>
-          <div>
-            <div>
-              <ion-button (click)="userSelector()" color="warning">Register</ion-button>
-              <ion-button class="btn btn-success" type="submit" style="float:right;">Login</ion-button>
-            </div>
-            <div>
-              <ion-button (click)="forgetPassword()" color="danger">forget password</ion-button>
-            </div>
+          <div style="text-align: center">
+            <h6>Have an Account Yet?</h6>
+            <ion-button (click)="userSelector()" color="warning">Register</ion-button>
           </div>
         </form>
       </div>

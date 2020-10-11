@@ -18,6 +18,7 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -295,6 +296,21 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
+    
+    @PUT
+    @Path("/addSDGs/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addSDGsToProfile(@PathParam("userId") Long userId, List<TagEntity> tags) {
+        try {
+             List<TagEntity> updatedSDGs = userSessionBeanLocal.addSDGsToProfile(userId, tags);
+            return Response.status(200).entity(updatedSDGs).build();
+        } catch (NoResultException | DuplicateTagInProfileException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
 
     @PUT
     @Path("/removeSDG/{userId}/{tagId}")
@@ -339,7 +355,22 @@ public class UserResource {
             user.getAffiliatedUsers().clear();
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
-
+            user.getFulfillments().clear();
+            for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
+                hrp.setActivity(null);
+                hrp.getAppliedUsers().clear();
+                if (hrp.getProject() != null) {
+                    hrp.getProject().setProjectOwner(null);
+                    hrp.getProject().getProjectMembers().clear();
+                    hrp.getProject().getProjectAdmins().clear();
+                    hrp.getProject().getActivities().clear();
+                    hrp.getProject().getHumanResourcePostings().clear();
+                    hrp.getProject().getMaterialResourcePostings().clear();
+                    hrp.getProject().getTasks().clear();
+                    hrp.getProject().getPosts().clear();
+                    hrp.getProject().getSdgs().clear();
+                }
+            }
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -426,6 +457,8 @@ public class UserResource {
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
             user.getAffiliatedUsers().clear();
+            user.getHrpApplied().clear();
+            user.getFulfillments().clear();
             user.setPassword("");
 
             return Response.status(Response.Status.OK).entity(user).build();
@@ -583,25 +616,25 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(UserEntity updatedUser) {
         try {
+            System.out.println("reached update user");
             UserEntity user = userSessionBeanLocal.updateUser(updatedUser);
-            user.getReviewsGiven().clear();
-            user.getReviewsReceived().clear();
-            user.getProjectsOwned().clear();
-            user.getProjectsJoined().clear();
-            user.getProjectsManaged().clear();
-            user.getGroupsJoined().clear();
-            user.getGroupAdmins().clear();
-            user.getPosts().clear();
-            user.getGroupsOwned().clear();
-            user.getBadges().clear();
-            user.getMras().clear();
-            user.getSkills().clear();
-            user.getFollowing().clear();
-            user.getFollowers().clear();
-            user.getFollowRequestMade().clear();
-            user.getFollowRequestReceived().clear();
-            user.setPassword("");
-            return Response.status(200).entity(user).build();
+
+            System.out.println("got user");
+            UserEntity userResponse = new UserEntity();
+            userResponse.setFirstName(user.getFirstName());
+            userResponse.setLastName(user.getLastName());
+            userResponse.setGender(user.getGender());
+            userResponse.setIsActive(user.getIsActive());
+            userResponse.setDob(user.getDob());
+            userResponse.setJoinedDate(user.getJoinedDate());
+            userResponse.setAdminStartDate(user.getAdminStartDate());
+            userResponse.setEmail(user.getEmail());
+            userResponse.setProfilePicture(user.getProfilePicture());
+            userResponse.setSdgs(user.getSdgs());
+            userResponse.setAccountPrivacySetting(user.getAccountPrivacySetting());
+            System.out.println("userResponse: " + userResponse);
+            return Response.status(200).entity(userResponse).build();
+
         } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -690,6 +723,12 @@ public class UserResource {
             temp.setFollowing(getUsersResponse(user.getFollowing()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
+                hrp.setActivity(null);
+                hrp.setProject(null);
+                hrp.getAppliedUsers().clear();
+            }
+            temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
         return usersResponse;
@@ -713,6 +752,7 @@ public class UserResource {
             temp.setAffiliatedUsers(getUsersResponse(user.getAffiliatedUsers()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
         return usersResponse;

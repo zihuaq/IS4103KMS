@@ -55,6 +55,8 @@ public interface UserSessionBeanLocal {
     public List<TagEntity> getSDGsForProfile(long userId) throws UserNotFoundException;
 
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
+    
+    public List<TagEntity> addSDGsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
 
     public void removeSDGFromProfile(long userId, long tagId) throws NoResultException;
 

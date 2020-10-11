@@ -4,6 +4,8 @@ import { User } from 'src/app/classes/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { TagService } from 'src/app/services/tag.service';
 import { UserService } from 'src/app/services/user.service';
+import { ToastController } from '@ionic/angular';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-add-skills',
@@ -11,16 +13,20 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./add-skills.page.scss'],
 })
 export class AddSkillsPage implements OnInit {
-  skillTags: Tag[];
+  skillTags: Tag[]
   filteredTags: Tag[];
   chosenTags: Tag[] = [];
   searchValue: string;
   hasSelected: boolean;
   loggedInUser: User;
 
-  constructor(private tagService: TagService, private authenticationService: AuthenticationService, private userService: UserService) { }
+  constructor(private tagService: TagService, private authenticationService: AuthenticationService, 
+    private userService: UserService, public toastController: ToastController, private location: Location) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     this.tagService.getAllSkillTags().subscribe((response) => {
       this.skillTags = response;
       this.authenticationService.getCurrentUser().then((user: User) => {
@@ -29,9 +35,9 @@ export class AddSkillsPage implements OnInit {
           .getSkillsForProfile(this.loggedInUser.userId)
           .subscribe((skills) => {
             this.loggedInUser = { ...this.loggedInUser, skills };
+            this.skillTags = this.skillTags.filter(tag => !this.loggedInUser.skills.includes(tag));
           });
-        this.skillTags = this.skillTags.filter(tag => !this.loggedInUser.skills.includes(tag));
-      });
+       });
     });
   }
 
@@ -80,6 +86,15 @@ export class AddSkillsPage implements OnInit {
       .addSkillsToProfile(this.loggedInUser.userId, this.chosenTags)
       .subscribe((responsedata) => {
         this.loggedInUser.skills = responsedata;
+        this.location.back();
+      },
+      async (err: any) => {
+        const toast = await this.toastController.create({
+          message: err,
+          duration: 2000
+        });
+        toast.present();
+        this.chosenTags = []
       });
   }
 }

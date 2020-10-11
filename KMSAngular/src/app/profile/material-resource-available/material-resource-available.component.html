@@ -27,8 +27,12 @@
                     </div>
                     <div class="form-group">
                         <label for="units"> Units *</label>
-                        <input type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units"
-                            required>
+                        <select type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units" required>
+                            <option disabled value="Select Unit">Select Unit</option>
+                            <option value="item(s)">item(s)</option>
+                            <option value="kg">kg</option>
+                            <option value="m">m</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
@@ -129,8 +133,8 @@
                     <li class="item">
                         <div class="product-info">
                             <a *ngIf="mra.startDate != null" class="product-title">Available from
-                                {{mra.startDate.toString().slice(0,10) | date }} to
-                                {{mra.endDate.toString().slice(0,10) | date}}
+                                {{mra.startDate.toString().slice(0,15) | date }} to
+                                {{mra.endDate.toString().slice(0,15) | date}}
                                 <span class="badge badge-secondary float-right">
                                     At location
                                     {{mra.latitude | number:'1.1-6'}},

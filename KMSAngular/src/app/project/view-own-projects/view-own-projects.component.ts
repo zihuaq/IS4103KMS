@@ -21,6 +21,8 @@ export class ViewOwnProjectsComponent implements OnInit {
   @Output() searchModelChange: EventEmitter<any> = new EventEmitter();
 
   projectsJoined: Project[];
+  projectsManaged: Project[];
+  projectsOwned: Project[];
   noProjects: boolean = true;
   loggedInUser: User;
 
@@ -39,6 +41,18 @@ export class ViewOwnProjectsComponent implements OnInit {
         if (this.projectsJoined.length > 0) {
           this.noProjects = false;
         }
+      }
+    );
+
+    this.userService.getProjectsManaged(this.loggedInUser.userId).subscribe(
+      response => {
+        this.projectsManaged = response;
+      }
+    );
+
+    this.userService.getProjectsOwned(this.loggedInUser.userId).subscribe(
+      response => {
+        this.projectsOwned = response;
       }
     );
   }
@@ -64,6 +78,18 @@ export class ViewOwnProjectsComponent implements OnInit {
 
   sortSDG(sdgList: Tag[]): Tag[] {
     return sdgList.sort((a, b) => (a.tagId - b.tagId));
+  }
+
+  isAdmin(projectId: number): boolean {
+    return this.projectsManaged
+      .map((project) => project.projectId)
+      .includes(projectId);
+  }
+
+  isOwner(projectId: number): boolean {
+    return this.projectsOwned
+      .map((project) => project.projectId)
+      .includes(projectId);
   }
 
 }

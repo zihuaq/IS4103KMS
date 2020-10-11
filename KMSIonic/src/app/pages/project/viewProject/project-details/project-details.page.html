@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/view-all-project"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{project.name}}</ion-title>    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>
+        <h1>          
+          <ion-buttons slot="end">
+            <b>{{project.name}}</b>
+            <ion-button *ngIf="isAdmin"(click)="editProject()"><ion-icon name="create-outline"></ion-icon></ion-button>
+          </ion-buttons>
+        </h1>
+        <p>Owner: {{owner.firstName}} {{owner.lastName}}</p>
+      </ion-card-subtitle>
+      <ion-button expand="full" size ="small" *ngIf="!isMember" (click)="joinProject()" >Join</ion-button>
+      <ion-button style="width: 80%;" *ngIf="isMember" disabled>Joined</ion-button>
+      <ion-button style="width: 15%;" *ngIf="isMember" (click)="leaveProjectDialog()">
+        <ion-icon name="exit-outline"></ion-icon>
+      </ion-button>
+    </ion-card-header>
+  </ion-card>
+  <ion-card>
+    <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
+      <ion-segment-button value="details">
+        <ion-label>Details</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="members">
+        <ion-label>Members</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="hrp">
+        <ion-label>Human Resource Posting</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="mrp">
+        <ion-label>Material Resource Posting</ion-label>
+      </ion-segment-button>
+
+    </ion-segment>
+  </ion-card>
+
+  <ion-card *ngIf="segment === 'details'">
+    <ion-card-content>
+      <p><b>Description:</b> {{project.description}}</p>
+      <p><b>Country:</b> {{project.country}}</p>
+      <p><b>Date created:</b> {{dateCreated | date}}</p>
+      <p><b>Monetary Funding Required:</b> ${{project.monetaryFundingRequired}}</p>
+      <p><b>Monetary Funding Obtained:</b> ${{project.monetaryFundingObtained}}</p>
+      <p><b>SDGs: </b> 
+        <span *ngFor="let tag of project.sdgs" style="margin-right: 5px;">
+            <ion-badge color="primary">{{tag.name}}</ion-badge>
+        </span>  
+    </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment === 'members'">
+    <ion-card-content>
+      <ion-list *ngFor="let member of project.projectAdmins">
+        <ion-label *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}} </ion-label>
+        <ion-badge *ngIf="owner.userId == member.userId" color="primary">Owner</ion-badge>
+        <ion-badge *ngIf="currentUserId == member.userId && owner.userId == member.userId" color="medium">Me</ion-badge>
+      </ion-list>
+
+      <ion-list *ngFor="let member of project.projectAdmins">
+        <ion-label *ngIf="owner.userId != member.userId">{{member.firstName}} {{member.lastName}} </ion-label>
+        <ion-badge *ngIf="owner.userId != member.userId" color="secondary">Admin</ion-badge>
+        <ion-badge *ngIf="currentUserId == member.userId && owner.userId != member.userId" color="medium">Me</ion-badge>
+      </ion-list>
+
+      <ion-list *ngFor="let member of project.projectMembers">
+        <ion-label *ngIf="!checkAdmin(member)">{{member.firstName}} {{member.lastName}} </ion-label>
+        <ion-badge *ngIf="!checkAdmin(member) && currentUserId== member.userId" color="medium">Me</ion-badge>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment === 'hrp'">
+    <ion-card-content>
+      hrp tab
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment === 'mrp'">
+    <ion-card-content>
+      mrp tab
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+

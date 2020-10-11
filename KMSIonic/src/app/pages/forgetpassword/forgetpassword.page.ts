@@ -19,14 +19,14 @@ export class ForgetpasswordPage implements OnInit {
   constructor(
     private userService: UserService,
     public alertController: AlertController,
-    private route: Router
+    private router: Router
   ) {}
 
   ngOnInit() {}
 
   async presentAlert() {
     const alert = await this.alertController.create({
-      header: "Alert",
+      header: "Action Required",
       message: "New password sent please check your email",
       buttons: ["OK"]
     })
@@ -34,7 +34,7 @@ export class ForgetpasswordPage implements OnInit {
     await alert.present()
     let result = await alert.onDidDismiss()
     console.log(result)
-    this.route.navigate(["/login"])
+    this.router.navigate(["/login"])
   }
 
   getNewPassword(forgotPasswordForm: NgForm) {
