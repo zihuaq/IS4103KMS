@@ -5,6 +5,8 @@
  */
 package ejb.session.stateless;
 
+import Exception.DuplicateLikeException;
+import Exception.LikeNotFoundException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.PostEntity;
@@ -27,6 +29,12 @@ public interface PostSessionBeanLocal {
     public List<PostEntity> getPostForUserNewsfeed(Long userId) throws UserNotFoundException, NoResultException;
     
     public void updatePost(PostEntity postToUpdate);
+    
+    public void likePost(Long postId, Long userId) throws NoResultException, DuplicateLikeException;
+    
+    public void removeLikeForPost(Long postId, Long userId) throws NoResultException, LikeNotFoundException;
+    
+    public void deletePostById(Long postId) throws NoResultException;
 
     public void deletePostInProjectFeed(Long postId);
 

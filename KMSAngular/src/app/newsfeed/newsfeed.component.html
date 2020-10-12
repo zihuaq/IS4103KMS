@@ -45,7 +45,7 @@
                             class="fas fa-edit"></i>
                     </button>
                     <button type="button" class="btn btn-tool" data-card-widget="remove"
-                        *ngIf="loggedInUser.userId == post.postOwner.userId"><i class="fas fa-times"></i>
+                        *ngIf="loggedInUser.userId == post.postOwner.userId" (click)="deletePost(post.postId)"><i class="fas fa-times"></i>
                     </button>
                 </div>
                 <!-- /.card-tools -->
@@ -56,8 +56,10 @@
 
                 <p>{{post.text}}</p>
 
-                <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like </button>
-                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i> Share </button>
+                <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveLikedPost(post.postId)" (click)="likePost(post.postId)"><i class="far fa-thumbs-up"></i> Like </button>  
+                <button type="button" class="btn btn-default btn-sm" *ngIf="userHaveLikedPost(post.postId)" (click)="removeLikeForPost(post.postId)"><i class="fas fa-thumbs-up"></i> Like </button>
+                <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveSharedPost(post.postId)"><i class="fas fa-share"></i> Share </button>
+                <button type="button" class="btn btn-default btn-sm" disabled="true" *ngIf="userHaveSharedPost(post.postId)"><i class="fas fa-share"></i> Shared </button>
                 <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}
                     comments</span>
             </div>

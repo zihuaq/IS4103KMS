@@ -25,6 +25,21 @@ export class PostService {
       .pipe(map(this.parsePostDate), catchError(this.handleError));
   }
 
+  deletePostById(postId: number): Observable<any> {
+    return this.http.delete<any>(this.baseUrl + '/' + postId)
+      .pipe(catchError(this.handleError));
+  }
+
+  likePost(userId:number, postId: number): Observable<any> {
+    return this.http.put<any>(this.baseUrl + '/likePost/' + userId + '/' + postId, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  removeLikeForPost(userId:number, postId: number): Observable<any> {
+    return this.http.put<any>(this.baseUrl + '/removeLikeForPost/' + userId + '/' + postId, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   getPostForUserNewsfeed(userId: number): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/userNewsFeed/' + userId)
       .pipe(map((data) => {

@@ -5,6 +5,8 @@
  */
 package ejb.session.stateless;
 
+import Exception.DuplicateLikeException;
+import Exception.LikeNotFoundException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.PostEntity;
@@ -67,14 +69,14 @@ public class PostSessionBean implements PostSessionBeanLocal {
         PostEntity post = em.find(PostEntity.class, postId);
         return post;
     }
-    
+
     @Override
     public List<PostEntity> getPostForUserNewsfeed(Long userId) throws UserNotFoundException, NoResultException {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
 
         if (user != null) {
             List<PostEntity> posts = user.getPosts();
-            for(int i=0; i<user.getFollowing().size(); i++){
+            for (int i = 0; i < user.getFollowing().size(); i++) {
                 posts.addAll(user.getFollowing().get(i).getPosts());
             }
             return posts;
@@ -87,6 +89,57 @@ public class PostSessionBean implements PostSessionBeanLocal {
     public void updatePost(PostEntity postToUpdate) {
         em.merge(postToUpdate);
         em.flush();
+    }
+
+    @Override
+    public void likePost(Long postId, Long userId) throws NoResultException, DuplicateLikeException {
+        PostEntity post = em.find(PostEntity.class, postId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (post != null && user != null) {
+            if (!user.getLikedPosts().contains(post) && !post.getLikers().contains(user)) {
+                user.getLikedPosts().add(post);
+                post.getLikers().add(user);
+            } else {
+                throw new DuplicateLikeException("User already liked this post");
+            }
+        } else {
+            throw new NoResultException("Post or user not found");
+        }
+    }
+
+    @Override
+    public void removeLikeForPost(Long postId, Long userId) throws NoResultException, LikeNotFoundException {
+        PostEntity post = em.find(PostEntity.class, postId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (post != null && user != null) {
+            if (user.getLikedPosts().contains(post) && post.getLikers().contains(user)) {
+                user.getLikedPosts().remove(post);
+                post.getLikers().remove(user);
+            } else {
+                throw new LikeNotFoundException("User has not liked this post");
+            }
+        } else {
+            throw new NoResultException("Post is not found");
+        }
+    }
+
+    @Override
+    public void deletePostById(Long postId) throws NoResultException {
+        PostEntity post = em.find(PostEntity.class, postId);
+
+        if (post != null) {
+            post.getPostOwner().getPosts().remove(post);
+            post.setPostOwner(null);
+            if (post.getProject() != null) {
+                post.getProject().getPosts().remove(post);
+                post.setProject(null);
+            }
+            em.remove(post);
+        } else {
+            throw new NoResultException("Post is not found");
+        }
     }
 
     @Override

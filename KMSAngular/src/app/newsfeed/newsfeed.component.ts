@@ -92,4 +92,55 @@ export class NewsfeedComponent implements OnInit {
       }
     }
   }
+
+  deletePost(postId: number) {
+    this.postService.deletePostById(postId).subscribe(() => {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Success',
+        autohide: true,
+        delay: 2500,
+        body: 'Post deleted!',
+      });
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    }, (err) => {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: err,
+      });
+    });
+  }
+
+  likePost(postId: number) {
+    this.postService.likePost(this.loggedInUser.userId, postId).subscribe(() => {
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  removeLikeForPost(postId: number) {
+    this.postService.removeLikeForPost(this.loggedInUser.userId, postId).subscribe(() => {
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  userHaveLikedPost(postId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    let index = post.likers.findIndex((user) => user.userId == this.loggedInUser.userId);
+    return index > -1;
+  }
+
+  userHaveSharedPost(postId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    let index = post.sharedPosts.findIndex((sharedPost) => sharedPost.postOwner.userId == this.loggedInUser.userId);
+    return index > -1;
+  }
 }

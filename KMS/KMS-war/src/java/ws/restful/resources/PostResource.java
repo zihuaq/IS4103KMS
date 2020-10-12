@@ -5,6 +5,8 @@
  */
 package ws.restful.resources;
 
+import Exception.DuplicateLikeException;
+import Exception.LikeNotFoundException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import ejb.session.stateless.PostSessionBeanLocal;
@@ -23,6 +25,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -84,6 +87,52 @@ public class PostResource {
         }
     }
 
+    @PUT
+    @Path("/likePost/{userId}/{postId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response likePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId) {
+        try {
+            postSessionBean.likePost(postId, userId);
+            return Response.status(204).build();
+        } catch (NoResultException | DuplicateLikeException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/removeLikeForPost/{userId}/{postId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeLikeForPost(@PathParam("userId") Long userId, @PathParam("postId") Long postId) {
+        try {
+            postSessionBean.removeLikeForPost(postId, userId);
+            return Response.status(204).build();
+        } catch (NoResultException | LikeNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @DELETE
+    @Path("/{postId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deletePost(@PathParam("postId") Long postId) {
+        try {
+            postSessionBean.deletePostById(postId);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+
+    }
+
     private List<PostEntity> getPostResponse(List<PostEntity> posts) {
         List<PostEntity> result = new ArrayList<>();
         for (int i = 0; i < posts.size(); i++) {
@@ -102,7 +151,7 @@ public class PostResource {
             List<UserEntity> likers = new ArrayList<UserEntity>();
             for (int j = 0; j < posts.get(i).getLikers().size(); j++) {
                 UserEntity liker = new UserEntity();
-                user.setUserId(posts.get(i).getLikers().get(j).getUserId());
+                liker.setUserId(posts.get(i).getLikers().get(j).getUserId());
                 likers.add(liker);
             }
             post.setLikers(likers);
@@ -113,6 +162,14 @@ public class PostResource {
                 comments.add(comment);
             }
             post.setComments(comments);
+            List<PostEntity> sharedPosts = new ArrayList<PostEntity>();
+            for (int j = 0; j < posts.get(i).getSharedPosts().size(); j++) {
+                PostEntity sharedPost = new PostEntity();
+                UserEntity postOwner = new UserEntity();
+                postOwner.setUserId(posts.get(i).getSharedPosts().get(j).getPostOwner().getUserId());
+                sharedPost.setPostOwner(postOwner);
+            }
+            post.setSharedPosts(sharedPosts);
             result.add(post);
         }
         return result;
