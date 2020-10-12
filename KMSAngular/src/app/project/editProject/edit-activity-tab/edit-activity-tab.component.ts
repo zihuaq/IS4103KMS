@@ -10,6 +10,8 @@ import { Activity } from 'src/app/classes/activity';
 import { ActivityService } from 'src/app/activity.service';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/project.service';
+import { User } from 'src/app/classes/user';
+import { SessionService } from 'src/app/session.service';
 
 declare var $: any;
 
@@ -27,10 +29,8 @@ export class EditActivityTabComponent implements OnInit {
 
   viewDate: Date = new Date();
 
-  modalData: {
-    action: string;
-    event: CalendarEvent;
-  };
+  startDate: string;
+  endDate: string;
 
   refresh: Subject<any> = new Subject();
 
@@ -38,50 +38,90 @@ export class EditActivityTabComponent implements OnInit {
 
   events: CalendarEvent[] = [];
 
+  actions: CalendarEventAction[] = [
+    {
+      label: '<i class="fas fa-edit"><i>',
+      a11yLabel: 'Edit',
+      onClick: ({ event }: { event: CalendarEvent }): void => {
+        console.log(event);
+        $('#modal-edit-activity').modal('show');
+      },
+    },
+    {
+      label: '<i class="fas fa-trash-alt"></i>',
+      a11yLabel: 'Delete',
+      onClick: ({ event }: { event: CalendarEvent }): void => {
+        $('#delete-activity-dialog').modal('show');
+      },
+    }
+  ];
+
   projectId: number;
   project: Project;
   newActivity: Activity;
+  activityToEdit: Activity;
   activities: Activity[];
   minDate = new Date().toISOString().slice(0, 10);
   minEndDate = new Date().toISOString().slice(0, 10);
+  ownerId: number;
+  loggedInUser: User;
 
-  constructor(private activityService: ActivityService,
+  constructor(private sessionService: SessionService,
+    private activityService: ActivityService,
     private projectService: ProjectService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private datePipe: DatePipe) { 
       this.newActivity = new Activity();
+      this.activityToEdit = new Activity();
+      this.activityToEdit.joinedUsers = [];
       this.activities = [];
       this.project = new Project();
     }
 
   ngOnInit(): void {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
-
-    this.activityService.getActivitiesByProject(this.projectId, this.dateToString(this.viewDate)).subscribe(
-      response => {
-        this.activities = response;
-        for (let activity of this.activities) {
-          let event = {
-            start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
-            end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
-            title: activity.name,
-            allDay: true
-          }
-          this.events.push(event);
-        }
-        console.log(this.events);
-        this.refresh.next();
-      }
-    );
+    this.loggedInUser = this.sessionService.getCurrentUser();
+    this.refreshActivities();
 
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.project = response;
         this.newActivity = new Activity();
-        this.newActivity.country = this.project.country;
+        this.newActivity.country = this.project.country;  
+        this.ownerId = this.project.projectOwner.userId;  
       }
     );
+  }
+
+  refreshActivities() {
+    this.activityService.getActivitiesByProject(this.projectId, this.dateToString(this.viewDate)).subscribe(
+      response => {
+        this.activities = response;
+        this.events = [];
+        for (let activity of this.activities) {
+          let event = {
+            id: activity.activityId,
+            start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
+            end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
+            title: activity.name,
+            allDay: true,
+            actions: this.actions
+          }
+          this.events.push(event);
+        }
+        this.refresh.next();
+      }
+    );
+  }
+
+  isAdmin(user: User): boolean {
+    for(let member of this.project.projectAdmins) {
+      if (member.userId == user.userId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -100,42 +140,12 @@ export class EditActivityTabComponent implements OnInit {
 
   setView(view: CalendarView) {
     this.view = view;
-    this.activityService.getActivitiesByProject(this.projectId, this.dateToString(this.viewDate)).subscribe(
-      response => {
-        this.activities = response;
-        this.events = [];
-        for (let activity of this.activities) {
-          let event = {
-            start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
-            end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
-            title: activity.name,
-            allDay: true
-          }
-          this.events.push(event);
-        }
-        this.refresh.next();
-      }
-    );
+    this.refreshActivities();
   }
 
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
-    this.activityService.getActivitiesByProject(this.projectId, this.dateToString(this.viewDate)).subscribe(
-      response => {
-        this.activities = response;
-        this.events = [];
-        for (let activity of this.activities) {
-          let event = {
-            start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
-            end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
-            title: activity.name,
-            allDay: true
-          }
-          this.events.push(event);
-        }
-        this.refresh.next();
-      }
-    );
+    this.refreshActivities();
   }
 
   clickCreate() {
@@ -173,31 +183,12 @@ export class EditActivityTabComponent implements OnInit {
             delay: 2500,
             body: 'New Activity created successfully',
           });
-          this.activityService.getActivitiesByProject(this.projectId, this.dateToString(this.viewDate)).subscribe(
-            response => {
-              this.activities = response;
-              this.events = [];
-              for (let activity of this.activities) {
-                let event = {
-                  start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
-                  end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
-                  title: activity.name,
-                  allDay: true
-                }
-                this.events.push(event);
-              }
-              this.refresh.next();
-            }
-          );
+          this.refreshActivities();
         }
       );
-      $('#addActivityModalCloseBtn').click()
+      $('#addActivityModalCloseBtn').click();
     }
     
-  }
-
-  deleteActivity(eventToDelete: CalendarEvent) {
-
   }
 
   dateToString(date: Date) {
@@ -207,6 +198,101 @@ export class EditActivityTabComponent implements OnInit {
   formatDate(date: string) {
     var str = date.slice(0, date.indexOf("["));
     return str;
+  }
+
+  clickActivity(activityId: number) {
+    this.activityService.getActivityById(activityId).subscribe(
+      response => {
+        this.activityToEdit = response;
+        this.activityToEdit.startDate = new Date(this.formatDate(this.activityToEdit.startDate.toString()));
+        this.startDate = this.dateToString(this.activityToEdit.startDate);
+        this.activityToEdit.endDate = new Date(this.formatDate(this.activityToEdit.endDate.toString()));
+        this.endDate = this.dateToString(this.activityToEdit.endDate);
+      }
+    )
+  }
+
+  editActivity(updateActivityForm: NgForm) {
+    if (this.startDate > this.endDate) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: 'End Date cannot be earlier than Start Date',
+      });
+      return;
+    }
+    if (updateActivityForm.valid) {
+      this.activityToEdit.startDate = new Date(this.startDate);
+      this.activityToEdit.endDate = new Date(this.endDate);
+      this.activityService.updateActivity(this.activityToEdit).subscribe(
+        response => {
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Activity updated successfully',
+          });
+          this.refreshActivities();
+        },
+        error => {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'Error',
+            autohide: true,
+            delay: 2500,
+            body: error,
+          });
+        }
+      );
+      $('#updateActivityModalCloseBtn').click();
+    }
+  }
+
+  deleteActivity() {
+    this.activityService.deleteActivity(this.activityToEdit.activityId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Activity deleted successfully',
+        });
+        this.refreshActivities();
+        $('#updateActivityModalCloseBtn').click();
+      },
+      error => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+      }
+    );
+  }
+
+  removeMember(userId: number) {
+    this.activityService.removeMemberFromActivity(this.activityToEdit.activityId, userId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Memeber removed successfully',
+        });
+        this.activityService.getActivityById(this.activityToEdit.activityId).subscribe(
+          response => {
+            this.activityToEdit = response;
+          }
+        );
+      }
+    )
   }
 
 }

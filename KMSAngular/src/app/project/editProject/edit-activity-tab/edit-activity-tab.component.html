@@ -102,8 +102,15 @@
                     {{activity.description}}
                     </td>
                     <td>
-                        <button class="btn btn-warning"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                        <button class="btn btn-warning" data-toggle="modal" data-target="#modal-edit-activity" data-backdrop="static" (click)="clickActivity(activity.activityId)">                            
+                            <i class="fas fa-edit" data-toggle="tooltip" data-placement="top" title="Edit"></i>
+                        </button>
+                        <button class="btn btn-secondary" data-toggle="modal" data-target="#modal-users" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                            <i class="fas fa-users"></i>
+                        </button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#delete-activity-dialog" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                            <i class="fas fa-trash-alt" ></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -154,6 +161,121 @@
                     <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!newActivityForm.valid">Create</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-edit-activity">
+    <div class="modal-dialog">
+        <div class="modal-content bg-info">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Activity</h4>
+                <button type="button" id="updateActivityModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (ngSubmit)="editActivity(updateActivityForm)" #updateActivityForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" [(ngModel)]="activityToEdit.name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input id="startDate" type="date" class="form-control" name="startDate" [(ngModel)]="startDate" [min]="minDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input id="endDate" type="date" class="form-control" name="endDate" [(ngModel)]="endDate" [min]="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" class="form-control" name="country" [(ngModel)]="activityToEdit.country" required disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" class="form-control" placeholder="Enter Location" name="location" [(ngModel)]="activityToEdit.location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="activityToEdit.description" required>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!updateActivityForm.valid">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-activity-dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Delete Activity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this activity?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="delete-hrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteActivity()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-users">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Members</h4>
+                <button type="button" id="viewUserBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <span *ngIf="activityToEdit.joinedUsers.length == 0">
+                    There is currently no members joined this activity.
+                </span>
+                <span *ngIf="activityToEdit.joinedUsers">
+                    <ul class="list-group" *ngFor="let member of activityToEdit.joinedUsers">
+                        <span *ngIf="ownerId == member.userId">
+                            <li class="list-group-item" >
+                                {{member.firstName}} {{member.lastName}}
+                                <span class="badge badge-dark badge-pill">Owner</span>
+                                <span class="badge badge-primary badge-pill" *ngIf="member.userId == loggedInUser.userId">Me</span>
+                            </li>
+                        </span>
+                    </ul>
+                    <ul class="list-group" *ngFor="let member of activityToEdit.joinedUsers">
+                        <li class="list-group-item" *ngIf="isAdmin(member) && ownerId != member.userId">
+                            {{member.firstName}} {{member.lastName}}
+                            <span class="badge badge-secondary badge-pill">Admin</span>
+                            <span class="badge badge-primary badge-pill" *ngIf="member.userId == loggedInUser.userId">Me</span>
+                            <button class="btn btn-primary" *ngIf="ownerId == member.userId && member.userId != loggedInUser.userId" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>                        
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" (click)="removeMember(member.userId)">Remove</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="list-group" *ngFor="let member of activityToEdit.joinedUsers">
+                        <li class="list-group-item" *ngIf="!isAdmin(member)">
+                            {{member.firstName}} {{member.lastName}}
+                            <span class="badge badge-primary badge-pill" *ngIf="member.userId == loggedInUser.userId">Me</span>
+                            <button class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>                        
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" (click)="removeMember(member.userId)">Remove</a>
+                            </div>
+                        </li>
+                    </ul>
+                </span>                
+            </div>
         </div>
     </div>
 </div>

@@ -22,6 +22,12 @@ export class ActivityService {
     return this.httpClient.get<any>(this.baseUrl+"/getActivitiesByProject/" + projectId + "/" + dateString).pipe();
   }
 
+  getActivityById(activityId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl+ "/getActivityById/" + activityId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   createNewActivity(newActivity: Activity, projectId): Observable<any> {
     let createActivityReq = {
       "newActivity" : newActivity,
@@ -29,6 +35,30 @@ export class ActivityService {
     }
 
     return this.httpClient.put<any>(this.baseUrl+"/createNewActivity", createActivityReq, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateActivity(activityToUpdate: Activity): Observable<any> {
+    return this.httpClient.post<any>(this.baseUrl+"/updateActivity", activityToUpdate, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteActivity(activityId: number):Observable<any> {
+    return this.httpClient.delete<any>(this.baseUrl+"/deleteActivity/" + activityId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addMemberToActivity(activityId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/addMemberToActivity/" + activityId + "/" + userId, null, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  removeMemberFromActivity(activityId: number, userId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/removeMemberFromActivity/" + activityId + "/" + userId, null, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
