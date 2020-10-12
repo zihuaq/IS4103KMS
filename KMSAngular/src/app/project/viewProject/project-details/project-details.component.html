@@ -74,12 +74,12 @@
                 </div>
                 <div class="card-body" id="custom-tabs-four-tabContent">
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel" style="position: relative;">
                             <p><b>Description:</b> {{projectToView.description}}</p>
                             <p><b>Country:</b> {{projectToView.country}}</p>
-                            <p><b>Date created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
-                            <p><b>Monetary Funding Required:</b> ${{projectToView.monetaryFundingRequired}}</p>
-                            <p><b>Monetary Funding Obtained:</b> ${{projectToView.monetaryFundingObtained}}</p>
+                            <button *ngIf="projectToView.monetaryFundingRequired && isMember" type="button" class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;" [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project</button>
+                            <p><b>Date Created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
+                            <p *ngIf="projectToView.monetaryFundingRequired"><b>Monetary Funding (USD):</b> ${{projectToView.monetaryFundingObtained | number:'1.0'}} obtained / ${{projectToView.monetaryFundingRequired | number:'1.0'}} required</p>
                             <p><b>SDGs: </b> 
                                 <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary" style="margin-right: 5px;">
                                     {{tag.name}}

@@ -1,0 +1,55 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Donate to Project: {{projectToDonate.name}}</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item">Project</li>
+            <li class="breadcrumb-item active">Donate</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+        <!-- general form elements -->
+        <div class="card card-default" style="width: 50%;">
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form role="form">
+            <div class="card-body">
+              <div class="form-group">
+                  <label for="donationAmount">Amount (USD)</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input name="donation" type="number" class="form-control" id="donationAmount" [(ngModel)]="donationAmount" placeholder="Enter Amount" [max]="projectToDonate.monetaryFundingRequired">
+                </div>
+                <div class="text-muted">Project's Funding Needed: ${{(projectToDonate.monetaryFundingRequired - projectToDonate.monetaryFundingObtained) | number:'1.0'}}</div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <div id="paypal-checkout-btn"></div>
+            </div>
+            
+        </form>
+        </div>
+        <!-- /.card -->
+    </div>
+    
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

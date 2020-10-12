@@ -83,6 +83,8 @@ public class HrpResource {
                 hrp.getProject().getTasks().clear();
                 hrp.getProject().getPosts().clear();
                 hrp.getProject().getSdgs().clear();
+                hrp.getProject().getReviews().clear();
+                hrp.getProject().getDonations().clear();
             }
             if (hrp.getActivity() != null) {
                 hrp.getActivity().getHumanResourcePostings().clear();
@@ -110,6 +112,7 @@ public class HrpResource {
                     appliedUser.getFollowRequestReceived().clear();
                     appliedUser.getHrpApplied().clear();
                     appliedUser.getFulfillments().clear();
+                    appliedUser.getDonations().clear();
                 }
             }
             

@@ -116,6 +116,7 @@ public class GroupResource {
         group.getGroupOwner().getFollowRequestReceived().clear();
         group.getGroupOwner().getHrpApplied().clear();
         group.getGroupOwner().getFulfillments().clear();
+        group.getGroupOwner().getDonations().clear();
         for (UserEntity member : group.getGroupMembers()) {
             member.getGroupsOwned().clear();
             member.getReviewsGiven().clear();
@@ -135,6 +136,7 @@ public class GroupResource {
             member.getFollowRequestReceived().clear();
             member.getHrpApplied().clear();
             member.getFulfillments().clear();
+            member.getDonations().clear();
         }
         for (UserEntity admin : group.getGroupAdmins()) {
             admin.getGroupsOwned().clear();
@@ -155,6 +157,7 @@ public class GroupResource {
             admin.getFollowRequestReceived().clear();
             admin.getHrpApplied().clear();
             admin.getFulfillments().clear();
+            admin.getDonations().clear();
         }
         
 //        for (PostEntity post : group.getPosts()) {

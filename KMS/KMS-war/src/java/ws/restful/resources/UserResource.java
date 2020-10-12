@@ -369,6 +369,7 @@ public class UserResource {
                 }
             }
             user.getActivityJoined().clear();
+            user.getDonations().clear();
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -459,6 +460,7 @@ public class UserResource {
             user.getFulfillments().clear();
             user.setPassword("");
             user.getActivityJoined().clear();
+            user.getDonations().clear();
             
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
@@ -980,6 +982,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsOwned).build();
             
@@ -1005,6 +1009,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsJoined).build();
             
@@ -1030,6 +1036,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsManaged).build();
             

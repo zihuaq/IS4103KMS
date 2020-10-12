@@ -60,6 +60,12 @@ public class ProjectEntity implements Serializable {
     @Lob
     private String profilePicture;
     
+    private Double monetaryFundingRequired;
+    
+    private Double monetaryFundingObtained;
+    
+    private String paypalMerchantId;
+    
     @ManyToOne
     private UserEntity projectOwner;
 
@@ -70,9 +76,6 @@ public class ProjectEntity implements Serializable {
     @JoinTable(name = "projectAdmins")
     @ManyToMany(mappedBy="projectsManaged")
     private List<UserEntity> projectAdmins;
-    
-    private Double monetaryFundingRequired;
-    private Double monetaryFundingObtained;
     
     @OneToMany(mappedBy = "project")
     private List<ActivityEntity> activities;
@@ -95,7 +98,8 @@ public class ProjectEntity implements Serializable {
     @OneToMany(mappedBy = "project")
     private List<ReviewEntity> reviews;
 
-
+    @OneToMany(mappedBy = "project")
+    private List<DonationEntity> donations;
 
     public ProjectEntity() {
         this.projectMembers = new ArrayList<>();
@@ -108,17 +112,19 @@ public class ProjectEntity implements Serializable {
         this.status = ProjectStatusEnum.ACTIVE;
         this.monetaryFundingObtained = 0.0;
         this.sdgs = new ArrayList<>();
+        this.donations = new ArrayList<>();
     }
 
-    public ProjectEntity(String name, String description, Date startDate, String country, String profilePicture, Double monetaryFundingRequired) {
+    public ProjectEntity(String name, String description, Date dateCreated, String country, String profilePicture, Double monetaryFundingRequired, String paypalMerchantId) {
         this();
         this.name = name;
         this.description = description;
-        this.dateCreated = startDate;
+        this.dateCreated = dateCreated;
         this.country = country;
         this.profilePicture = profilePicture;
         this.monetaryFundingRequired = monetaryFundingRequired;
-    } 
+        this.paypalMerchantId = paypalMerchantId;
+    }
 
     public Long getProjectId() {
         return projectId;
@@ -297,6 +303,22 @@ public class ProjectEntity implements Serializable {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<DonationEntity> getDonations() {
+        return donations;
+    }
+
+    public void setDonations(List<DonationEntity> donations) {
+        this.donations = donations;
+    }
+
+    public String getPaypalMerchantId() {
+        return paypalMerchantId;
+    }
+
+    public void setPaypalMerchantId(String paypalMerchantId) {
+        this.paypalMerchantId = paypalMerchantId;
     }
     
 }

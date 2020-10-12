@@ -60,6 +60,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { EditActivityTabComponent } from './project/editProject/edit-activity-tab/edit-activity-tab.component';
 import { DatePipe } from '@angular/common';
+import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import { DatePipe } from '@angular/common';
     JobAppliedComponent,
     MyFulfillmentsComponent,
     ActivityTabComponent,
-    EditActivityTabComponent
+    EditActivityTabComponent,
+    DonateToProjectComponent
   ],
   imports: [
     BrowserModule,

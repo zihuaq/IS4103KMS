@@ -82,6 +82,8 @@ public class MrpResource {
             mrp.getProject().getTasks().clear();
             mrp.getProject().getPosts().clear();
             mrp.getProject().getSdgs().clear();
+            mrp.getProject().getReviews().clear();
+            mrp.getProject().getDonations().clear();
             mrp.getFulfillments().clear();
             if (mrp.getActivity() != null) {
                mrp.getActivity().getHumanResourcePostings().clear();

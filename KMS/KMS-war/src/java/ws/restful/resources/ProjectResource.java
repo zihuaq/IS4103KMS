@@ -12,6 +12,7 @@ import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import entity.ActivityEntity;
+import entity.DonationEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
@@ -85,6 +86,8 @@ public class ProjectResource {
             p.getMaterialResourcePostings().clear();
             p.getTasks().clear();
             p.getPosts().clear();
+            p.getReviews().clear();
+            p.getDonations().clear();
         }
         return Response.status(Status.OK).entity(new RetrieveAllProjectRsp(projects)).build();
     }
@@ -121,79 +124,66 @@ public class ProjectResource {
         System.out.println("******** ProjectResource: getProject()");
         try {
             ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
-            project.getProjectOwner().setReviewsGiven(new ArrayList<>());
-            project.getProjectOwner().setReviewsReceived(new ArrayList<>());
-            project.getProjectOwner().setProjectsOwned(new ArrayList<>());
-            project.getProjectOwner().setProjectsJoined(new ArrayList<>());
-            project.getProjectOwner().setProjectsManaged(new ArrayList<>());
-            project.getProjectOwner().setPosts(new ArrayList<>());
-            project.getProjectOwner().setGroupsOwned(new ArrayList<>());
-            project.getProjectOwner().setGroupsJoined(new ArrayList<>());
-            project.getProjectOwner().setGroupAdmins(new ArrayList<>());
-            project.getProjectOwner().setBadges(new ArrayList<>());
-            project.getProjectOwner().setMras(new ArrayList<>());
-            project.getProjectOwner().setSkills(new ArrayList<>());
-            project.getProjectOwner().setFollowing(new ArrayList<>());
-            project.getProjectOwner().setFollowers(new ArrayList<>());
-            project.getProjectOwner().setSdgs(new ArrayList<>());
-            project.getProjectOwner().setFollowRequestMade(new ArrayList<>());
-            project.getProjectOwner().setFollowRequestReceived(new ArrayList<>());
-            project.getProjectOwner().setAffiliatedUsers(new ArrayList<>());
-            project.getProjectOwner().setAffiliationRequestMade(new ArrayList<>());
-            project.getProjectOwner().setAffiliationRequestReceived(new ArrayList<>());
-            project.getProjectOwner().setHrpApplied(new ArrayList<>());
-            project.getProjectOwner().setFulfillments(new ArrayList<>());
-            project.getProjectOwner().setActivityJoined(new ArrayList<>());
-            
+            project.getProjectOwner().getGroupsOwned().clear();
+            project.getProjectOwner().getReviewsGiven().clear();
+            project.getProjectOwner().getReviewsReceived().clear();
+            project.getProjectOwner().getProjectsOwned().clear();
+            project.getProjectOwner().getProjectsJoined().clear();
+            project.getProjectOwner().getProjectsManaged().clear();
+            project.getProjectOwner().getGroupsJoined().clear();
+            project.getProjectOwner().getPosts().clear();
+            project.getProjectOwner().getBadges().clear();
+            project.getProjectOwner().getMras().clear();
+            project.getProjectOwner().getSkills().clear();
+            project.getProjectOwner().getFollowers().clear();
+            project.getProjectOwner().getFollowing().clear();
+            project.getProjectOwner().getSdgs().clear();
+            project.getProjectOwner().getFollowRequestMade().clear();
+            project.getProjectOwner().getFollowRequestReceived().clear();
+            project.getProjectOwner().getHrpApplied().clear();
+            project.getProjectOwner().getFulfillments().clear();
+            project.getProjectOwner().getDonations().clear();
             for (UserEntity member : project.getProjectMembers()) {
-                member.setReviewsGiven(new ArrayList<>());
-                member.setReviewsReceived(new ArrayList<>());
-                member.setProjectsOwned(new ArrayList<>());
-                member.setProjectsJoined(new ArrayList<>());
-                member.setProjectsManaged(new ArrayList<>());
-                member.setPosts(new ArrayList<>());
-                member.setGroupsOwned(new ArrayList<>());
-                member.setGroupsJoined(new ArrayList<>());
-                member.setGroupAdmins(new ArrayList<>());
-                member.setBadges(new ArrayList<>());
-                member.setMras(new ArrayList<>());
-                member.setSkills(new ArrayList<>());
-                member.setFollowing(new ArrayList<>());
-                member.setFollowers(new ArrayList<>());
-                member.setSdgs(new ArrayList<>());
-                member.setFollowRequestMade(new ArrayList<>());
-                member.setFollowRequestReceived(new ArrayList<>());
-                member.setAffiliatedUsers(new ArrayList<>());
-                member.setAffiliationRequestMade(new ArrayList<>());
-                member.setAffiliationRequestReceived(new ArrayList<>());
-                member.setHrpApplied(new ArrayList<>());
-                member.setFulfillments(new ArrayList<>());
-                member.setActivityJoined(new ArrayList<>());
+                member.getGroupsOwned().clear();
+                member.getReviewsGiven().clear();
+                member.getReviewsReceived().clear();
+                member.getProjectsOwned().clear();
+                member.getProjectsJoined().clear();
+                member.getProjectsManaged().clear();
+                member.getGroupsJoined().clear();
+                member.getPosts().clear();
+                member.getBadges().clear();
+                member.getMras().clear();
+                member.getSkills().clear();
+                member.getFollowers().clear();
+                member.getFollowing().clear();
+                member.getSdgs().clear();
+                member.getFollowRequestMade().clear();
+                member.getFollowRequestReceived().clear();
+                member.getHrpApplied().clear();
+                member.getFulfillments().clear();
+                member.getDonations().clear();
             }
             for (UserEntity admin : project.getProjectAdmins()) {
-                admin.setReviewsGiven(new ArrayList<>());
-                admin.setReviewsReceived(new ArrayList<>());
-                admin.setProjectsOwned(new ArrayList<>());
-                admin.setProjectsJoined(new ArrayList<>());
-                admin.setProjectsManaged(new ArrayList<>());
-                admin.setPosts(new ArrayList<>());
-                admin.setGroupsOwned(new ArrayList<>());
-                admin.setGroupsJoined(new ArrayList<>());
-                admin.setGroupAdmins(new ArrayList<>());
-                admin.setBadges(new ArrayList<>());
-                admin.setMras(new ArrayList<>());
-                admin.setSkills(new ArrayList<>());
-                admin.setFollowing(new ArrayList<>());
-                admin.setFollowers(new ArrayList<>());
-                admin.setSdgs(new ArrayList<>());
-                admin.setFollowRequestMade(new ArrayList<>());
-                admin.setFollowRequestReceived(new ArrayList<>());
-                admin.setAffiliatedUsers(new ArrayList<>());
-                admin.setAffiliationRequestMade(new ArrayList<>());
-                admin.setAffiliationRequestReceived(new ArrayList<>());
-                admin.setHrpApplied(new ArrayList<>());
-                admin.setFulfillments(new ArrayList<>());
-                admin.setActivityJoined(new ArrayList<>());
+                admin.getGroupsOwned().clear();
+                admin.getReviewsGiven().clear();
+                admin.getReviewsReceived().clear();
+                admin.getProjectsOwned().clear();
+                admin.getProjectsJoined().clear();
+                admin.getProjectsManaged().clear();
+                admin.getGroupsJoined().clear();
+                admin.getPosts().clear();
+                admin.getBadges().clear();
+                admin.getMras().clear();
+                admin.getSkills().clear();
+                admin.getFollowers().clear();
+                admin.getFollowing().clear();
+                admin.getSdgs().clear();
+                admin.getFollowRequestMade().clear();
+                admin.getFollowRequestReceived().clear();
+                admin.getHrpApplied().clear();
+                admin.getFulfillments().clear();
+                admin.getDonations().clear();
             }
             for (ActivityEntity ae : project.getActivities()) {
                 ae.setProject(null);
@@ -217,6 +207,14 @@ public class ProjectResource {
             for (PostEntity post : project.getPosts()) {
                 post.setPostOwner(null);
                 post.setProject(null);
+            }
+            for (ReviewEntity review: project.getReviews()) {
+                review.setProject(null);
+                review.setFrom(null);
+                review.setTo(null);
+            }
+            for (DonationEntity donation: project.getDonations()) {
+                donation.setProject(null);
             }
             return Response.status(Status.OK).entity(project).build();
         } catch (NoResultException ex) {
