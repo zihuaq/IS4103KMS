@@ -31,7 +31,7 @@ export class ProjectDetailsComponent implements OnInit {
   selectedProfilePicture: string | ArrayBuffer;
   selectedProfilePictureName: string;
   noOfMembers: number;
-  currencySymbol: string;
+  //currencySymbol: string;
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
@@ -71,8 +71,8 @@ export class ProjectDetailsComponent implements OnInit {
           }
         }
         this.dateCreated = this.projectToView.dateCreated.toString().substring(0,10);
-        var getSymbolFromCurrency = require('currency-symbol-map')
-        this.currencySymbol = getSymbolFromCurrency(this.projectToView.currency);
+        // var getSymbolFromCurrency = require('currency-symbol-map')
+        // this.currencySymbol = getSymbolFromCurrency(this.projectToView.currency);
       }, 
       error => {
         $(document).Toasts('create', {

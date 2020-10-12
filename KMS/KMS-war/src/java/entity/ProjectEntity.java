@@ -64,8 +64,6 @@ public class ProjectEntity implements Serializable {
     
     private Double monetaryFundingObtained;
     
-    private String currency;
-    
     private String paypalMerchantId;
     
     @ManyToOne
@@ -117,7 +115,7 @@ public class ProjectEntity implements Serializable {
         this.donations = new ArrayList<>();
     }
 
-    public ProjectEntity(String name, String description, Date dateCreated, String country, String profilePicture, Double monetaryFundingRequired, String currency, String paypalMerchantId) {
+    public ProjectEntity(String name, String description, Date dateCreated, String country, String profilePicture, Double monetaryFundingRequired, String paypalMerchantId) {
         this();
         this.name = name;
         this.description = description;
@@ -125,7 +123,6 @@ public class ProjectEntity implements Serializable {
         this.country = country;
         this.profilePicture = profilePicture;
         this.monetaryFundingRequired = monetaryFundingRequired;
-        this.currency = currency;
         this.paypalMerchantId = paypalMerchantId;
     }
 
@@ -314,14 +311,6 @@ public class ProjectEntity implements Serializable {
 
     public void setDonations(List<DonationEntity> donations) {
         this.donations = donations;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public String getPaypalMerchantId() {

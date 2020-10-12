@@ -18,7 +18,6 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
   addScript: boolean = false;
 
   newDonation: Donation;
-  codes: string[];
   selectedCurrency: string = "USD";
   currencySymbol: string = "$";
   donationAmount: number;
@@ -28,61 +27,61 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
     private sessionService: SessionService,
     private router: Router) {
       this.newDonation = new Donation();
-     }
+    }
 
   ngOnInit(): void {
     this.checkAccessRight();
  
     //var cc = require('currency-codes');
-    var cc = [
-      {id: 'AUD', text: 'Australian Dollar (AUD)'},
-      {id: 'BRL', text: 'Brazilian Real (BRL)'},
-      {id: 'CAD', text: 'Canadian Dollar (CAD)'},
-      {id: 'CNY', text: 'Chinese Renmenbi (CNY)'},
-      {id: 'CZK', text: 'Czech Koruna (CZK)'},
-      {id: 'DKK', text: 'Danish Krone (DKK)'},
-      {id: 'EUR', text: 'Euro (EUR)'},
-      {id: 'HKD', text: 'Hong Kong Dollar (HKD)'},
-      {id: 'HUF', text: 'Hungarian Forint (HUF)'},
-      {id: 'INR', text: 'Indian Rupee (INR)'},
-      {id: 'ILS', text: 'Israeli New Shekel (ILS)'},
-      {id: 'JPY', text: 'Japanese Yen (JPY)'},
-      {id: 'MYR', text: 'Malaysian Ringgit (MYR)'},
-      {id: 'MXN', text: 'Mexican Peso (MXN)'},
-      {id: 'TWD', text: 'New Taiwan Dollar (TWD)'},
-      {id: 'NZD', text: 'New Zealand Dollar (NZD)'},
-      {id: 'NOK', text: 'Norwegian Krone (NOK)'},
-      {id: 'PHP', text: 'Philippine Peso (PHP)'},
-      {id: 'PLN', text: 'Polish Złoty (PLN)'},
-      {id: 'GBP', text: 'Pound Sterling (GBP)'},
-      {id: 'RUB', text: 'Russian Ruble (RUB)'},
-      {id: 'SGD', text: 'Singapore Dollar (SGD)'},
-      {id: 'SEK', text: 'Swedish Krona (SEK)'},
-      {id: 'CHF', text: 'Swiss Franc (CHF)'},
-      {id: 'THB', text: 'Thai Baht (THB)'},
-      {id: 'USD', text: 'United States Dollar (USD)'},
-    ];
-    $('.ccselect2').select2({
-      data: cc,
-      allowClear: true,
-      theme: "classic"
-    });
-    $('.ccselect2').val(this.selectedCurrency).trigger('change');
+    // var cc = [
+    //   {id: 'AUD', text: 'Australian Dollar (AUD)'},
+    //   {id: 'BRL', text: 'Brazilian Real (BRL)'},
+    //   {id: 'CAD', text: 'Canadian Dollar (CAD)'},
+    //   {id: 'CNY', text: 'Chinese Renmenbi (CNY)'},
+    //   {id: 'CZK', text: 'Czech Koruna (CZK)'},
+    //   {id: 'DKK', text: 'Danish Krone (DKK)'},
+    //   {id: 'EUR', text: 'Euro (EUR)'},
+    //   {id: 'HKD', text: 'Hong Kong Dollar (HKD)'},
+    //   {id: 'HUF', text: 'Hungarian Forint (HUF)'},
+    //   {id: 'INR', text: 'Indian Rupee (INR)'},
+    //   {id: 'ILS', text: 'Israeli New Shekel (ILS)'},
+    //   {id: 'JPY', text: 'Japanese Yen (JPY)'},
+    //   {id: 'MYR', text: 'Malaysian Ringgit (MYR)'},
+    //   {id: 'MXN', text: 'Mexican Peso (MXN)'},
+    //   {id: 'TWD', text: 'New Taiwan Dollar (TWD)'},
+    //   {id: 'NZD', text: 'New Zealand Dollar (NZD)'},
+    //   {id: 'NOK', text: 'Norwegian Krone (NOK)'},
+    //   {id: 'PHP', text: 'Philippine Peso (PHP)'},
+    //   {id: 'PLN', text: 'Polish Złoty (PLN)'},
+    //   {id: 'GBP', text: 'Pound Sterling (GBP)'},
+    //   {id: 'RUB', text: 'Russian Ruble (RUB)'},
+    //   {id: 'SGD', text: 'Singapore Dollar (SGD)'},
+    //   {id: 'SEK', text: 'Swedish Krona (SEK)'},
+    //   {id: 'CHF', text: 'Swiss Franc (CHF)'},
+    //   {id: 'THB', text: 'Thai Baht (THB)'},
+    //   {id: 'USD', text: 'United States Dollar (USD)'},
+    // ];
+    // $('.ccselect2').select2({
+    //   data: cc,
+    //   allowClear: true,
+    //   theme: "classic"
+    // });
+    // $('.ccselect2').val(this.selectedCurrency).trigger('change');
 
-    $('.ccselect2').on('select2:select', () => {
-      this.selectedCurrency = $('.ccselect2').val();
-      console.log(this.selectedCurrency);
-      this.addPaypalScript().then(() => {
-        paypal.Buttons(this.paypalConfig).render('#paypal-checkout-btn');
-      });
-      var getSymbolFromCurrency = require('currency-symbol-map')
-      this.currencySymbol = getSymbolFromCurrency(this.selectedCurrency);
-      if(this.selectedCurrency == "HUF" || this.selectedCurrency == "JPY" || this.selectedCurrency == "TWD") {
-        this.noDecimal = true;
-      } else {
-        this.noDecimal = false;
-      }
-    });
+    // $('.ccselect2').on('select2:select', () => {
+    //   this.selectedCurrency = $('.ccselect2').val();
+    //   console.log(this.selectedCurrency);
+    //   this.addPaypalScript().then(() => {
+    //     paypal.Buttons(this.paypalConfig).render('#paypal-checkout-btn');
+    //   });
+    //   var getSymbolFromCurrency = require('currency-symbol-map')
+    //   this.currencySymbol = getSymbolFromCurrency(this.selectedCurrency);
+    //   if(this.selectedCurrency == "HUF" || this.selectedCurrency == "JPY" || this.selectedCurrency == "TWD") {
+    //     this.noDecimal = true;
+    //   } else {
+    //     this.noDecimal = false;
+    //   }
+    // });
   }
 
   paypalConfig = {
@@ -114,7 +113,7 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
         return actions.order.create({
           purchase_units: [{
             amount: {
-              currency_code: this.selectedCurrency,
+              //currency_code: this.selectedCurrency,
               value: this.donationAmount
             }
           }]
@@ -130,6 +129,8 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
         this.newDonation.dateDonated = new Date(details.create_time);
         this.newDonation.amount = details.purchase_units[0].amount.value;
         this.newDonation.currency = details.purchase_units[0].amount.currency_code;
+        console.log(details);
+        //console.log(details.purchase_units[0].payments.captures)
         //console.log("Seller Receivable Breakdown:" + details.purchase_units[0].payments.captures[0].seller_receivable_breakdown);
         //console.log("Currency(Net):" + details.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount.currency_code);
         //console.log("Currency(Receivable):" + details.purchase_units[0].payments.captures[0].seller_receivable_breakdown.receivable_amount.currency_code);
@@ -151,12 +152,19 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
     },
 
     onError: (err) => {
+      // $(document).Toasts('create', {
+      //   class: 'bg-warning',
+      //   title: 'Unsupported Currency',
+      //   autohide: true,
+      //   delay: 4000,
+      //   body: 'Selected currency is not accepted by the platform\'s PayPal account',
+      // });
       $(document).Toasts('create', {
         class: 'bg-warning',
-        title: 'Unsupported Currency',
+        title: 'Donation Unsuccessful',
         autohide: true,
         delay: 4000,
-        body: 'Selected currency is not accepted by the platform\'s PayPal account',
+        body: 'An error occurred during donation',
       });
       console.log(err);
     }
@@ -174,14 +182,14 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
     this.addScript = true;
     return new Promise((resolve, reject) => {
       let scripttagElement = document.createElement('script'); //<script src=""></script>
-      scripttagElement.src = 'https://www.paypal.com/sdk/js?client-id=AUYlN1aHUFhSZ6teqyLKngzQ9-bpmRoHAa1CQB1Lsp9oZwKEQ20z7yfzuKi95nRrpTG7CsJwC_p2FVTm&currency=' + this.selectedCurrency;
+      scripttagElement.src = 'https://www.paypal.com/sdk/js?client-id=AUYlN1aHUFhSZ6teqyLKngzQ9-bpmRoHAa1CQB1Lsp9oZwKEQ20z7yfzuKi95nRrpTG7CsJwC_p2FVTm';
+      //scripttagElement.src = 'https://www.paypal.com/sdk/js?client-id=AUYlN1aHUFhSZ6teqyLKngzQ9-bpmRoHAa1CQB1Lsp9oZwKEQ20z7yfzuKi95nRrpTG7CsJwC_p2FVTm&currency=' + this.selectedCurrency;
       scripttagElement.onload = resolve;
       document.body.appendChild(scripttagElement); 
     })
   }
 
   onSelect() {
-    console.log("*******onSelect()")
     this.addPaypalScript().then(() => {
       paypal.Buttons(this.paypalConfig).render('#paypal-checkout-btn');
     })
