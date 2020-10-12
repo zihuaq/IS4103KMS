@@ -77,7 +77,7 @@
                 <th>Country</th>
                 <th>Location</th>
                 <th>Description</th>
-                <th>Action</th>
+                <th *ngIf="isMember">Action</th>
             </thead>
     
             <tbody>
@@ -100,7 +100,7 @@
                     <td>
                     {{activity.description}}
                     </td>
-                    <td>
+                    <td *ngIf="isMember">
                         <button class="btn btn-primary" *ngIf="!hasJoined(activity.activityId)" (click)="joinActivity(activity.activityId)">Join</button>
                         <button class="btn btn-light" *ngIf="hasJoined(activity.activityId)" disabled>Joined</button>
                         <button class="btn btn-primary" *ngIf="hasJoined(activity.activityId)" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>                        

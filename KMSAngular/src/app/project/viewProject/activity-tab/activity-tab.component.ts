@@ -8,6 +8,8 @@ import { DatePipe } from '@angular/common';
 import { Activity } from 'src/app/classes/activity';
 import { ActivityService } from 'src/app/activity.service';
 import { SessionService } from 'src/app/session.service';
+import { Project } from 'src/app/classes/project';
+import { ProjectService } from 'src/app/project.service';
 
 declare var $: any;
 
@@ -38,8 +40,11 @@ export class ActivityTabComponent implements OnInit {
 
   projectId: number;
   activities: Activity[];
+  isMember: boolean = false;
+  project: Project;
 
-  constructor(private activityService: ActivityService,
+  constructor(private projectService: ProjectService,
+    private activityService: ActivityService,
     private sessionService: SessionService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -49,6 +54,20 @@ export class ActivityTabComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+
+    this.projectService.getProjectById(this.projectId).subscribe(
+      response => {
+        this.project = response;
+        for (let member of this.project.projectMembers) {
+          if (this.sessionService.getCurrentUser().userId == member.userId) {
+            this.isMember = true;
+          }
+        }
+      }, 
+      error => {
+        this.router.navigate(["/error"]);
+      }
+    );
 
     this.refreshActivities();
   }
