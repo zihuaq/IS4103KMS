@@ -4,7 +4,7 @@
             <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
                 Previous
             </div>
-            <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+            <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
                 Today
             </div>
             <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
@@ -15,7 +15,7 @@
     <div class="col-sm-4">
         <h3>{{ viewDate | date:'MMMM yyyy' }}</h3>
     </div>
-    <div class="col-sm-4">
+    <!-- <div class="col-sm-4">
         <div class="btn-group">
             <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
                 Month
@@ -27,7 +27,7 @@
                 Day
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <div [ngSwitch]="view">
@@ -54,4 +54,62 @@
       [refresh]="refresh"
     >
     </mwl-calendar-day-view>
-  </div>
+</div>
+
+<br/><br/><br/>
+
+<h3>
+    Activities
+    <div class="clearfix"></div>
+</h3>
+
+<span *ngIf="activities.length == 0">
+    No activities
+</span>
+
+<span *ngIf="activities.length > 0">
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <th>Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Country</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Action</th>
+            </thead>
+    
+            <tbody>
+                <tr *ngFor="let activity of activities">
+                    <td>
+                    {{activity.name}}
+                    </td>
+                    <td>
+                    {{formatDate(activity.startDate) | date}}
+                    </td>
+                    <td>
+                    {{formatDate(activity.endDate) | date}}
+                    </td>
+                    <td>
+                    {{activity.country}}
+                    </td>
+                    <td>
+                    {{activity.location}}
+                    </td>
+                    <td>
+                    {{activity.description}}
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" *ngIf="!hasJoined(activity.activityId)" (click)="joinActivity(activity.activityId)">Join</button>
+                        <button class="btn btn-light" *ngIf="hasJoined(activity.activityId)" disabled>Joined</button>
+                        <button class="btn btn-primary" *ngIf="hasJoined(activity.activityId)" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>                        
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" (click)="leaveActivity(activity.activityId)">Leave</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</span>

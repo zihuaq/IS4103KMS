@@ -7,6 +7,9 @@ import { DatePipe } from '@angular/common';
 
 import { Activity } from 'src/app/classes/activity';
 import { ActivityService } from 'src/app/activity.service';
+import { SessionService } from 'src/app/session.service';
+
+declare var $: any;
 
 @Component({
   selector: 'app-activity-tab',
@@ -37,6 +40,7 @@ export class ActivityTabComponent implements OnInit {
   activities: Activity[];
 
   constructor(private activityService: ActivityService,
+    private sessionService: SessionService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private datePipe: DatePipe) {
@@ -46,9 +50,14 @@ export class ActivityTabComponent implements OnInit {
   ngOnInit(): void {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
 
+    this.refreshActivities();
+  }
+
+  refreshActivities() {
     this.activityService.getActivitiesByProject(this.projectId, this.dateToString(this.viewDate)).subscribe(
       response => {
         this.activities = response;
+        this.events = [];
         for (let activity of this.activities) {
           let event = {
             start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
@@ -58,7 +67,6 @@ export class ActivityTabComponent implements OnInit {
           }
           this.events.push(event);
         }
-        console.log(this.events);
         this.refresh.next();
       }
     );
@@ -80,10 +88,12 @@ export class ActivityTabComponent implements OnInit {
 
   setView(view: CalendarView) {
     this.view = view;
+    this.refreshActivities();
   }
 
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
+    this.refreshActivities();
   }
 
   dateToString(date: Date) {
@@ -93,6 +103,49 @@ export class ActivityTabComponent implements OnInit {
   formatDate(date: string) {
     var str = date.slice(0, date.indexOf("["));
     return str;
+  }
+
+  hasJoined(activityId: number): boolean {
+    for (let activity of this.activities) {
+      if (activity.activityId === activityId) {
+        for (let user of activity.joinedUsers) {
+          if (user.userId === this.sessionService.getCurrentUser().userId) {
+            return true;
+          }
+        }       
+      }
+    }
+    return false;
+  }
+
+  joinActivity(activityId: number) {
+    this.activityService.addMemberToActivity(activityId, this.sessionService.getCurrentUser().userId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Joined',
+        });
+        this.refreshActivities();
+      }
+    )
+  }
+
+  leaveActivity(activityId: number) {
+    this.activityService.removeMemberFromActivity(activityId, this.sessionService.getCurrentUser().userId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Left',
+        });
+        this.refreshActivities();
+      }
+    )
   }
 
 }
