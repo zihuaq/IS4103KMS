@@ -1,13 +1,67 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-searchbar routerLink="/search-users" routerDirection="forward">
-    </ion-searchbar>
-  </ion-toolbar>
+  <ion-item-divider class="ion-no-padding">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-searchbar routerLink="/search-users" routerDirection="forward">
+      </ion-searchbar>
+    </ion-toolbar>
+  </ion-item-divider>
 </ion-header>
 
 <ion-content>
+  <ion-item-divider class="ion-no-padding">
+    <ion-toolbar>
+      <ion-avatar slot="start" style="width: 40px; height: 40px;" *ngIf="loggedInUser" class="ion-margin-start">
+        <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
+          alt="User profile picture">
+        <img *ngIf="!loggedInUser.profilePicture" class="ion-border"
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          alt="User profile picture">
+      </ion-avatar>
+      <ion-button [routerLink]="['/create-post/user']" fill="outline" expand="full" shape="round" color="medium"
+        class="ion-margin" size="default">
+        <span style="margin-right: auto; margin-top: 3px; color: black; font-size: 0.8em">What's on
+          your
+          mind?</span>
+      </ion-button>
+    </ion-toolbar>
+  </ion-item-divider>
+  <ion-card *ngFor="let post of newsfeedPosts">
+    <ion-item lines="none">
+      <ion-avatar slot="start" class="ion-margin-start">
+        <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
+          alt="User profile picture">
+        <img *ngIf="!loggedInUser.profilePicture" class="ion-border"
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          alt="User profile picture">
+      </ion-avatar>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12">
+            <ion-card-title>{{loggedInUser.firstName}} {{loggedInUser.lastName}}</ion-card-title>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-card-subtitle>{{post.postDate | date}}</ion-card-subtitle>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-icon name="ellipsis-horizontal-outline" slot="end" (click)="postActionSheet()"></ion-icon>
+    </ion-item>
+    <ion-card-content>
+      {{post.text}}
+    </ion-card-content>
+    <img [src]="post.picture" *ngIf="post.picture" />
+    <ion-item>
+      <ion-badge slot="start" class="ion-no-margin">
+        <ion-icon name="thumbs-up"></ion-icon>
+      </ion-badge>
+      <ion-label style="margin-left: 2px;">{{post.likers.length}}</ion-label>
+      <ion-label slot="end" class="ion-text-end" color="medium">{{post.comments.length}} comments</ion-label>
+    </ion-item>
+  </ion-card>
 
 </ion-content>

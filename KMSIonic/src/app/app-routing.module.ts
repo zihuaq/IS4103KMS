@@ -186,7 +186,11 @@ const routes: Routes = [
       import(
         "./pages/add-material-resource-available/add-material-resource-available.module"
       ).then((m) => m.AddMaterialResourceAvailablePageModule)
+  },  {
+    path: 'create-post',
+    loadChildren: () => import('./pages/create-post/create-post.module').then( m => m.CreatePostPageModule)
   }
+
 
 ]
 
