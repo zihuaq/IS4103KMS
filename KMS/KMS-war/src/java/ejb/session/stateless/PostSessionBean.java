@@ -9,6 +9,7 @@ import Exception.DuplicateLikeException;
 import Exception.LikeNotFoundException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.PostCommentEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.UserEntity;
@@ -126,15 +127,77 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
+    public void addCommentForPost(Long postId, PostCommentEntity comment) throws NoResultException {
+        PostEntity post = em.find(PostEntity.class, postId);
+        UserEntity user = em.find(UserEntity.class, comment.getCommentOwner().getUserId());
+
+        if (post != null && user != null) {
+            comment.setPost(post);
+            em.persist(comment);
+            em.flush();
+            post.getComments().add(comment);
+        } else {
+            throw new NoResultException("Post or comment owner not found");
+        }
+    }
+
+    @Override
+    public void likeComment(Long commentId, Long userId) throws DuplicateLikeException, NoResultException {
+        PostCommentEntity comment = em.find(PostCommentEntity.class, commentId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (comment != null && user != null) {
+            if (!comment.getLikers().contains(user)) {
+                comment.getLikers().add(user);
+            } else {
+                throw new DuplicateLikeException("User already liked this comment");
+            }
+        } else {
+            throw new NoResultException("Comment or user not found");
+        }
+    }
+
+    @Override
+    public void removeLikeForComment(Long commentId, Long userId) throws NoResultException, LikeNotFoundException {
+        PostCommentEntity comment = em.find(PostCommentEntity.class, commentId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (comment != null && user != null) {
+            if (comment.getLikers().contains(user)) {
+                comment.getLikers().remove(user);
+            } else {
+                throw new LikeNotFoundException("User has not liked this post");
+            }
+        } else {
+            throw new NoResultException("Comment or user not found");
+        }
+    }
+
+    @Override
+    public void deleteComment(Long commentId) throws NoResultException {
+        PostCommentEntity comment = em.find(PostCommentEntity.class, commentId);
+
+        if (comment != null) {
+            PostEntity post = em.find(PostEntity.class, comment.getPost().getPostId());
+            if (post != null) {
+                post.getComments().remove(comment);
+                em.remove(comment);
+            } else {
+                throw new NoResultException("Post is not found");
+            }
+        } else {
+            throw new NoResultException("Comment is not found");
+        }
+    }
+
+    @Override
     public void deletePostById(Long postId) throws NoResultException {
         PostEntity post = em.find(PostEntity.class, postId);
 
         if (post != null) {
             post.getPostOwner().getPosts().remove(post);
-            post.setPostOwner(null);
             if (post.getProject() != null) {
                 post.getProject().getPosts().remove(post);
-                post.setProject(null);
             }
             em.remove(post);
         } else {

@@ -41,9 +41,9 @@ import javax.ws.rs.core.Response;
  */
 @Path("post")
 public class PostResource {
-
+    
     PostSessionBeanLocal postSessionBean = lookupPostSessionBeanLocal();
-
+    
     @Context
     private UriInfo context;
 
@@ -52,7 +52,7 @@ public class PostResource {
      */
     public PostResource() {
     }
-
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/userNewsFeed/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -86,7 +86,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/likePost/{userId}/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/removeLikeForPost/{userId}/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -116,9 +116,71 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
+    @PUT
+    @Path("/addComment/{postId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addCommentForPost(@PathParam("postId") Long postId, PostCommentEntity comment) {
+        try {
+            postSessionBean.addCommentForPost(postId, comment);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @PUT
+    @Path("/likeComment/{userId}/{commentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response likeComment(@PathParam("userId") Long userId, @PathParam("commentId") Long commentId) {
+        try {
+            postSessionBean.likeComment(commentId, userId);
+            return Response.status(204).build();
+        } catch (NoResultException | DuplicateLikeException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @PUT
+    @Path("/removeLikeForComment/{userId}/{commentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeLikeForComment(@PathParam("userId") Long userId, @PathParam("commentId") Long commentId) {
+        try {
+            postSessionBean.removeLikeForComment(commentId, userId);
+            return Response.status(204).build();
+        } catch (NoResultException | LikeNotFoundException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
     @DELETE
-    @Path("/{postId}")
+    @Path("/comment/{commentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteComment(@PathParam("commentId") Long commentId) {
+        try {
+            postSessionBean.deleteComment(commentId);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+        
+    }
+    
+    @DELETE
+    @Path("/post/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deletePost(@PathParam("postId") Long postId) {
         try {
@@ -130,9 +192,9 @@ public class PostResource {
                     .build();
             return Response.status(404).entity(exception).build();
         }
-
+        
     }
-
+    
     private List<PostEntity> getPostResponse(List<PostEntity> posts) {
         List<PostEntity> result = new ArrayList<>();
         for (int i = 0; i < posts.size(); i++) {
@@ -159,6 +221,21 @@ public class PostResource {
             for (int j = 0; j < posts.get(i).getComments().size(); j++) {
                 PostCommentEntity comment = new PostCommentEntity();
                 comment.setPostCommentId(posts.get(i).getComments().get(j).getPostCommentId());
+                UserEntity commentOwner = new UserEntity();
+                commentOwner.setUserId(posts.get(i).getComments().get(j).getCommentOwner().getUserId());
+                commentOwner.setProfilePicture(posts.get(i).getComments().get(j).getCommentOwner().getProfilePicture());
+                commentOwner.setFirstName(posts.get(i).getComments().get(j).getCommentOwner().getFirstName());
+                commentOwner.setLastName(posts.get(i).getComments().get(j).getCommentOwner().getLastName());
+                comment.setCommentOwner(commentOwner);
+                comment.setComment(posts.get(i).getComments().get(j).getComment());
+                comment.setDateTime(posts.get(i).getComments().get(j).getDateTime());
+                List<UserEntity> commentLikers = new ArrayList<UserEntity>();
+                for (int k = 0; k < posts.get(i).getComments().get(j).getLikers().size(); k++) {
+                    UserEntity commentLiker = new UserEntity();
+                    commentLiker.setUserId(posts.get(i).getComments().get(j).getLikers().get(k).getUserId());
+                    commentLikers.add(commentLiker);
+                }
+                comment.setLikers(commentLikers);
                 comments.add(comment);
             }
             post.setComments(comments);
@@ -174,7 +251,7 @@ public class PostResource {
         }
         return result;
     }
-
+    
     private PostSessionBeanLocal lookupPostSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();

@@ -6,6 +6,7 @@ import { SessionService } from '../session.service';
 import { PostService } from '../post.service';
 import { UserService } from '../user.service';
 import { forkJoin } from 'rxjs';
+import { PostComment } from '../classes/post-comment';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -132,9 +133,72 @@ export class NewsfeedComponent implements OnInit {
     })
   }
 
+  addComment(text: string, postId: number) {
+    let comment = new PostComment();
+    let user = new User();
+    user.userId = this.loggedInUser.userId;
+    user.profilePicture = this.loggedInUser.profilePicture;
+    user.firstName = this.loggedInUser.firstName;
+    user.lastName = this.loggedInUser.lastName;
+    comment.commentOwner = user;
+    comment.comment = text;
+    comment.dateTime = new Date();
+    this.postService.addCommentForPost(postId, comment).subscribe(() => {
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  likeComment(commentId: number) {
+    this.postService.likeComment(this.loggedInUser.userId, commentId).subscribe(() => {
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  removeLikeForComment(commentId: number) {
+    this.postService.removeLikeForComment(this.loggedInUser.userId, commentId).subscribe(() => {
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  deleteComment(commentId: number) {
+    this.postService.deleteComment(commentId).subscribe(() => {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Success',
+        autohide: true,
+        delay: 2500,
+        body: 'Comment deleted!',
+      });
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    }, (err) => {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: err,
+      });
+    });
+  }
+
   userHaveLikedPost(postId: number) {
     let post = this.newsfeedPosts.find((post) => post.postId == postId);
     let index = post.likers.findIndex((user) => user.userId == this.loggedInUser.userId);
+    return index > -1;
+  }
+
+  userHaveLikedComment(postId: number, commentId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    let comment = post.comments.find((comment) => comment.postCommentId == commentId);
+    let index = comment.likers.findIndex((user) => user.userId == this.loggedInUser.userId);
     return index > -1;
   }
 
