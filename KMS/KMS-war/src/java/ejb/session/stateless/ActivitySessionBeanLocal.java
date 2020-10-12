@@ -28,7 +28,7 @@ public interface ActivitySessionBeanLocal {
 
     public void addMemberToActivity(Long activityId, Long userId) throws NoResultException;
 
-    public void removeMemberToActivity(Long activityId, Long userId) throws NoResultException;
+    public void removeMemberFromActivity(Long activityId, Long userId) throws NoResultException;
 
     public void deleteActivity(Long activityId) throws NoResultException;
         

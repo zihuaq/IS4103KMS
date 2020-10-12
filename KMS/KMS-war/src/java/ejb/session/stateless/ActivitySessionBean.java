@@ -86,12 +86,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         activity.setStartDate(activityToUpdate.getStartDate());
         activity.setEndDate(activityToUpdate.getEndDate());
         activity.setLocation(activityToUpdate.getLocation());
-        activity.setDescription(activityToUpdate.getDescription());
-        
-        activity.getProject().getActivities().remove(activity);
-        ProjectEntity project = projectSessionBeanLocal.getProjectById(activityToUpdate.getProject().getProjectId());
-        activity.setProject(project);
-        project.getActivities().add(activity);        
+        activity.setDescription(activityToUpdate.getDescription());               
     }
     
     @Override
@@ -104,7 +99,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     }
     
     @Override
-    public void removeMemberToActivity(Long activityId, Long userId) throws NoResultException {
+    public void removeMemberFromActivity(Long activityId, Long userId) throws NoResultException {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         ActivityEntity activity = getActivityById(activityId);
         
