@@ -25,6 +25,7 @@ declare var $: any;
 })
 export class ViewMrpTabComponent implements OnInit {
 
+  isMember: boolean = false;
   projectId: number;
   project: Project;
   tags: Tag[];
@@ -76,6 +77,11 @@ export class ViewMrpTabComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.project = response;
+        for (let member of this.project.projectMembers) {
+          if (this.loggedInUser.userId == member.userId) {
+            this.isMember = true;
+          }
+        }
       }, 
       error => {
         this.router.navigate(["/error"]);

@@ -8,7 +8,7 @@
     <div id="list" *ngFor="let mrp of mrpList; let i = index">
         <div class="card" style="width: 100%;">
             <div class="card-header" >
-                <div *ngIf="mrp.description" class="row">
+                <div *ngIf="mrp.description && isMember" class="row">
                     <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openMrpBody'+ i" data-toggle="collapse">
                         <h5 class="card-title" style="font-size: 20px; margin-top: 5px;"><b>{{mrp.name}}</b>
                             <br/>
@@ -19,7 +19,7 @@
                         <button type="button" class="btn bg-gradient-primary float-right" (click)="clickFulfill(mrp)" data-toggle="modal" data-target="#modal-fulfill-posting" data-backdrop="static" style="margin-top: 10px; margin-right: 10px; z-index: 10;">Fulfill</button> 
                     </div>
                 </div> 
-                <div *ngIf="!mrp.description" class="row">
+                <div *ngIf="!mrp.description && isMember" class="row">
                     <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openMrpBody'+ i" data-toggle="collapse">
                         <h5 class="card-title" style="font-size: 20px; margin-top: 10px;"><b>{{mrp.name}}</b></h5>
                     </div>
@@ -27,6 +27,14 @@
                         <button type="button" class="btn bg-gradient-primary float-right" (click)="clickFulfill(mrp)" data-toggle="modal" data-target="#modal-fulfill-posting" data-backdrop="static" style="margin-top: 5px; margin-right: 10px; z-index: 10;">Fulfill</button> 
                     </div>
                 </div>
+                <div *ngIf="!isMember" class="row">
+                    <div class="col-12" style="cursor: pointer; " [attr.data-target]="'#openMrpBody'+ i" data-toggle="collapse">
+                        <h5 class="card-title" style="font-size: 20px; margin-top: 5px;"><b>{{mrp.name}}</b>
+                            <br/>
+                            <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
+                        </h5>  
+                    </div>
+                </div> 
             </div>
             <div id="openMrpBody{{i}}" class="collapse show" data-parent="#list">
                 <div class="card-body" style="display: block;">

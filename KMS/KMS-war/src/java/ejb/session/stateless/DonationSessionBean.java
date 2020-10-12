@@ -37,8 +37,10 @@ public class DonationSessionBean implements DonationSessionBeanLocal {
         user.getDonations().add(newDonation);
         
         if (projectId != null) {
+            System.out.println("******** Donate to Project");
             ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
             
+            project.setMonetaryFundingObtained(project.getMonetaryFundingObtained() + newDonation.getAmount());
             project.getDonations().add(newDonation);
             newDonation.setProject(project);  
         }
