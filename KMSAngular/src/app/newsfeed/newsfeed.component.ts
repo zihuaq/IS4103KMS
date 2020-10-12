@@ -6,6 +6,10 @@ import { SessionService } from '../session.service';
 import { PostService } from '../post.service';
 import { UserService } from '../user.service';
 import { forkJoin } from 'rxjs';
+import { PostComment } from '../classes/post-comment';
+import { Report } from '../classes/report';
+import { Tag } from '../classes/tag';
+import { TagService } from '../tag.service';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -21,18 +25,34 @@ export class NewsfeedComponent implements OnInit {
   createdPost: Post;
   loggedInUser: User;
   newsfeedPosts: Post[];
+  editingComment: PostComment;
+  commentToDeleteId: number;
+  report: Report;
+  reportTags: Tag[];
+  selectedTags: Tag[];
+  selectedTagNames: string[];
+  postToReport: Post;
 
-  constructor(private sessionService: SessionService, private userService: UserService, private postService: PostService) { }
+  constructor(private sessionService: SessionService, private userService: UserService,
+    private postService: PostService, private tagService: TagService) { }
 
   ngOnInit(): void {
     bsCustomFileInput.init();
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     forkJoin([
       this.userService.getUser(loggedInUserId.toString()),
-      this.postService.getPostForUserNewsfeed(loggedInUserId)
+      this.postService.getPostForUserNewsfeed(loggedInUserId),
+      this.tagService.getAllReportTags()
     ]).subscribe((result) => {
       this.loggedInUser = result[0];
       this.newsfeedPosts = result[1];
+      this.reportTags = result[2];
+      $('#reportnewsfeedselect2').select2({
+        data: this.reportTags.map((item) => {
+          return item.name;
+        }),
+        allowClear: true,
+      });
     });
   }
 
@@ -132,9 +152,91 @@ export class NewsfeedComponent implements OnInit {
     })
   }
 
+  addComment(text: string, postId: number) {
+    let comment = new PostComment();
+    let user = new User();
+    user.userId = this.loggedInUser.userId;
+    user.profilePicture = this.loggedInUser.profilePicture;
+    user.firstName = this.loggedInUser.firstName;
+    user.lastName = this.loggedInUser.lastName;
+    comment.commentOwner = user;
+    comment.comment = text;
+    comment.dateTime = new Date();
+    this.postService.addCommentForPost(postId, comment).subscribe(() => {
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  likeComment(commentId: number) {
+    this.postService.likeComment(this.loggedInUser.userId, commentId).subscribe(() => {
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  removeLikeForComment(commentId: number) {
+    this.postService.removeLikeForComment(this.loggedInUser.userId, commentId).subscribe(() => {
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  deleteComment(commentId: number) {
+    this.postService.deleteComment(commentId).subscribe(() => {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Success',
+        autohide: true,
+        delay: 2500,
+        body: 'Comment deleted!',
+      });
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    }, (err) => {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: err,
+      });
+    });
+  }
+
+  updateComment() {
+    this.postService.updateComment(this.editingComment).subscribe(() => {
+      this.editingComment = null;
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
+  reportPost() {
+
+  }
+
+  setPostToReport(postId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    this.postToReport = post;
+    this.report = new Report();
+  }
+
   userHaveLikedPost(postId: number) {
     let post = this.newsfeedPosts.find((post) => post.postId == postId);
     let index = post.likers.findIndex((user) => user.userId == this.loggedInUser.userId);
+    return index > -1;
+  }
+
+  userHaveLikedComment(postId: number, commentId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    let comment = post.comments.find((comment) => comment.postCommentId == commentId);
+    let index = comment.likers.findIndex((user) => user.userId == this.loggedInUser.userId);
     return index > -1;
   }
 
@@ -142,5 +244,11 @@ export class NewsfeedComponent implements OnInit {
     let post = this.newsfeedPosts.find((post) => post.postId == postId);
     let index = post.sharedPosts.findIndex((sharedPost) => sharedPost.postOwner.userId == this.loggedInUser.userId);
     return index > -1;
+  }
+
+  setEditingComment(postId: number, commentId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    let comment = post.comments.find((comment) => comment.postCommentId == commentId);
+    this.editingComment = comment;
   }
 }
