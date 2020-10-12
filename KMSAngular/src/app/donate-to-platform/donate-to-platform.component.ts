@@ -128,7 +128,7 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
         this.newDonation.paypalOrderId = details.id;
         this.newDonation.dateDonated = new Date(details.create_time);
         this.newDonation.amount = details.purchase_units[0].amount.value;
-        this.newDonation.currency = details.purchase_units[0].amount.currency_code;
+        //this.newDonation.currency = details.purchase_units[0].amount.currency_code;
         console.log(details);
         //console.log(details.purchase_units[0].payments.captures)
         //console.log("Seller Receivable Breakdown:" + details.purchase_units[0].payments.captures[0].seller_receivable_breakdown);

@@ -42,22 +42,17 @@ public class DonationEntity implements Serializable {
     @Column(nullable=false)
     private Double amount;
     
-    @NotNull
-    @Column(nullable=false)
-    private String currency;
-    
     @ManyToOne
     private ProjectEntity project;
 
     public DonationEntity() {
     }
 
-    public DonationEntity(String paypalOrderId, Date dateDonated, Double amount, String currency) {
+    public DonationEntity(String paypalOrderId, Date dateDonated, Double amount) {
         this();
         this.paypalOrderId = paypalOrderId;
         this.dateDonated = dateDonated;
         this.amount = amount;
-        this.currency = currency;
     }
 
     public Long getDonationId() {
@@ -115,14 +110,6 @@ public class DonationEntity implements Serializable {
 
     public void setAmount(Double amount) {
         this.amount = amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public ProjectEntity getProject() {
