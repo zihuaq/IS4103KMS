@@ -191,6 +191,18 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
+    public void updateComment(PostCommentEntity comment) throws NoResultException {
+        PostCommentEntity commentToUpdate = em.find(PostCommentEntity.class, comment.getPostCommentId());
+
+        if (commentToUpdate != null) {
+            commentToUpdate.setComment(comment.getComment());
+            em.merge(commentToUpdate);
+        } else {
+            throw new NoResultException("Comment is not found");
+        }
+    }
+
+    @Override
     public void deletePostById(Long postId) throws NoResultException {
         PostEntity post = em.find(PostEntity.class, postId);
 

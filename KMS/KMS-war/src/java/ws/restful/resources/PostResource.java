@@ -41,9 +41,9 @@ import javax.ws.rs.core.Response;
  */
 @Path("post")
 public class PostResource {
-    
+
     PostSessionBeanLocal postSessionBean = lookupPostSessionBeanLocal();
-    
+
     @Context
     private UriInfo context;
 
@@ -52,7 +52,7 @@ public class PostResource {
      */
     public PostResource() {
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @GET
     @Path("/userNewsFeed/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -86,7 +86,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/likePost/{userId}/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/removeLikeForPost/{userId}/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -116,7 +116,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/addComment/{postId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -132,7 +132,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/likeComment/{userId}/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -147,7 +147,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/removeLikeForComment/{userId}/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -162,7 +162,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @DELETE
     @Path("/comment/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -176,9 +176,24 @@ public class PostResource {
                     .build();
             return Response.status(404).entity(exception).build();
         }
-        
+
     }
-    
+
+    @PUT
+    @Path("/updateComment")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateComment(PostCommentEntity comment) {
+        try {
+            postSessionBean.updateComment(comment);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     @DELETE
     @Path("/post/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -192,9 +207,9 @@ public class PostResource {
                     .build();
             return Response.status(404).entity(exception).build();
         }
-        
+
     }
-    
+
     private List<PostEntity> getPostResponse(List<PostEntity> posts) {
         List<PostEntity> result = new ArrayList<>();
         for (int i = 0; i < posts.size(); i++) {
@@ -251,7 +266,7 @@ public class PostResource {
         }
         return result;
     }
-    
+
     private PostSessionBeanLocal lookupPostSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();

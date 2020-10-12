@@ -55,7 +55,8 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo">
+                    <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo"
+                        style="display: block; margin-left: auto;margin-right: auto;width: 50%;">
 
                     <p>{{post.text}}</p>
 
@@ -67,6 +68,10 @@
                             class="fas fa-share"></i> share </button>
                     <button type="button" class="btn btn-default btn-sm" disabled="true"
                         *ngIf="userHaveSharedPost(post.postId)"><i class="fas fa-share"></i> shared </button>
+                    <button type="button" class="btn btn-default btn-sm"
+                        *ngIf="loggedInUser.userId == post.postOwner.userId" data-toggle="modal"
+                        data-target="#modal-default" (click)="setPostToReport(post.postId)">
+                        <i class="fas fa-flag"></i> report </button>
                     <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}
                         comments</span>
                 </div>
@@ -82,11 +87,12 @@
                             <span class="username">
                                 {{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}
                                 <button type="button" class="btn btn-tool float-right"
-                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId"
-                                    (click)="deleteComment(comment.postCommentId)">
+                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId" data-toggle="modal"
+                                    data-target="#modal-danger" (click)="commentToDeleteId = comment.postCommentId">
                                     <i class="fas fa-times fa-sm"></i>
                                 </button>
                                 <button type="button" class="btn btn-tool float-right"
+                                    (click)="setEditingComment(post.postId, comment.postCommentId)"
                                     *ngIf="loggedInUser.userId == comment.commentOwner.userId">
                                     <i class="fas fa-edit fa-sm"></i>
                                 </button>
@@ -106,7 +112,12 @@
                                 </button>
                                 - {{comment.likers.length}} likes
                             </span>
-                            {{comment.comment}}
+                            <div *ngIf="!editingComment || editingComment.postCommentId != comment.postCommentId">
+                                {{comment.comment}} </div>
+                            <input *ngIf="editingComment && editingComment.postCommentId == comment.postCommentId"
+                                [(ngModel)]="editingComment.comment" (keyup.enter)="updateComment()">
+                            <small *ngIf="editingComment && editingComment.postCommentId == comment.postCommentId">
+                                Press enter to save </small>
                         </div>
                         <!-- /.comment-text -->
                     </div>
@@ -130,4 +141,54 @@
         </div>
         <!-- /.col -->
     </span>
+</div>
+
+<div class="modal fade" id="modal-danger">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Do you want to delete this comment?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" (click)="deleteComment(commentToDeleteId)"
+                    data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-default" *ngIf="postToReport && reportTags">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Report {{postToReport.postOwner.firstName}} {{postToReport.postOwner.lastName}}'s Post</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Help us understand what is happening, please select your concerns. </p>
+                <div class="select2-red">
+                    <select class="select2" id="reportnewsfeedselect2" multiple="multiple" data-placeholder="Select concerns"
+                        data-dropdown-css-class="select2-red" style="width: 100%;">
+                    </select>
+                </div>
+                <br />
+                <textarea class="form-control" id="content" rows="3" placeholder="Elaboration if necessary"
+                    [(ngModel)]="report.reportContent"></textarea>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" (click)="reportPost()" data-dismiss="modal">Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
 </div>

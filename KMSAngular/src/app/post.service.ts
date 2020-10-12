@@ -61,6 +61,11 @@ export class PostService {
       .pipe(catchError(this.handleError));
   }
 
+  updateComment(comment: PostComment): Observable<any> {
+    return this.http.put<any>(this.baseUrl + '/updateComment/', comment, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   getPostForUserNewsfeed(userId: number): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/userNewsFeed/' + userId)
       .pipe(map((data) => {
