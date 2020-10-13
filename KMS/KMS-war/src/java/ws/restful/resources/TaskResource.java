@@ -59,6 +59,7 @@ public class TaskResource {
             task.setProject(null);
             for (TaskEntity predecessor: task.getPredecessors()) {
                 predecessor.setProject(null);
+                predecessor.getPredecessors().clear();
             }
                 
             return Response.status(Status.OK).entity(task).build(); 

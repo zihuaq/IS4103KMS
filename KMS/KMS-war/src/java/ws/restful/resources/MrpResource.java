@@ -86,7 +86,7 @@ public class MrpResource {
             mrp.getProject().getDonations().clear();
             mrp.getFulfillments().clear();
             if (mrp.getActivity() != null) {
-               mrp.getActivity().getHumanResourcePostings().clear();
+                mrp.getActivity().getHumanResourcePostings().clear();
                 mrp.getActivity().getMaterialResourcePostings().clear();
                 mrp.getActivity().setProject(null); 
             }

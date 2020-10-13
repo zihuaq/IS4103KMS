@@ -112,6 +112,7 @@ public class HrpResource {
                     appliedUser.getFollowRequestReceived().clear();
                     appliedUser.getHrpApplied().clear();
                     appliedUser.getFulfillments().clear();
+                    appliedUser.getActivityJoined().clear();
                     appliedUser.getDonations().clear();
                 }
             }
