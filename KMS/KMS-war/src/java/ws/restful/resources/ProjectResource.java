@@ -203,6 +203,9 @@ public class ProjectResource {
             }
             for (TaskEntity task : project.getTasks()) {
                 task.setProject(null);
+                for (TaskEntity predecessor: task.getPredecessors()) {
+                    predecessor.setProject(null);
+                }
             }
             for (PostEntity post : project.getPosts()) {
                 post.setPostOwner(null);
