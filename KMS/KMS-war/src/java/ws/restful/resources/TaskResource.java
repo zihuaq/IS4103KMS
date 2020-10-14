@@ -57,10 +57,8 @@ public class TaskResource {
             TaskEntity task = taskSessionBeanLocal.getTaskById(taskId);
             
             task.setProject(null);
-            for (TaskEntity predecessor: task.getPredecessors()) {
-                predecessor.setProject(null);
-                predecessor.getPredecessors().clear();
-            }
+            task.getParent().setProject(null);
+            task.getParent().setParent(null);
                 
             return Response.status(Status.OK).entity(task).build(); 
             
@@ -80,7 +78,7 @@ public class TaskResource {
         System.out.println("******** TaskResource: createNewTask()");
         if (createTaskReq != null) {
             try {
-                Long taskId = taskSessionBeanLocal.createNewTask(createTaskReq.getNewTask(), createTaskReq.getProjectId(), createTaskReq.getPredecessorIds());
+                Long taskId = taskSessionBeanLocal.createNewTask(createTaskReq.getNewTask(), createTaskReq.getProjectId());
                 
                 return Response.status(Response.Status.OK).entity(taskId).build();
                 

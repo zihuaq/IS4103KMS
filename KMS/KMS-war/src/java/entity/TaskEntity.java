@@ -6,16 +6,13 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -34,11 +31,7 @@ public class TaskEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
-    private String name;
-    
-    @NotNull
-    @Column(nullable=false)
-    private String description;
+    private String title;
     
     @NotNull
     @Column(nullable=false)
@@ -50,25 +43,27 @@ public class TaskEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
     
+    @NotNull
+    @Column(nullable=false)
+    private Integer progress;
+    
     @ManyToOne
     private ProjectEntity project;
     
-    @OneToMany
-    private List<TaskEntity> predecessors;
+    @ManyToOne
+    private TaskEntity parent;
 
     public TaskEntity() {
-        this.predecessors = new ArrayList<>();
     }
 
-    public TaskEntity(Long taskId, String name, String description, Date startDate, Date endDate) {
+    public TaskEntity(Long taskId, String name, Date startDate, Date endDate, Integer progress) {
         this();
         this.taskId = taskId;
-        this.name = name;
-        this.description = description;
+        this.title = name;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-    
+        this.progress = progress;
+    } 
 
     public Long getTaskId() {
         return taskId;
@@ -103,20 +98,12 @@ public class TaskEntity implements Serializable {
         return "entity.Task[ id=" + taskId + " ]";
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Date getStartDate() {
@@ -134,7 +121,15 @@ public class TaskEntity implements Serializable {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+    
+    public Integer getProgress() {
+        return progress;
+    }
 
+    public void setProgress(Integer progress) {
+        this.progress = progress;
+    }
+    
     public ProjectEntity getProject() {
         return project;
     }
@@ -143,12 +138,12 @@ public class TaskEntity implements Serializable {
         this.project = project;
     }
 
-    public List<TaskEntity> getPredecessors() {
-        return predecessors;
+    public TaskEntity getParent() {
+        return parent;
     }
 
-    public void setPredecessors(List<TaskEntity> predecessors) {
-        this.predecessors = predecessors;
+    public void setParent(TaskEntity parent) {
+        this.parent = parent;
     }
     
 }

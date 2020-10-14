@@ -7,7 +7,6 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.TaskEntity;
-import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -19,7 +18,7 @@ public interface TaskSessionBeanLocal {
     
     public TaskEntity getTaskById(Long taskId) throws NoResultException;
 
-    public Long createNewTask(TaskEntity newTask, Long projectId, List<Long> predecessorIds) throws NoResultException;
+    public Long createNewTask(TaskEntity newTask, Long projectId) throws NoResultException;
 
     public void updateTask(TaskEntity taskToUpdate) throws NoResultException;
 

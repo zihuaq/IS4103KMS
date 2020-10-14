@@ -6,7 +6,6 @@
 package ws.restful.model;
 
 import entity.TaskEntity;
-import java.util.List;
 
 /**
  *
@@ -16,15 +15,13 @@ public class CreateTaskReq {
     
     private TaskEntity newTask;
     private Long projectId;
-    private List<Long> predecessorIds;
 
     public CreateTaskReq() {
     }
 
-    public CreateTaskReq(TaskEntity newTask, Long projectId, List<Long> predecessorIds) {
+    public CreateTaskReq(TaskEntity newTask, Long projectId) {
         this.newTask = newTask;
         this.projectId = projectId;
-        this.predecessorIds = predecessorIds;
     }
 
     public TaskEntity getNewTask() {
@@ -43,14 +40,4 @@ public class CreateTaskReq {
         this.projectId = projectId;
     }
 
-    public List<Long> getPredecessorIds() {
-        return predecessorIds;
-    }
-
-    public void setPredecessorIds(List<Long> predecessorIds) {
-        this.predecessorIds = predecessorIds;
-    }
-    
-    
-    
 }

@@ -8,7 +8,6 @@ package ejb.session.stateless;
 import Exception.NoResultException;
 import entity.ProjectEntity;
 import entity.TaskEntity;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -30,6 +29,7 @@ public class TaskSessionBean implements TaskSessionBeanLocal {
     @Override
     public TaskEntity getTaskById(Long taskId) throws NoResultException {
         TaskEntity task = em.find(TaskEntity.class, taskId);
+        
         if (task != null) {
             return task;
         } else {
@@ -38,18 +38,15 @@ public class TaskSessionBean implements TaskSessionBeanLocal {
     }
     
     @Override
-    public Long createNewTask(TaskEntity newTask, Long projectId, List<Long> predecessorIds) throws NoResultException {
+    public Long createNewTask(TaskEntity newTask, Long projectId) throws NoResultException {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
         newTask.setProject(project);
         project.getTasks().add(newTask);
         
-        if (!predecessorIds.isEmpty()) {
-            for (Long predecessorId : predecessorIds) {
-                TaskEntity predecessor = this.getTaskById(predecessorId);
-            
-                newTask.getPredecessors().add(predecessor); 
-            }   
+        if (newTask.getParent().getTaskId() != 0l) {
+            TaskEntity parent = this.getTaskById(newTask.getParent().getTaskId());
+            newTask.setParent(parent);  
         }
         
         em.persist(newTask);
@@ -62,15 +59,10 @@ public class TaskSessionBean implements TaskSessionBeanLocal {
     public void updateTask(TaskEntity taskToUpdate) throws NoResultException {
         TaskEntity task = this.getTaskById(taskToUpdate.getTaskId());
         
-        task.setName(taskToUpdate.getName());
-        task.setDescription(taskToUpdate.getDescription());
+        task.setTitle(taskToUpdate.getTitle());
         task.setStartDate(taskToUpdate.getStartDate());
         task.setEndDate(taskToUpdate.getEndDate());
-        for (TaskEntity predecessor: taskToUpdate.getPredecessors()) {
-            this.getTaskById(predecessor.getTaskId());
-        }
-        task.setPredecessors(taskToUpdate.getPredecessors());
-        
+        task.setProgress(taskToUpdate.getProgress());       
     }
     
     @Override
@@ -80,7 +72,9 @@ public class TaskSessionBean implements TaskSessionBeanLocal {
         taskToDelete.getProject().getTasks().remove(taskToDelete);
         taskToDelete.setProject(null);
         
-        taskToDelete.getPredecessors().clear();
+        taskToDelete.setParent(null);
+        
+        em.remove(taskToDelete);
     }
     
 }
