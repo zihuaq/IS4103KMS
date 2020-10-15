@@ -34,6 +34,9 @@ public class GroupEntity implements Serializable {
     @Column(nullable=false)
     private String name;
     
+    @Column(length = 2000)
+    private String description;
+    
     private String country;
     
     private String profilePicture;
@@ -48,6 +51,9 @@ public class GroupEntity implements Serializable {
     @ManyToMany
     @JoinTable(name= "groupAdmins")
     private List<UserEntity> groupAdmins;
+    
+    @ManyToMany
+    private List<TagEntity> sdgs;
     
     public GroupEntity() {
         groupMembers = new ArrayList<>();
@@ -141,6 +147,22 @@ public class GroupEntity implements Serializable {
 
     public void setGroupAdmins(List<UserEntity> groupAdmins) {
         this.groupAdmins = groupAdmins;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<TagEntity> getSdgs() {
+        return sdgs;
+    }
+
+    public void setSdgs(List<TagEntity> sdgs) {
+        this.sdgs = sdgs;
     }
     
 }

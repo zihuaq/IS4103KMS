@@ -7,11 +7,41 @@
   <div >
     <div>
       <app-profile-report-item *ngFor= "let report of reports"
-      [report] = "report"></app-profile-report-item>
+      [report] = "report" (reportSelected) = "onReportSelected($event)"></app-profile-report-item>
     </div>
   </div>
 
-
+  <div bsModal #verdictModal = "bs-modal" class="modal fade" id="profileReportModal" tabindex="-1" aria-labelledby="profileReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="profileReportModalLabel">Pass Verdict</h5>
+          <button type="button" class="close" (click)="hideChildModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" (ngSubmit)="onPassVerdict(VerdictForm)" #VerdictForm="ngForm">
+            <div class="form-group">
+              <label for="verdict">Verdict comment:</label>
+              <textarea type="text" id="verdict" class="form-control" ngModel name="verdict" style="height: 50%;" required>
+              </textarea>
+          </div>
+          <div>
+            <label *ngIf = "!selectedReport === undefined">Set {{selectedReport.reportedUser.firstName}} Status</label>
+            <div class = "radio" *ngFor = "let status of settingStatus" >
+              <label>
+                <input type = "radio" name = "status" [value] = "status" ngModel required>
+                {{status}}
+              </label>
+            </div>
+          </div>
+            <button type="submit" class="btn btn-primary" style = "float: right;" [disabled]="!VerdictForm.valid">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 

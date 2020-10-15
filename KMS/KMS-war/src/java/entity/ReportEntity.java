@@ -65,6 +65,10 @@ public class ReportEntity implements Serializable {
     @JoinColumn(nullable=false)
     @ManyToMany
     private List<TagEntity> reportTags;
+    
+    private Boolean resolved;
+    
+    private String verdictComments;
 
     public ReportEntity(){
         this.reportTags = new ArrayList<>();
@@ -184,6 +188,22 @@ public class ReportEntity implements Serializable {
 
     public void setReportedGroup(GroupEntity reportedGroup) {
         this.reportedGroup = reportedGroup;
+    }
+
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(Boolean resolved) {
+        this.resolved = resolved;
+    }
+
+    public String getVerdictComments() {
+        return verdictComments;
+    }
+
+    public void setVerdictComments(String verdictComments) {
+        this.verdictComments = verdictComments;
     }
 
     

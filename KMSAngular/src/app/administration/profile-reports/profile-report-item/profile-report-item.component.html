@@ -22,6 +22,12 @@
       {{report.reportedUser.firstName}} {{report.reportedUser.lastName}}
     </a>
   </span>
+  <span class="badge badge-success" style="float: right;" *ngIf = "report.resolved === true">
+    RESOLVED
+  </span>
+  <span class="badge badge-danger" style="float: right;" *ngIf = "report.resolved === false">
+    PENDING ACTION
+  </span>
   <hr>
   <div>
     <p class="list-group-item-text">
@@ -29,9 +35,18 @@
     </p>
   </div>
   <p>Report tags:
-    <p *ngFor = "let tag of report.reportTags">
+    <span class="badge badge-pill badge-danger" *ngFor = "let tag of report.reportTags">
       {{tag.name}}
+    </span>
   </p>
   <hr>
-
+  <p *ngIf = "report.resolved === true">
+    {{report.verdictComments}}
+  </p>
+  <button type="button"
+  *ngIf = "report.resolved === false"
+  style="float: right;"
+  class="btn btn-outline-danger btn-sm" (click) = "onSelectReport()" >Pass Verdict</button>
 </div>
+<!-- data-toggle="modal" data-target="#profileReportModal" -->
+

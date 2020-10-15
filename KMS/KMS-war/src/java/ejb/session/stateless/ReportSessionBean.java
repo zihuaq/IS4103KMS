@@ -56,6 +56,19 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         }
     }
     
+    
+    
+    @Override
+    public void updateReportVerdict(ReportEntity updatedReport) throws NoResultException{
+        ReportEntity report = em.find(ReportEntity.class, updatedReport.getReportId());
+        if(report == null){
+            throw new NoResultException("Report not found");
+        }
+        
+        report.setVerdictComments(updatedReport.getVerdictComments());
+        report.setResolved(Boolean.TRUE);
+    }
+    
     @Override
     public List<ReportEntity> getAllReports(){
         List<ReportEntity> reports = em.createQuery("SELECT r FROM ReportEntity r").getResultList();

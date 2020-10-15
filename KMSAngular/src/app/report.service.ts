@@ -35,7 +35,16 @@ export class ReportService {
   getProfileReports():Observable<any>{
     return this.http.get<any>(this.baseUrl+'/getProfileReports')
     .pipe(catchError(this.handleError))
+  }
 
+  passProfileReportVerdict(report: Report, active: Boolean):Observable<any>{
+    let PassProfileReportVerdictReq ={
+      report: report,
+      active: active
+    }
+
+    return this.http.post<any>(this.baseUrl+'/passProfileReportVerdict', PassProfileReportVerdictReq)
+    .pipe(catchError(this.handleError))
   }
 
   getProjectReports():Observable<any>{

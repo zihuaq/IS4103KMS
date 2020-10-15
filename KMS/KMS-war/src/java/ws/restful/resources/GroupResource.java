@@ -10,6 +10,7 @@ import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import ejb.session.stateless.GroupSessionBeanLocal;
 import entity.GroupEntity;
+import entity.ProjectEntity;
 import entity.UserEntity;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -74,9 +76,9 @@ public class GroupResource {
     public Response createNewProject(CreateGroupReq createGroupReq) {
         System.out.println("******** ProjectResource: createNewProject()");
         if (createGroupReq != null) {
-            System.out.println("Group: " + createGroupReq.getGroup());
+            System.out.println("Group: " + createGroupReq.getNewGroup());
             try {
-                Long groupId = groupSessionBeanLocal.createNewGroup(createGroupReq.getGroup(), createGroupReq.getUserId());
+                Long groupId = groupSessionBeanLocal.createNewGroup(createGroupReq.getNewGroup(), createGroupReq.getOwnerId(), createGroupReq.getTagIds());
                 CreateGroupRsp createGroupRsp = new CreateGroupRsp(groupId);
                 System.out.println("******** Group created");
                 return Response.status(Response.Status.OK).entity(createGroupRsp).build();
@@ -97,71 +99,77 @@ public class GroupResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroup(@PathParam("groupId") Long groupId) {
         System.out.println("******** GroupResource: createNewGroup()");
-        GroupEntity group = groupSessionBeanLocal.getGroupById(groupId);
-        group.getGroupOwner().getGroupsOwned().clear();
-        group.getGroupOwner().getReviewsGiven().clear();
-        group.getGroupOwner().getReviewsReceived().clear();
-        group.getGroupOwner().getProjectsOwned().clear();
-        group.getGroupOwner().getProjectsJoined().clear();
-        group.getGroupOwner().getProjectsManaged().clear();
-        group.getGroupOwner().getGroupsJoined().clear();
-        group.getGroupOwner().getPosts().clear();
-        group.getGroupOwner().getBadges().clear();
-        group.getGroupOwner().getMras().clear();
-        group.getGroupOwner().getSkills().clear();
-        group.getGroupOwner().getFollowers().clear();
-        group.getGroupOwner().getFollowing().clear();
-        group.getGroupOwner().getSdgs().clear();
-        group.getGroupOwner().getFollowRequestMade().clear();
-        group.getGroupOwner().getFollowRequestReceived().clear();
-        group.getGroupOwner().getHrpApplied().clear();
-        group.getGroupOwner().getFulfillments().clear();
-        for (UserEntity member : group.getGroupMembers()) {
-            member.getGroupsOwned().clear();
-            member.getReviewsGiven().clear();
-            member.getReviewsReceived().clear();
-            member.getProjectsOwned().clear();
-            member.getProjectsJoined().clear();
-            member.getProjectsManaged().clear();
-            member.getGroupsJoined().clear();
-            member.getPosts().clear();
-            member.getBadges().clear();
-            member.getMras().clear();
-            member.getSkills().clear();
-            member.getFollowers().clear();
-            member.getFollowing().clear();
-            member.getSdgs().clear();
-            member.getFollowRequestMade().clear();
-            member.getFollowRequestReceived().clear();
-            member.getHrpApplied().clear();
-            member.getFulfillments().clear();
+        try{
+            GroupEntity group = groupSessionBeanLocal.getGroupById(groupId);
+            group.getGroupOwner().getGroupsOwned().clear();
+            group.getGroupOwner().getReviewsGiven().clear();
+            group.getGroupOwner().getReviewsReceived().clear();
+            group.getGroupOwner().getProjectsOwned().clear();
+            group.getGroupOwner().getProjectsJoined().clear();
+            group.getGroupOwner().getProjectsManaged().clear();
+            group.getGroupOwner().getGroupsJoined().clear();
+            group.getGroupOwner().getPosts().clear();
+            group.getGroupOwner().getBadges().clear();
+            group.getGroupOwner().getMras().clear();
+            group.getGroupOwner().getSkills().clear();
+            group.getGroupOwner().getFollowers().clear();
+            group.getGroupOwner().getFollowing().clear();
+            group.getGroupOwner().getSdgs().clear();
+            group.getGroupOwner().getFollowRequestMade().clear();
+            group.getGroupOwner().getFollowRequestReceived().clear();
+            group.getGroupOwner().getHrpApplied().clear();
+            group.getGroupOwner().getFulfillments().clear();
+            for (UserEntity member : group.getGroupMembers()) {
+                member.getGroupsOwned().clear();
+                member.getReviewsGiven().clear();
+                member.getReviewsReceived().clear();
+                member.getProjectsOwned().clear();
+                member.getProjectsJoined().clear();
+                member.getProjectsManaged().clear();
+                member.getGroupsJoined().clear();
+                member.getPosts().clear();
+                member.getBadges().clear();
+                member.getMras().clear();
+                member.getSkills().clear();
+                member.getFollowers().clear();
+                member.getFollowing().clear();
+                member.getSdgs().clear();
+                member.getFollowRequestMade().clear();
+                member.getFollowRequestReceived().clear();
+                member.getHrpApplied().clear();
+                member.getFulfillments().clear();
+            }
+            for (UserEntity admin : group.getGroupAdmins()) {
+                admin.getGroupsOwned().clear();
+                admin.getReviewsGiven().clear();
+                admin.getReviewsReceived().clear();
+                admin.getProjectsOwned().clear();
+                admin.getProjectsJoined().clear();
+                admin.getProjectsManaged().clear();
+                admin.getGroupsJoined().clear();
+                admin.getPosts().clear();
+                admin.getBadges().clear();
+                admin.getMras().clear();
+                admin.getSkills().clear();
+                admin.getFollowers().clear();
+                admin.getFollowing().clear();
+                admin.getSdgs().clear();
+                admin.getFollowRequestMade().clear();
+                admin.getFollowRequestReceived().clear();
+                admin.getHrpApplied().clear();
+                admin.getFulfillments().clear();
+            }
+
+    //        for (PostEntity post : group.getPosts()) {
+    //            post.setPostOwner(null);
+    //            post.setProject(null);
+    //        }
+            return Response.status(Response.Status.OK).entity(group).build();
         }
-        for (UserEntity admin : group.getGroupAdmins()) {
-            admin.getGroupsOwned().clear();
-            admin.getReviewsGiven().clear();
-            admin.getReviewsReceived().clear();
-            admin.getProjectsOwned().clear();
-            admin.getProjectsJoined().clear();
-            admin.getProjectsManaged().clear();
-            admin.getGroupsJoined().clear();
-            admin.getPosts().clear();
-            admin.getBadges().clear();
-            admin.getMras().clear();
-            admin.getSkills().clear();
-            admin.getFollowers().clear();
-            admin.getFollowing().clear();
-            admin.getSdgs().clear();
-            admin.getFollowRequestMade().clear();
-            admin.getFollowRequestReceived().clear();
-            admin.getHrpApplied().clear();
-            admin.getFulfillments().clear();
+        catch(NoResultException ex){
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
-        
-//        for (PostEntity post : group.getPosts()) {
-//            post.setPostOwner(null);
-//            post.setProject(null);
-//        }
-        return Response.status(Response.Status.OK).entity(group).build();
 
     }
     
@@ -247,6 +255,36 @@ public class GroupResource {
             return Response.status(Response.Status.OK).build();
             
         } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("deleteGroup/{groupId}")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteGroup(@PathParam("groupId") Long groupId) {
+        System.out.println("******** groupResource: deleteGroup()");
+        try {
+            groupSessionBeanLocal.deleteGroup(groupId);
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/update")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateGroup(GroupEntity group) {
+        System.out.println("******** GroupResource: updateGroup()");
+        try {
+            groupSessionBeanLocal.updateGroup(group);
+            return Response.status(204).build();
+        } catch(NoResultException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();

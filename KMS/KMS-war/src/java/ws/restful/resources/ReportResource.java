@@ -6,6 +6,7 @@
 package ws.restful.resources;
 
 import ejb.session.stateless.ReportSessionBeanLocal;
+import ejb.session.stateless.UserSessionBeanLocal;
 import entity.GroupEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
@@ -27,8 +28,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.ErrorRsp;
+import ws.restful.model.PassProfileReportVerdictReq;
 
 /**
  * REST Web Service
@@ -38,8 +41,10 @@ import ws.restful.model.ErrorRsp;
 @Path("report")
 public class ReportResource {
 
-    ReportSessionBeanLocal reportSessionBean = lookupReportSessionBeanLocal();
+    UserSessionBeanLocal userSessionBean = lookupUserSessionBeanLocal();
 
+    ReportSessionBeanLocal reportSessionBean = lookupReportSessionBeanLocal();
+    
     @Context
     private UriInfo context;
 
@@ -115,6 +120,8 @@ public class ReportResource {
             temp.setReportContent(reportEntity.getReportContent());
             temp.setReportTags(reportEntity.getReportTags());
             temp.setReportType(reportEntity.getReportType());
+            temp.setResolved(reportEntity.getResolved());
+            temp.setVerdictComments(reportEntity.getVerdictComments());
             temp.setReportOwner(reportOwner);
             temp.setReportedUser(reportedUser);
             profileReportResponse.add(temp);
@@ -122,6 +129,24 @@ public class ReportResource {
         return profileReportResponse;
     } 
      
+     @POST
+     @Path("passProfileReportVerdict")
+     @Consumes(MediaType.APPLICATION_JSON)
+     @Produces(MediaType.APPLICATION_JSON)
+     public Response passProfileReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
+        try {
+            UserEntity reportedUser = userSessionBean.getUserById(passProfileReportVerdictReq.getReport().getReportedUser().getUserId());
+            reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
+            if(!passProfileReportVerdictReq.getActive()){
+                reportedUser.setIsActive(Boolean.FALSE);
+                userSessionBean.updateUser(reportedUser);
+            }
+            return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
     @GET
     @Path("/getProjectReports")
     @Produces(MediaType.APPLICATION_JSON)
@@ -154,6 +179,8 @@ public class ReportResource {
             temp.setReportContent(reportEntity.getReportContent());
             temp.setReportTags(reportEntity.getReportTags());
             temp.setReportType(reportEntity.getReportType());
+            temp.setResolved(reportEntity.getResolved());
+            temp.setVerdictComments(reportEntity.getVerdictComments());
             temp.setReportOwner(reportOwner);
             temp.setReportedProject(reportedProject);
             projectReportResponse.add(temp);
@@ -193,6 +220,8 @@ public class ReportResource {
             temp.setReportContent(reportEntity.getReportContent());
             temp.setReportTags(reportEntity.getReportTags());
             temp.setReportType(reportEntity.getReportType());
+            temp.setResolved(reportEntity.getResolved());
+            temp.setVerdictComments(reportEntity.getVerdictComments());
             temp.setReportOwner(reportOwner);
             temp.setReportedGroup(reportedGroup);
             groupReportResponse.add(temp);
@@ -232,6 +261,8 @@ public class ReportResource {
             temp.setReportContent(reportEntity.getReportContent());
             temp.setReportTags(reportEntity.getReportTags());
             temp.setReportType(reportEntity.getReportType());
+            temp.setResolved(reportEntity.getResolved());
+            temp.setVerdictComments(reportEntity.getVerdictComments());
             temp.setReportOwner(reportOwner);
             temp.setReportedPost(reportedPost);
             postReportResponse.add(temp);
@@ -243,6 +274,16 @@ public class ReportResource {
         try {
             javax.naming.Context c = new InitialContext();
             return (ReportSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/ReportSessionBean!ejb.session.stateless.ReportSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private UserSessionBeanLocal lookupUserSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (UserSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/UserSessionBean!ejb.session.stateless.UserSessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

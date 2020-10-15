@@ -19,17 +19,13 @@ import javax.ejb.Local;
 @Local
 public interface GroupSessionBeanLocal {
 
-    public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException;
-
     public List<GroupEntity> retrieveAllGroup();
 
-    public GroupEntity getGroupById(Long groupId);
+    public GroupEntity getGroupById(Long groupId)throws NoResultException;
 
     public void joinGroup(Long groupId, Long userId) throws NoResultException;
 
     public void removeMember(Long groupId, Long userId) throws NoResultException, InvalidRoleException;
-
-    public void updateGroup(GroupEntity groupToUpdate);
 
     public void addAdmin(Long groupId, Long userId) throws NoResultException;
 
@@ -37,6 +33,10 @@ public interface GroupSessionBeanLocal {
 
     public void changeOwner(Long groupId, Long newOwnerId) throws NoResultException;
 
-    public void deleteGroup(Long groupId);
+    public void deleteGroup(Long groupId) throws NoResultException;
+
+    public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException;
+
+    public void updateGroup(GroupEntity groupToUpdate) throws NoResultException;
     
 }

@@ -11,11 +11,11 @@ export class Report {
     reportedProject: Project;
     reportContent: string;
     reportTags: Tag[];
-    resolved: Boolean;
+    resolved: boolean;
     verdictComments: String;
 
     constructor(reportId?: number, reportOwner?: User, reportType?: ReportType, reportedUser?: User, reportedProject?: Project, reportContent?: string, reportTags?: Tag[],
-      resolved?: Boolean, verdictComments?: String){
+      resolved?: boolean, verdictComments?: String){
         this.reportId = reportId;
         this.reportOwner = reportOwner;
         this.reportType = reportType;
