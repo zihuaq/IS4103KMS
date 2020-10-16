@@ -6,8 +6,8 @@
 package ws.restful.resources;
 
 import Exception.NoResultException;
-import ejb.session.stateless.DependencySessionBeanLocal;
-import entity.DependencyEntity;
+import ejb.session.stateless.LinkSessionBeanLocal;
+import entity.LinkEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,51 +31,48 @@ import ws.restful.model.ErrorRsp;
  *
  * @author zihua
  */
-@Path("dependency")
-public class DependencyResource {
+@Path("link")
+public class LinkResource {
 
-    DependencySessionBeanLocal dependencySessionBeanLocal = lookupDependencySessionBeanLocal();
+    LinkSessionBeanLocal linkSessionBeanLocal = lookupLinkSessionBeanLocal1();
 
     @Context
     private UriInfo context;
 
     /**
-     * Creates a new instance of DependencyResource
+     * Creates a new instance of LinkResource
      */
-    public DependencyResource() {
+    public LinkResource() {
     }
     
-    @Path("getDependenciesByProject/{projectId}")
+    @Path("getLinksByProject/{projectId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDependenciesByProject(@PathParam("projectId") Long projectId) {
-        System.out.println("******** DependencyResource: getDependenciesByProject()");
+    public Response getLinksByProject(@PathParam("projectId") Long projectId) {
+        System.out.println("******** LinkResource: getLinksByProject()");
         
-        List<DependencyEntity> dependencies = dependencySessionBeanLocal.getDependenciesByProject(projectId);
+        List<LinkEntity> links = linkSessionBeanLocal.getLinksByProject(projectId);
         
-        for (DependencyEntity dependency: dependencies) {
-            dependency.getPredecessor().setProject(null);
-            dependency.getPredecessor().setParent(null);
-            
-            dependency.getSuccessor().setProject(null);
-            dependency.getSuccessor().setParent(null);
+        for (LinkEntity link: links) {
+            link.setSourceTask(null);
+            link.setTargetTask(null);
         }
         
-        return Response.status(Response.Status.OK).entity(dependencies).build();
+        return Response.status(Response.Status.OK).entity(links).build();
     }
     
-    @Path("createNewDependency")
+    @Path("createNewLink")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewDependency(DependencyEntity newDependency) {
-        System.out.println("******** DependencyResource: createNewDependency()");
+    public Response createNewLink(LinkEntity newLink) {
+        System.out.println("******** LinkResource: createNewLink()");
         
-        if (newDependency != null) {
+        if (newLink != null) {
             try {
-                Long dependencyId = dependencySessionBeanLocal.createNewDependency(newDependency);
+                Long linkId = linkSessionBeanLocal.createNewLink(newLink);
                 
-                return Response.status(Response.Status.OK).entity(dependencyId).build();
+                return Response.status(Response.Status.OK).entity(linkId).build();
                 
             } catch (NoResultException ex) {
                 ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
@@ -90,13 +87,13 @@ public class DependencyResource {
         }
     }
     
-    @Path("deleteDependency/{dependencyId}")
+    @Path("deleteLink/{linkId}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteDependency(@PathParam("dependencyId") Long dependencyId) {
-        System.out.println("******** DependencyResource: deleteDependency()");
+    public Response deleteLink(@PathParam("linkId") Long linkId) {
+        System.out.println("******** LinkResource: deleteLink()");
         try {
-            dependencySessionBeanLocal.deleteDependency(dependencyId);
+            linkSessionBeanLocal.deleteLink(linkId);
 
             return Response.status(Response.Status.OK).build();
         } catch (NoResultException ex) {
@@ -105,10 +102,10 @@ public class DependencyResource {
         }
     }
 
-    private DependencySessionBeanLocal lookupDependencySessionBeanLocal() {
+    private LinkSessionBeanLocal lookupLinkSessionBeanLocal1() {
         try {
             javax.naming.Context c = new InitialContext();
-            return (DependencySessionBeanLocal) c.lookup("java:global/KMS/KMS-war/DependencySessionBean!ejb.session.stateless.DependencySessionBeanLocal");
+            return (LinkSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/LinkSessionBean!ejb.session.stateless.LinkSessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

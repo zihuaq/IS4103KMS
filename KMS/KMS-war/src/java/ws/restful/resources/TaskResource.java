@@ -8,6 +8,7 @@ package ws.restful.resources;
 import Exception.NoResultException;
 import ejb.session.stateless.TaskSessionBeanLocal;
 import entity.TaskEntity;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
@@ -47,6 +48,28 @@ public class TaskResource {
     public TaskResource() {
     }
     
+    @Path("getTasksByProject/{projectId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTasksByProject(@PathParam("projectId") Long projectId) {
+        try {
+            System.out.println("******** TaskResource: getTasksByProject()");
+        
+            List<TaskEntity> tasks = taskSessionBeanLocal.getTasksByProject(projectId);
+            
+            for (TaskEntity task : tasks) {
+                task.setProject(null);
+                task.setParentTask(null);
+            }
+            return Response.status(Status.OK).entity(tasks).build();
+            
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }  
+    }
+    
     @Path("{taskId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,8 +80,7 @@ public class TaskResource {
             TaskEntity task = taskSessionBeanLocal.getTaskById(taskId);
             
             task.setProject(null);
-            task.getParent().setProject(null);
-            task.getParent().setParent(null);
+            task.setParentTask(null);
                 
             return Response.status(Status.OK).entity(task).build(); 
             

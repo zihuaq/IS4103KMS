@@ -2,7 +2,7 @@ import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Dependency } from './classes/dependency';
+import { Link } from './classes/link';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -11,26 +11,26 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class DependencyService {
+export class LinkService {
 
-  baseUrl: string = '/api/dependency';
+  baseUrl: string = '/api/link';
 
   constructor(private httpClient: HttpClient) { }
 
-  getDependenciesByProject(projectId: number): Observable<any> {
-    return this.httpClient.get<any>(this.baseUrl + "/getDependenciesByProject/" + projectId).pipe(
+  getLinksByProject(projectId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getLinksByProject/" + projectId).pipe(
       catchError(this.handleError)
     );
   }
 
-  createNewDependency(newDependency: Dependency): Observable<any> {
-    return this.httpClient.put<any>(this.baseUrl+"/createNewDependency", newDependency, httpOptions).pipe(
+  createNewLink(newLink: Link): Observable<any> {
+    return this.httpClient.put<any>(this.baseUrl+"/createNewLink", newLink, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
-  deleteDependency(dependencyId: number): Observable<any> {
-    return this.httpClient.delete<any>(this.baseUrl + "/deleteDependency/" + dependencyId).pipe(
+  deleteLink(linkId: number): Observable<any> {
+    return this.httpClient.delete<any>(this.baseUrl + "/deleteLink/" + linkId).pipe(
       catchError(this.handleError)
     );
   }

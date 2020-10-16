@@ -1,16 +1,16 @@
 export class Task {
-    taskId: number;
-    title: String;
-    startDate: Date;
-    endDate: Date;
+    id: number;
+    text: String;
+    start_date: Date;
+    end_date: Date;
     progress: number;
-    parent: Task;
+    parent: number;
 
-    constructor(taskId?: number, title?: String, startDate?: Date, endDate?: Date, progress?: number, parent?: Task) {
-        this.taskId = taskId;
-        this.title = title;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    constructor(id?: number, text?: String, start_date?: Date, end_date?: Date, progress?: number, parent?: number) {
+        this.id = id;
+        this.text = text;
+        this.start_date = start_date;
+        this.end_date = end_date;
         this.progress = progress;
         this.parent = parent;
     }
