@@ -100,8 +100,7 @@ public class PostSessionBean implements PostSessionBeanLocal {
         UserEntity user = em.find(UserEntity.class, userId);
 
         if (post != null && user != null) {
-            if (!user.getLikedPosts().contains(post) && !post.getLikers().contains(user)) {
-                user.getLikedPosts().add(post);
+            if (!post.getLikers().contains(user)) {
                 post.getLikers().add(user);
             } else {
                 throw new DuplicateLikeException("User already liked this post");
@@ -117,8 +116,7 @@ public class PostSessionBean implements PostSessionBeanLocal {
         UserEntity user = em.find(UserEntity.class, userId);
 
         if (post != null && user != null) {
-            if (user.getLikedPosts().contains(post) && post.getLikers().contains(user)) {
-                user.getLikedPosts().remove(post);
+            if (post.getLikers().contains(user)) {
                 post.getLikers().remove(user);
             } else {
                 throw new LikeNotFoundException("User has not liked this post");
@@ -237,10 +235,6 @@ public class PostSessionBean implements PostSessionBeanLocal {
                 postWithOriginalPostToBeDeleted.get(i).setOriginalPostDeleted(true);
                 postWithOriginalPostToBeDeleted.get(i).setOriginalPost(null);
             }
-            for (int i = 0; i < post.getSharedPosts().size(); i++) {
-                post.getSharedPosts().get(i).setOriginalPostDeleted(true);
-                post.getSharedPosts().get(i).setOriginalPost(null);
-            }
             
             Query q2 = em.createQuery("SELECT p FROM PostEntity p");
             List<PostEntity> allPosts = q2.getResultList();
@@ -253,6 +247,11 @@ public class PostSessionBean implements PostSessionBeanLocal {
             }
             
             post.getPostOwner().getPosts().remove(post);
+            
+            for(int i=0; i<post.getComments().size(); i++){
+                em.remove(post.getComments().get(i));
+            }
+            
             if (post.getProject() != null) {
                 post.getProject().getPosts().remove(post);
             }

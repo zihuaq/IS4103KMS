@@ -54,7 +54,7 @@ public class PostEntity implements Serializable {
     @ManyToOne
     private UserEntity postOwner;
     
-    @ManyToMany(mappedBy = "likedPosts")
+    @JoinTable(name = "likedPosts")
     private List<UserEntity> likers;
     
     @JoinTable(name = "sharedPosts")
