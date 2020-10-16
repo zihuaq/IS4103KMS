@@ -194,6 +194,22 @@ public class PostResource {
         }
     }
 
+    @PUT
+    @Path("/sharePost/{postToShareId}/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sharePost(@PathParam("postToShareId") Long postToShareId, @PathParam("userId") Long userId, PostEntity post) {
+        try {
+            postSessionBean.sharePost(postToShareId, userId, post);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     @DELETE
     @Path("/post/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -260,8 +276,23 @@ public class PostResource {
                 UserEntity postOwner = new UserEntity();
                 postOwner.setUserId(posts.get(i).getSharedPosts().get(j).getPostOwner().getUserId());
                 sharedPost.setPostOwner(postOwner);
+                sharedPosts.add(sharedPost);
             }
             post.setSharedPosts(sharedPosts);
+            if (posts.get(i).getOriginalPost() != null) {
+                PostEntity originalPost = new PostEntity();
+                UserEntity originalPostOwner = new UserEntity();
+                originalPostOwner.setUserId(posts.get(i).getOriginalPost().getPostOwner().getUserId());
+                originalPostOwner.setFirstName(posts.get(i).getOriginalPost().getPostOwner().getFirstName());
+                originalPostOwner.setLastName(posts.get(i).getOriginalPost().getPostOwner().getLastName());
+                originalPost.setPostOwner(originalPostOwner);
+                originalPost.setPicture(posts.get(i).getOriginalPost().getPicture());
+                originalPost.setText(posts.get(i).getOriginalPost().getText());
+                originalPost.setPostId(posts.get(i).getOriginalPost().getPostId());
+                originalPost.setPostDate(posts.get(i).getOriginalPost().getPostDate());
+                post.setOriginalPost(originalPost);
+            }
+            post.setOriginalPostDeleted(posts.get(i).isOriginalPostDeleted());
             result.add(post);
         }
         return result;

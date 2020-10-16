@@ -27,6 +27,7 @@ export class NewsfeedComponent implements OnInit {
   newsfeedPosts: Post[];
   editingComment: PostComment;
   commentToDeleteId: number;
+  postToShare: Post;
   report: Report;
   reportTags: Tag[];
   selectedTags: Tag[];
@@ -53,6 +54,7 @@ export class NewsfeedComponent implements OnInit {
         }),
         allowClear: true,
       });
+      console.log(this.newsfeedPosts)
     });
   }
 
@@ -99,6 +101,7 @@ export class NewsfeedComponent implements OnInit {
           });
           this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
             this.newsfeedPosts = result;
+            this.postContent = null;
           });
         }, (err) => {
           $(document).Toasts('create', {
@@ -217,8 +220,32 @@ export class NewsfeedComponent implements OnInit {
     })
   }
 
+  sharePost(text: string) {
+    let post = new Post();
+    post.text = text;
+    post.postDate = new Date();
+    this.postService.sharePost(this.postToShare.postId, this.loggedInUser.userId, post).subscribe(() => {
+      this.postToShare = null;
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Success',
+        autohide: true,
+        delay: 2500,
+        body: 'Post Shared!',
+      });
+      this.postService.getPostForUserNewsfeed(this.loggedInUser.userId).subscribe((result) => {
+        this.newsfeedPosts = result;
+      });
+    })
+  }
+
   reportPost() {
 
+  }
+
+  setPostToShare(postId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    this.postToShare = post;
   }
 
   setPostToReport(postId: number) {

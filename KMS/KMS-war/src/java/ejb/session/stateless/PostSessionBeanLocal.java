@@ -43,7 +43,9 @@ public interface PostSessionBeanLocal {
     
     public void deleteComment(Long commentId) throws NoResultException;
     
-    public void updateComment(PostCommentEntity comment) throws NoResultException; 
+    public void updateComment(PostCommentEntity comment) throws NoResultException;
+    
+    public void sharePost(Long postToShareId, Long userId, PostEntity post) throws NoResultException;
     
     public void deletePostById(Long postId) throws NoResultException;
 

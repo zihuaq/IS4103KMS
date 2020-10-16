@@ -66,6 +66,11 @@ export class PostService {
       .pipe(catchError(this.handleError));
   }
 
+  sharePost(postToShareId: number, userId: number, post: Post): Observable<any> {
+    return this.http.put<any>(this.baseUrl + '/sharePost/' + postToShareId + '/' + userId, post, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   getPostForUserNewsfeed(userId: number): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/userNewsFeed/' + userId)
       .pipe(map((data) => {
@@ -93,6 +98,17 @@ export class PostService {
                   post.editDate.substring(17, 19)
                 ))
             };
+            // if (post.originalPost) {
+            //   post.originalPost.postDate = new Date(
+            //     Date.UTC(
+            //       post.originalPost.postDate.substring(0, 4),
+            //       post.originalPost.postDate.substring(5, 7) - 1,
+            //       post.originalPost.postDate.substring(8, 10),
+            //       post.originalPost.postDate.substring(11, 13),
+            //       post.originalPost.postDate.substring(14, 16),
+            //       post.originalPost.postDate.substring(17, 19)
+            //     ));
+            // }
             post.comments.map((postComment) => {
               return {
                 ...postComment,
@@ -104,8 +120,7 @@ export class PostService {
                     postComment.dateTime.substring(11, 13),
                     postComment.dateTime.substring(14, 16),
                     postComment.dateTime.substring(17, 19)
-                  )
-                )
+                  ))
               };
             });
             return post;
@@ -122,6 +137,17 @@ export class PostService {
                   post.postDate.substring(17, 19)
                 ))
             }
+            // if (post.originalPost.postDate != null) {
+            //   post.originalPost.postDate = new Date(
+            //     Date.UTC(
+            //       post.originalPost.postDate.substring(0, 4),
+            //       post.originalPost.postDate.substring(5, 7) - 1,
+            //       post.originalPost.postDate.substring(8, 10),
+            //       post.originalPost.postDate.substring(11, 13),
+            //       post.originalPost.postDate.substring(14, 16),
+            //       post.originalPost.postDate.substring(17, 19)
+            //     ));
+            // }
             post.comments.map((postComment) => {
               return {
                 ...postComment,

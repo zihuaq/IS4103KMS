@@ -56,16 +56,45 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo"
-                        style="display: block; margin-left: auto;margin-right: auto;width: 50%;">
+                        style="display: block; margin-left: auto;margin-right: auto" width=250 height=250>
 
                     <p>{{post.text}}</p>
 
+                    <div *ngIf="post.originalPost && !post.originalPostDeleted" class="shared-post">
+                        <div class="user-block">
+                            <img *ngIf="post.originalPost.postOwner.profilePicture" class="img-circle"
+                                [src]="post.originalPost.postOwner.profilePicture" alt="User Image">
+                            <img *ngIf="!post.originalPost.postOwner.profilePicture" class="img-circle"
+                                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                alt="User Image">
+                            <span class="username"><a href="#">{{post.originalPost.postOwner.firstName}}
+                                    {{post.originalPost.postOwner.lastName}}</a></span>
+                            <span class="description">{{post.originalPost.postDate}}</span>
+                        </div>
+                        <div class="card-body">
+                            <br />
+                            <img *ngIf="post.originalPost.picture" class="img-fluid pad"
+                                [src]="post.originalPost.picture" alt="Photo"
+                                style="display: block; margin-left: auto;margin-right: auto;" width=150 height=150>
+                            <br />
+                            <p>{{post.originalPost.text}}</p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="post.originalPostDeleted" class="shared-post">
+                        <div class="card-body">
+                            <p class="text-muted">The original post have been deleted.</p>
+                        </div>
+                    </div>
+
+                    <br />
                     <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveLikedPost(post.postId)"
                         (click)="likePost(post.postId)"><i class="far fa-thumbs-up"></i> like </button>
                     <button type="button" class="btn btn-default btn-sm" *ngIf="userHaveLikedPost(post.postId)"
                         (click)="removeLikeForPost(post.postId)"><i class="fas fa-thumbs-up"></i> liked </button>
-                    <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveSharedPost(post.postId)"><i
-                            class="fas fa-share"></i> share </button>
+                    <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveSharedPost(post.postId)"
+                        data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
+                        <i class="fas fa-share"></i> share </button>
                     <button type="button" class="btn btn-default btn-sm" disabled="true"
                         *ngIf="userHaveSharedPost(post.postId)"><i class="fas fa-share"></i> shared </button>
                     <button type="button" class="btn btn-default btn-sm"
@@ -73,7 +102,7 @@
                         data-target="#modal-default" (click)="setPostToReport(post.postId)">
                         <i class="fas fa-flag"></i> report </button>
                     <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}
-                        comments</span>
+                        comments - {{post.sharedPosts.length}} shares</span>
                 </div>
                 <div *ngIf="post.comments && post.comments.length >0" class="card-footer card-comments">
                     <div class="card-comment" *ngFor="let comment of post.comments">
@@ -164,11 +193,36 @@
 </div>
 <!-- /.modal -->
 
+<div class="modal fade" id="modal-secondary" *ngIf="postToShare">
+    <div class="modal-dialog">
+        <div class="modal-content bg-secondary">
+            <div class="modal-header">
+                <h4 class="modal-title">Share {{postToShare.postOwner.firstName}} {{postToShare.postOwner.lastName}}'s
+                    Post</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <input placeholder="Say something about this post..." #text style="width: 100%;">
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal"
+                    (click)="sharePost(text.value)">Post</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
 <div class="modal fade" id="modal-default" *ngIf="postToReport && reportTags">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Report {{postToReport.postOwner.firstName}} {{postToReport.postOwner.lastName}}'s Post</h4>
+                <h4 class="modal-title">Report {{postToReport.postOwner.firstName}}
+                    {{postToReport.postOwner.lastName}}'s Post</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -176,8 +230,8 @@
             <div class="modal-body">
                 <p>Help us understand what is happening, please select your concerns. </p>
                 <div class="select2-red">
-                    <select class="select2" id="reportnewsfeedselect2" multiple="multiple" data-placeholder="Select concerns"
-                        data-dropdown-css-class="select2-red" style="width: 100%;">
+                    <select class="select2" id="reportnewsfeedselect2" multiple="multiple"
+                        data-placeholder="Select concerns" data-dropdown-css-class="select2-red" style="width: 100%;">
                     </select>
                 </div>
                 <br />
@@ -186,7 +240,8 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
-                <button type="button" class="btn btn-primary" (click)="reportPost()" data-dismiss="modal">Submit</button>
+                <button type="button" class="btn btn-primary" (click)="reportPost()"
+                    data-dismiss="modal">Submit</button>
             </div>
         </div>
         <!-- /.modal-content -->
