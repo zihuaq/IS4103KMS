@@ -59,16 +59,19 @@
                             <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab">Human Resource Postings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                            <a class="nav-link" id="details-tab-activity" data-toggle="pill" href="#activity-tab">Activities</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-activity" data-toggle="pill" href="#activity-tab">Activity</a>
+                            <a class="nav-link" id="details-tab-task" data-toggle="pill" href="#task-tab">Tasks</a>
                         </li>
                     </ul>
                 </div>
@@ -128,17 +131,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
+                            <p>review-tab works</p>
+                        </div>
                         <div class="tab-pane fade" id="mrp-tab" role="tabpanel">
                             <app-view-mrp-tab></app-view-mrp-tab>
                         </div>
                         <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
                             <app-view-hrp-tab></app-view-hrp-tab>
                         </div>
-                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
-                            <p>review-tab works</p>
-                        </div>
                         <div class="tab-pane fade" id="activity-tab" role="tabpanel">
                             <app-activity-tab></app-activity-tab>
+                        </div>
+                        <div class="tab-pane fade" id="task-tab" role="tabpanel">
+                            <app-task-tab></app-task-tab>
                         </div>
                     </div>                    
                 </div>

@@ -31,7 +31,7 @@
     "currency-codes": "^2.1.0",
     "currency-symbol-map": "^4.0.4",
     "date-fns": "^2.16.1",
-    "devextreme-angular": "20.1.7",
+    "dhtmlx-gantt": "^7.0.10",
     "ngx-bootstrap": "^6.1.0",
     "ngx-paypal": "^6.2.0",
     "rxjs": "~6.5.5",
