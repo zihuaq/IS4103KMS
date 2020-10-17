@@ -55,7 +55,13 @@ import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp
 import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
 import { JobAppliedComponent } from './profile/job-applied/job-applied.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
-import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/manage-fulfillments/manage-fulfillments.component';
+import { ActivityTabComponent } from './project/viewProject/activity-tab/activity-tab.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { EditActivityTabComponent } from './project/editProject/edit-activity-tab/edit-activity-tab.component';
+import { DatePipe } from '@angular/common';
+import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
+import { TaskTabComponent } from './project/viewProject/task-tab/task-tab.component';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
 
 @NgModule({
@@ -106,7 +112,10 @@ import { NewsfeedComponent } from './newsfeed/newsfeed.component';
     ViewMrpTabComponent,
     JobAppliedComponent,
     MyFulfillmentsComponent,
-    ManageFulfillmentsComponent,
+    ActivityTabComponent,
+    EditActivityTabComponent,
+    DonateToProjectComponent,
+    TaskTabComponent,
     NewsfeedComponent
   ],
   imports: [
@@ -119,8 +128,9 @@ import { NewsfeedComponent } from './newsfeed/newsfeed.component';
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     ModalModule.forRoot(),
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,0 +1,179 @@
+<div class="row text-center">
+    <div class="col-sm-4">
+        <div class="btn-group">
+            <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+                Previous
+            </div>
+            <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+                Today
+            </div>
+            <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+                Next
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <h3>{{ viewDate | date:'MMMM yyyy' }}</h3>
+    </div>
+    <!-- <div class="col-sm-4">
+        <div class="btn-group">
+            <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
+                Month
+            </div>
+            <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
+                Week
+            </div>
+            <div class="btn btn-primary" (click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
+                Day
+            </div>
+        </div>
+    </div> -->
+</div>
+
+<div [ngSwitch]="view">
+    <mwl-calendar-month-view
+      *ngSwitchCase="CalendarView.Month"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+      [activeDayIsOpen]="activeDayIsOpen"
+      (dayClicked)="dayClicked($event.day)"
+    >
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+      *ngSwitchCase="CalendarView.Week"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+    >
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view
+      *ngSwitchCase="CalendarView.Day"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+    >
+    </mwl-calendar-day-view>
+</div>
+
+<br/><br/><br/>
+
+<h3>
+    Activities
+    <div class="clearfix"></div>
+</h3>
+
+<span *ngIf="activities.length == 0">
+    No activities
+</span>
+
+<span *ngIf="activities.length > 0">
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <th>Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Country</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th *ngIf="isMember">Action</th>
+            </thead>
+    
+            <tbody>
+                <tr *ngFor="let activity of activities">
+                    <td>
+                    {{activity.name}}
+                    </td>
+                    <td>
+                    {{formatDate(activity.startDate) | date}}
+                    </td>
+                    <td>
+                    {{formatDate(activity.endDate) | date}}
+                    </td>
+                    <td>
+                    {{activity.country}}
+                    </td>
+                    <td>
+                    {{activity.location}}
+                    </td>
+                    <td>
+                    {{activity.description}}
+                    </td>
+                    <td *ngIf="isMember">
+                        <button class="btn btn-secondary" rel="tooltip" title="Members" data-toggle="modal" data-target="#modal-user-joined" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                            <i class="fas fa-users"></i>
+                        </button>
+                        <button class="btn btn-primary" *ngIf="!hasJoined(activity.activityId)" (click)="joinActivity(activity.activityId)">Join</button>
+                        <button class="btn btn-light" *ngIf="hasJoined(activity.activityId)" disabled>Joined</button>
+                        <button class="btn btn-primary" *ngIf="hasJoined(activity.activityId)" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>                        
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" (click)="leaveActivity(activity.activityId)">Leave</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</span>
+
+<div class="modal fade" id="modal-user-joined">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Members</h4>
+                <button type="button" id="viewUserBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <span *ngIf="activitySelected.joinedUsers.length == 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title"><b>Members</b></h5>
+                        </div>
+                        <li class="list-group-item">
+                            There is currently no members in this activity.
+                        </li>
+                    </div>
+                </span>
+                <span *ngIf="activitySelected.joinedUsers.length > 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title"><b>Members</b></h5>
+                        </div>
+                        <ul class="list-group" *ngFor="let member of activitySelected.joinedUsers">
+                            <li class="list-group-item">
+                                <span *ngIf="!inContributors(member.userId)">
+                                    {{member.firstName}} {{member.lastName}}
+                                </span>
+                            </li>
+                        </ul> 
+                    </div>                               
+                </span>   
+                <span *ngIf="contributors.length == 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title"><b>Contributors</b></h5>
+                        </div>
+                        <li class="list-group-item">
+                            There is currently no contributors in this activity.
+                        </li>
+                    </div>
+                </span>
+                <span *ngIf="contributors.length > 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title"><b>Contributors</b></h5>
+                        </div>
+                        <ul class="list-group" *ngFor="let contributor of contributors">
+                            <li class="list-group-item" >
+                                {{contributor.firstName}} {{contributor.lastName}}
+                            </li>
+                        </ul> 
+                    </div>                               
+                </span>          
+            </div>
+        </div>
+    </div>
+</div>

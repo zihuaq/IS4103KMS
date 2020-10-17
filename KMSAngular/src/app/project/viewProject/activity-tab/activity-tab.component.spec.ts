@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManageFulfillmentsComponent } from './manage-fulfillments.component';
+import { ActivityTabComponent } from './activity-tab.component';
 
-describe('ManageFulfillmentsComponent', () => {
-  let component: ManageFulfillmentsComponent;
-  let fixture: ComponentFixture<ManageFulfillmentsComponent>;
+describe('ActivityTabComponent', () => {
+  let component: ActivityTabComponent;
+  let fixture: ComponentFixture<ActivityTabComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ManageFulfillmentsComponent ]
+      declarations: [ ActivityTabComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ManageFulfillmentsComponent);
+    fixture = TestBed.createComponent(ActivityTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

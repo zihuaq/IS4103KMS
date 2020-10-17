@@ -59,24 +59,30 @@
                             <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab">Human Resource Postings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                            <a class="nav-link" id="details-tab-activity" data-toggle="pill" href="#activity-tab">Activities</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-task" data-toggle="pill" href="#task-tab">Tasks</a>
                         </li>
                     </ul>
                 </div>
                 <div class="card-body" id="custom-tabs-four-tabContent">
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel" style="position: relative;">
                             <p><b>Description:</b> {{projectToView.description}}</p>
                             <p><b>Country:</b> {{projectToView.country}}</p>
-                            <p><b>Date created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
-                            <p><b>Monetary Funding Required:</b> ${{projectToView.monetaryFundingRequired}}</p>
-                            <p><b>Monetary Funding Obtained:</b> ${{projectToView.monetaryFundingObtained}}</p>
+                            <button *ngIf="projectToView.monetaryFundingRequired && isMember" type="button" class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;" [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project</button>
+                            <p><b>Date Created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
+                            <p *ngIf="projectToView.monetaryFundingRequired"><b>Monetary Funding (USD):</b> ${{projectToView.monetaryFundingObtained | number:'1.0'}} obtained / ${{projectToView.monetaryFundingRequired | number:'1.0'}} required</p>
                             <p><b>SDGs: </b> 
                                 <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary" style="margin-right: 5px;">
                                     {{tag.name}}
@@ -125,14 +131,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
+                            <p>review-tab works</p>
+                        </div>
                         <div class="tab-pane fade" id="mrp-tab" role="tabpanel">
                             <app-view-mrp-tab></app-view-mrp-tab>
                         </div>
                         <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
                             <app-view-hrp-tab></app-view-hrp-tab>
                         </div>
-                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
-                            <p>review-tab works</p>
+                        <div class="tab-pane fade" id="activity-tab" role="tabpanel">
+                            <app-activity-tab></app-activity-tab>
+                        </div>
+                        <div class="tab-pane fade" id="task-tab" role="tabpanel">
+                            <app-task-tab></app-task-tab>
                         </div>
                     </div>                    
                 </div>

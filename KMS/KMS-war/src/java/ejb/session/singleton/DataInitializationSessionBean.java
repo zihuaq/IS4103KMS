@@ -147,12 +147,12 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORT));
         
         try {
-            projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", 0.0), 1l, new ArrayList<>(Arrays.asList(37l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Improve Sanitation in Nigeria", "Inadequate sanitation is a leading cause of poverty, largely due to premature mortality. Less than one third of the Nigerian population has access to basic sanitation.", new Date(), "Nigeria", "", 5000.0), 3l, new ArrayList<>(Arrays.asList(24l, 26l, 29l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Educating Farmers", "Educate market gardeners and farmers on protecting land, soil degradation and more efficient agricultural techniques.", new Date(), "Viet Nam", "", 1000.0), 4l, new ArrayList<>(Arrays.asList(25l, 35l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", 0.0), 5l, new ArrayList<>(Arrays.asList(26l, 27l, 29l, 33l, 37l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Green City Solutions", "Create and implement new green inventions such as city trees that are plant-based air filters and smart street pathway that converts kinetic energy of footsteps into electricity.", new Date(), "United Kingdom", "", 10000.0), 5l, new ArrayList<>(Arrays.asList(30l, 32l, 34l, 36l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Resilience and Response Systems", "Promoting social cohesion and investing in community-led resilience and response systems. Helping people cope with adversity, through social protection and basic services.", new Date(), "Hong Kong", "", 0.0), 6l, new ArrayList<>(Arrays.asList(31l, 39l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", null, null), 1l, new ArrayList<>(Arrays.asList(37l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Improve Sanitation in Nigeria", "Inadequate sanitation is a leading cause of poverty, largely due to premature mortality. Less than one third of the Nigerian population has access to basic sanitation.", new Date(), "Nigeria", "", 5000.0, "YPYAZ5KNH42QL"), 3l, new ArrayList<>(Arrays.asList(24l, 26l, 29l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Educating Farmers", "Educate market gardeners and farmers on protecting land, soil degradation and more efficient agricultural techniques.", new Date(), "Bolivia", "", 1000.0, "WUTXB4YPU76ZY"), 4l, new ArrayList<>(Arrays.asList(25l, 35l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", null, null), 5l, new ArrayList<>(Arrays.asList(26l, 27l, 29l, 33l, 37l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Green City Solutions", "Create and implement new green inventions such as city trees that are plant-based air filters and smart street pathway that converts kinetic energy of footsteps into electricity.", new Date(), "United Kingdom", "", 10000.0, "SDFU9MD6FJC2Q"), 5l, new ArrayList<>(Arrays.asList(30l, 32l, 34l, 36l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Resilience and Response Systems", "Promoting social cohesion and investing in community-led resilience and response systems. Helping people cope with adversity, through social protection and basic services.", new Date(), "Hong Kong", "", 3000.0, "3MRY2XUU4FMFC"), 6l, new ArrayList<>(Arrays.asList(31l, 39l)));
             projectSessionBean.joinProject(4l, 1l);
             projectSessionBean.joinProject(4l, 2l);
             projectSessionBean.joinProject(4l, 3l);
@@ -172,7 +172,7 @@ public class DataInitializationSessionBean {
             
             tagIds.add(9l);
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.4491, 103.8185), 1l, tagIds);
-            
+            projectSessionBean.joinProject(1l, 3l);
             humanResourcePostingSessionBean.joinHrp(3l, 2l);
             
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-30"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(23l)));

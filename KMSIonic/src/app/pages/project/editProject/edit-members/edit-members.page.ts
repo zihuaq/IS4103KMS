@@ -40,10 +40,12 @@ export class EditMembersPage implements OnInit {
     }
 
   ngOnInit() {
+    console.log('memberTab: ngOnInit ')
     this.refreshProject();
   }
 
   ionViewWillEnter() {
+    console.log('memberTab: ionViewWillEnter ')
     this.refreshProject();
   }
 
@@ -299,6 +301,9 @@ export class EditMembersPage implements OnInit {
         handler: () => {
           this.removeMember(user);
         }
+      }, {
+        text: 'Cancel',
+        role: 'cancel'
       }]
     })
     await actionSheet.present();
@@ -316,6 +321,9 @@ export class EditMembersPage implements OnInit {
         handler: () => {
           this.removeMember(user);
         }
+      }, {
+        text: 'Cancel',
+        role: 'cancel'
       }]
     })
     await actionSheet.present();

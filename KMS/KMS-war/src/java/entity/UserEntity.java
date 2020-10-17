@@ -144,6 +144,13 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "postOwner")
     private List<PostEntity> posts;
 
+    @JoinTable(name = "activityJoined")
+    @ManyToMany
+    private List<ActivityEntity> activityJoined;
+    
+    @OneToMany
+    private List<DonationEntity> donations;
+    
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
         this.reviewsReceived = new ArrayList<>();
@@ -171,6 +178,8 @@ public class UserEntity implements Serializable {
         this.affiliationRequestReceived = new ArrayList<>();
         this.hrpApplied = new ArrayList<>();
         this.fulfillments = new ArrayList<>();
+        this.activityJoined = new ArrayList<>();
+        this.donations = new ArrayList<>();
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
@@ -539,5 +548,21 @@ public class UserEntity implements Serializable {
 
     public void setFulfillments(List<FulfillmentEntity> fulfillments) {
         this.fulfillments = fulfillments;
-    }  
+    }
+
+    public List<ActivityEntity> getActivityJoined() {
+        return activityJoined;
+    }
+
+    public void setActivityJoined(List<ActivityEntity> activityJoined) {
+        this.activityJoined = activityJoined;
+    }
+
+    public List<DonationEntity> getDonations() {
+        return donations;
+    }
+
+    public void setDonations(List<DonationEntity> donations) {
+        this.donations = donations;
+    }
 }
