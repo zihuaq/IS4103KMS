@@ -98,6 +98,34 @@ export class TaskTabComponent implements OnInit {
           });
         });
     }, null);
+
+    gantt.attachEvent("onAfterLinkAdd", (id, link) => {
+      this.linkService.createNewLink(link).subscribe(
+        response => {
+          console.log(link, response);
+          gantt.changeLinkId(id, response);
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Link is successfully created!',
+          });
+        });
+    }, null);
+
+    gantt.attachEvent("onAfterLinkDelete", (id) => {
+      this.linkService.deleteLink(id).subscribe(
+        response => {
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Link is successfully deleted!',
+          });
+        });
+    }, null);
     
   }
   
