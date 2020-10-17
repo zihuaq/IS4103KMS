@@ -254,6 +254,38 @@ public class ActivityResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+    
+    @Path("addHrpToActivity/{activityId}/{hrpId}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addHrpToActivity(@PathParam("activityId") Long activityId, @PathParam("hrpId") Long hrpId) {
+        System.out.println("******** ActivityResource: addHrpToActivity()");
+        try {
+            activitySessionBean.allocateHrpToActivity(activityId, hrpId);
+            
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("removeHrpFromActivity/{activityId}/{hrpId}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response removeHrpFromActivity(@PathParam("activityId") Long activityId, @PathParam("hrpId") Long hrpId) {
+        System.out.println("******** ActivityResource: removeHrpFromActivity()");
+        try {
+            activitySessionBean.removeHrpFromActivity(activityId, hrpId);
+            
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
 
     private ActivitySessionBeanLocal lookupActivitySessionBeanLocal() {
         try {
