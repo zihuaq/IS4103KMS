@@ -11,14 +11,12 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -39,9 +37,6 @@ public class PostEntity implements Serializable {
     
     @Temporal(TemporalType.DATE)
     private Date postDate;
-    
-    @Temporal(TemporalType.DATE)
-    private Date editDate;
     
     private String text;
     
@@ -79,9 +74,8 @@ public class PostEntity implements Serializable {
         this.originalPostDeleted = false;
     }
 
-    public PostEntity(Date postDate, Date editDate, String text, UserEntity postOwner, PostEntity originalPost) {
+    public PostEntity(Date postDate, String text, UserEntity postOwner, PostEntity originalPost) {
         this.postDate = postDate;
-        this.editDate = editDate;
         this.text = text;
         this.postOwner = postOwner;
         this.originalPost = originalPost;
@@ -166,14 +160,6 @@ public class PostEntity implements Serializable {
 
     public void setPostDate(Date postDate) {
         this.postDate = postDate;
-    }
-
-    public Date getEditDate() {
-        return editDate;
-    }
-
-    public void setEditDate(Date editDate) {
-        this.editDate = editDate;
     }
 
     public String getText() {

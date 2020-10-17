@@ -104,78 +104,35 @@ export class PostService {
       map((data) => {
         // return data.map((post) => {this.parsePostDate})
         return data.map((post) => {
-          if (post.editDate) {
-            post = {
-              ...post,
-              postDate: new Date(
+          post = {
+            ...post,
+            postDate: new Date(
+              Date.UTC(
+                post.postDate.substring(0, 4),
+                post.postDate.substring(5, 7) - 1,
+                post.postDate.substring(8, 10),
+                post.postDate.substring(11, 13),
+                post.postDate.substring(14, 16),
+                post.postDate.substring(17, 19)
+              )
+            )
+          };
+          post.comments.map((postComment) => {
+            return {
+              ...postComment,
+              dateTime: new Date(
                 Date.UTC(
-                  post.postDate.substring(0, 4),
-                  post.postDate.substring(5, 7) - 1,
-                  post.postDate.substring(8, 10),
-                  post.postDate.substring(11, 13),
-                  post.postDate.substring(14, 16),
-                  post.postDate.substring(17, 19)
-                )
-              ),
-              editDate: new Date(
-                Date.UTC(
-                  post.editDate.substring(0, 4),
-                  post.editDate.substring(5, 7) - 1,
-                  post.editDate.substring(8, 10),
-                  post.editDate.substring(11, 13),
-                  post.editDate.substring(14, 16),
-                  post.editDate.substring(17, 19)
+                  postComment.dateTime.substring(0, 4),
+                  postComment.dateTime.substring(5, 7) - 1,
+                  postComment.dateTime.substring(8, 10),
+                  postComment.dateTime.substring(11, 13),
+                  postComment.dateTime.substring(14, 16),
+                  postComment.dateTime.substring(17, 19)
                 )
               )
             };
-            post.comments.map((postComment) => {
-              return {
-                ...postComment,
-                dateTime: new Date(
-                  Date.UTC(
-                    postComment.dateTime.substring(0, 4),
-                    postComment.dateTime.substring(5, 7) - 1,
-                    postComment.dateTime.substring(8, 10),
-                    postComment.dateTime.substring(11, 13),
-                    postComment.dateTime.substring(14, 16),
-                    postComment.dateTime.substring(17, 19)
-                  )
-                )
-              };
-            });
-            return post;
-          } else {
-            console.log('here');
-            post = {
-              ...post,
-              postDate: new Date(
-                Date.UTC(
-                  post.postDate.substring(0, 4),
-                  post.postDate.substring(5, 7) - 1,
-                  post.postDate.substring(8, 10),
-                  post.postDate.substring(11, 13),
-                  post.postDate.substring(14, 16),
-                  post.postDate.substring(17, 19)
-                )
-              )
-            };
-            post.comments.map((postComment) => {
-              return {
-                ...postComment,
-                dateTime: new Date(
-                  Date.UTC(
-                    postComment.dateTime.substring(0, 4),
-                    postComment.dateTime.substring(5, 7) - 1,
-                    postComment.dateTime.substring(8, 10),
-                    postComment.dateTime.substring(11, 13),
-                    postComment.dateTime.substring(14, 16),
-                    postComment.dateTime.substring(17, 19)
-                  )
-                )
-              };
-            });
-            return post;
-          }
+          });
+          return post;
         });
       }),
       catchError(this.handleError)
