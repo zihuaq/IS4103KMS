@@ -1,30 +1,37 @@
-<label >{{profile.firstName}} {{profile.lastName}}'s Projects Joined</label>
+<label>{{profile.firstName}} {{profile.lastName}}'s Projects Joined</label>
 <br />
 
-<span *ngIf="noProjects"> 
+<span *ngIf="noProjects">
     {{profile.firstName}} {{profile.lastName}} has not joined any projects at the moment.
 </span>
 
-<span *ngIf="!noProjects"> 
+<span *ngIf="!noProjects">
     <div *ngFor="let project of projectsJoined">
         <div class="card">
             <div class="card-body">
                 <div class="row">
                     <div class="col-4">
-                        <div class="image" style= "overflow: hidden; position: relative; margin-left: 10px;">
-                            <img *ngIf="project.profilePicture" style="height: auto; width: auto; transform: scale(1.5)" [src]="project.profilePicture"  alt="Project Profile Picture">
-                            <img *ngIf="!project.profilePicture" style="height: 150px; width: auto;"  src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Project Profile Picture">
+                        <div class="image" style="overflow: hidden; position: relative; margin-left: 10px;">
+                            <img *ngIf="project.profilePicture" style="height: auto; width: auto; transform: scale(1.5)"
+                                [src]="project.profilePicture" alt="Project Profile Picture">
+                            <img *ngIf="!project.profilePicture" style="height: 150px; width: auto;"
+                                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                alt="Project Profile Picture">
                         </div>
                     </div>
                     <div class="col-8">
                         <div>
                             <span style="font-size: 18px; font-weight: bold; margin-top: 5px;">{{project.name}}
-                                <span class="badge badge-info" *ngIf="project.status == projectType.ACTIVE" style="font-size: 12px; padding-right: 5px; vertical-align:20%;">{{project.status}}</span>
-                                <span class="badge badge-warning" *ngIf="project.status == projectType.INACTIVE" style="font-size: 12px; padding-right: 5px; vertical-align: 20%;">{{project.status}}</span>
-                                <span class="badge badge-success" *ngIf="project.status == projectType.COMPLETED" style="font-size: 12px; padding-right: 5px; background-color: rgb(11, 139, 11); vertical-align: 20%;">{{project.status}}</span>
+                                <span class="badge badge-info" *ngIf="project.status == projectType.ACTIVE"
+                                    style="font-size: 12px; padding-right: 5px; vertical-align:20%;">{{project.status}}</span>
+                                <span class="badge badge-warning" *ngIf="project.status == projectType.INACTIVE"
+                                    style="font-size: 12px; padding-right: 5px; vertical-align: 20%;">{{project.status}}</span>
+                                <span class="badge badge-success" *ngIf="project.status == projectType.COMPLETED"
+                                    style="font-size: 12px; padding-right: 5px; background-color: rgb(11, 139, 11); vertical-align: 20%;">{{project.status}}</span>
                             </span>
-                            <br/>
-                            <span class="card-text" style="font-size: 15px; color: rgb(92, 92, 92); margin-top: 10px;">{{project.description}}</span>
+                            <br />
+                            <span class="card-text"
+                                style="font-size: 15px; color: rgb(92, 92, 92); margin-top: 10px;">{{project.description}}</span>
                             <span class="text-muted text-sm" style="margin-left: -7px; margin-top: -15px;">
                                 <span class="d-flex flex-wrap">
                                     <div *ngFor="let sdg of project.sdgs">
@@ -32,7 +39,8 @@
                                     </div>
                                 </span>
                             </span>
-                            <a class="card-block stretched-link text decoration-none" style="cursor: pointer;" (click)="onSelect(project)"></a>
+                            <a class="card-block stretched-link text decoration-none" *ngIf="!shared"
+                                style="cursor: pointer;" (click)="onSelect(project)"></a>
                         </div>
                     </div>
                 </div>

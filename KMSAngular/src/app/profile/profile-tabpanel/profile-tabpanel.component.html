@@ -1,10 +1,9 @@
 <div class="card card-primary card-outline card-tabs">
     <div class="card-header p-0 pt-1 border-bottom-0">
         <ul class="nav nav-tabs" id="profile-tab" role="tablist">
-            <li class="nav-item" *ngIf="profile.userId != loggedInUser.userId">
-                <a class="nav-link" id="profile-tab-projects-tabname" data-toggle="pill"
-                    href="#profile-tab-projects" role="tab" aria-controls="profile-tab-projects"
-                    aria-selected="false">Projects</a>
+            <li class="nav-item" *ngIf="shared || profile.userId != loggedInUser.userId">
+                <a class="nav-link" id="profile-tab-projects-tabname" data-toggle="pill" href="#profile-tab-projects"
+                    role="tab" aria-controls="profile-tab-projects" aria-selected="false">Projects</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link active" id="profile-tab-material-resource-available-tabname" data-toggle="pill"
@@ -16,12 +15,12 @@
                 <a class="nav-link" id="profile-tab-skills-tabname" data-toggle="pill" href="#profile-tab-skills"
                     role="tab" aria-controls="profile-tab-skills" aria-selected="false">Skills</a>
             </li>
-            <li class="nav-item" *ngIf="profile.userId == loggedInUser.userId">
+            <li class="nav-item" *ngIf="!shared && profile.userId == loggedInUser.userId">
                 <a class="nav-link" id="profile-tab-edit-profile-tabname" data-toggle="pill"
                     href="#profile-tab-edit-profile" role="tab" aria-controls="profile-tab-edit-profile"
                     aria-selected="false">Edit Profile</a>
             </li>
-            <li class="nav-item" *ngIf="profile.userId == loggedInUser.userId">
+            <li class="nav-item" *ngIf="!shared && profile.userId == loggedInUser.userId">
                 <a class="nav-link" id="profile-tab-job-applied-tabname" data-toggle="pill"
                     href="#profile-tab-job-applied" role="tab" aria-controls="profile-tab-job-applied"
                     aria-selected="false">Job Applied</a>
@@ -32,17 +31,18 @@
         <div class="tab-content" id="custom-tabs-four-tabContent">
             <div class="tab-pane fade" id="profile-tab-projects" role="tabpanel"
                 aria-labelledby="profile-tab-projects-tabname">
-                <app-projects [profile]="profile" (profileChanged)="handleProfileChanged($event)"></app-projects>
-            </div> 
+                <app-projects [shared]="shared" [profile]="profile" (profileChanged)="handleProfileChanged($event)">
+                </app-projects>
+            </div>
             <div class="tab-pane fade show active" id="profile-tab-material-resource-available" role="tabpanel"
                 aria-labelledby="profile-tab-material-resource-available-tabname">
-                <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser"
+                <app-material-resource-available [shared]="shared" [profile]="profile" [loggedInUser]="loggedInUser"
                     (profileChanged)="handleProfileChanged($event)">
                 </app-material-resource-available>
             </div>
             <div class="tab-pane fade" id="profile-tab-skills" role="tabpanel"
                 aria-labelledby="profile-tab-skills-tabname">
-                <app-skills [profile]="profile" [loggedInUser]="loggedInUser"
+                <app-skills [shared]="shared" [profile]="profile" [loggedInUser]="loggedInUser"
                     (profileChanged)="handleProfileChanged($event)"></app-skills>
             </div>
             <div class="tab-pane fade" id="profile-tab-edit-profile" role="tabpanel"

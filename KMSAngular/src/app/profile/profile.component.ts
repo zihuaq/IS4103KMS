@@ -12,6 +12,7 @@ import { SessionService } from '../session.service';
 export class ProfileComponent implements OnInit {
   profile: User;
   loggedInUser: User;
+  shared: boolean;
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
@@ -19,6 +20,7 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.shared = this.activatedRoute.snapshot.url[1]?.path == 'shared';
     let profileid = this.activatedRoute.snapshot.params.userid;
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     if (!profileid || profileid == loggedInUserId) {
@@ -32,12 +34,12 @@ export class ProfileComponent implements OnInit {
       this.userService
         .getUser(loggedInUserId.toString())
         .subscribe((data: User) => {
-          console.log(data)
+          console.log(data);
           this.loggedInUser = data;
         });
-        
+
       this.userService.getUser(profileid).subscribe((data: User) => {
-        console.log(data)
+        console.log(data);
         this.profile = data;
       });
     }

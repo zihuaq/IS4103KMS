@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="!isEditPage">Create Post</ion-title>
+    <ion-title *ngIf="isEditPage">Edit Post</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!isEditPage" (click)="createPost()" [disabled]="!canPost">POST</ion-button>
+      <ion-button *ngIf="isEditPage" (click)="createPost()" [disabled]="!canPost">UPDATE</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="loggedInUser">
+  <ion-item lines="none">
+    <ion-avatar slot="start" class="ion-margin-start">
+      <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
+        alt="User profile picture">
+      <img *ngIf="!loggedInUser.profilePicture" class="ion-border"
+        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+        alt="User profile picture">
+    </ion-avatar>
+    <ion-card-title>{{loggedInUser.firstName}} {{loggedInUser.lastName}}</ion-card-title>
+  </ion-item>
+  <ion-item *ngIf="uploadedPicture" lines="none">
+    <ion-slides pager="true" [options]="slideOpts" style="height: 100px;">
+      <ion-slide>
+        <img [src]="uploadedPicture" />
+      </ion-slide>
+    </ion-slides>
+  </ion-item>
+  <ion-textarea (ionChange)="checkCanPost()" placeholder="What's on your mind?" [(ngModel)]="postContent" autoGrow=true>
+  </ion-textarea>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-button (click)="choosePictureActionSheet()" expand="block" shape="round">
+      Upload Picture
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

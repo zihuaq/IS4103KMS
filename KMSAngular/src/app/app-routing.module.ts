@@ -25,7 +25,6 @@ import { ErrorPageComponent } from './project/viewProject/error-page/error-page.
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 
-
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
   { path: 'signup', component: CreateNewUserComponent },
@@ -64,9 +63,14 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: ProfileComponent,
   },
-  { path: 'profile', 
-    canActivate: [RouteGuard], 
-    component: ProfileComponent 
+  {
+    path: 'profile/shared/:userid',
+    component: ProfileComponent,
+  },
+  {
+    path: 'profile',
+    canActivate: [RouteGuard],
+    component: ProfileComponent,
   },
   {
     path: 'accountVerification/:email/:uuid',
@@ -102,21 +106,21 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: SdgInfoComponent,
   },
-  { path: '', 
-  canActivate: [RouteGuard], 
-  component: IndexComponent 
+  { path: '', canActivate: [RouteGuard], component: IndexComponent },
+  {
+    path: 'projectDetails/:projectId',
+    canActivate: [RouteGuard],
+    component: ProjectDetailsComponent,
   },
-  { path: 'projectDetails/:projectId', 
-    canActivate: [RouteGuard], 
-    component: ProjectDetailsComponent 
+  {
+    path: 'editProject/:projectId',
+    canActivate: [RouteGuard],
+    component: EditProjectComponent,
   },
-  { path: 'editProject/:projectId',
-    canActivate: [RouteGuard], 
-    component: EditProjectComponent
-  },
-  { path: 'myFulfillments/:projectId',
-    canActivate: [RouteGuard], 
-    component: MyFulfillmentsComponent
+  {
+    path: 'myFulfillments/:projectId',
+    canActivate: [RouteGuard],
+    component: MyFulfillmentsComponent,
   },
   {
     path: 'donateToProject/:projectId',
