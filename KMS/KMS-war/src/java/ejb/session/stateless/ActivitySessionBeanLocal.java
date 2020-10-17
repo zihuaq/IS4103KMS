@@ -31,5 +31,9 @@ public interface ActivitySessionBeanLocal {
     public void removeMemberFromActivity(Long activityId, Long userId) throws NoResultException;
 
     public void deleteActivity(Long activityId) throws NoResultException;
+
+    public void allocateHrpToActivity(Long activityId, Long hrpId) throws NoResultException;
+
+    public void removeHrpFromActivity(Long activityId, Long hrpId) throws NoResultException;
         
 }

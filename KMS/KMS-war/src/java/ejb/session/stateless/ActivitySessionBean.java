@@ -27,6 +27,9 @@ import javax.persistence.Query;
 @Stateless
 public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
+    @EJB(name = "HumanResourcePostingSessionBeanLocal")
+    private HumanResourcePostingSessionBeanLocal humanResourcePostingSessionBeanLocal;
+
     @EJB(name = "UserSessionBeanLocal")
     private UserSessionBeanLocal userSessionBeanLocal;
 
@@ -136,5 +139,24 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         }
         
         em.remove(activityToDelete);
+    }
+    
+    @Override
+    public void allocateHrpToActivity(Long activityId, Long hrpId) throws NoResultException {
+        ActivityEntity activity = getActivityById(activityId);
+        HumanResourcePostingEntity hrp = humanResourcePostingSessionBeanLocal.getHrpById(hrpId);
+        
+        hrp.setActivity(activity);
+        activity.getHumanResourcePostings().add(hrp);
+        
+    }
+    
+    @Override
+    public void removeHrpFromActivity(Long activityId, Long hrpId) throws NoResultException {
+        ActivityEntity activity = getActivityById(activityId);
+        HumanResourcePostingEntity hrp = humanResourcePostingSessionBeanLocal.getHrpById(hrpId);
+        
+        hrp.setActivity(null);
+        activity.getHumanResourcePostings().remove(hrp);
     }
 }
