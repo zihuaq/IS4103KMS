@@ -10,6 +10,9 @@ import { ActivityService } from 'src/app/activity.service';
 import { SessionService } from 'src/app/session.service';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/project.service';
+import { User } from 'src/app/classes/user';
+import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
+import { HrpService } from 'src/app/hrp.service';
 
 declare var $: any;
 
@@ -42,14 +45,20 @@ export class ActivityTabComponent implements OnInit {
   activities: Activity[];
   isMember: boolean = false;
   project: Project;
+  activitySelected: Activity;
+  contributors: User[];
 
   constructor(private projectService: ProjectService,
     private activityService: ActivityService,
     private sessionService: SessionService,
+    private hrpService: HrpService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private datePipe: DatePipe) {
     this.activities = [];
+    this.activitySelected = new Activity();
+    this.activitySelected.joinedUsers = [];
+    this.contributors = [];
    }
 
   ngOnInit(): void {
@@ -165,6 +174,35 @@ export class ActivityTabComponent implements OnInit {
         this.refreshActivities();
       }
     )
+  }
+
+  clickActivity(activityId: number) {
+    this.activityService.getActivityById(activityId).subscribe(
+      response => {
+        this.activitySelected = response;
+      }
+    );
+    
+    this.contributors = [];
+    this.hrpService.getHrpByActivityId(activityId).subscribe(
+      response => {
+        let hrps = response;
+        for (let hrp of hrps) {
+          for (let user of hrp.appliedUsers) {
+            this.contributors.push(user);
+          }
+        }
+      }
+    )
+  }
+
+  inContributors(userId: number): boolean {
+    for (let user of this.contributors) {
+      if (user.userId == userId) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }
