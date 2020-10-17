@@ -87,6 +87,20 @@ export class PostService {
       .pipe(catchError(this.handleError));
   }
 
+  sharePost(
+    postToShareId: number,
+    userId: number,
+    post: Post
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/sharePost/' + postToShareId + '/' + userId,
+        post,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   getPostForUserNewsfeed(userId: number): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/userNewsFeed/' + userId).pipe(
       map((data) => {

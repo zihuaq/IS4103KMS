@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -53,10 +54,13 @@ public class PostEntity implements Serializable {
     @ManyToOne
     private UserEntity postOwner;
     
-    @ManyToMany(mappedBy = "likedPosts")
+    @JoinTable(name = "likedPosts")
     private List<UserEntity> likers;
-    @OneToMany(mappedBy = "originalPost")
+    
+    @JoinTable(name = "sharedPosts")
+    @OneToMany
     private List<PostEntity> sharedPosts;
+    
     @ManyToOne
     private PostEntity originalPost;
 
@@ -65,12 +69,14 @@ public class PostEntity implements Serializable {
     
     @ManyToOne
     private ProjectEntity project;
-
+    
+    private boolean originalPostDeleted;
 
     public PostEntity() {
         this.likers = new ArrayList<>();
         this.sharedPosts = new ArrayList<>();
         this.comments = new ArrayList<>();
+        this.originalPostDeleted = false;
     }
 
     public PostEntity(Date postDate, Date editDate, String text, UserEntity postOwner, PostEntity originalPost) {
@@ -192,5 +198,13 @@ public class PostEntity implements Serializable {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public boolean isOriginalPostDeleted() {
+        return originalPostDeleted;
+    }
+
+    public void setOriginalPostDeleted(boolean originalPostDeleted) {
+        this.originalPostDeleted = originalPostDeleted;
     }
 }

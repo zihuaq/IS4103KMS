@@ -14,9 +14,10 @@ export class Post {
     originalPost: Post;
     comments: PostComment[];
     project: Project;
+    originalPostDeleted: boolean;
 
     constructor(postId?: number, postDate?: Date, editDate?: Date, text?: string, picture?: string | ArrayBuffer, postOwner?: User,
-        likers?: User[], sharedPosts?: Post[], originalPost?: Post, comments?: PostComment[], project?: Project) {
+        likers?: User[], sharedPosts?: Post[], originalPost?: Post, comments?: PostComment[], project?: Project, originalPostDeleted?: boolean) {
         this.postId = postId;
         this.postDate = postDate;
         this.editDate = editDate;
@@ -28,5 +29,6 @@ export class Post {
         this.originalPost = originalPost;
         this.comments = comments;
         this.project = project;
+        this.originalPostDeleted = originalPostDeleted;
     }
 }

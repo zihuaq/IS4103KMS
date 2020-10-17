@@ -46,7 +46,9 @@ public interface PostSessionBeanLocal {
     public void updateComment(PostCommentEntity comment) throws NoResultException;
 
     public List<PostCommentEntity> getCommentsForPost(Long postId) throws NoResultException;
-
+    
+    public void sharePost(Long postToShareId, Long userId, PostEntity post) throws NoResultException;
+    
     public void deletePostById(Long postId) throws NoResultException;
 
     public void deletePostInProjectFeed(Long postId) throws NoResultException;

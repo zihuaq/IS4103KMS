@@ -14,11 +14,15 @@ import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -85,6 +89,8 @@ public class PostSessionBean implements PostSessionBeanLocal {
             for (int i = 0; i < user.getFollowing().size(); i++) {
                 posts.addAll(user.getFollowing().get(i).getPosts());
             }
+            Collections.sort(posts, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
+            Collections.reverse(posts);
             return posts;
         } else {
             throw new UserNotFoundException("User does not exist.");
@@ -110,8 +116,7 @@ public class PostSessionBean implements PostSessionBeanLocal {
         UserEntity user = em.find(UserEntity.class, userId);
 
         if (post != null && user != null) {
-            if (!user.getLikedPosts().contains(post) && !post.getLikers().contains(user)) {
-                user.getLikedPosts().add(post);
+            if (!post.getLikers().contains(user)) {
                 post.getLikers().add(user);
             } else {
                 throw new DuplicateLikeException("User already liked this post");
@@ -127,8 +132,7 @@ public class PostSessionBean implements PostSessionBeanLocal {
         UserEntity user = em.find(UserEntity.class, userId);
 
         if (post != null && user != null) {
-            if (user.getLikedPosts().contains(post) && post.getLikers().contains(user)) {
-                user.getLikedPosts().remove(post);
+            if (post.getLikers().contains(user)) {
                 post.getLikers().remove(user);
             } else {
                 throw new LikeNotFoundException("User has not liked this post");
@@ -229,11 +233,55 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
+    public void sharePost(Long postToShareId, Long userId, PostEntity post) throws NoResultException {
+        PostEntity postToShare = em.find(PostEntity.class, postToShareId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (postToShare != null && user != null) {
+            post.setPostOwner(user);
+            if (postToShare.getOriginalPost() == null) {
+                post.setOriginalPost(postToShare);
+            } else {
+                post.setOriginalPost(postToShare.getOriginalPost());
+            }
+            em.persist(post);
+            em.flush();
+            postToShare.getSharedPosts().add(post);
+            user.getPosts().add(post);
+        } else {
+            throw new NoResultException("Post or comment owner not found");
+        }
+    }
+
+    @Override
     public void deletePostById(Long postId) throws NoResultException {
         PostEntity post = em.find(PostEntity.class, postId);
 
         if (post != null) {
+            Query q = em.createQuery("SELECT p FROM PostEntity AS p WHERE p.originalPost.postId = :pId");
+            q.setParameter("pId", postId);
+            List<PostEntity> postWithOriginalPostToBeDeleted = q.getResultList();
+            for (int i = 0; i < postWithOriginalPostToBeDeleted.size(); i++) {
+                postWithOriginalPostToBeDeleted.get(i).setOriginalPostDeleted(true);
+                postWithOriginalPostToBeDeleted.get(i).setOriginalPost(null);
+            }
+
+            Query q2 = em.createQuery("SELECT p FROM PostEntity p");
+            List<PostEntity> allPosts = q2.getResultList();
+            for (int i = 0; i < allPosts.size(); i++) {
+                if (!Objects.equals(allPosts.get(i).getPostId(), postId)) {
+                    if (allPosts.get(i).getSharedPosts().contains(post)) {
+                        allPosts.get(i).getSharedPosts().remove(post);
+                    }
+                }
+            }
+
             post.getPostOwner().getPosts().remove(post);
+
+            for (int i = 0; i < post.getComments().size(); i++) {
+                em.remove(post.getComments().get(i));
+            }
+
             if (post.getProject() != null) {
                 post.getProject().getPosts().remove(post);
             }

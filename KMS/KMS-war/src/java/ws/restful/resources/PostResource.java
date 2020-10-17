@@ -250,6 +250,22 @@ public class PostResource {
         }
     }
 
+    @PUT
+    @Path("/sharePost/{postToShareId}/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sharePost(@PathParam("postToShareId") Long postToShareId, @PathParam("userId") Long userId, PostEntity post) {
+        try {
+            postSessionBean.sharePost(postToShareId, userId, post);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     @DELETE
     @Path("/post/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -294,7 +310,6 @@ public class PostResource {
         PostEntity post = new PostEntity();
         post.setPostId(postToProcess.getPostId());
         post.setPostDate(postToProcess.getPostDate());
-        post.setEditDate(postToProcess.getEditDate());
         post.setText(postToProcess.getText());
         post.setPicture(postToProcess.getPicture());
         UserEntity user = new UserEntity();
@@ -322,8 +337,23 @@ public class PostResource {
             UserEntity postOwner = new UserEntity();
             postOwner.setUserId(postToProcess.getSharedPosts().get(j).getPostOwner().getUserId());
             sharedPost.setPostOwner(postOwner);
+            sharedPosts.add(sharedPost);
         }
         post.setSharedPosts(sharedPosts);
+        if (postToProcess.getOriginalPost() != null) {
+            PostEntity originalPost = new PostEntity();
+            UserEntity originalPostOwner = new UserEntity();
+            originalPostOwner.setUserId(postToProcess.getOriginalPost().getPostOwner().getUserId());
+            originalPostOwner.setFirstName(postToProcess.getOriginalPost().getPostOwner().getFirstName());
+            originalPostOwner.setLastName(postToProcess.getOriginalPost().getPostOwner().getLastName());
+            originalPost.setPostOwner(originalPostOwner);
+            originalPost.setPicture(postToProcess.getOriginalPost().getPicture());
+            originalPost.setText(postToProcess.getOriginalPost().getText());
+            originalPost.setPostId(postToProcess.getOriginalPost().getPostId());
+            originalPost.setPostDate(postToProcess.getOriginalPost().getPostDate());
+            post.setOriginalPost(originalPost);
+        }
+        post.setOriginalPostDeleted(postToProcess.isOriginalPostDeleted());
         return post;
     }
 
