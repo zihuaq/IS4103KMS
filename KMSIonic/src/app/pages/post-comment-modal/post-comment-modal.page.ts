@@ -127,4 +127,34 @@ export class PostCommentModalPage implements OnInit {
 
     await actionSheet.present();
   }
+
+  likeComment(commentId: number) {
+    this.postService
+      .likeComment(this.loggedInUser.userId, commentId)
+      .subscribe(() => {
+        this.postService.getCommentsForPost(this.postId).subscribe((result) => {
+          this.comments = result;
+        });
+      });
+  }
+
+  removeLikeForComment(commentId: number) {
+    this.postService
+      .removeLikeForComment(this.loggedInUser.userId, commentId)
+      .subscribe(() => {
+        this.postService.getCommentsForPost(this.postId).subscribe((result) => {
+          this.comments = result;
+        });
+      });
+  }
+
+  userHaveLikedComment(commentId: number) {
+    let comment = this.comments.find(
+      (comment) => comment.postCommentId == commentId
+    );
+    let index = comment.likers.findIndex(
+      (user) => user.userId == this.loggedInUser.userId
+    );
+    return index > -1;
+  }
 }

@@ -17,10 +17,33 @@
           src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
           alt="User profile picture" />
       </ion-avatar>
-      <ion-label>
-        <h2>{{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}</h2>
-        <p>{{comment.comment}}</p>
-      </ion-label>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12"
+            style="background-color: lightgrey; border-radius: 25px; padding: 5px 10px 5px 10px; height: fit-content;">
+            <h5 class="ion-no-margin">{{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}</h5>
+            <p class="ion-no-margin">{{comment.comment}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="ion-no-padding">
+            {{comment.dateTime | date}}
+          </ion-col>
+          <ion-col size="4" class="ion-no-padding">
+            <ion-button *ngIf="!userHaveLikedComment(comment.postCommentId)" style="position: absolute;"
+              (click)="likeComment(comment.postCommentId)" fill="clear" class="ion-no-margin ion-no-padding">
+              Like
+            </ion-button>
+            <ion-button *ngIf="userHaveLikedComment(comment.postCommentId)" style="position: absolute;"
+              (click)="removeLikeForComment(comment.postCommentId)" fill="clear" class="ion-no-margin ion-no-padding">
+              Liked
+            </ion-button>
+          </ion-col>
+          <ion-col size="4" class="ion-text-end ion-no-padding">{{comment.likers.length}}
+            <ion-icon name="thumbs-up"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-item>
   </ion-list>
 </ion-content>

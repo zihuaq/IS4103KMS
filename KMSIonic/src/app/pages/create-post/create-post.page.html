@@ -32,8 +32,36 @@
   </ion-item>
   <ion-textarea (ionChange)="checkCanPost()" placeholder="What's on your mind?" [(ngModel)]="postContent" autoGrow=true>
   </ion-textarea>
+  <ion-card *ngIf="oldPost && oldPost.originalPost">
+    <ion-item lines="none">
+      <ion-avatar slot="start" class="ion-margin-start">
+        <img *ngIf="oldPost.originalPost.postOwner.profilePicture" class="ion-border"
+          [src]="oldPost.originalPost.postOwner.profilePicture" alt="User profile picture">
+        <img *ngIf="!oldPost.originalPost.postOwner.profilePicture" class="ion-border"
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          alt="User profile picture">
+      </ion-avatar>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12">
+            <ion-card-title>{{oldPost.originalPost.postOwner.firstName}} {{oldPost.originalPost.postOwner.lastName}}
+            </ion-card-title>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-card-subtitle>{{oldPost.originalPost.postDate | date}}</ion-card-subtitle>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-card-content>
+      {{oldPost.originalPost.text}}
+    </ion-card-content>
+    <img [src]="oldPost.originalPost.picture" *ngIf="oldPost.originalPost.picture" />
+  </ion-card>
 </ion-content>
-<ion-footer class="ion-no-border">
+<ion-footer class="ion-no-border" *ngIf="!oldPost || (oldPost && !oldPost.originalPost)">
   <ion-toolbar>
     <ion-button (click)="choosePictureActionSheet()" expand="block" shape="round">
       Upload Picture

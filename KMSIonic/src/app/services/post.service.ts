@@ -114,9 +114,27 @@ export class PostService {
   }
 
   getCommentsForPost(postId: number): Observable<any> {
-    return this.http
-      .get<any>(this.baseUrl + '/postComments/' + postId)
-      .pipe(catchError(this.handleError));
+    return this.http.get<any>(this.baseUrl + '/postComments/' + postId).pipe(
+      map((data) => {
+        return data.map((postComment) => {
+          console.log(postComment);
+          return {
+            ...postComment,
+            dateTime: new Date(
+              Date.UTC(
+                postComment.dateTime.substring(0, 4),
+                postComment.dateTime.substring(5, 7) - 1,
+                postComment.dateTime.substring(8, 10),
+                postComment.dateTime.substring(11, 13),
+                postComment.dateTime.substring(14, 16),
+                postComment.dateTime.substring(17, 19)
+              )
+            )
+          };
+        });
+      }),
+      catchError(this.handleError)
+    );
   }
 
   getPostForUserNewsfeed(userId: number): Observable<any> {
@@ -152,6 +170,21 @@ export class PostService {
               )
             };
           });
+          if (post.originalPost) {
+            post.originalPost = {
+              ...post.originalPost,
+              postDate: new Date(
+                Date.UTC(
+                  post.originalPost.postDate.substring(0, 4),
+                  post.originalPost.postDate.substring(5, 7) - 1,
+                  post.originalPost.postDate.substring(8, 10),
+                  post.originalPost.postDate.substring(11, 13),
+                  post.originalPost.postDate.substring(14, 16),
+                  post.originalPost.postDate.substring(17, 19)
+                )
+              )
+            };
+          }
           return post;
         });
       }),
