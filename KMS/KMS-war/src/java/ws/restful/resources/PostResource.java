@@ -71,13 +71,45 @@ public class PostResource {
         }
     }
 
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updatePost(PostEntity post) {
+        try {
+            PostEntity postEntity = postSessionBean.updatePost(post);
+            postEntity = processPost(postEntity);
+            return Response.status(200).entity(postEntity).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/{postId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPostById(@PathParam("postId") Long postId) {
+        try {
+            PostEntity post = postSessionBean.getPostById(postId);
+            post = processPost(post);
+            return Response.status(200).entity(post).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     @GET
     @Path("/userNewsFeed/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPostForUserNewsfeed(@PathParam("userId") Long userId) {
         try {
             List<PostEntity> posts = postSessionBean.getPostForUserNewsfeed(userId);
-            posts = getPostResponse(posts);
+            posts = getPostsResponse(posts);
             return Response.status(200).entity(posts).build();
         } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -123,8 +155,13 @@ public class PostResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addCommentForPost(@PathParam("postId") Long postId, PostCommentEntity comment) {
         try {
-            postSessionBean.addCommentForPost(postId, comment);
-            return Response.status(204).build();
+            List<PostCommentEntity> postComments = postSessionBean.addCommentForPost(postId, comment);
+            List<PostCommentEntity> comments = new ArrayList<>();
+            for (int j = 0; j < postComments.size(); j++) {
+                PostCommentEntity postComment = processComment(postComments.get(j));
+                comments.add(postComment);
+            }
+            return Response.status(200).entity(comments).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -176,7 +213,6 @@ public class PostResource {
                     .build();
             return Response.status(404).entity(exception).build();
         }
-
     }
 
     @PUT
@@ -186,6 +222,26 @@ public class PostResource {
         try {
             postSessionBean.updateComment(comment);
             return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/postComments/{postId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCommentsForPost(@PathParam("postId") Long postId) {
+        try {
+            List<PostCommentEntity> postComments = postSessionBean.getCommentsForPost(postId);
+            List<PostCommentEntity> comments = new ArrayList<>();
+            for (int j = 0; j < postComments.size(); j++) {
+                PostCommentEntity comment = processComment(postComments.get(j));
+                comments.add(comment);
+            }
+            return Response.status(200).entity(comments).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -207,64 +263,89 @@ public class PostResource {
                     .build();
             return Response.status(404).entity(exception).build();
         }
-
     }
 
-    private List<PostEntity> getPostResponse(List<PostEntity> posts) {
+    @GET
+    @Path("/comment/{commentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPostCommentById(@PathParam("commentId") Long commentId) {
+        try {
+            PostCommentEntity postCommentEntity = postSessionBean.getPostCommentById(commentId);
+            postCommentEntity = processComment(postCommentEntity);
+            return Response.status(200).entity(postCommentEntity).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    private List<PostEntity> getPostsResponse(List<PostEntity> posts) {
         List<PostEntity> result = new ArrayList<>();
         for (int i = 0; i < posts.size(); i++) {
-            PostEntity post = new PostEntity();
-            post.setPostId(posts.get(i).getPostId());
-            post.setPostDate(posts.get(i).getPostDate());
-            post.setEditDate(posts.get(i).getEditDate());
-            post.setText(posts.get(i).getText());
-            post.setPicture(posts.get(i).getPicture());
-            UserEntity user = new UserEntity();
-            user.setUserId(posts.get(i).getPostOwner().getUserId());
-            user.setFirstName(posts.get(i).getPostOwner().getFirstName());
-            user.setLastName(posts.get(i).getPostOwner().getLastName());
-            user.setProfilePicture(posts.get(i).getPostOwner().getProfilePicture());
-            post.setPostOwner(user);
-            List<UserEntity> likers = new ArrayList<UserEntity>();
-            for (int j = 0; j < posts.get(i).getLikers().size(); j++) {
-                UserEntity liker = new UserEntity();
-                liker.setUserId(posts.get(i).getLikers().get(j).getUserId());
-                likers.add(liker);
-            }
-            post.setLikers(likers);
-            List<PostCommentEntity> comments = new ArrayList<PostCommentEntity>();
-            for (int j = 0; j < posts.get(i).getComments().size(); j++) {
-                PostCommentEntity comment = new PostCommentEntity();
-                comment.setPostCommentId(posts.get(i).getComments().get(j).getPostCommentId());
-                UserEntity commentOwner = new UserEntity();
-                commentOwner.setUserId(posts.get(i).getComments().get(j).getCommentOwner().getUserId());
-                commentOwner.setProfilePicture(posts.get(i).getComments().get(j).getCommentOwner().getProfilePicture());
-                commentOwner.setFirstName(posts.get(i).getComments().get(j).getCommentOwner().getFirstName());
-                commentOwner.setLastName(posts.get(i).getComments().get(j).getCommentOwner().getLastName());
-                comment.setCommentOwner(commentOwner);
-                comment.setComment(posts.get(i).getComments().get(j).getComment());
-                comment.setDateTime(posts.get(i).getComments().get(j).getDateTime());
-                List<UserEntity> commentLikers = new ArrayList<UserEntity>();
-                for (int k = 0; k < posts.get(i).getComments().get(j).getLikers().size(); k++) {
-                    UserEntity commentLiker = new UserEntity();
-                    commentLiker.setUserId(posts.get(i).getComments().get(j).getLikers().get(k).getUserId());
-                    commentLikers.add(commentLiker);
-                }
-                comment.setLikers(commentLikers);
-                comments.add(comment);
-            }
-            post.setComments(comments);
-            List<PostEntity> sharedPosts = new ArrayList<PostEntity>();
-            for (int j = 0; j < posts.get(i).getSharedPosts().size(); j++) {
-                PostEntity sharedPost = new PostEntity();
-                UserEntity postOwner = new UserEntity();
-                postOwner.setUserId(posts.get(i).getSharedPosts().get(j).getPostOwner().getUserId());
-                sharedPost.setPostOwner(postOwner);
-            }
-            post.setSharedPosts(sharedPosts);
+            PostEntity post = processPost(posts.get(i));
             result.add(post);
         }
         return result;
+    }
+
+    private PostEntity processPost(PostEntity postToProcess) {
+        PostEntity post = new PostEntity();
+        post.setPostId(postToProcess.getPostId());
+        post.setPostDate(postToProcess.getPostDate());
+        post.setEditDate(postToProcess.getEditDate());
+        post.setText(postToProcess.getText());
+        post.setPicture(postToProcess.getPicture());
+        UserEntity user = new UserEntity();
+        user.setUserId(postToProcess.getPostOwner().getUserId());
+        user.setFirstName(postToProcess.getPostOwner().getFirstName());
+        user.setLastName(postToProcess.getPostOwner().getLastName());
+        user.setProfilePicture(postToProcess.getPostOwner().getProfilePicture());
+        post.setPostOwner(user);
+        List<UserEntity> likers = new ArrayList<UserEntity>();
+        for (int j = 0; j < postToProcess.getLikers().size(); j++) {
+            UserEntity liker = new UserEntity();
+            liker.setUserId(postToProcess.getLikers().get(j).getUserId());
+            likers.add(liker);
+        }
+        post.setLikers(likers);
+        List<PostCommentEntity> comments = new ArrayList<>();
+        for (int j = 0; j < postToProcess.getComments().size(); j++) {
+            PostCommentEntity comment = processComment(postToProcess.getComments().get(j));
+            comments.add(comment);
+        }
+        post.setComments(comments);
+        List<PostEntity> sharedPosts = new ArrayList<>();
+        for (int j = 0; j < postToProcess.getSharedPosts().size(); j++) {
+            PostEntity sharedPost = new PostEntity();
+            UserEntity postOwner = new UserEntity();
+            postOwner.setUserId(postToProcess.getSharedPosts().get(j).getPostOwner().getUserId());
+            sharedPost.setPostOwner(postOwner);
+        }
+        post.setSharedPosts(sharedPosts);
+        return post;
+    }
+
+    private PostCommentEntity processComment(PostCommentEntity commentToProcess) {
+        PostCommentEntity postComment = new PostCommentEntity();
+        postComment.setPostCommentId(commentToProcess.getPostCommentId());
+        UserEntity commentOwner = new UserEntity();
+        commentOwner.setUserId(commentToProcess.getCommentOwner().getUserId());
+        commentOwner.setProfilePicture(commentToProcess.getCommentOwner().getProfilePicture());
+        commentOwner.setFirstName(commentToProcess.getCommentOwner().getFirstName());
+        commentOwner.setLastName(commentToProcess.getCommentOwner().getLastName());
+        postComment.setCommentOwner(commentOwner);
+        postComment.setComment(commentToProcess.getComment());
+        postComment.setDateTime(commentToProcess.getDateTime());
+        List<UserEntity> commentLikers = new ArrayList<>();
+        for (int k = 0; k < commentToProcess.getLikers().size(); k++) {
+            UserEntity commentLiker = new UserEntity();
+            commentLiker.setUserId(commentToProcess.getLikers().get(k).getUserId());
+            commentLikers.add(commentLiker);
+        }
+        postComment.setLikers(commentLikers);
+        return postComment;
     }
 
     private PostSessionBeanLocal lookupPostSessionBeanLocal() {

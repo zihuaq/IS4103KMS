@@ -22,7 +22,9 @@
 <br />
 <span *ngIf="!shared && profile.skills.length == 0 && loggedInUser.userId == profile.userId"> You have no skills at the
   moment.</span>
-<span *ngIf="shared || (profile.skills.length == 0 && loggedInUser.userId != profile.userId)"> {{profile.firstName}}
+<span
+  *ngIf="(shared && profile.skills.length == 0) || (!shared && profile.skills.length == 0 && loggedInUser.userId != profile.userId)">
+  {{profile.firstName}}
   {{profile.lastName}} has no skills at the moment.</span>
 
 <span *ngIf="!shared && profile.skills.length > 0 && loggedInUser.userId == profile.userId">
@@ -34,7 +36,8 @@
   </div>
 </span>
 
-<span *ngIf="shared || (profile.skills.length > 0 && loggedInUser.userId != profile.userId)">
+<span
+  *ngIf="(shared && profile.skills.length > 0) || (profile.skills.length > 0 && loggedInUser.userId != profile.userId)">
   <div *ngFor="let skill of profile.skills">
     <small class="badge badge-warning">
       {{skill.name}}

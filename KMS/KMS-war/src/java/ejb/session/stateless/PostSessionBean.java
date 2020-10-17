@@ -66,9 +66,14 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
-    public PostEntity getPostById(Long postId) {
+    public PostEntity getPostById(Long postId) throws NoResultException {
         PostEntity post = em.find(PostEntity.class, postId);
-        return post;
+        if (post != null) {
+            return post;
+        } else {
+            throw new NoResultException("Post not found");
+        }
+
     }
 
     @Override
@@ -87,9 +92,16 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
-    public void updatePost(PostEntity postToUpdate) {
-        em.merge(postToUpdate);
-        em.flush();
+    public PostEntity updatePost(PostEntity postToUpdate) throws NoResultException {
+        PostEntity oldPost = em.find(PostEntity.class, postToUpdate.getPostId());
+        if (oldPost != null) {
+            oldPost.setPicture(postToUpdate.getPicture());
+            oldPost.setText(postToUpdate.getText());
+            em.flush();
+            return oldPost;
+        } else {
+            throw new NoResultException("Post not found");
+        }
     }
 
     @Override
@@ -127,15 +139,18 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
-    public void addCommentForPost(Long postId, PostCommentEntity comment) throws NoResultException {
+    public List<PostCommentEntity> addCommentForPost(Long postId, PostCommentEntity comment) throws NoResultException {
         PostEntity post = em.find(PostEntity.class, postId);
         UserEntity user = em.find(UserEntity.class, comment.getCommentOwner().getUserId());
 
         if (post != null && user != null) {
             comment.setPost(post);
+            comment.setCommentOwner(user);
             em.persist(comment);
             em.flush();
             post.getComments().add(comment);
+            post.getComments().size();
+            return post.getComments();
         } else {
             throw new NoResultException("Post or comment owner not found");
         }
@@ -203,6 +218,17 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
+    public List<PostCommentEntity> getCommentsForPost(Long postId) throws NoResultException {
+        PostEntity post = em.find(PostEntity.class, postId);
+        if (post != null) {
+            post.getComments().size();
+            return post.getComments();
+        } else {
+            throw new NoResultException("Post is not found");
+        }
+    }
+
+    @Override
     public void deletePostById(Long postId) throws NoResultException {
         PostEntity post = em.find(PostEntity.class, postId);
 
@@ -218,7 +244,7 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
-    public void deletePostInProjectFeed(Long postId) {
+    public void deletePostInProjectFeed(Long postId) throws NoResultException {
         PostEntity postToDelete = getPostById(postId);
 
         postToDelete.getPostOwner().getPosts().remove(postToDelete);
@@ -229,4 +255,15 @@ public class PostSessionBean implements PostSessionBeanLocal {
 
         em.remove(postToDelete);
     }
+
+    @Override
+    public PostCommentEntity getPostCommentById(Long commentId) throws NoResultException {
+        PostCommentEntity commentEntity = em.find(PostCommentEntity.class, commentId);
+        if (commentEntity != null) {
+            return commentEntity;
+        } else {
+            throw new NoResultException("Comment not found");
+        }
+    }
+
 }

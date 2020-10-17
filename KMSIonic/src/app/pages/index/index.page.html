@@ -49,19 +49,43 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ion-icon name="ellipsis-horizontal-outline" slot="end" (click)="postActionSheet()"></ion-icon>
+      <ion-icon name="ellipsis-horizontal-outline" slot="end" (click)="postActionSheet(post.postId)"></ion-icon>
     </ion-item>
     <ion-card-content>
       {{post.text}}
     </ion-card-content>
     <img [src]="post.picture" *ngIf="post.picture" />
-    <ion-item>
-      <ion-badge slot="start" class="ion-no-margin">
+    <ion-item-divider class="ion-no-padding">
+      <ion-badge slot="start" class="ion-no-margin ion-margin-start">
         <ion-icon name="thumbs-up"></ion-icon>
       </ion-badge>
-      <ion-label style="margin-left: 2px;">{{post.likers.length}}</ion-label>
-      <ion-label slot="end" class="ion-text-end" color="medium">{{post.comments.length}} comments</ion-label>
-    </ion-item>
+      <ion-label style="margin-left: 5px;">{{post.likers.length}}</ion-label>
+      <ion-label slot="end" class="ion-text-end ion-margin-end" color="medium">{{post.comments.length}} comments
+      </ion-label>
+    </ion-item-divider>
+    <ion-grid class="ion-no-padding" style="height: 100%;">
+      <ion-row style="height: 100%;">
+        <ion-col *ngIf="!userHaveLikedPost(post.postId)" size="4" class="ion-text-center ion-activatable ion-padding"
+          (click)="like(post.postId)">
+          <ion-icon name="thumbs-up-outline"></ion-icon> Like
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-col>
+        <ion-col *ngIf="userHaveLikedPost(post.postId)" size="4" class="ion-text-center ion-activatable ion-padding"
+          (click)="removeLikeForPost(post.postId)">
+          <ion-icon name="thumbs-up"></ion-icon> Liked
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-col>
+        <ion-col size="4" class="ion-text-center ion-activatable ion-padding"
+          (click)="showPostCommentModal(post.postId)">
+          <ion-icon name="chatbox-outline"></ion-icon> Comment
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-col>
+        <ion-col size="4" class="ion-text-center ion-activatable ion-padding" (click)="share(post.postId)">
+          <ion-icon name="arrow-redo-outline"></ion-icon> Share
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-card>
 
 </ion-content>

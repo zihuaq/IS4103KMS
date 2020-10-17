@@ -1,6 +1,6 @@
 <app-top-navbar *ngIf="!shared"></app-top-navbar>
 <app-side-navbar *ngIf="!shared"></app-side-navbar>
-<div class="content-wrapper">
+<div [ngClass]="{'content-wrapper': !shared}">
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
@@ -43,4 +43,4 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<app-footer></app-footer>
+<app-footer [shared]="shared"></app-footer>

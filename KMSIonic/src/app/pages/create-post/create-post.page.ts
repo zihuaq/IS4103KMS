@@ -3,7 +3,7 @@ import { AuthenticationService } from './../../services/authentication.service';
 import { Post } from './../../classes/post';
 import { PostService } from './../../services/post.service';
 import { ApplicationRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ActionSheetController, ToastController } from '@ionic/angular';
 
 declare var Camera: any;
@@ -19,6 +19,7 @@ export class CreatePostPage implements OnInit {
   postContent: string;
   loggedInUser: User;
   canPost = false;
+  postId: number;
   slideOpts = {
     initialSlide: 0,
     direction: 'horizontal',
@@ -31,11 +32,20 @@ export class CreatePostPage implements OnInit {
     private app: ApplicationRef,
     private postService: PostService,
     private toastController: ToastController,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {}
   ionViewWillEnter() {
+    if (this.activatedRoute.snapshot.url[1].path == 'edit') {
+      this.postId = this.activatedRoute.snapshot.params.postid;
+      this.postService.getPostById(this.postId).subscribe((post: Post) => {
+        this.postContent = post.text;
+        this.uploadedPicture = post.picture;
+      });
+    }
+
     let loggedInUserId = this.authenticationService
       .getCurrentUser()
       .then((user: any) => {

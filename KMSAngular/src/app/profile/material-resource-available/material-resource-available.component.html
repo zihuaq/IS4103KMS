@@ -105,7 +105,8 @@
     material
     resource available
     at the moment.</span>
-<span *ngIf="shared || (profile.mras && profile.mras.length == 0 && loggedInUser.userId != profile.userId)">
+<span
+    *ngIf="profile.mras && ((shared && profile.mras.length == 0) || (profile.mras.length == 0 && loggedInUser.userId != profile.userId))">
     {{profile.firstName}}
     {{profile.lastName}} has no material resource available at the moment.</span>
 

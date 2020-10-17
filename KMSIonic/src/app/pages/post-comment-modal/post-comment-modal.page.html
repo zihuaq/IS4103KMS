@@ -1,0 +1,35 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Comments</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let comment of comments" appLongPress (press)="postCommentActionSheet(comment.postCommentId)">
+      <ion-avatar slot="start">
+        <img *ngIf="comment.commentOwner.profilePicture" class="ion-border" [src]="comment.commentOwner.profilePicture"
+          alt="User profile picture" />
+        <img *ngIf="!comment.commentOwner.profilePicture" class="ion-border"
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          alt="User profile picture" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{comment.commentOwner.firstName}}{{comment.commentOwner.lastName}}</h2>
+        <p>{{comment.comment}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-input placeholder="Write a comment..." [(ngModel)]="commentText">
+    </ion-input>
+    <ion-button (click)="addComment()" slot="end" fill="outline">
+      <ion-icon slot="icon-only" name="send"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
