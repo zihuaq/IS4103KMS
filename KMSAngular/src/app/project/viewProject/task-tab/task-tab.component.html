@@ -1,1 +1,11 @@
+<div class="row">
+    <div class="input-icons col-9">
+        <i class="fas fa-search icon"></i>
+        <input class="form-control input-field" placeholder="Search tasks" [(ngModel)]="searchInput" (ngModelChange)="onChange()">
+    </div>
+    <div >
+        <button class="btn bg-gradient-info" type=button onclick="gantt.ext.zoom.zoomIn();" style="margin-right: 10px"><i class="fas fa-search-plus"></i> Zoom In</button>
+        <button class="btn bg-gradient-info" type=button onclick="gantt.ext.zoom.zoomOut();"><i class="fas fa-search-minus"></i> Zoom Out</button>
+    </div>
+</div>
 <div #ganttChart class='gantt-chart'></div>

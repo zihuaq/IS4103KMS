@@ -4,3 +4,63 @@
     width: 100%;
     height: 600px;
 }
+
+.input-icons i { 
+    position: absolute; 
+} 
+  
+.input-icons { 
+    width: 100%; 
+    margin-bottom: 10px; 
+    margin-left: 2px;
+} 
+  
+.icon { 
+    padding: 11px; 
+    min-width: 40px; 
+} 
+  
+.input-field { 
+    width: 100%; 
+    padding: 10px; 
+    padding-left: 35px;
+}
+
+.gantt_tree_content {
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+
+.today{
+    background-color:#f8e99f!important      
+}
+
+.gantt_cal_light {
+    width: 620px!important
+}
+
+.gantt_qi_big_icon.icon_delete{
+    display: none;
+}
+
+.task_color {
+    border: 2px solid #7094e2;
+    color: #7094e2;
+    background: #7094e2;
+}
+
+.task_color .gantt_task_progress {
+    background: #5177ca;
+}
+
+.gantt_task_link .gantt_line_wrapper div {
+    background-color: #5034b8;
+}
+
+.gantt_task_link:hover .gantt_line_wrapper div {
+    box-shadow: 0 0 5px 0px #5034b8;
+}
+
+.gantt_task_link .gantt_link_arrow_right {
+    border-left-color: #5034b8;
+}
