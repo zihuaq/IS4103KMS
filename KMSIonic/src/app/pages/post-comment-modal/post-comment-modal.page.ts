@@ -94,7 +94,7 @@ export class PostCommentModalPage implements OnInit {
                 component: EditPostCommentModalPage,
                 swipeToClose: true,
                 showBackdrop: true,
-                cssClass: 'post-comment-modal',
+                cssClass: 'edit-post-comment-modal',
                 componentProps: {
                   commentId: comment.postCommentId
                 }

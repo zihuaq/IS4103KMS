@@ -221,6 +221,10 @@ const routes: Routes = [
   },  {
     path: 'edit-post-comment-modal',
     loadChildren: () => import('./pages/edit-post-comment-modal/edit-post-comment-modal.module').then( m => m.EditPostCommentModalPageModule)
+  },
+  {
+    path: 'share-post-modal',
+    loadChildren: () => import('./pages/share-post-modal/share-post-modal.module').then( m => m.SharePostModalPageModule)
   }
 
 ];

@@ -1,0 +1,25 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-avatar slot="start" style="width: 40px; height: 40px;" class="ion-margin-start">
+      <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
+        alt="User profile picture" />
+      <img *ngIf="!loggedInUser.profilePicture" class="ion-border"
+        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+        alt="User profile picture" />
+    </ion-avatar>
+    <ion-title>{{loggedInUser.firstName}} {{loggedInUser.lastName}}</ion-title>
+    <ion-icon name="close" slot="end" class="ion-margin-end" (click)="dismiss()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-textarea placeholder="Say something about this post..." [(ngModel)]="postContent" autoGrow=true #sharePostInput>
+  </ion-textarea>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button (click)="sharePost()" slot="end" fill="outline">
+      SHARE NOW
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

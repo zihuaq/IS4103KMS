@@ -13,6 +13,7 @@ import {
 } from '@ionic/angular';
 import { PostCommentModalPage } from '../post-comment-modal/post-comment-modal.page';
 import { Router } from '@angular/router';
+import { SharePostModalPage } from '../share-post-modal/share-post-modal.page';
 
 @Component({
   selector: 'app-index',
@@ -150,8 +151,22 @@ export class IndexPage implements OnInit {
       });
   }
 
-  share(postId: number) {
-    console.log('share', postId);
+  async share(post: Post) {
+    console.log('share', post.postId);
+    const modal = await this.modalController.create({
+      component: SharePostModalPage,
+      swipeToClose: true,
+      showBackdrop: true,
+      cssClass: 'share-post-modal',
+      componentProps: {
+        sharedPost: post,
+        loggedInUser: this.loggedInUser
+      }
+    });
+    modal.present();
+    modal.onDidDismiss().then(() => {
+      this.ionViewWillEnter();
+    });
   }
 
   async showPostCommentModal(postId: number) {
