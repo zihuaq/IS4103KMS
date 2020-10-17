@@ -83,15 +83,15 @@ public class PostSessionBean implements PostSessionBeanLocal {
     @Override
     public List<PostEntity> getPostForUserNewsfeed(Long userId) throws UserNotFoundException, NoResultException {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
-
+        List<PostEntity> postForUserNewsFeed = new ArrayList<>();
         if (user != null) {
-            List<PostEntity> posts = user.getPosts();
+            postForUserNewsFeed.addAll(user.getPosts());
             for (int i = 0; i < user.getFollowing().size(); i++) {
-                posts.addAll(user.getFollowing().get(i).getPosts());
+                postForUserNewsFeed.addAll(user.getFollowing().get(i).getPosts());
             }
-            Collections.sort(posts, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
-            Collections.reverse(posts);
-            return posts;
+            Collections.sort(postForUserNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
+            Collections.reverse(postForUserNewsFeed);
+            return postForUserNewsFeed;
         } else {
             throw new UserNotFoundException("User does not exist.");
         }

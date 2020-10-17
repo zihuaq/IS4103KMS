@@ -27,6 +27,12 @@ export class PostService {
       .pipe(map(this.parsePostDate), catchError(this.handleError));
   }
 
+  updatePost(post: Post) {
+    return this.http
+      .put<any>(this.baseUrl, post, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   deletePostById(postId: number): Observable<any> {
     return this.http
       .delete<any>(this.baseUrl + '/post/' + postId)
@@ -142,46 +148,19 @@ export class PostService {
   }
 
   private parsePostDate(post: any) {
-    if (post.editDate) {
-      return {
-        ...post,
-        postDate: new Date(
-          Date.UTC(
-            post.postDate.substring(0, 4),
-            post.postDate.substring(5, 7) - 1,
-            post.postDate.substring(8, 10),
-            post.postDate.substring(11, 13),
-            post.postDate.substring(14, 16),
-            post.postDate.substring(17, 19)
-          )
-        ),
-        editDate: new Date(
-          Date.UTC(
-            post.editDate.substring(0, 4),
-            post.editDate.substring(5, 7) - 1,
-            post.editDate.substring(8, 10),
-            post.editDate.substring(11, 13),
-            post.editDate.substring(14, 16),
-            post.editDate.substring(17, 19)
-          )
-        ),
-      };
-    } else {
-      console.log('here');
-      return {
-        ...post,
-        postDate: new Date(
-          Date.UTC(
-            post.postDate.substring(0, 4),
-            post.postDate.substring(5, 7) - 1,
-            post.postDate.substring(8, 10),
-            post.postDate.substring(11, 13),
-            post.postDate.substring(14, 16),
-            post.postDate.substring(17, 19)
-          )
-        ),
-      };
-    }
+    return {
+      ...post,
+      postDate: new Date(
+        Date.UTC(
+          post.postDate.substring(0, 4),
+          post.postDate.substring(5, 7) - 1,
+          post.postDate.substring(8, 10),
+          post.postDate.substring(11, 13),
+          post.postDate.substring(14, 16),
+          post.postDate.substring(17, 19)
+        )
+      ),
+    };
   }
 
   private handleError(error: HttpErrorResponse) {

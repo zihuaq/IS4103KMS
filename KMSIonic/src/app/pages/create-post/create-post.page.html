@@ -3,9 +3,11 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Create Post</ion-title>
+    <ion-title *ngIf="!isEditPage">Create Post</ion-title>
+    <ion-title *ngIf="isEditPage">Edit Post</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="createPost()" [disabled]="!canPost">POST</ion-button>
+      <ion-button *ngIf="!isEditPage" (click)="createPost()" [disabled]="!canPost">POST</ion-button>
+      <ion-button *ngIf="isEditPage" (click)="createPost()" [disabled]="!canPost">UPDATE</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

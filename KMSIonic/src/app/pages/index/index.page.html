@@ -31,16 +31,16 @@
   <ion-card *ngFor="let post of newsfeedPosts">
     <ion-item lines="none">
       <ion-avatar slot="start" class="ion-margin-start">
-        <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
+        <img *ngIf="post.postOwner.profilePicture" class="ion-border" [src]="post.postOwner.profilePicture"
           alt="User profile picture">
-        <img *ngIf="!loggedInUser.profilePicture" class="ion-border"
+        <img *ngIf="!post.postOwner.profilePicture" class="ion-border"
           src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
           alt="User profile picture">
       </ion-avatar>
       <ion-grid fixed>
         <ion-row>
           <ion-col size="12">
-            <ion-card-title>{{loggedInUser.firstName}} {{loggedInUser.lastName}}</ion-card-title>
+            <ion-card-title>{{post.postOwner.firstName}} {{post.postOwner.lastName}}</ion-card-title>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -49,7 +49,7 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ion-icon name="ellipsis-horizontal-outline" slot="end" (click)="postActionSheet(post.postId)"></ion-icon>
+      <ion-icon name="ellipsis-horizontal-outline" slot="end" (click)="postActionSheet(post)"></ion-icon>
     </ion-item>
     <ion-card-content>
       {{post.text}}

@@ -42,6 +42,7 @@ export class IndexPage implements OnInit {
         this.userService.getUser(loggedInUserId.toString()),
         this.postService.getPostForUserNewsfeed(loggedInUserId)
       ]).subscribe((result) => {
+        console.log(result[1]);
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
         this.app.tick();
@@ -49,28 +50,42 @@ export class IndexPage implements OnInit {
     });
   }
 
-  async postActionSheet(postId: number) {
-    const actionSheet = await this.actionSheetController.create({
-      buttons: [
-        {
-          text: 'Delete',
-          icon: 'trash',
-          handler: () => {
-            console.log('Delete chosen');
-            this.deletePost(postId);
+  async postActionSheet(post: Post) {
+    let actionSheet;
+    if (this.loggedInUser.userId == post.postOwner.userId) {
+      actionSheet = await this.actionSheetController.create({
+        buttons: [
+          {
+            text: 'Delete',
+            icon: 'trash',
+            handler: () => {
+              console.log('Delete chosen');
+              this.deletePost(post.postId);
+            }
+          },
+          {
+            text: 'Edit',
+            icon: 'create',
+            handler: () => {
+              console.log('Edit chosen');
+              this.router.navigate(['/create-post/user/edit/' + post.postId]);
+            }
           }
-        },
-        {
-          text: 'Edit',
-          icon: 'create',
-          handler: () => {
-            console.log('Edit chosen');
-            this.router.navigate(['/create-post/user/edit/' + postId]);
+        ]
+      });
+    } else {
+      actionSheet = await this.actionSheetController.create({
+        buttons: [
+          {
+            text: 'Report',
+            icon: 'alert-circle',
+            handler: () => {
+              console.log('Report chosen');
+            }
           }
-        }
-      ]
-    });
-
+        ]
+      });
+    }
     actionSheet.onDidDismiss().then(() => {
       console.log('Dismissed');
     });

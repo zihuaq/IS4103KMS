@@ -20,6 +20,8 @@ export class CreatePostPage implements OnInit {
   loggedInUser: User;
   canPost = false;
   postId: number;
+  isEditPage: boolean;
+  oldPost: Post;
   slideOpts = {
     initialSlide: 0,
     direction: 'horizontal',
@@ -38,11 +40,14 @@ export class CreatePostPage implements OnInit {
 
   ngOnInit() {}
   ionViewWillEnter() {
-    if (this.activatedRoute.snapshot.url[1].path == 'edit') {
+    this.isEditPage = this.activatedRoute.snapshot.url[1]?.path == 'edit';
+    if (this.isEditPage) {
       this.postId = this.activatedRoute.snapshot.params.postid;
       this.postService.getPostById(this.postId).subscribe((post: Post) => {
         this.postContent = post.text;
         this.uploadedPicture = post.picture;
+        this.oldPost = post;
+        this.checkCanPost();
       });
     }
 
@@ -65,29 +70,52 @@ export class CreatePostPage implements OnInit {
       });
       toast.present();
     } else {
-      createdPost.postDate = new Date();
-      createdPost.text = this.postContent;
-      createdPost.picture = this.uploadedPicture;
-      createdPost.postOwner = this.loggedInUser;
+      if (!this.isEditPage) {
+        createdPost.postDate = new Date();
+        createdPost.text = this.postContent;
+        createdPost.picture = this.uploadedPicture;
+        createdPost.postOwner = this.loggedInUser;
 
-      this.postService.createPost(createdPost).subscribe(
-        async (data: Post) => {
-          const toast = await this.toastController.create({
-            message: 'Post created!',
-            duration: 2000
-          });
-          toast.present();
-          this.router.navigate(['/index']);
-        },
-        async (err) => {
-          const toast = await this.toastController.create({
-            message: 'err',
-            duration: 2000
-          });
-          toast.present();
-          this.router.navigate(['/index']);
-        }
-      );
+        this.postService.createPost(createdPost).subscribe(
+          async (data: Post) => {
+            const toast = await this.toastController.create({
+              message: 'Post created!',
+              duration: 2000
+            });
+            toast.present();
+            this.router.navigate(['/index']);
+          },
+          async (err) => {
+            const toast = await this.toastController.create({
+              message: err,
+              duration: 2000
+            });
+            toast.present();
+            this.router.navigate(['/index']);
+          }
+        );
+      } else {
+        this.oldPost.text = this.postContent;
+        this.oldPost.picture = this.uploadedPicture;
+        this.postService.updatePost(this.oldPost).subscribe(
+          async () => {
+            const toast = await this.toastController.create({
+              message: 'Post updated!',
+              duration: 2000
+            });
+            toast.present();
+            this.router.navigate(['/index']);
+          },
+          async (err) => {
+            const toast = await this.toastController.create({
+              message: err,
+              duration: 2000
+            });
+            toast.present();
+            this.router.navigate(['/index']);
+          }
+        );
+      }
     }
   }
 

@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let comment of comments" appLongPress (press)="postCommentActionSheet(comment.postCommentId)">
+    <ion-item *ngFor="let comment of comments" appLongPress (press)="postCommentActionSheet(comment)">
       <ion-avatar slot="start">
         <img *ngIf="comment.commentOwner.profilePicture" class="ion-border" [src]="comment.commentOwner.profilePicture"
           alt="User profile picture" />
