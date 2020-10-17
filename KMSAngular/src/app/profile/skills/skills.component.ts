@@ -22,6 +22,7 @@ declare var $: any;
 export class SkillsComponent implements OnInit, OnChanges {
   @Input() profile: User;
   @Input() loggedInUser: User;
+  @Input() shared: boolean;
   @Output() profileChanged = new EventEmitter<User>();
   skillTags: Tag[];
   selectedTagNames: string[];

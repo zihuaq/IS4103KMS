@@ -12,5 +12,7 @@ package util.enumeration;
 public enum ReportTypeEnum {
     PROFILE,
     GROUP,
-    PROJECT
+    PROJECT,
+    POST,
+    COMMENT
 }

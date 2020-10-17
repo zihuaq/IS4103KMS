@@ -62,6 +62,7 @@ import { EditActivityTabComponent } from './project/editProject/edit-activity-ta
 import { DatePipe } from '@angular/common';
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 import { TaskTabComponent } from './project/viewProject/task-tab/task-tab.component';
+import { NewsfeedComponent } from './newsfeed/newsfeed.component';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import { TaskTabComponent } from './project/viewProject/task-tab/task-tab.compon
     ActivityTabComponent,
     EditActivityTabComponent,
     DonateToProjectComponent,
-    TaskTabComponent
+    TaskTabComponent,
+    NewsfeedComponent
   ],
   imports: [
     BrowserModule,

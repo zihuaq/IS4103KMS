@@ -21,182 +21,234 @@ const routes: Routes = [
       )
   },
   {
-    path: "forgetpassword",
+    path: 'forgetpassword',
     loadChildren: () =>
-      import("./pages/forgetpassword/forgetpassword.module").then(
+      import('./pages/forgetpassword/forgetpassword.module').then(
         (m) => m.ForgetpasswordPageModule
       )
   },
   {
-    path: "userselector",
+    path: 'userselector',
     loadChildren: () =>
-      import("./pages/userselector/userselector.module").then(
+      import('./pages/userselector/userselector.module').then(
         (m) => m.UserselectorPageModule
       )
   },
   {
-    path: "registerinstitution",
+    path: 'registerinstitution',
     loadChildren: () =>
-      import("./pages/registerinstitution/registerinstitution.module").then(
+      import('./pages/registerinstitution/registerinstitution.module').then(
         (m) => m.RegisterinstitutionPageModule
       )
   },
   {
-    path: "profile",
+    path: 'profile',
     loadChildren: () =>
-      import("./pages/profile/profile.module").then((m) => m.ProfilePageModule),
+      import('./pages/profile/profile.module').then((m) => m.ProfilePageModule),
     canActivate: [AuthGuard]
   },
   {
-    path: "search-users",
+    path: 'search-users',
     loadChildren: () =>
-      import("./pages/search-users/search-users.module").then(
+      import('./pages/search-users/search-users.module').then(
         (m) => m.SearchUsersPageModule
       ),
     canActivate: [AuthGuard]
   },
   {
-    path: "notifications",
+    path: 'notifications',
     loadChildren: () =>
-      import("./pages/notifications/notifications.module").then(
+      import('./pages/notifications/notifications.module').then(
         (m) => m.NotificationsPageModule
       ),
     canActivate: [AuthGuard]
   },
   {
-    path: "sdg-info",
+    path: 'sdg-info',
     loadChildren: () =>
-      import("./pages/sdg-info/sdg-info.module").then(
+      import('./pages/sdg-info/sdg-info.module').then(
         (m) => m.SdgInfoPageModule
       ),
     canActivate: [AuthGuard]
   },
   {
-    path: "index",
+    path: 'index',
     loadChildren: () =>
-      import("./pages/index/index.module").then((m) => m.IndexPageModule),
+      import('./pages/index/index.module').then((m) => m.IndexPageModule),
     canActivate: [AuthGuard]
   },
   {
-    path: "add-skills",
+    path: 'add-skills',
     loadChildren: () =>
-      import("./pages/add-skills/add-skills.module").then(
+      import('./pages/add-skills/add-skills.module').then(
         (m) => m.AddSkillsPageModule
       ),
     canActivate: [AuthGuard]
   },
   {
-    path: "view-skills",
+    path: 'view-skills',
     loadChildren: () =>
-      import("./pages/view-skills/view-skills.module").then(
+      import('./pages/view-skills/view-skills.module').then(
         (m) => m.ViewSkillsPageModule
       ),
     canActivate: [AuthGuard]
   },
   {
     path: 'view-all-project',
-    loadChildren: () => 
-    import('./pages/project/view-all-project/view-all-project.module').then( 
+    loadChildren: () =>
+      import('./pages/project/view-all-project/view-all-project.module').then(
         (m) => m.ViewAllProjectPageModule
       ),
-      canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'create-new-project',
-    loadChildren: () => 
-    import('./pages/project/create-new-project/create-new-project.module').then( 
-      (m) => m.CreateNewProjectPageModule
-    ),
+    loadChildren: () =>
+      import('./pages/project/create-new-project/create-new-project.module').then(
+        (m) => m.CreateNewProjectPageModule
+      ),
     canActivate: [AuthGuard]
   },
   {
     path: 'project-details/:projectId',
-    loadChildren: () => import('./pages/project/viewProject/project-details/project-details.module').then( m => m.ProjectDetailsPageModule)
+    loadChildren: () =>
+      import('./pages/project/viewProject/project-details/project-details.module').then(
+        (m) => m.ProjectDetailsPageModule
+      )
   },
   {
     path: 'edit-project-details/:projectId',
-    loadChildren: () => import('./pages/project/editProject/edit-project-details/edit-project-details.module').then( m => m.EditProjectDetailsPageModule)
+    loadChildren: () =>
+      import('./pages/project/editProject/edit-project-details/edit-project-details.module').then(
+        (m) => m.EditProjectDetailsPageModule
+      )
   },
   {
     path: 'tab-panel/:projectId',
-    loadChildren: () => import('./pages/project/editProject/tab-panel/tab-panel.module').then( m => m.TabPanelPageModule)
+    loadChildren: () =>
+      import('./pages/project/editProject/tab-panel/tab-panel.module').then(
+        (m) => m.TabPanelPageModule
+      )
   },
   {
     path: 'edit-members',
-    loadChildren: () => import('./pages/project/editProject/edit-members/edit-members.module').then( m => m.EditMembersPageModule)
+    loadChildren: () =>
+      import('./pages/project/editProject/edit-members/edit-members.module').then(
+        (m) => m.EditMembersPageModule
+      )
   },
   {
     path: 'changepassword',
-    loadChildren: () => import('./changepassword/changepassword.module').then( m => m.ChangepasswordPageModule)
+    loadChildren: () =>
+      import('./changepassword/changepassword.module').then(
+        (m) => m.ChangepasswordPageModule
+      )
   },
   {
     path: 'user-setting',
-    loadChildren: () => import('./user-setting/user-setting.module').then( m => m.UserSettingPageModule)
+    loadChildren: () =>
+      import('./user-setting/user-setting.module').then(
+        (m) => m.UserSettingPageModule
+      )
   },
   {
     path: 'deactivate-account',
-    loadChildren: () => import('./deactivate-account/deactivate-account.module').then( m => m.DeactivateAccountPageModule)
+    loadChildren: () =>
+      import('./deactivate-account/deactivate-account.module').then(
+        (m) => m.DeactivateAccountPageModule
+      )
   },
   {
     path: 'logout',
-    loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
+    loadChildren: () =>
+      import('./pages/logout/logout.module').then((m) => m.LogoutPageModule)
   },
   {
     path: 'view-own-projects',
-    loadChildren: () => import('./pages/project/view-own-projects/view-own-projects.module').then( m => m.ViewOwnProjectsPageModule)
+    loadChildren: () =>
+      import('./pages/project/view-own-projects/view-own-projects.module').then(
+        (m) => m.ViewOwnProjectsPageModule
+      )
   },
   {
-    path: "view-users",
+    path: 'view-users',
     loadChildren: () =>
-      import("./pages/view-users/view-users.module").then(
+      import('./pages/view-users/view-users.module').then(
         (m) => m.ViewUsersPageModule
       )
   },
   {
-    path: "view-basic-info",
+    path: 'view-basic-info',
     loadChildren: () =>
-      import("./pages/view-basic-info/view-basic-info.module").then(
+      import('./pages/view-basic-info/view-basic-info.module').then(
         (m) => m.ViewBasicInfoPageModule
       )
   },
   {
-    path: "edit-basic-info",
+    path: 'edit-basic-info',
     loadChildren: () =>
-      import("./pages/edit-basic-info/edit-basic-info.module").then(
+      import('./pages/edit-basic-info/edit-basic-info.module').then(
         (m) => m.EditBasicInfoPageModule
       )
   },
   {
-    path: "view-sdgs",
+    path: 'view-sdgs',
     loadChildren: () =>
-      import("./pages/view-sdgs/view-sdgs.module").then(
+      import('./pages/view-sdgs/view-sdgs.module').then(
         (m) => m.ViewSdgsPageModule
       )
   },
   {
-    path: "add-sdgs",
+    path: 'add-sdgs',
     loadChildren: () =>
-      import("./pages/add-sdgs/add-sdgs.module").then(
+      import('./pages/add-sdgs/add-sdgs.module').then(
         (m) => m.AddSdgsPageModule
       )
   },
   {
     path: "add-material-resource-available",
     loadChildren: () =>
-      import(
-        "./pages/add-material-resource-available/add-material-resource-available.module"
-      ).then((m) => m.AddMaterialResourceAvailablePageModule)
-  },  {
+      import("./pages/add-material-resource-available/add-material-resource-available.module").then(
+        (m) => m.AddMaterialResourceAvailablePageModule
+      )
+  },
+  {
     path: 'view-hrp',
-    loadChildren: () => import('./pages/project/viewProject/view-hrp/view-hrp.module').then( m => m.ViewHrpPageModule)
+    loadChildren: () => 
+      import('./pages/project/viewProject/view-hrp/view-hrp.module').then( 
+        (m) => m.ViewHrpPageModule
+      )
   },
   {
     path: 'edit-hrp',
-    loadChildren: () => import('./pages/project/editProject/edit-hrp/edit-hrp.module').then( m => m.EditHrpPageModule)
+    loadChildren: () => 
+      import('./pages/project/editProject/edit-hrp/edit-hrp.module').then( 
+        (m) => m.EditHrpPageModule
+      )
+  },
+  {
+    path: 'create-post',
+    loadChildren: () =>
+      import('./pages/create-post/create-post.module').then(
+        (m) => m.CreatePostPageModule
+      )
+  },
+  {
+    path: 'edit-post-comment-modal',
+    loadChildren: () => 
+      import('./pages/edit-post-comment-modal/edit-post-comment-modal.module').then( 
+        (m) => m.EditPostCommentModalPageModule
+      )
+  },
+  {
+    path: 'share-post-modal',
+    loadChildren: () => 
+      import('./pages/share-post-modal/share-post-modal.module').then( 
+        (m) => m.SharePostModalPageModule
+      )
   }
 
-
-]
+];
 
 @NgModule({
   imports: [

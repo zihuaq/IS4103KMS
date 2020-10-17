@@ -6,7 +6,7 @@
   </button>
 </div>
 
-<div class="form-group" *ngIf="loggedInUser.userId == profile.userId">
+<div class="form-group" *ngIf="!shared && loggedInUser.userId == profile.userId">
   <label>Select Skills</label>
   <div class="select2-purple">
     <select class="select2" id="skillselect2" multiple="multiple" data-placeholder="Select skills"
@@ -16,15 +16,18 @@
   <button type="button" class="btn btn-block btn-default" (click)="submitSkills()">Submit selections</button>
 </div>
 
-<label *ngIf="loggedInUser.userId == profile.userId"> My Skills</label>
-<label *ngIf="loggedInUser.userId != profile.userId"> {{profile.firstName}} {{profile.lastName}}'s Skills </label>
+<label *ngIf="!shared && loggedInUser.userId == profile.userId"> My Skills</label>
+<label *ngIf="shared || loggedInUser.userId != profile.userId"> {{profile.firstName}} {{profile.lastName}}'s Skills
+</label>
 <br />
-<span *ngIf="profile.skills.length == 0 && loggedInUser.userId == profile.userId"> You have no skills at the
+<span *ngIf="!shared && profile.skills.length == 0 && loggedInUser.userId == profile.userId"> You have no skills at the
   moment.</span>
-<span *ngIf="profile.skills.length == 0 && loggedInUser.userId != profile.userId"> {{profile.firstName}}
+<span
+  *ngIf="(shared && profile.skills.length == 0) || (!shared && profile.skills.length == 0 && loggedInUser.userId != profile.userId)">
+  {{profile.firstName}}
   {{profile.lastName}} has no skills at the moment.</span>
 
-<span *ngIf="profile.skills.length > 0 && loggedInUser.userId == profile.userId">
+<span *ngIf="!shared && profile.skills.length > 0 && loggedInUser.userId == profile.userId">
   <div *ngFor="let skill of profile.skills">
     <small class="badge badge-warning" (click)="deleteSkill(skill.tagId)">
       {{skill.name}}
@@ -33,7 +36,8 @@
   </div>
 </span>
 
-<span *ngIf="profile.skills.length > 0 && loggedInUser.userId != profile.userId">
+<span
+  *ngIf="(shared && profile.skills.length > 0) || (profile.skills.length > 0 && loggedInUser.userId != profile.userId)">
   <div *ngFor="let skill of profile.skills">
     <small class="badge badge-warning">
       {{skill.name}}

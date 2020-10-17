@@ -133,6 +133,19 @@ export class TaskTabComponent implements OnInit {
     gantt.config.fit_tasks = true;
     gantt.config.date_grid = "%d-%m-%Y";
     gantt.config.date_format = '%Y-%m-%d %H:%i';
+    gantt.config.columns=[
+      {name:"text", label:"Task Name", tree:true, width:150 },
+      {name:"start_date", label:"Start Time", align: "center", width: 80 },
+      {name:"end_date", label:"End Time", align: "center", width: 80 },
+      {name:"duration", label:"Duration", align: "center" , width: 70, template: (task) => {
+        if (task.duration > 1) {
+          return task.duration + " days"
+        } else {
+          return task.duration + " day"
+        } 
+      }},
+      {name:"add", label:"" }
+    ];
     gantt.init(this.ganttChart.nativeElement);
 	}
 }

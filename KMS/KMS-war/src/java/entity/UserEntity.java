@@ -91,8 +91,7 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "projectAdmins")
     @ManyToMany
     private List<ProjectEntity> projectsManaged;
-    @OneToMany(mappedBy = "postOwner")
-    private List<PostEntity> posts;
+    
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
     @JoinTable(name= "groupMembers")
@@ -141,6 +140,9 @@ public class UserEntity implements Serializable {
     
     @OneToMany(mappedBy = "fulfillmentOwner")
     private List<FulfillmentEntity> fulfillments;
+    
+    @OneToMany(mappedBy = "postOwner")
+    private List<PostEntity> posts;
 
     @JoinTable(name = "activityJoined")
     @ManyToMany
@@ -563,5 +565,4 @@ public class UserEntity implements Serializable {
     public void setDonations(List<DonationEntity> donations) {
         this.donations = donations;
     }
-  
 }

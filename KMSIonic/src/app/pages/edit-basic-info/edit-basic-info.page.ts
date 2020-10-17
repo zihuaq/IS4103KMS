@@ -1,29 +1,29 @@
-import { ApplicationRef, Component, NgZone, OnInit } from "@angular/core"
-import { NgForm } from "@angular/forms"
-import { ActivatedRoute, Router } from "@angular/router"
-import { User } from "src/app/classes/user"
-import { AccountPrivacySettingEnum } from "src/app/enum/account-privacy-setting.enum"
-import { AuthenticationService } from "src/app/services/authentication.service"
-import { UserService } from "src/app/services/user.service"
-import { ActionSheetController, ToastController } from "@ionic/angular"
-import { Location } from "@angular/common"
-import { UserType } from "src/app/enum/user-type.enum"
+import { ApplicationRef, Component, NgZone, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { User } from 'src/app/classes/user';
+import { AccountPrivacySettingEnum } from 'src/app/enum/account-privacy-setting.enum';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { UserService } from 'src/app/services/user.service';
+import { ActionSheetController, ToastController } from '@ionic/angular';
+import { Location } from '@angular/common';
+import { UserType } from 'src/app/enum/user-type.enum';
 
-declare var Camera: any
-declare var navigator: Navigator
+declare var Camera: any;
+declare var navigator: any;
 
 @Component({
-  selector: "app-edit-basic-info",
-  templateUrl: "./edit-basic-info.page.html",
-  styleUrls: ["./edit-basic-info.page.scss"]
+  selector: 'app-edit-basic-info',
+  templateUrl: './edit-basic-info.page.html',
+  styleUrls: ['./edit-basic-info.page.scss']
 })
 export class EditBasicInfoPage implements OnInit {
-  loggedInUser: User
-  loggedInUserId: number
-  updatedUser: User
-  privacySettings = AccountPrivacySettingEnum
-  genders = ["Male", "Female"]
-  UserType = UserType
+  loggedInUser: User;
+  loggedInUserId: number;
+  updatedUser: User;
+  privacySettings = AccountPrivacySettingEnum;
+  genders = ['Male', 'Female'];
+  UserType = UserType;
 
   constructor(
     private location: Location,
@@ -39,77 +39,77 @@ export class EditBasicInfoPage implements OnInit {
   ngOnInit() {}
 
   ionViewWillEnter() {
-    let profileid = this.activatedRoute.snapshot.params.userid
+    let profileid = this.activatedRoute.snapshot.params.userid;
     this.authenticationService.getCurrentUser().then((user: User) => {
-      this.loggedInUserId = user.userId
+      this.loggedInUserId = user.userId;
       if (!profileid || profileid == this.loggedInUserId) {
-        profileid = this.loggedInUserId
+        profileid = this.loggedInUserId;
         this.userService.getUser(profileid).subscribe((data) => {
-          this.loggedInUser = data
-        })
+          this.loggedInUser = data;
+        });
       } else {
         //error
       }
-    })
+    });
   }
 
   async choosePictureActionSheet() {
     const actionSheet = await this.actionSheetController.create({
-      header: "Choose Profile Picture",
+      header: 'Choose Profile Picture',
       buttons: [
         {
-          text: "Camera",
-          icon: "camera",
+          text: 'Camera',
+          icon: 'camera',
           handler: () => {
-            console.log("Camera chosen")
+            console.log('Camera chosen');
             navigator.camera.getPicture(
               (imageUri) => {
-                console.log(imageUri)
+                console.log(imageUri);
                 this.loggedInUser.profilePicture =
-                  "data:image/jpeg;base64," + imageUri
-                this.app.tick()
+                  'data:image/jpeg;base64,' + imageUri;
+                this.app.tick();
               },
               (error) => {
-                console.debug("Unable to obtain picture: " + error, "app")
+                console.debug('Unable to obtain picture: ' + error, 'app');
               },
               this.setOptions(Camera.PictureSourceType.CAMERA)
-            )
+            );
           }
         },
         {
-          text: "Gallery",
-          icon: "albums",
+          text: 'Gallery',
+          icon: 'albums',
           handler: () => {
-            console.log("Gallery chosen")
+            console.log('Gallery chosen');
             navigator.camera.getPicture(
               (imageUri) => {
-                console.log(imageUri)
+                console.log(imageUri);
                 this.loggedInUser.profilePicture =
-                  "data:image/jpeg;base64," + imageUri
-                this.app.tick()
+                  'data:image/jpeg;base64,' + imageUri;
+                this.app.tick();
               },
               (error) => {
-                console.debug("Unable to obtain picture: " + error, "app")
+                console.debug('Unable to obtain picture: ' + error, 'app');
               },
               this.setOptions(Camera.PictureSourceType.PHOTOLIBRARY)
-            )
+            );
           }
         },
         {
-          text: "Remove Existing",
-          icon: "trash",
+          text: 'Remove Existing',
+          icon: 'trash',
           handler: () => {
-            this.loggedInUser.profilePicture = null
+            this.loggedInUser.profilePicture = null;
           }
         }
       ]
-    })
+    });
 
     actionSheet.onDidDismiss().then(() => {
-      console.log("Dismissed")
-    })
+      console.log('Dismissed');
+    });
 
-    await actionSheet.present()
+    await actionSheet.present();
   }
 
   setOptions(srcType) {
@@ -122,25 +122,25 @@ export class EditBasicInfoPage implements OnInit {
       encodingType: Camera.EncodingType.JPEG,
       mediaType: Camera.MediaType.PICTURE,
       correctOrientation: true
-    }
-    return options
+    };
+    return options;
   }
 
   onEditProfile(editForm: NgForm) {
-    this.updatedUser = new User()
+    this.updatedUser = new User();
     if (editForm.valid) {
-      console.log(editForm)
-      this.updatedUser.userId = this.loggedInUser.userId
-      this.updatedUser.firstName = editForm.value.firstName
-      this.updatedUser.lastName = editForm.value.lastName
-      this.updatedUser.email = editForm.value.email
-      this.updatedUser.dob = new Date(editForm.value.dob)
-      this.updatedUser.profilePicture = this.loggedInUser.profilePicture
-      this.updatedUser.gender = editForm.value.gender
-      this.updatedUser.accountPrivacySetting = editForm.value.privacySettings
+      console.log(editForm);
+      this.updatedUser.userId = this.loggedInUser.userId;
+      this.updatedUser.firstName = editForm.value.firstName;
+      this.updatedUser.lastName = editForm.value.lastName;
+      this.updatedUser.email = editForm.value.email;
+      this.updatedUser.dob = new Date(editForm.value.dob);
+      this.updatedUser.profilePicture = this.loggedInUser.profilePicture;
+      this.updatedUser.gender = editForm.value.gender;
+      this.updatedUser.accountPrivacySetting = editForm.value.privacySettings;
       this.userService.updateUser(this.updatedUser).subscribe(
         async (responsedata: User) => {
-          console.log(responsedata)
+          console.log(responsedata);
           this.updatedUser = {
             ...this.loggedInUser,
             firstName: responsedata.firstName,
@@ -151,21 +151,22 @@ export class EditBasicInfoPage implements OnInit {
             profilePicture: responsedata.profilePicture,
             sdgs: responsedata.sdgs,
             accountPrivacySetting: responsedata.accountPrivacySetting
-          }
+          };
           const toast = await this.toastController.create({
-            message: "Your settings have been saved.",
+            message: 'Your settings have been saved.',
             duration: 2000
-          })
-          toast.present()
-          this.router.navigate(["/profile"])
+          });
+          toast.present();
+          this.router.navigate(['/profile']);
         },
         async (err) => {
           const toast = await this.toastController.create({
             message: err,
             duration: 2000
-          })
+          });
+          toast.present();
         }
-      )
+      );
     }
   }
 }
