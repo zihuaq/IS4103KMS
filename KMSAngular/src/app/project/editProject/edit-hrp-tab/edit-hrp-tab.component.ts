@@ -1,6 +1,7 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { DatePipe } from '@angular/common'; 
 
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/project.service';
@@ -43,7 +44,8 @@ export class EditHrpTabComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private tagService: TagService,
-    private hrpService: HrpService) { 
+    private hrpService: HrpService,
+    private datePipe: DatePipe) { 
       this.projectToEdit = new Project();
       this.newHrp = new HumanResourcePosting();
       this.hrpToEdit = new HumanResourcePosting();
@@ -196,8 +198,10 @@ export class EditHrpTabComponent implements OnInit {
         $("#editskillselect2")
         .trigger("change");
 
-        this.startDate = this.hrpToEdit.startDate.toString().substring(0, 10);
-        this.endDate = this.hrpToEdit.endDate.toString().substring(0, 10);
+        this.hrpToEdit.startDate = new Date(this.formatDate(this.hrpToEdit.startDate.toString()));
+        this.startDate = this.dateToString(this.hrpToEdit.startDate);
+        this.hrpToEdit.endDate = new Date(this.formatDate(this.hrpToEdit.endDate.toString()));
+        this.endDate = this.dateToString(this.hrpToEdit.endDate);
       },
       error => {
         $(document).Toasts('create', {
@@ -271,6 +275,7 @@ export class EditHrpTabComponent implements OnInit {
           );
         }
       );
+      $('#editHrpModalCloseBtn').click();
     }
   }
 
@@ -307,5 +312,14 @@ export class EditHrpTabComponent implements OnInit {
   changehref(lat: number, long: number) {
     var url = "http://maps.google.com/?q=" + lat + "," + long;
     window.open(url, '_blank');
+  }
+
+  dateToString(date: Date) {
+    return this.datePipe.transform(date, "yyyy-MM-dd");
+  }
+  
+  formatDate(date: string) {
+    var str = date.slice(0, date.indexOf("["));
+    return str;
   }
 }

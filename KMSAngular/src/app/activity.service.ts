@@ -63,6 +63,18 @@ export class ActivityService {
     );
   }
 
+  addHrpToActivity(activityId: number, hrpId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/addHrpToActivity/" + activityId + "/" + hrpId, null, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  removeHrpFromActivity(activityId: number, hrpId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/removeHrpFromActivity/" + activityId + "/" + hrpId, null, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
     

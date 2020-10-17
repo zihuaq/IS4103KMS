@@ -102,14 +102,17 @@
                     {{activity.description}}
                     </td>
                     <td>
-                        <button class="btn btn-warning" data-toggle="modal" data-target="#modal-edit-activity" data-backdrop="static" (click)="clickActivity(activity.activityId)">                            
-                            <i class="fas fa-edit" data-toggle="tooltip" data-placement="top" title="Edit"></i>
+                        <button class="btn btn-warning" rel="tooltip" title="Edit" data-toggle="modal" data-target="#modal-edit-activity" data-backdrop="static" (click)="clickActivity(activity.activityId)">                            
+                            <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-secondary" data-toggle="modal" data-target="#modal-users" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                        <button class="btn btn-secondary" rel="tooltip" title="Members" data-toggle="modal" data-target="#modal-users" data-backdrop="static" (click)="clickActivity(activity.activityId)">
                             <i class="fas fa-users"></i>
                         </button>
-                        <button class="btn btn-danger" data-toggle="modal" data-target="#delete-activity-dialog" data-backdrop="static" (click)="clickActivity(activity.activityId)">
-                            <i class="fas fa-trash-alt" ></i>
+                        <button class="btn btn-info" rel="tooltip" title="Human Resource Postings" data-toggle="modal" data-target="#modal-hrp" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                            <i class="fas fa-user-tie"></i>
+                        </button>
+                        <button class="btn btn-danger" rel="tooltip" title="Delete" data-toggle="modal" data-target="#delete-activity-dialog" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
                 </tr>
@@ -225,6 +228,76 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button id="delete-hrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteActivity()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-hrp">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Human Resource Postings</h4>
+                <button type="button" id="hrpBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <span *ngIf="hrpAllocated.length == 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title"><b>Allocated Human Resource Posting</b></h5>                            
+                        </div>
+                        <li class="list-group-item">
+                            There is currently no Human Resource Posting allocated to this activity.
+                        </li>
+                    </div>                    
+                </span>
+                <span *ngIf="hrpAllocated.length > 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title"><b>Allocated Human Resource Posting</b></h5>                            
+                        </div>
+                        <ul class="list-group list-group-flush" *ngFor="let hrp of hrpAllocated">
+                            <li class="list-group-item">
+                                {{hrp.name}}
+                                <br/>
+                                {{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}
+                                <button class="btn btn-default float-right" (click)="removeHrpFromActivity(hrp.humanResourcePostingId)">Remove</button>
+                                <br/>
+                                No. of people: {{hrp.totalSlots}}
+                            </li>
+                        </ul> 
+                    </div>
+                </span>
+                
+                <span *ngIf="hrpAvailable.length == 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title"><b>Available Human Resource Posting</b></h5>                            
+                        </div>
+                        <li class="list-group-item">
+                            There is currently no Human Resource Posting to be allocated to this activity.
+                        </li>
+                    </div>                    
+                </span>
+                <span *ngIf="hrpAvailable.length > 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title"><b>Available Human Resource Posting</b></h5>                            
+                        </div>
+                        <ul class="list-group list-group-flush" *ngFor="let hrp of hrpAvailable">
+                            <li class="list-group-item">
+                                {{hrp.name}}
+                                <br/>
+                                {{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}
+                                <button class="btn btn-default float-right" (click)="allocateHrpToActivity(hrp.humanResourcePostingId)">Allocate</button>
+                                <br/>
+                                No. of people: {{hrp.totalSlots}}                                
+                            </li>
+                        </ul> 
+                    </div>
+                </span>
             </div>
         </div>
     </div>

@@ -22,26 +22,26 @@
                         <input type="text" id="hrpName" class="form-control" placeholder="Enter Name" name="hrpName" [(ngModel)]="newHrp.name" required>
                     </div>
                     <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="newHrp.description" required></textarea>
+                        <label for="hrpDescription">Description</label>
+                        <textarea id="hrpDescription" class="form-control" placeholder="Enter Description" name="hrpDescription" [(ngModel)]="newHrp.description" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="skillTag">Skill Tags</label>
+                        <label for="hrpSkillTag">Skill Tags</label>
                         <div class="select2-blue">
                             <select class="select2" id="hrpselect2" multiple="multiple" data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue" style="width: 100%;"></select>                        
                         </div>                   
                     </div>
                     <div class="form-group">
-                        <label for="startDate">Start Date</label>
-                        <input id="startDate" type="date" class="form-control" name="startDate" [(ngModel)]="newHrp.startDate" [min]="minDate" required>
+                        <label for="hrpStartDate">Start Date</label>
+                        <input id="hrpStartDate" type="date" class="form-control" name="hrpStartDate" [(ngModel)]="newHrp.startDate" [min]="minDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="endDate">End Date</label>
-                        <input id="endDate" type="date" class="form-control" name="endDate" [(ngModel)]="newHrp.endDate" [min]="newHrp.startDate" required>
+                        <label for="hrpEndDate">End Date</label>
+                        <input id="hrpEndDate" type="date" class="form-control" name="hrpEndDate" [(ngModel)]="newHrp.endDate" [min]="newHrp.startDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="totalSlots">Total Slots Needed</label>
-                        <input id="totalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="totalSlots" [(ngModel)]="newHrp.totalSlots" min="1" required>
+                        <label for="hrpTotalSlots">Total Slots Needed</label>
+                        <input id="hrpTotalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="hrpTotalSlots" [(ngModel)]="newHrp.totalSlots" min="1" required>
                     </div>
                     <div class="form-group">
                         <label>Location of resource</label>
@@ -50,12 +50,12 @@
                         </google-map>
                     </div>
                     <div class="form-group">
-                        <label for="lat">Latitude</label>
-                        <input id="lat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="lat" [(ngModel)]="newHrp.latitude" required disabled>
+                        <label for="hrpLat">Latitude</label>
+                        <input id="hrpLat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="hrpLat" [(ngModel)]="newHrp.latitude" required disabled>
                     </div>
                     <div class="form-group">
-                        <label for="long">Longitude</label>
-                        <input id="long" type=number steps="any" class="form-control" placeholder="Enter longitude" name="long" [(ngModel)]="newHrp.longitude" required disabled>
+                        <label for="hrpLong">Longitude</label>
+                        <input id="hrpLong" type=number steps="any" class="form-control" placeholder="Enter longitude" name="hrpLong" [(ngModel)]="newHrp.longitude" required disabled>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -91,7 +91,7 @@
             </div>
             <div class="card-body" style="display: block;">
                 <p style="margin: 0 7px 0 7px;">
-                    <b>Required from {{hrp.startDate.toString().slice(0,10) | date}} to {{hrp.endDate.toString().slice(0,10) | date}}</b>
+                    <b>Required from {{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</b>
                     <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(hrp.latitude, hrp.longitude)" target="_blank">
                         At location
                         {{hrp.latitude | number:'1.1-6'}},
@@ -124,11 +124,11 @@
             <form (ngSubmit)="editHrp(editHrpForm)" #editHrpForm="ngForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="hrpName">Human Resource Posting Name</label>
-                        <input type="text" id="hrpName" class="form-control" placeholder="Enter Name" name="hrpName" [(ngModel)]="hrpToEdit.name" required>
+                        <label for="editHrpName">Human Resource Posting Name</label>
+                        <input type="text" id="editHrpName" class="form-control" placeholder="Enter Name" name="editHrpName" [(ngModel)]="hrpToEdit.name" required>
                     </div>
                     <div class="form-group">
-                        <label for="description">Description</label>
+                        <label for="editHrpDescription">Description</label>
                         <textarea id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="hrpToEdit.description" required></textarea>
                     </div>
                     <div class="form-group">
@@ -138,16 +138,16 @@
                         </div>                   
                     </div>
                     <div class="form-group">
-                        <label for="startDate">Start Date</label>
-                        <input id="startDate" type="date" class="form-control" name="startDate" [(ngModel)]="startDate" [min]="minDate" required>
+                        <label for="editHrpStartDate">Start Date</label>
+                        <input id="editHrpStartDate" type="date" class="form-control" name="editHrpStartDate" [(ngModel)]="startDate" [min]="minDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="endDate">End Date</label>
-                        <input id="endDate" type="date" class="form-control" name="endDate" [(ngModel)]="endDate" [min]="startDate" required>
+                        <label for="editHrpEndDate">End Date</label>
+                        <input id="editHrpEndDate" type="date" class="form-control" name="editHrpEndDate" [(ngModel)]="endDate" [min]="startDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="totalSlots">Total Slots Needed</label>
-                        <input id="totalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="totalSlots" [(ngModel)]="hrpToEdit.totalSlots" min="1" required>
+                        <label for="editHrpTotalSlots">Total Slots Needed</label>
+                        <input id="editHrpTotalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="editHrpTotalSlots" [(ngModel)]="hrpToEdit.totalSlots" min="1" required>
                     </div>
                     <div class="form-group">
                         <label>Location of resource</label>
@@ -156,12 +156,12 @@
                         </google-map>
                     </div>
                     <div class="form-group">
-                        <label for="lat">Latitude</label>
-                        <input id="lat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="lat" [(ngModel)]="hrpToEdit.latitude" required>
+                        <label for="editHrpLat">Latitude</label>
+                        <input id="editHrpLat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="editHrpLat" [(ngModel)]="hrpToEdit.latitude" required>
                     </div>
                     <div class="form-group">
-                        <label for="long">Longitude</label>
-                        <input id="long" type=number steps="any" class="form-control" placeholder="Enter longitude" name="long" [(ngModel)]="hrpToEdit.longitude" required>
+                        <label for="editHrpLong">Longitude</label>
+                        <input id="editHrpLong" type=number steps="any" class="form-control" placeholder="Enter longitude" name="editHrpLong" [(ngModel)]="hrpToEdit.longitude" required>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

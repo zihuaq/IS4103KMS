@@ -12,6 +12,8 @@ import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/project.service';
 import { User } from 'src/app/classes/user';
 import { SessionService } from 'src/app/session.service';
+import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
+import { HrpService } from 'src/app/hrp.service';
 
 declare var $: any;
 
@@ -38,23 +40,23 @@ export class EditActivityTabComponent implements OnInit {
 
   events: CalendarEvent[] = [];
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-edit"><i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        console.log(event);
-        $('#modal-edit-activity').modal('show');
-      },
-    },
-    {
-      label: '<i class="fas fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        $('#delete-activity-dialog').modal('show');
-      },
-    }
-  ];
+  // actions: CalendarEventAction[] = [
+  //   {
+  //     label: '<i class="fas fa-edit"><i>',
+  //     a11yLabel: 'Edit',
+  //     onClick: ({ event }: { event: CalendarEvent }): void => {
+  //       console.log(event);
+  //       $('#modal-edit-activity').modal('show');
+  //     },
+  //   },
+  //   {
+  //     label: '<i class="fas fa-trash-alt"></i>',
+  //     a11yLabel: 'Delete',
+  //     onClick: ({ event }: { event: CalendarEvent }): void => {
+  //       $('#delete-activity-dialog').modal('show');
+  //     },
+  //   }
+  // ];
 
   projectId: number;
   project: Project;
@@ -65,8 +67,11 @@ export class EditActivityTabComponent implements OnInit {
   minEndDate = new Date().toISOString().slice(0, 10);
   ownerId: number;
   loggedInUser: User;
+  hrpAvailable: HumanResourcePosting[];
+  hrpAllocated: HumanResourcePosting[];
 
-  constructor(private sessionService: SessionService,
+  constructor(private hrpService: HrpService,
+    private sessionService: SessionService,
     private activityService: ActivityService,
     private projectService: ProjectService,
     private router: Router,
@@ -77,6 +82,8 @@ export class EditActivityTabComponent implements OnInit {
       this.activityToEdit.joinedUsers = [];
       this.activities = [];
       this.project = new Project();
+      this.hrpAllocated = [];
+      this.hrpAvailable = [];
     }
 
   ngOnInit(): void {
@@ -106,7 +113,6 @@ export class EditActivityTabComponent implements OnInit {
             end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
             title: activity.name,
             allDay: true,
-            actions: this.actions
           }
           this.events.push(event);
         }
@@ -208,8 +214,20 @@ export class EditActivityTabComponent implements OnInit {
         this.startDate = this.dateToString(this.activityToEdit.startDate);
         this.activityToEdit.endDate = new Date(this.formatDate(this.activityToEdit.endDate.toString()));
         this.endDate = this.dateToString(this.activityToEdit.endDate);
+
+        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.startDate)).subscribe(
+          response => {
+            this.hrpAvailable = response;
+          }
+        );
+
+        this.hrpService.getHrpByActivityId(activityId).subscribe(
+          response => {
+            this.hrpAllocated = response;
+          }
+        );
       }
-    )
+    );
   }
 
   editActivity(updateActivityForm: NgForm) {
@@ -289,6 +307,56 @@ export class EditActivityTabComponent implements OnInit {
         this.activityService.getActivityById(this.activityToEdit.activityId).subscribe(
           response => {
             this.activityToEdit = response;
+          }
+        );
+      }
+    )
+  }
+
+  allocateHrpToActivity(hrpId: number) {
+    this.activityService.addHrpToActivity(this.activityToEdit.activityId, hrpId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Hrp allocated to this activity successfully',
+        });
+        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.startDate)).subscribe(
+          response => {
+            this.hrpAvailable = response;
+          }
+        );
+
+        this.hrpService.getHrpByActivityId(this.activityToEdit.activityId).subscribe(
+          response => {
+            this.hrpAllocated = response;
+          }
+        );
+      }
+    )
+  }
+
+  removeHrpFromActivity(hrpId: number) {
+    this.activityService.removeHrpFromActivity(this.activityToEdit.activityId, hrpId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Hrp removed from this activity successfully',
+        });
+        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.startDate)).subscribe(
+          response => {
+            this.hrpAvailable = response;
+          }
+        );
+
+        this.hrpService.getHrpByActivityId(this.activityToEdit.activityId).subscribe(
+          response => {
+            this.hrpAllocated = response;
           }
         );
       }

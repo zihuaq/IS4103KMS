@@ -23,6 +23,7 @@
     "@ionic/angular": "^5.3.3",
     "@ng-idle/core": "^10.0.0-beta.1",
     "@ng-idle/keepalive": "^10.0.0-beta.1",
+    "@types/googlemaps": "^3.40.0",
     "admin-lte": "^3.0.5",
     "angular-calendar": "^0.28.20",
     "angular2-moment": "^1.9.0",
