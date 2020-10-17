@@ -142,6 +142,7 @@ public class ProjectResource {
             project.getProjectOwner().getFollowRequestReceived().clear();
             project.getProjectOwner().getHrpApplied().clear();
             project.getProjectOwner().getFulfillments().clear();
+            project.getProjectOwner().getActivityJoined().clear();
             project.getProjectOwner().getDonations().clear();
             for (UserEntity member : project.getProjectMembers()) {
                 member.getGroupsOwned().clear();
@@ -162,6 +163,7 @@ public class ProjectResource {
                 member.getFollowRequestReceived().clear();
                 member.getHrpApplied().clear();
                 member.getFulfillments().clear();
+                member.getActivityJoined().clear();
                 member.getDonations().clear();
             }
             for (UserEntity admin : project.getProjectAdmins()) {
@@ -183,6 +185,7 @@ public class ProjectResource {
                 admin.getFollowRequestReceived().clear();
                 admin.getHrpApplied().clear();
                 admin.getFulfillments().clear();
+                admin.getActivityJoined().clear();
                 admin.getDonations().clear();
             }
             for (ActivityEntity ae : project.getActivities()) {
@@ -203,6 +206,7 @@ public class ProjectResource {
             }
             for (TaskEntity task : project.getTasks()) {
                 task.setProject(null);
+                task.setParentTask(null);
             }
             for (PostEntity post : project.getPosts()) {
                 post.setPostOwner(null);

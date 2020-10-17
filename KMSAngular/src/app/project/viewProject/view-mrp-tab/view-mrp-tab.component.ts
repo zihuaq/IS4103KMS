@@ -218,21 +218,21 @@ export class ViewMrpTabComponent implements OnInit {
     } else {
       this.maxQuantity = Math.min(mraToDonate.quantity, this.mrpToFulfill.lackingQuantity);
     }
-    if(mraToDonate.endDate != null && mraToDonate.endDate < this.mrpToFulfill.startDate) {
+    if(mraToDonate.endDate != null && mraToDonate.endDate < this.mrpToFulfill.endDate) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Expired Resource',
         autohide: true,
         delay: 5000,
-        body: 'The donated resource will expire before the start date of Material Resource Posting',
+        body: 'The donated resource will expire before the end date of Material Resource Posting',
       });
-    } if(mraToDonate.startDate != null && mraToDonate.startDate > this.mrpToFulfill.endDate) {
+    } if(mraToDonate.startDate != null && mraToDonate.startDate > this.mrpToFulfill.startDate) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Resource Unavailable',
         autohide: true,
         delay: 5000,
-        body: 'The donated resource is only available after the end date of Material Resource Posting',
+        body: 'The donated resource is only available after the start date of Material Resource Posting',
       });
     } else {
       this.mraToDonate = mraToDonate;

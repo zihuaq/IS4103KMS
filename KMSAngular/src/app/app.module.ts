@@ -61,6 +61,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { EditActivityTabComponent } from './project/editProject/edit-activity-tab/edit-activity-tab.component';
 import { DatePipe } from '@angular/common';
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
+import { TaskTabComponent } from './project/viewProject/task-tab/task-tab.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { DonateToProjectComponent } from './project/viewProject/donate-to-projec
     MyFulfillmentsComponent,
     ActivityTabComponent,
     EditActivityTabComponent,
-    DonateToProjectComponent
+    DonateToProjectComponent,
+    TaskTabComponent
   ],
   imports: [
     BrowserModule,
@@ -124,7 +126,7 @@ import { DonateToProjectComponent } from './project/viewProject/donate-to-projec
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     ModalModule.forRoot(),
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

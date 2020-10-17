@@ -35,11 +35,13 @@ public class ApplicationConfig extends Application {
         resources.add(ws.restful.resources.FulfillmentResource.class);
         resources.add(ws.restful.resources.GroupResource.class);
         resources.add(ws.restful.resources.HrpResource.class);
+        resources.add(ws.restful.resources.LinkResource.class);
         resources.add(ws.restful.resources.MraResource.class);
         resources.add(ws.restful.resources.MrpResource.class);
         resources.add(ws.restful.resources.ProjectResource.class);
         resources.add(ws.restful.resources.ReportResource.class);
         resources.add(ws.restful.resources.TagResource.class);
+        resources.add(ws.restful.resources.TaskResource.class);
         resources.add(ws.restful.resources.UserResource.class);
     }
     
