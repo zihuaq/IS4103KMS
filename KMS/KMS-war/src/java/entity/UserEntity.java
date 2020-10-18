@@ -143,9 +143,6 @@ public class UserEntity implements Serializable {
     
     @OneToMany(mappedBy = "fulfillmentOwner")
     private List<FulfillmentEntity> fulfillments;
-    
-//    @OneToMany(mappedBy = "postOwner")
-//    private List<PostEntity> posts;
 
     @JoinTable(name = "activityJoined")
     @ManyToMany

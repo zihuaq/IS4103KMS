@@ -151,28 +151,28 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPROFILE));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPROFILE));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTPROFILE));
-        
+
         tagSessionBean.createNewTag(new TagEntity("Fake Group", TagTypeEnum.REPORTGROUP));
         tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTGROUP));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTGROUP));
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTGROUP));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTGROUP));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTGROUP));
-        
+
         tagSessionBean.createNewTag(new TagEntity("Fake Project", TagTypeEnum.REPORTPROJECT));
         tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPROJECT));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTPROJECT));
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPROJECT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPROJECT));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTPROJECT));
-        
+
         tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTPOST));
         tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPOST));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTPOST));
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPOST));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPOST));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTPOST));
-        
+
         tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTCOMMENT));
