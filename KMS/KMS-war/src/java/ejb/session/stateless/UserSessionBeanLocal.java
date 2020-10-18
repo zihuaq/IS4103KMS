@@ -16,6 +16,7 @@ import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.GroupEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -109,5 +110,11 @@ public interface UserSessionBeanLocal {
     public List<ReviewEntity> getUserRecievedReviews(Long userId) throws UserNotFoundException;
 
     public Long editReview(Long reviewId, String title, String message, Integer rating) throws NoResultException;
+
+    public List<GroupEntity> getGroupsManaged(Long userId) throws UserNotFoundException;
+
+    public List<GroupEntity> getGroupsJoined(Long userId) throws UserNotFoundException;
+
+    public List<GroupEntity> getGroupsOwned(Long userId) throws UserNotFoundException;
 
 }

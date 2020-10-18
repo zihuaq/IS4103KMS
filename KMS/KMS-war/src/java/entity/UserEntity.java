@@ -182,18 +182,6 @@ public class UserEntity implements Serializable {
         this.donations = new ArrayList<>();
     }
 
-    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
-        this();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.gender = gender;
-        this.email = email;
-        this.password = password;
-        this.joinedDate = joinedDate;
-        this.profilePicture = profilePicture;
-    }
-
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, UserTypeEnum usertype) {
         this();
         this.firstName = firstName;
@@ -204,6 +192,19 @@ public class UserEntity implements Serializable {
         this.setPassword(password);
         this.joinedDate = new Date();
         this.userType = usertype;
+    }
+
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date adminStartDate, UserTypeEnum userType) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.email = email;
+        this.setPassword(password);
+        this.joinedDate = new Date();
+        this.adminStartDate = adminStartDate;
+        this.userType = userType;
     }
 
     public Long getUserId() {

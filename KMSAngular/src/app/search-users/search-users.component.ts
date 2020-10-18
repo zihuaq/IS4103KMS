@@ -8,6 +8,8 @@ import { UserService } from '../user.service';
 import { AccountPrivacySettingEnum } from '../classes/privacy-settings.enum';
 import { Router } from '@angular/router';
 import { UserType } from '../classes/user-type.enum';
+import { TagService } from '../tag.service';
+import { Tag } from '../classes/tag';
 
 declare var $: any;
 
@@ -19,19 +21,31 @@ declare var $: any;
 export class SearchUsersComponent implements OnInit {
   allUsers: User[];
   filteredUsers: User[];
-  searchString: string;
+  searchString: string = "";
   loggedInUserId: number;
   loggedInUserFollowing: User[];
   loggedInUserFollowRequestMade: FollowRequest[];
   user: User;
   query: string;
+  skillTags: Tag[];
+  sdgTags: Tag[];
+  selectedSkillTags: Tag[] = [];
+  selectedsdgTags: Tag[] = [];
+  selectedUserType: UserType = null;
+  userTypes: any = [
+    { id: UserType.ADMIN, value: "Admin" },
+    { id: UserType.INDIVIDUAL, value: "Individual" },
+    { id: UserType.INSTITUTE, value: "Institute" },
+    { id: "All", value: "All" }
+  ]
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private sessionService: SessionService,
+    private tagService: TagService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     let userId = this.activatedRoute.snapshot.params.userid;
@@ -44,16 +58,21 @@ export class SearchUsersComponent implements OnInit {
           this.userService.getFollowing(this.loggedInUserId),
           this.userService.getFollowRequestMade(this.loggedInUserId),
           this.userService.getUser(userId),
+          this.tagService.getAllSDGTags(),
+          this.tagService.getAllSkillTags()
         ]).subscribe((result) => {
           this.allUsers = result[0];
           this.filteredUsers = this.allUsers;
           this.loggedInUserFollowing = result[1];
           this.loggedInUserFollowRequestMade = result[2];
           this.user = result[3];
+          this.sdgTags = result[4];
+          this.skillTags = result[5];
+          this.initialiseSelect2();
           if (
             this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
-              AccountPrivacySettingEnum.PRIVATE &&
+            AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
               .map((user) => user.userId)
               .includes(this.user.userId)
@@ -67,16 +86,21 @@ export class SearchUsersComponent implements OnInit {
           this.userService.getFollowing(this.loggedInUserId),
           this.userService.getFollowRequestMade(this.loggedInUserId),
           this.userService.getUser(userId),
+          this.tagService.getAllSDGTags(),
+          this.tagService.getAllSkillTags()
         ]).subscribe((result) => {
           this.allUsers = result[0];
           this.filteredUsers = this.allUsers;
           this.loggedInUserFollowing = result[1];
           this.loggedInUserFollowRequestMade = result[2];
           this.user = result[3];
+          this.sdgTags = result[4];
+          this.skillTags = result[5];
+          this.initialiseSelect2();
           if (
             this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
-              AccountPrivacySettingEnum.PRIVATE &&
+            AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
               .map((user) => user.userId)
               .includes(this.user.userId)
@@ -90,16 +114,21 @@ export class SearchUsersComponent implements OnInit {
           this.userService.getFollowRequestMade(this.loggedInUserId),
           this.userService.getAffiliatedUsers(parseInt(userId)),
           this.userService.getUser(userId),
+          this.tagService.getAllSDGTags(),
+          this.tagService.getAllSkillTags()
         ]).subscribe((result) => {
           this.loggedInUserFollowing = result[0];
           this.loggedInUserFollowRequestMade = result[1];
           this.allUsers = result[2];
           this.filteredUsers = this.allUsers;
           this.user = result[3];
+          this.sdgTags = result[4];
+          this.skillTags = result[5];
+          this.initialiseSelect2();
           if (
             this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
-              AccountPrivacySettingEnum.PRIVATE &&
+            AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
               .map((user) => user.userId)
               .includes(this.user.userId)
@@ -113,40 +142,128 @@ export class SearchUsersComponent implements OnInit {
         this.userService.getAllUsers(),
         this.userService.getFollowing(this.loggedInUserId),
         this.userService.getFollowRequestMade(this.loggedInUserId),
+        this.tagService.getAllSDGTags(),
+        this.tagService.getAllSkillTags()
       ]).subscribe((result) => {
         this.allUsers = result[0];
         this.filteredUsers = this.allUsers;
         this.loggedInUserFollowing = result[1];
         this.loggedInUserFollowRequestMade = result[2];
+        this.sdgTags = result[3];
+        this.skillTags = result[4];
+        this.initialiseSelect2();
       });
     }
   }
 
-  handleSearchStringChanged(event) {
-    this.searchString = event;
+  initialiseSelect2() {
+    $('#searchsdgselect2').select2({
+      data: this.sdgTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#searchskillsselect2').select2({
+      data: this.skillTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#searchsdgselect2').on("change", () => {
+      this.sdgChanged()
+    });
+    $('#searchskillsselect2').on("change", () => {
+      this.skillsChanged();
+    });
+  }
+
+  sdgChanged() {
+    let selectedTagNames = $('#searchsdgselect2').val();
+    this.selectedsdgTags = []
+    this.sdgTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        this.selectedsdgTags.push(element)
+      }
+    });
+    this.updateFilteredUsersAccordingToRefineOptions();
+  }
+
+  skillsChanged() {
+    let selectedTagNames = $('#searchskillsselect2').val();
+    this.selectedSkillTags = []
+    this.skillTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        this.selectedSkillTags.push(element)
+      }
+    });
+    this.updateFilteredUsersAccordingToRefineOptions();
+  }
+
+  updateFilteredUsersAccordingToRefineOptions() {
     this.filteredUsers = [];
-    for (var user of this.allUsers) {
-      console.log(user);
-      if (
-        user.userType == UserType.INDIVIDUAL ||
-        user.userType == UserType.ADMIN
-      ) {
-        if (
-          user.firstName
-            .toLowerCase()
-            .includes(this.searchString.toLowerCase()) ||
-          user.lastName.toLowerCase().includes(this.searchString.toLowerCase())
-        ) {
+    if (this.selectedSkillTags.length > 0 || this.selectedsdgTags.length > 0 || this.selectedUserType) {
+      this.allUsers.forEach((user) => {
+        let numSkillsMatch = 0;
+        let numSDGMatch = 0;
+        let userTypeMatch = this.selectedUserType == null;
+        user.sdgs.forEach((sdg) => {
+          if (this.selectedsdgTags.some(tag => tag.tagId == sdg.tagId)) {
+            numSDGMatch++;
+          }
+        });
+        user.skills.forEach((skill) => {
+          if (this.selectedSkillTags.some(tag => tag.tagId == skill.tagId)) {
+            numSkillsMatch++;
+          }
+        });
+        if (this.selectedUserType) {
+          if (this.selectedUserType == user.userType) {
+            userTypeMatch = true;
+          }
+        }
+        if (userTypeMatch && numSkillsMatch == this.selectedSkillTags.length && numSDGMatch == this.selectedsdgTags.length && !this.filteredUsers.some(filteredUser => filteredUser.userId == user.userId)) {
+          if (this.userMatchSearchString(user)) {
+            this.filteredUsers.push(user);
+          }
+        }
+      });
+    } else {
+      this.allUsers.forEach(user => {
+        if (this.userMatchSearchString(user)) {
           this.filteredUsers.push(user);
         }
-      } else if (user.userType == UserType.INSTITUTE) {
-        if (
-          user.firstName.toLowerCase().includes(this.searchString.toLowerCase())
-        ) {
-          this.filteredUsers.push(user);
-        }
+      });
+    }
+  }
+
+  userMatchSearchString(user: User) {
+    if (user.userType == UserType.INDIVIDUAL || user.userType == UserType.ADMIN) {
+      if (!user.firstName.toLowerCase().includes(this.searchString.toLowerCase()) &&
+        !user.lastName.toLowerCase().includes(this.searchString.toLowerCase())) {
+        return false;
+      }
+    } else if (user.userType == UserType.INSTITUTE) {
+      if (!user.firstName.toLowerCase().includes(this.searchString.toLowerCase())) {
+        return false;
       }
     }
+    return true;
+  }
+
+  onSelectedUserTypeChange(event) {
+    if (event.target.value == "All") {
+      this.selectedUserType = null;
+    } else if (event.target.value == this.selectedUserType) {
+      this.selectedUserType = null;
+    } else {
+      this.selectedUserType = event.target.value;
+    }
+    this.updateFilteredUsersAccordingToRefineOptions();
+  }
+
+  handleSearchStringChanged(event) {
+    this.searchString = event;
+    this.updateFilteredUsersAccordingToRefineOptions();
   }
 
   follow(userId: number) {

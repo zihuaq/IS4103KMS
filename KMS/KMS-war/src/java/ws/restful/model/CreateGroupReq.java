@@ -6,38 +6,50 @@
 package ws.restful.model;
 
 import entity.GroupEntity;
+import java.util.List;
 
 /**
  *
  * @author zeplh
  */
 public class CreateGroupReq {
-   private GroupEntity group;
-   private Long userId;
+   private GroupEntity newGroup;
+   private Long ownerId;
+   private List<Long> tagIds;
 
     public CreateGroupReq() {
     }
 
-    public CreateGroupReq(GroupEntity group, Long userId) {
-        this.group = group;
-        this.userId = userId;
+    public CreateGroupReq(GroupEntity newGroup, Long ownerId, List<Long> tagIds) {
+        this.newGroup = newGroup;
+        this.ownerId = ownerId;
+        this.tagIds = tagIds;
     }
 
-    public GroupEntity getGroup() {
-        return group;
+    public GroupEntity getNewGroup() {
+        return newGroup;
     }
 
-    public void setGroup(GroupEntity group) {
-        this.group = group;
+    public void setNewGroup(GroupEntity newGroup) {
+        this.newGroup = newGroup;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
-   
+
+    public List<Long> getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(List<Long> tagIds) {
+        this.tagIds = tagIds;
+    }
+    
+    
    
 }

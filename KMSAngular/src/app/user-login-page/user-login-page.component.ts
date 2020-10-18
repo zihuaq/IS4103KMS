@@ -47,6 +47,9 @@ export class UserLoginPageComponent implements OnInit {
 
           if (user != null) {
             this.sessionService.setIsLogin(true);
+            if(user.userType.toString() == "ADMIN"){
+              this.sessionService.setIsAdmin(true);
+            }
             this.sessionService.setCurrentUser(user);
             this.userService.user.next(user);
             this.userService.loggedIn = true;

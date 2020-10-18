@@ -27,7 +27,15 @@ public interface TagSessionBeanLocal {
     public List<TagEntity> getAllMaterialResourceTags();
     
     public List<TagEntity> getAllSDGTags();
-    
-    public List<TagEntity> getAllReportTags();
+
+    public List<TagEntity> getAllProfileReportTags();
+
+    public List<TagEntity> getAllGroupReportTags();
+
+    public List<TagEntity> getAllProjectReportTags();
+
+    public List<TagEntity> getAllPostReportTags();
+
+    public List<TagEntity> getAllCommentReportTags();
 
 }

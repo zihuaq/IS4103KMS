@@ -51,11 +51,24 @@ public class ReportEntity implements Serializable {
     
     @ManyToOne
     private ProjectEntity reportedProject;
+    
+    @ManyToOne
+    private PostEntity reportedPost;
+    
+    @ManyToOne
+    private PostCommentEntity reportedComment;
+    
+    @ManyToOne
+    private GroupEntity reportedGroup;
 
     @NotNull
     @JoinColumn(nullable=false)
     @ManyToMany
     private List<TagEntity> reportTags;
+    
+    private Boolean resolved;
+    
+    private String verdictComments;
 
     public ReportEntity(){
         this.reportTags = new ArrayList<>();
@@ -152,5 +165,49 @@ public class ReportEntity implements Serializable {
     public void setReportedProject(ProjectEntity reportedProject) {
         this.reportedProject = reportedProject;
     }
+
+    public PostEntity getReportedPost() {
+        return reportedPost;
+    }
+
+    public void setReportedPost(PostEntity reportedPost) {
+        this.reportedPost = reportedPost;
+    }
+
+    public PostCommentEntity getReportedComment() {
+        return reportedComment;
+    }
+
+    public void setReportedComment(PostCommentEntity reportedComment) {
+        this.reportedComment = reportedComment;
+    }
+
+    public GroupEntity getReportedGroup() {
+        return reportedGroup;
+    }
+
+    public void setReportedGroup(GroupEntity reportedGroup) {
+        this.reportedGroup = reportedGroup;
+    }
+
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(Boolean resolved) {
+        this.resolved = resolved;
+    }
+
+    public String getVerdictComments() {
+        return verdictComments;
+    }
+
+    public void setVerdictComments(String verdictComments) {
+        this.verdictComments = verdictComments;
+    }
+
+    
+    
+    
     
 }
