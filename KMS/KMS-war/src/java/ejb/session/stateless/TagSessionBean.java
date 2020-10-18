@@ -65,9 +65,37 @@ public class TagSessionBean implements TagSessionBeanLocal {
     }    
     
     @Override
-    public List<TagEntity> getAllReportTags() {
+    public List<TagEntity> getAllProfileReportTags() {
         Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
-        q.setParameter("tagType", TagTypeEnum.REPORT);
+        q.setParameter("tagType", TagTypeEnum.REPORTPROFILE);
         return q.getResultList();
-    }  
+    }
+    
+    @Override
+    public List<TagEntity> getAllGroupReportTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.REPORTGROUP);
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<TagEntity> getAllProjectReportTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.REPORTPROJECT);
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<TagEntity> getAllPostReportTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.REPORTPOST);
+        return q.getResultList();
+    }
+    
+    @Override
+    public List<TagEntity> getAllCommentReportTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.REPORTCOMMENT);
+        return q.getResultList();
+    }
 }

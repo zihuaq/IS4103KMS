@@ -139,12 +139,40 @@ public class DataInitializationSessionBean {
         userSessionBean.createNewUser(new UserEntity("Ba", "Chu", new Date(), "Male", "8@8.com", "pw8", UserTypeEnum.INSTITUTE));
         userSessionBean.createNewUser(new UserEntity("Jiu", "Xie", new Date(), "Female", "9@9.com", "pw9", UserTypeEnum.INSTITUTE));
         userSessionBean.createNewUser(new UserEntity("Shi", "Chow", new Date(), "Male", "10@10.com", "pw10", UserTypeEnum.INSTITUTE));
-        tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORT));
-        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORT));
-        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORT));
-        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORT));
-        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORT));
-        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORTPROFILE));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPROFILE));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTPROFILE));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPROFILE));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPROFILE));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTPROFILE));
+        
+        tagSessionBean.createNewTag(new TagEntity("Fake Group", TagTypeEnum.REPORTGROUP));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTGROUP));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTGROUP));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTGROUP));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTGROUP));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTGROUP));
+        
+        tagSessionBean.createNewTag(new TagEntity("Fake Project", TagTypeEnum.REPORTPROJECT));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPROJECT));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTPROJECT));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPROJECT));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPROJECT));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTPROJECT));
+        
+        tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTPOST));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPOST));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTPOST));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPOST));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPOST));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTPOST));
+        
+        tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTCOMMENT));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTCOMMENT));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTCOMMENT));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTCOMMENT));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTCOMMENT));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
         
         try {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", null, null), 1l, new ArrayList<>(Arrays.asList(37l)));

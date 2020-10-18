@@ -12,7 +12,7 @@ import { ModalController, ToastController } from '@ionic/angular';
 @Component({
   selector: 'app-report-profile',
   templateUrl: './report-profile.component.html',
-  styleUrls: ['./report-profile.component.scss'],
+  styleUrls: ['./report-profile.component.scss']
 })
 export class ReportProfileComponent implements OnInit {
   @Input() profileId: number;
@@ -20,21 +20,26 @@ export class ReportProfileComponent implements OnInit {
   profile: User;
   loggedInUser: User;
   reportTags: Tag[];
-  content: string = "";
+  content: string = '';
   filteredTags: Tag[] = [];
   chosenTags: Tag[] = [];
   searchValue: string;
   hasSelected: boolean;
   report: Report;
 
-  constructor(private tagService: TagService, private reportService: ReportService,
-    private userService: UserService, private toastController: ToastController, public modalController: ModalController) { }
+  constructor(
+    private tagService: TagService,
+    private reportService: ReportService,
+    private userService: UserService,
+    private toastController: ToastController,
+    public modalController: ModalController
+  ) {}
 
   ngOnInit() {
     forkJoin([
       this.userService.getUser(this.profileId.toString()),
       this.userService.getUser(this.loggedInUserId.toString()),
-      this.tagService.getAllReportTags()
+      this.tagService.getAllProfileReportTags()
     ]).subscribe((result) => {
       this.profile = result[0];
       this.loggedInUser = result[1];
@@ -49,9 +54,9 @@ export class ReportProfileComponent implements OnInit {
       this.filteredTags = this.reportTags;
     }
 
-    this.filteredTags = this.reportTags.filter(tag => {
+    this.filteredTags = this.reportTags.filter((tag) => {
       if (tag.name && this.searchValue) {
-        return (tag.name.toLowerCase().includes(this.searchValue.toLowerCase()));
+        return tag.name.toLowerCase().includes(this.searchValue.toLowerCase());
       }
     });
   }
@@ -72,22 +77,22 @@ export class ReportProfileComponent implements OnInit {
   removeTag(tag: Tag) {
     this.chosenTags.forEach((element, index) => {
       if (element.name == tag.name) {
-        this.chosenTags.splice(index, 1)
+        this.chosenTags.splice(index, 1);
       }
     });
   }
 
   clearSearch() {
-    this.searchValue = "";
+    this.searchValue = '';
     this.filteredTags = [];
   }
 
   async onSubmit() {
     if (this.chosenTags.length == 0) {
       const toast = await this.toastController.create({
-        message: "Please select at least one concern.",
+        message: 'Please select at least one concern.',
         duration: 2000,
-        color: "red"
+        color: 'red'
       });
       toast.present();
     } else {
@@ -99,8 +104,8 @@ export class ReportProfileComponent implements OnInit {
       this.report.reportTags = this.chosenTags;
       this.reportService.createReport(this.report).subscribe(async () => {
         const toast = await this.toastController.create({
-          message: "Report created successfully",
-          duration: 2000,
+          message: 'Report created successfully',
+          duration: 2000
         });
         toast.present();
         this.dismissModal();
@@ -110,7 +115,7 @@ export class ReportProfileComponent implements OnInit {
 
   dismissModal() {
     this.modalController.dismiss({
-      'dismissed': true
+      dismissed: true
     });
   }
 }

@@ -13,5 +13,9 @@ public enum TagTypeEnum {
     SKILL,
     SDG,
     MATERIALRESOURCE,
-    REPORT
+    REPORTPROFILE,
+    REPORTGROUP,
+    REPORTPROJECT,
+    REPORTPOST,
+    REPORTCOMMENT
 }
