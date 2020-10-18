@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import util.enumeration.ActivityStatusEnum;
 
 /**
  *
@@ -59,7 +62,10 @@ public class ActivityEntity implements Serializable {
     @Column(nullable=false)
     private String description;
     
-    //private ActivityStatusEnum activityStatus
+    @NotNull
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private ActivityStatusEnum activityStatus;
     
     @ManyToOne
     @JoinColumn
@@ -81,7 +87,7 @@ public class ActivityEntity implements Serializable {
         this.joinedUsers = new ArrayList<>();
     }
 
-    public ActivityEntity(String name, Date startDate, Date endDate, String coutry, String location, String description, ProjectEntity project, List<HumanResourcePostingEntity> humanResourcePostings, List<MaterialResourcePostingEntity> materialResourcePostings) {
+    public ActivityEntity(String name, Date startDate, Date endDate, String coutry, String location, String description, ActivityStatusEnum activityStatus, ProjectEntity project, List<HumanResourcePostingEntity> humanResourcePostings, List<MaterialResourcePostingEntity> materialResourcePostings) {
         this();
         this.name = name;
         this.startDate = startDate;
@@ -89,6 +95,7 @@ public class ActivityEntity implements Serializable {
         this.country = coutry;
         this.location = location;
         this.description = description;
+        this.activityStatus = activityStatus;
         this.project = project;
         this.humanResourcePostings = humanResourcePostings;
         this.materialResourcePostings = materialResourcePostings;
@@ -173,6 +180,14 @@ public class ActivityEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ActivityStatusEnum getActivityStatus() {
+        return activityStatus;
+    }
+
+    public void setActivityStatus(ActivityStatusEnum activityStatus) {
+        this.activityStatus = activityStatus;
     }
 
     public ProjectEntity getProject() {

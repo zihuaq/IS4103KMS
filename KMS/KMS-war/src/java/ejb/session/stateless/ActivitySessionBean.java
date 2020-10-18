@@ -11,6 +11,8 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.UserEntity;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.ActivityStatusEnum;
 
 /**
  *
@@ -42,6 +45,15 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     @Override
     public Long createNewActivity(ActivityEntity newActivity, Long projectId) throws NoResultException {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        LocalDate activityDate = LocalDate.parse(sdf.format(newActivity.getStartDate()));
+        LocalDate today = LocalDate.now();
+        if (activityDate.isEqual(today)) {
+            newActivity.setActivityStatus(ActivityStatusEnum.ONGOING);
+        } else {
+            newActivity.setActivityStatus(ActivityStatusEnum.PLANNED);
+        }
         
         em.persist(newActivity);
         em.flush();
@@ -89,7 +101,18 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         activity.setStartDate(activityToUpdate.getStartDate());
         activity.setEndDate(activityToUpdate.getEndDate());
         activity.setLocation(activityToUpdate.getLocation());
-        activity.setDescription(activityToUpdate.getDescription());               
+        activity.setDescription(activityToUpdate.getDescription());
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = LocalDate.parse(sdf.format(activityToUpdate.getStartDate()));
+        LocalDate endDate = LocalDate.parse(sdf.format(activityToUpdate.getStartDate()));
+
+        if (startDate.isEqual(today)) {
+            activity.setActivityStatus(ActivityStatusEnum.ONGOING);
+        } else if (endDate.isAfter(today)) {
+            activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+        }
     }
     
     @Override
@@ -159,4 +182,35 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         hrp.setActivity(null);
         activity.getHumanResourcePostings().remove(hrp);
     }
+    
+    @Override
+    public List<ActivityEntity> retrieveActivitiesNotCompleted() {
+        
+        Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityStatus <> :inStatus");
+        query.setParameter("inStatus", ActivityStatusEnum.COMPLETED);
+        
+        return query.getResultList();
+    }
+    
+    @Override
+    public void updateActivitiesStatus(List<ActivityEntity> activities) {
+        if (!activities.isEmpty()) {
+            for (ActivityEntity activity: activities) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                LocalDate today = LocalDate.now();
+                LocalDate startDate = LocalDate.parse(sdf.format(activity.getStartDate()));
+                LocalDate endDate = LocalDate.parse(sdf.format(activity.getStartDate()));
+
+                if (startDate.isEqual(today)) {
+                    activity.setActivityStatus(ActivityStatusEnum.ONGOING);
+                } else if (endDate.isAfter(today)) {
+                    activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+                }
+
+                em.merge(activity);
+                em.flush();
+            }
+        }
+    }
+        
 }
