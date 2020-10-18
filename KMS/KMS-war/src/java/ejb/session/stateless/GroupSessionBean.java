@@ -52,10 +52,10 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             user.getGroupsJoined().add(newGroup);
             newGroup.getGroupMembers().add(user);
             
-            for (Long tagId: tagIds){
-                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
-                newGroup.getSdgs().add(tag);
-            }
+//            for (Long tagId: tagIds){
+//                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
+//                newGroup.getSdgs().add(tag);
+//            }
             
             return newGroup.getGroupId();
         } catch (NoResultException ex) {
@@ -179,8 +179,6 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     @Override
     public void updateStatus(Long groupId, String status) throws NoResultException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    
-        public void persist(Object object) {
-        em.persist(object);
+
     }
 }
