@@ -246,7 +246,11 @@ const routes: Routes = [
       import('./pages/share-post-modal/share-post-modal.module').then( 
         (m) => m.SharePostModalPageModule
       )
+  },  {
+    path: 'report-post-modal',
+    loadChildren: () => import('./pages/report-post-modal/report-post-modal.module').then( m => m.ReportPostModalPageModule)
   }
+
 
 ];
 

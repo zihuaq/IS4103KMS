@@ -206,6 +206,17 @@ public class UserEntity implements Serializable {
         this.userType = usertype;
     }
 
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date adminStartDate, UserTypeEnum userType) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.email = email;
+        this.password = password;
+        this.adminStartDate = adminStartDate;
+        this.userType = userType;
+    }
+
     public Long getUserId() {
         return userId;
     }
