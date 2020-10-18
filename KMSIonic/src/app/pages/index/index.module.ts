@@ -1,3 +1,4 @@
+import { ReportPostModalPageModule } from './../report-post-modal/report-post-modal.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +16,8 @@ import { PostCommentModalPageModule } from '../post-comment-modal/post-comment-m
     FormsModule,
     IonicModule,
     IndexPageRoutingModule,
-    PostCommentModalPageModule
+    PostCommentModalPageModule,
+    ReportPostModalPageModule
   ],
   declarations: [IndexPage]
 })

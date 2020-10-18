@@ -249,6 +249,10 @@ const routes: Routes = [
   },  {
     path: 'report-post-modal',
     loadChildren: () => import('./pages/report-post-modal/report-post-modal.module').then( m => m.ReportPostModalPageModule)
+  },
+  {
+    path: 'report-comment-modal',
+    loadChildren: () => import('./pages/report-comment-modal/report-comment-modal.module').then( m => m.ReportCommentModalPageModule)
   }
 
 

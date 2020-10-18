@@ -16,8 +16,8 @@ import javax.ejb.Local;
  */
 @Local
 public interface ReportSessionBeanLocal {
-    
-    public ReportEntity createNewReport(ReportEntity report) throws NoResultException;
+
+    public ReportEntity reportProfile(ReportEntity report) throws NoResultException;
 
     public ReportEntity reportProject(ReportEntity report) throws NoResultException;
 
@@ -36,5 +36,9 @@ public interface ReportSessionBeanLocal {
     public void updateReportVerdict(ReportEntity updatedReport) throws NoResultException;
 
     public ReportEntity reportGroup(ReportEntity report) throws NoResultException;
-    
+
+    public ReportEntity reportPost(ReportEntity report) throws NoResultException;
+
+    public ReportEntity reportComment(ReportEntity report) throws NoResultException;
+
 }

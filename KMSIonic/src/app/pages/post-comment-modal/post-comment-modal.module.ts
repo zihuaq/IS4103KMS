@@ -1,3 +1,5 @@
+import { ReportCommentModalPageModule } from './../report-comment-modal/report-comment-modal.module';
+import { EditPostCommentModalPageModule } from './../edit-post-comment-modal/edit-post-comment-modal.module';
 import { EditPostCommentModalPage } from './../edit-post-comment-modal/edit-post-comment-modal.page';
 import { SharedModule } from '../../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -16,8 +18,10 @@ import { PostCommentModalPage } from './post-comment-modal.page';
     FormsModule,
     IonicModule,
     PostCommentModalPageRoutingModule,
-    SharedModule
+    SharedModule,
+    EditPostCommentModalPageModule,
+    ReportCommentModalPageModule
   ],
-  declarations: [PostCommentModalPage, EditPostCommentModalPage]
+  declarations: [PostCommentModalPage]
 })
 export class PostCommentModalPageModule {}

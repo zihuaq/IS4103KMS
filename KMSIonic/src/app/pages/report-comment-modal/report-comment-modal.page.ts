@@ -1,20 +1,20 @@
-import { ReportService } from './../../services/report.service';
-import { ReportType } from './../../enum/report-type.enum';
+import { ReportType } from 'src/app/enum/report-type.enum';
+import { TagService } from 'src/app/services/tag.service';
+import { ReportService } from 'src/app/services/report.service';
 import { Report } from './../../classes/report';
 import { Tag } from './../../classes/tag';
-import { TagService } from './../../services/tag.service';
 import { User } from './../../classes/user';
-import { Post } from './../../classes/post';
+import { PostComment } from './../../classes/post-comment';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-report-post-modal',
-  templateUrl: './report-post-modal.page.html',
-  styleUrls: ['./report-post-modal.page.scss']
+  selector: 'app-report-comment-modal',
+  templateUrl: './report-comment-modal.page.html',
+  styleUrls: ['./report-comment-modal.page.scss']
 })
-export class ReportPostModalPage implements OnInit {
-  @Input() post: Post;
+export class ReportCommentModalPage implements OnInit {
+  @Input() comment: PostComment;
   @Input() loggedInUser: User;
   reportTags: Tag[];
   selectedTags: Tag[] = [];
@@ -29,7 +29,7 @@ export class ReportPostModalPage implements OnInit {
   ngOnInit() {}
 
   ionViewWillEnter() {
-    this.tagService.getAllPostReportTags().subscribe((result) => {
+    this.tagService.getAllCommentReportTags().subscribe((result) => {
       this.reportTags = result;
     });
   }
@@ -68,12 +68,12 @@ export class ReportPostModalPage implements OnInit {
       toast.present();
     } else {
       let report = new Report();
-      report.reportType = ReportType.POST;
+      report.reportType = ReportType.COMMENT;
       report.reportOwner = this.loggedInUser;
-      report.reportedPost = this.post;
+      report.reportedComment = this.comment;
       report.reportContent = this.content;
       report.reportTags = this.selectedTags;
-      this.reportService.reportPost(report).subscribe(async () => {
+      this.reportService.reportComment(report).subscribe(async () => {
         const toast = await this.toastController.create({
           message: 'Report created successfully',
           duration: 2000
