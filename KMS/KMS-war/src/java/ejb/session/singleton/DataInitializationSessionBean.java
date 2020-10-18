@@ -6,10 +6,12 @@
 package ejb.session.singleton;
 
 import Exception.CreateProjectException;
+import Exception.CreateGroupException;
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
+import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.MaterialResourcePostingSessionBeanLocal;
@@ -23,6 +25,7 @@ import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.UserEntity;
+import entity.GroupEntity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +59,9 @@ public class DataInitializationSessionBean {
 
     @EJB
     private ProjectSessionBeanLocal projectSessionBean;
+
+    @EJB
+    private GroupSessionBeanLocal groupSessionBean;
 
     @EJB
     private MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBean;
@@ -129,50 +135,22 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("SDG 17", TagTypeEnum.SDG));
         
         
-        userSessionBean.createNewUser(new UserEntity("Yi", "Tan", new Date(), "Female", "1@1.com", "pw1", new Date(), UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("Er", "Lim", new Date(), "Male", "2@2.com", "pw2", new Date(), UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("San", "Chew", new Date(), "Female", "3@3.com", "pw3", new Date(), UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("Si", "Chua", new Date(), "Male", "4@4.com", "pw4", new Date(), UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("Wu", "Ang", new Date(), "Female", "5@5.com", "pw5", UserTypeEnum.INDIVIDUAL));
-        userSessionBean.createNewUser(new UserEntity("Liu", "Choo", new Date(), "Male", "6@6.com", "pw6", UserTypeEnum.INDIVIDUAL));
-        userSessionBean.createNewUser(new UserEntity("Qi", "Chia", new Date(), "Female", "7@7.com", "pw7", UserTypeEnum.INDIVIDUAL));
-        userSessionBean.createNewUser(new UserEntity("Ba", "Chu", new Date(), "Male", "8@8.com", "pw8", UserTypeEnum.INSTITUTE));
-        userSessionBean.createNewUser(new UserEntity("Jiu", "Xie", new Date(), "Female", "9@9.com", "pw9", UserTypeEnum.INSTITUTE));
-        userSessionBean.createNewUser(new UserEntity("Shi", "Chow", new Date(), "Male", "10@10.com", "pw10", UserTypeEnum.INSTITUTE));
-        tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORTPROFILE));
-        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPROFILE));
-        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTPROFILE));
-        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPROFILE));
-        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPROFILE));
-        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTPROFILE));
-        
-        tagSessionBean.createNewTag(new TagEntity("Fake Group", TagTypeEnum.REPORTGROUP));
-        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTGROUP));
-        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTGROUP));
-        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTGROUP));
-        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTGROUP));
-        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTGROUP));
-        
-        tagSessionBean.createNewTag(new TagEntity("Fake Project", TagTypeEnum.REPORTPROJECT));
-        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPROJECT));
-        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTPROJECT));
-        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPROJECT));
-        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPROJECT));
-        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORTPROJECT));
-        
-        tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTPOST));
-        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPOST));
-        tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTPOST));
-        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTPOST));
-        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTPOST));
-        tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTPOST));
-        
-        tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTCOMMENT));
-        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTCOMMENT));
-        tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTCOMMENT));
-        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTCOMMENT));
-        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTCOMMENT));
-        tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
+        userSessionBean.createNewUser(new UserEntity("Emma", "Tan", new Date(), "Female", "1@1.com", "pw1", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Jason", "Lim", new Date(), "Male", "2@2.com", "pw2", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Susan", "Chew", new Date(), "Female", "3@3.com", "pw3", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Joshua", "Chua", new Date(), "Male", "4@4.com", "pw4", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Wendy", "Ang", new Date(), "Female", "5@5.com", "pw5", UserTypeEnum.INDIVIDUAL));
+        userSessionBean.createNewUser(new UserEntity("Lester", "Choo", new Date(), "Male", "6@6.com", "pw6", UserTypeEnum.INDIVIDUAL));
+        userSessionBean.createNewUser(new UserEntity("Qi Qi", "Chia", new Date(), "Female", "7@7.com", "pw7", UserTypeEnum.INDIVIDUAL));
+        userSessionBean.createNewUser(new UserEntity("Benjamin", "Chu", new Date(), "Male", "8@8.com", "pw8", UserTypeEnum.INSTITUTE));
+        userSessionBean.createNewUser(new UserEntity("Jasmin", "Xie", new Date(), "Female", "9@9.com", "pw9", UserTypeEnum.INSTITUTE));
+        userSessionBean.createNewUser(new UserEntity("Samuel", "Chow", new Date(), "Male", "10@10.com", "pw10", UserTypeEnum.INSTITUTE));
+        tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORT));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Activities", TagTypeEnum.REPORT));
         
         try {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", null, null), 1l, new ArrayList<>(Arrays.asList(37l)));
@@ -187,6 +165,22 @@ public class DataInitializationSessionBean {
             projectSessionBean.joinProject(4l, 6l);
             projectSessionBean.addAdmin(4l, 6l);
         } catch (CreateProjectException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "Singapore", ""), 1l);
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "Malaysia", ""), 3l);
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "Indonesia", ""), 4l);
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 4", "Korea", ""), 5l);
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 5", "Japan", ""), 6l);
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "Thailand", ""), 6l);      
+            groupSessionBean.joinGroup(4l, 1l);
+            groupSessionBean.joinGroup(4l, 2l);
+            groupSessionBean.joinGroup(4l, 3l);                  
+            groupSessionBean.joinGroup(4l, 6l);
+            groupSessionBean.addAdmin(4l, 6l);
+        } catch (CreateGroupException ex) {
             System.out.println(ex.getMessage());
         }
         

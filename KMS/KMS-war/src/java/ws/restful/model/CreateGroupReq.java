@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license header, choose License Headers in Group Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -13,9 +13,10 @@ import java.util.List;
  * @author zeplh
  */
 public class CreateGroupReq {
-   private GroupEntity newGroup;
-   private Long ownerId;
-   private List<Long> tagIds;
+    
+    private GroupEntity newGroup;
+    private Long ownerId;
+    private List<Long> tagIds;
 
     public CreateGroupReq() {
     }
@@ -51,5 +52,4 @@ public class CreateGroupReq {
     }
     
     
-   
 }

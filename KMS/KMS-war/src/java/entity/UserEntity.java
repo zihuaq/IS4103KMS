@@ -91,7 +91,10 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "projectAdmins")
     @ManyToMany
     private List<ProjectEntity> projectsManaged;
-    
+    @ManyToMany
+    private List<GroupEntity> groupsManaged;
+    @OneToMany(mappedBy = "postOwner")
+    private List<PostEntity> posts;
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
     @JoinTable(name= "groupMembers")
@@ -433,6 +436,10 @@ public class UserEntity implements Serializable {
 
     public List<ProjectEntity> getProjectsManaged() {
         return projectsManaged;
+    }
+    
+    public List<GroupEntity> getGroupsManaged() {
+        return groupsManaged;
     }
 
     public void setProjectsManaged(List<ProjectEntity> projectsManaged) {

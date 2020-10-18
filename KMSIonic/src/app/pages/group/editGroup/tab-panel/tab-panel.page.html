@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/group-details/{{groupId}}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Manage Group</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
+      <ion-segment-button value="details">
+        <ion-label>Details</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="members">
+        <ion-label>Members</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="hrp">
+        <ion-label>Human Resource Posting</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="mrp">
+        <ion-label>Material Resource Posting</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="delete">
+        <ion-label>Delete</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-card>
+
+  <ion-card *ngIf="segment == 'details'">
+    <ion-card-content>
+      <app-edit-group-details></app-edit-group-details>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment == 'members'">
+    <ion-card-content>
+      <app-edit-members></app-edit-members>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment == 'hrp'">
+    <ion-card-content>
+      hrp
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment == 'mrp'">
+    <ion-card-content>
+      mrp
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment == 'delete'">
+    <ion-card-content>
+      Are you sure you want to delete this group?
+      <ion-button (click)="presentAlert()">Delete</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
