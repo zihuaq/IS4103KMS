@@ -38,14 +38,33 @@ export class TabPanelPage implements OnInit {
     }
 
   ngOnInit() {
+    console.log("tab-panel: ngOnInit()")
     this.authenticationService.getCurrentUser().then(
       (user: User) => {
         this.currentUserId = user.userId;
       }
     );
+    this.refreshProject();
   }
 
   ionViewWillEnter() {
+    this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+    this.projectService.getProjectById(this.projectId).subscribe(
+      async response => {
+        this.projectToEdit = response;
+        if (this.projectToEdit.projectOwner.userId == this.currentUserId) {
+          this.isOwner = true;
+        }
+        this.noOfMembers = this.projectToEdit.projectMembers.length;
+
+        this.owner = this.projectToEdit.projectOwner;
+
+        this.dateCreated = this.projectToEdit.dateCreated.toString().slice(0,10);
+      }
+    )
+  }
+
+  refreshProject() {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
     this.projectService.getProjectById(this.projectId).subscribe(
       async response => {
