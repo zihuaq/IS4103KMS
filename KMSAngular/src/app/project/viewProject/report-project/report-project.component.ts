@@ -69,6 +69,7 @@ export class ReportProjectComponent implements OnInit {
     this.report.reportedProject = this.projectToReport;
     this.report.reportContent = this.content;
     this.report.reportTags = this.selectedTags;
+    this.report.resolved = false;
     console.log(this.report);
     this.reportService.reportProject(this.report).subscribe(() => {
       $(document).Toasts('create', {

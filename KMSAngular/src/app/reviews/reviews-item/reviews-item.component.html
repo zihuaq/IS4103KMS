@@ -1,0 +1,43 @@
+<div class="list-group-item clearfix">
+  <span class="pull-left">
+    <p>From: </p>
+    <img *ngIf="review.from.profilePicture" src="review.from.profilePicture" alt=""
+    class = "img-responsive"
+    style ="max-height: 20px;">
+    <img *ngIf="!review.from.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
+    class = "img-responsive"
+    style ="max-height: 20px;">
+    <a routerLink="/profile/{{review.from.userId}}">
+      {{review.from.firstName}} {{review.from.lastName}}
+    </a>
+  </span>
+  <span class="pull-left" *ngIf="review.to != null">
+    <p>to: </p>
+    <img *ngIf="review.to.profilePicture" src="review.to.profilePicture" alt=""
+    class = "img-responsive"
+    style ="max-height: 20px;">
+    <img *ngIf="!review.to.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
+    class = "img-responsive"
+    style ="max-height: 20px;">
+    <a routerLink="/profile/{{review.to.userId}}">
+      {{review.to.firstName}} {{review.to.lastName}}
+    </a>
+  </span>
+  <span class="pull-left" *ngIf="review.to == null">
+    <p>to: </p>
+    <a routerLink="/projectDetails/{{review.project.projectId}}">
+      {{review.project.name}}
+    </a>
+  </span>
+  <hr>
+  <div>
+    <h4 class = "list-group-item-heading">
+      {{review.title}}
+    </h4>
+    <p class="list-group-item-text">
+      {{review.reviewField}}
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra tortor vel massa viverra viverra. Mauris ut ornare mauris. Fusce hendrerit mattis nulla, id varius lacus mattis sodales. Donec a velit vel est ullamcorper efficitur sed ut tellus. Aliquam vitae enim egestas, tincidunt enim faucibus, malesuada ante. Vestibulum egestas sed tellus at eleifend. Vestibulum sed eros non odio vehicula euismod id vel felis. Vestibulum neque ligula, malesuada at magna vel, consequat accumsan arcu. Vestibulum at vehicula diam.
+    </p>
+
+  </div>
+</div>
