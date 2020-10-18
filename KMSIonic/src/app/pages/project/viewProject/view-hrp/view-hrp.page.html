@@ -3,10 +3,18 @@
 <span *ngIf="hrpList.length > 0">
   <ion-list *ngFor="let hrp of hrpList">
     <ion-item>
-      <ion-label>
-        <h2><b>{{hrp.name}}</b></h2>
-        <p>{{hrp.description}}</p>
-      </ion-label>
+      <span *ngIf="isMember">
+        <ion-label tappable (click)="viewHrpDetails($event, hrp)">
+          <h2><b>{{hrp.name}}</b></h2>
+          <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
+        </ion-label>
+      </span>
+      <span *ngIf="!isMember">
+        <ion-label>
+          <h2><b>{{hrp.name}}</b></h2>
+          <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
+        </ion-label>
+      </span>
     </ion-item>
   </ion-list>
 </span>

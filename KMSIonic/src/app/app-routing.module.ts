@@ -221,6 +221,53 @@ const routes: Routes = [
         "./pages/add-material-resource-available/add-material-resource-available.module"
       ).then((m) => m.AddMaterialResourceAvailablePageModule)
   },
+  {
+    path: 'view-hrp',
+    loadChildren: () => 
+      import('./pages/project/viewProject/view-hrp/view-hrp.module').then( 
+        (m) => m.ViewHrpPageModule
+      )
+  },
+  {
+    path: 'edit-hrp',
+    loadChildren: () => 
+      import('./pages/project/editProject/edit-hrp/edit-hrp.module').then( 
+        (m) => m.EditHrpPageModule
+      )
+  },
+  {
+    path: 'create-post',
+    loadChildren: () =>
+      import('./pages/create-post/create-post.module').then(
+        (m) => m.CreatePostPageModule
+      )
+  },
+  {
+    path: 'edit-post-comment-modal',
+    loadChildren: () => 
+      import('./pages/edit-post-comment-modal/edit-post-comment-modal.module').then( 
+        (m) => m.EditPostCommentModalPageModule
+      )
+  },
+  {
+    path: 'share-post-modal',
+    loadChildren: () => 
+      import('./pages/share-post-modal/share-post-modal.module').then( 
+        (m) => m.SharePostModalPageModule
+      )
+  },
+  {
+    path: 'hrp-details/:hrpId',
+    loadChildren: () => 
+    import('./pages/project/viewProject/hrp-details/hrp-details.module').then( 
+      m => m.HrpDetailsPageModule
+      )
+  },
+  {
+    path: 'report-post-modal',
+    loadChildren: () => import('./pages/report-post-modal/report-post-modal.module').then( m => m.ReportPostModalPageModule)
+  }
+
 
 
 ];

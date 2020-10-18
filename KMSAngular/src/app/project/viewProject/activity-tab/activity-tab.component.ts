@@ -143,7 +143,14 @@ export class ActivityTabComponent implements OnInit {
         }       
       }
     }
-    return false;
+    // this.clickActivity(activityId);
+
+    // for (let user of this.contributors) {
+    //   if (user.userId === this.sessionService.getCurrentUser().userId) {
+    //     return true;
+    //   }
+    // }
+    // return false;
   }
 
   joinActivity(activityId: number) {
@@ -193,7 +200,7 @@ export class ActivityTabComponent implements OnInit {
           }
         }
       }
-    )
+    );
   }
 
   inContributors(userId: number): boolean {
