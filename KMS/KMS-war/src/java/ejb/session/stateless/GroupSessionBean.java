@@ -25,6 +25,9 @@ import util.enumeration.GroupStatusEnum;
 @Stateless
 public class GroupSessionBean implements GroupSessionBeanLocal {
 
+    @EJB(name = "TagSessionBeanLocal")
+    private TagSessionBeanLocal tagSessionBeanLocal;
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
     
@@ -47,6 +50,11 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             newGroup.getGroupAdmins().add(user);
             user.getGroupsJoined().add(newGroup);
             newGroup.getGroupMembers().add(user);
+            
+            for (Long tagId: tagIds){
+                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
+                newGroup.getSdgs().add(tag);
+            }
             
             return newGroup.getGroupId();
         } catch (NoResultException ex) {

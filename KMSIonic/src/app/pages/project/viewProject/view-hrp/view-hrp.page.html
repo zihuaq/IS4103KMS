@@ -1,0 +1,12 @@
+<span *ngIf="hrpList.length == 0">There is no human resource posting at the moment.</span>
+
+<span *ngIf="hrpList.length > 0">
+  <ion-list *ngFor="let hrp of hrpList">
+    <ion-item>
+      <ion-label>
+        <h2><b>{{hrp.name}}</b></h2>
+        <p>{{hrp.description}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</span>

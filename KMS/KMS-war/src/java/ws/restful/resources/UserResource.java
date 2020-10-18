@@ -18,6 +18,7 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.GroupEntity;
 import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
@@ -31,6 +32,8 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -90,6 +93,7 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
+   
 
     @PUT
     @Path("/addskills/{userId}")
@@ -353,6 +357,7 @@ public class UserResource {
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
             user.getFulfillments().clear();
+            user.getPosts().clear();
             for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
                 hrp.setActivity(null);
                 hrp.getAppliedUsers().clear();
@@ -368,6 +373,8 @@ public class UserResource {
                     hrp.getProject().getSdgs().clear();
                 }
             }
+            user.getActivityJoined().clear();
+            user.getDonations().clear();
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -457,7 +464,9 @@ public class UserResource {
             user.getHrpApplied().clear();
             user.getFulfillments().clear();
             user.setPassword("");
-
+            user.getActivityJoined().clear();
+            user.getDonations().clear();
+            
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
             System.out.println(ex.getMessage());
@@ -749,7 +758,7 @@ public class UserResource {
             temp.setAffiliatedUsers(getUsersResponse(user.getAffiliatedUsers()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
-            temp.setHrpApplied(user.getHrpApplied());
+            // temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
         return usersResponse;
@@ -851,18 +860,21 @@ public class UserResource {
     
     private List<ReviewEntity> getWrittenReviewsResponse(List<ReviewEntity> reviews){
          List<ReviewEntity> writtenReviewsResponse = new ArrayList<>();
+         ReviewEntity temp = new ReviewEntity();
         for (ReviewEntity reviewEntity : reviews) {
             UserEntity to = new UserEntity();
-            to.setUserId(reviewEntity.getTo().getUserId());
-            to.setFirstName(reviewEntity.getTo().getFirstName());
-            to.setLastName(reviewEntity.getTo().getLastName());
-            to.setProfilePicture(reviewEntity.getTo().getProfilePicture());
+            if(reviewEntity.getTo() != null){
+                to.setUserId(reviewEntity.getTo().getUserId());
+                to.setFirstName(reviewEntity.getTo().getFirstName());
+                to.setLastName(reviewEntity.getTo().getLastName());
+                to.setProfilePicture(reviewEntity.getTo().getProfilePicture());
+                temp.setTo(to);
+            }
             UserEntity from = new UserEntity();
             from.setUserId(reviewEntity.getFrom().getUserId());
             from.setFirstName(reviewEntity.getFrom().getFirstName());
             from.setLastName(reviewEntity.getFrom().getLastName());
             from.setProfilePicture(reviewEntity.getFrom().getProfilePicture());
-            ReviewEntity temp = new ReviewEntity();
             ProjectEntity project = new ProjectEntity();
             project.setProjectId(reviewEntity.getProject().getProjectId());
             project.setName(reviewEntity.getProject().getName());
@@ -870,7 +882,6 @@ public class UserResource {
             temp.setTitle(reviewEntity.getTitle());
             temp.setReviewField(reviewEntity.getReviewField());
             temp.setRating(reviewEntity.getRating());
-            temp.setTo(to);
             temp.setFrom(from);
             temp.setProject(project);
             writtenReviewsResponse.add(temp);
@@ -978,6 +989,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsOwned).build();
             
@@ -1003,6 +1016,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsJoined).build();
             
@@ -1028,6 +1043,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsManaged).build();
             
@@ -1036,5 +1053,94 @@ public class UserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+    
+    @Path("/groupsOwned/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupsOwned(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getGroupsOwned()");
+        try {
+            List<GroupEntity> groupsOwned = userSessionBeanLocal.getGroupsOwned(userId);
+            for (GroupEntity g : groupsOwned) {
+                g.setGroupOwner(null);
+                g.getGroupMembers().clear();
+                g.getGroupAdmins().clear();
+                //g.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(groupsOwned).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/viewOwnGroups/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupsJoined(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getGroupsJoined()");
+        try {
+            List<GroupEntity> groupsJoined = userSessionBeanLocal.getGroupsJoined(userId);
+            for (GroupEntity g : groupsJoined) {
+                g.setGroupOwner(null);
+                g.getGroupMembers().clear();
+                g.getGroupAdmins().clear();
+                //g.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(groupsJoined).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/groupsManaged/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupsManaged(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getProjectsManaged()");
+        try {
+            List<GroupEntity> groupsManaged = userSessionBeanLocal.getGroupsManaged(userId);
+            for (GroupEntity g : groupsManaged) {
+                g.setGroupOwner(null);
+                g.getGroupMembers().clear();
+                g.getGroupAdmins().clear();
+                //g.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(groupsManaged).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+
+    public void persist(Object object) {
+        /* Add this to the deployment descriptor of this module (e.g. web.xml, ejb-jar.xml):
+         * <persistence-context-ref>
+         * <persistence-context-ref-name>persistence/LogicalName</persistence-context-ref-name>
+         * <persistence-unit-name>KMS-warPU</persistence-unit-name>
+         * </persistence-context-ref>
+         * <resource-ref>
+         * <res-ref-name>UserTransaction</res-ref-name>
+         * <res-type>javax.transaction.UserTransaction</res-type>
+         * <res-auth>Container</res-auth>
+         * </resource-ref> */
+        try {
+            javax.naming.Context ctx = new InitialContext();
+            UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
+            utx.begin();
+            EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
+            em.persist(object);
+            utx.commit();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    
 
 }

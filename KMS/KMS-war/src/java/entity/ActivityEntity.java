@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -14,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -46,7 +49,7 @@ public class ActivityEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date endDate;
     
-    private String coutry;
+    private String country;
     
     @NotNull
     @Column(nullable=false)
@@ -67,10 +70,29 @@ public class ActivityEntity implements Serializable {
     
     @OneToMany(mappedBy = "activity")
     private List<MaterialResourcePostingEntity> materialResourcePostings;
-    //@OneToMany
-    //private List<HumanResourcePosting> humanResourcePostings;
     
+    @JoinTable(name = "activityJoined")
+    @ManyToMany(mappedBy = "activityJoined")
+    private List<UserEntity> joinedUsers;
     
+    public ActivityEntity() {
+        this.humanResourcePostings = new ArrayList<>();
+        this.materialResourcePostings = new ArrayList<>();
+        this.joinedUsers = new ArrayList<>();
+    }
+
+    public ActivityEntity(String name, Date startDate, Date endDate, String coutry, String location, String description, ProjectEntity project, List<HumanResourcePostingEntity> humanResourcePostings, List<MaterialResourcePostingEntity> materialResourcePostings) {
+        this();
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.country = coutry;
+        this.location = location;
+        this.description = description;
+        this.project = project;
+        this.humanResourcePostings = humanResourcePostings;
+        this.materialResourcePostings = materialResourcePostings;
+    }              
 
     public Long getActivityId() {
         return activityId;
@@ -129,12 +151,12 @@ public class ActivityEntity implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getCoutry() {
-        return coutry;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCoutry(String coutry) {
-        this.coutry = coutry;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getLocation() {
@@ -175,6 +197,14 @@ public class ActivityEntity implements Serializable {
 
     public void setMaterialResourcePostings(List<MaterialResourcePostingEntity> materialResourcePostings) {
         this.materialResourcePostings = materialResourcePostings;
+    }
+
+    public List<UserEntity> getJoinedUsers() {
+        return joinedUsers;
+    }
+
+    public void setJoinedUsers(List<UserEntity> joinedUsers) {
+        this.joinedUsers = joinedUsers;
     }
     
 }

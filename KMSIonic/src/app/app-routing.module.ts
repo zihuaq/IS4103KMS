@@ -222,7 +222,8 @@ const routes: Routes = [
       ).then((m) => m.AddMaterialResourceAvailablePageModule)
   },
 
-]
+
+];
 
 @NgModule({
   imports: [

@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license header, choose License Headers in Group Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -11,6 +11,7 @@ import Exception.NoResultException;
 import entity.GroupEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.enumeration.GroupStatusEnum;
 
 /**
  *
@@ -25,13 +26,17 @@ public interface GroupSessionBeanLocal {
 
     public List<GroupEntity> retrieveAllGroup();
 
-    public GroupEntity getGroupById(Long groupId);
+    public List<GroupEntity> retrieveGroupByStatus(GroupStatusEnum status);
+
+    public GroupEntity getGroupById(Long groupId) throws NoResultException;
 
     public void joinGroup(Long groupId, Long userId) throws NoResultException;
 
     public void removeMember(Long groupId, Long userId) throws NoResultException, InvalidRoleException;
 
-    public void updateGroup(GroupEntity groupToUpdate);
+    public void updateGroup(GroupEntity groupToUpdate) throws NoResultException;
+
+    public void updateStatus(Long groupId, String status) throws NoResultException;
 
     public void addAdmin(Long groupId, Long userId) throws NoResultException;
 
@@ -39,6 +44,12 @@ public interface GroupSessionBeanLocal {
 
     public void changeOwner(Long groupId, Long newOwnerId) throws NoResultException;
 
-    public void deleteGroup(Long groupId);
+    public void deleteGroup(Long groupId) throws NoResultException;
+
+    //public List<ReviewEntity> getGroupReviews(Long groupId) throws NoResultException;
+
+    //public Long createNewGroupReview(ReviewEntity newReview, Long groupId, Long fromUserId) throws CreateGroupReviewException;
+
+    //public Long createNewUserReview(ReviewEntity newReview, Long groupId, Long fromUserId, Long toUserId) throws CreateUserReviewException;    
     
 }

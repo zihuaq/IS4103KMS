@@ -25,7 +25,7 @@
     <!-- /.content-header -->
     <!-- Main content -->
     <section class="content">
-        <div class="card card-solid">
+        <div class="card card-solid" class="searchResult">
             <div class=searchBar>
                 <app-searchbar [searchString]="searchString" [query]="query"
                     (searchStringChanged)="handleSearchStringChanged($event)">
@@ -102,8 +102,31 @@
             </span>
         </div>
         <!-- /.col -->
+        <div class="refineSearchColumn">
+            <h3 class="refineTitle"> Refine Search </h3>
+            <h4 class="refineSubtitle"> User Type </h4>
+            <div class="radio" *ngFor="let userType of userTypes">
+                <label style="font-size: .75rem;">
+                    <input type="radio" name="userType" [value]="userType.id" (change)="onSelectedUserTypeChange($event)" />
+                    {{userType.value}}
+                </label>
+            </div>
+            <h4 class="refineSubtitle"> SDG </h4>
+            <div class="select2-dark">
+                <select class="select2" id="searchsdgselect2" multiple="multiple" data-placeholder="Add SDG filter"
+                    data-dropdown-css-class="select2-dark" style="width: 100%">
+                </select>
+            </div>
+            <h4 class="refineSubtitle"> Skills </h4>
+            <div class="select2-dark">
+                <select class="select2" id="searchskillsselect2" multiple="multiple"
+                    data-placeholder="Add skills filter" data-dropdown-css-class="select2-dark" style="width: 100%;">
+                </select>
+            </div>
+        </div>
     </section>
     <!-- /.content -->
+
 </div>
 
 <app-footer></app-footer>

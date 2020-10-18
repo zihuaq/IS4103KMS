@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Tag } from 'src/app/classes/tag';
 import { UserService } from 'src/app/user.service';
 import { User } from '../../classes/user';
@@ -22,14 +28,17 @@ export class BasicDetailsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     const parsedUrl = new URL(window.location.href);
-    this.profileUrl = parsedUrl.origin + '/profile/' + this.profile.userId;
+    this.profileUrl =
+      parsedUrl.origin + '/profile/shared/' + this.profile.userId;
     this.userSdgs = this.profile.sdgs;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.userService.getSDGsForProfile(this.profile.userId).subscribe((sdgs) => {
-      this.userSdgs = sdgs;
-    })
+    this.userService
+      .getSDGsForProfile(this.profile.userId)
+      .subscribe((sdgs) => {
+        this.userSdgs = sdgs;
+      });
   }
 
   copyProfileUrl() {

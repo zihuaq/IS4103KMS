@@ -1,5 +1,6 @@
 import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { review } from 'src/app/classes/review';
 import { User } from '../../classes/user';
 
 @Component({
@@ -10,6 +11,7 @@ import { User } from '../../classes/user';
 export class ProfileTabpanelComponent implements OnInit {
   @Input() profile: User;
   @Input() loggedInUser: User;
+  @Input() shared: boolean;
   @Output() profileChanged = new EventEmitter<User>();
   @Output() userChanged = new EventEmitter<User>();
 

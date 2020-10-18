@@ -62,6 +62,14 @@ export class HrpService {
     );
   }
 
+  availableHrp(projectId: number, startDate: string, endDate: string) {
+    return this.httpClient.get<any>(this.baseUrl+"/availableHrp/" + projectId + "/" + startDate + "/" + endDate).pipe();
+  }
+
+  getHrpByActivityId(activityId: number) {
+    return this.httpClient.get<any>(this.baseUrl+"/getHrpByActivityId/" + activityId).pipe();
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
     

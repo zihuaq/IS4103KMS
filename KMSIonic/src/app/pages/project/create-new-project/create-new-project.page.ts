@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { NgForm } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { User } from 'src/app/classes/user';
@@ -22,7 +23,8 @@ export class CreateNewProjectPage implements OnInit {
   tagList: Tag[];
   currentUserId: number;
 
-  constructor(public toastController: ToastController,
+  constructor(public modalCtrl: ModalController,
+    public toastController: ToastController,
     private router: Router,
     private projectService: ProjectService,
     private tagService: TagService,
@@ -62,6 +64,9 @@ export class CreateNewProjectPage implements OnInit {
             duration: 2000
           });
           toast.present();
+          this.modalCtrl.dismiss({
+            'dismissed': true
+          });
           this.router.navigate(["project-details/" + response.projectId]);
         },
         async error => {
@@ -73,6 +78,12 @@ export class CreateNewProjectPage implements OnInit {
         }
       );
     }
+  }
+
+  dismissModal() {
+    this.modalCtrl.dismiss({
+      'dismissed': true
+    });
   }
 
 }

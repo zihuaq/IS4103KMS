@@ -5,6 +5,7 @@ import { UserType } from './user-type.enum';
 import { FollowRequest } from './follow-request';
 import { AffiliationRequest } from './affiliation-request';
 import { HumanResourcePosting } from './human-resource-posting';
+import { Post } from './post';
 
 export class User {
   userId: number;
@@ -33,6 +34,8 @@ export class User {
   affiliationRequestMade: AffiliationRequest[];
   affiliationRequestReceived: AffiliationRequest[];
   hrpApplied: HumanResourcePosting[];
+  posts: Post[];
+  likedPosts: Post[];
 
   constructor(
     userId?: number,
@@ -59,7 +62,9 @@ export class User {
     affiliatedUsers?: User[],
     affiliationRequestMade?: AffiliationRequest[],
     affiliationRequestReceived?: AffiliationRequest[],
-    hrpApplied?: HumanResourcePosting[]
+    hrpApplied?: HumanResourcePosting[],
+    posts?: Post[],
+    likedPosts?: Post[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -86,5 +91,7 @@ export class User {
     this.affiliationRequestMade = affiliationRequestMade;
     this.affiliationRequestReceived = affiliationRequestReceived;
     this.hrpApplied = hrpApplied;
+    this.posts = posts;
+    this.likedPosts = likedPosts;
   }
 }

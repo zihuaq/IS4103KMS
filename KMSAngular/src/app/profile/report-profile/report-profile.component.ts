@@ -28,7 +28,7 @@ export class ReportProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.tagService.getAllReportTags().subscribe((response) => {
+    this.tagService.getAllProfileReportTags().subscribe((response) => {
       this.reportTags = response;
       console.log(this.reportTags);
       $('#reportselect2').select2({
@@ -64,6 +64,7 @@ export class ReportProfileComponent implements OnInit {
     this.report.reportedUser = this.profile;
     this.report.reportContent = this.content;
     this.report.reportTags = this.selectedTags;
+    this.report.resolved = false;
     console.log(this.report);
     this.reportService.createReport(this.report).subscribe(() => {
       $(document).Toasts('create', {

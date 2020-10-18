@@ -52,10 +52,38 @@ import { ViewOwnProjectsComponent } from './project/view-own-projects/view-own-p
 import { EditMrpTabComponent } from './project/editProject/edit-mrp-tab/edit-mrp-tab.component';
 import { AffiliationRequestsComponent } from './notifications/affiliation-requests/affiliation-requests.component';
 import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
+import { ReviewsComponent } from './reviews/reviews.component';
+import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.component';
+import { ReviewsRecievedComponent } from './profile/reviews-recieved/reviews-recieved.component';
+import { ReviewsWrittenComponent } from './profile/reviews-written/reviews-written.component';
+import { AdministrationComponent } from './administration/administration.component';
+import { UserSettingComponent } from './profile/user-setting/user-setting.component';
 import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
 import { JobAppliedComponent } from './profile/job-applied/job-applied.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
-import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/manage-fulfillments/manage-fulfillments.component';
+// import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/manage-fulfillments/manage-fulfillments.component';
+import { ProfileReportsComponent } from './administration/profile-reports/profile-reports.component';
+import { ProjectReportsComponent } from './administration/project-reports/project-reports.component';
+import { ProjectReportItemComponent } from './administration/project-reports/project-report-item/project-report-item.component';
+import { ProfileReportItemComponent } from './administration/profile-reports/profile-report-item/profile-report-item.component';
+import { CreateNewGroupComponent } from './group/create-new-group/create-new-group.component';
+import { EditGroupDetailsTabComponent } from './group/editGroup/edit-group-details-tab/edit-group-details-tab.component';
+import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.component';
+import { GroupMembersTabComponent } from './group/editGroup/group-members-tab/group-members-tab.component';
+import { ViewAllGroupComponent } from './group/view-all-group/view-all-group.component';
+import { ViewOwnGroupComponent } from './group/view-own-group/view-own-group.component';
+import { GroupErrorPageComponent } from './group/viewGroup/group-error-page/group-error-page.component';
+import { GroupDetailsComponent } from './group/viewGroup/group-details/group-details.component';
+import { ReportGroupComponent } from './group/viewGroup/report-group/report-group.component';
+
+import { ActivityTabComponent } from './project/viewProject/activity-tab/activity-tab.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { EditActivityTabComponent } from './project/editProject/edit-activity-tab/edit-activity-tab.component';
+import { DatePipe } from '@angular/common';
+import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
+import { TaskTabComponent } from './project/viewProject/task-tab/task-tab.component';
+import { NewsfeedComponent } from './newsfeed/newsfeed.component';
 
 @NgModule({
   declarations: [
@@ -101,11 +129,36 @@ import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/
     ViewOwnProjectsComponent,
     EditMrpTabComponent,
     AffiliationRequestsComponent,
+    ReviewsComponent,
+    ReviewsItemComponent,
+    ReviewsRecievedComponent,
+    ReviewsWrittenComponent,
+    AdministrationComponent,
+    UserSettingComponent,
     ViewHrpTabComponent,
     ViewMrpTabComponent,
     JobAppliedComponent,
     MyFulfillmentsComponent,
-    ManageFulfillmentsComponent
+    // ManageFulfillmentsComponent,
+    ProfileReportsComponent,
+    ProjectReportsComponent,
+    ProjectReportItemComponent,
+    ProfileReportItemComponent,
+    CreateNewGroupComponent,
+    EditGroupDetailsTabComponent,
+    EditGroupComponent,
+    GroupMembersTabComponent,
+    ViewAllGroupComponent,
+    ViewOwnGroupComponent,
+    GroupErrorPageComponent,
+    GroupDetailsComponent,
+    ReportGroupComponent,
+
+    ActivityTabComponent,
+    EditActivityTabComponent,
+    DonateToProjectComponent,
+    TaskTabComponent,
+    NewsfeedComponent
   ],
   imports: [
     BrowserModule,
@@ -117,8 +170,9 @@ import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     ModalModule.forRoot(),
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

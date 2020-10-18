@@ -1,0 +1,58 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Comments</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let comment of comments" appLongPress (press)="postCommentActionSheet(comment)">
+      <ion-avatar slot="start">
+        <img *ngIf="comment.commentOwner.profilePicture" class="ion-border" [src]="comment.commentOwner.profilePicture"
+          alt="User profile picture" />
+        <img *ngIf="!comment.commentOwner.profilePicture" class="ion-border"
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          alt="User profile picture" />
+      </ion-avatar>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12"
+            style="background-color: lightgrey; border-radius: 25px; padding: 5px 10px 5px 10px; height: fit-content;">
+            <h5 class="ion-no-margin">{{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}</h5>
+            <p class="ion-no-margin">{{comment.comment}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="ion-no-padding">
+            {{comment.dateTime | date}}
+          </ion-col>
+          <ion-col size="4" class="ion-no-padding">
+            <ion-button *ngIf="!userHaveLikedComment(comment.postCommentId)" style="position: absolute;"
+              (click)="likeComment(comment.postCommentId)" fill="clear" class="ion-no-margin ion-no-padding">
+              Like
+            </ion-button>
+            <ion-button *ngIf="userHaveLikedComment(comment.postCommentId)" style="position: absolute;"
+              (click)="removeLikeForComment(comment.postCommentId)" fill="clear" class="ion-no-margin ion-no-padding">
+              Liked
+            </ion-button>
+          </ion-col>
+          <ion-col size="4" class="ion-text-end ion-no-padding">{{comment.likers.length}}
+            <ion-icon name="thumbs-up"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-input placeholder="Write a comment..." [(ngModel)]="commentText">
+    </ion-input>
+    <ion-button (click)="addComment()" slot="end" fill="outline">
+      <ion-icon slot="icon-only" name="send"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

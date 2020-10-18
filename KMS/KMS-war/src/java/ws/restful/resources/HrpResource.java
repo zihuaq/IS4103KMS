@@ -9,6 +9,9 @@ import Exception.NoResultException;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import entity.HumanResourcePostingEntity;
 import entity.UserEntity;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,6 +86,8 @@ public class HrpResource {
                 hrp.getProject().getTasks().clear();
                 hrp.getProject().getPosts().clear();
                 hrp.getProject().getSdgs().clear();
+                hrp.getProject().getReviews().clear();
+                hrp.getProject().getDonations().clear();
             }
             if (hrp.getActivity() != null) {
                 hrp.getActivity().getHumanResourcePostings().clear();
@@ -110,6 +115,8 @@ public class HrpResource {
                     appliedUser.getFollowRequestReceived().clear();
                     appliedUser.getHrpApplied().clear();
                     appliedUser.getFulfillments().clear();
+                    appliedUser.getActivityJoined().clear();
+                    appliedUser.getDonations().clear();
                 }
             }
             
@@ -209,6 +216,75 @@ public class HrpResource {
             
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
+    }
+    
+    @Path("availableHrp/{projectId}/{startDate}/{endDate}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response availableHrp(@PathParam("projectId") Long projectId,@PathParam("startDate") String startString, @PathParam("endDate") String endString) {
+        System.out.println("******** HrpResource: availableHrp()");
+        
+        Date start = new Date();
+        Date end = new Date();
+        try {
+            start = new SimpleDateFormat("yyyy-MM-dd").parse(startString);
+            end = new SimpleDateFormat("yyyy-MM-dd").parse(endString);
+        } catch (ParseException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
+        }  
+        
+        List<HumanResourcePostingEntity> hrps = humanResourcePostingSessionBean.availableHrp(projectId, start, end);
+        
+        for (HumanResourcePostingEntity hrp : hrps) {
+            hrp.setProject(null);
+            hrp.setActivity(null);
+            hrp.getAppliedUsers().clear();
+        }
+        
+        return Response.status(Status.OK).entity(hrps).build();
+    }
+    
+    @Path("getHrpByActivityId/{activityId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getHrpByActivityId(@PathParam("activityId") Long activityId) {
+        System.out.println("******** HrpResource: getHrpByActivityId()");
+        
+        List<HumanResourcePostingEntity> hrps = humanResourcePostingSessionBean.getHrpByActivityId(activityId);
+        
+        for (HumanResourcePostingEntity hrp : hrps) {
+            hrp.setProject(null);
+            hrp.setActivity(null);
+            if (hrp.getAppliedUsers().size() > 0) {
+                for (UserEntity appliedUser : hrp.getAppliedUsers()) {
+                    appliedUser.getGroupsOwned().clear();
+                    appliedUser.getReviewsGiven().clear();
+                    appliedUser.getReviewsReceived().clear();
+                    appliedUser.getProjectsOwned().clear();
+                    appliedUser.getProjectsJoined().clear();
+                    appliedUser.getProjectsManaged().clear();
+                    appliedUser.getGroupsJoined().clear();
+                    appliedUser.getPosts().clear();
+                    appliedUser.getBadges().clear();
+                    appliedUser.getMras().clear();
+                    appliedUser.getSkills().clear();
+                    appliedUser.getFollowers().clear();
+                    appliedUser.getFollowing().clear();
+                    appliedUser.getSdgs().clear();
+                    appliedUser.getFollowRequestMade().clear();
+                    appliedUser.getFollowRequestReceived().clear();
+                    appliedUser.getHrpApplied().clear();
+                    appliedUser.getFulfillments().clear();
+                    appliedUser.getDonations().clear();
+                }
+            }
+        }
+        
+        return Response.status(Status.OK).entity(hrps).build();
     }
 
     private HumanResourcePostingSessionBeanLocal lookupHumanResourcePostingSessionBeanLocal() {
