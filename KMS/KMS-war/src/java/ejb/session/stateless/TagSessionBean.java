@@ -32,8 +32,9 @@ public class TagSessionBean implements TagSessionBeanLocal {
 
     @Override
     public void createNewTag(TagEntity tag) throws TagNameExistException {
-        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE LOWER(t.name)= :name");
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE LOWER(t.name)= :name AND t.tagType = :tagType");
         q.setParameter("name", tag.getName().toLowerCase());
+        q.setParameter("tagType", tag.getTagType());
         List<TagEntity> tags = (List<TagEntity>) q.getResultList();
 
         if (tags.isEmpty()) {

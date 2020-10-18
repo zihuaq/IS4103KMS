@@ -129,10 +129,10 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("SDG 17", TagTypeEnum.SDG));
         
         
-        userSessionBean.createNewUser(new UserEntity("Yi", "Tan", new Date(), "Female", "1@1.com", "pw1", UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("Er", "Lim", new Date(), "Male", "2@2.com", "pw2", UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("San", "Chew", new Date(), "Female", "3@3.com", "pw3", UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("Si", "Chua", new Date(), "Male", "4@4.com", "pw4", UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Yi", "Tan", new Date(), "Female", "1@1.com", "pw1", new Date(), UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Er", "Lim", new Date(), "Male", "2@2.com", "pw2", new Date(), UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("San", "Chew", new Date(), "Female", "3@3.com", "pw3", new Date(), UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Si", "Chua", new Date(), "Male", "4@4.com", "pw4", new Date(), UserTypeEnum.ADMIN));
         userSessionBean.createNewUser(new UserEntity("Wu", "Ang", new Date(), "Female", "5@5.com", "pw5", UserTypeEnum.INDIVIDUAL));
         userSessionBean.createNewUser(new UserEntity("Liu", "Choo", new Date(), "Male", "6@6.com", "pw6", UserTypeEnum.INDIVIDUAL));
         userSessionBean.createNewUser(new UserEntity("Qi", "Chia", new Date(), "Female", "7@7.com", "pw7", UserTypeEnum.INDIVIDUAL));
