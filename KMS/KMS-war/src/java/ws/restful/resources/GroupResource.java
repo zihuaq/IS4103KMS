@@ -190,7 +190,7 @@ public class GroupResource {
 //                mrp.getFulfillments().clear();
 //            }
 //
-            return Response.status(200).entity(group).build();
+            return Response.status(Status.OK).entity(group).build();
         } catch (NoResultException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();

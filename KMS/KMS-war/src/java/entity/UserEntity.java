@@ -570,4 +570,8 @@ public class UserEntity implements Serializable {
     public void setDonations(List<DonationEntity> donations) {
         this.donations = donations;
     }
+
+    public void setGroupsManaged(ArrayList<Object> arrayList) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
