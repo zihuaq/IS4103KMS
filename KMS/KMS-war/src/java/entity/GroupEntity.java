@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import util.enumeration.GroupStatusEnum;
 
 /**
  *
@@ -163,6 +164,14 @@ public class GroupEntity implements Serializable {
 
     public void setSdgs(List<TagEntity> sdgs) {
         this.sdgs = sdgs;
+    }
+
+    public void setStatus(GroupStatusEnum valueOf) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public GroupStatusEnum getStatus() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

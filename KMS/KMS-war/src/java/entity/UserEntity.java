@@ -144,8 +144,8 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "fulfillmentOwner")
     private List<FulfillmentEntity> fulfillments;
     
-    @OneToMany(mappedBy = "postOwner")
-    private List<PostEntity> posts;
+//    @OneToMany(mappedBy = "postOwner")
+//    private List<PostEntity> posts;
 
     @JoinTable(name = "activityJoined")
     @ManyToMany
@@ -572,5 +572,9 @@ public class UserEntity implements Serializable {
 
     public void setDonations(List<DonationEntity> donations) {
         this.donations = donations;
+    }
+
+    public void setGroupsManaged(ArrayList<Object> arrayList) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

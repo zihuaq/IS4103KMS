@@ -190,7 +190,7 @@ public class GroupResource {
 //                mrp.getFulfillments().clear();
 //            }
 //
-            return Response.status(200).entity(group).build();
+            return Response.status(Status.OK).entity(group).build();
         } catch (NoResultException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
@@ -342,34 +342,6 @@ public class GroupResource {
         GroupStatusEnum[] enumList = GroupStatusEnum.values();
         
         return Response.status(Response.Status.OK).entity(enumList).build();
-    @Path("deleteGroup/{groupId}")
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteGroup(@PathParam("groupId") Long groupId) {
-        System.out.println("******** groupResource: deleteGroup()");
-        try {
-            groupSessionBeanLocal.deleteGroup(groupId);
-            return Response.status(Response.Status.OK).build();
-        } catch (NoResultException ex) {
-            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
-        }
-    }
-    
-    @Path("/update")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateGroup(GroupEntity group) {
-        System.out.println("******** GroupResource: updateGroup()");
-        try {
-            groupSessionBeanLocal.updateGroup(group);
-            return Response.status(204).build();
-        } catch(NoResultException ex) {
-            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-            
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
-        }
     }
 
 //    @Path("createNewGroupReview")
