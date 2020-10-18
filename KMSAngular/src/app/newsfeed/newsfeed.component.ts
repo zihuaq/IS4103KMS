@@ -47,7 +47,7 @@ export class NewsfeedComponent implements OnInit {
     forkJoin([
       this.userService.getUser(loggedInUserId.toString()),
       this.postService.getPostForUserNewsfeed(loggedInUserId),
-      this.tagService.getAllReportTags(),
+      this.tagService.getAllPostReportTags(),
     ]).subscribe((result) => {
       this.loggedInUser = result[0];
       this.newsfeedPosts = result[1];

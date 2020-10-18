@@ -20,6 +20,23 @@
                     href="#profile-tab-edit-profile" role="tab" aria-controls="profile-tab-edit-profile"
                     aria-selected="false">Edit Profile</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab-reviews-recieved-tabname" data-toggle="pill"
+                  href="#profile-tab-reviews-recieved" role="tab" aria-controls="profile-tab-reviews-recieved"
+                  aria-selected="false">Reviews Recived</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab-reviews-written-tabname" data-toggle="pill"
+                  href="#profile-tab-reviews-written" role="tab" aria-controls="profile-tab-reviews-written"
+                  aria-selected="false">Reviews Written</a>
+            </li>
+            <!-- <li class="nav-item"> -->
+            <li class="nav-item"
+            *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
+              <a class="nav-link" id="profile-tab-settings-tabname" data-toggle="pill"
+                  href="#profile-tab-settings" role="tab" aria-controls="profile-tab-reviews-setting"
+                  aria-selected="false">User Settings</a>
+            <!-- <li class="nav-item" *ngIf="profile.userId == loggedInUser.userId"> -->
             <li class="nav-item" *ngIf="!shared && profile.userId == loggedInUser.userId">
                 <a class="nav-link" id="profile-tab-job-applied-tabname" data-toggle="pill"
                     href="#profile-tab-job-applied" role="tab" aria-controls="profile-tab-job-applied"
@@ -31,8 +48,12 @@
         <div class="tab-content" id="custom-tabs-four-tabContent">
             <div class="tab-pane fade" id="profile-tab-projects" role="tabpanel"
                 aria-labelledby="profile-tab-projects-tabname">
+<<<<<<< HEAD
+                <app-projects [profile]="profile" (profileChanged)="handleProfileChanged($event)"></app-projects>
+=======
                 <app-projects [shared]="shared" [profile]="profile" (profileChanged)="handleProfileChanged($event)">
                 </app-projects>
+>>>>>>> e18571ffd669a3c29d1a306eece71616a8fd9cf0
             </div>
             <div class="tab-pane fade show active" id="profile-tab-material-resource-available" role="tabpanel"
                 aria-labelledby="profile-tab-material-resource-available-tabname">
@@ -48,6 +69,18 @@
             <div class="tab-pane fade" id="profile-tab-edit-profile" role="tabpanel"
                 aria-labelledby="profile-tab-edit-profile-tabname">
                 <app-edit-profile [user]="loggedInUser" (userChanged)="handleUserChanged($event)"></app-edit-profile>
+            </div>
+            <div class="tab-pane fade" id="profile-tab-reviews-recieved" role="tabpanel"
+                aria-labelledby="profile-tab-reviews-recieved-tabname">
+                <app-reviews-recieved [profile]="profile" [loggedInUser]="loggedInUser" (userChanged)="handleUserChanged($event)"></app-reviews-recieved>
+            </div>
+            <div class="tab-pane fade" id="profile-tab-reviews-written" role="tabpanel"
+                aria-labelledby="profile-tab-reviews-written-tabname">
+                <app-reviews-written [profile]="profile" [loggedInUser]="loggedInUser" (userChanged)="handleUserChanged($event)"></app-reviews-written>
+            </div>
+            <div class="tab-pane fade" id="profile-tab-settings" role="tabpanel"
+                aria-labelledby="profile-tab-settings">
+                <app-user-setting [user]="profile"></app-user-setting>
             </div>
             <div class="tab-pane fade" id="profile-tab-job-applied" role="tabpanel"
                 aria-labelledby="profile-tab-job-applied-tabname">

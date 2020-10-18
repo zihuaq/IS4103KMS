@@ -868,6 +868,33 @@ public class UserSessionBean implements UserSessionBeanLocal {
         
     }
     
+    @Override
+    public List<GroupEntity> getGroupsOwned(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        user.getGroupsOwned().size();
+        return user.getGroupsOwned();
+    }
+    
+    @Override
+    public List<GroupEntity> getGroupsJoined(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        
+        user.getGroupsJoined().size();
+        return user.getGroupsJoined();
+    }
+    
+    
+    @Override
+    public List<GroupEntity> getGroupsManaged(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.getGroupAdmins().size();
+        return user.getGroupAdmins();
+        
+    }
+    
     public Long editReview(Long reviewId, String title, String message, Integer rating) throws NoResultException{
         ReviewEntity review = em.find(ReviewEntity.class, reviewId);
         if(review == null){
@@ -879,4 +906,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
         
         return review.getReviewId();
     }
+    
+    
 }

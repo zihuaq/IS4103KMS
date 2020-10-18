@@ -65,10 +65,37 @@ public class TagResource {
     }
     
     @GET
-    @Path("/report")
+    @Path("/report/profile")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllReportTags() {
-        return Response.status(200).entity(tagSessionBeanLocal.getAllReportTags()).build();
+    public Response getAllProfileReportTags() {
+        return Response.status(200).entity(tagSessionBeanLocal.getAllProfileReportTags()).build();
+    }
+    @GET
+    @Path("/report/group")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllGroupReportTags() {
+        return Response.status(200).entity(tagSessionBeanLocal.getAllGroupReportTags()).build();
+    }
+    
+    @GET
+    @Path("/report/project")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllProjectReportTags() {
+        return Response.status(200).entity(tagSessionBeanLocal.getAllProjectReportTags()).build();
+    }
+    
+    @GET
+    @Path("/report/post")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllPostReportTags() {
+        return Response.status(200).entity(tagSessionBeanLocal.getAllPostReportTags()).build();
+    }
+    
+    @GET
+    @Path("/report/comment")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllCommentReportTags() {
+        return Response.status(200).entity(tagSessionBeanLocal.getAllCommentReportTags()).build();
     }
 
     private TagSessionBeanLocal lookupTagSessionBeanLocal() {

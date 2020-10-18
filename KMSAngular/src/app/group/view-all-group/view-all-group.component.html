@@ -1,0 +1,89 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Discover Groups
+                        <span style="margin-right: 5px;"></span>
+                        <a type="button" class="btn btn-light" routerLink="/createNewGroup" style="vertical-align: 20%; background-color: lightgray;"><i class="fas fa-plus"></i> Create New Group</a>
+                    </h1>
+
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+                        <li class="breadcrumb-item">Groups</li>
+                        <li class="breadcrumb-item active">Discover</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <section class="content">
+        <div class="card card-solid">
+            <div class="input-group" style="margin: 15px 20px; width: auto">
+                <input class="form-control" placeholder="Search groups" [(ngModel)]="searchModel" (ngModelChange)="updateSearchModel($event)">
+            </div>
+            <div class="card-body pb-0">
+                <span class="text-muted" *ngIf="noGroups">
+                    <p style="padding-bottom: 1em;">No groups found.</p>
+                </span>
+                <span *ngIf="!noGroups">
+                    <div class="row d-flex align-items-stretch" >
+                        <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" *ngFor="let group of groups | listFilter: searchModel">
+                            <div class="card p-3 bg-light" >
+                                <div class="image" style="height: 180px; overflow: hidden; position: relative;">
+                                    <img class="card-img-top" *ngIf="group.profilePicture" style="transform: scale(1.5)" [src]="group.profilePicture"  alt="Group Profile Picture">
+                                    <img class="card-img-top" *ngIf="!group.profilePicture"  src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Group Profile Picture">
+                                </div>
+
+                                <p class="card-title" style="font-size: 20px; font-weight: bold; margin-top: 5px;">{{group.name}}</p>
+                                <p class="card-text" style="font-size: 15px; color: rgb(92, 92, 92);">{{group.description}}</p>
+                                <p class="text-muted text-sm" style="margin-left: -5px;">
+                                    <span class="d-flex flex-wrap">
+                                        <div *ngFor="let sdg of sortSDG(group.sdgs)" class="col-2">
+                                            <small class="badge badge-dark">
+                                                {{sdg.name}}
+                                            </small>
+                                        </div>
+                                    </span>
+                                </p>
+                                <button type="button" *ngIf="isMember(group.groupId) == false" class="btn btn-light btn-block mt-auto" (click)="joinGroup(group)" style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); z-index: 2;" ><i class="far fa-handshake"></i> Join</button>
+                                <button type="button" *ngIf="isMember(group.groupId) == true" class="btn btn-light btn-block mt-auto" (click)="clickLeaveGroup(group)" data-toggle="modal" data-target="#modal-confirm-leave-group" style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); z-index: 2;"><i class="fas fa-handshake-slash"></i> Leave</button>
+                                <a class="card-block stretched-link text decoration-none" style="cursor: pointer;" (click)="onSelect(group)"></a>
+                            </div>
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="modal-confirm-leave-group">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Leave Group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to leave this group?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="delete-mrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="leaveGroup()">Leave</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>
+

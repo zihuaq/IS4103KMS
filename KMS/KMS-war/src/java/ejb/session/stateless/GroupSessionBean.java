@@ -6,16 +6,10 @@
 package ejb.session.stateless;
 
 import Exception.CreateGroupException;
-import Exception.CreateProjectException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
-import entity.ActivityEntity;
 import entity.GroupEntity;
-import entity.HumanResourcePostingEntity;
-import entity.MaterialResourcePostingEntity;
-import entity.PostEntity;
-import entity.ProjectEntity;
-import entity.TaskEntity;
+import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
 import javax.ejb.EJB;
@@ -31,6 +25,9 @@ import javax.persistence.Query;
 @Stateless
 public class GroupSessionBean implements GroupSessionBeanLocal {
 
+    @EJB(name = "TagSessionBeanLocal")
+    private TagSessionBeanLocal tagSessionBeanLocal;
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
     
@@ -40,7 +37,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     @EJB(name = "PostSessionBeanLocal")
     private PostSessionBeanLocal postSessionBeanLocal;
     
-    public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException {
+    public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newGroup);
@@ -53,6 +50,11 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             user.getGroupsJoined().add(newGroup);
             newGroup.getGroupMembers().add(user);
             
+            for (Long tagId: tagIds){
+                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
+                newGroup.getSdgs().add(tag);
+            }
+            
             return newGroup.getGroupId();
         } catch (NoResultException ex) {
             throw new CreateGroupException("User not found");
@@ -60,16 +62,20 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     }
     
     public List<GroupEntity> retrieveAllGroup() {
-        Query query = em.createQuery("SELECT g FROM GroupEntity G");
+        Query query = em.createQuery("SELECT g FROM GroupEntity g");
         
         return query.getResultList();
     }
     
  
-    public GroupEntity getGroupById(Long groupId) {
+    public GroupEntity getGroupById(Long groupId) throws NoResultException{
         GroupEntity group = em.find(GroupEntity.class, groupId);
+        if (group != null) {
+            return group;
+        } else {
+            throw new NoResultException("group does not exists");
+        }
         
-        return group;
     }
     
     public void joinGroup(Long groupId, Long userId) throws NoResultException {
@@ -100,9 +106,21 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         }
         
     }
-     public void updateGroup(GroupEntity groupToUpdate) {
-        em.merge(groupToUpdate);
-        em.flush();
+     public void updateGroup(GroupEntity groupToUpdate) throws NoResultException {
+        GroupEntity group = getGroupById(groupToUpdate.getGroupId());
+        
+        group.setName(groupToUpdate.getName());
+        group.setDescription(groupToUpdate.getDescription());
+        group.setCountry(groupToUpdate.getCountry());
+        for (int i = 0; i < groupToUpdate.getSdgs().size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, groupToUpdate.getSdgs().get(i).getTagId());
+           if (tag == null) {
+               throw new NoResultException("SDG tag not found.");
+           }
+        }
+        group.setSdgs(groupToUpdate.getSdgs());
+        //group.setStatus(groupToUpdate.getStatus());
+        group.setProfilePicture(groupToUpdate.getProfilePicture());
     }
      
       public void addAdmin(Long groupId, Long userId) throws NoResultException {
@@ -130,7 +148,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         user.getGroupsOwned().add(group);
     }
        
-       public void deleteGroup(Long groupId) {
+       public void deleteGroup(Long groupId) throws NoResultException {
         GroupEntity groupToDelete = getGroupById(groupId);
         
         groupToDelete.getGroupOwner().getGroupsOwned().remove(groupToDelete);
@@ -153,5 +171,9 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
 //        groupToDelete.getPosts().clear();
         
         em.remove(groupToDelete);
+    }
+
+    public void persist(Object object) {
+        em.persist(object);
     }
 }

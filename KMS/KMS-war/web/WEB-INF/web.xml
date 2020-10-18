@@ -5,4 +5,22 @@
             30
         </session-timeout>
     </session-config>
+    <!--    <ejb-local-ref>
+        <ejb-ref-name>UserSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.UserSessionBeanLocal</local>
+        <ejb-link>#UserSessionBean</ejb-link>
+    </ejb-local-ref>-->
+    <!--    <ejb-local-ref>
+        <ejb-ref-name>UserSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.UserSessionBeanLocal</local>
+        <ejb-link>#UserSessionBean</ejb-link>
+    </ejb-local-ref>-->
+<!--    <ejb-local-ref>
+        <ejb-ref-name>UserSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.UserSessionBeanLocal</local>
+        <ejb-link>#UserSessionBean</ejb-link>
+    </ejb-local-ref>-->
 </web-app>

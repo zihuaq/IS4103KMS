@@ -8,6 +8,8 @@ import { UserService } from '../user.service';
 import { AccountPrivacySettingEnum } from '../classes/privacy-settings.enum';
 import { Router } from '@angular/router';
 import { UserType } from '../classes/user-type.enum';
+import { TagService } from '../tag.service';
+import { Tag } from '../classes/tag';
 
 declare var $: any;
 
@@ -25,13 +27,18 @@ export class SearchUsersComponent implements OnInit {
   loggedInUserFollowRequestMade: FollowRequest[];
   user: User;
   query: string;
+  skillTags: Tag[];
+  sdgTags: Tag[];
+  selectedSkillTags: Tag[];
+  selectedsdgTags: Tag[];
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private sessionService: SessionService,
+    private tagService: TagService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     let userId = this.activatedRoute.snapshot.params.userid;
@@ -44,16 +51,21 @@ export class SearchUsersComponent implements OnInit {
           this.userService.getFollowing(this.loggedInUserId),
           this.userService.getFollowRequestMade(this.loggedInUserId),
           this.userService.getUser(userId),
+          this.tagService.getAllSDGTags(),
+          this.tagService.getAllSkillTags()
         ]).subscribe((result) => {
           this.allUsers = result[0];
           this.filteredUsers = this.allUsers;
           this.loggedInUserFollowing = result[1];
           this.loggedInUserFollowRequestMade = result[2];
           this.user = result[3];
+          this.sdgTags = result[4];
+          this.skillTags = result[5];
+          this.initialiseSelect2();
           if (
             this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
-              AccountPrivacySettingEnum.PRIVATE &&
+            AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
               .map((user) => user.userId)
               .includes(this.user.userId)
@@ -67,16 +79,21 @@ export class SearchUsersComponent implements OnInit {
           this.userService.getFollowing(this.loggedInUserId),
           this.userService.getFollowRequestMade(this.loggedInUserId),
           this.userService.getUser(userId),
+          this.tagService.getAllSDGTags(),
+          this.tagService.getAllSkillTags()
         ]).subscribe((result) => {
           this.allUsers = result[0];
           this.filteredUsers = this.allUsers;
           this.loggedInUserFollowing = result[1];
           this.loggedInUserFollowRequestMade = result[2];
           this.user = result[3];
+          this.sdgTags = result[4];
+          this.skillTags = result[5];
+          this.initialiseSelect2();
           if (
             this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
-              AccountPrivacySettingEnum.PRIVATE &&
+            AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
               .map((user) => user.userId)
               .includes(this.user.userId)
@@ -90,16 +107,21 @@ export class SearchUsersComponent implements OnInit {
           this.userService.getFollowRequestMade(this.loggedInUserId),
           this.userService.getAffiliatedUsers(parseInt(userId)),
           this.userService.getUser(userId),
+          this.tagService.getAllSDGTags(),
+          this.tagService.getAllSkillTags()
         ]).subscribe((result) => {
           this.loggedInUserFollowing = result[0];
           this.loggedInUserFollowRequestMade = result[1];
           this.allUsers = result[2];
           this.filteredUsers = this.allUsers;
           this.user = result[3];
+          this.sdgTags = result[4];
+          this.skillTags = result[5];
+          this.initialiseSelect2();
           if (
             this.loggedInUserId != userId &&
             this.user.accountPrivacySetting ==
-              AccountPrivacySettingEnum.PRIVATE &&
+            AccountPrivacySettingEnum.PRIVATE &&
             !this.loggedInUserFollowing
               .map((user) => user.userId)
               .includes(this.user.userId)
@@ -113,13 +135,61 @@ export class SearchUsersComponent implements OnInit {
         this.userService.getAllUsers(),
         this.userService.getFollowing(this.loggedInUserId),
         this.userService.getFollowRequestMade(this.loggedInUserId),
+        this.tagService.getAllSDGTags(),
+        this.tagService.getAllSkillTags()
       ]).subscribe((result) => {
         this.allUsers = result[0];
         this.filteredUsers = this.allUsers;
         this.loggedInUserFollowing = result[1];
         this.loggedInUserFollowRequestMade = result[2];
+        this.sdgTags = result[3];
+        this.skillTags = result[4];
+        this.initialiseSelect2();
       });
     }
+  }
+
+  initialiseSelect2() {
+    $('#searchsdgselect2').select2({
+      data: this.sdgTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#searchskillsselect2').select2({
+      data: this.skillTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#searchsdgselect2').on("change", () => {
+      this.sdgChanged()
+    });
+    $('#searchskillsselect2').on("change", () => {
+      this.skillsChanged();
+    });
+  }
+
+  sdgChanged() {
+    let selectedTagNames = $('#searchsdgselect2').val();
+    this.selectedsdgTags = []
+    this.sdgTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        this.selectedsdgTags.push(element)
+      }
+    });
+
+  }
+
+  skillsChanged() {
+    let selectedTagNames = $('#searchskillsselect2').val();
+    this.selectedSkillTags = []
+    this.skillTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        this.selectedSkillTags.push(element)
+      }
+    });
+
   }
 
   handleSearchStringChanged(event) {
