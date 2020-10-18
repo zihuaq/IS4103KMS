@@ -61,7 +61,7 @@ import { UserSettingComponent } from './profile/user-setting/user-setting.compon
 import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
 import { JobAppliedComponent } from './profile/job-applied/job-applied.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
-import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/manage-fulfillments/manage-fulfillments.component';
+// import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/manage-fulfillments/manage-fulfillments.component';
 import { ProfileReportsComponent } from './administration/profile-reports/profile-reports.component';
 import { ProjectReportsComponent } from './administration/project-reports/project-reports.component';
 import { ProjectReportItemComponent } from './administration/project-reports/project-report-item/project-report-item.component';
@@ -139,7 +139,7 @@ import { NewsfeedComponent } from './newsfeed/newsfeed.component';
     ViewMrpTabComponent,
     JobAppliedComponent,
     MyFulfillmentsComponent,
-    ManageFulfillmentsComponent,
+    // ManageFulfillmentsComponent,
     ProfileReportsComponent,
     ProjectReportsComponent,
     ProjectReportItemComponent,

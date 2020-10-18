@@ -28,7 +28,7 @@ export class ReportGroupComponent implements OnInit {
     private tagService: TagService) { }
 
   ngOnInit(): void {
-    this.tagService.getAllReportTags().subscribe((response) => {
+    this.tagService.getAllGroupReportTags().subscribe((response) => {
       this.reportTags = response;
       console.log(this.reportTags);
       $('#reportselect2').select2({
