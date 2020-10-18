@@ -1,11 +1,19 @@
-<div class="row">
-    <div class="input-icons col-9">
+<div class="row" style="margin-bottom: 10px;">
+    <div class="input-icons">
         <i class="fas fa-search icon"></i>
         <input class="form-control input-field" placeholder="Search tasks" [(ngModel)]="searchInput" (ngModelChange)="onChange()">
     </div>
-    <div >
-        <button class="btn bg-gradient-info" type=button onclick="gantt.ext.zoom.zoomIn();" style="margin-right: 10px"><i class="fas fa-search-plus"></i> Zoom In</button>
-        <button class="btn bg-gradient-info" type=button onclick="gantt.ext.zoom.zoomOut();"><i class="fas fa-search-minus"></i> Zoom Out</button>
+    <div style="margin-left: 10px;">
+        <button class="btn bg-gradient-light" type="button" onclick="gantt.ext.zoom.zoomIn();"><i class="fas fa-search-plus"></i> Zoom In</button>
+        <button class="btn bg-gradient-light" type="button" onclick="gantt.ext.zoom.zoomOut();" style="margin-right: 10px"><i class="fas fa-search-minus"></i> Zoom Out</button>
+        <button type="button" class="btn bg-gradient-info" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-download"></i> Export</button>  
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" (click)="export('pdf')">PDF</a>
+            <a class="dropdown-item" (click)="export('png')">PNG</a>
+            <a class="dropdown-item" (click)="export('excel')">Excel</a>
+            <a class="dropdown-item" (click)="export('ical')">iCal</a>
+            <a class="dropdown-item" (click)="export('msproject')">MS Project</a>
+        </div>
     </div>
 </div>
 <div #ganttChart class='gantt-chart'></div>
