@@ -9,6 +9,7 @@ import Exception.CreateGroupException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import entity.GroupEntity;
+import entity.TagEntity;
 import entity.UserEntity;
 import java.util.List;
 import javax.ejb.EJB;
@@ -178,5 +179,8 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     @Override
     public void updateStatus(Long groupId, String status) throws NoResultException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+        public void persist(Object object) {
+        em.persist(object);
     }
 }

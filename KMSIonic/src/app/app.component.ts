@@ -52,9 +52,9 @@ export class AppComponent implements OnInit {
       icon: "person"
     },
     {
-      title: "Discover Project",
-      url: "/view-all-project",
-      icon: "search"
+      title: 'Discover Project',
+      url: '/view-all-project',
+      icon: 'search'
     },
     {
       title: 'My Project',

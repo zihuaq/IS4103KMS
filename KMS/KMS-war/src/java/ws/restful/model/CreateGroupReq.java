@@ -6,7 +6,6 @@
 package ws.restful.model;
 
 import entity.GroupEntity;
-import entity.GroupEntity;
 import java.util.List;
 
 /**
