@@ -37,9 +37,33 @@ export class TagService {
       .pipe(catchError(this.handleError));
   }
 
-  getAllReportTags(): Observable<any> {
+  getAllProfileReportTags(): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + '/report')
+      .get<any>(this.baseUrl + '/report/profile')
+      .pipe(catchError(this.handleError));
+  }
+
+  getAllGroupReportTags(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/report/group')
+      .pipe(catchError(this.handleError));
+  }
+
+  getAllProjectReportTags(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/report/project')
+      .pipe(catchError(this.handleError));
+  }
+
+  getAllPostReportTags(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/report/post')
+      .pipe(catchError(this.handleError));
+  }
+
+  getAllCommentReportTags(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/report/comment')
       .pipe(catchError(this.handleError));
   }
 

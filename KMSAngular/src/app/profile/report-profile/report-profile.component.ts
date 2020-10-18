@@ -28,7 +28,7 @@ export class ReportProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.tagService.getAllReportTags().subscribe((response) => {
+    this.tagService.getAllProfileReportTags().subscribe((response) => {
       this.reportTags = response;
       console.log(this.reportTags);
       $('#reportselect2').select2({
