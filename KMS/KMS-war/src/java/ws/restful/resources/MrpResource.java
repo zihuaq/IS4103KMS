@@ -82,10 +82,15 @@ public class MrpResource {
             mrp.getProject().getTasks().clear();
             mrp.getProject().getPosts().clear();
             mrp.getProject().getSdgs().clear();
+            mrp.getProject().getReviews().clear();
+            mrp.getProject().getDonations().clear();
             mrp.getFulfillments().clear();
-//            mrp.getActivity().getHumanResourcePostings().clear();
-//            mrp.getActivity().getMaterialResourcePostings().clear();
-//            mrp.getActivity().setProject(null);
+            if (mrp.getActivity() != null) {
+                mrp.getActivity().getHumanResourcePostings().clear();
+                mrp.getActivity().getMaterialResourcePostings().clear();
+                mrp.getActivity().setProject(null); 
+            }
+            
             
             return Response.status(Status.OK).entity(mrp).build();
             

@@ -76,6 +76,14 @@ import { GroupErrorPageComponent } from './group/viewGroup/group-error-page/grou
 import { GroupDetailsComponent } from './group/viewGroup/group-details/group-details.component';
 import { ReportGroupComponent } from './group/viewGroup/report-group/report-group.component';
 
+import { ActivityTabComponent } from './project/viewProject/activity-tab/activity-tab.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { EditActivityTabComponent } from './project/editProject/edit-activity-tab/edit-activity-tab.component';
+import { DatePipe } from '@angular/common';
+import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
+import { TaskTabComponent } from './project/viewProject/task-tab/task-tab.component';
+import { NewsfeedComponent } from './newsfeed/newsfeed.component';
 
 @NgModule({
   declarations: [
@@ -144,8 +152,13 @@ import { ReportGroupComponent } from './group/viewGroup/report-group/report-grou
     ViewOwnGroupComponent,
     GroupErrorPageComponent,
     GroupDetailsComponent,
-    ReportGroupComponent
+    ReportGroupComponent,
 
+    ActivityTabComponent,
+    EditActivityTabComponent,
+    DonateToProjectComponent,
+    TaskTabComponent,
+    NewsfeedComponent
   ],
   imports: [
     BrowserModule,
@@ -157,8 +170,9 @@ import { ReportGroupComponent } from './group/viewGroup/report-group/report-grou
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     ModalModule.forRoot(),
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

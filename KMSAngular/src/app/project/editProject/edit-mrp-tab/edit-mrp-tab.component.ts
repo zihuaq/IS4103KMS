@@ -9,6 +9,7 @@ import { MaterialResourcePostingService } from '../../../material-resource-posti
 import { ActivatedRoute, Router } from '@angular/router';
 import { FulfillmentService } from '../../../fulfillment.service';
 import { Fulfillment } from '../../../classes/fulfillment';
+import { FulfillmentStatus } from 'src/app/classes/fulfillment-status.enum';
 
 declare var $: any;
 
@@ -44,6 +45,16 @@ export class EditMrpTabComponent implements OnInit {
     disableDoubleClickZoom: true,
   };
 
+  mrpToFulfill: MaterialResourcePosting;
+  fulfillmentList: Fulfillment[];
+  noFulfillments: boolean = true;
+  fulfillmentToUpdate: Fulfillment;
+
+  maxQuantity: number;
+  quantityReceived: number;
+
+  newTotalPledgedQuantity: number;
+
   constructor(public projectService: ProjectService,
     public materialResourcePostingService: MaterialResourcePostingService,
     private fulfillmentService: FulfillmentService,
@@ -56,6 +67,9 @@ export class EditMrpTabComponent implements OnInit {
       this.mrpToEdit.fulfillments = new Array();
       this.mrpToDelete = new MaterialResourcePosting;
       this.mrpList = [];
+      this.fulfillmentList = [];
+      this.mrpToFulfill = new MaterialResourcePosting;
+      this.fulfillmentToUpdate = new Fulfillment;
     }
 
   ngOnInit(): void {
@@ -373,6 +387,183 @@ export class EditMrpTabComponent implements OnInit {
   changehref(lat: number, long: number) {
     var url = "http://maps.google.com/?q=" + lat + "," + long;
     window.open(url, '_blank');
+  }
+
+  clickFulfillment(mrp: MaterialResourcePosting){
+    this.mrpToFulfill = mrp;
+    this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
+      response => {
+        this.fulfillmentList = response;
+        var list: Fulfillment[] = new Array();
+        this.fulfillmentList.forEach((element) => {
+          if (element.status != FulfillmentStatus.REJECTED) {
+            list.push(element);
+          }
+        });
+        this.fulfillmentList = list;
+        console.log(this.fulfillmentList)
+      }
+    )
+  }
+
+  closeModal() {
+    this.fulfillmentList = new Array();
+  }
+
+  get fulfillmentStatus(): typeof FulfillmentStatus{
+    return FulfillmentStatus;
+  }
+
+  clickReceive(fulfillment: Fulfillment) {
+    this.fulfillmentToUpdate = fulfillment;
+    this.maxQuantity = this.fulfillmentToUpdate.unreceivedQuantity;
+    $('#modal-fulfillments').hide();
+  }
+
+  receiveFulfillment() {
+    if (this.quantityReceived > this.maxQuantity) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Incorrect Quantity Received',
+        autohide: true,
+        delay: 3500,
+        body: 'Quantity received cannot be more than quantity unreceived',
+      });
+    } else {
+      this.fulfillmentToUpdate.receivedQuantity += this.quantityReceived;
+      if (this.quantityReceived == this.fulfillmentToUpdate.unreceivedQuantity) { //fully received
+        this.fulfillmentToUpdate.unreceivedQuantity = 0;
+        this.fulfillmentToUpdate.status = FulfillmentStatus.FULFILLED;
+      } else { //partially received
+        this.fulfillmentToUpdate.unreceivedQuantity -= this.quantityReceived;
+        this.fulfillmentToUpdate.status = FulfillmentStatus.PARTIALLYFULFILLED;
+      }
+      this.fulfillmentService.receiveResource(this.fulfillmentToUpdate).subscribe(
+        response => {
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Fulfillment is updated sucessfully',
+          });
+          this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
+            response => {
+              this.fulfillmentList = response;
+              var list: Fulfillment[] = new Array();
+              this.fulfillmentList.forEach((element) => {
+                if (element.status != FulfillmentStatus.REJECTED) {
+                  list.push(element);
+                }
+              });
+              this.fulfillmentList = list;
+            }
+          )
+          $('#modal-fulfillments').show();
+        }
+      )
+    }
+  }
+
+  clickUpdate(fulfillment: Fulfillment) {
+    this.fulfillmentToUpdate = fulfillment;
+    this.newTotalPledgedQuantity = this.fulfillmentToUpdate.totalPledgedQuantity;
+    $('#modal-fulfillments').hide();
+  }
+
+  updateQuantity() {
+    if(this.newTotalPledgedQuantity < this.fulfillmentToUpdate.receivedQuantity) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Invalid Quantity',
+        autohide: true,
+        delay: 3500,
+        body: 'Total pledged quantity cannot be less than quantity received',
+      });
+    } else if(this.newTotalPledgedQuantity > this.mrpToFulfill.lackingQuantity) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Invalid Quantity',
+        autohide: true,
+        delay: 3500,
+        body: 'Total pledged quantity cannot be more than quantity required',
+      });
+    } else if((this.newTotalPledgedQuantity - this.fulfillmentToUpdate.totalPledgedQuantity) > this.fulfillmentToUpdate.mra.quantity) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Invalid Quantity',
+        autohide: true,
+        delay: 3500,
+        body: 'Total pledged quantity cannot be more than available quantity of user',
+      });
+    } else {
+      this.fulfillmentToUpdate.totalPledgedQuantity = this.newTotalPledgedQuantity;
+      if (this.fulfillmentToUpdate.totalPledgedQuantity == this.fulfillmentToUpdate.receivedQuantity) {
+        this.fulfillmentToUpdate.status = FulfillmentStatus.FULFILLED;
+      } else if(this.fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED && this.fulfillmentToUpdate.totalPledgedQuantity > this.fulfillmentToUpdate.receivedQuantity) {
+        this.fulfillmentToUpdate.status = FulfillmentStatus.PARTIALLYFULFILLED;
+      }
+      this.fulfillmentService.updateQuantity(this.fulfillmentToUpdate).subscribe(
+        response => {
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Total pledged quantity of fulfillment is updated sucessfully',
+          });
+          this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
+            response => {
+              this.fulfillmentList = response;
+              var list: Fulfillment[] = new Array();
+              this.fulfillmentList.forEach((element) => {
+                if (element.status != FulfillmentStatus.REJECTED) {
+                  list.push(element);
+                }
+              });
+              this.fulfillmentList = list;
+            }
+          )
+          $('#modal-fulfillments').show();
+        }
+      )
+    }
+  }
+
+  clickReject(fulfillment: Fulfillment) {
+    this.fulfillmentToUpdate = fulfillment;
+    $('#modal-fulfillments').hide();
+  }
+
+  rejectFulfillment() {
+    this.fulfillmentService.rejectFulfillment(this.fulfillmentToUpdate.fulfillmentId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Fulfillment is rejected sucessfully',
+        });
+        this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
+          response => {
+            this.fulfillmentList = response;
+            var list: Fulfillment[] = new Array();
+            this.fulfillmentList.forEach((element) => {
+              if (element.status != FulfillmentStatus.REJECTED) {
+                list.push(element);
+              }
+            });
+            this.fulfillmentList = list;
+          }
+        )
+        $('#modal-fulfillments').show();
+      }
+    )
+  }
+
+  close() {
+    $('#modal-fulfillments').show();
   }
 
 }

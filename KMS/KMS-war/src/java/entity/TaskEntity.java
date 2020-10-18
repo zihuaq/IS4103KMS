@@ -27,65 +27,72 @@ public class TaskEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long taskId;
+    private Long id;
     
     @NotNull
     @Column(nullable=false)
-    private String name;
+    private String text;
     
     @NotNull
     @Column(nullable=false)
-    private String description;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date start_date;
     
     @NotNull
     @Column(nullable=false)
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date end_date;
     
     @NotNull
     @Column(nullable=false)
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private Double progress;
+    
+    @NotNull
+    @Column(nullable=false)
+    private Long parent;
     
     @ManyToOne
     private ProjectEntity project;
+    
+    @ManyToOne
+    private TaskEntity parentTask;
 
     public TaskEntity() {
     }
 
-    public TaskEntity(Long taskId, String name, String description, Date startDate, Date endDate) {
+    public TaskEntity(Long taskId, String name, Date startDate, Date endDate, Double progress, Long parent) {
         this();
-        this.taskId = taskId;
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-    
+        this.id = taskId;
+        this.text = name;
+        this.start_date = startDate;
+        this.end_date = endDate;
+        this.progress = progress;
+        this.parent = parent;
+    } 
 
-    public Long getTaskId() {
-        return taskId;
+    public Long getId() {
+        return id;
     }
 
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (taskId != null ? taskId.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the taskId fields are not set
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof TaskEntity)) {
             return false;
         }
         TaskEntity other = (TaskEntity) object;
-        if ((this.taskId == null && other.taskId != null) || (this.taskId != null && !this.taskId.equals(other.taskId))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -93,47 +100,63 @@ public class TaskEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Task[ id=" + taskId + " ]";
+        return "entity.Task[ id=" + id + " ]";
     }
 
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public String getDescription() {
-        return description;
+    public Date getStart_date() {
+        return start_date;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getEnd_date() {
+        return end_date;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setEnd_date(Date end_date) {
+        this.end_date = end_date;
+    }
+    
+    public Double getProgress() {
+        return progress;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public void setProgress(Double progress) {
+        this.progress = progress;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public Long getParent() {
+        return parent;
     }
 
+    public void setParent(Long parent) {
+        this.parent = parent;
+    }
+    
     public ProjectEntity getProject() {
         return project;
     }
 
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public TaskEntity getParentTask() {
+        return parentTask;
+    }
+
+    public void setParentTask(TaskEntity parentTask) {
+        this.parentTask = parentTask;
     }
     
 }

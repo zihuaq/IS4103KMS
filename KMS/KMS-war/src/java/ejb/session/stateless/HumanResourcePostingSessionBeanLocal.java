@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.HumanResourcePostingEntity;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -30,5 +31,9 @@ public interface HumanResourcePostingSessionBeanLocal {
     public void joinHrp(Long userId, Long hrpId) throws NoResultException;
 
     public void leaveHrp(Long userId, Long hrpId) throws NoResultException;
+
+    public List<HumanResourcePostingEntity> availableHrp(Long projectId, Date startDate, Date endDate);
+
+    public List<HumanResourcePostingEntity> getHrpByActivityId(Long activityId);
     
 }

@@ -11,6 +11,7 @@ import { User } from '../../classes/user';
 export class ProfileTabpanelComponent implements OnInit {
   @Input() profile: User;
   @Input() loggedInUser: User;
+  @Input() shared: boolean;
   @Output() profileChanged = new EventEmitter<User>();
   @Output() userChanged = new EventEmitter<User>();
 

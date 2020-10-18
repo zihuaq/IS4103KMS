@@ -32,6 +32,7 @@ import { CreateNewGroupComponent } from './group/create-new-group/create-new-gro
 import { GroupDetailsComponent } from './group/viewGroup/group-details/group-details.component';
 import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.component';
 
+import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -76,9 +77,14 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: ProfileComponent,
   },
-  { path: 'profile',
+  {
+    path: 'profile/shared/:userid',
+    component: ProfileComponent,
+  },
+  {
+    path: 'profile',
     canActivate: [RouteGuard],
-    component: ProfileComponent
+    component: ProfileComponent,
   },
   {
     path: 'accountVerification/:email/:uuid',
@@ -118,18 +124,7 @@ const routes: Routes = [
   canActivate: [RouteGuard],
   component: IndexComponent
   },
-  { path: 'projectDetails/:projectId',
-    canActivate: [RouteGuard],
-    component: ProjectDetailsComponent
-  },
-  { path: 'editProject/:projectId',
-    canActivate: [RouteGuard],
-    component: EditProjectComponent
-  },
-  { path: 'myFulfillments/:projectId',
-    canActivate: [RouteGuard],
-    component: MyFulfillmentsComponent
-  },
+
   //groups
   {
     path: 'viewAllGroups',
@@ -155,6 +150,27 @@ const routes: Routes = [
     component: EditGroupComponent
   },
 
+  { path: '', canActivate: [RouteGuard], component: IndexComponent },
+  {
+    path: 'projectDetails/:projectId',
+    canActivate: [RouteGuard],
+    component: ProjectDetailsComponent,
+  },
+  {
+    path: 'editProject/:projectId',
+    canActivate: [RouteGuard],
+    component: EditProjectComponent,
+  },
+  {
+    path: 'myFulfillments/:projectId',
+    canActivate: [RouteGuard],
+    component: MyFulfillmentsComponent,
+  },
+  {
+    path: 'donateToProject/:projectId',
+    canActivate: [RouteGuard],
+    component: DonateToProjectComponent
+  }
 
 ];
 

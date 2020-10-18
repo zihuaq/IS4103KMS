@@ -387,19 +387,19 @@ export class UserService {
 
   getProjectsOwned(userId: number): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + /projectsOwned/ + userId)
+      .get<any>(this.baseUrl + "/projectsOwned/" + userId)
       .pipe(catchError(this.handleError));
   }
 
   getProjectsJoined(userId: number): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + /viewOwnProjects/ + userId)
+      .get<any>(this.baseUrl + "/viewOwnProjects/" + userId)
       .pipe(catchError(this.handleError));
   }
 
   getProjectsManaged(userId: number): Observable<any> {
     return this.http
-      .get<any>(this.baseUrl + /projectsManaged/ + userId)
+      .get<any>(this.baseUrl + "/projectsManaged/" + userId)
       .pipe(catchError(this.handleError));
   }
 

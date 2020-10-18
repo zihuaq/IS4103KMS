@@ -58,6 +58,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         newFulfillment.setMra(mra);
         
         em.persist(newFulfillment);
+        em.flush();
         
         return newFulfillment.getFulfillmentId();
     }

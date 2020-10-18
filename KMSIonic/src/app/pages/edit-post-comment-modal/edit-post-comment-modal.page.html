@@ -1,0 +1,31 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="start" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Edit Comment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="comment">
+  <ion-item>
+    <ion-avatar slot="start">
+      <img *ngIf="comment.commentOwner.profilePicture" class="ion-border" [src]="comment.commentOwner.profilePicture"
+        alt="User profile picture" />
+      <img *ngIf="!comment.commentOwner.profilePicture" class="ion-border"
+        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+        alt="User profile picture" />
+    </ion-avatar>
+    <ion-input [(ngModel)]="comment.comment" class="ion-border" #commentInput></ion-input>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-button (click)="dismiss()" slot="end" fill="outline">
+      Cancel
+    </ion-button>
+    <ion-button (click)="updateComment()" slot="end" fill="outline">
+      Update
+    </ion-button>
+  </ion-item>
+</ion-content>

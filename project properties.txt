@@ -1,0 +1,8 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 633450bf9013f99487ee0539ecfe20c958939982
+j2ee.platform.classpath=
+j2ee.platform.classpath=${j2ee.server.home}/modules/endorsed/grizzly-npn-bootstrap.jar:${j2ee.server.home}/modules/endorsed/jakarta.annotation-api.jar:${j2ee.server.home}/modules/endorsed/jakarta.xml.bind-api.jar:${j2ee.server.home}/modules/endorsed/webservices-api-osgi.jar:${j2ee.server.home}/modules/bean-validator.jar:${j2ee.server.home}/modules/cdi-api.jar:${j2ee.server.home}/modules/javax.batch-api.jar:${j2ee.server.home}/modules/jaxb-osgi.jar:${j2ee.server.home}/modules/webservices-osgi.jar:${j2ee.server.home}/modules/weld-osgi-bundle.jar:${j2ee.server.middleware}/mq/lib/jaxm-api.jar
+>>>>>>> e18571ffd669a3c29d1a306eece71616a8fd9cf0

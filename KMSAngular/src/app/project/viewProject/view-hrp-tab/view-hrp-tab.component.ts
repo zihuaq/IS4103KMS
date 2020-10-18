@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DatePipe } from '@angular/common'; 
 
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/project.service';
@@ -29,7 +30,8 @@ export class ViewHrpTabComponent implements OnInit {
     private projectService: ProjectService,
     private tagService: TagService,
     private router: Router,
-    private activatedRouter: ActivatedRoute) {
+    private activatedRouter: ActivatedRoute,
+    private datePipe: DatePipe) {
       this.project = new Project();
       this.tags = [];
       this.hrpList = [];
@@ -41,8 +43,8 @@ export class ViewHrpTabComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.project = response;
-        for (let admin of this.project.projectMembers) {
-          if (this.sessionService.getCurrentUser().userId == admin.userId) {
+        for (let member of this.project.projectMembers) {
+          if (this.sessionService.getCurrentUser().userId == member.userId) {
             this.isMember = true;
           }
         }
@@ -177,5 +179,14 @@ export class ViewHrpTabComponent implements OnInit {
   changehref(lat: number, long: number) {
     var url = "http://maps.google.com/?q=" + lat + "," + long;
     window.open(url, '_blank');
+  }
+
+  dateToString(date: Date) {
+    return this.datePipe.transform(date, "yyyy-MM-dd");
+  }
+
+  formatDate(date: string) {
+    var str = date.slice(0, date.indexOf("["));
+    return str;
   }
 }

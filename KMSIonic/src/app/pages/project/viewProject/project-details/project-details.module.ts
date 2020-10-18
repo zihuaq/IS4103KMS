@@ -5,7 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { ProjectDetailsPageRoutingModule } from './project-details-routing.module';
+import { ViewHrpPageRoutingModule } from '../view-hrp/view-hrp-routing.module';
 
+import { ViewHrpPage } from '../view-hrp/view-hrp.page';
 import { ProjectDetailsPage } from './project-details.page';
 
 @NgModule({
@@ -13,8 +15,9 @@ import { ProjectDetailsPage } from './project-details.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    ProjectDetailsPageRoutingModule
+    ProjectDetailsPageRoutingModule,
+    ViewHrpPageRoutingModule
   ],
-  declarations: [ProjectDetailsPage]
+  declarations: [ProjectDetailsPage, ViewHrpPage]
 })
 export class ProjectDetailsPageModule {}

@@ -9,36 +9,38 @@ import { User } from '../../classes/user';
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.css']
+  styleUrls: ['./projects.component.css'],
 })
 export class ProjectsComponent implements OnInit {
   @Input() profile: User;
+  @Input() shared: boolean;
   @Output() userChanged = new EventEmitter<User>();
 
   projectsJoined: Project[];
   noProjects: boolean = true;
-  
-  constructor(public projectService: ProjectService,
+
+  constructor(
+    public projectService: ProjectService,
     public userService: UserService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.userService.getProjectsJoined(this.profile.userId).subscribe(
-      response => {
+    this.userService
+      .getProjectsJoined(this.profile.userId)
+      .subscribe((response) => {
         this.projectsJoined = response;
         if (this.projectsJoined.length > 0) {
           this.noProjects = false;
         }
-      }
-    );
+      });
   }
 
   onSelect(project: Project): void {
-    this.router.navigate(["/projectDetails/" + project.projectId]);
+    this.router.navigate(['/projectDetails/' + project.projectId]);
   }
 
-  get projectType(): typeof ProjectType{
+  get projectType(): typeof ProjectType {
     return ProjectType;
   }
-
 }

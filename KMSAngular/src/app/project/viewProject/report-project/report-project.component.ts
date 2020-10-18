@@ -12,7 +12,7 @@ declare var $: any;
 @Component({
   selector: 'app-report-project',
   templateUrl: './report-project.component.html',
-  styleUrls: ['./report-project.component.css']
+  styleUrls: ['./report-project.component.css'],
 })
 export class ReportProjectComponent implements OnInit {
   @Input() loggedInUser: User;
@@ -23,11 +23,13 @@ export class ReportProjectComponent implements OnInit {
   content: string;
   report: Report;
 
-  constructor(private reportService: ReportService,
-    private tagService: TagService) { }
+  constructor(
+    private reportService: ReportService,
+    private tagService: TagService
+  ) {}
 
   ngOnInit(): void {
-    this.tagService.getAllReportTags().subscribe((response) => {
+    this.tagService.getAllProjectReportTags().subscribe((response) => {
       this.reportTags = response;
       console.log(this.reportTags);
       $('#reportselect2').select2({
@@ -75,10 +77,9 @@ export class ReportProjectComponent implements OnInit {
         title: 'Success',
         autohide: true,
         delay: 2500,
-        body: 'Report is submitted successfully!'
+        body: 'Report is submitted successfully!',
       });
       $('#modal-reportProject').modal('hide');
     });
   }
-
 }

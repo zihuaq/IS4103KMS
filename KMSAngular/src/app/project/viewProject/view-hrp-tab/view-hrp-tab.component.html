@@ -16,7 +16,7 @@
             </div>
             <div class="card-body" style="display: block;">
                 <p style="margin: 0 7px 0 7px;">
-                    <b>{{hrp.startDate.toString().slice(0,10) | date}} to {{hrp.endDate.toString().slice(0,10) | date}}</b>
+                    <b>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</b>
                     <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(hrp.latitude, hrp.longitude)" target="_blank">
                         At location
                         {{hrp.latitude | number:'1.1-6'}},

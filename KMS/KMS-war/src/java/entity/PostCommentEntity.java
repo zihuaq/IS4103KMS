@@ -6,12 +6,16 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -39,13 +43,21 @@ public class PostCommentEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
     
+    @NotNull
+    @JoinColumn(nullable=false)
     @OneToOne
     private PostEntity post;
     
+    @NotNull
+    @JoinColumn(nullable=false)
     @ManyToOne
     private UserEntity commentOwner;
+    
+    @ManyToMany
+    private List<UserEntity> likers;
 
     public PostCommentEntity() {
+        this.likers = new ArrayList<>();
     }
 
     public PostCommentEntity(String comment, Date dateTime) {
@@ -117,6 +129,14 @@ public class PostCommentEntity implements Serializable {
 
     public void setCommentOwner(UserEntity commentOwner) {
         this.commentOwner = commentOwner;
+    }
+
+    public void setLikers(List<UserEntity> likers) {
+        this.likers = likers;
+    }
+
+    public List<UserEntity> getLikers() {
+        return likers;
     }
     
 }

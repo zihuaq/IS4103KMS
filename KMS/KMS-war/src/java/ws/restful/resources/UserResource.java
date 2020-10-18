@@ -357,6 +357,7 @@ public class UserResource {
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
             user.getFulfillments().clear();
+            user.getPosts().clear();
             for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
                 hrp.setActivity(null);
                 hrp.getAppliedUsers().clear();
@@ -372,6 +373,8 @@ public class UserResource {
                     hrp.getProject().getSdgs().clear();
                 }
             }
+            user.getActivityJoined().clear();
+            user.getDonations().clear();
             return Response.status(200).entity(user).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -461,7 +464,9 @@ public class UserResource {
             user.getHrpApplied().clear();
             user.getFulfillments().clear();
             user.setPassword("");
-
+            user.getActivityJoined().clear();
+            user.getDonations().clear();
+            
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
             System.out.println(ex.getMessage());
@@ -753,7 +758,7 @@ public class UserResource {
             temp.setAffiliatedUsers(getUsersResponse(user.getAffiliatedUsers()));
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
-            temp.setHrpApplied(user.getHrpApplied());
+            // temp.setHrpApplied(user.getHrpApplied());
             usersResponse.add(temp);
         }
         return usersResponse;
@@ -984,6 +989,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsOwned).build();
             
@@ -1009,6 +1016,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsJoined).build();
             
@@ -1034,6 +1043,8 @@ public class UserResource {
                 p.getMaterialResourcePostings().clear();
                 p.getTasks().clear();
                 p.getPosts().clear();
+                p.getReviews().clear();
+                p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsManaged).build();
             

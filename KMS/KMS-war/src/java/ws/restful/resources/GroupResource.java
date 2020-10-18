@@ -98,6 +98,7 @@ public class GroupResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroup(@PathParam("groupId") Long groupId) {
+
         System.out.println("******** GroupResource: getGroup()");
         try{
             GroupEntity group = groupSessionBeanLocal.getGroupById(groupId);
@@ -181,6 +182,7 @@ public class GroupResource {
         catch(NoResultException ex){
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+
         }
 
     }

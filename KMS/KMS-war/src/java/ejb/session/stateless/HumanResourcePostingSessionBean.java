@@ -10,6 +10,7 @@ import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.UserEntity;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -133,6 +134,24 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
         
         hrp.setObtainedSlots(hrp.getObtainedSlots() - 1);
         hrp.setLackingSlots(hrp.getLackingSlots() + 1);
+    }
+    
+    @Override
+    public List<HumanResourcePostingEntity> availableHrp(Long projectId, Date startDate, Date endDate) {
+        Query query = em.createQuery("SELECT hrp FROM HumanResourcePostingEntity hrp WHERE hrp.project.projectId = :inProjectId AND hrp.activity IS NULL AND hrp.startDate <= :inStartDate AND hrp.endDate >= :inEndDate");
+        query.setParameter("inProjectId", projectId);
+        query.setParameter("inStartDate", startDate);
+        query.setParameter("inEndDate", endDate);
+        
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<HumanResourcePostingEntity> getHrpByActivityId(Long activityId) {
+        Query query = em.createQuery("SELECT hrp FROM HumanResourcePostingEntity hrp WHERE hrp.activity.activityId = :inActivityId");
+        query.setParameter("inActivityId", activityId);
+        
+        return query.getResultList();
     }
     
 }
