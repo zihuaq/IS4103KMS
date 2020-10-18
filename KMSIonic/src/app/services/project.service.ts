@@ -26,6 +26,7 @@ export class ProjectService {
   }
 
   getAllProject(): Observable<any> {
+    console.log(this.httpClient.get<any>(this.baseUrl+"/getAllProject"));
     return this.httpClient.get<any>(this.baseUrl+"/getAllProject").pipe();
   }
 

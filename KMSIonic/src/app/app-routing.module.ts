@@ -121,9 +121,43 @@ const routes: Routes = [
     path: 'tab-panel/:projectId',
     loadChildren: () => import('./pages/project/editProject/tab-panel/tab-panel.module').then( m => m.TabPanelPageModule)
   },
+  
   {
     path: 'edit-members',
     loadChildren: () => import('./pages/project/editProject/edit-members/edit-members.module').then( m => m.EditMembersPageModule)
+  },
+  {
+    path: 'view-all-group',
+    loadChildren: () => 
+    import('./pages/group/view-all-group/view-all-group.module').then( 
+        (m) => m.ViewAllGroupPageModule
+      ),
+      canActivate: [AuthGuard]
+  },
+  {
+    path: 'create-new-group',
+    loadChildren: () => 
+    import('./pages/group/create-new-group/create-new-group.module').then( 
+      (m) => m.CreateNewGroupPageModule
+    ),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'group-details/:groupId',
+    loadChildren: () => import('./pages/group/viewGroup/group-details/group-details.module').then( m => m.GroupDetailsPageModule)
+  },
+  {
+    path: 'edit-group-details/:groupId',
+    loadChildren: () => import('./pages/group/editGroup/edit-group-details/edit-group-details.module').then( m => m.EditGroupDetailsPageModule)
+  },
+  {   //** */
+    path: 'tab-panel/:groupId',
+    loadChildren: () => import('./pages/group/editGroup/tab-panel/tab-panel.module').then( m => m.TabPanelPageModule)
+  },
+  
+  {   //** */
+    path: 'edit-members',
+    loadChildren: () => import('./pages/group/editGroup/edit-members/edit-members.module').then( m => m.EditMembersPageModule)
   },
   {
     path: 'changepassword',
@@ -186,7 +220,7 @@ const routes: Routes = [
       import(
         "./pages/add-material-resource-available/add-material-resource-available.module"
       ).then((m) => m.AddMaterialResourceAvailablePageModule)
-  }
+  },
 
 ]
 

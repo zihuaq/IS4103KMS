@@ -1,21 +1,14 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license header, choose License Headers in Group Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package ejb.session.stateless;
 
 import Exception.CreateGroupException;
-import Exception.CreateProjectException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
-import entity.ActivityEntity;
 import entity.GroupEntity;
-import entity.HumanResourcePostingEntity;
-import entity.MaterialResourcePostingEntity;
-import entity.PostEntity;
-import entity.ProjectEntity;
-import entity.TaskEntity;
 import entity.UserEntity;
 import java.util.List;
 import javax.ejb.EJB;
@@ -23,6 +16,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.GroupStatusEnum;
 
 /**
  *
@@ -40,6 +34,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     @EJB(name = "PostSessionBeanLocal")
     private PostSessionBeanLocal postSessionBeanLocal;
     
+    @Override
     public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
@@ -59,19 +54,25 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         }
     }
     
+    @Override
     public List<GroupEntity> retrieveAllGroup() {
-        Query query = em.createQuery("SELECT g FROM GroupEntity G");
+        Query query = em.createQuery("SELECT g FROM GroupEntity g");
         
         return query.getResultList();
     }
     
  
-    public GroupEntity getGroupById(Long groupId) {
+    @Override
+    public GroupEntity getGroupById(Long groupId) throws NoResultException {
         GroupEntity group = em.find(GroupEntity.class, groupId);
-        
-        return group;
+        if (group != null) {
+            return group;
+        } else {
+            throw new NoResultException("Group does not exists");
+        }
     }
     
+    @Override
     public void joinGroup(Long groupId, Long userId) throws NoResultException {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
@@ -80,12 +81,13 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         group.getGroupMembers().add(user); 
     }
     
+    @Override
     public void removeMember(Long groupId, Long userId) throws NoResultException, InvalidRoleException {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         
         if (group.getGroupOwner().getUserId().equals(userId)) {
-            throw new InvalidRoleException("Owner cannot leave the project");
+            throw new InvalidRoleException("Owner cannot leave the group");
             
         } else {
             user.getGroupsJoined().remove(group);
@@ -100,11 +102,13 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         }
         
     }
+    @Override
      public void updateGroup(GroupEntity groupToUpdate) {
         em.merge(groupToUpdate);
         em.flush();
     }
      
+    @Override
       public void addAdmin(Long groupId, Long userId) throws NoResultException {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
@@ -113,6 +117,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         user.getGroupAdmins().add(group);
     }
       
+    @Override
       public void removeAdmin(Long groupId, Long userId) throws NoResultException {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
@@ -121,6 +126,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         user.getGroupAdmins().remove(group);
     }
       
+    @Override
        public void changeOwner(Long groupId, Long newOwnerId) throws NoResultException {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(newOwnerId);
@@ -130,7 +136,8 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         user.getGroupsOwned().add(group);
     }
        
-       public void deleteGroup(Long groupId) {
+    @Override
+       public void deleteGroup(Long groupId) throws NoResultException{
         GroupEntity groupToDelete = getGroupById(groupId);
         
         groupToDelete.getGroupOwner().getGroupsOwned().remove(groupToDelete);
@@ -153,5 +160,15 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
 //        groupToDelete.getPosts().clear();
         
         em.remove(groupToDelete);
+    }
+
+    @Override
+    public List<GroupEntity> retrieveGroupByStatus(GroupStatusEnum status) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateStatus(Long groupId, String status) throws NoResultException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

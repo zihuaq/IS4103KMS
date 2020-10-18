@@ -19,6 +19,8 @@ import javax.ejb.Local;
 @Local
 public interface GroupSessionBeanLocal {
 
+    //public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException;
+    
     public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException;
 
     public List<GroupEntity> retrieveAllGroup();

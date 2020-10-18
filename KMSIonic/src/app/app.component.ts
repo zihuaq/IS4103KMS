@@ -42,6 +42,16 @@ export class AppComponent implements OnInit {
       icon: "information-circle"
     },
     {
+      title: "Discover Group",
+      url: "/view-all-group",
+      icon: "people"
+    },
+    {
+      title: "My Group",
+      url: "/view-own-groups",
+      icon: "person"
+    },
+    {
       title: "Discover Project",
       url: "/view-all-project",
       icon: "search"
