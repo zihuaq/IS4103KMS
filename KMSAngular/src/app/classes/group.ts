@@ -6,7 +6,7 @@ export class Group {
   name: string;
   description: string;
   country: string;
-  groupPicture: string | ArrayBuffer;
+  profilePicture: string | ArrayBuffer;
   groupOwner: User;
   groupMembers: User[];
   groupAdmins: User[];
@@ -17,7 +17,7 @@ export class Group {
       name?: string,
       description?: string,
       country?: string,
-      groupPicture?: string | ArrayBuffer,
+      profilePicture?: string | ArrayBuffer,
       groupOwner?: User,
       groupMembers?: User[],
       groupAdmins?: User[],
@@ -27,7 +27,7 @@ export class Group {
       this.name = name;
       this.description = description;
       this.country = country;
-      this.groupPicture = groupPicture;
+      this.profilePicture = profilePicture;
       this.groupOwner = groupOwner;
       this.groupMembers = groupMembers;
       this.groupAdmins = groupAdmins;

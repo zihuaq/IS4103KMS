@@ -58,7 +58,7 @@ public class GroupResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllGroups() {
-        System.out.println("******** GroupResource: getAllGroup()");
+        System.out.println("******** GroupResource: getAllGroups()");
         List<GroupEntity> group = groupSessionBeanLocal.retrieveAllGroup();
         for (GroupEntity g : group) {
             g.setGroupOwner(null);
@@ -74,7 +74,7 @@ public class GroupResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewProject(CreateGroupReq createGroupReq) {
-        System.out.println("******** ProjectResource: createNewProject()");
+        System.out.println("******** GroupResource: createNewGroup()");
         if (createGroupReq != null) {
             System.out.println("Group: " + createGroupReq.getNewGroup());
             try {
@@ -98,10 +98,11 @@ public class GroupResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroup(@PathParam("groupId") Long groupId) {
-        System.out.println("******** GroupResource: createNewGroup()");
+        System.out.println("******** GroupResource: getGroup()");
         try{
             GroupEntity group = groupSessionBeanLocal.getGroupById(groupId);
             group.getGroupOwner().getGroupsOwned().clear();
+            group.getGroupOwner().getGroupAdmins().clear();
             group.getGroupOwner().getReviewsGiven().clear();
             group.getGroupOwner().getReviewsReceived().clear();
             group.getGroupOwner().getProjectsOwned().clear();
@@ -119,14 +120,18 @@ public class GroupResource {
             group.getGroupOwner().getFollowRequestReceived().clear();
             group.getGroupOwner().getHrpApplied().clear();
             group.getGroupOwner().getFulfillments().clear();
+            group.getGroupOwner().getAffiliationRequestMade().clear();
+            group.getGroupOwner().getAffiliationRequestReceived().clear();
+            group.getGroupOwner().getAffiliatedUsers().clear();
             for (UserEntity member : group.getGroupMembers()) {
                 member.getGroupsOwned().clear();
+                member.getGroupAdmins().clear();
+                member.getGroupsJoined().clear();
                 member.getReviewsGiven().clear();
                 member.getReviewsReceived().clear();
                 member.getProjectsOwned().clear();
                 member.getProjectsJoined().clear();
                 member.getProjectsManaged().clear();
-                member.getGroupsJoined().clear();
                 member.getPosts().clear();
                 member.getBadges().clear();
                 member.getMras().clear();
@@ -138,9 +143,13 @@ public class GroupResource {
                 member.getFollowRequestReceived().clear();
                 member.getHrpApplied().clear();
                 member.getFulfillments().clear();
+                member.getAffiliationRequestMade().clear();
+                member.getAffiliationRequestReceived().clear();
+                member.getAffiliatedUsers().clear();
             }
             for (UserEntity admin : group.getGroupAdmins()) {
                 admin.getGroupsOwned().clear();
+                admin.getGroupAdmins().clear();
                 admin.getReviewsGiven().clear();
                 admin.getReviewsReceived().clear();
                 admin.getProjectsOwned().clear();
@@ -158,6 +167,9 @@ public class GroupResource {
                 admin.getFollowRequestReceived().clear();
                 admin.getHrpApplied().clear();
                 admin.getFulfillments().clear();
+                admin.getAffiliationRequestMade().clear();
+                admin.getAffiliationRequestReceived().clear();
+                admin.getAffiliatedUsers().clear();
             }
 
     //        for (PostEntity post : group.getPosts()) {

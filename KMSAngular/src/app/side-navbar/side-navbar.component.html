@@ -60,6 +60,32 @@
             </li>
           </ul>
         </li>
+        <!-- group -->
+        <li class="nav-item has-treeview">
+          <a class="nav-link">
+            <i class="nav-icon fas fa-hands-helping"></i>
+            <p>
+              Group
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink = "/viewAllGroups">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Discover Groups</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/viewOwnGroups/', loggedInUser.userId]">
+                <i class="far fa-circle nav-icon"></i>
+                <p>My Groups</p>
+              </a>
+            </li>
+          </ul>
+        </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/notifications">
             <i class="fas fa-bell nav-icon"></i>

@@ -66,6 +66,16 @@ import { ProfileReportsComponent } from './administration/profile-reports/profil
 import { ProjectReportsComponent } from './administration/project-reports/project-reports.component';
 import { ProjectReportItemComponent } from './administration/project-reports/project-report-item/project-report-item.component';
 import { ProfileReportItemComponent } from './administration/profile-reports/profile-report-item/profile-report-item.component';
+import { CreateNewGroupComponent } from './group/create-new-group/create-new-group.component';
+import { EditGroupDetailsTabComponent } from './group/editGroup/edit-group-details-tab/edit-group-details-tab.component';
+import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.component';
+import { GroupMembersTabComponent } from './group/editGroup/group-members-tab/group-members-tab.component';
+import { ViewAllGroupComponent } from './group/view-all-group/view-all-group.component';
+import { ViewOwnGroupComponent } from './group/view-own-group/view-own-group.component';
+import { GroupErrorPageComponent } from './group/viewGroup/group-error-page/group-error-page.component';
+import { GroupDetailsComponent } from './group/viewGroup/group-details/group-details.component';
+import { ReportGroupComponent } from './group/viewGroup/report-group/report-group.component';
+
 
 @NgModule({
   declarations: [
@@ -125,7 +135,17 @@ import { ProfileReportItemComponent } from './administration/profile-reports/pro
     ProfileReportsComponent,
     ProjectReportsComponent,
     ProjectReportItemComponent,
-    ProfileReportItemComponent
+    ProfileReportItemComponent,
+    CreateNewGroupComponent,
+    EditGroupDetailsTabComponent,
+    EditGroupComponent,
+    GroupMembersTabComponent,
+    ViewAllGroupComponent,
+    ViewOwnGroupComponent,
+    GroupErrorPageComponent,
+    GroupDetailsComponent,
+    ReportGroupComponent
+
   ],
   imports: [
     BrowserModule,

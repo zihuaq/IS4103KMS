@@ -403,6 +403,25 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  getGroupsOwned(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /groupsOwned/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getGroupsJoined(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /viewOwnGroups/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+  getGroupsManaged(userId: number): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + /groupsManaged/ + userId)
+      .pipe(catchError(this.handleError));
+  }
+
+
   getRecievedReviews(userId: number): Observable<any>{
     return this.http.get<any>(this.baseUrl + /receivedreviews/ + userId)
     .pipe(catchError(this.handleError));

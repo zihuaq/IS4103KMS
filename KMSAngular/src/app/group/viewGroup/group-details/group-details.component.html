@@ -1,0 +1,245 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+
+
+
+<div class="content-wrapper">
+    <div class="loading" *ngIf="!loaded">
+        <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
+    </div>
+    <div class="content-header" *ngIf="loaded">
+        <div class="content-fluid">
+            <div class="card">
+                <div class="image"  style="height: 350px; overflow: hidden; position: relative;">
+                    <span *ngIf="groupToView.profilePicture">
+                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
+                        <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
+                            <img class="card-img-top" style="display: block;" [src]="groupToView.profilePicture"  alt="Group Profile Picture">
+                            <div class="after">
+                                <i class="fas fa-search-plus" style="font-size: 25px;"></i>
+                            </div>
+                        </div>
+                    </span>
+                    <span *ngIf="!groupToView.profilePicture">
+                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-addPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Add</button>
+                        <div class="image-layer">
+                            <img class="card-img-top" style="margin: -10% 0 0 0; display: block;" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Group Profile Picture">
+                        </div>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{groupToView.name}}</p>
+                    <!-- <span class="badge badge-info" *ngIf="groupToView.status == groupType.ACTIVE" style="margin-top: 10px;">{{groupToView.status}}</span>
+                    <span class="badge badge-warning" *ngIf="groupToView.status == groupType.INACTIVE" style="margin-top: 10px;">{{groupToView.status}}</span>
+                    <span class="badge badge-success" *ngIf="groupToView.status == groupType.COMPLETED" style="margin-top: 10px;">{{groupToView.status}}</span> -->
+                    <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}
+                        <span *ngIf="!isMember">
+                            <app-report-group [loggedInUser]="loggedInUser" [groupToReport]="groupToView"></app-report-group>
+                            <button type="button" class="btn btn-light float-right" (click)="joinGroup()">Join Group</button>
+                        </span>
+                        <span *ngIf="isMember">
+                            <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
+                            <button type="button" [disabled] class="btn btn-light float-right">Joined</button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Group</a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#modal-confirm-leave-group">Leave Group</a>
+                            </div>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card card-primary card-outline card-tabs">
+                <div class="card-header p-0 pt-1 border-bottom-0">
+                    <ul class="nav nav-tabs" id="details-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" role="tab">Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab">Human Resource Postings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                        </li> -->
+                    </ul>
+                </div>
+                <div class="card-body" id="custom-tabs-four-tabContent">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
+                            <p><b>Description:</b> {{groupToView.description}}</p>
+                            <p><b>Country:</b> {{groupToView.country}}</p>
+                            <!-- <p><b>Date created:</b> {{groupToView.dateCreated.toString().slice(0,10) | date}}</p>
+                            <p><b>Monetary Funding Required:</b> ${{groupToView.monetaryFundingRequired}}</p>
+                            <p><b>Monetary Funding Obtained:</b> ${{groupToView.monetaryFundingObtained}}</p> -->
+                            <p><b>SDGs: </b>
+                                <span *ngFor="let tag of groupToView.sdgs" class="badge badge-primary" style="margin-right: 5px;">
+                                    {{tag.name}}
+                                </span>
+                            </p>
+                            <!-- <p>Group status: {{groupToView.status}}</p> -->
+                        </div>
+                        <div class="tab-pane fade" id="members-tab" role="tabpanel">
+                            <div class="row">
+                                <div class="col-6" style="padding-right: 40px">
+                                    <h5>Admins</h5>
+                                    <!--Owner-->
+                                    <ul class="list-group" *ngFor="let member of groupToView.groupAdmins">
+                                        <li class="list-group-item"  *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-dark badge-pill" *ngIf="owner.userId == member.userId">Owner</span>
+                                            <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">Me</span>
+                                        </li>
+                                    </ul>
+                                    <!--If you are an admin but not an owner-->
+                                    <ul class="list-group" *ngFor="let member of groupToView.groupAdmins">
+                                        <li class="list-group-item"  *ngIf="loggedInUser.userId == member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
+                                            <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">Me</span>
+                                        </li>
+                                    </ul>
+                                    <!--Admins except you-->
+                                    <ul class="list-group" *ngFor="let member of groupToView.groupAdmins">
+                                        <li class="list-group-item"  *ngIf="loggedInUser.userId != member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-6" style="padding-right: 40px">
+                                    <h5>Members</h5>
+                                    <!--If you are a member-->
+                                    <ul class="list-group" *ngFor="let member of groupToView.groupMembers">
+                                        <li class="list-group-item"  *ngIf="loggedInUser.userId == member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-primary badge-pill">You</span>
+                                        </li>
+                                    </ul>
+                                    <!--Members except you-->
+                                    <ul class="list-group" *ngFor="let member of groupToView.groupMembers">
+                                        <li class="list-group-item" *ngIf="loggedInUser.userId != member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="tab-pane fade" id="mrp-tab" role="tabpanel">
+                            <app-view-mrp-tab></app-view-mrp-tab>
+                        </div>
+                        <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
+                            <app-view-hrp-tab></app-view-hrp-tab>
+                        </div>
+                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
+                            <p>review-tab works</p>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-addPicture" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Add Profile Picture</h4>
+            <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" [src]="profilePicture" alt="Group Profile Picture">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Group Profile Picture">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
+                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
+                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
+                </div>
+            </div>
+            <div style="padding-top: 3%; display: flex; justify-content: center;">
+                <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" data-dismiss="modal" aria-label="Close">Save Changes</button>
+                <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+<div class="modal fade" id="modal-editPicture" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Edit Profile Picture</h4>
+            <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" [src]="profilePicture" alt="Group Profile Picture">
+            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Group Profile Picture">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
+                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
+                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
+                </div>
+                <div class="input-group-append" style="cursor: pointer" *ngIf="profilePicture">
+                    <span class="input-group-text" (click)="removePicture()">Remove Current</span>
+                </div>
+            </div>
+            <div style="padding-top: 3%; display: flex; justify-content: center;">
+                <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" data-dismiss="modal" aria-label="Close">Save Changes</button>
+                <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+<div class="modal fade" id="modal-profilePicture">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-body" style="margin-top: -1.5%;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          <img style="width: 100%; padding-top: 1%;" [src]="groupToView.profilePicture" alt="Group Profile Picture">
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <div class="modal fade" id="modal-confirm-leave-group">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Leave Group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to leave this group?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="delete-mrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="leaveGroup()">Leave</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

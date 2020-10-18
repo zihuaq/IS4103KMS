@@ -62,7 +62,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     }
     
     public List<GroupEntity> retrieveAllGroup() {
-        Query query = em.createQuery("SELECT g FROM GroupEntity G");
+        Query query = em.createQuery("SELECT g FROM GroupEntity g");
         
         return query.getResultList();
     }

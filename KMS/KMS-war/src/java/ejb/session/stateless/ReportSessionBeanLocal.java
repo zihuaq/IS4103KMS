@@ -34,5 +34,7 @@ public interface ReportSessionBeanLocal {
     public List<ReportEntity> getProjectReports() throws NoResultException;
 
     public void updateReportVerdict(ReportEntity updatedReport) throws NoResultException;
+
+    public ReportEntity reportGroup(ReportEntity report) throws NoResultException;
     
 }

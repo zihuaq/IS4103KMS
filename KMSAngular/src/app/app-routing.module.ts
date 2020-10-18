@@ -26,6 +26,11 @@ import { ErrorPageComponent } from './project/viewProject/error-page/error-page.
 import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
+import { ViewAllGroupComponent } from './group/view-all-group/view-all-group.component';
+import { ViewOwnGroupComponent } from './group/view-own-group/view-own-group.component';
+import { CreateNewGroupComponent } from './group/create-new-group/create-new-group.component';
+import { GroupDetailsComponent } from './group/viewGroup/group-details/group-details.component';
+import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.component';
 
 
 const routes: Routes = [
@@ -124,7 +129,32 @@ const routes: Routes = [
   { path: 'myFulfillments/:projectId',
     canActivate: [RouteGuard],
     component: MyFulfillmentsComponent
-  }
+  },
+  //groups
+  {
+    path: 'viewAllGroups',
+    canActivate: [RouteGuard],
+    component: ViewAllGroupComponent,
+  },
+  {
+    path: 'viewOwnGroups/:userid',
+    canActivate: [RouteGuard],
+    component: ViewOwnGroupComponent,
+  },
+  {
+    path: 'createNewGroup',
+    canActivate: [RouteGuard],
+    component: CreateNewGroupComponent,
+  },
+  { path: 'groupDetails/:groupId',
+    canActivate: [RouteGuard],
+    component: GroupDetailsComponent
+  },
+  { path: 'editGroup/:groupId',
+    canActivate: [RouteGuard],
+    component: EditGroupComponent
+  },
+
 
 ];
 

@@ -18,6 +18,7 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
+import entity.GroupEntity;
 import entity.HumanResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
@@ -1035,6 +1036,69 @@ public class UserResource {
                 p.getPosts().clear();
             }
             return Response.status(Status.OK).entity(projectsManaged).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/groupsOwned/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupsOwned(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getGroupsOwned()");
+        try {
+            List<GroupEntity> groupsOwned = userSessionBeanLocal.getGroupsOwned(userId);
+            for (GroupEntity g : groupsOwned) {
+                g.setGroupOwner(null);
+                g.getGroupMembers().clear();
+                g.getGroupAdmins().clear();
+                //g.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(groupsOwned).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/viewOwnGroups/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupsJoined(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getGroupsJoined()");
+        try {
+            List<GroupEntity> groupsJoined = userSessionBeanLocal.getGroupsJoined(userId);
+            for (GroupEntity g : groupsJoined) {
+                g.setGroupOwner(null);
+                g.getGroupMembers().clear();
+                g.getGroupAdmins().clear();
+                //g.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(groupsJoined).build();
+            
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/groupsManaged/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupsManaged(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getProjectsManaged()");
+        try {
+            List<GroupEntity> groupsManaged = userSessionBeanLocal.getGroupsManaged(userId);
+            for (GroupEntity g : groupsManaged) {
+                g.setGroupOwner(null);
+                g.getGroupMembers().clear();
+                g.getGroupAdmins().clear();
+                //g.getPosts().clear();
+            }
+            return Response.status(Status.OK).entity(groupsManaged).build();
             
         } catch (UserNotFoundException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());

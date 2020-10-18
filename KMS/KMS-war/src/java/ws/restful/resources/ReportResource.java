@@ -85,6 +85,22 @@ public class ReportResource {
         }
     }
     
+    @POST
+    @Path("/reportGroup")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reportGroup(ReportEntity report) {
+        System.out.println("******** ReportResource: reportProject()");
+        try {
+            reportSessionBean.reportGroup(report);
+            
+            return Response.status(Response.Status.OK).entity(report).build();
+            
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
     
     @GET
     @Path("/getProfileReports")
