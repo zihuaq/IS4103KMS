@@ -28,7 +28,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
 
-    @Schedule() //every day at midnight
+    @Schedule //every day at midnight
     public void timer() {
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
         System.out.println("********** EjbTimerSession.timer(): Timeout at " + timeStamp);
