@@ -21,7 +21,7 @@
     "@angular/router": "~10.0.0",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@ionic-native/clipboard": "^5.28.0",
-    "@ionic-native/core": "^5.0.0",
+    "@ionic-native/core": "^5.29.0",
     "@ionic-native/device": "^5.29.0",
     "@ionic-native/google-maps": "^5.5.0",
     "@ionic-native/keyboard": "^5.28.0",
