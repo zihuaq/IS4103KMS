@@ -98,10 +98,10 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
     @JoinTable(name= "groupMembers")
-    @ManyToMany(mappedBy = "groupMembers")
+    @ManyToMany
     private List<GroupEntity> groupsJoined;  
     @JoinTable(name= "groupAdmins")
-    @ManyToMany(mappedBy = "groupAdmins")
+    @ManyToMany
     private List<GroupEntity> groupAdmins;
     @OneToMany
     private List<BadgeEntity> badges;
@@ -571,7 +571,8 @@ public class UserEntity implements Serializable {
         this.donations = donations;
     }
 
-    public void setGroupsManaged(ArrayList<Object> arrayList) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setGroupsManaged(List<GroupEntity> groupsManaged) {
+        this.groupsManaged = groupsManaged;
     }
+
 }

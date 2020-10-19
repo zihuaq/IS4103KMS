@@ -5,13 +5,23 @@
     <ion-item>
       <span *ngIf="isMember">
         <ion-label tappable (click)="viewHrpDetails($event, hrp)">
-          <h2><b>{{hrp.name}}</b></h2>
+          <h2>
+            <b>{{hrp.name}}</b>
+            <span *ngIf="hasApplied(hrp.humanResourcePostingId)">
+              (Joined)
+            </span>
+          </h2>
           <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
         </ion-label>
       </span>
       <span *ngIf="!isMember">
         <ion-label>
-          <h2><b>{{hrp.name}}</b></h2>
+          <h2>
+            <b>{{hrp.name}}</b>
+            <span *ngIf="!hasApplied(hrp.humanResourcePostingId) && hasFilled(hrp.humanResourcePostingId)">
+              (Filled)
+            </span>
+          </h2>
           <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
         </ion-label>
       </span>

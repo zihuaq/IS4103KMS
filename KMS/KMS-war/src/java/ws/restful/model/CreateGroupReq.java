@@ -16,15 +16,13 @@ public class CreateGroupReq {
     
     private GroupEntity newGroup;
     private Long ownerId;
-    private List<Long> tagIds;
 
     public CreateGroupReq() {
     }
 
-    public CreateGroupReq(GroupEntity newGroup, Long ownerId, List<Long> tagIds) {
+    public CreateGroupReq(GroupEntity newGroup, Long ownerId) {
         this.newGroup = newGroup;
         this.ownerId = ownerId;
-        this.tagIds = tagIds;
     }
 
     public GroupEntity getNewGroup() {
@@ -43,13 +41,6 @@ public class CreateGroupReq {
         this.ownerId = ownerId;
     }
 
-    public List<Long> getTagIds() {
-        return tagIds;
-    }
-
-    public void setTagIds(List<Long> tagIds) {
-        this.tagIds = tagIds;
-    }
     
     
 }
