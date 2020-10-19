@@ -80,6 +80,7 @@ public class ActivityResource {
                     user.setProjectsOwned(new ArrayList<>());
                     user.setProjectsJoined(new ArrayList<>());
                     user.setProjectsManaged(new ArrayList<>());
+                    user.setGroupsManaged(new ArrayList<>());
                     user.setPosts(new ArrayList<>());
                     user.setGroupsOwned(new ArrayList<>());
                     user.setGroupsJoined(new ArrayList<>());
@@ -137,6 +138,7 @@ public class ActivityResource {
                     user.setProjectsOwned(new ArrayList<>());
                     user.setProjectsJoined(new ArrayList<>());
                     user.setProjectsManaged(new ArrayList<>());
+                    user.setGroupsManaged(new ArrayList<>());
                     user.setPosts(new ArrayList<>());
                     user.setGroupsOwned(new ArrayList<>());
                     user.setGroupsJoined(new ArrayList<>());
