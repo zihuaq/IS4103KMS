@@ -103,6 +103,28 @@ export class ViewHrpPage implements OnInit {
     return str;
   }
 
-  
+  hasApplied(hrpId: number): boolean {;
+    for (let hrp of this.hrpList) {
+      if (hrp.humanResourcePostingId == hrpId) {
+        for (let user of hrp.appliedUsers) {
+          if (user.userId === this.currentUserId) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  hasFilled(hrpId: number): boolean {
+    for (let hrp of this.hrpList) {
+      if (hrp.humanResourcePostingId == hrpId) {
+        if (hrp.totalSlots === hrp.obtainedSlots) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
 }

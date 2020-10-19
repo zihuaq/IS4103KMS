@@ -129,6 +129,7 @@ public class ProjectResource {
             project.getProjectOwner().setProjectsOwned(new ArrayList<>());
             project.getProjectOwner().setProjectsJoined(new ArrayList<>());
             project.getProjectOwner().setProjectsManaged(new ArrayList<>());
+            project.getProjectOwner().setGroupsManaged((new ArrayList<>()));
             project.getProjectOwner().setPosts(new ArrayList<>());
             project.getProjectOwner().setGroupsOwned(new ArrayList<>());
             project.getProjectOwner().setGroupsJoined(new ArrayList<>());
@@ -154,6 +155,7 @@ public class ProjectResource {
                 member.setProjectsOwned(new ArrayList<>());
                 member.setProjectsJoined(new ArrayList<>());
                 member.setProjectsManaged(new ArrayList<>());
+                member.setGroupsManaged(new ArrayList<>());
                 member.setPosts(new ArrayList<>());
                 member.setGroupsOwned(new ArrayList<>());
                 member.setGroupsJoined(new ArrayList<>());
@@ -180,6 +182,7 @@ public class ProjectResource {
                 admin.setProjectsOwned(new ArrayList<>());
                 admin.setProjectsJoined(new ArrayList<>());
                 admin.setProjectsManaged(new ArrayList<>());
+                admin.setGroupsManaged(new ArrayList<>());
                 admin.setPosts(new ArrayList<>());
                 admin.setGroupsOwned(new ArrayList<>());
                 admin.setGroupsJoined(new ArrayList<>());
