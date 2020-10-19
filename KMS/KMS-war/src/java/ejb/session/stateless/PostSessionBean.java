@@ -31,6 +31,9 @@ import javax.persistence.Query;
 @Stateless
 public class PostSessionBean implements PostSessionBeanLocal {
 
+    @EJB
+    private ProjectSessionBeanLocal projectSessionBean;
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
 
@@ -60,9 +63,21 @@ public class PostSessionBean implements PostSessionBeanLocal {
         UserEntity user = userSessionBeanLocal.getUserById(post.getPostOwner().getUserId());
 
         if (user != null) {
-            em.persist(post);
-            em.flush();
-            user.getPosts().add(post);
+            if (post.getProject() != null) {
+                ProjectEntity project = projectSessionBeanLocal.getProjectById(post.getProject().getProjectId());
+                if (project != null) {
+                    em.persist(post);
+                    em.flush();
+                    user.getPosts().add(post);
+                    project.getPosts().add(post);
+                } else {
+                    throw new NoResultException("Project does not exist.");
+                }
+            } else {
+                em.persist(post);
+                em.flush();
+                user.getPosts().add(post);
+            }
             return post;
         } else {
             throw new UserNotFoundException("User does not exist.");
@@ -87,13 +102,40 @@ public class PostSessionBean implements PostSessionBeanLocal {
         if (user != null) {
             postForUserNewsFeed.addAll(user.getPosts());
             for (int i = 0; i < user.getFollowing().size(); i++) {
-                postForUserNewsFeed.addAll(user.getFollowing().get(i).getPosts());
+                for (int j = 0; j < user.getFollowing().get(i).getPosts().size(); j++) {
+                    if (user.getFollowing().get(i).getPosts().get(j).getProject() == null) {
+                        postForUserNewsFeed.add(user.getFollowing().get(i).getPosts().get(j));
+                    }
+                }
             }
+            for (int i = 0; i < user.getProjectsJoined().size(); i++) {
+                for (int j = 0; j < user.getProjectsJoined().get(i).getPosts().size(); j++) {
+                    if (user.getProjectsJoined().get(i).getPosts().get(j).getPostOwner() != user) {
+                        postForUserNewsFeed.add(user.getProjectsJoined().get(i).getPosts().get(j));
+                    }
+                }
+            }
+
             Collections.sort(postForUserNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
             Collections.reverse(postForUserNewsFeed);
             return postForUserNewsFeed;
         } else {
             throw new UserNotFoundException("User does not exist.");
+        }
+    }
+
+    @Override
+    public List<PostEntity> getPostForProjectNewsfeed(Long projectId) throws NoResultException {
+        ProjectEntity project = projectSessionBean.getProjectById(projectId);
+
+        if (project != null) {
+            List<PostEntity> postForProjectNewsFeed = project.getPosts();
+
+            Collections.sort(postForProjectNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
+            Collections.reverse(postForProjectNewsFeed);
+            return postForProjectNewsFeed;
+        } else {
+            throw new NoResultException("Project does not exist.");
         }
     }
 

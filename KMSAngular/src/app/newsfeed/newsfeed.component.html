@@ -1,5 +1,6 @@
 <div class="container-fluid">
-    <form class="form-horizontal" (ngSubmit)="onCreatePost(createPostForm)" #createPostForm="ngForm">
+    <form class="form-horizontal" (ngSubmit)="onCreatePost(createPostForm)" #createPostForm="ngForm"
+        *ngIf="!newsfeedType || newsfeedType == 'project' && isMember">
         <div class="card card-outline card-info">
             <div class="card-header">
                 <h3 class="card-title">
@@ -37,8 +38,12 @@
                         <img *ngIf="!post.postOwner.profilePicture" class="img-circle"
                             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                             alt="User Image">
-                        <span class="username"><a href="#">{{post.postOwner.firstName}}
-                                {{post.postOwner.lastName}}</a></span>
+                        <span class="username">
+                            <a href="#">{{post.postOwner.firstName}}
+                                {{post.postOwner.lastName}} </a>
+                            <i *ngIf="post.project" class="fas fa-caret-right"></i>
+                            <a *ngIf="post.project"> {{post.project.name}}</a>
+                        </span>
                         <span class="description">{{post.postDate| date:'dd/MM/yyyy'}}</span>
                     </div>
                     <!-- /.user-block -->
@@ -47,7 +52,7 @@
                             *ngIf="loggedInUser.userId == post.postOwner.userId"><i class="fas fa-edit"></i>
                         </button>
                         <button type="button" class="btn btn-tool" data-card-widget="remove"
-                            *ngIf="loggedInUser.userId == post.postOwner.userId" (click)="deletePost(post.postId)"><i
+                            *ngIf="loggedInUser.userId == post.postOwner.userId || isAdminOrOwner" (click)="deletePost(post.postId)"><i
                                 class="fas fa-times"></i>
                         </button>
                     </div>
@@ -57,7 +62,7 @@
                 <div class="card-body">
                     <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo"
                         style="display: block; margin-left: auto;margin-right: auto" width=250 height=250>
-
+                        
                     <p>{{post.text}}</p>
 
                     <div *ngIf="post.originalPost && !post.originalPostDeleted" class="shared-post">
@@ -67,8 +72,12 @@
                             <img *ngIf="!post.originalPost.postOwner.profilePicture" class="img-circle"
                                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                                 alt="User Image">
-                            <span class="username"><a href="#">{{post.originalPost.postOwner.firstName}}
-                                    {{post.originalPost.postOwner.lastName}}</a></span>
+                            <span class="username">
+                                <a href="#">{{post.originalPost.postOwner.firstName}}
+                                    {{post.originalPost.postOwner.lastName}} </a>
+                                <i *ngIf="post.originalPost.project" class="fas fa-caret-right"></i>
+                                <a *ngIf="post.originalPost.project"> {{post.originalPost.project.name}}</a>
+                            </span>
                             <span class="description">{{post.originalPost.postDate}}</span>
                         </div>
                         <div class="card-body">
@@ -116,7 +125,7 @@
                             <span class="username">
                                 {{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}
                                 <button type="button" class="btn btn-tool float-right"
-                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId" data-toggle="modal"
+                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId || isAdminOrOwner" data-toggle="modal"
                                     data-target="#modal-danger" (click)="commentToDeleteId = comment.postCommentId">
                                     <i class="fas fa-times fa-sm"></i>
                                 </button>
@@ -169,6 +178,9 @@
             <!-- /.card -->
         </div>
         <!-- /.col -->
+    </span>
+    <span *ngIf="newsfeedPosts && newsfeedPosts.length == 0">
+        No posts yet.
     </span>
 </div>
 

@@ -12,6 +12,7 @@ import Exception.UserNotFoundException;
 import ejb.session.stateless.PostSessionBeanLocal;
 import entity.PostCommentEntity;
 import entity.PostEntity;
+import entity.ProjectEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +42,9 @@ import javax.ws.rs.core.Response;
  */
 @Path("post")
 public class PostResource {
-
+    
     PostSessionBeanLocal postSessionBean = lookupPostSessionBeanLocal();
-
+    
     @Context
     private UriInfo context;
 
@@ -52,7 +53,7 @@ public class PostResource {
      */
     public PostResource() {
     }
-
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,7 +71,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -86,7 +87,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,7 +103,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/userNewsFeed/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -118,7 +119,23 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
+    @GET
+    @Path("/projectNewsFeed/{projectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPostForProjectNewsfeed(@PathParam("projectId") Long projectId) {
+        try {
+            List<PostEntity> posts = postSessionBean.getPostForProjectNewsfeed(projectId);
+            posts = getPostsResponse(posts);
+            return Response.status(200).entity(posts).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
     @PUT
     @Path("/likePost/{userId}/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,7 +150,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/removeLikeForPost/{userId}/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -148,7 +165,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/addComment/{postId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -169,7 +186,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/likeComment/{userId}/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -184,7 +201,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/removeLikeForComment/{userId}/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -199,7 +216,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @DELETE
     @Path("/comment/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -214,7 +231,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/updateComment")
     @Produces(MediaType.APPLICATION_JSON)
@@ -229,7 +246,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/postComments/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -249,7 +266,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/sharePost/{postToShareId}/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -265,7 +282,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @DELETE
     @Path("/post/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -280,7 +297,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/comment/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -296,7 +313,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     private List<PostEntity> getPostsResponse(List<PostEntity> posts) {
         List<PostEntity> result = new ArrayList<>();
         for (int i = 0; i < posts.size(); i++) {
@@ -305,7 +322,7 @@ public class PostResource {
         }
         return result;
     }
-
+    
     private PostEntity processPost(PostEntity postToProcess) {
         PostEntity post = new PostEntity();
         post.setPostId(postToProcess.getPostId());
@@ -351,12 +368,24 @@ public class PostResource {
             originalPost.setText(postToProcess.getOriginalPost().getText());
             originalPost.setPostId(postToProcess.getOriginalPost().getPostId());
             originalPost.setPostDate(postToProcess.getOriginalPost().getPostDate());
+            if (postToProcess.getOriginalPost().getProject() != null) {
+                ProjectEntity project = new ProjectEntity();
+                project.setProjectId(postToProcess.getOriginalPost().getProject().getProjectId());
+                project.setName(postToProcess.getOriginalPost().getProject().getName());
+                originalPost.setProject(project);
+            }
             post.setOriginalPost(originalPost);
         }
         post.setOriginalPostDeleted(postToProcess.isOriginalPostDeleted());
+        if (postToProcess.getProject() != null) {
+            ProjectEntity project = new ProjectEntity();
+            project.setProjectId(postToProcess.getProject().getProjectId());
+            project.setName(postToProcess.getProject().getName());
+            post.setProject(project);
+        }
         return post;
     }
-
+    
     private PostCommentEntity processComment(PostCommentEntity commentToProcess) {
         PostCommentEntity postComment = new PostCommentEntity();
         postComment.setPostCommentId(commentToProcess.getPostCommentId());
@@ -377,7 +406,7 @@ public class PostResource {
         postComment.setLikers(commentLikers);
         return postComment;
     }
-
+    
     private PostSessionBeanLocal lookupPostSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();

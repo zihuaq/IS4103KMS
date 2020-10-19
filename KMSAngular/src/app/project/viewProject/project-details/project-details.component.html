@@ -73,6 +73,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-task" data-toggle="pill" href="#task-tab">Tasks</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-projectfeed" data-toggle="pill" href="#projectfeed-tab">Project Feed</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body" id="custom-tabs-four-tabContent">
@@ -145,6 +148,9 @@
                         </div>
                         <div class="tab-pane fade" id="task-tab" role="tabpanel">
                             <app-task-tab></app-task-tab>
+                        </div>
+                        <div class="tab-pane fade" id="projectfeed-tab" role="tabpanel">
+                            <app-newsfeed newsfeedType="project" id="{{projectId}}"></app-newsfeed>
                         </div>
                     </div>                    
                 </div>

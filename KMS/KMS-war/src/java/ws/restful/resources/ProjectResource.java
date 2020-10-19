@@ -144,6 +144,7 @@ public class ProjectResource {
             project.getProjectOwner().getFulfillments().clear();
             project.getProjectOwner().getActivityJoined().clear();
             project.getProjectOwner().getDonations().clear();
+            project.getPosts().clear();
             for (UserEntity member : project.getProjectMembers()) {
                 member.getGroupsOwned().clear();
                 member.getReviewsGiven().clear();
