@@ -47,12 +47,13 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        LocalDate activityDate = LocalDate.parse(sdf.format(newActivity.getStartDate()));
+        LocalDate startDate = LocalDate.parse(sdf.format(newActivity.getStartDate()));
         LocalDate today = LocalDate.now();
-        if (activityDate.isEqual(today)) {
-            newActivity.setActivityStatus(ActivityStatusEnum.ONGOING);
-        } else {
+        
+        if (startDate.isAfter(today)) {
             newActivity.setActivityStatus(ActivityStatusEnum.PLANNED);
+        } else {
+            newActivity.setActivityStatus(ActivityStatusEnum.ONGOING);
         }
         
         em.persist(newActivity);
@@ -108,10 +109,10 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         LocalDate startDate = LocalDate.parse(sdf.format(activityToUpdate.getStartDate()));
         LocalDate endDate = LocalDate.parse(sdf.format(activityToUpdate.getStartDate()));
 
-        if (startDate.isEqual(today)) {
+        if (startDate.isAfter(today)) {
+            activity.setActivityStatus(ActivityStatusEnum.PLANNED);
+        } else {
             activity.setActivityStatus(ActivityStatusEnum.ONGOING);
-        } else if (endDate.isBefore(today)) {
-            activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
         }
     }
     
@@ -201,10 +202,10 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
                 LocalDate startDate = LocalDate.parse(sdf.format(activity.getStartDate()));
                 LocalDate endDate = LocalDate.parse(sdf.format(activity.getStartDate()));
 
-                if (startDate.isEqual(today)) {
-                    activity.setActivityStatus(ActivityStatusEnum.ONGOING);
-                } else if (endDate.isBefore(today)) {
+                if (endDate.isBefore(today)) {
                     activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+                } else if (startDate.isEqual(today) || startDate.isBefore(today)) {
+                    activity.setActivityStatus(ActivityStatusEnum.ONGOING);
                 }
 
                 em.merge(activity);
