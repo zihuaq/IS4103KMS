@@ -12,6 +12,9 @@
             </span>
           </h2>
           <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
+          <span *ngFor="let tag of hrp.tags">
+            <ion-badge color="primary">{{tag.name}}</ion-badge>
+          </span>
         </ion-label>
       </span>
       <span *ngIf="!isMember">
@@ -23,6 +26,9 @@
             </span>
           </h2>
           <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
+          <span *ngFor="let tag of hrp.tags">
+            <ion-badge color="primary">{{tag.name}}</ion-badge>
+          </span>
         </ion-label>
       </span>
     </ion-item>

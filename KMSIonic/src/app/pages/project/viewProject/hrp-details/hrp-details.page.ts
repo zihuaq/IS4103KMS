@@ -43,6 +43,7 @@ export class HrpDetailsPage implements OnInit {
       this.tags = [];
       this.hrp = new HumanResourcePosting();
       this.hrp.appliedUsers = [];
+      this.hrp.tags = [];
      }
 
   ngOnInit() {
