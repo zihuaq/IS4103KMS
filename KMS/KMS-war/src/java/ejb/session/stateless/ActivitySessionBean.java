@@ -110,7 +110,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
         if (startDate.isEqual(today)) {
             activity.setActivityStatus(ActivityStatusEnum.ONGOING);
-        } else if (endDate.isAfter(today)) {
+        } else if (endDate.isBefore(today)) {
             activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
         }
     }
@@ -203,7 +203,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
                 if (startDate.isEqual(today)) {
                     activity.setActivityStatus(ActivityStatusEnum.ONGOING);
-                } else if (endDate.isAfter(today)) {
+                } else if (endDate.isBefore(today)) {
                     activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
                 }
 
