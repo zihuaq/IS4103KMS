@@ -14,6 +14,7 @@ import ejb.session.stateless.GroupSessionBeanLocal;
 import entity.GroupEntity;
 //import entity.ReviewEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 //import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -116,80 +117,85 @@ public class GroupResource {
         System.out.println("******** GroupResource: getGroup()");
         try {
             GroupEntity group = groupSessionBeanLocal.getGroupById(groupId);
-            group.getGroupOwner().getGroupsOwned().clear();
-            group.getGroupOwner().getReviewsGiven().clear();
-            group.getGroupOwner().getReviewsReceived().clear();
-            group.getGroupOwner().getGroupsOwned().clear();
-            group.getGroupOwner().getGroupsJoined().clear();
-            group.getGroupOwner().getGroupsManaged().clear();
-            group.getGroupOwner().getGroupsJoined().clear();
-            group.getGroupOwner().getPosts().clear();
-            group.getGroupOwner().getBadges().clear();
-            group.getGroupOwner().getMras().clear();
-            group.getGroupOwner().getSkills().clear();
-            group.getGroupOwner().getFollowers().clear();
-            group.getGroupOwner().getFollowing().clear();
-            group.getGroupOwner().getSdgs().clear();
-            group.getGroupOwner().getFollowRequestMade().clear();
-            group.getGroupOwner().getFollowRequestReceived().clear();
-            group.getGroupOwner().getHrpApplied().clear();
-            group.getGroupOwner().getFulfillments().clear();
+            group.getGroupOwner().setReviewsGiven(new ArrayList<>());
+            group.getGroupOwner().setReviewsReceived(new ArrayList<>());
+            group.getGroupOwner().setProjectsOwned(new ArrayList<>());
+            group.getGroupOwner().setProjectsJoined(new ArrayList<>());
+            group.getGroupOwner().setProjectsManaged(new ArrayList<>());
+            group.getGroupOwner().setGroupsManaged(new ArrayList<>());
+            group.getGroupOwner().setPosts(new ArrayList<>());
+            group.getGroupOwner().setGroupsOwned(new ArrayList<>());
+            group.getGroupOwner().setGroupsJoined(new ArrayList<>());
+            group.getGroupOwner().setGroupAdmins(new ArrayList<>());
+            group.getGroupOwner().setBadges(new ArrayList<>());
+            group.getGroupOwner().setMras(new ArrayList<>());
+            group.getGroupOwner().setSkills(new ArrayList<>());
+            group.getGroupOwner().setFollowing(new ArrayList<>());
+            group.getGroupOwner().setFollowers(new ArrayList<>());
+            group.getGroupOwner().setSdgs(new ArrayList<>());
+            group.getGroupOwner().setFollowRequestMade(new ArrayList<>());
+            group.getGroupOwner().setFollowRequestReceived(new ArrayList<>());
+            group.getGroupOwner().setAffiliatedUsers(new ArrayList<>());
+            group.getGroupOwner().setAffiliationRequestMade(new ArrayList<>());
+            group.getGroupOwner().setAffiliationRequestReceived(new ArrayList<>());
+            group.getGroupOwner().setHrpApplied(new ArrayList<>());
+            group.getGroupOwner().setFulfillments(new ArrayList<>());
+            group.getGroupOwner().setActivityJoined(new ArrayList<>());  
+            group.getGroupOwner().setDonations(new ArrayList<>());
             for (UserEntity member : group.getGroupMembers()) {
-                member.getGroupsOwned().clear();
-                member.getReviewsGiven().clear();
-                member.getReviewsReceived().clear();
-                member.getGroupsOwned().clear();
-                member.getGroupsJoined().clear();
-                member.getGroupsManaged().clear();
-                member.getGroupsJoined().clear();
-                member.getPosts().clear();
-                member.getBadges().clear();
-                member.getMras().clear();
-                member.getSkills().clear();
-                member.getFollowers().clear();
-                member.getFollowing().clear();
-                member.getSdgs().clear();
-                member.getFollowRequestMade().clear();
-                member.getFollowRequestReceived().clear();
-                member.getHrpApplied().clear();
-                member.getFulfillments().clear();
+                member.setReviewsGiven(new ArrayList<>());
+                member.setReviewsReceived(new ArrayList<>());
+                member.setProjectsOwned(new ArrayList<>());
+                member.setProjectsJoined(new ArrayList<>());
+                member.setProjectsManaged(new ArrayList<>());
+                member.setGroupsManaged(new ArrayList<>());
+                member.setPosts(new ArrayList<>());
+                member.setGroupsOwned(new ArrayList<>());
+                member.setGroupsJoined(new ArrayList<>());
+                member.setGroupAdmins(new ArrayList<>());
+                member.setBadges(new ArrayList<>());
+                member.setMras(new ArrayList<>());
+                member.setSkills(new ArrayList<>());
+                member.setFollowing(new ArrayList<>());
+                member.setFollowers(new ArrayList<>());
+                member.setSdgs(new ArrayList<>());
+                member.setFollowRequestMade(new ArrayList<>());
+                member.setFollowRequestReceived(new ArrayList<>());
+                member.setAffiliatedUsers(new ArrayList<>());
+                member.setAffiliationRequestMade(new ArrayList<>());
+                member.setAffiliationRequestReceived(new ArrayList<>());
+                member.setHrpApplied(new ArrayList<>());
+                member.setFulfillments(new ArrayList<>());
+                member.setActivityJoined(new ArrayList<>());  
+                member.setDonations(new ArrayList<>());
             }
             for (UserEntity admin : group.getGroupAdmins()) {
-                admin.getGroupsOwned().clear();
-                admin.getReviewsGiven().clear();
-                admin.getReviewsReceived().clear();
-                admin.getGroupsOwned().clear();
-                admin.getGroupsJoined().clear();
-                admin.getGroupsManaged().clear();
-                admin.getGroupsJoined().clear();
-                admin.getPosts().clear();
-                admin.getBadges().clear();
-                admin.getMras().clear();
-                admin.getSkills().clear();
-                admin.getFollowers().clear();
-                admin.getFollowing().clear();
-                admin.getSdgs().clear();
-                admin.getFollowRequestMade().clear();
-                admin.getFollowRequestReceived().clear();
-                admin.getHrpApplied().clear();
-                admin.getFulfillments().clear();
+                admin.setReviewsGiven(new ArrayList<>());
+                admin.setReviewsReceived(new ArrayList<>());
+                admin.setProjectsOwned(new ArrayList<>());
+                admin.setProjectsJoined(new ArrayList<>());
+                admin.setProjectsManaged(new ArrayList<>());
+                admin.setGroupsManaged(new ArrayList<>());
+                admin.setPosts(new ArrayList<>());
+                admin.setGroupsOwned(new ArrayList<>());
+                admin.setGroupsJoined(new ArrayList<>());
+                admin.setGroupAdmins(new ArrayList<>());
+                admin.setBadges(new ArrayList<>());
+                admin.setMras(new ArrayList<>());
+                admin.setSkills(new ArrayList<>());
+                admin.setFollowing(new ArrayList<>());
+                admin.setFollowers(new ArrayList<>());
+                admin.setSdgs(new ArrayList<>());
+                admin.setFollowRequestMade(new ArrayList<>());
+                admin.setFollowRequestReceived(new ArrayList<>());
+                admin.setAffiliatedUsers(new ArrayList<>());
+                admin.setAffiliationRequestMade(new ArrayList<>());
+                admin.setAffiliationRequestReceived(new ArrayList<>());
+                admin.setHrpApplied(new ArrayList<>());
+                admin.setFulfillments(new ArrayList<>());
+                admin.setActivityJoined(new ArrayList<>());  
+                admin.setDonations(new ArrayList<>());
             }
-//            for (ActivityEntity ae : group.getActivities()) {
-//                ae.setGroup(null);
-//                ae.getHumanResourcePostings().clear();
-//                ae.getMaterialResourcePostings().clear();
-//            }
-//            for (HumanResourcePostingEntity hrp : group.getHumanResourcePostings()) {
-//                hrp.setActivity(null);
-//                hrp.setGroup(null);
-//                hrp.getAppliedUsers().clear();
-//            }
-//            for (MaterialResourcePostingEntity mrp : group.getMaterialResourcePostings()) {
-//                mrp.setActivity(null);
-//                mrp.setGroup(null);
-//                mrp.getFulfillments().clear();
-//            }
-//
             return Response.status(Status.OK).entity(group).build();
         } catch (NoResultException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
@@ -235,22 +241,22 @@ public class GroupResource {
         }
     }
     
-    @Path("updateStatus/{groupId}")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateStatus(@PathParam("groupId") Long groupId, @QueryParam("status") String status) {
-        System.out.println("******** GroupResource: updateStatus()");
-        try {
-            groupSessionBeanLocal.updateStatus(groupId, status);
-
-            return Response.status(Status.OK).build();
-        
-        } catch (Exception ex) {
-            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-            
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
-        }
-    }
+//    @Path("updateStatus/{groupId}")
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response updateStatus(@PathParam("groupId") Long groupId, @QueryParam("status") String status) {
+//        System.out.println("******** GroupResource: updateStatus()");
+//        try {
+//            groupSessionBeanLocal.updateStatus(groupId, status);
+//
+//            return Response.status(Status.OK).build();
+//        
+//        } catch (Exception ex) {
+//            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+//            
+//            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+//        }
+//    }
     
     @Path("addAdmin/{groupId}/{userId}")
     @POST

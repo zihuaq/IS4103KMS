@@ -11,6 +11,7 @@ import entity.HumanResourcePostingEntity;
 import entity.UserEntity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -97,26 +98,31 @@ public class HrpResource {
             
             if (hrp.getAppliedUsers().size() > 0) {
                 for (UserEntity appliedUser : hrp.getAppliedUsers()) {
-                    appliedUser.getGroupsOwned().clear();
-                    appliedUser.getReviewsGiven().clear();
-                    appliedUser.getReviewsReceived().clear();
-                    appliedUser.getProjectsOwned().clear();
-                    appliedUser.getProjectsJoined().clear();
-                    appliedUser.getProjectsManaged().clear();
-                    appliedUser.getGroupsJoined().clear();
-                    appliedUser.getPosts().clear();
-                    appliedUser.getBadges().clear();
-                    appliedUser.getMras().clear();
-                    appliedUser.getSkills().clear();
-                    appliedUser.getFollowers().clear();
-                    appliedUser.getFollowing().clear();
-                    appliedUser.getSdgs().clear();
-                    appliedUser.getFollowRequestMade().clear();
-                    appliedUser.getFollowRequestReceived().clear();
-                    appliedUser.getHrpApplied().clear();
-                    appliedUser.getFulfillments().clear();
-                    appliedUser.getActivityJoined().clear();
-                    appliedUser.getDonations().clear();
+                    appliedUser.setReviewsGiven(new ArrayList<>());
+                    appliedUser.setReviewsReceived(new ArrayList<>());
+                    appliedUser.setProjectsOwned(new ArrayList<>());
+                    appliedUser.setProjectsJoined(new ArrayList<>());
+                    appliedUser.setProjectsManaged(new ArrayList<>());
+                    appliedUser.setGroupsManaged(new ArrayList<>());
+                    appliedUser.setPosts(new ArrayList<>());
+                    appliedUser.setGroupsOwned(new ArrayList<>());
+                    appliedUser.setGroupsJoined(new ArrayList<>());
+                    appliedUser.setGroupAdmins(new ArrayList<>());
+                    appliedUser.setBadges(new ArrayList<>());
+                    appliedUser.setMras(new ArrayList<>());
+                    appliedUser.setSkills(new ArrayList<>());
+                    appliedUser.setFollowing(new ArrayList<>());
+                    appliedUser.setFollowers(new ArrayList<>());
+                    appliedUser.setSdgs(new ArrayList<>());
+                    appliedUser.setFollowRequestMade(new ArrayList<>());
+                    appliedUser.setFollowRequestReceived(new ArrayList<>());
+                    appliedUser.setAffiliatedUsers(new ArrayList<>());
+                    appliedUser.setAffiliationRequestMade(new ArrayList<>());
+                    appliedUser.setAffiliationRequestReceived(new ArrayList<>());
+                    appliedUser.setHrpApplied(new ArrayList<>());
+                    appliedUser.setFulfillments(new ArrayList<>());
+                    appliedUser.setActivityJoined(new ArrayList<>());  
+                    appliedUser.setDonations(new ArrayList<>());
                 }
             }
             
@@ -261,25 +267,31 @@ public class HrpResource {
             hrp.setActivity(null);
             if (hrp.getAppliedUsers().size() > 0) {
                 for (UserEntity appliedUser : hrp.getAppliedUsers()) {
-                    appliedUser.getGroupsOwned().clear();
-                    appliedUser.getReviewsGiven().clear();
-                    appliedUser.getReviewsReceived().clear();
-                    appliedUser.getProjectsOwned().clear();
-                    appliedUser.getProjectsJoined().clear();
-                    appliedUser.getProjectsManaged().clear();
-                    appliedUser.getGroupsJoined().clear();
-                    appliedUser.getPosts().clear();
-                    appliedUser.getBadges().clear();
-                    appliedUser.getMras().clear();
-                    appliedUser.getSkills().clear();
-                    appliedUser.getFollowers().clear();
-                    appliedUser.getFollowing().clear();
-                    appliedUser.getSdgs().clear();
-                    appliedUser.getFollowRequestMade().clear();
-                    appliedUser.getFollowRequestReceived().clear();
-                    appliedUser.getHrpApplied().clear();
-                    appliedUser.getFulfillments().clear();
-                    appliedUser.getDonations().clear();
+                    appliedUser.setReviewsGiven(new ArrayList<>());
+                    appliedUser.setReviewsReceived(new ArrayList<>());
+                    appliedUser.setProjectsOwned(new ArrayList<>());
+                    appliedUser.setProjectsJoined(new ArrayList<>());
+                    appliedUser.setProjectsManaged(new ArrayList<>());
+                    appliedUser.setGroupsManaged(new ArrayList<>());
+                    appliedUser.setPosts(new ArrayList<>());
+                    appliedUser.setGroupsOwned(new ArrayList<>());
+                    appliedUser.setGroupsJoined(new ArrayList<>());
+                    appliedUser.setGroupAdmins(new ArrayList<>());
+                    appliedUser.setBadges(new ArrayList<>());
+                    appliedUser.setMras(new ArrayList<>());
+                    appliedUser.setSkills(new ArrayList<>());
+                    appliedUser.setFollowing(new ArrayList<>());
+                    appliedUser.setFollowers(new ArrayList<>());
+                    appliedUser.setSdgs(new ArrayList<>());
+                    appliedUser.setFollowRequestMade(new ArrayList<>());
+                    appliedUser.setFollowRequestReceived(new ArrayList<>());
+                    appliedUser.setAffiliatedUsers(new ArrayList<>());
+                    appliedUser.setAffiliationRequestMade(new ArrayList<>());
+                    appliedUser.setAffiliationRequestReceived(new ArrayList<>());
+                    appliedUser.setHrpApplied(new ArrayList<>());
+                    appliedUser.setFulfillments(new ArrayList<>());
+                    appliedUser.setActivityJoined(new ArrayList<>());  
+                    appliedUser.setDonations(new ArrayList<>());
                 }
             }
         }

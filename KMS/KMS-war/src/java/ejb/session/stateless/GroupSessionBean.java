@@ -47,7 +47,8 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     @EJB(name = "TagSessionBeanLocal")
     private TagSessionBeanLocal tagSessionBeanLocal;
 
-    public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException {
+    @Override
+    public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newGroup);
@@ -59,11 +60,6 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             user.getGroupsManaged().add(newGroup);
             newGroup.getGroupMembers().add(user);
             user.getGroupsJoined().add(newGroup);
-            
-            for (Long tagId : tagIds) {
-                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
-                newGroup.getSdgs().add(tag);
-            }
             
             return newGroup.getGroupId();
         } catch (NoResultException ex) {
@@ -173,25 +169,24 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         group.setName(groupToUpdate.getName());
         group.setDescription(groupToUpdate.getDescription());
         group.setCountry(groupToUpdate.getCountry());
-        for (int i = 0; i < groupToUpdate.getSdgs().size(); i++) {
-            TagEntity tag = em.find(TagEntity.class, groupToUpdate.getSdgs().get(i).getTagId());
-           if (tag == null) {
-               throw new NoResultException("SDG tag not found.");
-           }
-        }
-        group.setSdgs(groupToUpdate.getSdgs());
-        group.setStatus(groupToUpdate.getStatus());
+//        for (int i = 0; i < groupToUpdate.getSdgs().size(); i++) {
+//            TagEntity tag = em.find(TagEntity.class, groupToUpdate.getSdgs().get(i).getTagId());
+//           if (tag == null) {
+//               throw new NoResultException("SDG tag not found.");
+//           }
+//        }
+//        group.setSdgs(groupToUpdate.getSdgs());
         group.setProfilePicture(groupToUpdate.getProfilePicture());
         
     }
     
-    //Change group status
-    @Override
-    public void updateStatus(Long groupId, String status) throws NoResultException {
-        GroupEntity group = getGroupById(groupId);
-
-        group.setStatus(GroupStatusEnum.valueOf(status));
-    }
+//    //Change group status
+//    @Override
+//    public void updateStatus(Long groupId, String status) throws NoResultException {
+//        GroupEntity group = getGroupById(groupId);
+//
+//        group.setStatus(GroupStatusEnum.valueOf(status));
+//    }
     
     //Promote Member to Admin
     @Override
@@ -285,10 +280,5 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //    }
 }
-
-    @Override
-    public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
     

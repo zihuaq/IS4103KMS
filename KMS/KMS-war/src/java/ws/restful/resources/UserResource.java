@@ -340,10 +340,11 @@ public class UserResource {
             user.getProjectsOwned().clear();
             user.getProjectsJoined().clear();
             user.getProjectsManaged().clear();
+            user.getGroupsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
-            user.getGroupsOwned().clear();
             user.getPosts().clear();
+            user.getGroupsOwned().clear();
             user.getBadges().clear();
             user.getMras().clear();
             user.getSkills().clear();
@@ -352,12 +353,14 @@ public class UserResource {
             user.getSdgs().clear();
             user.getFollowRequestMade().clear();
             user.getFollowRequestReceived().clear();
-            user.setPassword("");
-            user.getAffiliatedUsers().clear();
             user.getAffiliationRequestMade().clear();
             user.getAffiliationRequestReceived().clear();
+            user.getAffiliatedUsers().clear();
+            user.getHrpApplied().clear();
             user.getFulfillments().clear();
-            user.getPosts().clear();
+            user.setPassword("");
+            user.getActivityJoined().clear();
+            user.getDonations().clear();
             for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
                 hrp.setActivity(null);
                 hrp.getAppliedUsers().clear();
@@ -446,6 +449,7 @@ public class UserResource {
             user.getProjectsOwned().clear();
             user.getProjectsJoined().clear();
             user.getProjectsManaged().clear();
+            user.getGroupsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
             user.getPosts().clear();

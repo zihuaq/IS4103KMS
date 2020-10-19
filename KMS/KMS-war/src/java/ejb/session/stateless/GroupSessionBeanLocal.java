@@ -36,7 +36,7 @@ public interface GroupSessionBeanLocal {
 
     public void updateGroup(GroupEntity groupToUpdate) throws NoResultException;
 
-    public void updateStatus(Long groupId, String status) throws NoResultException;
+//    public void updateStatus(Long groupId, String status) throws NoResultException;
 
     public void addAdmin(Long groupId, Long userId) throws NoResultException;
 
