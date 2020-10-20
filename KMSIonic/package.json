@@ -88,7 +88,10 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-googlemaps": {},
+      "cordova-plugin-googlemaps": {
+        "API_KEY_FOR_ANDROID": "AIzaSyBFnfCswcZchsZDcZiELcQNcwjnJk4g3Lw",
+        "API_KEY_FOR_IOS": "AIzaSyBFnfCswcZchsZDcZiELcQNcwjnJk4g3Lw"
+      },
       "cordova-plugin-camera": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },

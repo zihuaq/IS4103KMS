@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, ApplicationRef, ElementRef, ViewChild} from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { ModalController, Platform, ToastController } from '@ionic/angular';
+import { Location } from "@angular/common";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NgForm } from "@angular/forms";
 import { Subscription } from "rxjs";
 import {
@@ -12,7 +14,7 @@ import {
   ILatLng,
   LatLng,
   Marker
-} from "@ionic-native/google-maps/ngx"
+} from "@ionic-native/google-maps"
 
 import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
 import { HrpService } from 'src/app/services/hrp.service';
@@ -26,7 +28,7 @@ import { TagService } from 'src/app/services/tag.service';
 })
 export class CreateHrpPage implements OnInit {
 
-  @Input() projectId: number;
+  projectId: number;
   newHrp: HumanResourcePosting;
   tags: Tag[];
   filteredTags: Tag[];
@@ -41,6 +43,10 @@ export class CreateHrpPage implements OnInit {
   @ViewChild("map", { read: ElementRef, static: false }) mapRef: ElementRef;
   
   constructor(public modalCtrl: ModalController,
+    private toastController: ToastController,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private location: Location,
     private hrpService: HrpService,
     private tagService: TagService,
     private platform: Platform,
@@ -50,30 +56,31 @@ export class CreateHrpPage implements OnInit {
     this.tags = [];
     this.filteredTags = [];
     this.chosenTags = [];
-  }
-
-  ngOnInit() {
-  }
-
-  ionViewWillEnter() {
-    this.platform.ready().then(() => this.loadMap());
-    this.tagService.getAllSkillTags().subscribe(
-      response => {
-        this.tags = response;
-        this.app.tick();
-      },
-      // () => {
-      //   this.loadMap();
-      // }
-    );
     
   }
 
-  ionViewDidLeave() {
-    this.mapSubscription.unsubscribe()
+  ngOnInit() {
+    console.log("ngOnInit: create hrp")
+    this.platform.ready().then(() => this.loadMap())
   }
 
+  ionViewWillEnter() {
+    console.log("ionViewWillEnter: create hrp")
+    this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+    this.tagService.getAllSkillTags().subscribe(
+      (response) => {
+        this.tags = response; 
+        console.log(this.tags)
+      },
+    );
+  }
+
+  // ionViewDidLeave() {
+  //   this.mapSubscription.unsubscribe()
+  // }
+
   loadMap() {
+    console.log("load map")
     this.map = GoogleMaps.create("map_canvas")
 
     if (!this.newHrp.latitude) {
@@ -140,14 +147,33 @@ export class CreateHrpPage implements OnInit {
     );
   }
 
-  dismissModal() {
-    this.modalCtrl.dismiss({
-      'dismissed': true
-    });
+  dismiss() {
+    this.location.back();
   }
 
-  createHrp(hrpForm: NgForm) {
+  async createHrp(hrpForm: NgForm) {
+    let tagIds: number[] = [];
+    if (hrpForm.valid) {
+      if (new Date(this.startDate).toJSON().slice(0,10) > new Date(this.endDate).toJSON().slice(0,10)) {
+        const toast = await this.toastController.create({
+          message: "End Date should not come before the Start Date.",
+          duration: 2000
+        })
+        toast.present();
+      } else {
+        this.newHrp.startDate = new Date(this.startDate);
+        this.newHrp.endDate = new Date(this.endDate);
+        for (let tag of this.chosenTags) {
+          tagIds.push(tag.tagId);
+        }
+        this.hrpService.createNewHrp(this.newHrp, this.projectId, tagIds).subscribe(
+          response => {
+            this.router.navigate(["tab-panel/" + this.projectId]);
+          }
+        )
+      }
 
+    }
   }
 
   filterList(evt) {

@@ -47,6 +47,8 @@ export class EditHrpPage implements OnInit {
   }
 
   refreshHrp() {
+    this.hrpList = [];
+    this.tags = [];
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
 
     this.tagService.getAllSkillTags().subscribe(
@@ -118,22 +120,12 @@ export class EditHrpPage implements OnInit {
     );
   }
 
-  async createHrp() {
-    const modal = await this.modalController.create({
-      component: CreateHrpPage,
-      componentProps: {projectId: this.projectId}
-    });
-    return await modal.present();
-
-    // this.router.navigate(["create-hrp"]);
+  createHrp() {
+    this.router.navigate(["create-hrp/" + this.projectId]);
   }
 
-  async editHrp(hrpId: number) {
-    const modal = await this.modalController.create({
-      component: EditHrpDetailsPage,
-      componentProps: {hrpId: hrpId, projectId: this.projectId}
-    });
-    return await modal.present();
+  editHrp(hrpId: number) {
+    this.router.navigate(["edit-hrp-details/" + hrpId]);
   }
 
 }
