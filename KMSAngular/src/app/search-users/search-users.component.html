@@ -54,11 +54,11 @@
                                             <p class="text-muted text-sm">
                                                 <span *ngIf="user.sdgs.length == 0"> User has no SDG indicated</span>
                                                 <span class="d-flex flex-wrap" *ngIf="user.sdgs.length > 0">
-                                                    <div *ngFor="let sdg of user.sdgs" class="col-3">
+                                                    <p *ngFor="let sdg of user.sdgs" class="SDGs">
                                                         <small class="badge badge-dark">
                                                             {{sdg.name}}
                                                         </small>
-                                                    </div>
+                                                    </p>
                                                 </span>
                                             </p>
                                         </div>
@@ -107,16 +107,21 @@
             <h4 class="refineSubtitle"> User Type </h4>
             <div class="radio" *ngFor="let userType of userTypes">
                 <label style="font-size: .75rem;">
-                    <input type="radio" name="userType" [value]="userType.id" (change)="onSelectedUserTypeChange($event)" />
+                    <input *ngIf="userType.value == 'All'" type="radio" name="userType" [value]="userType.id"
+                        (change)="onSelectedUserTypeChange($event)" checked />
+                    <input *ngIf="userType.value != 'All'" type="radio" name="userType" [value]="userType.id"
+                        (change)="onSelectedUserTypeChange($event)"/>
                     {{userType.value}}
                 </label>
             </div>
+            <br />
             <h4 class="refineSubtitle"> SDG </h4>
             <div class="select2-dark">
                 <select class="select2" id="searchsdgselect2" multiple="multiple" data-placeholder="Add SDG filter"
                     data-dropdown-css-class="select2-dark" style="width: 100%">
                 </select>
             </div>
+            <br />
             <h4 class="refineSubtitle"> Skills </h4>
             <div class="select2-dark">
                 <select class="select2" id="searchskillsselect2" multiple="multiple"

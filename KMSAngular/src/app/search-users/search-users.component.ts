@@ -33,10 +33,10 @@ export class SearchUsersComponent implements OnInit {
   selectedsdgTags: Tag[] = [];
   selectedUserType: UserType = null;
   userTypes: any = [
+    { id: "All", value: "All" },
     { id: UserType.ADMIN, value: "Admin" },
     { id: UserType.INDIVIDUAL, value: "Individual" },
-    { id: UserType.INSTITUTE, value: "Institute" },
-    { id: "All", value: "All" }
+    { id: UserType.INSTITUTE, value: "Institute" }
   ]
 
   constructor(

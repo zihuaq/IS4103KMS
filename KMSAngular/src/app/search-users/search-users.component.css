@@ -45,3 +45,9 @@
     padding-bottom: 10px;
     padding-top: 0px;
 }
+
+.SDGs{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
