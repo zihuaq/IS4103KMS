@@ -235,11 +235,11 @@
                                     <div *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" class="dropdown-divider"></div>
                                     <a class="dropdown-item" data-toggle="modal" data-target="#modal-update" (click)="clickUpdate(fulfillment)">Update Quantity</a>
                                     <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-reject-fulfillment" (click)="clickReject(fulfillment)">Reject</a>
-                                  </div>
+                                </div>
                             </div>
                             <div class="card-body" style="display: block;">
                                 <b>{{fulfillment.mra.name}}</b>
-                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> View location at {{fulfillment.mra.latitude | number:'1.1-6'}}, {{fulfillment.mra.longitude | number:'1.1-6'}}</a>
+                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrpToFulfill.latitude, mrpToFulfill.longitude)" target="_blank"> View location at {{fulfillment.mra.latitude | number:'1.1-6'}}, {{fulfillment.mra.longitude | number:'1.1-6'}}</a>
                                 <br/>
                                 {{fulfillment.receivedQuantity}} {{mrpToFulfill.unit}} received / {{fulfillment.totalPledgedQuantity}} {{mrpToFulfill.unit}} pledged
                                 <br/>
@@ -255,9 +255,6 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" (click)="closeModal()" data-dismiss="modal">Back</button>
-            </div>
         </div>
     </div>
 </div>
@@ -267,7 +264,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmDialogLabel">Receive Resources</h5>
-                <button type="button" class="close" data-dismiss="modal" (click)="close()" aria-label="Close">
+                <button type="button" class="close" id="receiveModalCloseBtn" data-dismiss="modal" (click)="close()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -282,7 +279,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Cancel</button>
-                <button id="reject-fulfillment" type="button" class="btn btn-primary" data-dismiss="modal" (click)="receiveFulfillment()">Confirm</button>
+                <button id="reject-fulfillment" type="button" class="btn btn-primary" (click)="receiveFulfillment()">Confirm</button>
             </div>
         </div>
     </div>
@@ -293,7 +290,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmDialogLabel">Update Quantity</h5>
-                <button type="button" class="close" data-dismiss="modal" (click)="close()" aria-label="Close">
+                <button type="button" class="close" id="updateModalCloseBtn" data-dismiss="modal" (click)="close()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -305,7 +302,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Cancel</button>
-                <button id="reject-fulfillment" type="button" class="btn btn-primary" data-dismiss="modal" (click)="updateQuantity()">Confirm</button>
+                <button id="reject-fulfillment" type="button" class="btn btn-primary" (click)="updateQuantity()">Confirm</button>
             </div>
         </div>
     </div>

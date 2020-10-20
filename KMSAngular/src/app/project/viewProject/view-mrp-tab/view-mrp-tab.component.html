@@ -67,7 +67,7 @@
             </div>
             <div *ngIf="!mraToDonate" class="select-mra">
                 <div class="modal-body">
-                    <h5 style="font-size: 18px;">Select Material Resource Available to Donate</h5>
+                    <h5 style="font-size: 18px;">Material Resource Available to Donate</h5>
                     <button type="button" class="btn btn-block btn-outline-light" data-toggle="modal" data-target="#modal-create-mra" (click)="clickAddMra()" data-backdrop="static">
                         <i class="fas fa-plus"></i> Add Material Resource Available
                     </button>
@@ -131,12 +131,12 @@
                                 <span class="text-muted" style="font-size: 15px;">{{mraToDonate.description}}</span>
                             </h6>
                         </div>
-                        <div id="selectedBody" class="collapse" data-parent="#selectedMra">
+                        <div id="selectedBody" class="collapse show" data-parent="#selectedMra">
                             <div class="card-body" style="display: block;">
                                 <p style="margin: 0 7px 0 7px; color: black;">
                                     <b *ngIf="mraToDonate.startDate != null">Available from {{mraToDonate.startDate.toString().slice(0,15) | date }} to {{mraToDonate.endDate.toString().slice(0,15) | date }}</b> 
                                     <b *ngIf="mraToDonate.startDate == null">No Expiry Date</b> 
-                                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" > At location {{mraToDonate.latitude | number:'1.1-6'}}, {{mraToDonate.longitude | number:'1.1-6'}}</a>
+                                    <span class="badge badge-secondary float-right" style="cursor: pointer; color: white;" > At location {{mraToDonate.latitude | number:'1.1-6'}}, {{mraToDonate.longitude | number:'1.1-6'}}</span>
                                     <br/>
                                     {{mraToDonate.quantity | number:'1.0-2'}} {{mraToDonate.units}} available
                                     <br/>

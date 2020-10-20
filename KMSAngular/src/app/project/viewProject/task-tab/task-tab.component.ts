@@ -196,6 +196,8 @@ export class TaskTabComponent implements OnInit {
     }, null);
 
     gantt.attachEvent("onLightboxSave", (id, task, is_new) => {
+      console.log(task.start_date > task.end_date);
+      console.log(task.start_date);
       if (!is_new) {
         var sourceLinks = task.$source; 
         var targetLinks = task.$target;
@@ -244,6 +246,8 @@ export class TaskTabComponent implements OnInit {
             return true;
           }
         }
+      } else {
+        return true;
       }
     }, null);
 

@@ -246,7 +246,23 @@ export class ViewMrpTabComponent implements OnInit {
   }
 
   submit() {
-    if(this.totalPledgedQuantity > this.mrpToFulfill.lackingQuantity){
+    if(this.totalPledgedQuantity == null){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Fulfill Posting',
+        autohide: true,
+        delay: 3200,
+        body: 'Donated quantity is required',
+      });
+    } else if(!(this.totalPledgedQuantity > 0)){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Fulfill Posting',
+        autohide: true,
+        delay: 3200,
+        body: 'Donated quantity is invalid',
+      });
+    } else if(this.totalPledgedQuantity > this.mrpToFulfill.lackingQuantity){
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',

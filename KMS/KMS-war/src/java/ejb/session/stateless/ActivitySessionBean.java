@@ -30,6 +30,9 @@ import util.enumeration.ActivityStatusEnum;
 @Stateless
 public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
+    @EJB(name = "MaterialResourcePostingSessionBeanLocal")
+    private MaterialResourcePostingSessionBeanLocal materialResourcePostingSessionBeanLocal;
+
     @EJB(name = "HumanResourcePostingSessionBeanLocal")
     private HumanResourcePostingSessionBeanLocal humanResourcePostingSessionBeanLocal;
 
@@ -150,7 +153,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         
         if (!activityToDelete.getMaterialResourcePostings().isEmpty()) {
             for (MaterialResourcePostingEntity mrp : activityToDelete.getMaterialResourcePostings()) {
-                mrp.setActivity(null);                
+                mrp.getActivities().remove(activityToDelete);
             }
             activityToDelete.getMaterialResourcePostings().clear();
         }
@@ -212,6 +215,46 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
                 em.flush();
             }
         }
+    }
+    
+    @Override
+    public List<MaterialResourcePostingEntity> getAllocatedResources(Long activityId) throws NoResultException {
+        ActivityEntity activity = this.getActivityById(activityId);
+        activity.getMaterialResourcePostings().size();
+        
+        return activity.getMaterialResourcePostings();
+    }
+    
+    @Override
+    public void allocateResource(Long activityId, Long mrpId, Double quantity) throws NoResultException {
+        ActivityEntity activity = this.getActivityById(activityId);
+        MaterialResourcePostingEntity mrp = materialResourcePostingSessionBeanLocal.getMrpById(mrpId);
+        
+        activity.getMaterialResourcePostings().add(mrp);
+        activity.getAllocatedQuantities().put(mrpId, quantity);
+        mrp.getActivities().add(activity);
+        mrp.setAllocatedQuantity(mrp.getAllocatedQuantity() + quantity);   
+    }
+    
+    @Override
+    public void updateAllocateQuantity(Long activityId, Long mrpId, Double newQuantity) throws NoResultException {
+        ActivityEntity activity = this.getActivityById(activityId);
+        MaterialResourcePostingEntity mrp = materialResourcePostingSessionBeanLocal.getMrpById(mrpId);
+        
+        Double diff = newQuantity - activity.getAllocatedQuantities().get(mrpId);
+        activity.getAllocatedQuantities().put(mrpId, newQuantity);
+        mrp.setAllocatedQuantity(mrp.getAllocatedQuantity() + diff);
+    }
+    
+    @Override
+    public void removeAllocation(Long activityId, Long mrpId) throws NoResultException {
+        ActivityEntity activity = this.getActivityById(activityId);
+        MaterialResourcePostingEntity mrp = materialResourcePostingSessionBeanLocal.getMrpById(mrpId);
+        
+        mrp.getActivities().remove(activity);
+        mrp.setAllocatedQuantity(mrp.getAllocatedQuantity() - activity.getAllocatedQuantities().get(mrpId));
+        activity.getMaterialResourcePostings().remove(mrp);
+        activity.getAllocatedQuantities().remove(mrpId);
     }
         
 }

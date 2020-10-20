@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -54,6 +55,10 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Column(nullable=false)
     private Double lackingQuantity;
     
+    @NotNull
+    @Column(nullable=false)
+    private Double allocatedQuantity;
+    
     private String description;
     
     @NotNull
@@ -74,8 +79,9 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Column(nullable=false)
     private Double longitude;
     
-    @ManyToOne
-    private ActivityEntity activity;
+    @JoinTable(name = "allocatedMrps")
+    @ManyToMany
+    private List<ActivityEntity> activities;
     
     @ManyToOne
     @JoinColumn
@@ -89,6 +95,7 @@ public class MaterialResourcePostingEntity implements Serializable {
 
     public MaterialResourcePostingEntity() {
         this.tags = new ArrayList<>();
+        this.activities = new ArrayList<>();
         this.fulfillments = new ArrayList<>();
     }
 
@@ -105,8 +112,6 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.latitude = latitude;
         this.longitude = lontitude;
     }
-    
-    
 
     public Long getMaterialResourcePostingId() {
         return materialResourcePostingId;
@@ -173,6 +178,14 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.lackingQuantity = lackingQuantity;
     }
 
+    public Double getAllocatedQuantity() {
+        return allocatedQuantity;
+    }
+
+    public void setAllocatedQuantity(Double allocatedQuantity) {
+        this.allocatedQuantity = allocatedQuantity;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -213,12 +226,12 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.longitude = longitude;
     }
 
-    public ActivityEntity getActivity() {
-        return activity;
+    public List<ActivityEntity> getActivities() {
+        return activities;
     }
 
-    public void setActivity(ActivityEntity activity) {
-        this.activity = activity;
+    public void setActivities(List<ActivityEntity> activities) {
+        this.activities = activities;
     }
 
     public ProjectEntity getProject() {

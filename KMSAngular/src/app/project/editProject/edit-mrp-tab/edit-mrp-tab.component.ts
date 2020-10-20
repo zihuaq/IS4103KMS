@@ -460,6 +460,7 @@ export class EditMrpTabComponent implements OnInit {
             }
           )
           $('#modal-fulfillments').show();
+          $('#receiveModalCloseBtn').click();
         }
       )
     }
@@ -525,6 +526,7 @@ export class EditMrpTabComponent implements OnInit {
             }
           )
           $('#modal-fulfillments').show();
+          $('#updateModalCloseBtn').click();
         }
       )
     }

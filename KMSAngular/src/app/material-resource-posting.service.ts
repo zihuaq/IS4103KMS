@@ -78,6 +78,21 @@ export class MaterialResourcePostingService {
     );
   }
 
+  getListOfObtainedMrp(projectId: number, activityId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getListOfObtainedMrp/" + projectId + "/" + activityId).pipe(
+      // map((data) => {
+      //   return data.map((mrp: MaterialResourcePosting) => {
+      //     return {
+      //       ...mrp,
+      //       startDate: new Date(mrp.startDate.toString().substring(0, 20)),
+      //       endDate: new Date(mrp.endDate.toString().substring(0, 20)) 
+      //     }
+      //   });
+      // }),
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
     

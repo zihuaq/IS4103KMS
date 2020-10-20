@@ -215,7 +215,7 @@ public class ProjectResource {
                 hrp.getAppliedUsers().clear();
             }
             for (MaterialResourcePostingEntity mrp : project.getMaterialResourcePostings()) {
-                mrp.setActivity(null);
+                mrp.getActivities().clear();
                 mrp.setProject(null);
                 mrp.getFulfillments().clear();
             }
