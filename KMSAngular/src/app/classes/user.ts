@@ -6,6 +6,7 @@ import { FollowRequest } from './follow-request';
 import { AffiliationRequest } from './affiliation-request';
 import { HumanResourcePosting } from './human-resource-posting';
 import { Post } from './post';
+import { Project } from './project';
 
 export class User {
   userId: number;
@@ -36,6 +37,7 @@ export class User {
   hrpApplied: HumanResourcePosting[];
   posts: Post[];
   likedPosts: Post[];
+  projectsJoined: Project[];
 
   constructor(
     userId?: number,
@@ -64,7 +66,8 @@ export class User {
     affiliationRequestReceived?: AffiliationRequest[],
     hrpApplied?: HumanResourcePosting[],
     posts?: Post[],
-    likedPosts?: Post[]
+    likedPosts?: Post[],
+    projectsJoined?: Project[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -93,5 +96,6 @@ export class User {
     this.hrpApplied = hrpApplied;
     this.posts = posts;
     this.likedPosts = likedPosts;
+    this.projectsJoined = projectsJoined;
   }
 }

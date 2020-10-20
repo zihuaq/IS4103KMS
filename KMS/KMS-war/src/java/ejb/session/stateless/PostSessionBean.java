@@ -23,6 +23,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import ws.restful.model.SharePostToProjectOrGroupsReq;
 
 /**
  *
@@ -290,6 +291,41 @@ public class PostSessionBean implements PostSessionBeanLocal {
             em.flush();
             postToShare.getSharedPosts().add(post);
             user.getPosts().add(post);
+        } else {
+            throw new NoResultException("Post or comment owner not found");
+        }
+    }
+
+    @Override
+    public void sharePostToProjects(Long postToShareId, Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) throws NoResultException {
+        List<Long> projectIds = sharePostToProjectOrGroupsReq.getProjectsOrGroupsIds();
+        PostEntity postToShare = em.find(PostEntity.class, postToShareId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (postToShare != null && user != null) {
+            for (int i = 0; i < projectIds.size(); i++) {
+                ProjectEntity project = em.find(ProjectEntity.class, projectIds.get(i));
+                if (project != null) {
+                    PostEntity post = new PostEntity();
+                    post.setText(sharePostToProjectOrGroupsReq.getText());
+                    post.setPostDate(sharePostToProjectOrGroupsReq.getPostDate());
+                    post.setPostOwner(user);
+                    if (postToShare.getOriginalPost() == null) {
+                        post.setOriginalPost(postToShare);
+                    } else {
+                        post.setOriginalPost(postToShare.getOriginalPost());
+                    }
+                    post.setProject(project);
+                    em.persist(post);
+                    em.flush();
+                    postToShare.getSharedPosts().add(post);
+                    user.getPosts().add(post);
+                    project.getPosts().add(post);
+                } else {
+                    throw new NoResultException("Project not found");
+                }
+            }
+
         } else {
             throw new NoResultException("Post or comment owner not found");
         }

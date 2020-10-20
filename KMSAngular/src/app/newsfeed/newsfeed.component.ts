@@ -12,6 +12,8 @@ import { Tag } from '../classes/tag';
 import { TagService } from '../tag.service';
 import { ProjectService } from '../project.service';
 import { Project } from '../classes/project';
+import { SharePostToProjectOrGroupsReq } from '../models/SharePostToProjectOrGroupsReq';
+import { number } from 'currency-codes';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -42,6 +44,11 @@ export class NewsfeedComponent implements OnInit {
   isAdminOrOwner: boolean;
   isMember: boolean;
   project: Project;
+  shareOption: any = [
+    { id: "follower", value: "Followers" },
+    { id: "project", value: "Project(s)" }
+  ];
+  selectedShareOption: string;
 
   constructor(
     private sessionService: SessionService,
@@ -83,6 +90,13 @@ export class NewsfeedComponent implements OnInit {
           }),
           allowClear: true,
         });
+        $('#shareToProjectselect2').select2({
+          data: this.loggedInUser.projectsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        console.log(this.loggedInUser.projectsJoined)
       });
     } else {
       forkJoin([
@@ -95,6 +109,12 @@ export class NewsfeedComponent implements OnInit {
         this.reportTags = result[2];
         $('#reportnewsfeedselect2').select2({
           data: this.reportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#shareToProjectselect2').select2({
+          data: this.loggedInUser.projectsJoined.map((item) => {
             return item.name;
           }),
           allowClear: true,
@@ -280,22 +300,67 @@ export class NewsfeedComponent implements OnInit {
   }
 
   sharePost(text: string) {
-    let post = new Post();
-    post.text = text;
-    post.postDate = new Date();
-    this.postService
-      .sharePost(this.postToShare.postId, this.loggedInUser.userId, post)
-      .subscribe(() => {
-        this.postToShare = null;
+    if (this.selectedShareOption == "project") {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = text;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedProjectNames = $('#shareToProjectselect2').val();
+      let selectedProjectIds = [];
+      this.loggedInUser.projectsJoined.forEach((element) => {
+        if (selectedProjectNames.includes(element.name)) {
+          selectedProjectIds.push(element.projectId);
+        }
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedProjectIds;
+      if (selectedProjectIds.length == 0) {
         $(document).Toasts('create', {
-          class: 'bg-success',
-          title: 'Success',
+          class: 'bg-danger',
+          title: 'Error',
           autohide: true,
           delay: 2500,
-          body: 'Post Shared!',
+          body: "Please select an audience for your shared post.",
         });
-        this.updateNewsfeed();
+      } else {
+        this.postService
+          .sharePostToProjects(this.postToShare.postId, this.loggedInUser.userId, sharePostToProjectOrGroupsReq)
+          .subscribe(() => {
+            this.postToShare = null;
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 2500,
+              body: 'Post Shared!',
+            });
+            this.updateNewsfeed();
+          });
+      }
+    } else if (this.selectedShareOption == "follower") {
+      let post = new Post();
+      post.text = text;
+      post.postDate = new Date();
+      this.postService
+        .sharePost(this.postToShare.postId, this.loggedInUser.userId, post)
+        .subscribe(() => {
+          this.postToShare = null;
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Post Shared!',
+          });
+          this.updateNewsfeed();
+        });
+    } else {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: "Please select an audience for your shared post"
       });
+    }
   }
 
   reportPost() { }
@@ -344,5 +409,9 @@ export class NewsfeedComponent implements OnInit {
       (comment) => comment.postCommentId == commentId
     );
     this.editingComment = comment;
+  }
+
+  onSelectedShareOptionChange(event) {
+    this.selectedShareOption = event.target.value;
   }
 }

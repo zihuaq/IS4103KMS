@@ -8,6 +8,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Post } from './classes/post';
 import { PostComment } from './classes/post-comment';
+import { SharePostToProjectOrGroupsReq } from './models/SharePostToProjectOrGroupsReq'
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -103,6 +104,19 @@ export class PostService {
         this.baseUrl + '/sharePost/' + postToShareId + '/' + userId,
         post,
         httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  sharePostToProjects(
+    postToShareId: number,
+    userId: number,
+    shareReq: SharePostToProjectOrGroupsReq
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/sharePostToProjects/' + postToShareId + '/' + userId,
+        shareReq
       )
       .pipe(catchError(this.handleError));
   }

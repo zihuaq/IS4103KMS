@@ -93,7 +93,6 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
-   
 
     @PUT
     @Path("/addskills/{userId}")
@@ -237,7 +236,7 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @POST
     @Path("/acceptaffiliation/{toUserId}/{fromUserId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -297,13 +296,13 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/addSDGs/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addSDGsToProfile(@PathParam("userId") Long userId, List<TagEntity> tags) {
         try {
-             List<TagEntity> updatedSDGs = userSessionBeanLocal.addSDGsToProfile(userId, tags);
+            List<TagEntity> updatedSDGs = userSessionBeanLocal.addSDGsToProfile(userId, tags);
             return Response.status(200).entity(updatedSDGs).build();
         } catch (NoResultException | DuplicateTagInProfileException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -338,7 +337,6 @@ public class UserResource {
             user.getReviewsGiven().clear();
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
-            user.getProjectsJoined().clear();
             user.getProjectsManaged().clear();
             user.getGroupsJoined().clear();
             user.getGroupAdmins().clear();
@@ -373,6 +371,14 @@ public class UserResource {
                     hrp.getProject().getSdgs().clear();
                 }
             }
+            List<ProjectEntity> projects = new ArrayList<ProjectEntity>();
+            for (int i = 0; i < user.getProjectsJoined().size(); i++) {
+                ProjectEntity project = new ProjectEntity();
+                project.setProjectId(user.getProjectsJoined().get(i).getProjectId());
+                project.setName(user.getProjectsJoined().get(i).getName());
+                projects.add(project);
+            }
+            user.setProjectsJoined(projects);
             user.getActivityJoined().clear();
             user.getDonations().clear();
             return Response.status(200).entity(user).build();
@@ -466,7 +472,7 @@ public class UserResource {
             user.setPassword("");
             user.getActivityJoined().clear();
             user.getDonations().clear();
-            
+
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
             System.out.println(ex.getMessage());
@@ -705,6 +711,14 @@ public class UserResource {
             temp.setUserType(user.getUserType());
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
+            List<ProjectEntity> projects = new ArrayList<ProjectEntity>();
+            for (int i = 0; i < user.getProjectsJoined().size(); i++) {
+                ProjectEntity project = new ProjectEntity();
+                project.setProjectId(user.getProjectsJoined().get(i).getProjectId());
+                project.setName(user.getProjectsJoined().get(i).getName());
+                projects.add(project);
+            }
+            temp.setProjectsJoined(projects);
             usersResponse.add(temp);
         }
         return usersResponse;
@@ -841,6 +855,7 @@ public class UserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+
     @GET
     @Path("/writtenreviews/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -857,13 +872,13 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
-    private List<ReviewEntity> getWrittenReviewsResponse(List<ReviewEntity> reviews){
-         List<ReviewEntity> writtenReviewsResponse = new ArrayList<>();
-         ReviewEntity temp = new ReviewEntity();
+
+    private List<ReviewEntity> getWrittenReviewsResponse(List<ReviewEntity> reviews) {
+        List<ReviewEntity> writtenReviewsResponse = new ArrayList<>();
+        ReviewEntity temp = new ReviewEntity();
         for (ReviewEntity reviewEntity : reviews) {
             UserEntity to = new UserEntity();
-            if(reviewEntity.getTo() != null){
+            if (reviewEntity.getTo() != null) {
                 to.setUserId(reviewEntity.getTo().getUserId());
                 to.setFirstName(reviewEntity.getTo().getFirstName());
                 to.setLastName(reviewEntity.getTo().getLastName());
@@ -887,8 +902,8 @@ public class UserResource {
             writtenReviewsResponse.add(temp);
         }
         return writtenReviewsResponse;
-    } 
-    
+    }
+
     @GET
     @Path("/receivedreviews/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -905,9 +920,9 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
-    private List<ReviewEntity> getRecievedReviewsResponse(List<ReviewEntity> reviews){
-         List<ReviewEntity> recievedReviewsResponse = new ArrayList<>();
+
+    private List<ReviewEntity> getRecievedReviewsResponse(List<ReviewEntity> reviews) {
+        List<ReviewEntity> recievedReviewsResponse = new ArrayList<>();
         for (ReviewEntity reviewEntity : reviews) {
             UserEntity to = new UserEntity();
             to.setUserId(reviewEntity.getTo().getUserId());
@@ -933,8 +948,8 @@ public class UserResource {
             recievedReviewsResponse.add(temp);
         }
         return recievedReviewsResponse;
-    } 
-    
+    }
+
     @POST
     @Path("/editReview")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -949,7 +964,7 @@ public class UserResource {
                     .add("error", ex.getMessage())
                     .build();
             return Response.status(404).entity(exception).build();
-        } 
+        }
     }
     //    @POST
 //    @Path("ResetPassword")
@@ -972,7 +987,7 @@ public class UserResource {
 ////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
 ////            }
 //    }
-    
+
     @Path("/projectsOwned/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -993,13 +1008,13 @@ public class UserResource {
                 p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsOwned).build();
-            
+
         } catch (UserNotFoundException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @Path("/viewOwnProjects/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -1020,13 +1035,13 @@ public class UserResource {
                 p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsJoined).build();
-            
+
         } catch (UserNotFoundException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @Path("/projectsManaged/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -1047,13 +1062,13 @@ public class UserResource {
                 p.getDonations().clear();
             }
             return Response.status(Status.OK).entity(projectsManaged).build();
-            
+
         } catch (UserNotFoundException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @Path("/groupsOwned/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -1068,13 +1083,13 @@ public class UserResource {
                 //g.getPosts().clear();
             }
             return Response.status(Status.OK).entity(groupsOwned).build();
-            
+
         } catch (UserNotFoundException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @Path("/viewOwnGroups/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -1089,13 +1104,13 @@ public class UserResource {
                 //g.getPosts().clear();
             }
             return Response.status(Status.OK).entity(groupsJoined).build();
-            
+
         } catch (UserNotFoundException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @Path("/groupsManaged/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -1110,7 +1125,7 @@ public class UserResource {
                 //g.getPosts().clear();
             }
             return Response.status(Status.OK).entity(groupsManaged).build();
-            
+
         } catch (UserNotFoundException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
@@ -1140,7 +1155,5 @@ public class UserResource {
             throw new RuntimeException(e);
         }
     }
-
-    
 
 }
