@@ -266,7 +266,16 @@ const routes: Routes = [
   {
     path: 'report-post-modal',
     loadChildren: () => import('./pages/report-post-modal/report-post-modal.module').then( m => m.ReportPostModalPageModule)
+  },
+  {
+    path: 'create-hrp/:projectId',
+    loadChildren: () => import('./pages/project/editProject/create-hrp/create-hrp.module').then( m => m.CreateHrpPageModule)
+  },
+  {
+    path: 'edit-hrp-details/:hrpId',
+    loadChildren: () => import('./pages/project/editProject/edit-hrp-details/edit-hrp-details.module').then( m => m.EditHrpDetailsPageModule)
   }
+
 
 
 

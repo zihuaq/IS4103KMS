@@ -77,7 +77,6 @@ export class EditProjectDetailsPage implements OnInit {
       response => {
         this.projectToEdit = response;
         this.noOfMembers = this.projectToEdit.projectMembers.length;
-
         this.owner = this.projectToEdit.projectOwner;
 
         this.dateCreated = this.projectToEdit.dateCreated.toString().slice(0,10);

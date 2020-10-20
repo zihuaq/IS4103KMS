@@ -21,7 +21,7 @@
     "@angular/router": "~10.0.0",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@ionic-native/clipboard": "^5.28.0",
-    "@ionic-native/core": "^5.0.0",
+    "@ionic-native/core": "^5.29.0",
     "@ionic-native/device": "^5.29.0",
     "@ionic-native/google-maps": "^5.5.0",
     "@ionic-native/keyboard": "^5.28.0",
@@ -88,7 +88,10 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-googlemaps": {},
+      "cordova-plugin-googlemaps": {
+        "API_KEY_FOR_ANDROID": "AIzaSyBFnfCswcZchsZDcZiELcQNcwjnJk4g3Lw",
+        "API_KEY_FOR_IOS": "AIzaSyBFnfCswcZchsZDcZiELcQNcwjnJk4g3Lw"
+      },
       "cordova-plugin-camera": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },

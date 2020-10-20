@@ -10,9 +10,12 @@ import { EditProjectDetailsPageRoutingModule } from '../edit-project-details/edi
 
 import { EditMembersPageRoutingModule } from '../edit-members/edit-members-routing.module';
 
+import { EditHrpPageRoutingModule } from '../edit-hrp/edit-hrp-routing.module';
+
 import { TabPanelPage } from './tab-panel.page';
 import { EditProjectDetailsPage } from '../edit-project-details/edit-project-details.page';
 import { EditMembersPage } from '../edit-members/edit-members.page';
+import { EditHrpPage } from '../edit-hrp/edit-hrp.page';
 
 @NgModule({
   imports: [
@@ -21,8 +24,9 @@ import { EditMembersPage } from '../edit-members/edit-members.page';
     IonicModule,
     TabPanelPageRoutingModule,
     EditProjectDetailsPageRoutingModule,
-    EditMembersPageRoutingModule
+    EditMembersPageRoutingModule,
+    EditHrpPageRoutingModule
   ],
-  declarations: [TabPanelPage, EditProjectDetailsPage, EditMembersPage]
+  declarations: [TabPanelPage, EditProjectDetailsPage, EditMembersPage,EditHrpPage]
 })
 export class TabPanelPageModule {}
