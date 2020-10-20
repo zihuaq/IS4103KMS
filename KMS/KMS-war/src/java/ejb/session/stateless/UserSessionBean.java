@@ -291,7 +291,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void removeSDGFromProfile(long userId, long tagId) throws NoResultException {
+    public List<TagEntity> removeSDGFromProfile(long userId, long tagId) throws NoResultException {
         UserEntity user = em.find(UserEntity.class, userId);
         TagEntity tag = em.find(TagEntity.class, tagId);
 
@@ -304,6 +304,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         sdgs.remove(tag);
         user.setSdgs(sdgs);
+        return sdgs;
     }
 
     @Override

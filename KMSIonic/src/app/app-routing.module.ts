@@ -1,22 +1,22 @@
-import { NgModule } from "@angular/core"
-import { PreloadAllModules, RouterModule, Routes } from "@angular/router"
-import { AuthGuard } from "./services/auth.guard"
+import { NgModule } from '@angular/core';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './services/auth.guard';
 
 const routes: Routes = [
   {
-    path: "",
-    redirectTo: "index",
-    pathMatch: "full"
+    path: '',
+    redirectTo: 'index',
+    pathMatch: 'full'
   },
   {
-    path: "login",
+    path: 'login',
     loadChildren: () =>
-      import("./pages/login/login.module").then((m) => m.LoginPageModule)
+      import('./pages/login/login.module').then((m) => m.LoginPageModule)
   },
   {
-    path: "register",
+    path: 'register',
     loadChildren: () =>
-      import("./pages/register/register.module").then(
+      import('./pages/register/register.module').then(
         (m) => m.RegisterPageModule
       )
   },
@@ -104,24 +104,24 @@ const routes: Routes = [
   {
     path: 'create-new-project',
     loadChildren: () =>
-      import('./pages/project/create-new-project/create-new-project.module').then(
-        (m) => m.CreateNewProjectPageModule
-      ),
+      import(
+        './pages/project/create-new-project/create-new-project.module'
+      ).then((m) => m.CreateNewProjectPageModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'project-details/:projectId',
     loadChildren: () =>
-      import('./pages/project/viewProject/project-details/project-details.module').then(
-        (m) => m.ProjectDetailsPageModule
-      )
+      import(
+        './pages/project/viewProject/project-details/project-details.module'
+      ).then((m) => m.ProjectDetailsPageModule)
   },
   {
     path: 'edit-project-details/:projectId',
     loadChildren: () =>
-      import('./pages/project/editProject/edit-project-details/edit-project-details.module').then(
-        (m) => m.EditProjectDetailsPageModule
-      )
+      import(
+        './pages/project/editProject/edit-project-details/edit-project-details.module'
+      ).then((m) => m.EditProjectDetailsPageModule)
   },
   {
     path: 'tab-panel/:projectId',
@@ -133,9 +133,9 @@ const routes: Routes = [
   {
     path: 'edit-members',
     loadChildren: () =>
-      import('./pages/project/editProject/edit-members/edit-members.module').then(
-        (m) => m.EditMembersPageModule
-      )
+      import(
+        './pages/project/editProject/edit-members/edit-members.module'
+      ).then((m) => m.EditMembersPageModule)
   },
   {
     path: 'changepassword',
@@ -206,23 +206,23 @@ const routes: Routes = [
       )
   },
   {
-    path: "add-material-resource-available",
+    path: 'add-material-resource-available',
     loadChildren: () =>
-      import("./pages/add-material-resource-available/add-material-resource-available.module").then(
-        (m) => m.AddMaterialResourceAvailablePageModule
-      )
+      import(
+        './pages/add-material-resource-available/add-material-resource-available.module'
+      ).then((m) => m.AddMaterialResourceAvailablePageModule)
   },
   {
     path: 'view-hrp',
-    loadChildren: () => 
-      import('./pages/project/viewProject/view-hrp/view-hrp.module').then( 
+    loadChildren: () =>
+      import('./pages/project/viewProject/view-hrp/view-hrp.module').then(
         (m) => m.ViewHrpPageModule
       )
   },
   {
     path: 'edit-hrp',
-    loadChildren: () => 
-      import('./pages/project/editProject/edit-hrp/edit-hrp.module').then( 
+    loadChildren: () =>
+      import('./pages/project/editProject/edit-hrp/edit-hrp.module').then(
         (m) => m.EditHrpPageModule
       )
   },
@@ -232,30 +232,29 @@ const routes: Routes = [
       import('./pages/create-post/create-post.module').then(
         (m) => m.CreatePostPageModule
       )
-  },
-  {
-    path: 'edit-post-comment-modal',
-    loadChildren: () => 
-      import('./pages/edit-post-comment-modal/edit-post-comment-modal.module').then( 
-        (m) => m.EditPostCommentModalPageModule
-      )
-  },
-  {
-    path: 'share-post-modal',
-    loadChildren: () => 
-      import('./pages/share-post-modal/share-post-modal.module').then( 
-        (m) => m.SharePostModalPageModule
-      )
-  },  {
-    path: 'report-post-modal',
-    loadChildren: () => import('./pages/report-post-modal/report-post-modal.module').then( m => m.ReportPostModalPageModule)
-  },
-  {
-    path: 'report-comment-modal',
-    loadChildren: () => import('./pages/report-comment-modal/report-comment-modal.module').then( m => m.ReportCommentModalPageModule)
   }
-
-
+  // {
+  //   path: 'edit-post-comment-modal',
+  //   loadChildren: () =>
+  //     import('./pages/edit-post-comment-modal/edit-post-comment-modal.module').then(
+  //       (m) => m.EditPostCommentModalPageModule
+  //     )
+  // },
+  // {
+  //   path: 'share-post-modal',
+  //   loadChildren: () =>
+  //     import('./pages/share-post-modal/share-post-modal.module').then(
+  //       (m) => m.SharePostModalPageModule
+  //     )
+  // },
+  // {
+  //   path: 'report-post-modal',
+  //   loadChildren: () => import('./pages/report-post-modal/report-post-modal.module').then( m => m.ReportPostModalPageModule)
+  // },
+  // {
+  //   path: 'report-comment-modal',
+  //   loadChildren: () => import('./pages/report-comment-modal/report-comment-modal.module').then( m => m.ReportCommentModalPageModule)
+  // }
 ];
 
 @NgModule({

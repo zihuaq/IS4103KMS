@@ -59,7 +59,7 @@ public interface UserSessionBeanLocal {
     
     public List<TagEntity> addSDGsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
 
-    public void removeSDGFromProfile(long userId, long tagId) throws NoResultException;
+    public List<TagEntity> removeSDGFromProfile(long userId, long tagId) throws NoResultException;
 
     public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException;
 

@@ -317,8 +317,8 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeSDGFromProfile(@PathParam("userId") Long userId, @PathParam("tagId") Long tagId) {
         try {
-            userSessionBeanLocal.removeSDGFromProfile(userId, tagId);
-            return Response.status(204).build();
+            List<TagEntity> updatedSDGs = userSessionBeanLocal.removeSDGFromProfile(userId, tagId);
+            return Response.status(200).entity(updatedSDGs).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())

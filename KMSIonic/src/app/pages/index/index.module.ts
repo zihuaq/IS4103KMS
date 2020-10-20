@@ -9,6 +9,7 @@ import { IndexPageRoutingModule } from './index-routing.module';
 
 import { IndexPage } from './index.page';
 import { PostCommentModalPageModule } from '../post-comment-modal/post-comment-modal.module';
+import { SharePostModalPageModule } from '../share-post-modal/share-post-modal.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { PostCommentModalPageModule } from '../post-comment-modal/post-comment-m
     IonicModule,
     IndexPageRoutingModule,
     PostCommentModalPageModule,
-    ReportPostModalPageModule
+    ReportPostModalPageModule,
+    SharePostModalPageModule
   ],
   declarations: [IndexPage]
 })
