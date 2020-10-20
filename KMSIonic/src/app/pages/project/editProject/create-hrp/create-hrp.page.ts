@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ApplicationRef, ElementRef, ViewChild} from '@angular/core';
+import { Component, OnInit, ApplicationRef, ElementRef, ViewChild } from '@angular/core';
 import { ModalController, Platform, ToastController } from '@ionic/angular';
 import { Location } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -167,7 +167,12 @@ export class CreateHrpPage implements OnInit {
           tagIds.push(tag.tagId);
         }
         this.hrpService.createNewHrp(this.newHrp, this.projectId, tagIds).subscribe(
-          response => {
+          async response => {
+            const toast = await this.toastController.create({
+              message: "Hrp created successfully.",
+              duration: 2000
+            })
+            toast.present();
             this.router.navigate(["tab-panel/" + this.projectId]);
           }
         )
