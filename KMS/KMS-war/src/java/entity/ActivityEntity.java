@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -67,6 +68,8 @@ public class ActivityEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ActivityStatusEnum activityStatus;
     
+    private HashMap<Long, Double> allocatedQuantities;
+    
     @ManyToOne
     @JoinColumn
     private ProjectEntity project;
@@ -74,7 +77,8 @@ public class ActivityEntity implements Serializable {
     @OneToMany(mappedBy = "activity")
     private List<HumanResourcePostingEntity> humanResourcePostings;
     
-    @OneToMany(mappedBy = "activity")
+    @JoinTable(name = "allocatedMrps")
+    @ManyToMany(mappedBy = "activities")
     private List<MaterialResourcePostingEntity> materialResourcePostings;
     
     @JoinTable(name = "activityJoined")
@@ -82,6 +86,7 @@ public class ActivityEntity implements Serializable {
     private List<UserEntity> joinedUsers;
     
     public ActivityEntity() {
+        this.allocatedQuantities = new HashMap<>();
         this.humanResourcePostings = new ArrayList<>();
         this.materialResourcePostings = new ArrayList<>();
         this.joinedUsers = new ArrayList<>();
@@ -188,6 +193,14 @@ public class ActivityEntity implements Serializable {
 
     public void setActivityStatus(ActivityStatusEnum activityStatus) {
         this.activityStatus = activityStatus;
+    }
+
+    public HashMap<Long, Double> getAllocatedQuantities() {
+        return allocatedQuantities;
+    }
+
+    public void setAllocatedQuantities(HashMap<Long, Double> allocatedQuantities) {
+        this.allocatedQuantities = allocatedQuantities;
     }
 
     public ProjectEntity getProject() {

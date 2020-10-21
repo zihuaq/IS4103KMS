@@ -58,7 +58,7 @@ public class MrpResource {
         
         for (MaterialResourcePostingEntity mrp : mrpList) {
             mrp.setProject(null);
-            mrp.setActivity(null);
+            mrp.getActivities().clear();
             mrp.getFulfillments().clear();
         }
         
@@ -85,11 +85,7 @@ public class MrpResource {
             mrp.getProject().getReviews().clear();
             mrp.getProject().getDonations().clear();
             mrp.getFulfillments().clear();
-            if (mrp.getActivity() != null) {
-                mrp.getActivity().getHumanResourcePostings().clear();
-                mrp.getActivity().getMaterialResourcePostings().clear();
-                mrp.getActivity().setProject(null); 
-            }
+            mrp.getActivities().clear();
             
             
             return Response.status(Status.OK).entity(mrp).build();
@@ -156,6 +152,34 @@ public class MrpResource {
             
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
+    }
+    
+    @Path("getListOfObtainedMrp/{projectId}/{activityId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOfObtainedMrp(@PathParam("projectId") Long projectId, @PathParam("activityId") Long activityId) {
+        System.out.println("******** MrpResource: getListOfObtainedMrp()");
+        
+        try {
+            List<MaterialResourcePostingEntity> mrpList = materialResourcePostingSessionBean.getListOfObtainedMrp(projectId, activityId);
+
+            if (!mrpList.isEmpty()) {
+                for (MaterialResourcePostingEntity mrp : mrpList) {
+                    mrp.setProject(null);
+                    mrp.getActivities().clear();
+                    mrp.getFulfillments().clear();
+                } 
+            }
+            
+            return Response.status(Status.OK).entity(mrpList).build();  
+            
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+        
     }
 
     private MaterialResourcePostingSessionBeanLocal lookupMaterialResourcePostingSessionBeanLocal() {

@@ -102,16 +102,19 @@
                     {{activity.description}}
                     </td>
                     <td>
-                        <button class="btn btn-warning" rel="tooltip" title="Edit" data-toggle="modal" data-target="#modal-edit-activity" data-backdrop="static" (click)="clickActivity(activity.activityId)">                            
+                        <button class="btn bg-gradient-warning" rel="tooltip" title="Edit" data-toggle="modal" data-target="#modal-edit-activity" data-backdrop="static" (click)="clickActivity(activity.activityId)">                            
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-secondary" rel="tooltip" title="Members" data-toggle="modal" data-target="#modal-users" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                        <button class="btn bg-gradient-secondary" rel="tooltip" title="Members" data-toggle="modal" data-target="#modal-users" data-backdrop="static" (click)="clickActivity(activity.activityId)">
                             <i class="fas fa-users"></i>
                         </button>
-                        <button class="btn btn-info" rel="tooltip" title="Human Resource Postings" data-toggle="modal" data-target="#modal-hrp" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                        <button class="btn bg-gradient-info" rel="tooltip" title="Human Resource Postings" data-toggle="modal" data-target="#modal-hrp" data-backdrop="static" (click)="clickActivity(activity.activityId)">
                             <i class="fas fa-user-tie"></i>
                         </button>
-                        <button class="btn btn-danger" rel="tooltip" title="Delete" data-toggle="modal" data-target="#delete-activity-dialog" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                        <button class="btn bg-gradient-indigo" rel="tooltip" title="Material Resource Allocation" data-toggle="modal" data-target="#modal-material-allocation" data-backdrop="static" (click)="clickAllocatedMrp(activity)">
+                            <i class="fas fa-cubes"></i>
+                        </button>
+                        <button class="btn bg-gradient-danger" rel="tooltip" title="Delete" data-toggle="modal" data-target="#delete-activity-dialog" data-backdrop="static" (click)="clickActivity(activity.activityId)">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
@@ -348,6 +351,218 @@
                         </li>
                     </ul>
                 </span>                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Material Allocation-->
+<div class="modal fade" id="modal-material-allocation">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Allocated Material Resources</h4>
+                <button type="button" class="close" id="allocationModalCloseBtn" data-dismiss="modal" aria-label="Close" data-backdrop="static">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-block bg-gradient-info" data-toggle="modal" data-target="#modal-allocate" (click)="clickAllocate()" data-backdrop="static">
+                    <i class="fas fa-plus"></i> Allocate
+                </button>
+                <div *ngIf="allocatedResources.length == 0" style="margin-top: 10px;"> There is currently no allocated material resource at the moment</div>
+                <div *ngIf="allocatedResources.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: scroll;">
+                    <div id="allocatedResourceslist" *ngFor="let mrp of allocatedResources; let i = index">
+                        <div class="card" style="width: 100%;">
+                            <div class="card-header">
+                                <div *ngIf="mrp.description" class="row">
+                                    <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openPanel'+ i" data-toggle="collapse">
+                                        <h6 class="card-title" style="font-size: 20px; margin-top: 5px; color: black;"><b>{{mrp.name}}</b> 
+                                            <br/>
+                                            <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
+                                        </h6>
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-top: 10px; margin-right: 10px; z-index: 10;"><i class="fas fa-ellipsis-h"></i></button> 
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" data-toggle="modal" data-target="#modal-update-quantity" (click)="clickUpdateQuantity(mrp)">Update Quantity</a>
+                                            <a class="dropdown-item" data-toggle="modal" data-target="#modal-remove-allocation" (click)="clickRemoveAllocation(mrp)">Remove Allocation</a>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div *ngIf="!mrp.description" class="row">
+                                    <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openPanel'+ i" data-toggle="collapse">
+                                        <h6 class="card-title" style="font-size: 20px; margin-top: 10px; color: black;"><b>{{mrp.name}}</b></h6>
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-top: 10px; margin-right: 10px; z-index: 10;"><i class="fas fa-ellipsis-h"></i></button> 
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" data-toggle="modal" data-target="#modal-update-quantity" (click)="clickUpdateQuantity(mrp)">Update Quantity</a>
+                                            <a class="dropdown-item" data-toggle="modal" data-target="#modal-remove-allocation" (click)="clickRemoveAllocation(mrp)">Remove Allocation</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="openPanel{{i}}" class="collapse show" data-parent="#allocatedResourceslist">
+                                <div class="card-body" style="display: block;">
+                                    <p style="margin: 0 7px 0 7px; color: black;">
+                                        <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> View Location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
+                                        {{activityToEdit.allocatedQuantities[mrp.materialResourcePostingId] | number:'1.0-2'}} {{mrp.unit}} allocated
+                                        <br/>
+                                        <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
+                                            <div *ngFor="let tag of mrp.tags">
+                                                <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                                            </div>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-allocate">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Obtained Material Resources</h5>
+                <button type="button" class="close" id="allocateModalCloseBtn" (click)="cancelAllocate()" data-dismiss="modal" aria-label="Close" data-backdrop="static">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="!mrpToAllocate">
+                <div class="modal-body">
+                    <div *ngIf="obtainedResources.length == 0" style="margin-top: 10px;"> There is currently no available material resources at the moment</div>
+                    <div *ngIf="obtainedResources.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: scroll;">
+                        <div id="obtainedResourceslist" *ngFor="let mrp of obtainedResources; let i = index">
+                            <div class="card" style="width: 100%;">
+                                <div class="card-header">
+                                    <div *ngIf="mrp.description" class="row">
+                                        <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openPanel'+ i" data-toggle="collapse">
+                                            <h6 class="card-title" style="font-size: 20px; margin-top: 5px;"><b>{{mrp.name}}</b> 
+                                                <br/>
+                                                <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
+                                            </h6>
+                                        </div>
+                                        <div class="col-1">
+                                        <button type="button" class="btn bg-gradient-primary float-right" (click)="clickSelectMrp(mrp)" style="margin-top: 10px; margin-right: 10px; z-index: 10;">Select</button> 
+                                        </div>
+                                    </div> 
+                                    <div *ngIf="!mrp.description" class="row">
+                                        <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openPanel'+ i" data-toggle="collapse">
+                                            <h6 class="card-title" style="font-size: 20px; margin-top: 10px;"><b>{{mrp.name}}</b></h6>
+                                        </div>
+                                        <div class="col-1">
+                                        <button type="button" class="btn bg-gradient-primary float-right" (click)="clickSelectMrp(mrp)" style="margin-top: 5px; margin-right: 10px; z-index: 10;">Select</button> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="openPanel{{i}}" class="collapse show" data-parent="#obtainedResourceslist">
+                                    <div class="card-body" style="display: block;">
+                                        <p style="margin: 0 7px 0 7px;">
+                                            <b>Available from {{mrp.startDate.toString().slice(0,10) | date }} to {{mrp.endDate.toString().slice(0,10) | date }}</b> 
+                                            <br/>
+                                            {{mrp.obtainedQuantity - mrp.allocatedQuantity | number:'1.0-2'}} {{mrp.unit}} available / {{mrp.obtainedQuantity | number:'1.0-2'}} {{mrp.unit}} obtained
+                                            <br/>
+                                            <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
+                                                <div *ngFor="let tag of mrp.tags">
+                                                    <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                                                </div>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" (click)="cancelAllocate()" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+            <div *ngIf="mrpToAllocate" id="selectedMrp">
+                <div class="modal-body">
+                    <b style="font-size: 18px">Selected Material Resource</b>
+                    <div class="card" style="width: 100%; margin-top: 5px;">
+                        <div class="card-header" style="cursor: pointer;" data-target="#selectedBody" data-toggle="collapse">
+                            <h6 class="card-title" style="font-size: 20px; margin-top: 5px; color: black;"><b>{{mrpToAllocate.name}}</b> 
+                                <br/>
+                                <span class="text-muted" style="font-size: 15px;">{{mrpToAllocate.description}}</span>
+                            </h6>
+                        </div>
+                        <div id="selectedBody" class="collapse show" data-parent="#selectedMrp">
+                            <div class="card-body" style="display: block;">
+                                <p style="margin: 0 7px 0 7px; color: black;">
+                                    {{availableQuantity | number:'1.0-2'}} {{mrpToAllocate.unit}} available
+                                    <br/>
+                                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrpToAllocate.tags.length > 0">
+                                        <div *ngFor="let tag of mrpToAllocate.tags">
+                                            <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                                        </div>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>    
+                    </div>
+                    <b style="font-size: 18px">Quantity To Allocate</b>
+                    <br/>
+                    <input type="number" id="quantity" name="quantity" [max]="availableQuantity" [(ngModel)]="quantityAllocated" required>
+                    <b> {{mrpToAllocate.unit}}</b>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" (click)="back()">Back</button>
+                    <button type="button" class="btn bg-gradient-primary" (click)="confirmAllocation()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-update-quantity">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Quantity</h5>
+                <button type="button" class="close" id="updateQuantityModalCloseBtn" (click)="cancelEdit()" data-dismiss="modal" aria-label="Close" data-backdrop="static">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <b style="font-size: 18px">Total Allocated Quantity</b>
+                <br/>
+                <input type="number" id="quantityAllocated" name="quantityAllocated" [max]="availableQuantity" [(ngModel)]="quantityAllocated" required>
+                <b> {{mrpToEdit.unit}}</b>
+                <span>
+                    <b> / {{availableQuantity}} {{mrpToEdit.unit}} available</b>
+                </span>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" (click)="cancelEdit()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn bg-gradient-primary" (click)="updateQuantity()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-remove-allocation">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Remove Allocation</h5>
+                <button type="button" class="close" id="removeAllocationModalCloseBtn" (click)="cancelEdit()" data-dismiss="modal" aria-label="Close" data-backdrop="static">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove allocation of material resources?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" (click)="cancelEdit()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" (click)="removeAllocation()">Remove</button>
             </div>
         </div>
     </div>
