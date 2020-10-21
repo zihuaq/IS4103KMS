@@ -20,7 +20,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class CreateNewProjectPage implements OnInit {
 
   newProject: Project;
-  tagList: Tag[];
+  tags: Tag[];
   currentUserId: number;
 
   constructor(public modalCtrl: ModalController,
@@ -30,7 +30,7 @@ export class CreateNewProjectPage implements OnInit {
     private tagService: TagService,
     private authenticationService: AuthenticationService) { 
       this.newProject = new Project();
-      this.tagList = [];
+      this.tags = [];
     }
 
   ngOnInit() {
@@ -44,16 +44,26 @@ export class CreateNewProjectPage implements OnInit {
   ionViewWillEnter() {
     this.tagService.getAllSDGTags().subscribe(
       response => {
-        this.tagList = response;
+        this.tags = response;
       }
     )
   }
 
-  create(createProjectForm: NgForm) {
+  async create(createProjectForm: NgForm) {
     let tagIds: number[] = [];
-    for (let tag of this.newProject.sdgs) {
-      tagIds.push(tag.tagId);
+    if (this.newProject.sdgs.length > 0) {
+      for (let tag of this.newProject.sdgs) {
+        tagIds.push(tag.tagId);
+      }
+    } else {
+      const toast = await this.toastController.create({
+        message: "Please select at least one SDG tags.",
+        duration: 2000
+      })
+      toast.present();
+      return;
     }
+
     this.newProject.sdgs = [];
     if (createProjectForm.valid) {
       this.newProject.dateCreated = new Date();

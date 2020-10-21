@@ -92,8 +92,16 @@ export class EditProjectDetailsPage implements OnInit {
     this.segment;
   }
 
-  edit(editProjectForm: NgForm) {
+  async edit(editProjectForm: NgForm) {
     this.projectToEdit.sdgs = [];
+    if (this.selectedTagNames.length == 0) {
+      const toast = await this.toastController.create({
+        message: "Please select at least one SDG tags.",
+        duration: 2000
+      })
+      toast.present();
+      return;
+    }
     for (let tagString of this.selectedTagNames) {
       for (let tag of this.tagList) {
         if (tag.name == tagString) {

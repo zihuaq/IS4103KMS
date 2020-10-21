@@ -3,17 +3,17 @@
   <ion-list>
 
     <ion-item>
-      <ion-label><b>Name: </b></ion-label>
+      <ion-label position="stacked"><b>Name: </b></ion-label>
       <ion-input type="text" id="name" name="name" [(ngModel)]="projectToEdit.name" required #name="ngModel"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label><b>Description: </b></ion-label>
+      <ion-label position="stacked"><b>Description: </b></ion-label>
       <ion-textarea id="description" name="description" [(ngModel)]="projectToEdit.description" required #description="ngModel"></ion-textarea>
     </ion-item>
 
     <ion-item>
-      <ion-label><b>Country: </b></ion-label>
+      <ion-label position="stacked"><b>Country: </b></ion-label>
       <input list="country-list" id="country" name="country" [(ngModel)]="projectToEdit.country" required #country="ngModel" style="background: local; border: hidden;">              
         <datalist id="country-list"> 
           <option value="Afghanistan">Afghanistan</option>
@@ -264,19 +264,19 @@
     </ion-item>
 
     <ion-item>
-      <ion-label text-wrap><b>Monetary Funding Required(USD): </b></ion-label>
+      <ion-label position="stacked"><b>Monetary Funding Required(USD): </b></ion-label>
       <ion-input type="number" id="amount" name="amount" [(ngModel)]="projectToEdit.monetaryFundingRequired" required #amount="ngModel"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>SDG Tags: </ion-label>
+      <ion-label position="stacked">SDG Tags: </ion-label>
       <ion-select id="sdgs" *ngIf="selectedTagNames.length" name="sdgs" [(ngModel)]="selectedTagNames" required #sdgs="ngModel" multiple="true">
         <ion-select-option *ngFor="let tag of tagListString" [value]="tag">{{tag}}</ion-select-option>           
       </ion-select>
     </ion-item>
 
     <ion-item>
-      <ion-label>Project Status: </ion-label>
+      <ion-label position="stacked">Project Status: </ion-label>
       <ion-select id="status" name="status" [(ngModel)]="projectToEdit.status" required #status="ngModel">
         <ion-select-option *ngFor="let status of projectStatusList" [value]='status'>{{status}}</ion-select-option>
       </ion-select>
