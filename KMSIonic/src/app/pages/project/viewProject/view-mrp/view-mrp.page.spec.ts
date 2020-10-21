@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { EditHrpPage } from './edit-hrp.page';
+import { ViewMrpPage } from './view-mrp.page';
 
-describe('EditHrpPage', () => {
-  let component: EditHrpPage;
-  let fixture: ComponentFixture<EditHrpPage>;
+describe('ViewMrpPage', () => {
+  let component: ViewMrpPage;
+  let fixture: ComponentFixture<ViewMrpPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditHrpPage ],
+      declarations: [ ViewMrpPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EditHrpPage);
+    fixture = TestBed.createComponent(ViewMrpPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

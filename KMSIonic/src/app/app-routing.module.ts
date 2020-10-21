@@ -229,13 +229,6 @@ const routes: Routes = [
       )
   },
   {
-    path: 'edit-hrp',
-    loadChildren: () => 
-      import('./pages/project/editProject/edit-hrp/edit-hrp.module').then( 
-        (m) => m.EditHrpPageModule
-      )
-  },
-  {
     path: 'create-post',
     loadChildren: () =>
       import('./pages/create-post/create-post.module').then(
@@ -274,7 +267,21 @@ const routes: Routes = [
   {
     path: 'edit-hrp-details/:hrpId',
     loadChildren: () => import('./pages/project/editProject/edit-hrp-details/edit-hrp-details.module').then( m => m.EditHrpDetailsPageModule)
+  },
+  {
+    path: 'view-mrp',
+    loadChildren: () => import('./pages/project/viewProject/view-mrp/view-mrp.module').then( m => m.ViewMrpPageModule)
+  },
+  {
+    path: 'edit-mrp-details/:mrpId',
+    loadChildren: () => import('./pages/project/editProject/edit-mrp-details/edit-mrp-details.module').then( m => m.EditMrpDetailsPageModule)
+  },
+  {
+    path: 'create-mrp/:projectId',
+    loadChildren: () => import('./pages/project/editProject/create-mrp/create-mrp.module').then( m => m.CreateMrpPageModule)
   }
+
+
 
 
 
