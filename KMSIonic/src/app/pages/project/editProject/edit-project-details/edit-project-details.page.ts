@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ApplicationRef } from '@angular/core';
 import { Location } from "@angular/common";
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ToastController, ActionSheetController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 
 import { User } from 'src/app/classes/user';
@@ -11,6 +11,9 @@ import { ProjectType } from 'src/app/classes/project-type.enum';
 import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/services/tag.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+
+declare var Camera: any;
+declare var navigator: any;
 
 @Component({
   selector: 'app-edit-project-details',
@@ -30,11 +33,14 @@ export class EditProjectDetailsPage implements OnInit {
   tagListString: string[];
   selectedTagNames: string[] = [];
   projectStatusList: ProjectType[];
+  hasLoaded: boolean = false;
 
   constructor(public toastController: ToastController,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private projectService: ProjectService,
+    private actionSheetController: ActionSheetController,
+    private app: ApplicationRef,
     private tagService: TagService,
     private authenticationService: AuthenticationService,
     private location: Location) { 
@@ -76,6 +82,7 @@ export class EditProjectDetailsPage implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToEdit = response;
+        this.hasLoaded = true;
         this.noOfMembers = this.projectToEdit.projectMembers.length;
         this.owner = this.projectToEdit.projectOwner;
 
@@ -129,4 +136,77 @@ export class EditProjectDetailsPage implements OnInit {
       );
     }
   }
+  async choosePictureActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Choose Profile Picture',
+      buttons: [
+        {
+          text: 'Camera',
+          icon: 'camera',
+          handler: () => {
+            console.log('Camera chosen');
+            navigator.camera.getPicture(
+              (imageUri) => {
+                console.log(imageUri);
+                this.projectToEdit.profilePicture =
+                  'data:image/jpeg;base64,' + imageUri;
+                this.app.tick();
+              },
+              (error) => {
+                console.debug('Unable to obtain picture: ' + error, 'app');
+              },
+              this.setOptions(Camera.PictureSourceType.CAMERA)
+            );
+          }
+        },
+        {
+          text: 'Gallery',
+          icon: 'albums',
+          handler: () => {
+            console.log('Gallery chosen');
+            navigator.camera.getPicture(
+              (imageUri) => {
+                console.log(imageUri);
+                this.projectToEdit.profilePicture =
+                  'data:image/jpeg;base64,' + imageUri;
+                this.app.tick();
+              },
+              (error) => {
+                console.debug('Unable to obtain picture: ' + error, 'app');
+              },
+              this.setOptions(Camera.PictureSourceType.PHOTOLIBRARY)
+            );
+          }
+        },
+        {
+          text: 'Remove Existing',
+          icon: 'trash',
+          handler: () => {
+            this.projectToEdit.profilePicture = null;
+          }
+        }
+      ]
+    });
+
+    actionSheet.onDidDismiss().then(() => {
+      console.log('Dismissed');
+    });
+
+    await actionSheet.present();
+  }
+
+  setOptions(srcType) {
+    var options = {
+      // Some common settings are 20, 50, and 100
+      quality: 50,
+      destinationType: Camera.DestinationType.DATA_URL,
+      // In this app, dynamically set the picture source, Camera or photo gallery
+      sourceType: srcType,
+      encodingType: Camera.EncodingType.JPEG,
+      mediaType: Camera.MediaType.PICTURE,
+      correctOrientation: true
+    };
+    return options;
+  }
+
 }

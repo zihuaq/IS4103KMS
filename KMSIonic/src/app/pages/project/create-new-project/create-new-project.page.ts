@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ApplicationRef } from '@angular/core';
 
 import { NgForm } from '@angular/forms';
-import { ToastController } from '@ionic/angular';
-import { ModalController } from '@ionic/angular';
+import { ActionSheetController, ToastController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { User } from 'src/app/classes/user';
@@ -11,6 +10,9 @@ import { ProjectService } from 'src/app/services/project.service';
 import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/services/tag.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+
+declare var Camera: any;
+declare var navigator: any;
 
 @Component({
   selector: 'app-create-new-project',
@@ -25,7 +27,9 @@ export class CreateNewProjectPage implements OnInit {
 
   constructor(public modalCtrl: ModalController,
     public toastController: ToastController,
+    private actionSheetController: ActionSheetController,
     private router: Router,
+    private app: ApplicationRef,
     private projectService: ProjectService,
     private tagService: TagService,
     private authenticationService: AuthenticationService) { 
@@ -94,6 +98,79 @@ export class CreateNewProjectPage implements OnInit {
     this.modalCtrl.dismiss({
       'dismissed': true
     });
+  }
+
+  async choosePictureActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Choose Profile Picture',
+      buttons: [
+        {
+          text: 'Camera',
+          icon: 'camera',
+          handler: () => {
+            console.log('Camera chosen');
+            navigator.camera.getPicture(
+              (imageUri) => {
+                console.log(imageUri);
+                this.newProject.profilePicture =
+                  'data:image/jpeg;base64,' + imageUri;
+                this.app.tick();
+              },
+              (error) => {
+                console.debug('Unable to obtain picture: ' + error, 'app');
+              },
+              this.setOptions(Camera.PictureSourceType.CAMERA)
+            );
+          }
+        },
+        {
+          text: 'Gallery',
+          icon: 'albums',
+          handler: () => {
+            console.log('Gallery chosen');
+            navigator.camera.getPicture(
+              (imageUri) => {
+                console.log(imageUri);
+                this.newProject.profilePicture =
+                  'data:image/jpeg;base64,' + imageUri;
+                this.app.tick();
+              },
+              (error) => {
+                console.debug('Unable to obtain picture: ' + error, 'app');
+              },
+              this.setOptions(Camera.PictureSourceType.PHOTOLIBRARY)
+            );
+          }
+        },
+        {
+          text: 'Remove Existing',
+          icon: 'trash',
+          handler: () => {
+            this.newProject.profilePicture = null;
+          }
+        }
+      ]
+    });
+
+    actionSheet.onDidDismiss().then(() => {
+      console.log('Dismissed');
+    });
+
+    await actionSheet.present();
+  }
+
+  setOptions(srcType) {
+    var options = {
+      // Some common settings are 20, 50, and 100
+      quality: 50,
+      destinationType: Camera.DestinationType.DATA_URL,
+      // In this app, dynamically set the picture source, Camera or photo gallery
+      sourceType: srcType,
+      encodingType: Camera.EncodingType.JPEG,
+      mediaType: Camera.MediaType.PICTURE,
+      correctOrientation: true
+    };
+    return options;
   }
 
 }

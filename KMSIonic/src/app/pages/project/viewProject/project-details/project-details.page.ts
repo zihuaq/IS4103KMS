@@ -25,6 +25,7 @@ export class ProjectDetailsPage implements OnInit {
   noOfMembers: number;
   currentUserId: number;
   segment: string;
+  hasLoaded: boolean = false;
 
   constructor(public toastController: ToastController,
     public alertController: AlertController,
@@ -64,6 +65,7 @@ export class ProjectDetailsPage implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       async response => {
         this.project = response;
+        this.hasLoaded = true;
         this.noOfMembers = this.project.projectMembers.length;
 
         this.owner = this.project.projectOwner;

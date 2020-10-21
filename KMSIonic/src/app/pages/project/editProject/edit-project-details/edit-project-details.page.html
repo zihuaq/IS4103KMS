@@ -274,6 +274,17 @@
         <ion-select-option *ngFor="let tag of tagListString" [value]="tag">{{tag}}</ion-select-option>           
       </ion-select>
     </ion-item>
+    <ion-item>
+      <ion-avatar slot="start">
+        <img *ngIf="projectToEdit.profilePicture" class="ion-border" [src]="projectToEdit.profilePicture"
+          alt="Project profile picture">
+        <img *ngIf="!projectToEdit.profilePicture" class="ion-border"
+          src="https://www.showplacerents.com/img/image-placeholder.png"
+          alt="Project profile picture">
+      </ion-avatar>
+      <ion-button (click)="choosePictureActionSheet()">Change profile picture</ion-button>
+    </ion-item>
+    
 
     <ion-item>
       <ion-label position="stacked">Project Status: </ion-label>

@@ -292,6 +292,17 @@
             </ion-select>
           </ion-item>
 
+          <ion-item>
+            <ion-avatar slot="start">
+              <img *ngIf="newProject.profilePicture" class="ion-border" [src]="newProject.profilePicture"
+                alt="Project profile picture">
+              <img *ngIf="!newProject.profilePicture" class="ion-border"
+                src="https://www.showplacerents.com/img/image-placeholder.png"
+                alt="Project profile picture">
+            </ion-avatar>
+            <ion-button (click)="choosePictureActionSheet()">Add profile picture</ion-button>
+          </ion-item>
+
           <ion-button expand="full" type="submit" [disabled]="!createProjectForm.valid">
             Create
           </ion-button>
