@@ -188,21 +188,21 @@ const routes: Routes = [
   {
     path: 'changepassword',
     loadChildren: () =>
-      import('./changepassword/changepassword.module').then(
+      import('./pages/changepassword/changepassword.module').then(
         (m) => m.ChangepasswordPageModule
       )
   },
   {
     path: 'user-setting',
     loadChildren: () =>
-      import('./user-setting/user-setting.module').then(
+      import('./pages/user-setting/user-setting.module').then(
         (m) => m.UserSettingPageModule
       )
   },
   {
     path: 'deactivate-account',
     loadChildren: () =>
-      import('./deactivate-account/deactivate-account.module').then(
+      import('./pages/deactivate-account/deactivate-account.module').then(
         (m) => m.DeactivateAccountPageModule
       )
   },
