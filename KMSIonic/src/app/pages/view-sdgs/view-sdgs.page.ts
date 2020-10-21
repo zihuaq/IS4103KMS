@@ -8,7 +8,7 @@ import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-view-sdgs',
   templateUrl: './view-sdgs.page.html',
-  styleUrls: ['./view-sdgs.page.scss'],
+  styleUrls: ['./view-sdgs.page.scss']
 })
 export class ViewSdgsPage implements OnInit {
   profile: User;
@@ -18,16 +18,18 @@ export class ViewSdgsPage implements OnInit {
   isEdit: boolean;
   sdgsToRemove: Tag[] = [];
 
-  constructor(private activatedRoute: ActivatedRoute,
-    private userService: UserService, private authenticationService: AuthenticationService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private userService: UserService,
+    private authenticationService: AuthenticationService
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ionViewWillEnter() {
     let profileid = this.activatedRoute.snapshot.params.userid;
     this.authenticationService.getCurrentUser().then((user: User) => {
-      this.loggedInUserId = user.userId
+      this.loggedInUserId = user.userId;
       if (!profileid || profileid == this.loggedInUserId) {
         profileid = this.loggedInUserId;
         this.userService.getUser(profileid).subscribe((data: User) => {
@@ -46,12 +48,12 @@ export class ViewSdgsPage implements OnInit {
         this.userService
           .getUser(this.loggedInUserId.toString())
           .subscribe((data: User) => {
-            console.log(data)
+            console.log(data);
             this.loggedInUser = data;
           });
 
         this.userService.getUser(profileid).subscribe((data: User) => {
-          console.log(data)
+          console.log(data);
           this.profile = data;
 
           this.userService
@@ -66,24 +68,27 @@ export class ViewSdgsPage implements OnInit {
   }
 
   onEdit() {
-    this.isEdit = !this.isEdit
+    this.isEdit = !this.isEdit;
   }
 
-  deleteTag(tag: Tag){
-    this.displayedSdgs = this.displayedSdgs.filter(element => element.name != tag.name);
+  deleteTag(tag: Tag) {
+    this.displayedSdgs = this.displayedSdgs.filter(
+      (element) => element.name != tag.name
+    );
     this.sdgsToRemove.push(tag);
   }
 
   onSave() {
+    console.log('saving');
     this.sdgsToRemove.forEach((element) => {
       this.userService
-      .removeSkillFromProfile(this.profile.userId, element.tagId)
-      .subscribe((responsedata) => {
-        this.profile.skills = responsedata;
-        this.displayedSdgs = responsedata;
-      });
+        .removeSDGFromProfile(this.profile.userId, element.tagId)
+        .subscribe((responsedata) => {
+          this.profile.sdgs = responsedata;
+          this.displayedSdgs = responsedata;
+        });
     });
-    this.sdgsToRemove = []
+    this.sdgsToRemove = [];
     this.isEdit = !this.isEdit;
   }
 }

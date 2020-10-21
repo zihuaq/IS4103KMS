@@ -7,6 +7,8 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.GroupEntity;
+import entity.PostCommentEntity;
+import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.ReportEntity;
 import entity.UserEntity;
@@ -36,7 +38,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     private EntityManager em;
 
     @Override
-    public ReportEntity createNewReport(ReportEntity report) throws NoResultException {
+    public ReportEntity reportProfile(ReportEntity report) throws NoResultException {
         UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
         UserEntity reportedUser = em.find(UserEntity.class, report.getReportedUser().getUserId());
         if (reportOwner != null && reportedUser != null) {
@@ -66,10 +68,8 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             em.persist(report);
             em.flush();
             return report;
-            
         } else if (reportedProject == null) {
             throw new NoResultException("Project not found");
-        
         } else {
             throw new NoResultException("User not found");
         }
@@ -84,15 +84,42 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             em.persist(report);
             em.flush();
             return report;
-            
         } else if (reportedGroup == null) {
-            throw new NoResultException("Project not found");
-        
+            throw new NoResultException("Group not found");
         } else {
             throw new NoResultException("User not found");
         }
     }
     
+    @Override
+    public ReportEntity reportPost(ReportEntity report) throws NoResultException {
+        UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
+        PostEntity reportedPost = em.find(PostEntity.class, report.getReportedPost().getPostId());
+        if (reportOwner != null && reportedPost != null) {
+            em.persist(report);
+            em.flush();
+            return report;
+        } else if (reportedPost == null) {
+            throw new NoResultException("Post not found");
+        } else {
+            throw new NoResultException("User not found");
+        }
+    }
+    
+    @Override
+    public ReportEntity reportComment(ReportEntity report) throws NoResultException {
+        UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
+        PostCommentEntity reportedComment = em.find(PostCommentEntity.class, report.getReportedComment().getPostCommentId());
+        if (reportOwner != null && reportedComment != null) {
+            em.persist(report);
+            em.flush();
+            return report;
+        } else if (reportedComment == null) {
+            throw new NoResultException("Comment not found");
+        } else {
+            throw new NoResultException("User not found");
+        }
+    }
     
     @Override
     public void updateReportVerdict(ReportEntity updatedReport) throws NoResultException{

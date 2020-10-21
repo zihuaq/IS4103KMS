@@ -20,9 +20,9 @@ export class ReportService {
 
   constructor(private http: HttpClient) {}
 
-  createReport(report: Report): Observable<any> {
+  reportProfile(report: Report): Observable<any> {
     return this.http
-      .post<any>(this.baseUrl + '/create', report, httpOptions)
+      .post<any>(this.baseUrl + '/reportProfile', report, httpOptions)
       .pipe(catchError(this.handleError));
   }
 
@@ -38,24 +38,42 @@ export class ReportService {
       .pipe(catchError(this.handleError));
   }
 
-  getProfileReports():Observable<any>{
-    return this.http.get<any>(this.baseUrl+'/getProfileReports')
-    .pipe(catchError(this.handleError))
+  reportPost(report: Report): Observable<any> {
+    return this.http
+      .post<any>(this.baseUrl + '/reportPost', report, httpOptions)
+      .pipe(catchError(this.handleError));
   }
 
-  passProfileReportVerdict(report: Report, active: Boolean):Observable<any>{
-    let PassProfileReportVerdictReq ={
+  reportComment(report: Report): Observable<any> {
+    return this.http
+      .post<any>(this.baseUrl + '/reportComment', report, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  getProfileReports(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/getProfileReports')
+      .pipe(catchError(this.handleError));
+  }
+
+  passProfileReportVerdict(report: Report, active: Boolean): Observable<any> {
+    let PassProfileReportVerdictReq = {
       report: report,
-      active: active
-    }
+      active: active,
+    };
 
-    return this.http.post<any>(this.baseUrl+'/passProfileReportVerdict', PassProfileReportVerdictReq)
-    .pipe(catchError(this.handleError))
+    return this.http
+      .post<any>(
+        this.baseUrl + '/passProfileReportVerdict',
+        PassProfileReportVerdictReq
+      )
+      .pipe(catchError(this.handleError));
   }
 
-  getProjectReports():Observable<any>{
-    return this.http.get<any>(this.baseUrl+'/getProjectReports')
-    .pipe(catchError(this.handleError))
+  getProjectReports(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/getProjectReports')
+      .pipe(catchError(this.handleError));
   }
 
   passProjectReportVerdict(report: Report, active: Boolean):Observable<any>{
@@ -128,6 +146,4 @@ export class ReportService {
 
     return throwError(errorMessage);
   }
-
-
 }

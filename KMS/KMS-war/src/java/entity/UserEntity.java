@@ -91,14 +91,17 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "projectAdmins")
     @ManyToMany
     private List<ProjectEntity> projectsManaged;
-    
+    @ManyToMany
+    private List<GroupEntity> groupsManaged;
+    @OneToMany(mappedBy = "postOwner")
+    private List<PostEntity> posts;
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
     @JoinTable(name= "groupMembers")
-    @ManyToMany(mappedBy = "groupMembers")
+    @ManyToMany
     private List<GroupEntity> groupsJoined;  
     @JoinTable(name= "groupAdmins")
-    @ManyToMany(mappedBy = "groupAdmins")
+    @ManyToMany
     private List<GroupEntity> groupAdmins;
     @OneToMany
     private List<BadgeEntity> badges;
@@ -140,9 +143,6 @@ public class UserEntity implements Serializable {
     
     @OneToMany(mappedBy = "fulfillmentOwner")
     private List<FulfillmentEntity> fulfillments;
-    
-    @OneToMany(mappedBy = "postOwner")
-    private List<PostEntity> posts;
 
     @JoinTable(name = "activityJoined")
     @ManyToMany
@@ -182,18 +182,6 @@ public class UserEntity implements Serializable {
         this.donations = new ArrayList<>();
     }
 
-    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date joinedDate, String profilePicture) {
-        this();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.gender = gender;
-        this.email = email;
-        this.password = password;
-        this.joinedDate = joinedDate;
-        this.profilePicture = profilePicture;
-    }
-
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, UserTypeEnum usertype) {
         this();
         this.firstName = firstName;
@@ -204,6 +192,19 @@ public class UserEntity implements Serializable {
         this.setPassword(password);
         this.joinedDate = new Date();
         this.userType = usertype;
+    }
+
+    public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date adminStartDate, UserTypeEnum userType) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.email = email;
+        this.setPassword(password);
+        this.joinedDate = new Date();
+        this.adminStartDate = adminStartDate;
+        this.userType = userType;
     }
 
     public Long getUserId() {
@@ -433,6 +434,10 @@ public class UserEntity implements Serializable {
     public List<ProjectEntity> getProjectsManaged() {
         return projectsManaged;
     }
+    
+    public List<GroupEntity> getGroupsManaged() {
+        return groupsManaged;
+    }
 
     public void setProjectsManaged(List<ProjectEntity> projectsManaged) {
         this.projectsManaged = projectsManaged;
@@ -565,4 +570,9 @@ public class UserEntity implements Serializable {
     public void setDonations(List<DonationEntity> donations) {
         this.donations = donations;
     }
+
+    public void setGroupsManaged(List<GroupEntity> groupsManaged) {
+        this.groupsManaged = groupsManaged;
+    }
+
 }

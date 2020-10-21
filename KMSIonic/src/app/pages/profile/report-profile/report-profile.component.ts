@@ -49,7 +49,7 @@ export class ReportProfileComponent implements OnInit {
 
   filterList(evt) {
     this.searchValue = evt.srcElement.value;
-
+    console.log(!this.searchValue);
     if (!this.searchValue) {
       this.filteredTags = this.reportTags;
     }
@@ -102,7 +102,7 @@ export class ReportProfileComponent implements OnInit {
       this.report.reportedUser = this.profile;
       this.report.reportContent = this.content;
       this.report.reportTags = this.chosenTags;
-      this.reportService.createReport(this.report).subscribe(async () => {
+      this.reportService.reportProfile(this.report).subscribe(async () => {
         const toast = await this.toastController.create({
           message: 'Report created successfully',
           duration: 2000

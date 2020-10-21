@@ -35,5 +35,9 @@ public interface ActivitySessionBeanLocal {
     public void allocateHrpToActivity(Long activityId, Long hrpId) throws NoResultException;
 
     public void removeHrpFromActivity(Long activityId, Long hrpId) throws NoResultException;
+
+    public List<ActivityEntity> retrieveActivitiesNotCompleted();
+
+    public void updateActivitiesStatus(List<ActivityEntity> activities);
         
 }

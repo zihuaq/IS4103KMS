@@ -22,6 +22,7 @@
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@ionic-native/clipboard": "^5.28.0",
     "@ionic-native/core": "^5.0.0",
+    "@ionic-native/device": "^5.29.0",
     "@ionic-native/google-maps": "^5.5.0",
     "@ionic-native/keyboard": "^5.28.0",
     "@ionic-native/social-sharing": "^5.28.0",
@@ -31,8 +32,12 @@
     "@ionic/react": "^5.3.3",
     "@ionic/react-router": "^5.3.3",
     "@ionic/storage": "^2.3.1",
-    "cordova-android": "9.0.0",
+    "cordova-common": "^4.0.2",
+    "human-signals": "^2.1.0",
+    "jetifier": "^1.6.6",
+    "properties-parser": "^0.3.1",
     "rxjs": "~6.5.5",
+    "strip-final-newline": "^2.0.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },
@@ -88,7 +93,8 @@
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },
       "cordova-plugin-x-socialsharing": {},
-      "cordova-clipboard": {}
+      "cordova-clipboard": {},
+      "cordova-plugin-androidx-adapter": {}
     },
     "platforms": [
       "browser",

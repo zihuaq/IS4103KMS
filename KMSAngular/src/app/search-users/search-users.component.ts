@@ -21,7 +21,7 @@ declare var $: any;
 export class SearchUsersComponent implements OnInit {
   allUsers: User[];
   filteredUsers: User[];
-  searchString: string;
+  searchString: string = "";
   loggedInUserId: number;
   loggedInUserFollowing: User[];
   loggedInUserFollowRequestMade: FollowRequest[];
@@ -29,8 +29,15 @@ export class SearchUsersComponent implements OnInit {
   query: string;
   skillTags: Tag[];
   sdgTags: Tag[];
-  selectedSkillTags: Tag[];
-  selectedsdgTags: Tag[];
+  selectedSkillTags: Tag[] = [];
+  selectedsdgTags: Tag[] = [];
+  selectedUserType: UserType = null;
+  userTypes: any = [
+    { id: "All", value: "All" },
+    { id: UserType.ADMIN, value: "Admin" },
+    { id: UserType.INDIVIDUAL, value: "Individual" },
+    { id: UserType.INSTITUTE, value: "Institute" }
+  ]
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -178,7 +185,7 @@ export class SearchUsersComponent implements OnInit {
         this.selectedsdgTags.push(element)
       }
     });
-
+    this.updateFilteredUsersAccordingToRefineOptions();
   }
 
   skillsChanged() {
@@ -189,34 +196,74 @@ export class SearchUsersComponent implements OnInit {
         this.selectedSkillTags.push(element)
       }
     });
+    this.updateFilteredUsersAccordingToRefineOptions();
+  }
 
+  updateFilteredUsersAccordingToRefineOptions() {
+    this.filteredUsers = [];
+    if (this.selectedSkillTags.length > 0 || this.selectedsdgTags.length > 0 || this.selectedUserType) {
+      this.allUsers.forEach((user) => {
+        let numSkillsMatch = 0;
+        let numSDGMatch = 0;
+        let userTypeMatch = this.selectedUserType == null;
+        user.sdgs.forEach((sdg) => {
+          if (this.selectedsdgTags.some(tag => tag.tagId == sdg.tagId)) {
+            numSDGMatch++;
+          }
+        });
+        user.skills.forEach((skill) => {
+          if (this.selectedSkillTags.some(tag => tag.tagId == skill.tagId)) {
+            numSkillsMatch++;
+          }
+        });
+        if (this.selectedUserType) {
+          if (this.selectedUserType == user.userType) {
+            userTypeMatch = true;
+          }
+        }
+        if (userTypeMatch && numSkillsMatch == this.selectedSkillTags.length && numSDGMatch == this.selectedsdgTags.length && !this.filteredUsers.some(filteredUser => filteredUser.userId == user.userId)) {
+          if (this.userMatchSearchString(user)) {
+            this.filteredUsers.push(user);
+          }
+        }
+      });
+    } else {
+      this.allUsers.forEach(user => {
+        if (this.userMatchSearchString(user)) {
+          this.filteredUsers.push(user);
+        }
+      });
+    }
+  }
+
+  userMatchSearchString(user: User) {
+    if (user.userType == UserType.INDIVIDUAL || user.userType == UserType.ADMIN) {
+      if (!user.firstName.toLowerCase().includes(this.searchString.toLowerCase()) &&
+        !user.lastName.toLowerCase().includes(this.searchString.toLowerCase())) {
+        return false;
+      }
+    } else if (user.userType == UserType.INSTITUTE) {
+      if (!user.firstName.toLowerCase().includes(this.searchString.toLowerCase())) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  onSelectedUserTypeChange(event) {
+    if (event.target.value == "All") {
+      this.selectedUserType = null;
+    } else if (event.target.value == this.selectedUserType) {
+      this.selectedUserType = null;
+    } else {
+      this.selectedUserType = event.target.value;
+    }
+    this.updateFilteredUsersAccordingToRefineOptions();
   }
 
   handleSearchStringChanged(event) {
     this.searchString = event;
-    this.filteredUsers = [];
-    for (var user of this.allUsers) {
-      console.log(user);
-      if (
-        user.userType == UserType.INDIVIDUAL ||
-        user.userType == UserType.ADMIN
-      ) {
-        if (
-          user.firstName
-            .toLowerCase()
-            .includes(this.searchString.toLowerCase()) ||
-          user.lastName.toLowerCase().includes(this.searchString.toLowerCase())
-        ) {
-          this.filteredUsers.push(user);
-        }
-      } else if (user.userType == UserType.INSTITUTE) {
-        if (
-          user.firstName.toLowerCase().includes(this.searchString.toLowerCase())
-        ) {
-          this.filteredUsers.push(user);
-        }
-      }
-    }
+    this.updateFilteredUsersAccordingToRefineOptions();
   }
 
   follow(userId: number) {

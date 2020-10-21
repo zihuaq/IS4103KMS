@@ -11,7 +11,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-item-divider class="ion-no-padding">
+  <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" newsfeedType="user"
+    (init)="ionViewWillEnter()">
+  </app-newsfeed>
+  <!-- <ion-item-divider class="ion-no-padding">
     <ion-toolbar>
       <ion-avatar slot="start" style="width: 40px; height: 40px;" *ngIf="loggedInUser" class="ion-margin-start">
         <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
@@ -114,5 +117,5 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-  </ion-card>
+  </ion-card> -->
 </ion-content>

@@ -1,5 +1,4 @@
-import { EditPostCommentModalPage } from './../edit-post-comment-modal/edit-post-comment-modal.page';
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from './../../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +17,6 @@ import { PostCommentModalPage } from './post-comment-modal.page';
     PostCommentModalPageRoutingModule,
     SharedModule
   ],
-  declarations: [PostCommentModalPage, EditPostCommentModalPage]
+  declarations: [PostCommentModalPage]
 })
 export class PostCommentModalPageModule {}

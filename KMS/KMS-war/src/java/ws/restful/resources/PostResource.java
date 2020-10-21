@@ -12,6 +12,7 @@ import Exception.UserNotFoundException;
 import ejb.session.stateless.PostSessionBeanLocal;
 import entity.PostCommentEntity;
 import entity.PostEntity;
+import entity.ProjectEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import ws.restful.model.SharePostToProjectOrGroupsReq;
 
 /**
  * REST Web Service
@@ -62,6 +64,7 @@ public class PostResource {
             postEntity.getComments().clear();
             postEntity.getLikers().clear();
             postEntity.setPostOwner(null);
+            postEntity.setProject(null);
             return Response.status(200).entity(postEntity).build();
         } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -112,6 +115,22 @@ public class PostResource {
             posts = getPostsResponse(posts);
             return Response.status(200).entity(posts).build();
         } catch (UserNotFoundException | NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/projectNewsFeed/{projectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPostForProjectNewsfeed(@PathParam("projectId") Long projectId) {
+        try {
+            List<PostEntity> posts = postSessionBean.getPostForProjectNewsfeed(projectId);
+            posts = getPostsResponse(posts);
+            return Response.status(200).entity(posts).build();
+        } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -266,6 +285,22 @@ public class PostResource {
         }
     }
 
+    @PUT
+    @Path("/sharePostToProjects/{postToShareId}/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sharePostToProjects(@PathParam("postToShareId") Long postToShareId, @PathParam("userId") Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) {
+        try {
+            postSessionBean.sharePostToProjects(postToShareId, userId, sharePostToProjectOrGroupsReq);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     @DELETE
     @Path("/post/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -351,9 +386,21 @@ public class PostResource {
             originalPost.setText(postToProcess.getOriginalPost().getText());
             originalPost.setPostId(postToProcess.getOriginalPost().getPostId());
             originalPost.setPostDate(postToProcess.getOriginalPost().getPostDate());
+            if (postToProcess.getOriginalPost().getProject() != null) {
+                ProjectEntity project = new ProjectEntity();
+                project.setProjectId(postToProcess.getOriginalPost().getProject().getProjectId());
+                project.setName(postToProcess.getOriginalPost().getProject().getName());
+                originalPost.setProject(project);
+            }
             post.setOriginalPost(originalPost);
         }
         post.setOriginalPostDeleted(postToProcess.isOriginalPostDeleted());
+        if (postToProcess.getProject() != null) {
+            ProjectEntity project = new ProjectEntity();
+            project.setProjectId(postToProcess.getProject().getProjectId());
+            project.setName(postToProcess.getProject().getName());
+            post.setProject(project);
+        }
         return post;
     }
 

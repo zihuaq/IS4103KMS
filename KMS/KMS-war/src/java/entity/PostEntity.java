@@ -65,6 +65,9 @@ public class PostEntity implements Serializable {
     @ManyToOne
     private ProjectEntity project;
     
+    @ManyToOne
+    private GroupEntity group;
+    
     private boolean originalPostDeleted;
     
     private Boolean isActive;
@@ -77,6 +80,7 @@ public class PostEntity implements Serializable {
     }
 
     public PostEntity(Date postDate, String text, UserEntity postOwner, PostEntity originalPost) {
+        this();
         this.postDate = postDate;
         this.text = text;
         this.postOwner = postOwner;
@@ -196,6 +200,7 @@ public class PostEntity implements Serializable {
         this.originalPostDeleted = originalPostDeleted;
     }
 
+
     public Boolean getIsActive() {
         return isActive;
     }
@@ -205,4 +210,14 @@ public class PostEntity implements Serializable {
     }
     
     
+
+    public GroupEntity getGroup() {
+        return group;
+    }
+
+    public void setGroup(GroupEntity group) {
+        this.group = group;
+    }
+    
+
 }

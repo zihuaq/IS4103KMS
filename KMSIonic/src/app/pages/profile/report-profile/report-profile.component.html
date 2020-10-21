@@ -20,7 +20,7 @@
         Select your concerns
       </ion-label>
       <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
-        placeholder="Select your concerns"></ion-searchbar>
+        placeholder="Select your concerns" autocomplete="on"></ion-searchbar>
       <ion-list lines="none" *ngIf="filteredTags.length > 0">
         <ion-item *ngFor="let tag of filteredTags">
           <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">
@@ -43,7 +43,7 @@
       </ion-label>
       <ion-textarea class="content" maxlength="200" placeholder="Elaboration" [(ngModel)]="content">
       </ion-textarea>
-      <br/>
+      <br />
       <ion-footer>
         <ion-button expand="block" color="dark" (click)="onSubmit()">Submit</ion-button>
       </ion-footer>

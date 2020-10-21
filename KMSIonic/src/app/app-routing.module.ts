@@ -1,22 +1,22 @@
-import { NgModule } from "@angular/core"
-import { PreloadAllModules, RouterModule, Routes } from "@angular/router"
-import { AuthGuard } from "./services/auth.guard"
+import { NgModule } from '@angular/core';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './services/auth.guard';
 
 const routes: Routes = [
   {
-    path: "",
-    redirectTo: "index",
-    pathMatch: "full"
+    path: '',
+    redirectTo: 'index',
+    pathMatch: 'full'
   },
   {
-    path: "login",
+    path: 'login',
     loadChildren: () =>
-      import("./pages/login/login.module").then((m) => m.LoginPageModule)
+      import('./pages/login/login.module').then((m) => m.LoginPageModule)
   },
   {
-    path: "register",
+    path: 'register',
     loadChildren: () =>
-      import("./pages/register/register.module").then(
+      import('./pages/register/register.module').then(
         (m) => m.RegisterPageModule
       )
   },
@@ -104,24 +104,24 @@ const routes: Routes = [
   {
     path: 'create-new-project',
     loadChildren: () =>
-      import('./pages/project/create-new-project/create-new-project.module').then(
-        (m) => m.CreateNewProjectPageModule
-      ),
+      import(
+        './pages/project/create-new-project/create-new-project.module'
+      ).then((m) => m.CreateNewProjectPageModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'project-details/:projectId',
     loadChildren: () =>
-      import('./pages/project/viewProject/project-details/project-details.module').then(
-        (m) => m.ProjectDetailsPageModule
-      )
+      import(
+        './pages/project/viewProject/project-details/project-details.module'
+      ).then((m) => m.ProjectDetailsPageModule)
   },
   {
     path: 'edit-project-details/:projectId',
     loadChildren: () =>
-      import('./pages/project/editProject/edit-project-details/edit-project-details.module').then(
-        (m) => m.EditProjectDetailsPageModule
-      )
+      import(
+        './pages/project/editProject/edit-project-details/edit-project-details.module'
+      ).then((m) => m.EditProjectDetailsPageModule)
   },
   {
     path: 'tab-panel/:projectId',
@@ -130,10 +130,58 @@ const routes: Routes = [
         (m) => m.TabPanelPageModule
       )
   },
+
   {
     path: 'edit-members',
     loadChildren: () =>
-      import('./pages/project/editProject/edit-members/edit-members.module').then(
+      import(
+        './pages/project/editProject/edit-members/edit-members.module'
+      ).then((m) => m.EditMembersPageModule)
+  },
+  {
+    path: 'view-all-group',
+    loadChildren: () =>
+      import('./pages/group/view-all-group/view-all-group.module').then(
+        (m) => m.ViewAllGroupPageModule
+      ),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'create-new-group',
+    loadChildren: () =>
+      import('./pages/group/create-new-group/create-new-group.module').then(
+        (m) => m.CreateNewGroupPageModule
+      ),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'group-details/:groupId',
+    loadChildren: () =>
+      import('./pages/group/viewGroup/group-details/group-details.module').then(
+        (m) => m.GroupDetailsPageModule
+      )
+  },
+  {
+    path: 'edit-group-details/:groupId',
+    loadChildren: () =>
+      import(
+        './pages/group/editGroup/edit-group-details/edit-group-details.module'
+      ).then((m) => m.EditGroupDetailsPageModule)
+  },
+  {
+    //** */
+    path: 'tab-panel/:groupId',
+    loadChildren: () =>
+      import('./pages/group/editGroup/tab-panel/tab-panel.module').then(
+        (m) => m.TabPanelPageModule
+      )
+  },
+
+  {
+    //** */
+    path: 'edit-members',
+    loadChildren: () =>
+      import('./pages/group/editGroup/edit-members/edit-members.module').then(
         (m) => m.EditMembersPageModule
       )
   },
@@ -206,23 +254,23 @@ const routes: Routes = [
       )
   },
   {
-    path: "add-material-resource-available",
+    path: 'add-material-resource-available',
     loadChildren: () =>
-      import("./pages/add-material-resource-available/add-material-resource-available.module").then(
-        (m) => m.AddMaterialResourceAvailablePageModule
-      )
+      import(
+        './pages/add-material-resource-available/add-material-resource-available.module'
+      ).then((m) => m.AddMaterialResourceAvailablePageModule)
   },
   {
     path: 'view-hrp',
-    loadChildren: () => 
-      import('./pages/project/viewProject/view-hrp/view-hrp.module').then( 
+    loadChildren: () =>
+      import('./pages/project/viewProject/view-hrp/view-hrp.module').then(
         (m) => m.ViewHrpPageModule
       )
   },
   {
     path: 'edit-hrp',
-    loadChildren: () => 
-      import('./pages/project/editProject/edit-hrp/edit-hrp.module').then( 
+    loadChildren: () =>
+      import('./pages/project/editProject/edit-hrp/edit-hrp.module').then(
         (m) => m.EditHrpPageModule
       )
   },
@@ -234,20 +282,12 @@ const routes: Routes = [
       )
   },
   {
-    path: 'edit-post-comment-modal',
-    loadChildren: () => 
-      import('./pages/edit-post-comment-modal/edit-post-comment-modal.module').then( 
-        (m) => m.EditPostCommentModalPageModule
-      )
-  },
-  {
-    path: 'share-post-modal',
-    loadChildren: () => 
-      import('./pages/share-post-modal/share-post-modal.module').then( 
-        (m) => m.SharePostModalPageModule
+    path: 'hrp-details/:hrpId',
+    loadChildren: () =>
+      import('./pages/project/viewProject/hrp-details/hrp-details.module').then(
+        (m) => m.HrpDetailsPageModule
       )
   }
-
 ];
 
 @NgModule({

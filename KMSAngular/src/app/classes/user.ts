@@ -6,6 +6,8 @@ import { FollowRequest } from './follow-request';
 import { AffiliationRequest } from './affiliation-request';
 import { HumanResourcePosting } from './human-resource-posting';
 import { Post } from './post';
+import { Project } from './project';
+import { Activity } from './activity';
 
 export class User {
   userId: number;
@@ -36,6 +38,8 @@ export class User {
   hrpApplied: HumanResourcePosting[];
   posts: Post[];
   likedPosts: Post[];
+  projectsJoined: Project[];
+  activityJoined: Activity[];
 
   constructor(
     userId?: number,
@@ -59,12 +63,15 @@ export class User {
     followRequestMade?: FollowRequest[],
     followRequestReceived?: FollowRequest[],
     accountPrivacySetting?: AccountPrivacySettingEnum,
+    isActive?: Boolean,
     affiliatedUsers?: User[],
     affiliationRequestMade?: AffiliationRequest[],
     affiliationRequestReceived?: AffiliationRequest[],
     hrpApplied?: HumanResourcePosting[],
     posts?: Post[],
-    likedPosts?: Post[]
+    likedPosts?: Post[],
+    projectsJoined?: Project[],
+    activityJoined?: Activity[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -87,11 +94,14 @@ export class User {
     this.followRequestMade = followRequestMade;
     this.followRequestReceived = followRequestReceived;
     this.accountPrivacySetting = accountPrivacySetting;
+    this.isActive = isActive;
     this.affiliatedUsers = affiliatedUsers;
     this.affiliationRequestMade = affiliationRequestMade;
     this.affiliationRequestReceived = affiliationRequestReceived;
     this.hrpApplied = hrpApplied;
     this.posts = posts;
     this.likedPosts = likedPosts;
+    this.projectsJoined = projectsJoined;
+    this.activityJoined = activityJoined;
   }
 }

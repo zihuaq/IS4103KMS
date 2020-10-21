@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/view-all-project"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{hrp.name}}</ion-title> 
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card-content>
+    <p><b>Name:</b></p>
+    <p>{{hrp.name}}</p>
+    <br/>
+    <p><b>Description:</b></p>
+    <p>{{hrp.description}}</p>
+    <br/>
+    <p><b>Start Date:</b></p>
+    <p>{{startDate | date}}</p>
+    <br/>
+    <p><b>End Date:</b></p>
+    <p>{{endDate | date}}</p>
+    <br/>
+    <p><b>Location:</b></p>
+    <p>
+      {{hrp.latitude | number:'1.1-6'}},
+      {{hrp.longitude | number:'1.1-6'}}
+    </p>
+    <br/>
+    <p><b>Total slots:</b></p>
+    <p>{{hrp.totalSlots}}</p>
+    <br/>
+    <p><b>Obtained slots:</b></p>
+    <p>{{hrp.obtainedSlots}}</p>
+    <br/>
+    <p><b>Lacking slots:</b></p>
+    <p>{{hrp.lackingSlots}}</p>
+    <br/>    
+    <ion-button expand="full" size ="small" *ngIf="!hasApplied() && !hasFilled()" (click)="applyHrp()" >Apply</ion-button>
+    <ion-button expand="full" size ="small" *ngIf="!hasApplied() && hasFilled()" disabled>Filled</ion-button>
+    <ion-button expand="full" size ="small" *ngIf="hasApplied()" (click)="leaveHrp()" >Leave</ion-button>
+  </ion-card-content>
+  
+</ion-content>
