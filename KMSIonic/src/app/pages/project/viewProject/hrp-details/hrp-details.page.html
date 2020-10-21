@@ -22,10 +22,10 @@
     <p>{{endDate | date}}</p>
     <br/>
     <p><b>Location:</b></p>
-    <p>
+    <ion-badge color="warning" (click)="changehref(hrp.latitude, hrp.longitude)">
       {{hrp.latitude | number:'1.1-6'}},
       {{hrp.longitude | number:'1.1-6'}}
-    </p>
+    </ion-badge>
     <br/>
     <p><b>Total slots:</b></p>
     <p>{{hrp.totalSlots}}</p>

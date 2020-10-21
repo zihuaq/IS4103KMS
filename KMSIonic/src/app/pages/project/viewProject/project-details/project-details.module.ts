@@ -6,9 +6,11 @@ import { IonicModule } from '@ionic/angular';
 
 import { ProjectDetailsPageRoutingModule } from './project-details-routing.module';
 import { ViewHrpPageRoutingModule } from '../view-hrp/view-hrp-routing.module';
+import { ViewMrpPageRoutingModule } from '../view-mrp/view-mrp-routing.module';
 
-import { ViewHrpPage } from '../view-hrp/view-hrp.page';
 import { ProjectDetailsPage } from './project-details.page';
+import { ViewHrpPage } from '../view-hrp/view-hrp.page';
+import { ViewMrpPage } from '../view-mrp/view-mrp.page';
 
 @NgModule({
   imports: [
@@ -16,8 +18,9 @@ import { ProjectDetailsPage } from './project-details.page';
     FormsModule,
     IonicModule,
     ProjectDetailsPageRoutingModule,
-    ViewHrpPageRoutingModule
+    ViewHrpPageRoutingModule,
+    ViewMrpPageRoutingModule
   ],
-  declarations: [ProjectDetailsPage, ViewHrpPage]
+  declarations: [ProjectDetailsPage, ViewHrpPage, ViewMrpPage]
 })
 export class ProjectDetailsPageModule {}

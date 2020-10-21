@@ -11,6 +11,9 @@
               (Joined)
             </span>
           </h2>
+          <ion-badge color="warning">
+            At location {{hrp.latitude | number:'1.1-6'}}, {{hrp.longitude | number:'1.1-6'}}
+          </ion-badge>
           <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
           <span *ngFor="let tag of hrp.tags">
             <ion-badge color="primary">{{tag.name}}</ion-badge>
@@ -25,6 +28,9 @@
               (Filled)
             </span>
           </h2>
+          <ion-badge color="warning">
+            At location {{hrp.latitude | number:'1.1-6'}}, {{hrp.longitude | number:'1.1-6'}}
+          </ion-badge>
           <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
           <span *ngFor="let tag of hrp.tags">
             <ion-badge color="primary">{{tag.name}}</ion-badge>

@@ -135,18 +135,6 @@ export class CreateHrpPage implements OnInit {
       })
   }
 
-  refresh() {
-    this.tagService.getAllSkillTags().subscribe(
-      response => {
-        this.tags = response;
-        this.app.tick()
-      },
-      () => {
-        this.loadMap();
-      }
-    );
-  }
-
   dismiss() {
     this.location.back();
   }
@@ -160,6 +148,7 @@ export class CreateHrpPage implements OnInit {
           duration: 2000
         })
         toast.present();
+        return;
       } else {
         this.newHrp.startDate = new Date(this.startDate);
         this.newHrp.endDate = new Date(this.endDate);
