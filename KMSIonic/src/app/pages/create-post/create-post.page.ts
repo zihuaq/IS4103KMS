@@ -1,3 +1,6 @@
+import { Project } from './../../classes/project';
+import { Group } from './../../classes/group';
+import { ProjectService } from './../../services/project.service';
 import { User } from './../../classes/user';
 import { AuthenticationService } from './../../services/authentication.service';
 import { Post } from './../../classes/post';
@@ -5,6 +8,7 @@ import { PostService } from './../../services/post.service';
 import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ActionSheetController, ToastController } from '@ionic/angular';
+import { Location } from '@angular/common';
 
 declare var Camera: any;
 declare var navigator: any;
@@ -28,6 +32,11 @@ export class CreatePostPage implements OnInit {
     spaceBetween: 8,
     loop: false
   };
+  newsfeedType: string;
+  projectId: number;
+  groupId: number;
+  project: Project;
+  group: Group;
   constructor(
     private router: Router,
     private actionSheetController: ActionSheetController,
@@ -35,12 +44,15 @@ export class CreatePostPage implements OnInit {
     private postService: PostService,
     private toastController: ToastController,
     private authenticationService: AuthenticationService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private projectService: ProjectService,
+    private location: Location
   ) {}
 
   ngOnInit() {}
   ionViewWillEnter() {
     this.isEditPage = this.activatedRoute.snapshot.url[1]?.path == 'edit';
+    this.newsfeedType = this.activatedRoute.snapshot.url[0]?.path;
     if (this.isEditPage) {
       this.postId = this.activatedRoute.snapshot.params.postid;
       this.postService.getPostById(this.postId).subscribe((post: Post) => {
@@ -50,12 +62,22 @@ export class CreatePostPage implements OnInit {
         this.checkCanPost();
       });
     }
+    if (this.newsfeedType == 'project') {
+      this.projectId = this.activatedRoute.snapshot.params.projectid;
+      this.projectService
+        .getProjectById(this.projectId)
+        .subscribe((project) => {
+          this.project = project;
+        });
+    }
+    if (this.newsfeedType == 'group') {
+      this.groupId = this.activatedRoute.snapshot.params.groupid;
+      //TODO: get group
+    }
 
-    let loggedInUserId = this.authenticationService
-      .getCurrentUser()
-      .then((user: any) => {
-        this.loggedInUser = user;
-      });
+    this.authenticationService.getCurrentUser().then((user: any) => {
+      this.loggedInUser = user;
+    });
   }
 
   async createPost() {
@@ -75,6 +97,8 @@ export class CreatePostPage implements OnInit {
         createdPost.text = this.postContent;
         createdPost.picture = this.uploadedPicture;
         createdPost.postOwner = this.loggedInUser;
+        createdPost.project = this.project;
+        createdPost.group = this.group;
 
         this.postService.createPost(createdPost).subscribe(
           async (data: Post) => {
@@ -83,7 +107,7 @@ export class CreatePostPage implements OnInit {
               duration: 2000
             });
             toast.present();
-            this.router.navigate(['/index']);
+            this.location.back();
           },
           async (err) => {
             const toast = await this.toastController.create({
@@ -91,7 +115,7 @@ export class CreatePostPage implements OnInit {
               duration: 2000
             });
             toast.present();
-            this.router.navigate(['/index']);
+            this.location.back();
           }
         );
       } else {
@@ -104,7 +128,7 @@ export class CreatePostPage implements OnInit {
               duration: 2000
             });
             toast.present();
-            this.router.navigate(['/index']);
+            this.location.back();
           },
           async (err) => {
             const toast = await this.toastController.create({
@@ -112,7 +136,7 @@ export class CreatePostPage implements OnInit {
               duration: 2000
             });
             toast.present();
-            this.router.navigate(['/index']);
+            this.location.back();
           }
         );
       }

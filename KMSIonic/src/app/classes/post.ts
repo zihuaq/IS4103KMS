@@ -1,6 +1,7 @@
 import { User } from './user';
 import { PostComment } from './post-comment';
 import { Project } from './project';
+import { Group } from './group';
 
 export class Post {
   postId: number;
@@ -14,6 +15,8 @@ export class Post {
   originalPost: Post;
   comments: PostComment[];
   project: Project;
+  originalPostDeleted: boolean;
+  group: Group;
 
   constructor(
     postId?: number,
@@ -26,7 +29,9 @@ export class Post {
     sharedPosts?: Post[],
     originalPost?: Post,
     comments?: PostComment[],
-    project?: Project
+    project?: Project,
+    originalPostDeleted?: boolean,
+    group?: Group
   ) {
     this.postId = postId;
     this.postDate = postDate;
@@ -39,5 +44,7 @@ export class Post {
     this.originalPost = originalPost;
     this.comments = comments;
     this.project = project;
+    this.originalPostDeleted = originalPostDeleted;
+    this.group = group;
   }
 }

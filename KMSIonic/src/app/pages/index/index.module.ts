@@ -1,4 +1,4 @@
-import { ReportPostModalPageModule } from './../report-post-modal/report-post-modal.module';
+import { PostModule } from './../../shared/post/post.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,8 +8,6 @@ import { IonicModule } from '@ionic/angular';
 import { IndexPageRoutingModule } from './index-routing.module';
 
 import { IndexPage } from './index.page';
-import { PostCommentModalPageModule } from '../post-comment-modal/post-comment-modal.module';
-import { SharePostModalPageModule } from '../share-post-modal/share-post-modal.module';
 
 @NgModule({
   imports: [
@@ -17,9 +15,7 @@ import { SharePostModalPageModule } from '../share-post-modal/share-post-modal.m
     FormsModule,
     IonicModule,
     IndexPageRoutingModule,
-    PostCommentModalPageModule,
-    ReportPostModalPageModule,
-    SharePostModalPageModule
+    PostModule
   ],
   declarations: [IndexPage]
 })

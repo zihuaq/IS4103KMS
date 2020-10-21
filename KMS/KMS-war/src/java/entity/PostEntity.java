@@ -65,6 +65,9 @@ public class PostEntity implements Serializable {
     @ManyToOne
     private ProjectEntity project;
     
+    @ManyToOne
+    private GroupEntity group;
+    
     private boolean originalPostDeleted;
 
     public PostEntity() {
@@ -193,4 +196,13 @@ public class PostEntity implements Serializable {
     public void setOriginalPostDeleted(boolean originalPostDeleted) {
         this.originalPostDeleted = originalPostDeleted;
     }
+
+    public GroupEntity getGroup() {
+        return group;
+    }
+
+    public void setGroup(GroupEntity group) {
+        this.group = group;
+    }
+    
 }

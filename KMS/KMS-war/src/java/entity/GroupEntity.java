@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -55,9 +56,13 @@ public class GroupEntity implements Serializable {
     @ManyToMany
     private List<TagEntity> sdgs;
     
+    @OneToMany(mappedBy = "group")
+    private List<PostEntity> posts;
+    
     public GroupEntity() {
         groupMembers = new ArrayList<>();
         groupAdmins = new ArrayList<>();
+        this.posts = new ArrayList<>();
     }
 
     public GroupEntity(String name, String country, String profilePicture) {
@@ -163,6 +168,14 @@ public class GroupEntity implements Serializable {
 
     public void setSdgs(List<TagEntity> sdgs) {
         this.sdgs = sdgs;
+    }
+    
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostEntity> posts) {
+        this.posts = posts;
     }
     
 }
