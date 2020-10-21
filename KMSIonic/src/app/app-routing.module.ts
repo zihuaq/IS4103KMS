@@ -130,12 +130,60 @@ const routes: Routes = [
         (m) => m.TabPanelPageModule
       )
   },
+
   {
     path: 'edit-members',
     loadChildren: () =>
       import(
         './pages/project/editProject/edit-members/edit-members.module'
       ).then((m) => m.EditMembersPageModule)
+  },
+  {
+    path: 'view-all-group',
+    loadChildren: () =>
+      import('./pages/group/view-all-group/view-all-group.module').then(
+        (m) => m.ViewAllGroupPageModule
+      ),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'create-new-group',
+    loadChildren: () =>
+      import('./pages/group/create-new-group/create-new-group.module').then(
+        (m) => m.CreateNewGroupPageModule
+      ),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'group-details/:groupId',
+    loadChildren: () =>
+      import('./pages/group/viewGroup/group-details/group-details.module').then(
+        (m) => m.GroupDetailsPageModule
+      )
+  },
+  {
+    path: 'edit-group-details/:groupId',
+    loadChildren: () =>
+      import(
+        './pages/group/editGroup/edit-group-details/edit-group-details.module'
+      ).then((m) => m.EditGroupDetailsPageModule)
+  },
+  {
+    //** */
+    path: 'tab-panel/:groupId',
+    loadChildren: () =>
+      import('./pages/group/editGroup/tab-panel/tab-panel.module').then(
+        (m) => m.TabPanelPageModule
+      )
+  },
+
+  {
+    //** */
+    path: 'edit-members',
+    loadChildren: () =>
+      import('./pages/group/editGroup/edit-members/edit-members.module').then(
+        (m) => m.EditMembersPageModule
+      )
   },
   {
     path: 'changepassword',
@@ -232,29 +280,14 @@ const routes: Routes = [
       import('./pages/create-post/create-post.module').then(
         (m) => m.CreatePostPageModule
       )
+  },
+  {
+    path: 'hrp-details/:hrpId',
+    loadChildren: () =>
+      import('./pages/project/viewProject/hrp-details/hrp-details.module').then(
+        (m) => m.HrpDetailsPageModule
+      )
   }
-  // {
-  //   path: 'edit-post-comment-modal',
-  //   loadChildren: () =>
-  //     import('./pages/edit-post-comment-modal/edit-post-comment-modal.module').then(
-  //       (m) => m.EditPostCommentModalPageModule
-  //     )
-  // },
-  // {
-  //   path: 'share-post-modal',
-  //   loadChildren: () =>
-  //     import('./pages/share-post-modal/share-post-modal.module').then(
-  //       (m) => m.SharePostModalPageModule
-  //     )
-  // },
-  // {
-  //   path: 'report-post-modal',
-  //   loadChildren: () => import('./pages/report-post-modal/report-post-modal.module').then( m => m.ReportPostModalPageModule)
-  // },
-  // {
-  //   path: 'report-comment-modal',
-  //   loadChildren: () => import('./pages/report-comment-modal/report-comment-modal.module').then( m => m.ReportCommentModalPageModule)
-  // }
 ];
 
 @NgModule({

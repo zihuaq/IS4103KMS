@@ -114,7 +114,7 @@ export class ProjectDetailsPage implements OnInit {
           duration: 2000
         });
         toast.present();
-        this.isMember = true;
+        location.reload();
       });
   }
 
@@ -128,7 +128,7 @@ export class ProjectDetailsPage implements OnInit {
             duration: 2000
           });
           toast.present();
-          this.isMember = false;
+          location.reload();
         },
         async (error) => {
           const toast = await this.toastController.create({

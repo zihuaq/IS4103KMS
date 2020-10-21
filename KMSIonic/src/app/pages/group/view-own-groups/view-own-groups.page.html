@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      My Groups      
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="createGroup()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm"
+    (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <span *ngFor="let group of groupsOwned">
+    <ion-card tappable (click)="viewGroupDetails($event, group)">
+      <ion-card-header>
+        <b>{{group.name}}</b>&nbsp;
+        <ion-badge color="primary">{{group.status}}</ion-badge>
+      </ion-card-header>
+      <ion-card-content>
+        {{group.description}}    
+      </ion-card-content>
+    </ion-card>
+  </span>
+</ion-content>

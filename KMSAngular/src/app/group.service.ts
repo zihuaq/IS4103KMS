@@ -17,19 +17,18 @@ const httpOptions = {
 })
 export class GroupService {
 
-  baseUrl: string = '/api/Group';
+  baseUrl: string = '/api/group';
 
   constructor(private sessionService: SessionService, private httpClient: HttpClient) { }
 
   getAllGroup(): Observable<any> {
-    return this.httpClient.get<any>(this.baseUrl+"/getAllGroups").pipe();
+    return this.httpClient.get<any>(this.baseUrl+"/getAllGroup").pipe();
   }
 
-  createNewGroup(newGroup: Group, ownerId: number, tagIdsSelected: number[]): Observable<any> {
+  createNewGroup(newGroup: Group, ownerId: number): Observable<any> {
     let createGroupReq = {
       "newGroup": newGroup,
       "ownerId": ownerId,
-      "tagIds": tagIdsSelected
     }
 
     return this.httpClient.put<any>(this.baseUrl+"/createNewGroup", createGroupReq, httpOptions).pipe(

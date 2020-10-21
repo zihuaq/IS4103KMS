@@ -47,27 +47,29 @@ export class ViewHrpPage implements OnInit {
   }
 
   refreshProject() {
+    this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
     this.authenticationService.getCurrentUser().then(
       (user: User) => {
         this.currentUserId = user.userId;
         console.log(this.currentUserId);
-      }
-    );
+        
+        this.projectService.getProjectById(this.projectId).subscribe(
+          response => {
+            this.project = response;
+            for (let member of this.project.projectMembers) {
+              if (this.currentUserId == member.userId) {
+                this.isMember = true;
+              }
+            }
+          },
+          error => {
 
-    this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
-    this.projectService.getProjectById(this.projectId).subscribe(
-      response => {
-        this.project = response;
-        for (let member of this.project.projectMembers) {
-          if (this.currentUserId == member.userId) {
-            this.isMember = true;
           }
-        }
-      },
-      error => {
-
+        );
       }
     );
+
+    
 
     this.tagService.getAllSkillTags().subscribe(
       response => {
@@ -92,6 +94,15 @@ export class ViewHrpPage implements OnInit {
 
   }
 
+  viewHrpDetails(event, hrp) {
+    this.router.navigate(["hrp-details/" + hrp.humanResourcePostingId]);
+  }
+
+  formatDate(date: string) {
+    var str = date.slice(0, date.indexOf("["));
+    return str;
+  }
+
   hasApplied(hrpId: number): boolean {;
     for (let hrp of this.hrpList) {
       if (hrp.humanResourcePostingId == hrpId) {
@@ -114,68 +125,6 @@ export class ViewHrpPage implements OnInit {
       }
     }
     return false;
-  }
-
-  applyHrp(hrpId: number) {
-    this.hrpService.joinHrp(hrpId, this.currentUserId).subscribe(
-      async response => {
-        const toast = await this.toastController.create({
-          message: 'Joined.',
-          duration: 2000
-        });
-        toast.present();
-        this.hrpList = [];
-        this.hrpService.getHrpByProject(this.projectId).subscribe(
-          response => {
-            for (let hrp of response) {
-              this.hrpService.getHrp(hrp.humanResourcePostingId).subscribe(
-                response => {
-                  this.hrpList.push(response);
-                }
-              );
-            }
-          }
-        );
-      },
-      async error => {
-        const toast = await this.toastController.create({
-          message: error,
-          duration: 2000
-        });
-        toast.present();
-      }
-    );
-  }
-
-  leaveHrp(hrpId: number) {
-    this.hrpService.leaveHrp(hrpId, this.currentUserId).subscribe(
-      async response => {
-        const toast = await this.toastController.create({
-          message: 'Left.',
-          duration: 2000
-        });
-        toast.present();
-        this.hrpList = [];
-        this.hrpService.getHrpByProject(this.projectId).subscribe(
-          response => {
-            for (let hrp of response) {
-              this.hrpService.getHrp(hrp.humanResourcePostingId).subscribe(
-                response => {
-                  this.hrpList.push(response);
-                }
-              );
-            }
-          }
-        );
-      },
-      async error => {
-        const toast = await this.toastController.create({
-          message: error,
-          duration: 2000
-        });
-        toast.present();
-      }
-    );
   }
 
 }

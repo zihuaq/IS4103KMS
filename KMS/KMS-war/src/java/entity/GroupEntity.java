@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import util.enumeration.GroupStatusEnum;
 
 /**
  *
@@ -45,16 +46,16 @@ public class GroupEntity implements Serializable {
     @ManyToOne
     private UserEntity groupOwner;
     
-    @ManyToMany
     @JoinTable(name= "groupMembers")
+    @ManyToMany(mappedBy="groupsJoined")    
     private List<UserEntity> groupMembers;
     
-    @ManyToMany
     @JoinTable(name= "groupAdmins")
+    @ManyToMany(mappedBy="groupAdmins")    
     private List<UserEntity> groupAdmins;
     
-    @ManyToMany
-    private List<TagEntity> sdgs;
+//    @ManyToMany
+//    private List<TagEntity> sdgs;
     
     @OneToMany(mappedBy = "group")
     private List<PostEntity> posts;
@@ -65,13 +66,12 @@ public class GroupEntity implements Serializable {
         this.posts = new ArrayList<>();
     }
 
-    public GroupEntity(String name, String country, String profilePicture) {
-        this();
+    public GroupEntity(String name, String description, String country) {
         this.name = name;
+        this.description = description;
         this.country = country;
-        this.profilePicture = profilePicture;
     }
-    
+
 
     public Long getGroupId() {
         return groupId;
@@ -162,13 +162,13 @@ public class GroupEntity implements Serializable {
         this.description = description;
     }
 
-    public List<TagEntity> getSdgs() {
-        return sdgs;
-    }
-
-    public void setSdgs(List<TagEntity> sdgs) {
-        this.sdgs = sdgs;
-    }
+//    public List<TagEntity> getSdgs() {
+//        return sdgs;
+//    }
+//
+//    public void setSdgs(List<TagEntity> sdgs) {
+//        this.sdgs = sdgs;
+//    }
     
     public List<PostEntity> getPosts() {
         return posts;

@@ -64,6 +64,7 @@ public class PostResource {
             postEntity.getComments().clear();
             postEntity.getLikers().clear();
             postEntity.setPostOwner(null);
+            postEntity.setProject(null);
             return Response.status(200).entity(postEntity).build();
         } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
