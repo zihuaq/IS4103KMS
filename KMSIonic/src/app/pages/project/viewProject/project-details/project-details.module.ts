@@ -1,4 +1,4 @@
-import { PostModule } from './../../../../shared/post/post.module';
+import { PostModule } from '../../../../shared/post/post.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
