@@ -9,7 +9,7 @@
     <a routerLink="/profile/{{report.reportOwner.userId}}">
       {{report.reportOwner.firstName}} {{report.reportOwner.lastName}}
     </a>
-    made a report against Project:
+    made a report against Group:
   </span>
   <span class="pull-left">
     <!-- <img *ngIf="report.reportedUser.profilePicture" src="report.reportedUser.profilePicture" alt=""
@@ -18,8 +18,8 @@
     <img *ngIf="!report.reportedUser.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
     class = "img-responsive"
     style ="max-height: 20px;"> -->
-    <a routerLink="/project/{{report.reportedProject.projectId}}">
-      {{report.reportedProject.name}}
+    <a routerLink="/group/{{report.reportedGroup.groupId}}">
+      {{report.reportedGroup.name}}
     </a>
   </span>
   <span class="badge badge-success" style="float: right;" *ngIf = "report.resolved === true">
@@ -49,5 +49,6 @@
   class="btn btn-outline-danger btn-sm" (click) = "onSelectReport()" >Pass Verdict</button>
 </div>
 <!-- data-toggle="modal" data-target="#profileReportModal" -->
+
 
 

@@ -1,6 +1,7 @@
 package ejb.session.stateless;
 
 import Exception.AffiliatedUserExistException;
+import Exception.DeactivatedEntityException;
 import Exception.DuplicateAffiliationRequestException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
@@ -202,15 +203,17 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException {
+    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException, DeactivatedEntityException {
         try {
             UserEntity user = retrieveUserByEmail(email);
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + user.getSalt()));
             if (user.getPassword().equals(passwordHash)) {
-                System.out.println("user login if()");
+                if(user.getIsActive() == Boolean.FALSE){
+                    throw new DeactivatedEntityException("User account is deactivated");
+                }
                 return user;
             } else {
-                System.out.println("user login else()");
+                
                 throw new InvalidLoginCredentialException("Email does not exist of invalid password");
             }
         } catch (UserNotFoundException ex) {

@@ -15,6 +15,7 @@ export class Post {
     comments: PostComment[];
     project: Project;
     originalPostDeleted: boolean;
+    isActive: Boolean;
 
     constructor(postId?: number, postDate?: Date, editDate?: Date, text?: string, picture?: string | ArrayBuffer, postOwner?: User,
         likers?: User[], sharedPosts?: Post[], originalPost?: Post, comments?: PostComment[], project?: Project, originalPostDeleted?: boolean) {

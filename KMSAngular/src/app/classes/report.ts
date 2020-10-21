@@ -23,7 +23,7 @@ export class Report {
         this.reportType = reportType;
         this.reportedUser = reportedUser;
         this.reportedProject = reportedProject;
-        reportedGroup: Group;
+        this.reportedGroup = reportedGroup;
         this.reportContent = reportContent;
         this.reportTags = reportTags;
         this.resolved = resolved;

@@ -55,6 +55,8 @@ public class GroupEntity implements Serializable {
     @ManyToMany
     private List<TagEntity> sdgs;
     
+    private Boolean isActive;
+    
     public GroupEntity() {
         groupMembers = new ArrayList<>();
         groupAdmins = new ArrayList<>();
@@ -164,5 +166,15 @@ public class GroupEntity implements Serializable {
     public void setSdgs(List<TagEntity> sdgs) {
         this.sdgs = sdgs;
     }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    
     
 }

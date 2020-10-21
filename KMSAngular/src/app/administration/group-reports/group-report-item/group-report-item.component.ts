@@ -5,11 +5,11 @@ import { Report } from 'src/app/classes/report';
 import { ReportService } from 'src/app/report.service';
 
 @Component({
-  selector: 'app-project-report-item',
-  templateUrl: './project-report-item.component.html',
-  styleUrls: ['./project-report-item.component.css']
+  selector: 'app-group-report-item',
+  templateUrl: './group-report-item.component.html',
+  styleUrls: ['./group-report-item.component.css']
 })
-export class ProjectReportItemComponent implements OnInit {
+export class GroupReportItemComponent implements OnInit {
 
   @Input() report: Report;
   @Output() reportSelected = new EventEmitter<Report>();

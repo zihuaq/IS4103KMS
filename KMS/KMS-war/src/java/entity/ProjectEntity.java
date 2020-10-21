@@ -100,6 +100,8 @@ public class ProjectEntity implements Serializable {
 
     @OneToMany(mappedBy = "project")
     private List<DonationEntity> donations;
+    
+    private Boolean isActive;
 
     public ProjectEntity() {
         this.projectMembers = new ArrayList<>();
@@ -320,5 +322,15 @@ public class ProjectEntity implements Serializable {
     public void setPaypalMerchantId(String paypalMerchantId) {
         this.paypalMerchantId = paypalMerchantId;
     }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    
     
 }

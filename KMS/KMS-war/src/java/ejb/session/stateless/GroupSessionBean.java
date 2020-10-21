@@ -119,6 +119,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
            }
         }
         group.setSdgs(groupToUpdate.getSdgs());
+        group.setIsActive(groupToUpdate.getIsActive());
         //group.setStatus(groupToUpdate.getStatus());
         group.setProfilePicture(groupToUpdate.getProfilePicture());
     }

@@ -5,6 +5,9 @@
  */
 package ws.restful.resources;
 
+import ejb.session.stateless.GroupSessionBeanLocal;
+import ejb.session.stateless.PostSessionBeanLocal;
+import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.ReportSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.GroupEntity;
@@ -31,7 +34,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.ErrorRsp;
+import ws.restful.model.PassGroupReportVerdictReq;
 import ws.restful.model.PassProfileReportVerdictReq;
+import ws.restful.model.PassProjectReportVerdictReq;
 
 /**
  * REST Web Service
@@ -41,9 +46,17 @@ import ws.restful.model.PassProfileReportVerdictReq;
 @Path("report")
 public class ReportResource {
 
+    PostSessionBeanLocal postSessionBean = lookupPostSessionBeanLocal();
+
+    GroupSessionBeanLocal groupSessionBean = lookupGroupSessionBeanLocal();
+
+    ProjectSessionBeanLocal projectSessionBean = lookupProjectSessionBeanLocal();
+
     UserSessionBeanLocal userSessionBean = lookupUserSessionBeanLocal();
 
     ReportSessionBeanLocal reportSessionBean = lookupReportSessionBeanLocal();
+    
+    
     
     @Context
     private UriInfo context;
@@ -156,6 +169,7 @@ public class ReportResource {
             if(!passProfileReportVerdictReq.getActive()){
                 reportedUser.setIsActive(Boolean.FALSE);
                 userSessionBean.updateUser(reportedUser);
+                reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
             }
             return Response.status(Status.OK).build();
         } catch (Exception ex) {
@@ -163,6 +177,90 @@ public class ReportResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+     
+     @POST
+     @Path("passProjectReportVerdict")
+     @Consumes(MediaType.APPLICATION_JSON)
+     @Produces(MediaType.APPLICATION_JSON)
+     public Response passProjectReportVerdict(PassProjectReportVerdictReq passProjectReportVerdictReq) {
+        try {
+            ProjectEntity reportedProject = projectSessionBean.getProjectById(passProjectReportVerdictReq.getReport().getReportedProject().getProjectId());
+            reportSessionBean.updateReportVerdict(passProjectReportVerdictReq.getReport());
+            if(!passProjectReportVerdictReq.getActive()){
+                reportedProject.setIsActive(Boolean.FALSE);
+                projectSessionBean.updateProject(reportedProject);
+                reportSessionBean.sentReportVerdictEmail(passProjectReportVerdictReq.getReport());
+            }
+            return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+     
+     @POST
+     @Path("passGroupReportVerdict")
+     @Consumes(MediaType.APPLICATION_JSON)
+     @Produces(MediaType.APPLICATION_JSON)
+     public Response passGroupReportVerdict(PassGroupReportVerdictReq passGroupReportVerdictReq) {
+        try {
+            GroupEntity reportedGroup = groupSessionBean.getGroupById(passGroupReportVerdictReq.getReport().getReportedGroup().getGroupId());
+            reportSessionBean.updateReportVerdict(passGroupReportVerdictReq.getReport());
+            if(!passGroupReportVerdictReq.getActive()){
+                reportedGroup.setIsActive(Boolean.FALSE);
+                groupSessionBean.updateGroup(reportedGroup);
+                reportSessionBean.sentReportVerdictEmail(passGroupReportVerdictReq.getReport());
+            }
+            return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+     
+     @POST
+     @Path("passPostReportVerdict")
+     @Consumes(MediaType.APPLICATION_JSON)
+     @Produces(MediaType.APPLICATION_JSON)
+     //not done
+     public Response passPostReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
+        try {
+            UserEntity reportedUser = userSessionBean.getUserById(passProfileReportVerdictReq.getReport().getReportedUser().getUserId());
+            reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
+            if(!passProfileReportVerdictReq.getActive()){
+                reportedUser.setIsActive(Boolean.FALSE);
+                userSessionBean.updateUser(reportedUser);
+                reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
+            }
+            return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+     
+          
+     @POST
+     @Path("passCommentReportVerdict")
+     @Consumes(MediaType.APPLICATION_JSON)
+     @Produces(MediaType.APPLICATION_JSON)
+     //not done
+     public Response passCommentReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
+        try {
+            UserEntity reportedUser = userSessionBean.getUserById(passProfileReportVerdictReq.getReport().getReportedUser().getUserId());
+            reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
+            if(!passProfileReportVerdictReq.getActive()){
+                reportedUser.setIsActive(Boolean.FALSE);
+                userSessionBean.updateUser(reportedUser);
+                reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
+            }
+            return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+     
     @GET
     @Path("/getProjectReports")
     @Produces(MediaType.APPLICATION_JSON)
@@ -300,6 +398,36 @@ public class ReportResource {
         try {
             javax.naming.Context c = new InitialContext();
             return (UserSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/UserSessionBean!ejb.session.stateless.UserSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private ProjectSessionBeanLocal lookupProjectSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (ProjectSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/ProjectSessionBean!ejb.session.stateless.ProjectSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private GroupSessionBeanLocal lookupGroupSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (GroupSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/GroupSessionBean!ejb.session.stateless.GroupSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private PostSessionBeanLocal lookupPostSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (PostSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/PostSessionBean!ejb.session.stateless.PostSessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

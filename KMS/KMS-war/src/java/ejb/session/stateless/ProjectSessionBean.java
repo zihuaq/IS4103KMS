@@ -184,6 +184,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         project.setSdgs(projectToUpdate.getSdgs());
         project.setStatus(projectToUpdate.getStatus());
         project.setProfilePicture(projectToUpdate.getProfilePicture());
+        project.setIsActive(projectToUpdate.getIsActive());
         
     }
     

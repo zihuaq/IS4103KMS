@@ -63,7 +63,7 @@ export class ReportGroupComponent implements OnInit {
       }
     });
     this.report = new Report();
-    this.report.reportType = ReportType.PROJECT;
+    this.report.reportType = ReportType.GROUP;
     this.report.reportOwner = this.loggedInUser;
     this.report.reportedGroup = this.groupToReport;
     this.report.reportContent = this.content;

@@ -17,10 +17,28 @@
         <local>ejb.session.stateless.UserSessionBeanLocal</local>
         <ejb-link>#UserSessionBean</ejb-link>
     </ejb-local-ref>-->
-<!--    <ejb-local-ref>
+    <!--    <ejb-local-ref>
         <ejb-ref-name>UserSessionBeanLocal</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
         <local>ejb.session.stateless.UserSessionBeanLocal</local>
         <ejb-link>#UserSessionBean</ejb-link>
+    </ejb-local-ref>-->
+<!--    <ejb-local-ref>
+        <ejb-ref-name>ProjectSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.ProjectSessionBeanLocal</local>
+        <ejb-link>#ProjectSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>GroupSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.GroupSessionBeanLocal</local>
+        <ejb-link>#GroupSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>PostSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.PostSessionBeanLocal</local>
+        <ejb-link>#PostSessionBean</ejb-link>
     </ejb-local-ref>-->
 </web-app>

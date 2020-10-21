@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.AffiliatedUserExistException;
+import Exception.DeactivatedEntityException;
 import Exception.DuplicateAffiliationRequestException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
@@ -63,7 +64,7 @@ public interface UserSessionBeanLocal {
 
     public UserEntity retrieveUserByEmail(String email) throws UserNotFoundException;
 
-    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException;
+    public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException, DeactivatedEntityException;
 
     public void deleteUser(long userId) throws UserNotFoundException;
     

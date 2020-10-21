@@ -53,6 +53,8 @@ public class PostCommentEntity implements Serializable {
     @ManyToOne
     private UserEntity commentOwner;
     
+    private Boolean isActive;
+    
     @ManyToMany
     private List<UserEntity> likers;
 
@@ -138,5 +140,14 @@ public class PostCommentEntity implements Serializable {
     public List<UserEntity> getLikers() {
         return likers;
     }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
     
 }

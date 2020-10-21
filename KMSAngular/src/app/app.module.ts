@@ -84,6 +84,12 @@ import { DatePipe } from '@angular/common';
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 import { TaskTabComponent } from './project/viewProject/task-tab/task-tab.component';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
+import { GroupReportsComponent } from './administration/group-reports/group-reports.component';
+import { PostReportsComponent } from './administration/post-reports/post-reports.component';
+import { CommentReportsComponent } from './administration/comment-reports/comment-reports.component';
+import { GroupReportItemComponent } from './administration/group-reports/group-report-item/group-report-item.component';
+import { PostReportItemComponent } from './administration/post-reports/post-report-item/post-report-item.component';
+import { CommentReportItemComponent } from './administration/comment-reports/comment-report-item/comment-report-item.component';
 
 @NgModule({
   declarations: [
@@ -158,7 +164,13 @@ import { NewsfeedComponent } from './newsfeed/newsfeed.component';
     EditActivityTabComponent,
     DonateToProjectComponent,
     TaskTabComponent,
-    NewsfeedComponent
+    NewsfeedComponent,
+    GroupReportsComponent,
+    PostReportsComponent,
+    CommentReportsComponent,
+    GroupReportItemComponent,
+    PostReportItemComponent,
+    CommentReportItemComponent
   ],
   imports: [
     BrowserModule,

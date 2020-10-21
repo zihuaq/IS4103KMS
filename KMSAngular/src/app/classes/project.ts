@@ -21,24 +21,25 @@ export class Project {
     sdgs: Tag[];
     humanResourcePostings: HumanResourcePosting[];
     materialResourcePostings: MaterialResourcePosting[];
+    isActive: Boolean;
 
     constructor(
-        projectId?: number, 
-        name?: string, 
-        description?: string, 
-        status?: ProjectType, 
-        dateCreated?: Date, 
-        country?: string, 
-        profilePicture?: string | ArrayBuffer, 
-        monetaryFundingRequired?: number, 
-        monetaryFundingObtained?: number, 
+        projectId?: number,
+        name?: string,
+        description?: string,
+        status?: ProjectType,
+        dateCreated?: Date,
+        country?: string,
+        profilePicture?: string | ArrayBuffer,
+        monetaryFundingRequired?: number,
+        monetaryFundingObtained?: number,
         paypalMerchantId?: string,
-        projectOwner?: User, 
-        projectMembers?: User[], 
-        projectAdmins?: User[], 
+        projectOwner?: User,
+        projectMembers?: User[],
+        projectAdmins?: User[],
         sdgs?: Tag[],
         humanResourcePostings?: HumanResourcePosting[],
-        materialResourcePostings?: MaterialResourcePosting[]) 
+        materialResourcePostings?: MaterialResourcePosting[])
         {
         this.projectId = projectId;
         this.name = name;

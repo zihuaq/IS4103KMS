@@ -66,6 +66,8 @@ public class PostEntity implements Serializable {
     private ProjectEntity project;
     
     private boolean originalPostDeleted;
+    
+    private Boolean isActive;
 
     public PostEntity() {
         this.likers = new ArrayList<>();
@@ -193,4 +195,14 @@ public class PostEntity implements Serializable {
     public void setOriginalPostDeleted(boolean originalPostDeleted) {
         this.originalPostDeleted = originalPostDeleted;
     }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    
 }

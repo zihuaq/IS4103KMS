@@ -58,8 +58,28 @@ export class ReportService {
     .pipe(catchError(this.handleError))
   }
 
+  passProjectReportVerdict(report: Report, active: Boolean):Observable<any>{
+    let PassProjectReportVerdictReq ={
+      report: report,
+      active: active
+    }
+
+    return this.http.post<any>(this.baseUrl+'/passProjectReportVerdict', PassProjectReportVerdictReq)
+    .pipe(catchError(this.handleError))
+  }
+
   getGroupReports():Observable<any>{
     return this.http.get<any>(this.baseUrl+'/getGroupReports')
+    .pipe(catchError(this.handleError))
+  }
+
+  passGroupReportVerdict(report: Report, active: Boolean):Observable<any>{
+    let PassGroupReportVerdictReq ={
+      report: report,
+      active: active
+    }
+
+    return this.http.post<any>(this.baseUrl+'/passGroupReportVerdict', PassGroupReportVerdictReq)
     .pipe(catchError(this.handleError))
   }
 
@@ -68,8 +88,28 @@ export class ReportService {
     .pipe(catchError(this.handleError))
   }
 
+  passPostReportVerdict(report: Report, active: Boolean):Observable<any>{
+    let PassPostReportVerdictReq ={
+      report: report,
+      active: active
+    }
+
+    return this.http.post<any>(this.baseUrl+'/passPostReportVerdict', PassPostReportVerdictReq)
+    .pipe(catchError(this.handleError))
+  }
+
   getCommentReports():Observable<any>{
     return this.http.get<any>(this.baseUrl+'/getCommentReports')
+    .pipe(catchError(this.handleError))
+  }
+
+  passCommentReportVerdict(report: Report, active: Boolean):Observable<any>{
+    let PassCommentReportVerdictReq ={
+      report: report,
+      active: active
+    }
+
+    return this.http.post<any>(this.baseUrl+'/passCommentReportVerdict', PassCommentReportVerdictReq)
     .pipe(catchError(this.handleError))
   }
 
