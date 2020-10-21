@@ -3,7 +3,7 @@
   <ion-list>
 
     <ion-item>
-      <ion-label position="stacked"><b>Name: </b></ion-label>
+      <ion-label position="stacked"><b>Name *: </b></ion-label>
       <ion-input type="text" id="name" name="name" [(ngModel)]="projectToEdit.name" required #name="ngModel"></ion-input>
     </ion-item>
 
@@ -13,7 +13,7 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked"><b>Country: </b></ion-label>
+      <ion-label position="stacked"><b>Country *: </b></ion-label>
       <input list="country-list" id="country" name="country" [(ngModel)]="projectToEdit.country" required #country="ngModel" style="background: local; border: hidden;">              
         <datalist id="country-list"> 
           <option value="Afghanistan">Afghanistan</option>
@@ -264,7 +264,7 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked"><b>Monetary Funding Required(USD): </b></ion-label>
+      <ion-label position="stacked"><b>Monetary Funding Required(USD) *: </b></ion-label>
       <ion-input type="number" id="amount" name="amount" [(ngModel)]="projectToEdit.monetaryFundingRequired" required #amount="ngModel"></ion-input>
     </ion-item>
 

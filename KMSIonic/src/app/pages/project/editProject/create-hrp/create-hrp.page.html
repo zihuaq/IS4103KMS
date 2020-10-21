@@ -16,11 +16,11 @@
       <form (ngSubmit)="createHrp(hrpForm)" #hrpForm="ngForm">
         <ion-item-group>
           <ion-item>
-            <ion-label position="stacked">Human Resource Posting Name</ion-label>
+            <ion-label position="stacked">Human Resource Posting Name *</ion-label>
             <ion-input required type="text" id="hrpName" [(ngModel)]="newHrp.name" name="hrpName"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="stacked">Description</ion-label>
+            <ion-label position="stacked">Description *</ion-label>
             <ion-input required type="text" id="description" [(ngModel)]="newHrp.description" name="description"></ion-input>
           </ion-item>
           <ion-item>
@@ -46,19 +46,19 @@
             </ion-list>
           </ion-item>
           <ion-item>
-            <ion-label position="stacked">Start Date</ion-label>
+            <ion-label position="stacked">Start Date *</ion-label>
             <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
               [(ngModel)]="startDate">
             </ion-datetime>
           </ion-item>
           <ion-item>
-            <ion-label position="stacked">End Date</ion-label>
+            <ion-label position="stacked">End Date *</ion-label>
             <ion-datetime required name="endDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
               [(ngModel)]="endDate">
             </ion-datetime>
           </ion-item>
           <ion-item>
-            <ion-label position="stacked">Total Slots Needed</ion-label>
+            <ion-label position="stacked">Total Slots Needed *</ion-label>
             <ion-input required type="number" id="totalSlots" [(ngModel)]="newHrp.totalSlots" name="totalSlots" min="1"></ion-input>
           </ion-item>
           <ion-item>

@@ -1,6 +1,6 @@
 <form (ngSubmit)="edit(editProjectForm)" #editProjectForm="ngForm">
     <div class="form-group">
-        <label for="name">Project Name:</label>
+        <label for="name">Project Name *:</label>
         <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="projectToEdit.name" required="true">
         <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project name cannot be empty!</span>
     </div>
@@ -9,7 +9,7 @@
         <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="projectToEdit.description"></textarea>
     </div> 
     <div class="form-group">
-        <label for="country">Country:</label>
+        <label for="country">Country *:</label>
         <input id="country" name="country" required list ="country-list" class="form-control" #country="ngModel" name="country" [(ngModel)]="projectToEdit.country" required="true">
         <datalist id="country-list"> 
             <option value="" disabled selected hidden>Select a Country</option>
@@ -260,7 +260,7 @@
         </datalist>
     </div>
     <div class="form-group">
-        <label for="amount">Monetary Funding Required(USD):</label>
+        <label for="amount">Monetary Funding Required(USD) *:</label>
         <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="projectToEdit.monetaryFundingRequired" value="0" min="0">
     </div>
     <div class="form-group">

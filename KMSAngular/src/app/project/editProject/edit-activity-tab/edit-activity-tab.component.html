@@ -138,27 +138,27 @@
             <form (ngSubmit)="createActivity(newActivityForm)" #newActivityForm="ngForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">Name *</label>
                         <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" [(ngModel)]="newActivity.name" required>
                     </div>
                     <div class="form-group">
-                        <label for="startDate">Start Date</label>
+                        <label for="startDate">Start Date *</label>
                         <input id="startDate" type="date" class="form-control" name="startDate" [(ngModel)]="newActivity.startDate" [min]="minDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="endDate">End Date</label>
+                        <label for="endDate">End Date *</label>
                         <input id="endDate" type="date" class="form-control" name="endDate" [(ngModel)]="newActivity.endDate" [min]="newActivity.startDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="country">Country</label>
+                        <label for="country">Country *</label>
                         <input type="text" id="country" class="form-control" name="country" [(ngModel)]="newActivity.country" required disabled>
                     </div>
                     <div class="form-group">
-                        <label for="location">Location</label>
+                        <label for="location">Location *</label>
                         <input type="text" id="location" class="form-control" placeholder="Enter Location" name="location" [(ngModel)]="newActivity.location" required>
                     </div>
                     <div class="form-group">
-                        <label for="description">Description</label>
+                        <label for="description">Description *</label>
                         <input type="text" id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="newActivity.description" required>
                     </div>
                 </div>
@@ -183,27 +183,27 @@
             <form (ngSubmit)="editActivity(updateActivityForm)" #updateActivityForm="ngForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">Name *</label>
                         <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" [(ngModel)]="activityToEdit.name" required>
                     </div>
                     <div class="form-group">
-                        <label for="startDate">Start Date</label>
+                        <label for="startDate">Start Date *</label>
                         <input id="startDate" type="date" class="form-control" name="startDate" [(ngModel)]="startDate" [min]="minDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="endDate">End Date</label>
+                        <label for="endDate">End Date *</label>
                         <input id="endDate" type="date" class="form-control" name="endDate" [(ngModel)]="endDate" [min]="startDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="country">Country</label>
+                        <label for="country">Country *</label>
                         <input type="text" id="country" class="form-control" name="country" [(ngModel)]="activityToEdit.country" required disabled>
                     </div>
                     <div class="form-group">
-                        <label for="location">Location</label>
+                        <label for="location">Location *</label>
                         <input type="text" id="location" class="form-control" placeholder="Enter Location" name="location" [(ngModel)]="activityToEdit.location" required>
                     </div>
                     <div class="form-group">
-                        <label for="description">Description</label>
+                        <label for="description">Description *</label>
                         <input type="text" id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="activityToEdit.description" required>
                     </div>
                 </div>
