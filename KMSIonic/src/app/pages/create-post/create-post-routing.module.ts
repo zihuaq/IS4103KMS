@@ -5,15 +5,7 @@ import { CreatePostPage } from './create-post.page';
 
 const routes: Routes = [
   {
-    path: 'user',
-    component: CreatePostPage
-  },
-  {
-    path: 'group',
-    component: CreatePostPage
-  },
-  {
-    path: 'project',
+    path: 'user/create',
     component: CreatePostPage
   },
   {
@@ -25,7 +17,15 @@ const routes: Routes = [
     component: CreatePostPage
   },
   {
+    path: 'group/create/:groupid',
+    component: CreatePostPage
+  },
+  {
     path: 'project/edit/:postid',
+    component: CreatePostPage
+  },
+  {
+    path: 'project/create/:projectid',
     component: CreatePostPage
   }
 ];

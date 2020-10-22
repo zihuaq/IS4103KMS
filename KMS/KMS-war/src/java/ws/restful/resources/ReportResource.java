@@ -55,12 +55,13 @@ public class ReportResource {
     }
 
     @POST
-    @Path("/create")
+    @Path("/reportProfile")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createReport(ReportEntity report) {
+    public Response reportProfile (ReportEntity report) {
+        System.out.println("******** ReportResource: reportProfile()");
         try {
-            reportSessionBean.createNewReport(report);
-            return Response.status(200).entity(report).build();
+            ReportEntity reportResponse = reportSessionBean.reportProfile(report);
+            return Response.status(200).entity(reportResponse).build();
         } catch (Exception ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -75,10 +76,8 @@ public class ReportResource {
     public Response reportProject(ReportEntity report) {
         System.out.println("******** ReportResource: reportProject()");
         try {
-            reportSessionBean.reportProject(report);
-            
-            return Response.status(Response.Status.OK).entity(report).build();
-            
+            ReportEntity reportResponse = reportSessionBean.reportProject(report);
+            return Response.status(Response.Status.OK).entity(reportResponse).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
@@ -89,12 +88,38 @@ public class ReportResource {
     @Path("/reportGroup")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response reportGroup(ReportEntity report) {
-        System.out.println("******** ReportResource: reportProject()");
+        System.out.println("******** ReportResource: reportGroup()");
         try {
-            reportSessionBean.reportGroup(report);
-            
-            return Response.status(Response.Status.OK).entity(report).build();
-            
+            ReportEntity reportResponse = reportSessionBean.reportGroup(report);
+            return Response.status(Response.Status.OK).entity(reportResponse).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @POST
+    @Path("/reportPost")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reportPost(ReportEntity report) {
+        System.out.println("******** ReportResource: reportPost()");
+        try {
+            ReportEntity reportResponse = reportSessionBean.reportPost(report);
+            return Response.status(Response.Status.OK).entity(reportResponse).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @POST
+    @Path("/reportComment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reportComment(ReportEntity report) {
+        System.out.println("******** ReportResource: reportComment()");
+        try {
+            ReportEntity reportResponse = reportSessionBean.reportComment(report);
+            return Response.status(Response.Status.OK).entity(reportResponse).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();

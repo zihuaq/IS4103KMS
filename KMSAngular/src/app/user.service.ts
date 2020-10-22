@@ -139,7 +139,7 @@ export class UserService {
 
   removeSDGFromProfile(userId: number, tagId: number): Observable<any> {
     return this.http
-      .delete<any>(this.baseUrl + '/removeSDG/' + userId + '/' + tagId)
+      .put<any>(this.baseUrl + '/removeSDG/' + userId + '/' + tagId, null)
       .pipe(catchError(this.handleError));
   }
 

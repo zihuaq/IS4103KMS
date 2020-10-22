@@ -8,6 +8,7 @@ import {
 } from '@ionic/angular';
 import { User } from './../../classes/user';
 import { EditPostCommentModalPage } from '../edit-post-comment-modal/edit-post-comment-modal.page';
+import { ReportCommentModalPage } from '../report-comment-modal/report-comment-modal.page';
 
 @Component({
   selector: 'app-post-comment-modal',
@@ -113,8 +114,22 @@ export class PostCommentModalPage implements OnInit {
           {
             text: 'Report',
             icon: 'alert-circle',
-            handler: () => {
+            handler: async () => {
               console.log('Report chosen');
+              const modal = await this.modalController.create({
+                component: ReportCommentModalPage,
+                swipeToClose: true,
+                showBackdrop: true,
+                cssClass: 'report-post-modal',
+                componentProps: {
+                  comment,
+                  loggedInUser: this.loggedInUser
+                }
+              });
+              modal.present();
+              modal.onDidDismiss().then(() => {
+                this.ionViewWillEnter();
+              });
             }
           }
         ]

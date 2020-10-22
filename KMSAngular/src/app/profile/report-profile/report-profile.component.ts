@@ -66,7 +66,7 @@ export class ReportProfileComponent implements OnInit {
     this.report.reportTags = this.selectedTags;
     this.report.resolved = false;
     console.log(this.report);
-    this.reportService.createReport(this.report).subscribe(() => {
+    this.reportService.reportProfile(this.report).subscribe(() => {
       $(document).Toasts('create', {
         class: 'bg-success',
         title: 'Report Submitted Successfully',

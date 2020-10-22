@@ -13,6 +13,7 @@ import entity.PostCommentEntity;
 import entity.PostEntity;
 import java.util.List;
 import javax.ejb.Local;
+import ws.restful.model.SharePostToProjectOrGroupsReq;
 
 /**
  *
@@ -28,6 +29,8 @@ public interface PostSessionBeanLocal {
     public PostEntity getPostById(Long postId) throws NoResultException;
 
     public List<PostEntity> getPostForUserNewsfeed(Long userId) throws UserNotFoundException, NoResultException;
+    
+    public List<PostEntity> getPostForProjectNewsfeed(Long projectId) throws NoResultException;
 
     public PostEntity updatePost(PostEntity postToUpdate) throws NoResultException;
 
@@ -48,6 +51,8 @@ public interface PostSessionBeanLocal {
     public List<PostCommentEntity> getCommentsForPost(Long postId) throws NoResultException;
     
     public void sharePost(Long postToShareId, Long userId, PostEntity post) throws NoResultException;
+    
+    public void sharePostToProjects(Long postToShareId, Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) throws NoResultException;
     
     public void deletePostById(Long postId) throws NoResultException;
 

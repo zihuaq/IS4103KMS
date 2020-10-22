@@ -13,6 +13,27 @@
 </ion-header>
 
 <ion-content>
+  <ion-item>
+    <ion-label>Share To:</ion-label>
+    <ion-select [(ngModel)]="shareLocation" multiple="false">
+      <ion-select-option value="profile">Profile</ion-select-option>
+      <ion-select-option value="project">Project</ion-select-option>
+      <ion-select-option value="group">Group</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="shareLocation == 'project'">
+    <ion-label>Project:</ion-label>
+    <ion-select [(ngModel)]="shareToProjects" multiple="true" placeholder="Select Project">
+      <ion-select-option *ngFor="let project of projects" [value]="project">{{project.name}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="shareLocation == 'group'">
+    <ion-label>Group:</ion-label>
+    <ion-select [(ngModel)]="groups" multiple="true" placeholder="Select Group">
+      <ion-select-option *ngFor="let group of groups" [value]="group">{{group.name}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
   <ion-textarea placeholder="Say something about this post..." [(ngModel)]="postContent" autoGrow=true #sharePostInput>
   </ion-textarea>
 </ion-content>

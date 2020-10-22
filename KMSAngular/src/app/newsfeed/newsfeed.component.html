@@ -1,5 +1,6 @@
 <div class="container-fluid">
-    <form class="form-horizontal" (ngSubmit)="onCreatePost(createPostForm)" #createPostForm="ngForm">
+    <form class="form-horizontal" (ngSubmit)="onCreatePost(createPostForm)" #createPostForm="ngForm"
+        *ngIf="!newsfeedType || newsfeedType == 'project' && isMember">
         <div class="card card-outline card-info">
             <div class="card-header">
                 <h3 class="card-title">
@@ -37,8 +38,12 @@
                         <img *ngIf="!post.postOwner.profilePicture" class="img-circle"
                             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                             alt="User Image">
-                        <span class="username"><a href="#">{{post.postOwner.firstName}}
-                                {{post.postOwner.lastName}}</a></span>
+                        <span class="username">
+                            <a href="#">{{post.postOwner.firstName}}
+                                {{post.postOwner.lastName}} </a>
+                            <i *ngIf="post.project" class="fas fa-caret-right"></i>
+                            <a *ngIf="post.project"> {{post.project.name}}</a>
+                        </span>
                         <span class="description">{{post.postDate| date:'dd/MM/yyyy'}}</span>
                     </div>
                     <!-- /.user-block -->
@@ -47,8 +52,8 @@
                             *ngIf="loggedInUser.userId == post.postOwner.userId"><i class="fas fa-edit"></i>
                         </button>
                         <button type="button" class="btn btn-tool" data-card-widget="remove"
-                            *ngIf="loggedInUser.userId == post.postOwner.userId" (click)="deletePost(post.postId)"><i
-                                class="fas fa-times"></i>
+                            *ngIf="loggedInUser.userId == post.postOwner.userId || isAdminOrOwner"
+                            (click)="deletePost(post.postId)"><i class="fas fa-times"></i>
                         </button>
                     </div>
                     <!-- /.card-tools -->
@@ -67,8 +72,12 @@
                             <img *ngIf="!post.originalPost.postOwner.profilePicture" class="img-circle"
                                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                                 alt="User Image">
-                            <span class="username"><a href="#">{{post.originalPost.postOwner.firstName}}
-                                    {{post.originalPost.postOwner.lastName}}</a></span>
+                            <span class="username">
+                                <a href="#">{{post.originalPost.postOwner.firstName}}
+                                    {{post.originalPost.postOwner.lastName}} </a>
+                                <i *ngIf="post.originalPost.project" class="fas fa-caret-right"></i>
+                                <a *ngIf="post.originalPost.project"> {{post.originalPost.project.name}}</a>
+                            </span>
                             <span class="description">{{post.originalPost.postDate}}</span>
                         </div>
                         <div class="card-body">
@@ -92,11 +101,13 @@
                         (click)="likePost(post.postId)"><i class="far fa-thumbs-up"></i> like </button>
                     <button type="button" class="btn btn-default btn-sm" *ngIf="userHaveLikedPost(post.postId)"
                         (click)="removeLikeForPost(post.postId)"><i class="fas fa-thumbs-up"></i> liked </button>
-                    <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveSharedPost(post.postId)"
+                    <button type="button" *ngIf="!userHaveSharedPost(post.postId)" class="btn btn-default btn-sm"
                         data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
-                        <i class="fas fa-share"></i> share </button>
-                    <button type="button" class="btn btn-default btn-sm" disabled="true"
-                        *ngIf="userHaveSharedPost(post.postId)"><i class="fas fa-share"></i> shared </button>
+                        <i class="fas fa-share"></i> share
+                    </button>
+                    <button type="button" *ngIf="userHaveSharedPost(post.postId)" class="btn btn-default btn-sm"
+                        data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
+                        <i class="fas fa-share"></i> shared </button>
                     <button type="button" class="btn btn-default btn-sm"
                         *ngIf="loggedInUser.userId == post.postOwner.userId" data-toggle="modal"
                         data-target="#modal-default" (click)="setPostToReport(post.postId)">
@@ -116,8 +127,9 @@
                             <span class="username">
                                 {{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}
                                 <button type="button" class="btn btn-tool float-right"
-                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId" data-toggle="modal"
-                                    data-target="#modal-danger" (click)="commentToDeleteId = comment.postCommentId">
+                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId || isAdminOrOwner"
+                                    data-toggle="modal" data-target="#modal-danger"
+                                    (click)="commentToDeleteId = comment.postCommentId">
                                     <i class="fas fa-times fa-sm"></i>
                                 </button>
                                 <button type="button" class="btn btn-tool float-right"
@@ -170,6 +182,9 @@
         </div>
         <!-- /.col -->
     </span>
+    <span *ngIf="newsfeedPosts && newsfeedPosts.length == 0">
+        No posts yet.
+    </span>
 </div>
 
 <div class="modal fade" id="modal-danger">
@@ -193,17 +208,34 @@
 </div>
 <!-- /.modal -->
 
-<div class="modal fade" id="modal-secondary" *ngIf="postToShare">
+<div class="modal fade" id="modal-secondary">
     <div class="modal-dialog">
         <div class="modal-content bg-secondary">
             <div class="modal-header">
-                <h4 class="modal-title">Share {{postToShare.postOwner.firstName}} {{postToShare.postOwner.lastName}}'s
+                <h4 class="modal-title">Share
                     Post</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="background-color: whitesmoke;">
+                <h6 style="color: black;"> Thoughts </h6>
                 <input placeholder="Say something about this post..." #text style="width: 100%;">
+                <br />
+                <br />
+                <h6 style="color: black;"> Share with* </h6>
+                <div class="radio" *ngFor="let option of shareOption">
+                    <label style="color:black; font-size: .8em;">
+                        <input type="radio" name="option" id="{{option.id}}" [value]="option.id"
+                            (change)="onSelectedShareOptionChange($event)" />
+                        {{option.value}}
+                    </label>
+                </div>
+                <div class="select2-dark" [ngClass]="{'d-none': selectedShareOption != 'project'}">
+                    <select class="select2" id="shareToProjectselect2" multiple="multiple"
+                        data-placeholder="Share post with selected project(s)" data-dropdown-css-class="select2-dark"
+                        style="width: 100%;">
+                    </select>
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>

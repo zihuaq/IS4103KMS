@@ -1,3 +1,4 @@
+import { PostModule } from '../../../../shared/post/post.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +17,8 @@ import { ProjectDetailsPage } from './project-details.page';
     FormsModule,
     IonicModule,
     ProjectDetailsPageRoutingModule,
-    ViewHrpPageRoutingModule
+    ViewHrpPageRoutingModule,
+    PostModule
   ],
   declarations: [ProjectDetailsPage, ViewHrpPage]
 })

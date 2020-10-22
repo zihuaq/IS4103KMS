@@ -1,23 +1,24 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router } from "@angular/router"
-import { UserService } from "../services/user.service"
-import { AuthenticationService } from '../services/authentication.service';
-import { User } from '../classes/user';
-import { AlertController} from '@ionic/angular';
-
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { AuthenticationService } from '../../services/authentication.service';
+import { User } from '../../classes/user';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-user-setting',
   templateUrl: './user-setting.page.html',
-  styleUrls: ['./user-setting.page.scss'],
+  styleUrls: ['./user-setting.page.scss']
 })
 export class UserSettingPage implements OnInit {
-user:User;
+  user: User;
 
-  constructor(private route: Router,
+  constructor(
+    private route: Router,
     private userService: UserService,
     public authenticationService: AuthenticationService,
-    public alertController: AlertController) { }
+    public alertController: AlertController
+  ) {}
 
   ngOnInit() {
     this.authenticationService.getCurrentUser().then((user: any) => {
@@ -25,11 +26,11 @@ user:User;
     });
   }
 
-  changePassword(){
-    this.route.navigate(["/changepassword"])
+  changePassword() {
+    this.route.navigate(['/changepassword']);
   }
   activateAndDeactivate() {
-    this.route.navigate(["/deactivate-account"])
+    this.route.navigate(['/deactivate-account']);
   }
 
   async alertUserOnDelete() {
@@ -39,7 +40,7 @@ user:User;
       buttons: ['OK']
     });
 
-    await alert.present()
+    await alert.present();
     let result = await alert.onDidDismiss();
     console.log(result);
     this.route.navigate(['/login']);
@@ -47,14 +48,13 @@ user:User;
 
   refresh(): void {
     window.location.reload();
-}
+  }
 
   runDelete() {
-    console.log(this.user.userId)
-    this.userService.deleteUser(this.user.userId).subscribe((
-      response) => {
-      console.log(response)
-      })
-    this.authenticationService.logout()
+    console.log(this.user.userId);
+    this.userService.deleteUser(this.user.userId).subscribe((response) => {
+      console.log(response);
+    });
+    this.authenticationService.logout();
   }
 }

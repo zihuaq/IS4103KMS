@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router"
-import { AuthenticationService } from '../services/authentication.service';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../../services/authentication.service';
 import { NgForm } from '@angular/forms';
-import { UserService } from '../services/user.service';
-import { AlertController} from '@ionic/angular';
+import { UserService } from '../../services/user.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-changepassword',
   templateUrl: './changepassword.page.html',
-  styleUrls: ['./changepassword.page.scss'],
+  styleUrls: ['./changepassword.page.scss']
 })
 export class ChangepasswordPage implements OnInit {
-
   status = ['Active', 'Deactive'];
   passwordUpdated = false;
   passwordError = false;
@@ -19,10 +18,12 @@ export class ChangepasswordPage implements OnInit {
   passwordSuccessMessage = 'Password successfully changed';
   loggedInUser: any;
 
-  constructor(private route: Router,
+  constructor(
+    private route: Router,
     public authenticationService: AuthenticationService,
     private userService: UserService,
-    public alertController: AlertController) { }
+    public alertController: AlertController
+  ) {}
 
   ngOnInit() {
     this.authenticationService.getCurrentUser().then((user: any) => {
@@ -30,10 +31,10 @@ export class ChangepasswordPage implements OnInit {
     });
   }
 
-  goBackToUserSettings(){
-    this.route.navigate(["/user-setting"])
+  goBackToUserSettings() {
+    this.route.navigate(['/user-setting']);
   }
-  
+
   changePassword(passwordForm: NgForm) {
     if (passwordForm.valid) {
       let email = this.loggedInUser.email;
@@ -69,10 +70,9 @@ export class ChangepasswordPage implements OnInit {
       buttons: ['OK']
     });
 
-    await alert.present()
+    await alert.present();
     let result = await alert.onDidDismiss();
     console.log(result);
     this.route.navigate(['/index']);
   }
-
 }

@@ -1,0 +1,40 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Report</ion-title>
+    <ion-buttons slot="end" class="ion-padding-end">
+      <ion-icon name="close-outline" (click)="dismiss()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-title class="ion-padding">Report comment to admins</ion-title>
+  <ion-item lines="none">
+    <ion-text class="ion-text-wrap">Let the admins know what's wrong with this post. No one else
+      will see your
+      name or the
+      content of this
+      report.</ion-text>
+  </ion-item>
+  <ion-item *ngFor="let reportTag of reportTags" lines="none">
+    <ion-button *ngIf="!selected(reportTag)" fill="outline" (click)="select(reportTag)">{{reportTag.name}}
+    </ion-button>
+    <ion-button *ngIf="selected(reportTag)" color="primary" (click)="unselect(reportTag)">{{reportTag.name}}
+    </ion-button>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      Elaboration if necessary
+    </ion-label>
+  </ion-item>
+  <ion-textarea class="content" maxlength="200" placeholder="Elaboration" [(ngModel)]="content">
+  </ion-textarea>
+
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button (click)="report()" expand="full">
+      Submit
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
