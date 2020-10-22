@@ -61,7 +61,6 @@ import { UserSettingComponent } from './profile/user-setting/user-setting.compon
 import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
 import { JobAppliedComponent } from './profile/job-applied/job-applied.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
-// import { ManageFulfillmentsComponent } from './project/editProject/edit-mrp-tab/manage-fulfillments/manage-fulfillments.component';
 import { ProfileReportsComponent } from './administration/profile-reports/profile-reports.component';
 import { ProjectReportsComponent } from './administration/project-reports/project-reports.component';
 import { ProjectReportItemComponent } from './administration/project-reports/project-report-item/project-report-item.component';
@@ -84,6 +83,7 @@ import { DatePipe } from '@angular/common';
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 import { TaskTabComponent } from './project/viewProject/task-tab/task-tab.component';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
+import { EditTaskTabComponent } from './project/editProject/edit-task-tab/edit-task-tab.component';
 
 @NgModule({
   declarations: [
@@ -139,7 +139,6 @@ import { NewsfeedComponent } from './newsfeed/newsfeed.component';
     ViewMrpTabComponent,
     JobAppliedComponent,
     MyFulfillmentsComponent,
-    // ManageFulfillmentsComponent,
     ProfileReportsComponent,
     ProjectReportsComponent,
     ProjectReportItemComponent,
@@ -158,7 +157,8 @@ import { NewsfeedComponent } from './newsfeed/newsfeed.component';
     EditActivityTabComponent,
     DonateToProjectComponent,
     TaskTabComponent,
-    NewsfeedComponent
+    NewsfeedComponent,
+    EditTaskTabComponent
   ],
   imports: [
     BrowserModule,
