@@ -140,50 +140,39 @@ const routes: Routes = [
   },
   {
     path: 'view-all-group',
-    loadChildren: () =>
-      import('./pages/group/view-all-group/view-all-group.module').then(
+    loadChildren: () => 
+    import('./pages/group/view-all-group/view-all-group.module').then( 
         (m) => m.ViewAllGroupPageModule
       ),
-    canActivate: [AuthGuard]
+      canActivate: [AuthGuard]
   },
   {
     path: 'create-new-group',
-    loadChildren: () =>
-      import('./pages/group/create-new-group/create-new-group.module').then(
-        (m) => m.CreateNewGroupPageModule
-      ),
+    loadChildren: () => 
+    import('./pages/group/create-new-group/create-new-group.module').then( 
+      (m) => m.CreateNewGroupPageModule
+    ),
     canActivate: [AuthGuard]
   },
   {
     path: 'group-details/:groupId',
-    loadChildren: () =>
-      import('./pages/group/viewGroup/group-details/group-details.module').then(
-        (m) => m.GroupDetailsPageModule
-      )
+    loadChildren: () => import('./pages/group/viewGroup/group-details/group-details.module').then( m => m.GroupDetailsPageModule)
   },
   {
     path: 'edit-group-details/:groupId',
-    loadChildren: () =>
-      import(
-        './pages/group/editGroup/edit-group-details/edit-group-details.module'
-      ).then((m) => m.EditGroupDetailsPageModule)
+    loadChildren: () => import('./pages/group/editGroup/edit-group-details/edit-group-details.module').then( m => m.EditGroupDetailsPageModule)
+  },
+  {   //** */
+    path: 'tab-panel/group/:groupId',
+    loadChildren: () => import('./pages/group/editGroup/tab-panel/tab-panel.module').then( m => m.TabPanelPageModule)
   },
   {
-    //** */
-    path: 'tab-panel/:groupId',
-    loadChildren: () =>
-      import('./pages/group/editGroup/tab-panel/tab-panel.module').then(
-        (m) => m.TabPanelPageModule
-      )
+    path: 'view-own-groups',
+    loadChildren: () => import('./pages/group/view-own-groups/view-own-groups.module').then( m => m.ViewOwnGroupsPageModule)
   },
-
-  {
-    //** */
+  {   //** */
     path: 'edit-members',
-    loadChildren: () =>
-      import('./pages/group/editGroup/edit-members/edit-members.module').then(
-        (m) => m.EditMembersPageModule
-      )
+    loadChildren: () => import('./pages/group/editGroup/edit-members/edit-members.module').then( m => m.EditMembersPageModule)
   },
   {
     path: 'changepassword',

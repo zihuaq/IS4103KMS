@@ -10,7 +10,7 @@
     <ion-item>
       <ion-label><b>Description: </b></ion-label>
       <ion-textarea id="description" name="description" [(ngModel)]="groupToEdit.description" required #description="ngModel"></ion-textarea>
-    </ion-item>
+    </ion-item> 
 
     <ion-item>
       <ion-label><b>Country: </b></ion-label>
@@ -263,7 +263,7 @@
         </datalist>
     </ion-item>
 
-    <ion-item>
+    <!-- <ion-item>
       <ion-label text-wrap><b>Monetary Funding Required(USD): </b></ion-label>
       <ion-input id="amount" name="amount" [(ngModel)]="groupToEdit.monetaryFundingRequired" required #amount="ngModel"></ion-input>
     </ion-item>
@@ -275,14 +275,14 @@
           <ion-select-option [value]="tag.name">{{tag.name}}</ion-select-option>
         </span>              
       </ion-select>
-    </ion-item>
+    </ion-item> -->
 
-    <ion-item>
+    <!-- <ion-item>
       <ion-label>Group Status: </ion-label>
       <ion-select id="status" name="status" [(ngModel)]="groupToEdit.status" required #status="ngModel">
         <ion-select-option *ngFor="let status of groupStatusList" [value]='status'>{{status}}</ion-select-option>
       </ion-select>
-    </ion-item>
+    </ion-item> -->
 
     <ion-button expand="full" type="submit" [disabled]="!editGroupForm.valid">
       Update
