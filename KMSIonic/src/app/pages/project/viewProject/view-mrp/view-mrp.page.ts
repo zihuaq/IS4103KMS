@@ -73,6 +73,7 @@ export class ViewMrpPage implements OnInit {
   }
 
   viewMrpDetails(event, mrp) {
+    this.router.navigate(["mrp-details/" + mrp.materialResourcePostingId]);
   }
 
 }

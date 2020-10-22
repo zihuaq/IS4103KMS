@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/view-all-project"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{mrp.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card-content>
+    <p><b>Name:</b></p>
+      <p>{{mrp.name}}</p>
+      <br/>
+      <span *ngIf="mrp.description">
+        <p><b>Description:</b></p>
+        <p>{{mrp.description}}</p>
+        <br/>
+      </span>
+      <p><b>Start Date:</b></p>
+      <p>{{startDate | date}}</p>
+      <br/>
+      <p><b>End Date:</b></p>
+      <p>{{endDate | date}}</p>
+      <br/>
+      <p><b>Quantity:</b></p>
+      <p>{{mrp.lackingQuantity}} {{mrp.unit}} required / {{mrp.totalQuantity}} {{mrp.unit}} total</p>
+      <br/>
+      <p><b>Location:</b></p>
+      <ion-badge color="warning" (click)="changehref(mrp.latitude, mrp.longitude)">
+        {{mrp.latitude | number:'1.1-6'}},
+        {{mrp.longitude | number:'1.1-6'}}
+      </ion-badge>
+      <br/>  
+      <br/> 
+      <p><b>Tags:</b></p> 
+      <span *ngIf="mrp.tags.length > 0">
+        <span  *ngFor="let tag of mrp.tags">
+          <ion-badge color="primary">{{tag.name}}</ion-badge>
+        </span>      
+      </span>
+      <br/>
+      <br/>
+      <ion-button expand="full" size ="small" *ngIf="isMember" (click)="fulfillPosting()">Fulfill</ion-button>
+  </ion-card-content>
+</ion-content>
