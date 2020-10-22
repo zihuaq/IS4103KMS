@@ -382,11 +382,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <button type="button" class="btn btn-block bg-gradient-info" data-toggle="modal" data-target="#modal-allocate" (click)="clickAllocate()" data-backdrop="static">
+                <button type="button" class="btn btn-block bg-gradient-info mb-3" data-toggle="modal" data-target="#modal-allocate" (click)="clickAllocate()" data-backdrop="static">
                     <i class="fas fa-plus"></i> Allocate
                 </button>
-                <div *ngIf="allocatedResources.length == 0" style="margin-top: 10px;"> There is currently no allocated material resource at the moment</div>
-                <div *ngIf="allocatedResources.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: scroll;">
+                <div *ngIf="allocatedResources.length == 0"> There is currently no allocated material resource at the moment</div>
+                <span *ngIf="allocatedResources.length > 0" style="max-height: 500px; overflow-y: scroll;">
                     <div id="allocatedResourceslist" *ngFor="let mrp of allocatedResources; let i = index">
                         <div class="card" style="width: 100%;">
                             <div class="card-header">
@@ -434,7 +434,7 @@
                             </div>    
                         </div>
                     </div>
-                </div>
+                </span>
             </div>
         </div>
     </div>
@@ -452,7 +452,7 @@
             <div *ngIf="!mrpToAllocate">
                 <div class="modal-body">
                     <div *ngIf="obtainedResources.length == 0" style="margin-top: 10px;"> There is currently no available material resources at the moment</div>
-                    <div *ngIf="obtainedResources.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: scroll;">
+                    <span *ngIf="obtainedResources.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: scroll;">
                         <div id="obtainedResourceslist" *ngFor="let mrp of obtainedResources; let i = index">
                             <div class="card" style="width: 100%;">
                                 <div class="card-header">
@@ -493,7 +493,7 @@
                                 </div>    
                             </div>
                         </div>
-                    </div>
+                    </span>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" (click)="cancelAllocate()" data-dismiss="modal">Cancel</button>

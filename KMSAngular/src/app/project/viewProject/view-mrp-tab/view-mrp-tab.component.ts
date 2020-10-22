@@ -182,7 +182,7 @@ export class ViewMrpTabComponent implements OnInit {
               }
             }
           );
-          $('#modal-create-mra').hide();
+          $('#createMraModalCloseBtn').click();
           $('#modal-fulfill-posting').show();
           $(document).Toasts('create', {
             class: 'bg-success',
@@ -295,11 +295,18 @@ export class ViewMrpTabComponent implements OnInit {
               }
             }
           );
+          this.mraService.getMaterialResourceAvailable(this.loggedInUser.userId).subscribe(
+            response => {
+              this.mraList = response;
+              if (this.mraList.length > 0) {
+                this.noMra = false;
+              }
+            }
+          );
           this.newFulFillment = new Fulfillment();
           this.mraToDonate = null;
           this.totalPledgedQuantity = null;
-          $('#modal-fulfill-posting').hide();
-          $('.modal-backdrop').remove();
+          $('#fulfillPostingModalCloseBtn').click();
           $(document).Toasts('create', {
             class: 'bg-success',
             title: 'Success',

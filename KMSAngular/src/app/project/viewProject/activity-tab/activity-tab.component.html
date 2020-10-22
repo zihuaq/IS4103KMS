@@ -85,6 +85,9 @@
                         {{activity.name}}
                     </td>
                     <td>
+                        {{activity.description}}
+                    </td>
+                    <td>
                         {{formatDate(activity.startDate) | date}}
                         <br/>
                         {{formatDate(activity.startDate) | date: 'HH:mm'}}
@@ -100,16 +103,16 @@
                             {{activity.longitude | number:'1.1-6'}}
                         </a>
                     </td>
-                    <td>
-                        {{activity.description}}
-                    </td>
                     <td *ngIf="isMember">
-                        <button class="btn btn-secondary" rel="tooltip" title="Members" data-toggle="modal" data-target="#modal-user-joined" data-backdrop="static" (click)="clickActivity(activity.activityId)">
+                        <button class="btn bg-gradient-secondary" rel="tooltip" title="Members" data-toggle="modal" data-target="#modal-user-joined" data-backdrop="static" (click)="clickActivity(activity.activityId)">
                             <i class="fas fa-users"></i>
                         </button>
-                        <button class="btn btn-primary" *ngIf="!hasJoined(activity.activityId)" (click)="joinActivity(activity.activityId)">Join</button>
+                        <button class="btn bg-gradient-indigo" rel="tooltip" title="Material Resources" data-toggle="modal" data-target="#modal-material-resources" data-backdrop="static" (click)="clickAllocatedMrp(activity)">
+                            <i class="fas fa-cubes"></i>
+                        </button>
+                        <button class="btn bg-gradient-primary" *ngIf="!hasJoined(activity.activityId)" (click)="joinActivity(activity.activityId)">Join</button>
                         <button class="btn btn-light" *ngIf="hasJoined(activity.activityId)" disabled>Joined</button>
-                        <button class="btn btn-primary" *ngIf="hasJoined(activity.activityId)" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>                        
+                        <button class="btn bg-gradient-primary" *ngIf="hasJoined(activity.activityId)" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>                        
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" (click)="leaveActivity(activity.activityId)">Leave</a>
                         </div>
@@ -176,6 +179,48 @@
                         </ul> 
                     </div>                               
                 </span>          
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-material-resources">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Allocated Material Resources</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="allocatedResources.length == 0" style="margin-top: 10px;"> There is currently no allocated material resource at the moment</div>
+                <span *ngIf="allocatedResources.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: scroll;">
+                    <span id="allocatedResourceslist" *ngFor="let mrp of allocatedResources; let i = index">
+                        <div class="card" style="width: 100%;">
+                            <div class="card-header" style="cursor: pointer; " [attr.data-target]="'#openPanel'+ i" data-toggle="collapse">
+                                <h6 class="card-title" style="font-size: 20px; margin-top: 5px; color: black;"><b>{{mrp.name}}</b> 
+                                    <br/>
+                                    <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
+                                </h6>
+                            </div>
+                            <div id="openPanel{{i}}" class="collapse show" data-parent="#allocatedResourceslist">
+                                <div class="card-body" style="display: block;">
+                                    <p style="margin: 0 7px 0 7px; color: black;">
+                                        <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> View Location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
+                                        {{activitySelected.allocatedQuantities[mrp.materialResourcePostingId] | number:'1.0-2'}} {{mrp.unit}} allocated
+                                        <br/>
+                                        <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
+                                            <div *ngFor="let tag of mrp.tags">
+                                                <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                                            </div>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>    
+                        </div>
+                    </span>
+                </span>
             </div>
         </div>
     </div>
