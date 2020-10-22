@@ -307,7 +307,7 @@ export class EditMembersPage implements OnInit {
   async adminAction(user: User) {
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
-        text: 'Prmote to Admin',
+        text: 'Promote to Admin',
         handler: () => {
           this.promoteToAdmin(user);
         }

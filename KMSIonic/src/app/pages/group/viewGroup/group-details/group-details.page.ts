@@ -68,12 +68,13 @@ export class GroupDetailsPage implements OnInit {
 
         this.owner = this.group.groupOwner;
 
-        this.dateCreated = this.group.dateCreated.toString().slice(0,10);
+        // this.dateCreated = this.group.dateCreated.toString().slice(0,10);
 
         for (let admin of this.group.groupAdmins) {
           if (this.currentUserId == admin.userId) {
             this.isMember = true;
             this.isAdmin = true;
+            console.log("User is admin.");
           }
         }
 
@@ -81,6 +82,7 @@ export class GroupDetailsPage implements OnInit {
           for (let member of this.group.groupMembers) {
             if (this.currentUserId == member.userId) {
               this.isMember = true;
+              console.log("User is member.");
             }
           }
         }
@@ -139,7 +141,7 @@ export class GroupDetailsPage implements OnInit {
   }
 
   editGroup() {
-    this.router.navigate(["tab-panel/" + this.groupId]);
+    this.router.navigate(["tab-panel/group/" + this.groupId]);
   }
 
   async leaveGroupDialog() {

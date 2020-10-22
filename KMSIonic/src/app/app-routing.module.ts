@@ -151,10 +151,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/group/editGroup/edit-group-details/edit-group-details.module').then( m => m.EditGroupDetailsPageModule)
   },
   {   //** */
-    path: 'tab-panel/:groupId',
+    path: 'tab-panel/group/:groupId',
     loadChildren: () => import('./pages/group/editGroup/tab-panel/tab-panel.module').then( m => m.TabPanelPageModule)
   },
-  
+  {
+    path: 'view-own-groups',
+    loadChildren: () => import('./pages/group/view-own-groups/view-own-groups.module').then( m => m.ViewOwnGroupsPageModule)
+  },
   {   //** */
     path: 'edit-members',
     loadChildren: () => import('./pages/group/editGroup/edit-members/edit-members.module').then( m => m.EditMembersPageModule)

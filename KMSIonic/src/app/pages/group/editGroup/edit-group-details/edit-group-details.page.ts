@@ -100,7 +100,7 @@ export class EditGroupDetailsPage implements OnInit {
   }
 
   edit(editGroupForm: NgForm) {
-    // this.groupToEdit.sdgs = [];
+    //this.groupToEdit.sdgs = [];
     // for (let tagString of this.selectedTagNames) {
     //   for (let tag of this.tagList) {
     //     if (tag.name == tagString) {
