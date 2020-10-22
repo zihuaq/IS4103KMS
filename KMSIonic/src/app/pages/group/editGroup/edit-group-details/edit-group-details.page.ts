@@ -22,7 +22,7 @@ export class EditGroupDetailsPage implements OnInit {
   groupId: number;
   groupToEdit: Group;
   owner: User;
-  dateCreated: string;
+  //dateCreated: string;
   noOfMembers: number;
   currentUserId: number;  
   segment: string;
@@ -85,7 +85,7 @@ export class EditGroupDetailsPage implements OnInit {
 
         this.owner = this.groupToEdit.groupOwner;
 
-        this.dateCreated = this.groupToEdit.dateCreated.toString().slice(0,10);
+        //this.dateCreated = this.groupToEdit.dateCreated.toString().slice(0,10);
 
         // for (let tag of this.groupToEdit.sdgs) {
         //   this.selectedTagNames.push(tag.name);
@@ -109,7 +109,7 @@ export class EditGroupDetailsPage implements OnInit {
     //   }
     // }
     if (editGroupForm.valid) {
-      this.groupToEdit.dateCreated = new Date();
+      //this.groupToEdit.dateCreated = new Date();
       this.groupService.updateGroup(this.groupToEdit).subscribe(
         async response => {
           const toast = await this.toastController.create({

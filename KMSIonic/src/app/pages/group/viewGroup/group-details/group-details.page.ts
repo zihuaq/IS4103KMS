@@ -19,7 +19,7 @@ export class GroupDetailsPage implements OnInit {
   groupId: number;
   group: Group;
   owner: User;
-  dateCreated: string;
+  //dateCreated: string;
   isMember: boolean = false;
   isAdmin: boolean = false;
   noOfMembers: number;

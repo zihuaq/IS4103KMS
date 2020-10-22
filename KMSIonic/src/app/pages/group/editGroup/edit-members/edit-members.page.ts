@@ -65,7 +65,7 @@ export class EditMembersPage implements OnInit {
 
         this.owner = this.group.groupOwner;
 
-        this.dateCreated = this.group.dateCreated.toString().slice(0,10);
+        //this.dateCreated = this.group.dateCreated.toString().slice(0,10);
 
         for (let admin of this.group.groupAdmins) {
           if (this.currentUserId == admin.userId) {
@@ -111,7 +111,7 @@ export class EditMembersPage implements OnInit {
     
             this.owner = this.group.groupOwner;
     
-            this.dateCreated = this.group.dateCreated.toString().slice(0,10);
+            //this.dateCreated = this.group.dateCreated.toString().slice(0,10);
     
             for (let admin of this.group.groupAdmins) {
               if (this.currentUserId == admin.userId) {
@@ -159,7 +159,7 @@ export class EditMembersPage implements OnInit {
     
             this.owner = this.group.groupOwner;
     
-            this.dateCreated = this.group.dateCreated.toString().slice(0,10);
+            //this.dateCreated = this.group.dateCreated.toString().slice(0,10);
     
             for (let admin of this.group.groupAdmins) {
               if (this.currentUserId == admin.userId) {
@@ -206,7 +206,7 @@ export class EditMembersPage implements OnInit {
     
             this.owner = this.group.groupOwner;
     
-            this.dateCreated = this.group.dateCreated.toString().slice(0,10);
+            //this.dateCreated = this.group.dateCreated.toString().slice(0,10);
     
             for (let admin of this.group.groupAdmins) {
               if (this.currentUserId == admin.userId) {
@@ -253,7 +253,7 @@ export class EditMembersPage implements OnInit {
     
             this.owner = this.group.groupOwner;
     
-            this.dateCreated = this.group.dateCreated.toString().slice(0,10);
+            //this.dateCreated = this.group.dateCreated.toString().slice(0,10);
     
             for (let admin of this.group.groupAdmins) {
               if (this.currentUserId == admin.userId) {

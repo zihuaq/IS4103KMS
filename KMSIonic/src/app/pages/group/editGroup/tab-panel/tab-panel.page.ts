@@ -19,7 +19,7 @@ export class TabPanelPage implements OnInit {
   groupId: number;
   groupToEdit: Group;
   owner: User;
-  dateCreated: string;
+  //dateCreated: string;
   noOfMembers: number;
   currentUserId: number;  
   segment: string;
@@ -57,7 +57,7 @@ export class TabPanelPage implements OnInit {
 
         this.owner = this.groupToEdit.groupOwner;
 
-        this.dateCreated = this.groupToEdit.dateCreated.toString().slice(0,10);
+        //this.dateCreated = this.groupToEdit.dateCreated.toString().slice(0,10);
       }
     )
   }

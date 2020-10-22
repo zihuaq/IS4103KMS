@@ -53,7 +53,7 @@ export class CreateNewGroupPage implements OnInit {
     // }
     // this.newGroup.sdgs = [];
     if (createGroupForm.valid) {
-      this.newGroup.dateCreated = new Date();
+      //this.newGroup.dateCreated = new Date();
       this.groupService.createNewGroup(this.newGroup, this.currentUserId,).subscribe(
         async response => {
           const toast = await this.toastController.create({
