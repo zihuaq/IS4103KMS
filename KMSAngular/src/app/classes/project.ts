@@ -23,7 +23,7 @@ export class Project {
   humanResourcePostings: HumanResourcePosting[];
   materialResourcePostings: MaterialResourcePosting[];
   posts: Post[];
-  isActive: Boolean;
+  isActive: boolean;
 
   constructor(
     projectId?: number,

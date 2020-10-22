@@ -189,7 +189,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             }
         }
         if(groupReports.size() < 1){
-            throw new NoResultException("No profile reports");
+            throw new NoResultException("No group reports");
         }
         return groupReports;
     }
@@ -207,9 +207,14 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             }
         }
         if(postReports.size() < 1){
-            throw new NoResultException("No profile reports");
+            throw new NoResultException("No post reports");
         }
         return postReports;
+    }
+    
+    public void deleteReport(Long reportId) throws NoResultException{
+        ReportEntity report = getReportById(reportId);
+        em.remove(report);
     }
     
     @Override
@@ -225,7 +230,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             }
         }
         if(commentReports.size() < 1){
-            throw new NoResultException("No profile reports");
+            throw new NoResultException("No comment reports");
         }
         return commentReports;
     }

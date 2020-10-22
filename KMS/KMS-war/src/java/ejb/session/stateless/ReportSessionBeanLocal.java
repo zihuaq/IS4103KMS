@@ -45,5 +45,7 @@ public interface ReportSessionBeanLocal {
 
     public ReportEntity reportComment(ReportEntity report) throws NoResultException;
 
+    public void deleteReport(Long reportId) throws NoResultException;
+
 
 }

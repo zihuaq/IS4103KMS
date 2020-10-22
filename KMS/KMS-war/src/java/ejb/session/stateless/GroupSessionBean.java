@@ -53,7 +53,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newGroup);
             em.flush();
-            
+            newGroup.setIsActive(Boolean.TRUE);
             user.getGroupsOwned().add(newGroup);
             newGroup.setGroupOwner(user);
             newGroup.getGroupAdmins().add(user);

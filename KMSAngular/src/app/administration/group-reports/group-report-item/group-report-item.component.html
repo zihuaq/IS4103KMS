@@ -18,7 +18,7 @@
     <img *ngIf="!report.reportedUser.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
     class = "img-responsive"
     style ="max-height: 20px;"> -->
-    <a routerLink="/group/{{report.reportedGroup.groupId}}">
+    <a routerLink="/groupDetails/{{report.reportedGroup.groupId}}">
       {{report.reportedGroup.name}}
     </a>
   </span>

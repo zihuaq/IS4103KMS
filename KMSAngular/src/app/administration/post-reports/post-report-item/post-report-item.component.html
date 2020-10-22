@@ -1,1 +1,57 @@
-<p>post-report-item works!</p>
+<div class="list-group-item clearfix">
+  <span class="pull-left">
+    <img *ngIf="report.reportOwner.profilePicture" src="report.reportOwner.profilePicture" alt=""
+    class = "img-responsive"
+    style ="max-height: 20px;">
+    <img *ngIf="!report.reportOwner.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
+    class = "img-responsive"
+    style ="max-height: 20px;">
+    <a routerLink="/profile/{{report.reportOwner.userId}}">
+      {{report.reportOwner.firstName}} {{report.reportOwner.lastName}}
+    </a>
+    made a report against a Post:
+  </span>
+  <span class="pull-left">
+    <!-- <img *ngIf="report.reportedUser.profilePicture" src="report.reportedUser.profilePicture" alt=""
+    class = "img-responsive"
+    style ="max-height: 20px;">
+    <img *ngIf="!report.reportedUser.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
+    class = "img-responsive"
+    style ="max-height: 20px;"> -->
+  </span>
+  <span class="badge badge-success" style="float: right;" *ngIf = "report.resolved === true">
+    RESOLVED
+  </span>
+  <span class="badge badge-danger" style="float: right;" *ngIf = "report.resolved === false">
+    PENDING ACTION
+  </span>
+  <hr>
+  <div>
+    <p class="list-group-item-text">
+      Post: {{report.reportedPost.text}}
+    </p>
+  </div>
+  <div>
+    <p class="list-group-item-text">
+      Report message: {{report.reportContent}}
+    </p>
+  </div>
+  <p>Report tags:
+    <span class="badge badge-pill badge-danger" *ngFor = "let tag of report.reportTags">
+      {{tag.name}}
+    </span>
+  </p>
+  <hr>
+  <p *ngIf = "report.resolved === true">
+    {{report.verdictComments}}
+  </p>
+  <button type="button"
+  *ngIf = "report.resolved === false"
+  style="float: right;"
+  class="btn btn-outline-danger btn-sm" (click) = "onSelectReport()" >Pass Verdict</button>
+</div>
+<!-- data-toggle="modal" data-target="#profileReportModal" -->
+
+
+
+

@@ -53,7 +53,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newProject);
             em.flush();
-            
+            newProject.setIsActive(Boolean.TRUE);
             user.getProjectsOwned().add(newProject);
             newProject.setProjectOwner(user);
             newProject.getProjectAdmins().add(user);

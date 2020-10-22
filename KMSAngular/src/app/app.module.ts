@@ -91,6 +91,7 @@ import { GroupReportItemComponent } from './administration/group-reports/group-r
 import { PostReportItemComponent } from './administration/post-reports/post-report-item/post-report-item.component';
 import { CommentReportItemComponent } from './administration/comment-reports/comment-report-item/comment-report-item.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -170,7 +171,8 @@ import { CommentReportItemComponent } from './administration/comment-reports/com
     CommentReportsComponent,
     GroupReportItemComponent,
     PostReportItemComponent,
-    CommentReportItemComponent
+    CommentReportItemComponent,
+
   ],
   imports: [
     BrowserModule,

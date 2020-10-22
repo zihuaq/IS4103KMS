@@ -11,7 +11,7 @@ import Exception.NoResultException;
 import entity.GroupEntity;
 import java.util.List;
 import javax.ejb.Local;
-//import util.enumeration.GroupStatusEnum;
+import util.enumeration.GroupStatusEnum;
 
 /**
  *
@@ -26,7 +26,7 @@ public interface GroupSessionBeanLocal {
 
     public List<GroupEntity> retrieveAllGroup();
 
-//    public List<GroupEntity> retrieveGroupByStatus(GroupStatusEnum status);
+   //public List<GroupEntity> retrieveGroupByStatus(GroupStatusEnum status);
 
     public GroupEntity getGroupById(Long groupId) throws NoResultException;
 

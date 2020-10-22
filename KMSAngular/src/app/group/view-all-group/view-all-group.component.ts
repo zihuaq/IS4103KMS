@@ -42,7 +42,7 @@ export class ViewAllGroupComponent implements OnInit {
     this.groupService.getAllGroup().subscribe(
       response => {
         console.log(response)
-        this.groups = response;
+        this.groups = response.groups;
         if (this.groups.length > 0) {
           this.noGroups = false;
         }

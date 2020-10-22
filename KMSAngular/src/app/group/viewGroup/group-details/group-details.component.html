@@ -1,9 +1,11 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
+<div class="content-wrapper" *ngIf = "groupToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN'" >
+<p>This group has been deactivated for violationg our T&C</p>
+</div>
 
-
-<div class="content-wrapper">
+<div class="content-wrapper" *ngIf = "groupToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN'">
     <div class="loading" *ngIf="!loaded">
         <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
     </div>
@@ -58,10 +60,10 @@
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
+                        <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
+                            <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab">Group Settings</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab">Human Resource Postings</a>
                         </li>
                         <li class="nav-item">
@@ -125,10 +127,25 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="tab-pane fade" id="mrp-tab" role="tabpanel">
-                            <app-view-mrp-tab></app-view-mrp-tab>
+                         <div class="tab-pane fade" id="setting-tab" role="tabpanel">
+                          <form class="form-horizontal" (ngSubmit)="onEditGroupSetting(disableForm)" #disableForm="ngForm">
+                            <div>
+                              <label>Account Status</label>
+                              <div class = "radio" *ngFor = "let status of settingStatus">
+                                <label style="padding-right: 10px;" >
+                                  <input type = "radio" name = "status" [ngModel] = "groupToView.isActive ? 'Active' : 'Deactive'" [value] = "status">
+                                  {{status}}
+                                </label>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="offset-sm-2 col-sm-10">
+                                <button type="submit" class="btn btn-danger" style="float: right;" [disabled]="!disableForm.valid">Submit</button>
+                              </div>
+                            </div>
+                          </form>
                         </div>
-                        <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
+                        <!--<div class="tab-pane fade" id="hrp-tab" role="tabpanel">
                             <app-view-hrp-tab></app-view-hrp-tab>
                         </div>
                         <div class="tab-pane fade" id="review-tab" role="tabpanel">

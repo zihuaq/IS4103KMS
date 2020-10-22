@@ -87,7 +87,7 @@ export class ReportService {
   }
 
   getGroupReports():Observable<any>{
-    return this.http.get<any>(this.baseUrl+'/getGroupReports')
+    return this.http.get<any>(this.baseUrl+ '/getGroupReports')
     .pipe(catchError(this.handleError))
   }
 

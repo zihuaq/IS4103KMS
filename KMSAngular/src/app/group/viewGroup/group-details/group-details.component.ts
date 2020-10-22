@@ -7,6 +7,7 @@ import { Group } from 'src/app/classes/group';
 import { GroupService } from 'src/app/group.service';
 import { SessionService } from 'src/app/session.service';
 import { UserService } from 'src/app/user.service';
+import { NgForm } from '@angular/forms';
 // import { GroupType } from 'src/app/classes/group-type.enum';
 
 declare var $: any;
@@ -30,6 +31,7 @@ export class GroupDetailsComponent implements OnInit {
   selectedProfilePicture: string | ArrayBuffer;
   selectedProfilePictureName: string;
   noOfMembers: number;
+  settingStatus = ['Active', 'Deactive'];
 
   constructor(public groupService: GroupService,
     private userService: UserService,
@@ -200,6 +202,39 @@ export class GroupDetailsComponent implements OnInit {
   cancel() {
     this.profilePicture = this.groupToView.profilePicture;
     this.selectedProfilePicture = undefined;
+  }
+
+  onEditGroupSetting(disableForm: NgForm){
+    if (disableForm.valid) {
+      console.log(disableForm)
+    }
+    let active: boolean
+    if(disableForm.value.status == "Active"){
+      this.groupToView.isActive = true
+    }
+    else{
+      this.groupToView.isActive = false;
+    }
+    this.groupService.updateGroup(this.groupToView).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Group Setting Updated',
+        })
+      },
+      error => {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+      }
+    );
+
   }
 
   // get groupType(): typeof GroupType{

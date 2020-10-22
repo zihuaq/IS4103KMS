@@ -5,12 +5,14 @@
  */
 package ws.restful.resources;
 
+import Exception.NoResultException;
 import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.ReportSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.GroupEntity;
+import entity.PostCommentEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.ReportEntity;
@@ -24,9 +26,11 @@ import javax.json.JsonObject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -45,6 +49,8 @@ import ws.restful.model.PassProjectReportVerdictReq;
  */
 @Path("report")
 public class ReportResource {
+
+    
 
     PostSessionBeanLocal postSessionBean = lookupPostSessionBeanLocal();
 
@@ -250,12 +256,12 @@ public class ReportResource {
      //not done
      public Response passPostReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
-            UserEntity reportedUser = userSessionBean.getUserById(passProfileReportVerdictReq.getReport().getReportedUser().getUserId());
+            PostEntity reportedPost = postSessionBean.getPostById(passProfileReportVerdictReq.getReport().getReportedPost().getPostId());
             reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
             if(!passProfileReportVerdictReq.getActive()){
-                reportedUser.setIsActive(Boolean.FALSE);
-                userSessionBean.updateUser(reportedUser);
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
+                reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
+                postSessionBean.deletePostById(reportedPost.getPostId());
             }
             return Response.status(Status.OK).build();
         } catch (Exception ex) {
@@ -272,12 +278,12 @@ public class ReportResource {
      //not done
      public Response passCommentReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
-            UserEntity reportedUser = userSessionBean.getUserById(passProfileReportVerdictReq.getReport().getReportedUser().getUserId());
+            PostCommentEntity reportedComment = postSessionBean.getPostCommentById(passProfileReportVerdictReq.getReport().getReportedComment().getPostCommentId());
             reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
             if(!passProfileReportVerdictReq.getActive()){
-                reportedUser.setIsActive(Boolean.FALSE);
-                userSessionBean.updateUser(reportedUser);
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
+                reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
+                postSessionBean.deleteComment(reportedComment.getPostCommentId());
             }
             return Response.status(Status.OK).build();
         } catch (Exception ex) {
@@ -333,7 +339,7 @@ public class ReportResource {
     public Response getGroupReports() {
         System.out.println("******** ReportResource: getGroupReports");
         try {
-            List<ReportEntity> groupReports = reportSessionBean.getProjectReports();
+            List<ReportEntity> groupReports = reportSessionBean.getGroupReports();
             List<ReportEntity> groupReportsResponse = getGroupReportResponse(groupReports);
             return Response.status(Response.Status.OK).entity(groupReportsResponse).build();
             
@@ -375,8 +381,8 @@ public class ReportResource {
         System.out.println("******** ReportResource: getPostReports");
         try {
             List<ReportEntity> postReports = reportSessionBean.getPostReports();
-            List<ReportEntity> groupReportsResponse = getPostReportResponse(postReports);
-            return Response.status(Response.Status.OK).entity(groupReportsResponse).build();
+            List<ReportEntity> postReportsResponse = getPostReportResponse(postReports);
+            return Response.status(Response.Status.OK).entity(postReportsResponse).build();
             
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
@@ -394,7 +400,7 @@ public class ReportResource {
             reportOwner.setProfilePicture(reportEntity.getReportOwner().getProfilePicture());
             PostEntity reportedPost = new PostEntity();
             reportedPost.setPostId(reportEntity.getReportedPost().getPostId());
-            //reportedPost.setName(reportEntity.getReportedGroup().getName());
+            reportedPost.setText(reportEntity.getReportedPost().getText());
             ReportEntity temp = new ReportEntity();
             temp.setReportId(reportEntity.getReportId());
             temp.setReportContent(reportEntity.getReportContent());
@@ -408,6 +414,49 @@ public class ReportResource {
         }
         return postReportResponse;
     } 
+     
+     @GET
+    @Path("/getCommentReports")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCommentReports() {
+        System.out.println("******** ReportResource: getPostReports");
+        try {
+            List<ReportEntity> commentReports = reportSessionBean.getCommentReports();
+            List<ReportEntity> commentReportsResponse = getCommentReportResponse(commentReports);
+            return Response.status(Response.Status.OK).entity(commentReportsResponse).build();
+            
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+     private List<ReportEntity> getCommentReportResponse(List<ReportEntity> reports){
+         List<ReportEntity> postReportResponse = new ArrayList<>();
+        for (ReportEntity reportEntity : reports) {
+            UserEntity reportOwner = new UserEntity();
+            reportOwner.setUserId(reportEntity.getReportOwner().getUserId());
+            reportOwner.setFirstName(reportEntity.getReportOwner().getFirstName());
+            reportOwner.setLastName(reportEntity.getReportOwner().getLastName());
+            reportOwner.setProfilePicture(reportEntity.getReportOwner().getProfilePicture());
+            PostCommentEntity reportedPostComment = new PostCommentEntity();
+            reportedPostComment.setPostCommentId(reportEntity.getReportedComment().getPostCommentId());
+            reportedPostComment.setComment(reportEntity.getReportedComment().getComment());
+            ReportEntity temp = new ReportEntity();
+            temp.setReportId(reportEntity.getReportId());
+            temp.setReportContent(reportEntity.getReportContent());
+            temp.setReportTags(reportEntity.getReportTags());
+            temp.setReportType(reportEntity.getReportType());
+            temp.setResolved(reportEntity.getResolved());
+            temp.setVerdictComments(reportEntity.getVerdictComments());
+            temp.setReportOwner(reportOwner);
+            temp.setReportedComment(reportedPostComment);
+            postReportResponse.add(temp);
+        }
+        return postReportResponse;
+    } 
+     
+    
     
     private ReportSessionBeanLocal lookupReportSessionBeanLocal() {
         try {
@@ -450,6 +499,16 @@ public class ReportResource {
     }
 
     private PostSessionBeanLocal lookupPostSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (PostSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/PostSessionBean!ejb.session.stateless.PostSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private PostSessionBeanLocal lookupPostSessionBeanLocal1() {
         try {
             javax.naming.Context c = new InitialContext();
             return (PostSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/PostSessionBean!ejb.session.stateless.PostSessionBeanLocal");

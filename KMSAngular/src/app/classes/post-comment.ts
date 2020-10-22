@@ -8,7 +8,7 @@ export class PostComment {
     post: Post;
     commentOwner: User;
     likers: User[];
-    isActive: Boolean;
+    isActive: boolean;
 
     constructor(postCommentId?: number, comment?: string, dateTime?: Date,
         post?: Post, commentOwner?: User, likers?: User[]) {
