@@ -12,7 +12,7 @@ import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.UserEntity;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -49,10 +49,9 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     public Long createNewActivity(ActivityEntity newActivity, Long projectId) throws NoResultException {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        LocalDate startDate = LocalDate.parse(sdf.format(newActivity.getStartDate()));
-        LocalDate today = LocalDate.now();
-        
+        LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
+        LocalDateTime startDate = LocalDateTime.parse(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(newActivity.getStartDate()));
+
         if (startDate.isAfter(today)) {
             newActivity.setActivityStatus(ActivityStatusEnum.PLANNED);
         } else {
@@ -107,12 +106,14 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         activity.setLatitude(activityToUpdate.getLatitude());
         activity.setLongitude(activityToUpdate.getLongitude());
         
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        LocalDate today = LocalDate.now();
-        LocalDate startDate = LocalDate.parse(sdf.format(activityToUpdate.getStartDate()));
-        LocalDate endDate = LocalDate.parse(sdf.format(activityToUpdate.getStartDate()));
+        LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime startDate = LocalDateTime.parse(sdf.format(activity.getStartDate()));
+        LocalDateTime endDate = LocalDateTime.parse(sdf.format(activity.getEndDate()));
 
-        if (startDate.isAfter(today)) {
+        if (today.isAfter(endDate)) {
+            activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+        } else if (today.isBefore(startDate)) {
             activity.setActivityStatus(ActivityStatusEnum.PLANNED);
         } else {
             activity.setActivityStatus(ActivityStatusEnum.ONGOING);
@@ -198,16 +199,17 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     
     @Override
     public void updateActivitiesStatus(List<ActivityEntity> activities) {
+        LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
         if (!activities.isEmpty()) {
             for (ActivityEntity activity: activities) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                LocalDate today = LocalDate.now();
-                LocalDate startDate = LocalDate.parse(sdf.format(activity.getStartDate()));
-                LocalDate endDate = LocalDate.parse(sdf.format(activity.getStartDate()));
+                LocalDateTime startDate = LocalDateTime.parse(sdf.format(activity.getStartDate()));
+                LocalDateTime endDate = LocalDateTime.parse(sdf.format(activity.getEndDate()));
 
-                if (endDate.isBefore(today)) {
+                if (today.isAfter(endDate)) {
                     activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
-                } else if (startDate.isEqual(today) || startDate.isBefore(today)) {
+                } else if (!today.isBefore(startDate)) {
                     activity.setActivityStatus(ActivityStatusEnum.ONGOING);
                 }
 
