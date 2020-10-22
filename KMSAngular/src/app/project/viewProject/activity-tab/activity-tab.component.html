@@ -13,9 +13,9 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <h3>{{ viewDate | date:'MMMM yyyy' }}</h3>
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
     </div>
-    <!-- <div class="col-sm-4">
+    <div class="col-sm-4">
         <div class="btn-group">
             <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
                 Month
@@ -27,7 +27,7 @@
                 Day
             </div>
         </div>
-    </div> -->
+    </div>
 </div>
 
 <div [ngSwitch]="view">
@@ -72,33 +72,36 @@
         <table class="table table-bordered">
             <thead>
                 <th>Name</th>
+                <th>Description</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Country</th>
-                <th>Location</th>
-                <th>Description</th>
+                <th>Location</th> 
                 <th *ngIf="isMember">Action</th>
             </thead>
     
             <tbody>
                 <tr *ngFor="let activity of activities">
                     <td>
-                    {{activity.name}}
+                        {{activity.name}}
                     </td>
                     <td>
-                    {{formatDate(activity.startDate) | date}}
+                        {{formatDate(activity.startDate) | date}}
+                        <br/>
+                        {{formatDate(activity.startDate) | date: 'HH:mm'}}
                     </td>
                     <td>
-                    {{formatDate(activity.endDate) | date}}
+                        {{formatDate(activity.endDate) | date}}
+                        <br/>
+                        {{formatDate(activity.endDate) | date: 'HH:mm'}}
                     </td>
                     <td>
-                    {{activity.country}}
+                        <a class="badge badge-secondary" style="cursor: pointer; color: white;" (click)="changehref(activity.latitude, activity.longitude)">
+                            {{activity.latitude | number:'1.1-6'}},<br/>
+                            {{activity.longitude | number:'1.1-6'}}
+                        </a>
                     </td>
                     <td>
-                    {{activity.location}}
-                    </td>
-                    <td>
-                    {{activity.description}}
+                        {{activity.description}}
                     </td>
                     <td *ngIf="isMember">
                         <button class="btn btn-secondary" rel="tooltip" title="Members" data-toggle="modal" data-target="#modal-user-joined" data-backdrop="static" (click)="clickActivity(activity.activityId)">

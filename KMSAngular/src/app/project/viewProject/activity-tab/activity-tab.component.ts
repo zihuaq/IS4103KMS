@@ -88,16 +88,20 @@ export class ActivityTabComponent implements OnInit {
         this.events = [];
         for (let activity of this.activities) {
           let event = {
-            start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
-            end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
+            start: new Date(this.formatDate(activity.startDate.toString())),
+            end: new Date(this.formatDate(activity.endDate.toString())),
             title: activity.name,
-            allDay: true
           }
           this.events.push(event);
         }
         this.refresh.next();
       }
     );
+  }
+
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    window.open(url, '_blank');
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {

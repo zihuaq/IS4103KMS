@@ -45,19 +45,21 @@ public class ActivityEntity implements Serializable {
     
     @NotNull
     @Column(nullable=false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
     
     @NotNull
     @Column(nullable=false)
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
-    
-    private String country;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endDate;    
     
     @NotNull
     @Column(nullable=false)
-    private String location;
+    private Double latitude;
+    
+    @NotNull
+    @Column(nullable=false)
+    private Double longitude;
  
     @NotNull
     @Column(nullable=false)
@@ -92,19 +94,15 @@ public class ActivityEntity implements Serializable {
         this.joinedUsers = new ArrayList<>();
     }
 
-    public ActivityEntity(String name, Date startDate, Date endDate, String coutry, String location, String description, ActivityStatusEnum activityStatus, ProjectEntity project, List<HumanResourcePostingEntity> humanResourcePostings, List<MaterialResourcePostingEntity> materialResourcePostings) {
-        this();
+    public ActivityEntity(String name, Date startDate, Date endDate, Double latitude, Double longitude, String description, ActivityStatusEnum activityStatus) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.country = coutry;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = description;
         this.activityStatus = activityStatus;
-        this.project = project;
-        this.humanResourcePostings = humanResourcePostings;
-        this.materialResourcePostings = materialResourcePostings;
-    }              
+    } 
 
     public Long getActivityId() {
         return activityId;
@@ -163,22 +161,6 @@ public class ActivityEntity implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -233,6 +215,22 @@ public class ActivityEntity implements Serializable {
 
     public void setJoinedUsers(List<UserEntity> joinedUsers) {
         this.joinedUsers = joinedUsers;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
     
 }

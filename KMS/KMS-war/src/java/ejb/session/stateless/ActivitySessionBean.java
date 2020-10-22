@@ -101,11 +101,11 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         ActivityEntity activity = getActivityById(activityToUpdate.getActivityId());
         
         activity.setName(activityToUpdate.getName());
-        activity.setCountry(activityToUpdate.getCountry());
         activity.setStartDate(activityToUpdate.getStartDate());
         activity.setEndDate(activityToUpdate.getEndDate());
-        activity.setLocation(activityToUpdate.getLocation());
         activity.setDescription(activityToUpdate.getDescription());
+        activity.setLatitude(activityToUpdate.getLatitude());
+        activity.setLongitude(activityToUpdate.getLongitude());
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate today = LocalDate.now();

@@ -10,7 +10,8 @@ export class Activity {
     startDate: Date;
     endDate: Date;
     country: string;
-    location: string;
+    latitude: number;
+    longitude: number;
     description: string;
     activityStatus: ActivityStatus;
     allocatedQuantities: Map<number, number>;
@@ -25,7 +26,8 @@ export class Activity {
         startDate?: Date,
         endDate?: Date,
         country?: string,
-        location?: string,
+        latitude?: number,
+        longitude?: number,
         description?: string,
         activityStatus?: ActivityStatus,
         allocatedQuantities?: Map<number, number>,
@@ -39,7 +41,8 @@ export class Activity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.country = country;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = description;
         this.activityStatus = activityStatus;
         this.allocatedQuantities = allocatedQuantities;

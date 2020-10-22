@@ -80,6 +80,15 @@ export class EditActivityTabComponent implements OnInit {
   mrpToEdit: MaterialResourcePosting;
   newQuantityAllocated: number;
 
+  zoom = 12;
+  center: google.maps.LatLngLiteral;
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: true,
+  };
+
   constructor(private hrpService: HrpService,
     private sessionService: SessionService,
     private activityService: ActivityService,
@@ -123,16 +132,23 @@ export class EditActivityTabComponent implements OnInit {
         for (let activity of this.activities) {
           let event = {
             id: activity.activityId,
-            start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
-            end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
+            start: new Date(this.formatDate(activity.startDate.toString())),
+            end: new Date(this.formatDate(activity.endDate.toString())),
             title: activity.name,
-            allDay: true,
           }
           this.events.push(event);
         }
         this.refresh.next();
       }
     );
+  }
+
+  click(event: google.maps.MouseEvent) {
+    console.log(event);
+    this.newActivity.latitude = event.latLng.lat();
+    this.newActivity.longitude = event.latLng.lng();
+    this.activityToEdit.latitude = event.latLng.lat();
+    this.activityToEdit.longitude = event.latLng.lng();
   }
 
   isAdmin(user: User): boolean {
@@ -192,6 +208,7 @@ export class EditActivityTabComponent implements OnInit {
     }
 
     if (newActivityForm.valid) {
+      console.log(this.newActivity.startDate);
       this.newActivity.startDate = new Date(this.newActivity.startDate);
       this.newActivity.endDate = new Date(this.newActivity.endDate);
       this.activityService.createNewActivity(this.newActivity, this.projectId).subscribe(
@@ -212,7 +229,7 @@ export class EditActivityTabComponent implements OnInit {
   }
 
   dateToString(date: Date) {
-    return this.datePipe.transform(date, "yyyy-MM-dd");
+    return this.datePipe.transform(date, "yyyy-MM-ddTHH:mm");
   }
 
   formatDate(date: string) {
