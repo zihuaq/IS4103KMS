@@ -7,7 +7,7 @@ import { NgForm } from '@angular/forms';
 import { User } from 'src/app/classes/user';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/services/project.service';
-import { ProjectType } from 'src/app/classes/project-type.enum';
+import { ProjectType } from 'src/app/enum/project-type.enum';
 import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/services/tag.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';

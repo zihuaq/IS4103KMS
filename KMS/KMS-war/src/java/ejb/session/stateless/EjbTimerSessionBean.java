@@ -6,8 +6,8 @@
 package ejb.session.stateless;
 
 import entity.ActivityEntity;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
@@ -27,7 +27,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
     public void timer() {
         LocalDateTime now = LocalDateTime.now();
         if (now.getMinute() == 0) {
-            String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now);
+            String timeStamp = now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
             System.out.println("********** EjbTimerSession.timer(): Timeout at " + timeStamp);  
         }
         
