@@ -20,7 +20,7 @@ const httpOptions = {
 export class PostService {
   baseUrl: string = '/api/post';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createPost(post: Post) {
     return this.http
@@ -121,6 +121,19 @@ export class PostService {
       .pipe(catchError(this.handleError));
   }
 
+  sharePostToGroups(
+    postToShareId: number,
+    userId: number,
+    shareReq: SharePostToProjectOrGroupsReq
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/sharePostToGroups/' + postToShareId + '/' + userId,
+        shareReq
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   getPostForUserNewsfeed(userId: number): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/userNewsFeed/' + userId).pipe(
       map((data) => {
@@ -163,6 +176,46 @@ export class PostService {
 
   getPostForProjectNewsfeed(projectId: number): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/projectNewsFeed/' + projectId).pipe(
+      map((data) => {
+        // return data.map((post) => {this.parsePostDate})
+        return data.map((post) => {
+          post = {
+            ...post,
+            postDate: new Date(
+              Date.UTC(
+                post.postDate.substring(0, 4),
+                post.postDate.substring(5, 7) - 1,
+                post.postDate.substring(8, 10),
+                post.postDate.substring(11, 13),
+                post.postDate.substring(14, 16),
+                post.postDate.substring(17, 19)
+              )
+            ),
+          };
+          post.comments.map((postComment) => {
+            return {
+              ...postComment,
+              dateTime: new Date(
+                Date.UTC(
+                  postComment.dateTime.substring(0, 4),
+                  postComment.dateTime.substring(5, 7) - 1,
+                  postComment.dateTime.substring(8, 10),
+                  postComment.dateTime.substring(11, 13),
+                  postComment.dateTime.substring(14, 16),
+                  postComment.dateTime.substring(17, 19)
+                )
+              ),
+            };
+          });
+          return post;
+        });
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  getPostForGroupNewsfeed(groupId: number): Observable<any> {
+    return this.http.get<any>(this.baseUrl + '/groupNewsFeed/' + groupId).pipe(
       map((data) => {
         // return data.map((post) => {this.parsePostDate})
         return data.map((post) => {

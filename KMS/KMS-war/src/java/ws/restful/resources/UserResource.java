@@ -382,6 +382,15 @@ public class UserResource {
                 projects.add(project);
             }
             user.setProjectsJoined(projects);
+            List<GroupEntity> groups = new ArrayList<GroupEntity>();
+            for (int i = 0; i < user.getGroupsJoined().size(); i++) {
+                GroupEntity group = new GroupEntity();
+                group.setGroupId(user.getGroupsJoined().get(i).getGroupId());
+                group.setName(user.getGroupsJoined().get(i).getName());
+                groups.add(group);
+                System.out.println(user.getGroupsJoined());
+            }
+            user.setGroupsJoined(groups);
             user.getActivityJoined().clear();
             user.getDonations().clear();
             return Response.status(200).entity(user).build();
@@ -1084,7 +1093,7 @@ public class UserResource {
                 g.setGroupOwner(null);
                 g.getGroupMembers().clear();
                 g.getGroupAdmins().clear();
-                //g.getPosts().clear();
+                g.getPosts().clear();
             }
             return Response.status(Status.OK).entity(groupsOwned).build();
 
@@ -1105,7 +1114,7 @@ public class UserResource {
                 g.setGroupOwner(null);
                 g.getGroupMembers().clear();
                 g.getGroupAdmins().clear();
-                //g.getPosts().clear();
+                g.getPosts().clear();
             }
             return Response.status(Status.OK).entity(groupsJoined).build();
 
@@ -1126,7 +1135,7 @@ public class UserResource {
                 g.setGroupOwner(null);
                 g.getGroupMembers().clear();
                 g.getGroupAdmins().clear();
-                //g.getPosts().clear();
+                g.getPosts().clear();
             }
             return Response.status(Status.OK).entity(groupsManaged).build();
 

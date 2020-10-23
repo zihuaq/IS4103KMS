@@ -58,6 +58,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-groupfeed" data-toggle="pill" href="#groupfeed-tab">Group Feed <span class="badge badge-light"></span></a>
+                        </li>
                         <!-- <li class="nav-item">
                             <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
                         </li>
@@ -134,6 +137,9 @@
                         <div class="tab-pane fade" id="review-tab" role="tabpanel">
                             <p>review-tab works</p>
                         </div> -->
+                        <div class="tab-pane fade" id="groupfeed-tab" role="tabpanel">
+                            <app-newsfeed newsfeedType="group" id="{{groupId}}"></app-newsfeed>
+                        </div>
                     </div>
                 </div>
             </div>
