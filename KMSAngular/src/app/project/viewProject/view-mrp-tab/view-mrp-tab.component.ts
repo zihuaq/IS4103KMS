@@ -226,7 +226,7 @@ export class ViewMrpTabComponent implements OnInit {
         delay: 5000,
         body: 'The donated resource will expire before the end date of Material Resource Posting',
       });
-    } if(mraToDonate.startDate != null && mraToDonate.startDate > this.mrpToFulfill.startDate) {
+    } else if(mraToDonate.startDate != null && mraToDonate.startDate > this.mrpToFulfill.startDate) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Resource Unavailable',

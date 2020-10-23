@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ToastController, AlertController } from '@ionic/angular';
 import { User } from 'src/app/classes/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MrpService } from 'src/app/services/mrp.service';
@@ -23,9 +22,7 @@ export class MrpDetailsPage implements OnInit {
   currentProject: Project;
   isMember: boolean = false;
 
-  constructor(public toastController: ToastController,
-    public alertController: AlertController,
-    private activatedRoute: ActivatedRoute,
+  constructor(private activatedRoute: ActivatedRoute,
     private mrpService: MrpService,
     private projectService: ProjectService,
     private authenticationService: AuthenticationService) {
@@ -34,13 +31,14 @@ export class MrpDetailsPage implements OnInit {
       this.currentProject = new Project();
      }
 
-    ngOnInit() {
-      this.refreshMrp();
-    }
-  
-    ionViewWillEnter() {
-      this.refreshMrp();
-    }
+  ngOnInit() {
+    this.refreshMrp();
+  }
+
+  ionViewWillEnter() {
+    console.log("ionViewWillEnter")
+    this.refreshMrp();
+  }
 
   refreshMrp() {
     this.authenticationService.getCurrentUser().then(
@@ -69,10 +67,6 @@ export class MrpDetailsPage implements OnInit {
         ); 
       }
     );
-  }
-
-  fulfillPosting() {
-
   }
 
   changehref(lat: number, long: number) {

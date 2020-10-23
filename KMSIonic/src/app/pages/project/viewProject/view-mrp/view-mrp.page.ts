@@ -26,12 +26,9 @@ export class ViewMrpPage implements OnInit {
   noMrp: boolean = true;
   currentUserId: number;
 
-  constructor(private activatedRoute: ActivatedRoute,
-    private projectService: ProjectService,
-    private tagService: TagService,
+  constructor(private projectService: ProjectService,
     private mrpService: MrpService,
     private authenticationService: AuthenticationService,
-    private router: Router,
     private activatedRouter: ActivatedRoute) {
       this.mrpList = [];
      }
@@ -70,10 +67,6 @@ export class ViewMrpPage implements OnInit {
   changehref(lat: number, long: number) {
     var url = "http://maps.google.com/?q=" + lat + "," + long;
     window.open(url, '_blank');
-  }
-
-  viewMrpDetails(event, mrp) {
-    this.router.navigate(["mrp-details/" + mrp.materialResourcePostingId]);
   }
 
 }

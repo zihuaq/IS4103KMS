@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/view-all-project"></ion-back-button>
+      <ion-back-button defaultHref="/project-details/{{currentProject.projectId}}"></ion-back-button>
     </ion-buttons>
     <ion-title>{{mrp.name}}</ion-title>
   </ion-toolbar>
@@ -17,12 +17,10 @@
         <p>{{mrp.description}}</p>
         <br/>
       </span>
-      <p><b>Start Date:</b></p>
-      <p>{{startDate | date}}</p>
+      <p><b>Required Date:</b></p>
+      <p>{{startDate | date}} - {{endDate | date}}</p>
       <br/>
-      <p><b>End Date:</b></p>
-      <p>{{endDate | date}}</p>
-      <br/>
+
       <p><b>Quantity:</b></p>
       <p>{{mrp.lackingQuantity}} {{mrp.unit}} required / {{mrp.totalQuantity}} {{mrp.unit}} total</p>
       <br/>
@@ -41,6 +39,6 @@
       </span>
       <br/>
       <br/>
-      <ion-button expand="full" size ="small" *ngIf="isMember" (click)="fulfillPosting()">Fulfill</ion-button>
+      <ion-button expand="full" size ="small" *ngIf="isMember" [routerLink]="['/fulfill-posting', mrp.materialResourcePostingId]">Fulfill</ion-button>
   </ion-card-content>
 </ion-content>
