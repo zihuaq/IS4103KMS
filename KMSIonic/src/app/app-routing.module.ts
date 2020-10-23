@@ -269,7 +269,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/project/editProject/edit-hrp-details/edit-hrp-details.module').then( m => m.EditHrpDetailsPageModule)
   },
   {
-    path: 'view-mrp',
+    path: 'view-mrp/:mrpId',
     loadChildren: () => import('./pages/project/viewProject/view-mrp/view-mrp.module').then( m => m.ViewMrpPageModule)
   },
   {
@@ -283,6 +283,18 @@ const routes: Routes = [
   {
     path: 'mrp-details/:mrpId',
     loadChildren: () => import('./pages/project/viewProject/mrp-details/mrp-details.module').then( m => m.MrpDetailsPageModule)
+  },
+  {
+    path: 'fulfill-posting/:mrpId',
+    loadChildren: () => import('./pages/project/viewProject/mrp-details/fulfill-posting/fulfill-posting.module').then( m => m.FulfillPostingPageModule)
+  },
+  {
+    path: 'add-mra-modal',
+    loadChildren: () => import('./pages/project/viewProject/mrp-details/add-mra-modal/add-mra-modal.module').then( m => m.AddMraModalPageModule)
+  },
+  {
+    path: 'view-my-fulfillments/:projectId',
+    loadChildren: () => import('./pages/project/viewProject/view-mrp/view-my-fulfillments/view-my-fulfillments.module').then( m => m.ViewMyFulfillmentsPageModule)
   }
 
 
