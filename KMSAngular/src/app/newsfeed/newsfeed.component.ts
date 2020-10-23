@@ -14,6 +14,8 @@ import { ProjectService } from '../project.service';
 import { Project } from '../classes/project';
 import { SharePostToProjectOrGroupsReq } from '../models/SharePostToProjectOrGroupsReq';
 import { number } from 'currency-codes';
+import { ReportType } from '../classes/report-type.enum';
+import { ReportService } from '../report.service';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -37,9 +39,8 @@ export class NewsfeedComponent implements OnInit {
   commentToDeleteId: number;
   postToShare: Post;
   report: Report;
-  reportTags: Tag[];
-  selectedTags: Tag[];
-  selectedTagNames: string[];
+  postReportTags: Tag[];
+  commentReportTags: Tag[];
   postToReport: Post;
   isAdminOrOwner: boolean;
   isMember: boolean;
@@ -49,29 +50,32 @@ export class NewsfeedComponent implements OnInit {
     { id: "project", value: "Project(s)" }
   ];
   selectedShareOption: string;
+  sharePostText: string = "";
 
   constructor(
     private sessionService: SessionService,
     private userService: UserService,
     private postService: PostService,
     private tagService: TagService,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private reportService: ReportService
   ) { }
 
   ngOnInit(): void {
-    bsCustomFileInput.init();
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     if (this.newsfeedType == "project") {
       forkJoin([
         this.userService.getUser(loggedInUserId.toString()),
         this.postService.getPostForProjectNewsfeed(this.id),
         this.tagService.getAllPostReportTags(),
-        this.projectService.getProjectById(this.id)
+        this.projectService.getProjectById(this.id),
+        this.tagService.getAllCommentReportTags()
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
-        this.reportTags = result[2];
+        this.postReportTags = result[2];
         this.project = result[3];
+        this.commentReportTags = result[4];
         let memberIndex = this.project.projectMembers.findIndex(
           (user) => user.userId == this.loggedInUser.userId
         );
@@ -84,8 +88,8 @@ export class NewsfeedComponent implements OnInit {
         } else if (memberIndex > -1) {
           this.isMember = true
         }
-        $('#reportnewsfeedselect2').select2({
-          data: this.reportTags.map((item) => {
+        $('#reportPostselect2').select2({
+          data: this.postReportTags.map((item) => {
             return item.name;
           }),
           allowClear: true,
@@ -96,19 +100,21 @@ export class NewsfeedComponent implements OnInit {
           }),
           allowClear: true,
         });
-        console.log(this.loggedInUser.projectsJoined)
+        bsCustomFileInput.init();
       });
     } else {
       forkJoin([
         this.userService.getUser(loggedInUserId.toString()),
         this.postService.getPostForUserNewsfeed(loggedInUserId),
         this.tagService.getAllPostReportTags(),
+        this.tagService.getAllCommentReportTags()
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
-        this.reportTags = result[2];
-        $('#reportnewsfeedselect2').select2({
-          data: this.reportTags.map((item) => {
+        this.postReportTags = result[2];
+        this.commentReportTags = result[3];
+        $('#reportPostselect2').select2({
+          data: this.postReportTags.map((item) => {
             return item.name;
           }),
           allowClear: true,
@@ -119,6 +125,7 @@ export class NewsfeedComponent implements OnInit {
           }),
           allowClear: true,
         });
+        bsCustomFileInput.init();
       });
     }
   }
@@ -299,10 +306,10 @@ export class NewsfeedComponent implements OnInit {
     });
   }
 
-  sharePost(text: string) {
+  sharePost() {
     if (this.selectedShareOption == "project") {
       let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
-      sharePostToProjectOrGroupsReq.text = text;
+      sharePostToProjectOrGroupsReq.text = this.sharePostText;
       sharePostToProjectOrGroupsReq.postDate = new Date();
       let selectedProjectNames = $('#shareToProjectselect2').val();
       let selectedProjectIds = [];
@@ -333,11 +340,15 @@ export class NewsfeedComponent implements OnInit {
               body: 'Post Shared!',
             });
             this.updateNewsfeed();
+            $('#shareToProjectselect2').val(null).trigger('change');
+            this.sharePostText = "";
+            this.selectedShareOption = "";
+            $('#project').prop('checked', false);
           });
       }
     } else if (this.selectedShareOption == "follower") {
       let post = new Post();
-      post.text = text;
+      post.text = this.sharePostText;
       post.postDate = new Date();
       this.postService
         .sharePost(this.postToShare.postId, this.loggedInUser.userId, post)
@@ -351,6 +362,9 @@ export class NewsfeedComponent implements OnInit {
             body: 'Post Shared!',
           });
           this.updateNewsfeed();
+          this.sharePostText = "";
+          this.selectedShareOption = "";
+          $('#follower').prop('checked', false);
         });
     } else {
       $(document).Toasts('create', {
@@ -363,7 +377,40 @@ export class NewsfeedComponent implements OnInit {
     }
   }
 
-  reportPost() { }
+  reportPost() {
+    let selectedTags = [];
+    let selectedTagNames = $('#reportPostselect2').val();
+    if (selectedTagNames.length == 0) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Report',
+        autohide: true,
+        delay: 2500,
+        body: 'Please select at least one concern',
+      });
+      return;
+    }
+    this.postReportTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        selectedTags.push(element);
+      }
+    });
+    this.report.reportType = ReportType.POST;
+    this.report.reportOwner = this.loggedInUser;
+    this.report.reportedPost = this.postToReport;
+    this.report.reportTags = selectedTags;
+    this.report.resolved = false;
+    this.reportService.reportPost(this.report).subscribe(() => {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Report Submitted Successfully',
+        autohide: true,
+        delay: 2500,
+      });
+      $('#report-post-modal').modal('hide');
+      $('#reportPostselect2').val(null).trigger('change');
+    });
+  }
 
   setPostToShare(postId: number) {
     let post = this.newsfeedPosts.find((post) => post.postId == postId);
