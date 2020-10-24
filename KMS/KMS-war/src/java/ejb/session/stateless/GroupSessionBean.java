@@ -48,7 +48,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     private TagSessionBeanLocal tagSessionBeanLocal;
 
     @Override
-    public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException {
+    public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newGroup);
@@ -60,7 +60,10 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             user.getGroupsManaged().add(newGroup);
             newGroup.getGroupMembers().add(user);
             user.getGroupsJoined().add(newGroup);
-            
+            for (Long tagId : tagIds) {
+                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
+                newGroup.getSdgs().add(tag);
+            }
             return newGroup.getGroupId();
         } catch (NoResultException ex) {
             throw new CreateGroupException("User not found");

@@ -253,17 +253,23 @@ public class ReportResource {
      @Path("passPostReportVerdict")
      @Consumes(MediaType.APPLICATION_JSON)
      @Produces(MediaType.APPLICATION_JSON)
-     //not done
+    
      public Response passPostReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
             PostEntity reportedPost = postSessionBean.getPostById(passProfileReportVerdictReq.getReport().getReportedPost().getPostId());
-            reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
+            //reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
+            Long reportId = 0L;
             if(!passProfileReportVerdictReq.getActive()){
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
+                reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
                 postSessionBean.deletePostById(reportedPost.getPostId());
+            }else{
+                reportId = passProfileReportVerdictReq.getReport().getReportId();
+                reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
             }
-            return Response.status(Status.OK).build();
+            
+            return Response.status(Status.OK).entity(getPostReports()).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
@@ -275,17 +281,24 @@ public class ReportResource {
      @Path("passCommentReportVerdict")
      @Consumes(MediaType.APPLICATION_JSON)
      @Produces(MediaType.APPLICATION_JSON)
-     //not done
+     
      public Response passCommentReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
             PostCommentEntity reportedComment = postSessionBean.getPostCommentById(passProfileReportVerdictReq.getReport().getReportedComment().getPostCommentId());
-            reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
+            //reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
+            Long reportId = 0L;
             if(!passProfileReportVerdictReq.getActive()){
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
+                reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
                 postSessionBean.deleteComment(reportedComment.getPostCommentId());
             }
-            return Response.status(Status.OK).build();
+            else{
+                reportId = passProfileReportVerdictReq.getReport().getReportId();
+                reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
+
+            }
+            return Response.status(Status.OK).entity(getCommentReports()).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();

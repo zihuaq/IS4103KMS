@@ -22,7 +22,7 @@ public interface GroupSessionBeanLocal {
 
     //public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException;
     
-    public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException;
+    //public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException;
 
     public List<GroupEntity> retrieveAllGroup();
 
@@ -51,5 +51,7 @@ public interface GroupSessionBeanLocal {
     //public Long createNewGroupReview(ReviewEntity newReview, Long groupId, Long fromUserId) throws CreateGroupReviewException;
 
     //public Long createNewUserReview(ReviewEntity newReview, Long groupId, Long fromUserId, Long toUserId) throws CreateUserReviewException;    
+
+    public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException;
     
 }

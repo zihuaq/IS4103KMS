@@ -197,12 +197,13 @@ public class DataInitializationSessionBean {
         }
         
         try {
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ","Malaysia"), 3l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 4", "About SDG 4. Greetings From Korea. Started from locals who love kimchi and cucumber", "Korea"), 5l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 5", "About SDG 5. Greetings From Japan. Started froma group of locals who love sushi and expensive fruits", "Japan"), 6l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "About SDG 6. Greetings From Thailand. Started from a group of local street food seller in Bangkok", "Thailand"), 6l);      
+            
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l, Arrays.asList(2L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ","Malaysia"), 3l, Arrays.asList(3L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l, Arrays.asList(6L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 4", "About SDG 4. Greetings From Korea. Started from locals who love kimchi and cucumber", "Korea"), 5l, Arrays.asList(4L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 5", "About SDG 5. Greetings From Japan. Started froma group of locals who love sushi and expensive fruits", "Japan"), 6l, Arrays.asList(8L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "About SDG 6. Greetings From Thailand. Started from a group of local street food seller in Bangkok", "Thailand"), 6l, Arrays.asList(9L));      
             groupSessionBean.joinGroup(4l, 1l);
             groupSessionBean.joinGroup(4l, 2l);
             groupSessionBean.joinGroup(4l, 3l);                  

@@ -111,7 +111,8 @@ export class CreateNewGroupComponent implements OnInit {
       //this.newGroup.dateCreated = new Date();
       this.newGroup.isActive = true;
       this.newGroup.profilePicture = this.selectedProfilePicture;
-      this.groupService.createNewGroup(this.newGroup, this.ownerId).subscribe(
+
+      this.groupService.createNewGroup(this.newGroup, this.ownerId, this.tagIdsSelected).subscribe(
         response => {
           $(document).Toasts('create', {
             class: 'bg-success',

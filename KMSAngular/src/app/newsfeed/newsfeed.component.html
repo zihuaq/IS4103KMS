@@ -109,7 +109,8 @@
                         data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
                         <i class="fas fa-share"></i> shared </button>
                     <button type="button" class="btn btn-default btn-sm"
-                        *ngIf="loggedInUser.userId == post.postOwner.userId" data-toggle="modal"
+
+                         data-toggle="modal"
                         data-target="#modal-default" (click)="setPostToReport(post.postId)">
                         <i class="fas fa-flag"></i> report </button>
                     <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}

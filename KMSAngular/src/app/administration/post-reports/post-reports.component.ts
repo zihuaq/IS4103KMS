@@ -43,6 +43,7 @@ export class PostReportsComponent implements OnInit {
     }
     this.reportService.passPostReportVerdict(this.selectedReport,activeStatus)
     .subscribe((response)=>{
+      this.reports = response;
       this.verdictModal.hide();
     })
   }

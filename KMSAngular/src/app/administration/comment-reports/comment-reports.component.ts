@@ -22,6 +22,7 @@ export class CommentReportsComponent implements OnInit {
   ngOnInit(): void {
     this.reportService.getCommentReports().subscribe(
       (response)=>{
+
         this.reports = response;
       },
       (error)=>{
@@ -43,6 +44,7 @@ export class CommentReportsComponent implements OnInit {
     }
     this.reportService.passCommentReportVerdict(this.selectedReport,activeStatus)
     .subscribe((response)=>{
+      this.reports = response;
       this.verdictModal.hide();
     })
   }
