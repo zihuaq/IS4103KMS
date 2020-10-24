@@ -22,7 +22,7 @@
     No projects found.
   </span>
   <span *ngIf="!noProjects">
-    <span *ngFor="let project of projectsJoined">
+    <span *ngFor="let project of filteredProjects">
       <ion-card tappable (click)="viewProjectDetails($event, project)">
         <ion-card-header>
           <b>{{project.name}}</b>&nbsp;
