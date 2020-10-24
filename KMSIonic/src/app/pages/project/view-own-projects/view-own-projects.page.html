@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      My Projects      
+      My Projects
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="createProject()">
@@ -12,24 +12,23 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm"
-    (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm" (ionChange)="setFilteredItems(searchTerm)" #searchBar>
   </ion-searchbar>
 </ion-header>
 
 <ion-content>
-  <span *ngFor="let project of projectsOwned">
+  <span *ngFor="let project of projectsJoined">
     <ion-card tappable (click)="viewProjectDetails($event, project)">
       <ion-card-header>
         <b>{{project.name}}</b>&nbsp;
         <ion-badge color="primary">{{project.status}}</ion-badge>
       </ion-card-header>
       <ion-card-content>
-        {{project.description}}  
-        <br/>
+        {{project.description}}
+        <br />
         <span *ngFor="let sdg of sortSDG(project.sdgs)">
           <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
-        </span>   
+        </span>
       </ion-card-content>
     </ion-card>
   </span>

@@ -1,4 +1,5 @@
-<ion-item-divider class="ion-no-padding" *ngIf="newsfeedType == 'user' || (newsfeedType=='project' && isMember)">
+<ion-item-divider class="ion-no-padding"
+  *ngIf="newsfeedType == 'user' || (newsfeedType=='project' && isMember) || (newsfeedType=='group' && isMember)">
   <ion-toolbar>
     <ion-avatar slot="start" style="width: 40px; height: 40px;" *ngIf="loggedInUser" class="ion-margin-start">
       <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"

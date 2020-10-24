@@ -46,7 +46,11 @@ export class SharePostModalPage implements OnInit {
       .subscribe((projects) => {
         this.projects = projects;
       });
-    //TODO: get all groups of user
+    this.userService
+      .getGroupsJoined(this.loggedInUser.userId)
+      .subscribe((groups) => {
+        this.groups = groups;
+      });
   }
 
   async sharePost() {
@@ -96,6 +100,36 @@ export class SharePostModalPage implements OnInit {
           });
       }
     } else if (this.shareLocation == 'group') {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = this.postContent;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedGroupIds = this.shareToGroups.map((group) => {
+        return group.groupId;
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedGroupIds;
+      if (selectedGroupIds.length == 0) {
+        const toast = await this.toastController.create({
+          message: 'Please select an audience for your shared post.',
+          duration: 2000,
+          color: 'red'
+        });
+        toast.present();
+      } else {
+        this.postService
+          .sharePostToGroups(
+            this.sharedPost.postId,
+            this.loggedInUser.userId,
+            sharePostToProjectOrGroupsReq
+          )
+          .subscribe(async () => {
+            const toast = await this.toastController.create({
+              message: 'Post shared!',
+              duration: 2000
+            });
+            toast.present();
+            this.dismiss();
+          });
+      }
     }
   }
 }

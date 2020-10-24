@@ -223,10 +223,7 @@ public class ProjectResource {
                 task.setProject(null);
                 task.setParentTask(null);
             }
-            for (PostEntity post : project.getPosts()) {
-                post.setPostOwner(null);
-                post.setProject(null);
-            }
+            project.getPosts().clear();
             for (ReviewEntity review: project.getReviews()) {
                 review.setProject(null);
                 review.setFrom(null);
