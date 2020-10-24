@@ -295,13 +295,19 @@ const routes: Routes = [
   {
     path: 'view-my-fulfillments/:projectId',
     loadChildren: () => import('./pages/project/viewProject/view-mrp/view-my-fulfillments/view-my-fulfillments.module').then( m => m.ViewMyFulfillmentsPageModule)
+  },
+  {
+    path: 'manage-fulfillments-modal',
+    loadChildren: () => import('./pages/project/editProject/manage-fulfillments-modal/manage-fulfillments-modal.module').then( m => m.ManageFulfillmentsModalPageModule)
+  },
+  {
+    path: 'update-quantity-modal',
+    loadChildren: () => import('./pages/project/editProject/manage-fulfillments-modal/update-quantity-modal/update-quantity-modal.module').then( m => m.UpdateQuantityModalPageModule)
+  },
+  {
+    path: 'receive-resource-modal',
+    loadChildren: () => import('./pages/project/editProject/manage-fulfillments-modal/receive-resource-modal/receive-resource-modal.module').then( m => m.ReceiveResourceModalPageModule)
   }
-
-
-
-
-
-
 ];
 
 @NgModule({

@@ -421,7 +421,23 @@ export class EditMrpTabComponent implements OnInit {
   }
 
   receiveFulfillment() {
-    if (this.quantityReceived > this.maxQuantity) {
+    if(this.quantityReceived == null){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Fulfill Posting',
+        autohide: true,
+        delay: 3200,
+        body: 'Quantity received is required',
+      });
+    } else if(!(this.quantityReceived > 0)){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Fulfill Posting',
+        autohide: true,
+        delay: 3200,
+        body: 'Quantity received is invalid',
+      });
+    } else if (this.quantityReceived > this.maxQuantity) {
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Incorrect Quantity Received',
@@ -469,6 +485,7 @@ export class EditMrpTabComponent implements OnInit {
 
   clickUpdate(fulfillment: Fulfillment) {
     this.fulfillmentToUpdate = fulfillment;
+    this.maxQuantity = Math.max((this.fulfillmentToUpdate.totalPledgedQuantity + this.mrpToFulfill.lackingQuantity), (this.fulfillmentToUpdate.totalPledgedQuantity + this.fulfillmentToUpdate.mra.quantity));
     this.newTotalPledgedQuantity = this.fulfillmentToUpdate.totalPledgedQuantity;
     $('#modal-fulfillments').hide();
   }
@@ -482,7 +499,7 @@ export class EditMrpTabComponent implements OnInit {
         delay: 3500,
         body: 'Total pledged quantity cannot be less than quantity received',
       });
-    } else if(this.newTotalPledgedQuantity > this.mrpToFulfill.lackingQuantity) {
+    } else if(this.newTotalPledgedQuantity > (this.mrpToFulfill.lackingQuantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Invalid Quantity',
@@ -490,7 +507,7 @@ export class EditMrpTabComponent implements OnInit {
         delay: 3500,
         body: 'Total pledged quantity cannot be more than quantity required',
       });
-    } else if((this.newTotalPledgedQuantity - this.fulfillmentToUpdate.totalPledgedQuantity) > this.fulfillmentToUpdate.mra.quantity) {
+    } else if(this.newTotalPledgedQuantity > (this.fulfillmentToUpdate.mra.quantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Invalid Quantity',
@@ -512,7 +529,7 @@ export class EditMrpTabComponent implements OnInit {
             title: 'Success',
             autohide: true,
             delay: 2500,
-            body: 'Total pledged quantity of fulfillment is updated sucessfully',
+            body: 'Total pledged quantity of fulfillment is updated successfully',
           });
           this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
             response => {

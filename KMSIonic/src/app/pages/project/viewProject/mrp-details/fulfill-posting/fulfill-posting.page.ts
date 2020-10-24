@@ -128,7 +128,7 @@ export class FulfillPostingPage implements OnInit {
   async fulfillPosting() { 
     if(this.totalPledgedQuantity == null){
       const toast = await this.toastController.create({
-        message: "Donated quantity is required",
+        message: "Please enter donated quantity",
         color: "danger",
         duration: 3500
       });

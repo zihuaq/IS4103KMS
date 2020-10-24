@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
+  <ion-card class="ion-no-padding ion-no-margin">
     <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
       <ion-segment-button value="details">
         <ion-label>Details</ion-label>
@@ -86,51 +86,45 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="segment == 'mrp'">
-    <ion-card-content>
+  <span *ngIf="segment == 'mrp'">
+    <ion-card-content class="ion-no-margin">
       <ion-button expand="full" (click)="createMrp()">
         <ion-icon name="add-outline"></ion-icon>
-        New Material Resource Posting
+        Create New Posting
       </ion-button>
       
       <span *ngIf="noMrp">There is no material resource posting at the moment.</span>
       
       <span *ngIf="!noMrp">
-        <ion-list>
-          <ion-card *ngFor="let mrp of mrpList" class="ion-no-padding ion-no-margin">
-            <ion-grid>
-              <ion-row>
-                <ion-col size="8">
-                  <ion-label style="font-size: large; font-weight: bold;">
-                    {{mrp.name}}
-                  </ion-label>
-                </ion-col>
-                <ion-col size="2">
-                  <ion-icon class="iconButton" name="create-outline" (click)="editMrp(mrp.materialResourcePostingId)"></ion-icon>
-                </ion-col>
-                <ion-col size="2">
-                  <ion-icon class="iconButton" name="close-circle-outline" (click)="deleteMrpAlert(mrp.materialResourcePostingId)"></ion-icon>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-badge color="warning" (click)="changehref(mrp.latitude, mrp.longitude)">
-                  At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}
-                </ion-badge>
-              </ion-row>
-              <ion-row>
-                Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}
-              </ion-row>              
-              <ion-row>
-                <span *ngFor="let tag of mrp.tags">
-                  <ion-badge color="primary">{{tag.name}}</ion-badge>
-                </span>
-              </ion-row>
-            </ion-grid>
+        
+          <ion-card *ngFor="let mrp of mrpList" style="margin: 10px 0 0 0; padding: 5px;">
+            <ion-item lines="full">
+              <ion-card-title style="padding: 10px 0 10px 0">
+                <b>{{mrp.name}}</b>
+                <ion-card-subtitle *ngIf="mrp.description" style="margin-top: 5px;">{{mrp.description}}</ion-card-subtitle>
+              </ion-card-title>
+              <ion-buttons slot="end">
+                <ion-icon class="iconButton" name="ellipsis-horizontal-outline" (click)="handleMrpActionSheet(mrp.materialResourcePostingId)"></ion-icon>
+              </ion-buttons>
+            </ion-item>
+            <ion-card-content style="padding: 15px">
+              <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b> 
+              <br/>
+              {{mrp.lackingQuantity}} {{mrp.unit}} required / {{mrp.totalQuantity}} {{mrp.unit}} total
+              <ion-badge color="warning" (click)="changehref(mrp.latitude, mrp.longitude)" style="font-size: 12px; margin-top: 3px;">
+                View location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}
+              </ion-badge>
+              <br/>
+              <span *ngFor="let tag of mrp.tags" style="margin-right: 5px;">
+                <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
+              </span>
+            </ion-card-content>
+            
           </ion-card>
-        </ion-list>
+        
       </span>
     </ion-card-content>
-  </ion-card>
+  </span>
 
   <ion-card *ngIf="segment == 'delete'">
     <ion-card-content>

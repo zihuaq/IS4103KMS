@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ToastController, ActionSheetController, ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 
 import { User } from 'src/app/classes/user';
@@ -14,6 +14,7 @@ import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/services/tag.service';
 import { HrpService } from 'src/app/services/hrp.service';
 import { MrpService } from 'src/app/services/mrp.service';
+import { ManageFulfillmentsModalPage } from '../manage-fulfillments-modal/manage-fulfillments-modal.page';
 
 @Component({
   selector: 'app-tab-panel',
@@ -37,6 +38,8 @@ export class TabPanelPage implements OnInit {
   noMrp: boolean = true;
 
   constructor(public toastController: ToastController,
+    public modalController: ModalController,
+    public actionSheetController: ActionSheetController,
     public alertController: AlertController,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -229,8 +232,8 @@ export class TabPanelPage implements OnInit {
 
   async deleteMrpAlert(mrpId: number) {
     const alert = await this.alertController.create({
-      header: "Delete Mrp",
-      message: "Are you sure you want to delete this mrp?",
+      header: "Delete Posting",
+      message: "Are you sure you want to delete this posting?",
       buttons: [
         {
           text: "Cancel",
@@ -252,7 +255,7 @@ export class TabPanelPage implements OnInit {
     this.mrpService.deleteMrp(mrpId).subscribe(
       async response => {
         const toast = await this.toastController.create({
-          message: 'Mrp deleted successfully.',
+          message: 'Posting is deleted successfully.',
           duration: 2000
         });
         toast.present();
@@ -277,13 +280,55 @@ export class TabPanelPage implements OnInit {
     this.router.navigate(["edit-hrp-details/" + hrpId]);
   }
 
+  async handleMrpActionSheet(mrpId: number) {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Actions',
+      buttons: [{
+        text: 'Manage Fulfillments',
+        icon: 'cube',
+        handler: () => {
+          this.manageFulfillmentsModal(mrpId); 
+        }
+      }, {
+        text: 'Edit Posting',
+        icon: 'create',
+        handler: () => {
+          this.router.navigate(["edit-mrp-details/" + mrpId]);
+        }
+      }, {
+        text: 'Delete Posting',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          this.deleteMrpAlert(mrpId);
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel'
+      }]
+    });
+    await actionSheet.present();
+  }
+
   createMrp() {
     console.log(this.projectId);
     this.router.navigate(["create-mrp/" + this.projectId]);
   }
 
-  editMrp(mrpId: number) {
-    this.router.navigate(["edit-mrp-details/" + mrpId]);
+  async manageFulfillmentsModal(mrpId: number) {
+    const modal = await this.modalController.create({
+      component: ManageFulfillmentsModalPage,
+      showBackdrop: true,
+      swipeToClose: true,
+      componentProps: {
+        mrpId: mrpId
+      }
+    });
+    modal.present();
+    modal.onDidDismiss().then(() => {
+      this.refreshMrp();
+    });
   }
 
   changehref(lat: number, long: number) {

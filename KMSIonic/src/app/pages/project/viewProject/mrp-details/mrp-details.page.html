@@ -32,7 +32,7 @@
       <br/>  
       <br/> 
       <p><b>Tags:</b></p> 
-      <span *ngIf="mrp.tags.length > 0">
+      <span *ngIf="mrp.tags.length > 0" style="margin-right: 5px;">
         <span  *ngFor="let tag of mrp.tags">
           <ion-badge color="primary">{{tag.name}}</ion-badge>
         </span>      

@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Receive Resources</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label style="font-weight: bold;">Enter Quantity Received</ion-label>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-input type="number" id="quantity" [(ngModel)]="quantityReceived" [max]="maxQuantity" name="quantity" required></ion-input>
+    <span style="font-size: small; margin-left: 5px;">{{fulfillmentToUpdate.mra.units}} / {{fulfillmentToUpdate.unreceivedQuantity}} {{fulfillmentToUpdate.mra.units}} unreceived</span> 
+  </ion-item>
+    <ion-button expand="full" size ="small" (click)="receiveFulfillment()">Submit</ion-button>
+</ion-content>

@@ -15,12 +15,12 @@
     </span>
     <ion-card-header>
       <ion-card-subtitle>
-        <h1>          
+        <h2>          
           <ion-buttons slot="end">
             <b>{{project.name}}</b>
             <ion-button *ngIf="isAdmin"(click)="editProject()"><ion-icon name="create-outline"></ion-icon></ion-button>
           </ion-buttons>
-        </h1>
+        </h2>
         <p>Owner: {{owner.firstName}} {{owner.lastName}}</p>
       </ion-card-subtitle>
       <ion-button expand="full" size ="small" *ngIf="!isMember" (click)="joinProject()" >Join</ion-button>

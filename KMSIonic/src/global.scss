@@ -52,3 +52,18 @@
   position: absolute;
   display: block;
 }
+
+.manage-fulfillment-modal .modal-wrapper {
+  height: 40%;
+  top: 60%;
+  position: absolute;
+  display: block;
+}
+
+.sc-ion-modal-ios-h {
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+}
+
+.sc-ion-modal-md-h {
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+}

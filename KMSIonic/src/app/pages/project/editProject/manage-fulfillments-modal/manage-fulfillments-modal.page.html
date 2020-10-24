@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/project-details/{{projectId}}"></ion-back-button>
+    <ion-title>Manage Fulfillments</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
     </ion-buttons>
-    <ion-title>My Fulfillments</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -21,24 +21,25 @@
       </ion-item>
       <ion-item>
         <ion-card-title style="padding: 10px 5px 10px 5px">
-          {{fulfillment.mra.name}}
-          <ion-card-subtitle *ngIf="fulfillment.mra.description" style="margin-top: 5px;">{{fulfillment.mra.description}}</ion-card-subtitle>
+          <b>{{fulfillment.fulfillmentOwner.firstName}} {{fulfillment.fulfillmentOwner.lastName}}</b>
         </ion-card-title>
         <ion-buttons color="medium" slot="end">
-          <ion-icon class="iconButton" name="trash-outline" (click)="clickDelete(fulfillment)"></ion-icon>
+          <ion-icon class="iconButton" name="ellipsis-horizontal-outline" (click)="handleFulfillmentActionSheet(fulfillment)"></ion-icon>
         </ion-buttons>
       </ion-item>
-      <ion-card-content style="padding: 20px">
-        <b>Required from {{fulfillment.posting.startDate.toString().slice(0,20) | date }} to {{fulfillment.posting.endDate.toString().slice(0,20) | date }}</b> 
+      <ion-card-content style="padding-left: 20px; padding-right: 20px;">
+        <b style="font-size: 16px;">{{fulfillment.mra.name}}</b> 
         <br/>
-        {{fulfillment.receivedQuantity}} {{fulfillment.posting.unit}} received / {{fulfillment.totalPledgedQuantity}} {{fulfillment.posting.unit}} pledged
+        {{fulfillment.mra.description}} 
         <br/>
-        <ion-badge color="warning" style="margin-top: 5px; font-size: 12px;" (click)="changehref(fulfillment.posting.latitude, fulfillment.posting.longitude)">
-          View location at {{fulfillment.posting.latitude | number:'1.1-6'}}, {{fulfillment.posting.longitude | number:'1.1-6'}}
+        {{fulfillment.receivedQuantity}} {{fulfillment.mra.units}} received / {{fulfillment.totalPledgedQuantity}} {{fulfillment.mra.units}} pledged
+        <br/>
+        <ion-badge color="warning" style="margin-top: 5px; font-size: 12px;" (click)="changehref(fulfillment.mra.latitude, fulfillment.mra.longitude)">
+          View location at {{fulfillment.mra.latitude | number:'1.1-6'}}, {{fulfillment.mra.longitude | number:'1.1-6'}}
         </ion-badge>
         <br/>
-        <span *ngIf="fulfillment.posting.tags.length > 0">
-            <ion-label *ngFor="let tag of fulfillment.posting.tags" style="margin-right: 5px;">
+        <span *ngIf="fulfillment.mra.tags.length > 0">
+            <ion-label *ngFor="let tag of fulfillment.mra.tags" style="margin-right: 5px;">
               <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
             </ion-label>
         </span>

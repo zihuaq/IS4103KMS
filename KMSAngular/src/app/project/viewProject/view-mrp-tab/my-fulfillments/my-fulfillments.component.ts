@@ -63,13 +63,21 @@ export class MyFulfillmentsComponent implements OnInit {
 
   clickDelete(fulfillment: Fulfillment) {
     this.fulfillmentToDelete = fulfillment;
-    if (this.fulfillmentToDelete.status == FulfillmentStatus.PARTIALLYFULFILLED || this.fulfillmentToDelete.status == FulfillmentStatus.FULFILLED) {
+    if (this.fulfillmentToDelete.status == FulfillmentStatus.PARTIALLYFULFILLED) {
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Error',
         autohide: true,
         delay: 3500,
         body: 'Ongoing fulfillments cannot be deleted',
+      });
+    } else if (this.fulfillmentToDelete.status == FulfillmentStatus.FULFILLED) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 3500,
+        body: 'Completed fulfillments cannot be deleted',
       });
     } else {
       $('#modal-confirm-delete-fulfillment').modal('show');

@@ -4,13 +4,13 @@
 
   <span *ngIf="!noMrp">
     <ion-list *ngFor="let mrp of mrpList">
-      <ion-item>
+      <ion-item >
         <span>
-          <ion-label tappable [routerLink]="[ '/mrp-details', mrp.materialResourcePostingId ]">
+          <ion-label class="ion-text-wrap" tappable [routerLink]="[ '/mrp-details', mrp.materialResourcePostingId ]">
             <h2 style="font-size: large;"><b>{{mrp.name}}</b></h2>
-            <p class="text-muted"><b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b></p>
+            <p style="font-size: 13px;"><b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b></p>
             <p style="margin-bottom: 5px;">{{mrp.lackingQuantity}} {{mrp.unit}} required</p>
-            <span *ngFor="let tag of mrp.tags">
+            <span *ngFor="let tag of mrp.tags" style="margin-right: 5px;">
               <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
             </span>
           </ion-label>

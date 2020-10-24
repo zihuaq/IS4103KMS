@@ -55,8 +55,10 @@ export class ViewMyFulfillmentsPage implements OnInit {
   }
 
   async clickDelete(fulfillment: Fulfillment) {
-    if (fulfillment.status == FulfillmentStatus.PARTIALLYFULFILLED || fulfillment.status == FulfillmentStatus.FULFILLED) {
+    if (fulfillment.status == FulfillmentStatus.PARTIALLYFULFILLED) {
       this.toast(false, "Ongoing fulfillments cannot be deleted");
+    } else if (fulfillment.status == FulfillmentStatus.FULFILLED) {
+      this.toast(false, "Completed fulfillments cannot be deleted");
     } else {
       const alert = await this.alertController.create({
         header: 'Delete Fulfillment?',
