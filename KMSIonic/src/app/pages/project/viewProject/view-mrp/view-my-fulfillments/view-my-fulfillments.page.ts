@@ -7,7 +7,8 @@ import { FulfillmentService } from 'src/app/services/fulfillment.service';
 import { ProjectService } from 'src/app/services/project.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FulfillmentStatus } from 'src/app/enum/fulfillment-status.enum';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, ModalController } from '@ionic/angular';
+import { UpdateQuantityModalPage } from '../../../editProject/manage-fulfillments-modal/update-quantity-modal/update-quantity-modal.page';
 
 @Component({
   selector: 'app-view-my-fulfillments',
@@ -26,6 +27,7 @@ export class ViewMyFulfillmentsPage implements OnInit {
     private authenticationService: AuthenticationService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private modalController: ModalController,
     private alertController: AlertController,
     private toastController: ToastController) {
       this.fulfillmentList = [];
@@ -54,6 +56,38 @@ export class ViewMyFulfillmentsPage implements OnInit {
     return FulfillmentStatus;
   }
 
+  async clickUpdate(fulfillmentToUpdate: Fulfillment) {
+    if (fulfillmentToUpdate.status == FulfillmentStatus.ACCEPTED) {
+      this.toast(false, "Accepted fulfillments cannot be updated");
+    } else if (fulfillmentToUpdate.status == FulfillmentStatus.PARTIALLYFULFILLED) {
+      this.toast(false, "Ongoing fulfillments cannot be updated");
+    } else if (fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED) {
+      this.toast(false, "Completed fulfillments cannot be updated");
+    } else if (fulfillmentToUpdate.status == FulfillmentStatus.REJECTED) {
+      this.toast(false, "Rejected fulfillments cannot be updated");
+    } else {
+      const modal = await this.modalController.create({
+        component: UpdateQuantityModalPage,
+        cssClass: 'manage-fulfillment-modal',
+        showBackdrop: true,
+        swipeToClose: true,
+        componentProps: {
+          mrpId: fulfillmentToUpdate.posting.materialResourcePostingId,
+          fulfillmentToUpdate: fulfillmentToUpdate,
+          byUser: true
+        }
+      });
+      modal.present();
+      modal.onDidDismiss().then(() => {
+        this.fulfillmentService.getListOfFulfillmentsByUserAndProject(this.loggedInUser.userId, this.projectId).subscribe(
+          response => {
+            this.fulfillmentList = response;
+          }
+        );
+      });
+    }
+  }
+
   async clickDelete(fulfillment: Fulfillment) {
     if (fulfillment.status == FulfillmentStatus.PARTIALLYFULFILLED) {
       this.toast(false, "Ongoing fulfillments cannot be deleted");
@@ -61,15 +95,16 @@ export class ViewMyFulfillmentsPage implements OnInit {
       this.toast(false, "Completed fulfillments cannot be deleted");
     } else {
       const alert = await this.alertController.create({
-        header: 'Delete Fulfillment?',
+        header: 'Confirm Delete Fulfillment?',
         message: 'This action cannot be undone',
+        cssClass: 'rejectAlertCss',
         buttons: [
           {
             text: 'Cancel',
             role: 'cancel',
-            cssClass: 'secondary'
+            cssClass: 'reject-button'
           }, {
-            text: 'Confirm',
+            text: 'Delete',
             handler: () => {
               this.deleteFulfillment(fulfillment.fulfillmentId);
             }
@@ -110,8 +145,7 @@ export class ViewMyFulfillmentsPage implements OnInit {
         duration: 3500
       });
       toast.present();
-    }
-    
+    } 
   }
 
 }

@@ -149,6 +149,24 @@ public class FulfillmentResource {
         }
     }
     
+    @Path("acceptFulfillment")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response acceptFulfillment(Long fulfillmentId) {
+        try { 
+            System.out.println("******** FulfillmentResource: acceptFulfillment()");
+            fulfillmentSessionBeanLocal.acceptFulfillment(fulfillmentId);
+
+            return Response.status(204).build();
+            
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
     @Path("getFulfillmentsByMrp/{mrpId}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)

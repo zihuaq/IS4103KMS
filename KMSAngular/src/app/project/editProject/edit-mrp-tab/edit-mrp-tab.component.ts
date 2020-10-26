@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FulfillmentService } from '../../../fulfillment.service';
 import { Fulfillment } from '../../../classes/fulfillment';
 import { FulfillmentStatus } from 'src/app/classes/fulfillment-status.enum';
+import { filter } from 'rxjs/operators';
 
 declare var $: any;
 
@@ -52,8 +53,15 @@ export class EditMrpTabComponent implements OnInit {
 
   maxQuantity: number;
   quantityReceived: number;
-
   newTotalPledgedQuantity: number;
+
+  filteredList: Fulfillment[];
+  searchInput: string;
+  pledged: boolean = false;
+  accepted: boolean = false;
+  partiallyfulfilled: boolean = false;
+  fulfilled: boolean = false;
+  rejected: boolean = false;
 
   constructor(public projectService: ProjectService,
     public materialResourcePostingService: MaterialResourcePostingService,
@@ -341,13 +349,13 @@ export class EditMrpTabComponent implements OnInit {
           unreceivedQuantity += element.unreceivedQuantity;
         });
 
-        if(this.mrpToDelete.fulfillments.length > 0 && unreceivedQuantity > 0) {
+        if(this.mrpToDelete.fulfillments.length > 0) {
           $(document).Toasts('create', {
             class: 'bg-danger',
             title: 'Error',
             autohide: true,
             delay: 3500,
-            body: 'Material Resource Posting cannot be deleted as there are ongoing fulfillments',
+            body: 'Material Resource Posting cannot be deleted as there are fulfillments',
           });
         } else {
           $('#modal-confirm-delete-mrp').modal('show');
@@ -391,19 +399,58 @@ export class EditMrpTabComponent implements OnInit {
 
   clickFulfillment(mrp: MaterialResourcePosting){
     this.mrpToFulfill = mrp;
-    this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
+    this.refreshFulfillment(this.mrpToFulfill.materialResourcePostingId);
+  }
+
+  refreshFulfillment(mrpId: number) {
+    this.fulfillmentService.getFulfillmentsByMrp(mrpId).subscribe(
       response => {
         this.fulfillmentList = response;
-        var list: Fulfillment[] = new Array();
-        this.fulfillmentList.forEach((element) => {
-          if (element.status != FulfillmentStatus.REJECTED) {
-            list.push(element);
-          }
-        });
+        var list: Fulfillment[] = [];
+        this.fulfillmentList.forEach(
+          (fulfillment: Fulfillment) => { 
+            if (fulfillment.status != FulfillmentStatus.REJECTED) {
+              list.push(fulfillment);
+            }
+          });
         this.fulfillmentList = list;
-        console.log(this.fulfillmentList)
+        this.filter();
       }
     )
+  }
+
+  filter() {
+    this.filteredList = this.fulfillmentList;
+    if (this.searchInput && this.searchInput != "") {
+      this.filteredList = this.filteredList.filter(
+        (fulfillment: Fulfillment) => {
+          var name = fulfillment.fulfillmentOwner.firstName + " " + fulfillment.fulfillmentOwner.lastName;
+          return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase()) || name.toLowerCase().includes(this.searchInput.toLowerCase())
+        }
+      )
+    }
+    var statusSelected = [];
+    if (this.pledged == true) {
+      statusSelected.push(FulfillmentStatus.PLEDGED);
+    }
+    if (this.accepted == true) {
+      statusSelected.push(FulfillmentStatus.ACCEPTED);
+    }
+    if (this.partiallyfulfilled == true) {
+      statusSelected.push(FulfillmentStatus.PARTIALLYFULFILLED);
+    }
+    if (this.fulfilled == true) {
+      statusSelected.push(FulfillmentStatus.FULFILLED);
+    }
+    if (this.rejected == true) {
+      statusSelected.push(FulfillmentStatus.REJECTED);
+    }
+    if (statusSelected.length != 0 && statusSelected.length != 5) {
+      this.filteredList = this.filteredList.filter(
+        (fulfillment: Fulfillment) => {
+        return statusSelected.indexOf(fulfillment.status) > -1;
+      });
+    }
   }
 
   closeModal() {
@@ -463,18 +510,7 @@ export class EditMrpTabComponent implements OnInit {
             delay: 2500,
             body: 'Fulfillment is updated sucessfully',
           });
-          this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
-            response => {
-              this.fulfillmentList = response;
-              var list: Fulfillment[] = new Array();
-              this.fulfillmentList.forEach((element) => {
-                if (element.status != FulfillmentStatus.REJECTED) {
-                  list.push(element);
-                }
-              });
-              this.fulfillmentList = list;
-            }
-          )
+          this.refreshFulfillment(this.mrpToFulfill.materialResourcePostingId);
           this.quantityReceived = null;
           $('#modal-fulfillments').show();
           $('#receiveModalCloseBtn').click();
@@ -491,7 +527,23 @@ export class EditMrpTabComponent implements OnInit {
   }
 
   updateQuantity() {
-    if(this.newTotalPledgedQuantity < this.fulfillmentToUpdate.receivedQuantity) {
+    if(this.newTotalPledgedQuantity == null){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Invalid Quantity',
+        autohide: true,
+        delay: 3200,
+        body: 'Total pledged quantity is required',
+      });
+    } else if(!(this.newTotalPledgedQuantity > 0)){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Invalid Quantity',
+        autohide: true,
+        delay: 3200,
+        body: 'Total pledged quantity is invalid',
+      });
+    } else if(this.newTotalPledgedQuantity < this.fulfillmentToUpdate.receivedQuantity) {
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Invalid Quantity',
@@ -531,18 +583,7 @@ export class EditMrpTabComponent implements OnInit {
             delay: 2500,
             body: 'Total pledged quantity of fulfillment is updated successfully',
           });
-          this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
-            response => {
-              this.fulfillmentList = response;
-              var list: Fulfillment[] = new Array();
-              this.fulfillmentList.forEach((element) => {
-                if (element.status != FulfillmentStatus.REJECTED) {
-                  list.push(element);
-                }
-              });
-              this.fulfillmentList = list;
-            }
-          )
+          this.refreshFulfillment(this.mrpToFulfill.materialResourcePostingId);
           $('#modal-fulfillments').show();
           $('#updateModalCloseBtn').click();
         }
@@ -550,9 +591,25 @@ export class EditMrpTabComponent implements OnInit {
     }
   }
 
-  clickReject(fulfillment: Fulfillment) {
+  clickAcceptReject(fulfillment: Fulfillment) {
     this.fulfillmentToUpdate = fulfillment;
     $('#modal-fulfillments').hide();
+  }
+
+  acceptFulfillment() {
+    this.fulfillmentService.acceptFulfillment(this.fulfillmentToUpdate.fulfillmentId).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Fulfillment is accepted sucessfully',
+        });
+        this.refreshFulfillment(this.mrpToFulfill.materialResourcePostingId);
+        $('#modal-fulfillments').show();
+      }
+    )
   }
 
   rejectFulfillment() {
@@ -565,18 +622,7 @@ export class EditMrpTabComponent implements OnInit {
           delay: 2500,
           body: 'Fulfillment is rejected sucessfully',
         });
-        this.fulfillmentService.getFulfillmentsByMrp(this.mrpToFulfill.materialResourcePostingId).subscribe(
-          response => {
-            this.fulfillmentList = response;
-            var list: Fulfillment[] = new Array();
-            this.fulfillmentList.forEach((element) => {
-              if (element.status != FulfillmentStatus.REJECTED) {
-                list.push(element);
-              }
-            });
-            this.fulfillmentList = list;
-          }
-        )
+        this.refreshFulfillment(this.mrpToFulfill.materialResourcePostingId);
         $('#modal-fulfillments').show();
       }
     )

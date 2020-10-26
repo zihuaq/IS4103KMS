@@ -15,8 +15,9 @@
     <ion-card *ngFor="let fulfillment of fulfillmentList">
       <ion-item style="margin-top: 5px; margin-left: 5px; height: 35px;" lines="none">
         <ion-badge color="medium" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
+        <ion-badge *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; background-color: rgb(40, 80, 80);">{{fulfillment.status}}</ion-badge>
         <ion-badge color="tertiary" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px;">PARTIALLY FULFILLED</ion-badge>
-        <ion-badge color="success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
+        <ion-badge color="success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; color: white; background-color: rgb(7, 129, 7);">{{fulfillment.status}}</ion-badge>
         <ion-badge color="danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
       </ion-item>
       <ion-item>
@@ -30,8 +31,10 @@
       <ion-card-content style="padding-left: 20px; padding-right: 20px;">
         <b style="font-size: 16px;">{{fulfillment.mra.name}}</b> 
         <br/>
-        {{fulfillment.mra.description}} 
-        <br/>
+        <span *ngIf="fulfillment.mra.description"> 
+          {{fulfillment.mra.description}} 
+          <br/>
+        </span>
         {{fulfillment.receivedQuantity}} {{fulfillment.mra.units}} received / {{fulfillment.totalPledgedQuantity}} {{fulfillment.mra.units}} pledged
         <br/>
         <ion-badge color="warning" style="margin-top: 5px; font-size: 12px;" (click)="changehref(fulfillment.mra.latitude, fulfillment.mra.longitude)">

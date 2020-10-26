@@ -15,6 +15,7 @@ import { TagService } from 'src/app/services/tag.service';
 import { HrpService } from 'src/app/services/hrp.service';
 import { MrpService } from 'src/app/services/mrp.service';
 import { ManageFulfillmentsModalPage } from '../manage-fulfillments-modal/manage-fulfillments-modal.page';
+import { FulfillmentService } from '../../../../services/fulfillment.service';
 
 @Component({
   selector: 'app-tab-panel',
@@ -48,6 +49,7 @@ export class TabPanelPage implements OnInit {
     private tagService: TagService,
     private hrpService: HrpService,
     private mrpService: MrpService,
+    private fulfillmentService: FulfillmentService,
     private location: Location) { 
       this.projectToEdit = new Project();
       this.owner = new User();
@@ -256,7 +258,7 @@ export class TabPanelPage implements OnInit {
       async response => {
         const toast = await this.toastController.create({
           message: 'Posting is deleted successfully.',
-          duration: 2000
+          duration: 2500
         });
         toast.present();
         this.refreshMrp();
@@ -264,7 +266,8 @@ export class TabPanelPage implements OnInit {
       async error => {
         const toast = await this.toastController.create({
           message: error,
-          duration: 2000
+          color: "danger",
+          duration: 2500
         });
         toast.present();
       }
@@ -300,7 +303,16 @@ export class TabPanelPage implements OnInit {
         role: 'destructive',
         icon: 'trash',
         handler: () => {
-          this.deleteMrpAlert(mrpId);
+          this.fulfillmentService.getFulfillmentsByMrp(mrpId).subscribe(
+            response => {
+              if (response.length > 0) {
+                this.deleteError();
+              } else {
+                this.deleteMrpAlert(mrpId);
+              }
+            } 
+          )
+          
         }
       }, {
         text: 'Cancel',
@@ -309,6 +321,15 @@ export class TabPanelPage implements OnInit {
       }]
     });
     await actionSheet.present();
+  }
+
+  async deleteError() {
+    const toast = await this.toastController.create({
+      message: "Posting with fulfillments cannot be deleted",
+      color: "danger",
+      duration: 2500
+    });
+    toast.present();
   }
 
   createMrp() {

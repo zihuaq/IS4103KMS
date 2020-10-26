@@ -58,17 +58,12 @@ export class ManageFulfillmentsModalPage implements OnInit {
     var buttons = [];
     if (fulfillmentToUpdate.status == FulfillmentStatus.PLEDGED) {
       buttons = [{
-        text: 'Receive Resource',
+        text: 'Accept',
         handler: () => {
-          this.receiveResourceModal(fulfillmentToUpdate); 
+          this.acceptAlert(fulfillmentToUpdate.fulfillmentId);
         }
       }, {
-        text: 'Update Quantity',
-        handler: () => {
-          this.updateQuantityModal(fulfillmentToUpdate); 
-        }
-      }, {
-        text: 'Reject Fulfillment',
+        text: 'Reject',
         handler: () => {
           this.rejectAlert(fulfillmentToUpdate.fulfillmentId);
         }
@@ -76,7 +71,7 @@ export class ManageFulfillmentsModalPage implements OnInit {
         text: 'Cancel',
         role: 'cancel'
       }]
-    } else if (fulfillmentToUpdate.status == FulfillmentStatus.PARTIALLYFULFILLED) {
+    } else if (fulfillmentToUpdate.status == FulfillmentStatus.ACCEPTED || fulfillmentToUpdate.status == FulfillmentStatus.PARTIALLYFULFILLED) {
       buttons = [{
         text: 'Receive Resource',
         handler: () => {
@@ -129,7 +124,8 @@ export class ManageFulfillmentsModalPage implements OnInit {
       swipeToClose: true,
       componentProps: {
         mrpId: this.mrpId,
-        fulfillmentToUpdate: fulfillmentToUpdate
+        fulfillmentToUpdate: fulfillmentToUpdate,
+        byUser: false
       }
     });
     modal.present();
@@ -138,17 +134,47 @@ export class ManageFulfillmentsModalPage implements OnInit {
     });
   }
 
-  async rejectAlert(fulfillmentId: number) {
+  async acceptAlert(fulfillmentId: number) {
     const alert = await this.alertController.create({
-      header: 'Reject Fulfillment?',
+      header: 'Confirm Accept Fulfillment?',
+      cssClass: 'acceptAlertCss',
       message: 'This action cannot be undone',
       buttons: [
         {
           text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary'
+          role: 'cancel'
         }, {
           text: 'Confirm',
+          handler: () => {
+            this.fulfillmentService.acceptFulfillment(fulfillmentId).subscribe(
+              async response => {
+                const toast = await this.toastController.create({
+                  message: "Fulfillment is accepted sucessfully",
+                  duration: 3000
+                });
+                toast.present();
+                this.refreshFulfillments();
+              }
+            )
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async rejectAlert(fulfillmentId: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirm Reject Fulfillment?',
+      message: 'This action cannot be undone',
+      cssClass: 'rejectAlertCss',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }, {
+          text: 'Reject',
+          cssClass: 'reject-button',
           handler: () => {
             this.fulfillmentService.rejectFulfillment(fulfillmentId).subscribe(
               async response => {

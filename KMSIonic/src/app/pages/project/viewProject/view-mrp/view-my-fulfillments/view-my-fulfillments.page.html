@@ -15,8 +15,9 @@
     <ion-card *ngFor="let fulfillment of fulfillmentList">
       <ion-item style="margin-top: 5px; margin-left: 5px; height: 35px;" lines="none">
         <ion-badge color="medium" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
+        <ion-badge *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; background-color: rgb(40, 80, 80);">{{fulfillment.status}}</ion-badge>
         <ion-badge color="tertiary" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px;">PARTIALLY FULFILLED</ion-badge>
-        <ion-badge color="success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
+        <ion-badge color="success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; color: white; background-color: rgb(7, 129, 7);">{{fulfillment.status}}</ion-badge>
         <ion-badge color="danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
       </ion-item>
       <ion-item>
@@ -24,8 +25,9 @@
           {{fulfillment.mra.name}}
           <ion-card-subtitle *ngIf="fulfillment.mra.description" style="margin-top: 5px;">{{fulfillment.mra.description}}</ion-card-subtitle>
         </ion-card-title>
-        <ion-buttons color="medium" slot="end">
-          <ion-icon class="iconButton" name="trash-outline" (click)="clickDelete(fulfillment)"></ion-icon>
+        <ion-buttons slot="end">
+          <ion-icon class="iconButton" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="margin-right: 15px;" name="create-outline" (click)="clickUpdate(fulfillment)"></ion-icon>
+          <ion-icon class="iconButton" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED || fulfillment.status == fulfillmentStatus.REJECTED" name="trash-outline" (click)="clickDelete(fulfillment)"></ion-icon>
         </ion-buttons>
       </ion-item>
       <ion-card-content style="padding: 20px">

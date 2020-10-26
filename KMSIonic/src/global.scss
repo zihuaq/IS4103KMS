@@ -67,3 +67,18 @@
 .sc-ion-modal-md-h {
   --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
 }
+
+.acceptAlertCss{
+  .alert-title{
+    font-size: 18px;
+  }
+}
+
+.rejectAlertCss {
+  .alert-title{
+    font-size: 18px;
+  }
+  button.alert-button.reject-button{
+    color: rgb(219, 42, 42);
+  }
+}

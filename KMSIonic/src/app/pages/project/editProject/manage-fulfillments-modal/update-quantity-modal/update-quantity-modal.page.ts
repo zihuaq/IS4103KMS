@@ -15,6 +15,7 @@ export class UpdateQuantityModalPage implements OnInit {
 
   @Input() mrpId: number;
   @Input() fulfillmentToUpdate: Fulfillment;
+  @Input() byUser: boolean;
 
   mrpToFulfill: MaterialResourcePosting;
   newTotalPledgedQuantity: number;
@@ -26,6 +27,7 @@ export class UpdateQuantityModalPage implements OnInit {
     private mrpService: MrpService) { }
 
   ngOnInit() {
+    console.log(this.byUser);
     this.newTotalPledgedQuantity = this.fulfillmentToUpdate.totalPledgedQuantity;
     this.mrpService.getMrp(this.mrpId).subscribe(
       response => {
@@ -36,27 +38,24 @@ export class UpdateQuantityModalPage implements OnInit {
   }
 
   async updateQuantity() {
-    if(this.newTotalPledgedQuantity < this.fulfillmentToUpdate.receivedQuantity) {
-      const toast = await this.toastController.create({
-        message: "New pledged quantity cannot be less than quantity received",
-        color: "danger",
-        duration: 3500
-      });
-      toast.present();
+    if(this.newTotalPledgedQuantity == null){
+      this.toast(false, "New pledged quantity is required");
+
+    } else if(!(this.newTotalPledgedQuantity > 0)){
+      this.toast(false, "New pledged quantity is invalid");
+
+    } else if(this.newTotalPledgedQuantity < this.fulfillmentToUpdate.receivedQuantity) {
+      this.toast(false, "New pledged quantity cannot be less than quantity received");
+
     } else if(this.newTotalPledgedQuantity > (this.mrpToFulfill.lackingQuantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
-      const toast = await this.toastController.create({
-        message: "New pledged quantity cannot be more than quantity required",
-        color: "danger",
-        duration: 3500
-      });
-      toast.present();
+      this.toast(false, "New pledged quantity cannot be more than quantity required");
+
     } else if(this.newTotalPledgedQuantity > (this.fulfillmentToUpdate.mra.quantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
-      const toast = await this.toastController.create({
-        message: "New pledged quantity cannot be more than available quantity of user",
-        color: "danger",
-        duration: 3500
-      });
-      toast.present();
+      if (this.byUser == false) {
+        this.toast(false, "New pledged quantity cannot be more than available quantity of user");
+      } else {
+        this.toast(false, "New pledged quantity cannot be more than your available quantity");
+      }
     } else {
       this.fulfillmentToUpdate.totalPledgedQuantity = this.newTotalPledgedQuantity;
       if (this.fulfillmentToUpdate.totalPledgedQuantity == this.fulfillmentToUpdate.receivedQuantity) {
@@ -65,12 +64,8 @@ export class UpdateQuantityModalPage implements OnInit {
         this.fulfillmentToUpdate.status = FulfillmentStatus.PARTIALLYFULFILLED;
       }
       this.fulfillmentService.updateQuantity(this.fulfillmentToUpdate).subscribe(
-        async response => {
-          const toast = await this.toastController.create({
-            message: "New pledged quantity is updated successfully",
-            duration: 3500
-          });
-          toast.present();
+        response => {
+          this.toast(true, "New pledged quantity is updated successfully");
           this.dismiss();
         }
       )
@@ -79,6 +74,23 @@ export class UpdateQuantityModalPage implements OnInit {
 
   dismiss() {
     this.modalController.dismiss();
+  }
+
+  async toast(success: boolean, body: string) {
+    if (success) {
+      const toast = await this.toastController.create({
+        message: body,
+        duration: 3500
+      });
+      toast.present();
+    } else {
+      const toast = await this.toastController.create({
+        message: body,
+        color: 'danger',
+        duration: 3500
+      });
+      toast.present();
+    } 
   }
 
 }

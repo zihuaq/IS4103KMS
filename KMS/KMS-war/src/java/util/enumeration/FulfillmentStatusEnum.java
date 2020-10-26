@@ -11,6 +11,7 @@ package util.enumeration;
  */
 public enum FulfillmentStatusEnum {
     PLEDGED,
+    ACCEPTED,
     PARTIALLYFULFILLED,
     FULFILLED,
     REJECTED
