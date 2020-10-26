@@ -26,7 +26,10 @@
         </h2>
         <p>Owner: {{owner.firstName}} {{owner.lastName}}</p>
       </ion-card-subtitle>
-      <ion-button expand="full" size ="small" *ngIf="!isMember" (click)="joinProject()" >Join</ion-button>
+      <ion-button style="width: 80%;" *ngIf="!isMember" (click)="joinProject()" >Join</ion-button>
+      <ion-button style="width: 15%; --background: red" *ngIf="!isMember" (click)="reportProject()">
+        <ion-icon name="flag-outline"></ion-icon>
+      </ion-button>
       <ion-button style="width: 80%;" *ngIf="isMember" disabled>Joined</ion-button>
       <ion-button style="width: 15%;" *ngIf="isMember" (click)="leaveProjectDialog()">
         <ion-icon name="exit-outline"></ion-icon>

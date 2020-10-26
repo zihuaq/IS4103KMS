@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
+import { ToastController, AlertController, ModalController } from '@ionic/angular';
 
 import { User } from 'src/app/classes/user';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/services/project.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ProjectType } from 'src/app/enum/project-type.enum';
+import { ReportProjectPage } from '../report-project/report-project.page';
 
 @Component({
   selector: 'app-project-details',
@@ -28,7 +28,8 @@ export class ProjectDetailsPage implements OnInit {
   segment: string;
   hasLoaded: boolean = false;
 
-  constructor(public toastController: ToastController,
+  constructor(public modalController: ModalController,
+    public toastController: ToastController,
     public alertController: AlertController,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -59,7 +60,6 @@ export class ProjectDetailsPage implements OnInit {
     this.authenticationService.getCurrentUser().then(
       (user: User) => {
         this.currentUserId = user.userId;
-        console.log(this.currentUserId);
       }
     );
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
@@ -170,4 +170,11 @@ export class ProjectDetailsPage implements OnInit {
     return ProjectType;
   }
 
+  async reportProject() {
+    const modal = await this.modalController.create({
+      component: ReportProjectPage,
+      componentProps: {projectId: this.projectId}
+    });
+    return await modal.present();
+  }
 }
