@@ -8,6 +8,7 @@ import { User } from 'src/app/classes/user';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/services/project.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { ProjectType } from 'src/app/enum/project-type.enum';
 
 @Component({
   selector: 'app-project-details',
@@ -163,6 +164,10 @@ export class ProjectDetailsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  get projectType(): typeof ProjectType{
+    return ProjectType;
   }
 
 }

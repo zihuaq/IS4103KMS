@@ -15,7 +15,10 @@
     </span>
     <ion-card-header>
       <ion-card-subtitle>
-        <h2>          
+        <ion-badge color="tertiary" *ngIf="project.status == projectType.ACTIVE">{{project.status}}</ion-badge>
+        <ion-badge color="warning" *ngIf="project.status == projectType.INACTIVE">{{project.status}}</ion-badge>
+        <ion-badge color="success" *ngIf="project.status == projectType.COMPLETED">{{project.status}}</ion-badge>
+        <h2 style="margin-top: 10px;">          
           <ion-buttons slot="end">
             <b>{{project.name}}</b>
             <ion-button *ngIf="isAdmin"(click)="editProject()"><ion-icon name="create-outline"></ion-icon></ion-button>
@@ -59,7 +62,7 @@
       <p><b>Monetary Funding Required:</b> ${{project.monetaryFundingRequired}}</p>
       <p><b>Monetary Funding Obtained:</b> ${{project.monetaryFundingObtained}}</p>
       <p><b>SDGs: </b> 
-        <span *ngFor="let tag of project.sdgs" style="margin-right: 5px;">
+        <span *ngFor="let tag of project.sdgs" style="margin-right: 5px; vertical-align: middle;">
             <ion-badge color="primary">{{tag.name}}</ion-badge>
         </span>  
     </p>
@@ -70,19 +73,19 @@
     <ion-card-content>
       <ion-list *ngFor="let member of project.projectAdmins">
         <ion-label *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}} </ion-label>
-        <ion-badge *ngIf="owner.userId == member.userId" color="primary">Owner</ion-badge>
-        <ion-badge *ngIf="currentUserId == member.userId && owner.userId == member.userId" color="medium">Me</ion-badge>
+        <ion-badge *ngIf="owner.userId == member.userId" color="primary" style="vertical-align: -5px">Owner</ion-badge>
+        <ion-badge *ngIf="currentUserId == member.userId && owner.userId == member.userId" color="medium" style="vertical-align: -5px">Me</ion-badge>
       </ion-list>
 
       <ion-list *ngFor="let member of project.projectAdmins">
         <ion-label *ngIf="owner.userId != member.userId">{{member.firstName}} {{member.lastName}} </ion-label>
-        <ion-badge *ngIf="owner.userId != member.userId" color="secondary">Admin</ion-badge>
-        <ion-badge *ngIf="currentUserId == member.userId && owner.userId != member.userId" color="medium">Me</ion-badge>
+        <ion-badge *ngIf="owner.userId != member.userId" color="secondary" style="vertical-align: -5px;">Admin</ion-badge>
+        <ion-badge *ngIf="currentUserId == member.userId && owner.userId != member.userId" color="medium" style="vertical-align: -5px;">Me</ion-badge>
       </ion-list>
 
       <ion-list *ngFor="let member of project.projectMembers">
         <ion-label *ngIf="!checkAdmin(member)">{{member.firstName}} {{member.lastName}} </ion-label>
-        <ion-badge *ngIf="!checkAdmin(member) && currentUserId== member.userId" color="medium">Me</ion-badge>
+        <ion-badge *ngIf="!checkAdmin(member) && currentUserId== member.userId" color="medium" style="vertical-align: -5px;"> Me</ion-badge>
       </ion-list>
     </ion-card-content>
   </ion-card>
