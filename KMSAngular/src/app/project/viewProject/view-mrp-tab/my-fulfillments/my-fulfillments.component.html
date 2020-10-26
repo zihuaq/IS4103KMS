@@ -18,13 +18,13 @@
                         <div *ngFor="let fulfillment of fulfillmentList">
                             <div class="card" style="width: 100%;" >
                                 <div class="card-header">
-                                    <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{fulfillment.posting.name}}</b>&nbsp;
+                                    <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{fulfillment.mra.name}}</b>&nbsp;
                                         <span class="badge badge-primary" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</span>
                                         <span class="badge badge-info" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px; vertical-align: 30%;">PARTIALLY FULFILLED</span>
                                         <span class="badge badge-success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{fulfillment.status}}</span>
                                         <span class="badge badge-danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</span>
                                     <br/>
-                                    <span class="text-muted" style="font-size: 15px;">{{fulfillment.posting.description}}</span>
+                                    <span class="text-muted" style="font-size: 15px;">{{fulfillment.mra.description}}</span>
                                     </h5> 
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse">

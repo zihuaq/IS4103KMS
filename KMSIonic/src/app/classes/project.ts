@@ -1,6 +1,6 @@
 import { User } from './user';
 import { Tag } from './tag';
-import { ProjectType } from './project-type.enum';
+import { ProjectType } from '../enum/project-type.enum';
 import { HumanResourcePosting } from './human-resource-posting';
 import { MaterialResourcePosting } from './material-resource-posting';
 

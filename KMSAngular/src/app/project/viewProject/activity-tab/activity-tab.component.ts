@@ -13,6 +13,7 @@ import { ProjectService } from 'src/app/project.service';
 import { User } from 'src/app/classes/user';
 import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
 import { HrpService } from 'src/app/hrp.service';
+import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
 
 declare var $: any;
 
@@ -47,6 +48,7 @@ export class ActivityTabComponent implements OnInit {
   project: Project;
   activitySelected: Activity;
   contributors: User[];
+  allocatedResources: MaterialResourcePosting[];
 
   constructor(private projectService: ProjectService,
     private activityService: ActivityService,
@@ -59,6 +61,7 @@ export class ActivityTabComponent implements OnInit {
     this.activitySelected = new Activity();
     this.activitySelected.joinedUsers = [];
     this.contributors = [];
+    this.allocatedResources = [];
    }
 
   ngOnInit(): void {
@@ -214,6 +217,19 @@ export class ActivityTabComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  clickAllocatedMrp(activity: Activity) {
+    this.activityService.getActivityById(activity.activityId).subscribe(
+      response => {
+        this.activitySelected = response;
+      }
+    );
+    this.activityService.getAllocatedResources(activity.activityId).subscribe(
+      response => {
+        this.allocatedResources = response;
+      }
+    );
   }
 
 }

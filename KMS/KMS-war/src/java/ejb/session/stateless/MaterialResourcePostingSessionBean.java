@@ -125,13 +125,11 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
 
         List<MaterialResourcePostingEntity> mrpList = query.getResultList();
         List<MaterialResourcePostingEntity> availableMrpList = new ArrayList<>();
-        System.out.println(mrpList);
         for (MaterialResourcePostingEntity mrp: mrpList) {
             if (!mrp.getActivities().contains(activity)) {
                 availableMrpList.add(mrp);
             }
         }
-        System.out.println(availableMrpList);
         return availableMrpList;
     }
 }

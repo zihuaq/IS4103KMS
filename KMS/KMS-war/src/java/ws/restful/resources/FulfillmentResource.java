@@ -225,7 +225,7 @@ public class FulfillmentResource {
                 fulfillment.getPosting().setProject(null);
                 fulfillment.getPosting().setActivities(new ArrayList<>());
                 fulfillment.getPosting().getFulfillments().clear();
-                fulfillment.setMra(null);
+                fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }
             return Response.status(Response.Status.OK).entity(fulfillmentList).build();
         
@@ -250,7 +250,7 @@ public class FulfillmentResource {
                 fulfillment.getPosting().setProject(null);
                 fulfillment.getPosting().setActivities(new ArrayList<>());
                 fulfillment.getPosting().getFulfillments().clear();
-                fulfillment.setMra(null);
+                fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }
             return Response.status(Response.Status.OK).entity(fulfillmentList).build();
         

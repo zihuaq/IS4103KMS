@@ -6,14 +6,12 @@
 package ejb.session.stateless;
 
 import entity.ActivityEntity;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -25,13 +23,13 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
     @EJB(name = "ActivitySessionBeanLocal")
     private ActivitySessionBeanLocal activitySessionBeanLocal;
 
-    @PersistenceContext(unitName = "KMS-warPU")
-    private EntityManager em;
-
-    @Schedule //every day at midnight
+    @Schedule(hour = "*", minute = "*", persistent = false) //every minute
     public void timer() {
-        String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-        System.out.println("********** EjbTimerSession.timer(): Timeout at " + timeStamp);
+        LocalDateTime now = LocalDateTime.now();
+        if (now.getMinute() == 0) {
+            String timeStamp = now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            System.out.println("********** EjbTimerSession.timer(): Timeout at " + timeStamp);  
+        }
         
         List<ActivityEntity> activities = activitySessionBeanLocal.retrieveActivitiesNotCompleted();
         activitySessionBeanLocal.updateActivitiesStatus(activities);

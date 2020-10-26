@@ -459,6 +459,7 @@ export class EditMrpTabComponent implements OnInit {
               this.fulfillmentList = list;
             }
           )
+          this.quantityReceived = null;
           $('#modal-fulfillments').show();
           $('#receiveModalCloseBtn').click();
         }

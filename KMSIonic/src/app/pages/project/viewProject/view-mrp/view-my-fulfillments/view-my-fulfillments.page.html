@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/project-details/{{projectId}}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Fulfillments</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card-content *ngIf="fulfillmentList.length == 0">
+    No fulfillments at the moment
+  </ion-card-content>
+  <span *ngIf="fulfillmentList.length > 0">
+    <ion-card *ngFor="let fulfillment of fulfillmentList">
+      
+      <ion-item style="margin-top: 5px; height: 35px;" lines="none">
+        <ion-badge color="medium" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</ion-badge>
+        <ion-badge color="tertiary" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px; vertical-align: 30%;">PARTIALLY FULFILLED</ion-badge>
+        <ion-badge color="success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; vertical-align: 30%;">{{fulfillment.status}}</ion-badge>
+        <ion-badge color="danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px; vertical-align: 20%;">{{fulfillment.status}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-card-title>{{fulfillment.mra.name}}</ion-card-title>
+        <ion-button fill="clear" color="medium" slot="end" (click)="clickDelete(fulfillment)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-card-content>
+        <ion-card-subtitle *ngIf="fulfillment.mra.description">{{fulfillment.mra.description}}</ion-card-subtitle>
+        <b>Required from {{fulfillment.posting.startDate.toString().slice(0,20) | date }} to {{fulfillment.posting.endDate.toString().slice(0,20) | date }}</b> 
+        <br/>
+        {{fulfillment.receivedQuantity}} {{fulfillment.posting.unit}} received / {{fulfillment.totalPledgedQuantity}} {{fulfillment.posting.unit}} pledged
+        <br/>
+        <ion-badge color="warning" style="margin-top: 5px; font-size: 12px;" (click)="changehref(fulfillment.posting.latitude, fulfillment.posting.longitude)">
+          View location at {{fulfillment.posting.latitude | number:'1.1-6'}}, {{fulfillment.posting.longitude | number:'1.1-6'}}
+        </ion-badge>
+        <br/>
+        <span *ngIf="fulfillment.posting.tags.length > 0">
+            <ion-label *ngFor="let tag of fulfillment.posting.tags" style="margin-right: 5px;">
+              <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
+            </ion-label>
+        </span>
+      </ion-card-content>
+    </ion-card>
+  </span>
+</ion-content>
