@@ -279,7 +279,12 @@ const routes: Routes = [
   {
     path: 'create-mrp/:projectId',
     loadChildren: () => import('./pages/project/editProject/create-mrp/create-mrp.module').then( m => m.CreateMrpPageModule)
+  },
+  {
+    path: 'report-project',
+    loadChildren: () => import('./pages/project/viewProject/report-project/report-project.module').then( m => m.ReportProjectPageModule)
   }
+
 
 
 
