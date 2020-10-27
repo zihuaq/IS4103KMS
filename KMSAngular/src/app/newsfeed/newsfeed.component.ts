@@ -44,6 +44,7 @@ export class NewsfeedComponent implements OnInit {
   postReportTags: Tag[];
   commentReportTags: Tag[];
   postToReport: Post;
+  commentToReport: PostComment;
   isAdminOrOwner: boolean;
   isMember: boolean;
   project: Project;
@@ -99,6 +100,12 @@ export class NewsfeedComponent implements OnInit {
           }),
           allowClear: true,
         });
+        $('#reportCommentselect2').select2({
+          data: this.commentReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
         $('#shareToProjectselect2').select2({
           data: this.loggedInUser.projectsJoined.map((item) => {
             return item.name;
@@ -144,6 +151,12 @@ export class NewsfeedComponent implements OnInit {
           }),
           allowClear: true,
         });
+        $('#reportCommentselect2').select2({
+          data: this.commentReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
         $('#shareToProjectselect2').select2({
           data: this.loggedInUser.projectsJoined.map((item) => {
             return item.name;
@@ -171,6 +184,12 @@ export class NewsfeedComponent implements OnInit {
         this.commentReportTags = result[3];
         $('#reportPostselect2').select2({
           data: this.postReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#reportCommentselect2').select2({
+          data: this.commentReportTags.map((item) => {
             return item.name;
           }),
           allowClear: true,
@@ -565,6 +584,50 @@ export class NewsfeedComponent implements OnInit {
       (comment) => comment.postCommentId == commentId
     );
     this.editingComment = comment;
+  }
+
+  setCommentToReport(postId: number, commentId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    let comment = post.comments.find(
+      (comment) => comment.postCommentId == commentId
+    );
+    this.commentToReport = comment;
+    this.report = new Report();
+  }
+
+  reportComment() {
+    let selectedTags = [];
+    let selectedTagNames = $('#reportCommentselect2').val();
+    if (selectedTagNames.length == 0) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Report',
+        autohide: true,
+        delay: 2500,
+        body: 'Please select at least one concern',
+      });
+      return;
+    }
+    this.commentReportTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        selectedTags.push(element);
+      }
+    });
+    this.report.reportType = ReportType.COMMENT;
+    this.report.reportOwner = this.loggedInUser;
+    this.report.reportedComment = this.commentToReport;
+    this.report.reportTags = selectedTags;
+    this.report.resolved = false;
+    this.reportService.reportComment(this.report).subscribe(() => {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Report Submitted Successfully',
+        autohide: true,
+        delay: 2500,
+      });
+      $('#report-comment-modal').modal('hide');
+      $('#reportCommentselect2').val(null).trigger('change');
+    });
   }
 
   onSelectedShareOptionChange(event) {
