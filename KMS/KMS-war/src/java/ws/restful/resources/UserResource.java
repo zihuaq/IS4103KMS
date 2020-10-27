@@ -6,6 +6,7 @@
 package ws.restful.resources;
 
 import Exception.AffiliatedUserExistException;
+import Exception.DeactivatedEntityException;
 import Exception.DuplicateAffiliationRequestException;
 import Exception.DuplicateEmailException;
 import Exception.DuplicateFollowRequestException;
@@ -489,6 +490,11 @@ public class UserResource {
         } catch (InvalidLoginCredentialException ex) {
             System.out.println(ex.getMessage());
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+        } catch (DeactivatedEntityException ex){
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(ex.getMessage()).build();
         }
 
     }

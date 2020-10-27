@@ -26,7 +26,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import util.enumeration.GroupStatusEnum;
+
 
 /**
  *
@@ -48,19 +48,22 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     private TagSessionBeanLocal tagSessionBeanLocal;
 
     @Override
-    public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException {
+    public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newGroup);
             em.flush();
-            
+            newGroup.setIsActive(Boolean.TRUE);
             user.getGroupsOwned().add(newGroup);
             newGroup.setGroupOwner(user);
             newGroup.getGroupAdmins().add(user);
             user.getGroupsManaged().add(newGroup);
             newGroup.getGroupMembers().add(user);
             user.getGroupsJoined().add(newGroup);
-            
+            for (Long tagId : tagIds) {
+                TagEntity tag = tagSessionBeanLocal.getTagById(tagId);
+                newGroup.getSdgs().add(tag);
+            }
             return newGroup.getGroupId();
         } catch (NoResultException ex) {
             throw new CreateGroupException("User not found");
@@ -113,13 +116,13 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         return query.getResultList();
     }
     
-    @Override
-    public List<GroupEntity> retrieveGroupByStatus(GroupStatusEnum status) {
-        Query query = em.createQuery("SELECT p from GroupEntity p WHERE p.status = :inStatus");
-        query.setParameter("inStatus", status);
-        
-        return query.getResultList();
-    }
+//    @Override
+//    public List<GroupEntity> retrieveGroupByStatus(GroupStatusEnum status) {
+//        Query query = em.createQuery("SELECT p from GroupEntity p WHERE p.status = :inStatus");
+//        query.setParameter("inStatus", status);
+//        
+//        return query.getResultList();
+//    }
     
     @Override
     public GroupEntity getGroupById(Long groupId) throws NoResultException {
@@ -169,6 +172,17 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         group.setName(groupToUpdate.getName());
         group.setDescription(groupToUpdate.getDescription());
         group.setCountry(groupToUpdate.getCountry());
+
+        for (int i = 0; i < groupToUpdate.getSdgs().size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, groupToUpdate.getSdgs().get(i).getTagId());
+           if (tag == null) {
+               throw new NoResultException("SDG tag not found.");
+           }
+        }
+        group.setSdgs(groupToUpdate.getSdgs());
+        group.setIsActive(groupToUpdate.getIsActive());
+        //group.setStatus(groupToUpdate.getStatus());
+
 //        for (int i = 0; i < groupToUpdate.getSdgs().size(); i++) {
 //            TagEntity tag = em.find(TagEntity.class, groupToUpdate.getSdgs().get(i).getTagId());
 //           if (tag == null) {
@@ -176,6 +190,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
 //           }
 //        }
 //        group.setSdgs(groupToUpdate.getSdgs());
+
         group.setProfilePicture(groupToUpdate.getProfilePicture());
         
     }

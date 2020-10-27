@@ -9,6 +9,7 @@ import Exception.NoResultException;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import entity.FulfillmentEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,6 +149,24 @@ public class FulfillmentResource {
         }
     }
     
+    @Path("acceptFulfillment")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response acceptFulfillment(Long fulfillmentId) {
+        try { 
+            System.out.println("******** FulfillmentResource: acceptFulfillment()");
+            fulfillmentSessionBeanLocal.acceptFulfillment(fulfillmentId);
+
+            return Response.status(204).build();
+            
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
     @Path("getFulfillmentsByMrp/{mrpId}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -222,9 +241,9 @@ public class FulfillmentResource {
             for (FulfillmentEntity fulfillment : fulfillmentList) {
                 fulfillment.setFulfillmentOwner(null);
                 fulfillment.getPosting().setProject(null);
-                fulfillment.getPosting().setActivity(null);
+                fulfillment.getPosting().setActivities(new ArrayList<>());
                 fulfillment.getPosting().getFulfillments().clear();
-                fulfillment.setMra(null);
+                fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }
             return Response.status(Response.Status.OK).entity(fulfillmentList).build();
         
@@ -247,9 +266,9 @@ public class FulfillmentResource {
             for (FulfillmentEntity fulfillment : fulfillmentList) {
                 fulfillment.setFulfillmentOwner(null);
                 fulfillment.getPosting().setProject(null);
-                fulfillment.getPosting().setActivity(null);
+                fulfillment.getPosting().setActivities(new ArrayList<>());
                 fulfillment.getPosting().getFulfillments().clear();
-                fulfillment.setMra(null);
+                fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }
             return Response.status(Response.Status.OK).entity(fulfillmentList).build();
         

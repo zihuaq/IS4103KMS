@@ -1,20 +1,22 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
+<div class="content-wrapper" *ngIf = "projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN'" >
+  <p>This group has been deactivated for violationg our T&C</p>
+  </div>
 
-
-<div class="content-wrapper">
+<div class="content-wrapper" *ngIf = "projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN'">
     <div class="loading" *ngIf="!loaded">
         <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
     </div>
     <div class="content-header" *ngIf="loaded">
-        <div class="content-fluid"> 
+        <div class="content-fluid">
             <div class="card">
                 <div class="image"  style="height: 350px; overflow: hidden; position: relative;">
                     <span *ngIf="projectToView.profilePicture">
                         <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
                         <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
-                            <img class="card-img-top" style="display: block;" [src]="projectToView.profilePicture"  alt="Project Profile Picture"> 
+                            <img class="card-img-top" style="display: block;" [src]="projectToView.profilePicture"  alt="Project Profile Picture">
                             <div class="after">
                                 <i class="fas fa-search-plus" style="font-size: 25px;"></i>
                             </div>
@@ -23,7 +25,7 @@
                     <span *ngIf="!projectToView.profilePicture">
                         <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-addPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Add</button>
                         <div class="image-layer">
-                            <img class="card-img-top" style="margin: -10% 0 0 0; display: block;" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Project Profile Picture"> 
+                            <img class="card-img-top" style="margin: -10% 0 0 0; display: block;" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Project Profile Picture">
                         </div>
                     </span>
                 </div>
@@ -35,15 +37,15 @@
                     <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}
                         <span *ngIf="!isMember">
                             <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView"></app-report-project>
-                            <button type="button" class="btn btn-light float-right" (click)="joinProject()">Join Project</button>  
+                            <button type="button" class="btn btn-light float-right" (click)="joinProject()">Join Project</button>
                         </span>
                         <span *ngIf="isMember">
                             <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
-                            <button type="button" [disabled] class="btn btn-light float-right">Joined</button>   
+                            <button type="button" [disabled] class="btn btn-light float-right">Joined</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Project</a>
                                 <a class="dropdown-item" data-toggle="modal" data-target="#modal-confirm-leave-project">Leave Project</a>
-                            </div>                       
+                            </div>
                         </span>
                     </p>
                 </div>
@@ -76,6 +78,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-projectfeed" data-toggle="pill" href="#projectfeed-tab">Project Feed</a>
                         </li>
+                        <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
+                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab">project Settings</a>
+                      </li>
                     </ul>
                 </div>
                 <div class="card-body" id="custom-tabs-four-tabContent">
@@ -86,12 +91,12 @@
                             <button *ngIf="projectToView.monetaryFundingRequired && isMember" type="button" class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;" [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project</button>
                             <p><b>Date Created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
                             <p *ngIf="projectToView.monetaryFundingRequired"><b>Monetary Funding (USD):</b> ${{projectToView.monetaryFundingObtained | number:'1.0'}} obtained / ${{projectToView.monetaryFundingRequired | number:'1.0'}} required</p>
-                            <p><b>SDGs: </b> 
+                            <p><b>SDGs: </b>
                                 <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary" style="margin-right: 5px;">
                                     {{tag.name}}
-                                </span>  
+                                </span>
                             </p>
-                            <!-- <p>Project status: {{projectToView.status}}</p> -->                      
+                            <!-- <p>Project status: {{projectToView.status}}</p> -->
                         </div>
                         <div class="tab-pane fade" id="members-tab" role="tabpanel">
                             <div class="row">
@@ -152,11 +157,29 @@
                         <div class="tab-pane fade" id="projectfeed-tab" role="tabpanel">
                             <app-newsfeed newsfeedType="project" id="{{projectId}}"></app-newsfeed>
                         </div>
-                    </div>                    
+                        <div class="tab-pane fade" id="setting-tab" role="tabpanel">
+                          <form class="form-horizontal" (ngSubmit)="onEditProjectSetting(disableForm)" #disableForm="ngForm">
+                            <div>
+                              <label>Account Status</label>
+                              <div class = "radio" *ngFor = "let status of settingStatus">
+                                <label style="padding-right: 10px;" >
+                                  <input type = "radio" name = "status" [ngModel] = "projectToView.isActive ? 'Active' : 'Deactive'" [value] = "status">
+                                  {{status}}
+                                </label>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="offset-sm-2 col-sm-10">
+                                <button type="submit" class="btn btn-danger" style="float: right;" [disabled]="!disableForm.valid">Submit</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                    </div>
                 </div>
-            </div>                      
-        </div>          
-    </div>  
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="modal-addPicture" data-backdrop="static" data-keyboard="false">

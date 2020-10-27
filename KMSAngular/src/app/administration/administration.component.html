@@ -32,6 +32,21 @@
                   href="#project-reports" role="tab"
                   >Project Reports</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill"
+                  href="#group-reports" role="tab"
+                  >Group Reports</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill"
+                  href="#post-reports" role="tab"
+                  >Post Reports</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill"
+                  href="#comment-reports" role="tab"
+                  >Comment Reports</a>
+            </li>
         </ul>
     </div>
 
@@ -43,7 +58,15 @@
             <div class="tab-pane fade" id="project-reports" role="tabpanel">
                 <app-project-reports></app-project-reports>
             </div>
-
+            <div class="tab-pane fade" id="group-reports" role="tabpanel">
+              <app-group-reports></app-group-reports>
+          </div>
+          <div class="tab-pane fade" id="post-reports" role="tabpanel">
+            <app-post-reports></app-post-reports>
+        </div>
+        <div class="tab-pane fade" id="comment-reports" role="tabpanel">
+          <app-comment-reports></app-comment-reports>
+      </div>
         </div>
     </div>
     <!-- /.card -->

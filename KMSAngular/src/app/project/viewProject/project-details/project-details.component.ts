@@ -8,6 +8,7 @@ import { ProjectService } from 'src/app/project.service';
 import { SessionService } from 'src/app/session.service';
 import { UserService } from 'src/app/user.service';
 import { ProjectType } from 'src/app/classes/project-type.enum';
+import { NgForm } from '@angular/forms';
 
 declare var $: any;
 declare let require: any;
@@ -31,13 +32,14 @@ export class ProjectDetailsComponent implements OnInit {
   selectedProfilePicture: string | ArrayBuffer;
   selectedProfilePictureName: string;
   noOfMembers: number;
+  settingStatus = ['Active', 'Deactive'];
   //currencySymbol: string;
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
     private sessionService: SessionService,
     private activatedRoute: ActivatedRoute,
-    private router: Router) { 
+    private router: Router) {
       this.projectToView = new Project();
       this.owner = new User();
     }
@@ -73,7 +75,7 @@ export class ProjectDetailsComponent implements OnInit {
         this.dateCreated = this.projectToView.dateCreated.toString().substring(0,10);
         // var getSymbolFromCurrency = require('currency-symbol-map')
         // this.currencySymbol = getSymbolFromCurrency(this.projectToView.currency);
-      }, 
+      },
       error => {
         $(document).Toasts('create', {
           class: 'bg-danger',
@@ -108,7 +110,7 @@ export class ProjectDetailsComponent implements OnInit {
           delay: 2500,
           body: error,
         });
-      });  
+      });
   }
 
   leaveProject() {
@@ -208,5 +210,39 @@ export class ProjectDetailsComponent implements OnInit {
   get projectType(): typeof ProjectType{
     return ProjectType;
   }
-  
+
+  onEditProjectSetting(disableForm: NgForm) {
+    if (disableForm.valid) {
+      console.log(disableForm)
+    }
+    let active: boolean
+    if(disableForm.value.status == "Active"){
+      this.projectToView.isActive = true
+    }
+    else{
+      this.projectToView.isActive = false;
+    }
+    this.projectService.updateProject(this.projectToView).subscribe(
+      response => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Profile picture updated successfully',
+        })
+      },
+      error => {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+      }
+    );
+    this.profilePicture = this.selectedProfilePicture;
+    this.selectedProfilePicture = undefined;
+  }
+
 }

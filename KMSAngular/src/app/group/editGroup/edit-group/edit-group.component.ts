@@ -21,6 +21,7 @@ export class EditGroupComponent implements OnInit {
   @Output() groupChanged = new EventEmitter<Group>();
   groupId: number;
   isOwner: boolean = false;
+  loggedInUser: User;
 
   constructor(private groupService: GroupService,
     private userService: UserService,
@@ -28,6 +29,7 @@ export class EditGroupComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router) {
       this.groupToEdit = new Group();
+      this.loggedInUser = sessionService.getCurrentUser();
     }
 
   ngOnInit(): void {

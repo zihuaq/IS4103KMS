@@ -17,6 +17,7 @@ export class Post {
   project: Project;
   originalPostDeleted: boolean;
   group: Group;
+  isActive: boolean;
 
   constructor(
     postId?: number,

@@ -18,7 +18,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-import util.enumeration.GroupStatusEnum;
 
 /**
  *
@@ -54,11 +53,13 @@ public class GroupEntity implements Serializable {
     @ManyToMany(mappedBy="groupAdmins")    
     private List<UserEntity> groupAdmins;
     
-//    @ManyToMany
-//    private List<TagEntity> sdgs;
+    @ManyToMany
+    private List<TagEntity> sdgs;
     
     @OneToMany(mappedBy = "group")
     private List<PostEntity> posts;
+    
+    private Boolean isActive;
     
     public GroupEntity() {
         groupMembers = new ArrayList<>();
@@ -162,13 +163,13 @@ public class GroupEntity implements Serializable {
         this.description = description;
     }
 
-//    public List<TagEntity> getSdgs() {
-//        return sdgs;
-//    }
-//
-//    public void setSdgs(List<TagEntity> sdgs) {
-//        this.sdgs = sdgs;
-//    }
+    public List<TagEntity> getSdgs() {
+        return sdgs;
+    }
+
+    public void setSdgs(List<TagEntity> sdgs) {
+        this.sdgs = sdgs;
+    }
     
     public List<PostEntity> getPosts() {
         return posts;
@@ -177,5 +178,15 @@ public class GroupEntity implements Serializable {
     public void setPosts(List<PostEntity> posts) {
         this.posts = posts;
     }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    
     
 }

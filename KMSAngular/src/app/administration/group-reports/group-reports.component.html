@@ -1,0 +1,49 @@
+<h4>Group Reports</h4>
+<hr>
+<h1 *ngIf= "reports===undefined || reports.length == 0">
+  No Group Reports
+</h1>
+
+  <div >
+    <div>
+      <app-group-report-item *ngFor= "let report of reports"
+      [report] = "report" (reportSelected) = "onReportSelected($event)"></app-group-report-item>
+    </div>
+  </div>
+
+  <div bsModal #verdictModal = "bs-modal" class="modal fade" id="groupReportModal" tabindex="-1" aria-labelledby="groupReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="groupReportModalLabel">Pass Verdict</h5>
+          <button type="button" class="close" (click)="hideChildModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" (ngSubmit)="onPassVerdict(VerdictForm)" #VerdictForm="ngForm">
+            <div class="form-group">
+              <label for="verdict">Verdict comment:</label>
+              <textarea type="text" id="verdict" class="form-control" ngModel name="verdict" style="height: 50%;" required>
+              </textarea>
+          </div>
+          <div>
+            <label *ngIf = "!selectedReport === undefined">Set {{selectedReport.reportedGroup.name}} Status</label>
+            <div class = "radio" *ngFor = "let status of settingStatus" >
+              <label>
+                <input type = "radio" name = "status" [value] = "status" ngModel required>
+                {{status}}
+              </label>
+            </div>
+          </div>
+            <button type="submit" class="btn btn-primary" style = "float: right;" [disabled]="!VerdictForm.valid">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+

@@ -2,6 +2,7 @@ import { Project } from './project';
 import { User } from './user';
 import { HumanResourcePosting } from './human-resource-posting';
 import { MaterialResourcePosting } from './material-resource-posting';
+import { ActivityStatus } from './activity-status.enum';
 
 export class Activity {
     activityId: number;
@@ -9,8 +10,11 @@ export class Activity {
     startDate: Date;
     endDate: Date;
     country: string;
-    location: string;
+    latitude: number;
+    longitude: number;
     description: string;
+    activityStatus: ActivityStatus;
+    allocatedQuantities: Map<number, number>;
     project: Project;
     humanResourcePostings: HumanResourcePosting[];
     materialResourcePostings: MaterialResourcePosting[];
@@ -22,8 +26,11 @@ export class Activity {
         startDate?: Date,
         endDate?: Date,
         country?: string,
-        location?: string,
+        latitude?: number,
+        longitude?: number,
         description?: string,
+        activityStatus?: ActivityStatus,
+        allocatedQuantities?: Map<number, number>,
         project?: Project,
         humanResourcePostings?: HumanResourcePosting[],
         materialResourcePostings?: MaterialResourcePosting[],
@@ -34,8 +41,11 @@ export class Activity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.country = country;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = description;
+        this.activityStatus = activityStatus;
+        this.allocatedQuantities = allocatedQuantities;
         this.project = project;
         this.humanResourcePostings = humanResourcePostings;
         this.materialResourcePostings = materialResourcePostings;

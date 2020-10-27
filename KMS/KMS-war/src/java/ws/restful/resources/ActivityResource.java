@@ -80,6 +80,7 @@ public class ActivityResource {
                     user.setProjectsOwned(new ArrayList<>());
                     user.setProjectsJoined(new ArrayList<>());
                     user.setProjectsManaged(new ArrayList<>());
+                    user.setGroupsManaged(new ArrayList<>());
                     user.setPosts(new ArrayList<>());
                     user.setGroupsOwned(new ArrayList<>());
                     user.setGroupsJoined(new ArrayList<>());
@@ -124,7 +125,7 @@ public class ActivityResource {
             }
             if (activity.getMaterialResourcePostings() != null) {
                 for (MaterialResourcePostingEntity mrp: activity.getMaterialResourcePostings()) {
-                    mrp.setActivity(null);
+                    mrp.setActivities(new ArrayList<>());
                     mrp.setProject(null);
                     mrp.setTags(new ArrayList<>());
                     mrp.setFulfillments(new ArrayList<>());
@@ -137,6 +138,7 @@ public class ActivityResource {
                     user.setProjectsOwned(new ArrayList<>());
                     user.setProjectsJoined(new ArrayList<>());
                     user.setProjectsManaged(new ArrayList<>());
+                    user.setGroupsManaged(new ArrayList<>());
                     user.setPosts(new ArrayList<>());
                     user.setGroupsOwned(new ArrayList<>());
                     user.setGroupsJoined(new ArrayList<>());
@@ -280,6 +282,78 @@ public class ActivityResource {
         System.out.println("******** ActivityResource: removeHrpFromActivity()");
         try {
             activitySessionBean.removeHrpFromActivity(activityId, hrpId);
+            
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("getAllocatedResources/{activityId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllocatedResources(@PathParam("activityId") Long activityId) {
+        System.out.println("******** ActivityResource: getAllocatedResources()");
+        
+        try {
+            List<MaterialResourcePostingEntity> mrpList = activitySessionBean.getAllocatedResources(activityId);
+
+            for (MaterialResourcePostingEntity mrp : mrpList) {
+                mrp.setProject(null);
+                mrp.getActivities().clear();
+                mrp.getFulfillments().clear();
+            }
+            return Response.status(Status.OK).entity(mrpList).build();  
+            
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }   
+    }
+    
+    @Path("allocateResource/{activityId}/{mrpId}/{quantity}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response allocateResource(@PathParam("activityId") Long activityId, @PathParam("mrpId") Long mrpId, @PathParam("quantity") Double quantity) {
+        System.out.println("******** ActivityResource: allocateResource()");
+        try {
+            activitySessionBean.allocateResource(activityId, mrpId, quantity);
+            
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("updateAllocateQuantity/{activityId}/{mrpId}/{newQuantity}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateAllocateQuantity(@PathParam("activityId") Long activityId, @PathParam("mrpId") Long mrpId, @PathParam("newQuantity") Double newQuantity) {
+        System.out.println("******** ActivityResource: updateAllocateQuantity()");
+        try {
+            activitySessionBean.updateAllocateQuantity(activityId, mrpId, newQuantity);
+            
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("removeAllocation/{activityId}/{mrpId}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response removeAllocation(@PathParam("activityId") Long activityId, @PathParam("mrpId") Long mrpId) {
+        System.out.println("******** ActivityResource: removeAllocation()");
+        try {
+            activitySessionBean.removeAllocation(activityId, mrpId);
             
             return Response.status(204).build();
         } catch (NoResultException ex) {

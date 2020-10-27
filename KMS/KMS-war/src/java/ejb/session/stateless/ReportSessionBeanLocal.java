@@ -37,8 +37,15 @@ public interface ReportSessionBeanLocal {
 
     public ReportEntity reportGroup(ReportEntity report) throws NoResultException;
 
+
+    public void sentReportVerdictEmail(ReportEntity report) throws NoResultException;
+    
+
     public ReportEntity reportPost(ReportEntity report) throws NoResultException;
 
     public ReportEntity reportComment(ReportEntity report) throws NoResultException;
+
+    public void deleteReport(Long reportId) throws NoResultException;
+
 
 }

@@ -94,7 +94,7 @@ public class GroupResource {
         if (createGroupReq != null) {
             System.out.println("Group: " + createGroupReq.getNewGroup());
             try {
-                Long groupId = groupSessionBeanLocal.createNewGroup(createGroupReq.getNewGroup(), createGroupReq.getOwnerId());
+                Long groupId = groupSessionBeanLocal.createNewGroup(createGroupReq.getNewGroup(), createGroupReq.getOwnerId(), createGroupReq.getTagIds());
                 CreateGroupRsp createGroupRsp = new CreateGroupRsp(groupId);
                 System.out.println("******** Group created");
                 return Response.status(Status.OK).entity(createGroupRsp).build();

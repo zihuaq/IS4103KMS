@@ -38,6 +38,9 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
     
+    @EJB(name = "ActivitySessionBeanLocal")
+    private ActivitySessionBeanLocal activitySessionBeanLocal;
+    
     @EJB(name = "UserSessionBeanLocal")
     private UserSessionBeanLocal userSessionBeanLocal;
     
@@ -46,14 +49,23 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @EJB(name = "TagSessionBeanLocal")
     private TagSessionBeanLocal tagSessionBeanLocal;
+    
+    @EJB(name = "HumanResourcePostingSessionBeanLocal")
+    private HumanResourcePostingSessionBeanLocal humanResourcePostingSessionBeanLocal;
 
+    @EJB(name = "MaterialResourcePostingSessionBeanLocal")
+    private MaterialResourcePostingSessionBeanLocal materialResourcePostingSessionBeanLocal;
+    
+    @EJB(name = "TaskSessionBeanLocal")
+    private TaskSessionBeanLocal taskSessionBeanLocal;
+    
     @Override
     public Long createNewProject(ProjectEntity newProject, Long userId, List<Long> tagIds) throws CreateProjectException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newProject);
             em.flush();
-            
+            newProject.setIsActive(Boolean.TRUE);
             user.getProjectsOwned().add(newProject);
             newProject.setProjectOwner(user);
             newProject.getProjectAdmins().add(user);
@@ -175,6 +187,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         project.setName(projectToUpdate.getName());
         project.setDescription(projectToUpdate.getDescription());
         project.setCountry(projectToUpdate.getCountry());
+        project.setMonetaryFundingRequired(projectToUpdate.getMonetaryFundingRequired());
         for (int i = 0; i < projectToUpdate.getSdgs().size(); i++) {
             TagEntity tag = em.find(TagEntity.class, projectToUpdate.getSdgs().get(i).getTagId());
            if (tag == null) {
@@ -184,6 +197,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         project.setSdgs(projectToUpdate.getSdgs());
         project.setStatus(projectToUpdate.getStatus());
         project.setProfilePicture(projectToUpdate.getProfilePicture());
+        project.setIsActive(projectToUpdate.getIsActive());
         
     }
     
@@ -243,26 +257,27 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         }
         projectToDelete.getProjectMembers().clear();
         
-        for (ActivityEntity activity : projectToDelete.getActivities()) {
+        for (ActivityEntity activity : projectToDelete.getActivities()) {            
             activity.setProject(null);
+            activitySessionBeanLocal.deleteActivity(activity.getActivityId());            
         }
         projectToDelete.getActivities().clear();
         
         for (HumanResourcePostingEntity hrp : projectToDelete.getHumanResourcePostings()) {
             hrp.setProject(null);
-            // Delete hrp here
+            humanResourcePostingSessionBeanLocal.deleteHumanResourcePosting(hrp.getHumanResourcePostingId());
         }
         projectToDelete.getHumanResourcePostings().clear();
         
         for (MaterialResourcePostingEntity mrp : projectToDelete.getMaterialResourcePostings()) {
             mrp.setProject(null);
-            // Delete mrp here
+            materialResourcePostingSessionBeanLocal.deleteMaterialResourcePosting(mrp.getMaterialResourcePostingId());
         }
         projectToDelete.getMaterialResourcePostings().clear();
         
         for (TaskEntity task : projectToDelete.getTasks()) {
             task.setProject(null);
-            // Delete task here
+            taskSessionBeanLocal.deleteTask(task.getId());
         }
         projectToDelete.getTasks().clear();
         

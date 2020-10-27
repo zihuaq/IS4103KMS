@@ -14,6 +14,8 @@ import { User } from 'src/app/classes/user';
 import { SessionService } from 'src/app/session.service';
 import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
 import { HrpService } from 'src/app/hrp.service';
+import { MaterialResourcePosting } from '../../../classes/material-resource-posting';
+import { MaterialResourcePostingService } from '../../../material-resource-posting.service';
 
 declare var $: any;
 
@@ -70,10 +72,28 @@ export class EditActivityTabComponent implements OnInit {
   hrpAvailable: HumanResourcePosting[];
   hrpAllocated: HumanResourcePosting[];
 
+  obtainedResources: MaterialResourcePosting[];
+  allocatedResources: MaterialResourcePosting[];
+  mrpToAllocate: MaterialResourcePosting;
+  quantityAllocated: number;
+  availableQuantity: number;
+  mrpToEdit: MaterialResourcePosting;
+  newQuantityAllocated: number;
+
+  zoom = 12;
+  center: google.maps.LatLngLiteral;
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: true,
+  };
+
   constructor(private hrpService: HrpService,
     private sessionService: SessionService,
     private activityService: ActivityService,
     private projectService: ProjectService,
+    private mrpService: MaterialResourcePostingService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private datePipe: DatePipe) { 
@@ -84,6 +104,9 @@ export class EditActivityTabComponent implements OnInit {
       this.project = new Project();
       this.hrpAllocated = [];
       this.hrpAvailable = [];
+      this.obtainedResources = [];
+      this.allocatedResources = [];
+      this.mrpToEdit = new MaterialResourcePosting();
     }
 
   ngOnInit(): void {
@@ -109,16 +132,23 @@ export class EditActivityTabComponent implements OnInit {
         for (let activity of this.activities) {
           let event = {
             id: activity.activityId,
-            start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
-            end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
+            start: new Date(this.formatDate(activity.startDate.toString())),
+            end: new Date(this.formatDate(activity.endDate.toString())),
             title: activity.name,
-            allDay: true,
           }
           this.events.push(event);
         }
         this.refresh.next();
       }
     );
+  }
+
+  click(event: google.maps.MouseEvent) {
+    console.log(event);
+    this.newActivity.latitude = event.latLng.lat();
+    this.newActivity.longitude = event.latLng.lng();
+    this.activityToEdit.latitude = event.latLng.lat();
+    this.activityToEdit.longitude = event.latLng.lng();
   }
 
   isAdmin(user: User): boolean {
@@ -178,6 +208,7 @@ export class EditActivityTabComponent implements OnInit {
     }
 
     if (newActivityForm.valid) {
+      console.log(this.newActivity.startDate);
       this.newActivity.startDate = new Date(this.newActivity.startDate);
       this.newActivity.endDate = new Date(this.newActivity.endDate);
       this.activityService.createNewActivity(this.newActivity, this.projectId).subscribe(
@@ -198,7 +229,7 @@ export class EditActivityTabComponent implements OnInit {
   }
 
   dateToString(date: Date) {
-    return this.datePipe.transform(date, "yyyy-MM-dd");
+    return this.datePipe.transform(date, "yyyy-MM-ddTHH:mm");
   }
 
   formatDate(date: string) {
@@ -359,6 +390,210 @@ export class EditActivityTabComponent implements OnInit {
             this.hrpAllocated = response;
           }
         );
+      }
+    )
+  }
+
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    window.open(url, '_blank');
+  }
+
+  clickAllocatedMrp(activity: Activity) {
+    this.activityService.getActivityById(activity.activityId).subscribe(
+      response => {
+        this.activityToEdit = response;
+      }
+    );
+    this.activityService.getAllocatedResources(activity.activityId).subscribe(
+      response => {
+        this.allocatedResources = response;
+      }
+    );
+  }
+
+  clickAllocate() {
+    this.mrpService.getListOfObtainedMrp(this.projectId, this.activityToEdit.activityId).subscribe(
+      response => {
+        this.obtainedResources = response;
+      }
+    );
+    $('#modal-material-allocation').hide();
+  }
+
+  clickSelectMrp(mrp: MaterialResourcePosting) {
+    this.mrpToAllocate = mrp;
+    this.availableQuantity = mrp.obtainedQuantity - mrp.allocatedQuantity;
+  }
+
+  cancelAllocate() {
+    $('#modal-material-allocation').show();
+    this.mrpToAllocate = null;
+    this.availableQuantity = null;
+    this.quantityAllocated = null;
+  }
+
+  back() {
+    this.mrpToAllocate = null;
+    this.availableQuantity = null;
+    this.quantityAllocated = null;
+  }
+
+  confirmAllocation() {
+    if(this.quantityAllocated == null){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to allocate',
+        autohide: true,
+        delay: 3200,
+        body: 'Allocated quantity is required',
+      });
+    } else if(!(this.quantityAllocated > 0)){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to allocate',
+        autohide: true,
+        delay: 3200,
+        body: 'Allocated quantity is invalid',
+      });
+    } else if(this.quantityAllocated > this.availableQuantity) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to allocate',
+        autohide: true,
+        delay: 4000,
+        body: 'Allocated quantity cannot be more than available quantity',
+      });
+    } else {
+      this.activityService.allocateResource(this.activityToEdit.activityId, this.mrpToAllocate.materialResourcePostingId, this.quantityAllocated).subscribe(
+        response => {
+          this.activityService.getAllocatedResources(this.activityToEdit.activityId).subscribe(
+            response => {
+              this.allocatedResources = response;
+            }
+          );
+          this.activityService.getActivityById(this.activityToEdit.activityId).subscribe(
+            response => {
+              this.activityToEdit = response;
+            }
+          );
+
+          $('#modal-material-allocation').show();
+          $('#allocateModalCloseBtn').click();
+          this.mrpToAllocate = null;
+          this.availableQuantity = null;
+          this.quantityAllocated = null;
+
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 3200,
+            body: 'Material resource is allocated successfully',
+          });
+        }
+      )
+    }
+  }
+
+  clickUpdateQuantity(mrp: MaterialResourcePosting) {
+    $('#modal-material-allocation').hide();
+    this.mrpToEdit = mrp;
+    this.quantityAllocated = this.activityToEdit.allocatedQuantities[mrp.materialResourcePostingId];
+    this.availableQuantity = mrp.obtainedQuantity - mrp.allocatedQuantity + this.quantityAllocated;
+  }
+
+  cancelEdit() {
+    $('#modal-material-allocation').show();
+    this.mrpToEdit = new MaterialResourcePosting();
+    this.availableQuantity = null;
+    this.quantityAllocated = null;
+  }
+
+  updateQuantity() {
+    if(this.quantityAllocated == null){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to update quantity',
+        autohide: true,
+        delay: 3200,
+        body: 'Allocated quantity is required',
+      });
+    } else if(!(this.quantityAllocated > 0)){
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to update quantity',
+        autohide: true,
+        delay: 3200,
+        body: 'Allocated quantity is invalid',
+      });
+    } else if(this.quantityAllocated > this.availableQuantity) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to update quantity',
+        autohide: true,
+        delay: 4000,
+        body: 'Allocated quantity cannot be more than available quantity',
+      });
+    } else {
+        this.activityService.updateAllocateQuantity(this.activityToEdit.activityId, this.mrpToEdit.materialResourcePostingId, this.quantityAllocated).subscribe(
+          response => {
+            this.activityService.getAllocatedResources(this.activityToEdit.activityId).subscribe(
+              response => {
+                this.allocatedResources = response;
+                
+              }
+            );
+            this.activityService.getActivityById(this.activityToEdit.activityId).subscribe(
+              response => {
+                this.activityToEdit = response;
+              }
+            );
+            $('#modal-material-allocation').show();
+            $('#updateQuantityModalCloseBtn').click();
+
+            this.mrpToEdit = new MaterialResourcePosting();
+            this.availableQuantity = null;
+            this.quantityAllocated = null;
+
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 3200,
+              body: 'Allocated quantity is updated successfully',
+            });
+          }
+        )
+    }
+  }
+
+  clickRemoveAllocation(mrp: MaterialResourcePosting) {
+    $('#modal-material-allocation').hide();
+    this.mrpToEdit = mrp;
+  }
+
+  removeAllocation() {
+    this.activityService.removeAllocation(this.activityToEdit.activityId, this.mrpToEdit.materialResourcePostingId).subscribe(
+      response => {
+        this.activityService.getAllocatedResources(this.activityToEdit.activityId).subscribe(
+          response => {
+            this.allocatedResources = response;
+          }
+        );
+
+        //$('#modal-remove-allocation').hide();
+        $('#removeAllocationModalCloseBtn').click();
+        $('#modal-material-allocation').show();
+        this.mrpToEdit = new MaterialResourcePosting();
+
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 3200,
+          body: 'Material resource allocation is removed successfully',
+        });
       }
     )
   }

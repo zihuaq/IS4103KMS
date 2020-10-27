@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/project-details/{{projectId}}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Fulfillments</ion-title>
+  </ion-toolbar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchInput" (ionChange)="filter()" #searchBar></ion-searchbar>
+  <ion-item>
+    <ion-label>Filter by Status</ion-label>
+    <ion-select multiple="true" [(ngModel)]="statusSelected" selectedText=" " (ionChange)="filter()">
+      <ion-select-option value="PLEDGED">Pledged</ion-select-option>
+      <ion-select-option value="ACCEPTED">Accepted</ion-select-option>
+      <ion-select-option value="PARTIALLYFULFILLED">Partially Fulfilled</ion-select-option>
+      <ion-select-option value="FULFILLED">Fulfilled</ion-select-option>
+      <ion-select-option value="REJECTED">Rejected</ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-header>
+
+<ion-content>
+  <ion-card-content *ngIf="fulfillmentList.length == 0">
+    No fulfillments at the moment
+  </ion-card-content>
+  <span *ngIf="fulfillmentList.length > 0">
+    <ion-card *ngFor="let fulfillment of filteredList">
+      <ion-item style="margin-top: 5px; margin-left: 5px; height: 35px;" lines="none">
+        <ion-badge color="medium" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
+        <ion-badge *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; background-color: rgb(40, 80, 80);">{{fulfillment.status}}</ion-badge>
+        <ion-badge color="tertiary" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px;">PARTIALLY FULFILLED</ion-badge>
+        <ion-badge color="success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; color: white; background-color: rgb(7, 129, 7);">{{fulfillment.status}}</ion-badge>
+        <ion-badge color="danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-card-title style="padding: 10px 5px 10px 5px">
+          {{fulfillment.mra.name}}
+          <ion-card-subtitle *ngIf="fulfillment.mra.description" style="margin-top: 5px;">{{fulfillment.mra.description}}</ion-card-subtitle>
+        </ion-card-title>
+        <ion-buttons slot="end">
+          <ion-icon class="iconButton" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="margin-right: 15px;" name="create-outline" (click)="clickUpdate(fulfillment)"></ion-icon>
+          <ion-icon class="iconButton" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED || fulfillment.status == fulfillmentStatus.REJECTED" name="trash-outline" (click)="clickDelete(fulfillment)"></ion-icon>
+        </ion-buttons>
+      </ion-item>
+      <ion-card-content style="padding: 20px">
+        <b>Required from {{fulfillment.posting.startDate.toString().slice(0,20) | date }} to {{fulfillment.posting.endDate.toString().slice(0,20) | date }}</b> 
+        <br/>
+        {{fulfillment.receivedQuantity}} {{fulfillment.posting.unit}} received / {{fulfillment.totalPledgedQuantity}} {{fulfillment.posting.unit}} pledged
+        <br/>
+        <ion-badge color="warning" style="margin-top: 5px; font-size: 12px;" (click)="changehref(fulfillment.posting.latitude, fulfillment.posting.longitude)">
+          View location at {{fulfillment.posting.latitude | number:'1.1-6'}}, {{fulfillment.posting.longitude | number:'1.1-6'}}
+        </ion-badge>
+        <br/>
+        <span *ngIf="fulfillment.posting.tags.length > 0">
+            <ion-label *ngFor="let tag of fulfillment.posting.tags" style="margin-right: 5px;">
+              <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
+            </ion-label>
+        </span>
+      </ion-card-content>
+    </ion-card>
+  </span>
+</ion-content>

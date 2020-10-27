@@ -14,7 +14,15 @@ import entity.ReportEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import javax.ejb.Stateless;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.enumeration.ReportTypeEnum;
@@ -40,6 +48,16 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         } else {
             throw new NoResultException("User not found");
         }
+    }
+    
+    public ReportEntity getReportById(Long reportId) throws NoResultException{
+       
+        ReportEntity returnReport = em.find(ReportEntity.class, reportId);
+        if(returnReport == null){
+            throw new NoResultException("Repot not Found");
+        }
+        return returnReport;
+        
     }
     
     @Override
@@ -171,7 +189,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             }
         }
         if(groupReports.size() < 1){
-            throw new NoResultException("No profile reports");
+            throw new NoResultException("No group reports");
         }
         return groupReports;
     }
@@ -189,9 +207,14 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             }
         }
         if(postReports.size() < 1){
-            throw new NoResultException("No profile reports");
+            throw new NoResultException("No post reports");
         }
         return postReports;
+    }
+    
+    public void deleteReport(Long reportId) throws NoResultException{
+        ReportEntity report = getReportById(reportId);
+        em.remove(report);
     }
     
     @Override
@@ -207,8 +230,82 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             }
         }
         if(commentReports.size() < 1){
-            throw new NoResultException("No profile reports");
+            throw new NoResultException("No comment reports");
         }
         return commentReports;
+    }
+    
+    public void sentReportVerdictEmail(ReportEntity report) throws NoResultException{
+        final String username = "4103kms";
+        final String password = "4103kmsemail";
+        final String host = "localhost";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.user", username);
+
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        try {
+            ReportEntity currentReport = getReportById(report.getReportId());
+            if(currentReport.getReportType() == ReportTypeEnum.PROFILE){
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("4103kms@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedUser().getEmail()));
+                message.setSubject("Your KMS Account has been deactivated");
+                message.setText("Dear User," +'\n' + "Your account has been deactivated for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+
+                Transport.send(message);
+            }
+            if(currentReport.getReportType() == ReportTypeEnum.PROJECT){
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("4103kms@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedProject().getProjectOwner().getEmail()));
+                message.setSubject("The KMS Project " + currentReport.getReportedProject().getName() + " has been deactivated");
+                message.setText("Dear User," +'\n' + "Your project has been deactivated for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+
+                Transport.send(message);
+            }
+            if(currentReport.getReportType() == ReportTypeEnum.GROUP){
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("4103kms@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedGroup().getGroupOwner().getEmail()));
+                message.setSubject("The KMS Project " + currentReport.getReportedGroup().getName() + " has been deactivated");
+                message.setText("Dear User," +'\n' + "Your Group has been deactivated for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+
+                Transport.send(message);
+            }
+            if(currentReport.getReportType() == ReportTypeEnum.POST){
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("4103kms@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedPost().getPostOwner().getEmail()));
+                message.setSubject("A post you created has been deleted");
+                message.setText("Dear User," +'\n' + "Your Post has been deleted for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+
+                Transport.send(message);
+            }
+            if(currentReport.getReportType() == ReportTypeEnum.COMMENT){
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("4103kms@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedComment().getCommentOwner().getEmail()));
+                message.setSubject("A comment you created has been deleted");
+                message.setText("Dear User," +'\n' + "Your Comment has been deleted for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+
+                Transport.send(message);
+            }
+            
+
+            System.out.println("message sent");
+        } catch (MessagingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

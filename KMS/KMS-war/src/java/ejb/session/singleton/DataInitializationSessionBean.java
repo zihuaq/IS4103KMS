@@ -181,10 +181,10 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
         
         try {
-            projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", null, null), 1l, new ArrayList<>(Arrays.asList(37l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
             projectSessionBean.createNewProject(new ProjectEntity("Improve Sanitation in Nigeria", "Inadequate sanitation is a leading cause of poverty, largely due to premature mortality. Less than one third of the Nigerian population has access to basic sanitation.", new Date(), "Nigeria", "", 5000.0, "YPYAZ5KNH42QL"), 3l, new ArrayList<>(Arrays.asList(24l, 26l, 29l)));
             projectSessionBean.createNewProject(new ProjectEntity("Educating Farmers", "Educate market gardeners and farmers on protecting land, soil degradation and more efficient agricultural techniques.", new Date(), "Bolivia", "", 1000.0, "WUTXB4YPU76ZY"), 4l, new ArrayList<>(Arrays.asList(25l, 35l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", null, null), 5l, new ArrayList<>(Arrays.asList(26l, 27l, 29l, 33l, 37l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", 0.0, null), 5l, new ArrayList<>(Arrays.asList(26l, 27l, 29l, 33l, 37l)));
             projectSessionBean.createNewProject(new ProjectEntity("Green City Solutions", "Create and implement new green inventions such as city trees that are plant-based air filters and smart street pathway that converts kinetic energy of footsteps into electricity.", new Date(), "United Kingdom", "", 10000.0, "SDFU9MD6FJC2Q"), 5l, new ArrayList<>(Arrays.asList(30l, 32l, 34l, 36l)));
             projectSessionBean.createNewProject(new ProjectEntity("Resilience and Response Systems", "Promoting social cohesion and investing in community-led resilience and response systems. Helping people cope with adversity, through social protection and basic services.", new Date(), "Hong Kong", "", 3000.0, "3MRY2XUU4FMFC"), 6l, new ArrayList<>(Arrays.asList(31l, 39l)));
             projectSessionBean.joinProject(4l, 1l);
@@ -197,12 +197,13 @@ public class DataInitializationSessionBean {
         }
         
         try {
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ","Malaysia"), 3l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 4", "About SDG 4. Greetings From Korea. Started from locals who love kimchi and cucumber", "Korea"), 5l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 5", "About SDG 5. Greetings From Japan. Started froma group of locals who love sushi and expensive fruits", "Japan"), 6l);
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "About SDG 6. Greetings From Thailand. Started from a group of local street food seller in Bangkok", "Thailand"), 6l);      
+            
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l, Arrays.asList(2L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ","Malaysia"), 3l, Arrays.asList(3L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l, Arrays.asList(6L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 4", "About SDG 4. Greetings From Korea. Started from locals who love kimchi and cucumber", "Korea"), 5l, Arrays.asList(4L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 5", "About SDG 5. Greetings From Japan. Started froma group of locals who love sushi and expensive fruits", "Japan"), 6l, Arrays.asList(8L));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "About SDG 6. Greetings From Thailand. Started from a group of local street food seller in Bangkok", "Thailand"), 6l, Arrays.asList(9L));      
             groupSessionBean.joinGroup(4l, 1l);
             groupSessionBean.joinGroup(4l, 2l);
             groupSessionBean.joinGroup(4l, 3l);                  

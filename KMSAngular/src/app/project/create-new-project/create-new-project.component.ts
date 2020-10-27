@@ -33,7 +33,7 @@ export class CreateNewProjectComponent implements OnInit {
   constructor(public projectService: ProjectService,
     private tagService: TagService,
     private sessionService: SessionService,
-    private router: Router) { 
+    private router: Router) {
       this.newProject = new Project();
   }
 
@@ -85,7 +85,7 @@ export class CreateNewProjectComponent implements OnInit {
   removePicture() {
     this.selectedProfilePicture = undefined;
   }
-  
+
   create(createProjectForm: NgForm) {
     this.ownerId = this.sessionService.getCurrentUser().userId;
     this.selectedTagNames = $('#sdgselect2').val();
@@ -108,6 +108,7 @@ export class CreateNewProjectComponent implements OnInit {
 
     if (createProjectForm.valid) {
       this.newProject.dateCreated = new Date();
+      this.newProject.isActive = true;
       this.newProject.profilePicture = this.selectedProfilePicture;
       this.projectService.createNewProject(this.newProject, this.ownerId, this.tagIdsSelected).subscribe(
         response => {

@@ -69,6 +69,8 @@ public class PostEntity implements Serializable {
     private GroupEntity group;
     
     private boolean originalPostDeleted;
+    
+    private Boolean isActive;
 
     public PostEntity() {
         this.likers = new ArrayList<>();
@@ -198,6 +200,17 @@ public class PostEntity implements Serializable {
         this.originalPostDeleted = originalPostDeleted;
     }
 
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    
+    
+
     public GroupEntity getGroup() {
         return group;
     }
@@ -206,4 +219,5 @@ public class PostEntity implements Serializable {
         this.group = group;
     }
     
+
 }

@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Update Posting</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>  
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <strong>Update Material Resource Posting</strong>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="editMrp(mrpForm)" #mrpForm="ngForm">
+        <ion-item-group>
+          <ion-item>
+            <ion-label position="stacked">Material Resource Posting Name *</ion-label>
+            <ion-input required type="text" id="mrpName" [(ngModel)]="mrpToEdit.name" name="mrpName"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Quantity Required *</ion-label>
+            <ion-input required type="number" id="quantity" [(ngModel)]="mrpToEdit.totalQuantity" name="quantity"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Unit *</ion-label>
+            <ion-select id="unit" [(ngModel)]="mrpToEdit.unit" name="unit">
+              <ion-select-option value="item(s)">items(s)</ion-select-option>
+              <ion-select-option value="kg">kg</ion-select-option>
+              <ion-select-option value="m">m</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Description</ion-label>
+            <ion-input type="text" id="description" [(ngModel)]="mrpToEdit.description" name="description"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Date Required From *</ion-label>
+            <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
+              [(ngModel)]="startDate">
+            </ion-datetime>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Date Required To *</ion-label>
+            <ion-datetime required name="endDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
+              [(ngModel)]="endDate">
+            </ion-datetime>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Material Resource Tags *</ion-label>
+            <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
+            [ngModelOptions]="{standalone: true}" placeholder="Search tags"></ion-searchbar>
+            <ion-list lines="none" *ngIf="filteredTags.length > 0">
+              <ion-item *ngFor="let tag of filteredTags">
+                <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">
+                  <ion-text>
+                    <h3>{{tag.name}}</h3>
+                  </ion-text>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-list>
+              <ion-item *ngFor="let tag of chosenTags" lines="none">
+                <ion-chip>
+                  <ion-label>{{tag.name}} </ion-label>
+                  <ion-icon name="close-outline" (click)="removeTag(tag)"></ion-icon>
+                </ion-chip>
+              </ion-item>
+            </ion-list>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Location of resource</ion-label>
+          </ion-item>
+          <div id="map_canvas">
+          </div>
+          <ion-item>
+            <ion-label position="stacked">Latitude *</ion-label>
+            <ion-input type="text" id="latitude" [ngModel]="mrpToEdit.latitude" name="latitude" required disabled>
+            </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Longitude *</ion-label>
+            <ion-input type="text" id="longitude" [ngModel]="mrpToEdit.longitude" name="longitude" required disabled>
+            </ion-input>
+          </ion-item>
+        </ion-item-group>
+        <ion-button type="submit" [disabled]="!mrpForm.valid" expand="block">Update</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

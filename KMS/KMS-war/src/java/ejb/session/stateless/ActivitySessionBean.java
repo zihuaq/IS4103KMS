@@ -12,7 +12,7 @@ import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.UserEntity;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +30,9 @@ import util.enumeration.ActivityStatusEnum;
 @Stateless
 public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
+    @EJB(name = "MaterialResourcePostingSessionBeanLocal")
+    private MaterialResourcePostingSessionBeanLocal materialResourcePostingSessionBeanLocal;
+
     @EJB(name = "HumanResourcePostingSessionBeanLocal")
     private HumanResourcePostingSessionBeanLocal humanResourcePostingSessionBeanLocal;
 
@@ -46,13 +49,13 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     public Long createNewActivity(ActivityEntity newActivity, Long projectId) throws NoResultException {
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        LocalDate activityDate = LocalDate.parse(sdf.format(newActivity.getStartDate()));
-        LocalDate today = LocalDate.now();
-        if (activityDate.isEqual(today)) {
-            newActivity.setActivityStatus(ActivityStatusEnum.ONGOING);
-        } else {
+        LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
+        LocalDateTime startDate = LocalDateTime.parse(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(newActivity.getStartDate()));
+
+        if (startDate.isAfter(today)) {
             newActivity.setActivityStatus(ActivityStatusEnum.PLANNED);
+        } else {
+            newActivity.setActivityStatus(ActivityStatusEnum.ONGOING);
         }
         
         em.persist(newActivity);
@@ -97,21 +100,23 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         ActivityEntity activity = getActivityById(activityToUpdate.getActivityId());
         
         activity.setName(activityToUpdate.getName());
-        activity.setCountry(activityToUpdate.getCountry());
         activity.setStartDate(activityToUpdate.getStartDate());
         activity.setEndDate(activityToUpdate.getEndDate());
-        activity.setLocation(activityToUpdate.getLocation());
         activity.setDescription(activityToUpdate.getDescription());
+        activity.setLatitude(activityToUpdate.getLatitude());
+        activity.setLongitude(activityToUpdate.getLongitude());
         
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        LocalDate today = LocalDate.now();
-        LocalDate startDate = LocalDate.parse(sdf.format(activityToUpdate.getStartDate()));
-        LocalDate endDate = LocalDate.parse(sdf.format(activityToUpdate.getStartDate()));
+        LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime startDate = LocalDateTime.parse(sdf.format(activity.getStartDate()));
+        LocalDateTime endDate = LocalDateTime.parse(sdf.format(activity.getEndDate()));
 
-        if (startDate.isEqual(today)) {
-            activity.setActivityStatus(ActivityStatusEnum.ONGOING);
-        } else if (endDate.isBefore(today)) {
+        if (today.isAfter(endDate)) {
             activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+        } else if (today.isBefore(startDate)) {
+            activity.setActivityStatus(ActivityStatusEnum.PLANNED);
+        } else {
+            activity.setActivityStatus(ActivityStatusEnum.ONGOING);
         }
     }
     
@@ -149,7 +154,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         
         if (!activityToDelete.getMaterialResourcePostings().isEmpty()) {
             for (MaterialResourcePostingEntity mrp : activityToDelete.getMaterialResourcePostings()) {
-                mrp.setActivity(null);                
+                mrp.getActivities().remove(activityToDelete);
             }
             activityToDelete.getMaterialResourcePostings().clear();
         }
@@ -194,23 +199,64 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     
     @Override
     public void updateActivitiesStatus(List<ActivityEntity> activities) {
+        LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
         if (!activities.isEmpty()) {
             for (ActivityEntity activity: activities) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                LocalDate today = LocalDate.now();
-                LocalDate startDate = LocalDate.parse(sdf.format(activity.getStartDate()));
-                LocalDate endDate = LocalDate.parse(sdf.format(activity.getStartDate()));
+                LocalDateTime startDate = LocalDateTime.parse(sdf.format(activity.getStartDate()));
+                LocalDateTime endDate = LocalDateTime.parse(sdf.format(activity.getEndDate()));
 
-                if (startDate.isEqual(today)) {
-                    activity.setActivityStatus(ActivityStatusEnum.ONGOING);
-                } else if (endDate.isBefore(today)) {
+                if (today.isAfter(endDate)) {
                     activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+                } else if (!today.isBefore(startDate)) {
+                    activity.setActivityStatus(ActivityStatusEnum.ONGOING);
                 }
 
                 em.merge(activity);
                 em.flush();
             }
         }
+    }
+    
+    @Override
+    public List<MaterialResourcePostingEntity> getAllocatedResources(Long activityId) throws NoResultException {
+        ActivityEntity activity = this.getActivityById(activityId);
+        activity.getMaterialResourcePostings().size();
+        
+        return activity.getMaterialResourcePostings();
+    }
+    
+    @Override
+    public void allocateResource(Long activityId, Long mrpId, Double quantity) throws NoResultException {
+        ActivityEntity activity = this.getActivityById(activityId);
+        MaterialResourcePostingEntity mrp = materialResourcePostingSessionBeanLocal.getMrpById(mrpId);
+        
+        activity.getMaterialResourcePostings().add(mrp);
+        activity.getAllocatedQuantities().put(mrpId, quantity);
+        mrp.getActivities().add(activity);
+        mrp.setAllocatedQuantity(mrp.getAllocatedQuantity() + quantity);   
+    }
+    
+    @Override
+    public void updateAllocateQuantity(Long activityId, Long mrpId, Double newQuantity) throws NoResultException {
+        ActivityEntity activity = this.getActivityById(activityId);
+        MaterialResourcePostingEntity mrp = materialResourcePostingSessionBeanLocal.getMrpById(mrpId);
+        
+        Double diff = newQuantity - activity.getAllocatedQuantities().get(mrpId);
+        activity.getAllocatedQuantities().put(mrpId, newQuantity);
+        mrp.setAllocatedQuantity(mrp.getAllocatedQuantity() + diff);
+    }
+    
+    @Override
+    public void removeAllocation(Long activityId, Long mrpId) throws NoResultException {
+        ActivityEntity activity = this.getActivityById(activityId);
+        MaterialResourcePostingEntity mrp = materialResourcePostingSessionBeanLocal.getMrpById(mrpId);
+        
+        mrp.getActivities().remove(activity);
+        mrp.setAllocatedQuantity(mrp.getAllocatedQuantity() - activity.getAllocatedQuantities().get(mrpId));
+        activity.getMaterialResourcePostings().remove(mrp);
+        activity.getAllocatedQuantities().remove(mrpId);
     }
         
 }

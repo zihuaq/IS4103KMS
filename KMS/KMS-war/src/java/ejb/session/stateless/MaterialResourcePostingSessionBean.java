@@ -6,9 +6,11 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
+import entity.ActivityEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,6 +24,9 @@ import javax.persistence.Query;
  */
 @Stateless
 public class MaterialResourcePostingSessionBean implements MaterialResourcePostingSessionBeanLocal {
+
+    @EJB(name = "ActivitySessionBeanLocal")
+    private ActivitySessionBeanLocal activitySessionBeanLocal;
 
     @EJB(name = "TagSessionBeanLocal")
     private TagSessionBeanLocal tagSessionBeanLocal;
@@ -39,6 +44,7 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
         
         newMrp.setLackingQuantity(newMrp.getTotalQuantity());
         newMrp.setObtainedQuantity(0.0);
+        newMrp.setAllocatedQuantity(0.0);
         
         em.persist(newMrp);
         em.flush();
@@ -93,14 +99,37 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
     @Override
     public void deleteMaterialResourcePosting(Long mrpId) throws NoResultException {
         MaterialResourcePostingEntity mrp = getMrpById(mrpId);
-        if (mrp.getActivity() != null) {
-            mrp.getActivity().getMaterialResourcePostings().remove(mrp);
-            mrp.setActivity(null);
+        if (!mrp.getActivities().isEmpty()) {
+            for (ActivityEntity activity: mrp.getActivities()) {
+                activity.getMaterialResourcePostings().remove(mrp);
+                activity.getAllocatedQuantities().remove(mrpId);
+            }
+            mrp.getActivities().clear();
         }
         if (mrp.getProject() != null) {
             mrp.getProject().getMaterialResourcePostings().remove(mrp);
             mrp.setProject(null);
         }
         em.remove(mrp);
+    }
+    
+    @Override
+    public List<MaterialResourcePostingEntity> getListOfObtainedMrp(Long projectId, Long activityId) throws NoResultException {
+        
+        ActivityEntity activity = activitySessionBeanLocal.getActivityById(activityId);
+
+        Query query = em.createQuery("SELECT mrp FROM MaterialResourcePostingEntity mrp WHERE mrp.project.projectId = :inProjectId AND mrp.obtainedQuantity > 0.0 AND mrp.startDate <= :inStartDate AND mrp.endDate >= :inEndDate");
+        query.setParameter("inProjectId", projectId);
+        query.setParameter("inStartDate", activity.getStartDate());
+        query.setParameter("inEndDate", activity.getEndDate());
+
+        List<MaterialResourcePostingEntity> mrpList = query.getResultList();
+        List<MaterialResourcePostingEntity> availableMrpList = new ArrayList<>();
+        for (MaterialResourcePostingEntity mrp: mrpList) {
+            if (!mrp.getActivities().contains(activity)) {
+                availableMrpList.add(mrp);
+            }
+        }
+        return availableMrpList;
     }
 }

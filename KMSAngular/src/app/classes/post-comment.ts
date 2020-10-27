@@ -8,6 +8,7 @@ export class PostComment {
     post: Post;
     commentOwner: User;
     likers: User[];
+    isActive: boolean;
 
     constructor(postCommentId?: number, comment?: string, dateTime?: Date,
         post?: Post, commentOwner?: User, likers?: User[]) {
@@ -18,4 +19,4 @@ export class PostComment {
         this.commentOwner = commentOwner;
         this.likers = likers;
     }
-} 
+}

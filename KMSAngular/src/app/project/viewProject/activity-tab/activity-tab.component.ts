@@ -13,6 +13,7 @@ import { ProjectService } from 'src/app/project.service';
 import { User } from 'src/app/classes/user';
 import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
 import { HrpService } from 'src/app/hrp.service';
+import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
 
 declare var $: any;
 
@@ -47,6 +48,7 @@ export class ActivityTabComponent implements OnInit {
   project: Project;
   activitySelected: Activity;
   contributors: User[];
+  allocatedResources: MaterialResourcePosting[];
 
   constructor(private projectService: ProjectService,
     private activityService: ActivityService,
@@ -59,6 +61,7 @@ export class ActivityTabComponent implements OnInit {
     this.activitySelected = new Activity();
     this.activitySelected.joinedUsers = [];
     this.contributors = [];
+    this.allocatedResources = [];
    }
 
   ngOnInit(): void {
@@ -88,16 +91,20 @@ export class ActivityTabComponent implements OnInit {
         this.events = [];
         for (let activity of this.activities) {
           let event = {
-            start: startOfDay(new Date(this.formatDate(activity.startDate.toString()))),
-            end: endOfDay(new Date(this.formatDate(activity.endDate.toString()))),
+            start: new Date(this.formatDate(activity.startDate.toString())),
+            end: new Date(this.formatDate(activity.endDate.toString())),
             title: activity.name,
-            allDay: true
           }
           this.events.push(event);
         }
         this.refresh.next();
       }
     );
+  }
+
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    window.open(url, '_blank');
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -210,6 +217,19 @@ export class ActivityTabComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  clickAllocatedMrp(activity: Activity) {
+    this.activityService.getActivityById(activity.activityId).subscribe(
+      response => {
+        this.activitySelected = response;
+      }
+    );
+    this.activityService.getAllocatedResources(activity.activityId).subscribe(
+      response => {
+        this.allocatedResources = response;
+      }
+    );
   }
 
 }

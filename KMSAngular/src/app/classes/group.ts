@@ -12,6 +12,7 @@ export class Group {
   groupMembers: User[];
   groupAdmins: User[];
   sdgs: Tag[];
+  isActive: boolean;
   posts: Post[];
 
   constructor(
