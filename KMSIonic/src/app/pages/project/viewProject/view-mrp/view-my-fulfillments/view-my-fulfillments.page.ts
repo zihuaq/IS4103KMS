@@ -21,6 +21,9 @@ export class ViewMyFulfillmentsPage implements OnInit {
   projectId: number;
 
   fulfillmentList: Fulfillment[];
+  filteredList: Fulfillment[];
+  searchInput: string;
+  statusSelected: [];
 
   constructor(private projectService: ProjectService,
     private fulfillmentService: FulfillmentService,
@@ -31,6 +34,8 @@ export class ViewMyFulfillmentsPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController) {
       this.fulfillmentList = [];
+      this.filteredList = [];
+      this.statusSelected = [];
      }
 
   ngOnInit() {
@@ -38,13 +43,43 @@ export class ViewMyFulfillmentsPage implements OnInit {
     this.authenticationService.getCurrentUser().then(
       (user: User) => {
         this.loggedInUser = user;  
-        this.fulfillmentService.getListOfFulfillmentsByUserAndProject(this.loggedInUser.userId, this.projectId).subscribe(
-          response => {
-            this.fulfillmentList = response;
-          }
-        );    
+        this.refreshFulfillments(this.loggedInUser.userId, this.projectId);
       }
     );
+  }
+
+  refreshFulfillments(userId: number, projectId: number) {
+    this.fulfillmentService.getListOfFulfillmentsByUserAndProject(userId, projectId).subscribe(
+      response => {
+        this.fulfillmentList = response;
+        this.filter();
+      }
+    ); 
+  }
+
+  filter() {
+    this.filteredList = this.fulfillmentList;
+
+    if (this.searchInput && this.searchInput != "") {
+      this.filteredList = this.fulfillmentList.filter(
+        (fulfillment: Fulfillment) => {
+          return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase())
+        }
+      )
+    }
+
+    var statusSelectedEnums: FulfillmentStatus[] = [];
+    this.statusSelected.forEach(
+      (status: string) => {
+        statusSelectedEnums.push(FulfillmentStatus[status]);
+      }
+    )
+    if (statusSelectedEnums.length != 0 && statusSelectedEnums.length != 5) {
+      this.filteredList = this.filteredList.filter(
+        (fulfillment: Fulfillment) => {
+        return statusSelectedEnums.indexOf(fulfillment.status) > -1;
+      });
+    }
   }
 
   changehref(lat: number, long: number) {
@@ -79,11 +114,7 @@ export class ViewMyFulfillmentsPage implements OnInit {
       });
       modal.present();
       modal.onDidDismiss().then(() => {
-        this.fulfillmentService.getListOfFulfillmentsByUserAndProject(this.loggedInUser.userId, this.projectId).subscribe(
-          response => {
-            this.fulfillmentList = response;
-          }
-        );
+        this.refreshFulfillments(this.loggedInUser.userId, this.projectId);
       });
     }
   }
@@ -119,11 +150,7 @@ export class ViewMyFulfillmentsPage implements OnInit {
     this.fulfillmentService.deleteFulfillment(fulfillmentId).subscribe(
       response => {
         this.toast(true, "Fulfillment is deleted successfully");
-        this.fulfillmentService.getListOfFulfillmentsByUserAndProject(this.loggedInUser.userId, this.projectId).subscribe(
-          response => {
-            this.fulfillmentList = response;
-          }
-        );
+        this.refreshFulfillments(this.loggedInUser.userId, this.projectId);
       },
       error => {
         this.toast(false, error);

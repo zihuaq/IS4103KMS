@@ -5,6 +5,17 @@
     </ion-buttons>
     <ion-title>My Fulfillments</ion-title>
   </ion-toolbar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchInput" (ionChange)="filter()" #searchBar></ion-searchbar>
+  <ion-item>
+    <ion-label>Filter by Status</ion-label>
+    <ion-select multiple="true" [(ngModel)]="statusSelected" selectedText=" " (ionChange)="filter()">
+      <ion-select-option value="PLEDGED">Pledged</ion-select-option>
+      <ion-select-option value="ACCEPTED">Accepted</ion-select-option>
+      <ion-select-option value="PARTIALLYFULFILLED">Partially Fulfilled</ion-select-option>
+      <ion-select-option value="FULFILLED">Fulfilled</ion-select-option>
+      <ion-select-option value="REJECTED">Rejected</ion-select-option>
+    </ion-select>
+  </ion-item>
 </ion-header>
 
 <ion-content>
@@ -12,7 +23,7 @@
     No fulfillments at the moment
   </ion-card-content>
   <span *ngIf="fulfillmentList.length > 0">
-    <ion-card *ngFor="let fulfillment of fulfillmentList">
+    <ion-card *ngFor="let fulfillment of filteredList">
       <ion-item style="margin-top: 5px; margin-left: 5px; height: 35px;" lines="none">
         <ion-badge color="medium" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px;">{{fulfillment.status}}</ion-badge>
         <ion-badge *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; background-color: rgb(40, 80, 80);">{{fulfillment.status}}</ion-badge>

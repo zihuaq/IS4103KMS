@@ -16,6 +16,9 @@ export class ManageFulfillmentsModalPage implements OnInit {
   @Input() mrpId: number;
 
   fulfillmentList: Fulfillment[];
+  filteredList: Fulfillment[];
+  searchInput: string
+  statusSelected: [];
 
   constructor(private modalController: ModalController,
     private toastController: ToastController,
@@ -23,6 +26,8 @@ export class ManageFulfillmentsModalPage implements OnInit {
     private alertController: AlertController,
     private fulfillmentService: FulfillmentService) {
       this.fulfillmentList = [];
+      this.filteredList = [];
+      this.statusSelected = [];
      }
 
   ngOnInit() {
@@ -41,9 +46,36 @@ export class ManageFulfillmentsModalPage implements OnInit {
           }
         });
         this.fulfillmentList = list;
+        this.filter();
         console.log(this.fulfillmentList)
       }
     )
+  }
+
+  filter() {
+    this.filteredList = this.fulfillmentList;
+
+    if (this.searchInput && this.searchInput != "") {
+      this.filteredList = this.fulfillmentList.filter(
+        (fulfillment: Fulfillment) => {
+          var name = fulfillment.fulfillmentOwner.firstName + " " + fulfillment.fulfillmentOwner.lastName;
+          return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase()) || name.toLowerCase().includes(this.searchInput.toLowerCase()) || fulfillment.mra.description.toLowerCase().includes(this.searchInput.toLowerCase())
+        }
+      )
+    }
+
+    var statusSelectedEnums: FulfillmentStatus[] = [];
+    this.statusSelected.forEach(
+      (status: string) => {
+        statusSelectedEnums.push(FulfillmentStatus[status]);
+      }
+    )
+    if (statusSelectedEnums.length != 0 && statusSelectedEnums.length != 4) {
+      this.filteredList = this.filteredList.filter(
+        (fulfillment: Fulfillment) => {
+        return statusSelectedEnums.indexOf(fulfillment.status) > -1;
+      });
+    }
   }
 
   async handleFulfillmentActionSheet(fulfillmentToUpdate: Fulfillment) {

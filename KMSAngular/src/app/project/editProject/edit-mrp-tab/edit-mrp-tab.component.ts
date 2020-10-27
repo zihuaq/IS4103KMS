@@ -425,7 +425,7 @@ export class EditMrpTabComponent implements OnInit {
       this.filteredList = this.filteredList.filter(
         (fulfillment: Fulfillment) => {
           var name = fulfillment.fulfillmentOwner.firstName + " " + fulfillment.fulfillmentOwner.lastName;
-          return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase()) || name.toLowerCase().includes(this.searchInput.toLowerCase())
+          return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase()) || name.toLowerCase().includes(this.searchInput.toLowerCase()) || fulfillment.mra.description.toLowerCase().includes(this.searchInput.toLowerCase())
         }
       )
     }
@@ -442,10 +442,8 @@ export class EditMrpTabComponent implements OnInit {
     if (this.fulfilled == true) {
       statusSelected.push(FulfillmentStatus.FULFILLED);
     }
-    if (this.rejected == true) {
-      statusSelected.push(FulfillmentStatus.REJECTED);
-    }
-    if (statusSelected.length != 0 && statusSelected.length != 5) {
+
+    if (statusSelected.length != 0 && statusSelected.length != 4) {
       this.filteredList = this.filteredList.filter(
         (fulfillment: Fulfillment) => {
         return statusSelected.indexOf(fulfillment.status) > -1;
