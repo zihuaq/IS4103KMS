@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/mrp-details/{{mrp.materialResourcePostingId}}" (click)="clickReselect()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Fulfill Posting</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!selectedMra">
+    <ion-item>
+      <ion-label style="font-weight: bold;">Select Your Resource</ion-label>
+      <ion-button color="primary" fill="outline" slot="end" style="font-size: 12px;" (click)="presentAddMraModal()">Add</ion-button>
+    </ion-item>
+    <ion-card-content *ngIf="mraList.length == 0">
+      No material resource available at the moment
+    </ion-card-content>
+    <span *ngIf="mraList.length > 0">
+      <ion-card button (click)="clickSelectMra(mra)" *ngFor="let mra of mraList">
+        <ion-card-header>
+          <ion-card-title>{{mra.name}}</ion-card-title>
+          <ion-card-subtitle *ngIf="mra.description">{{mra.description}}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <span *ngIf="mra.startDate != null">
+            <b>Available from {{mra.startDate.toString().slice(0,15) | date }} to {{mra.endDate.toString().slice(0,15) | date }}</b> 
+            <br/>
+          </span>
+          {{mra.quantity | number:'1.0-2'}} {{mra.units}} available
+          <br/>
+          <ion-badge color="warning" style="margin-top: 5px; font-size: 12px;">
+            At location {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}
+          </ion-badge>
+          <br/>
+          <span *ngIf="mra.tags.length > 0">
+              <ion-label *ngFor="let tag of mra.tags" style="margin-right: 5px;">
+                <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
+              </ion-label>
+          </span>
+        </ion-card-content>
+      </ion-card>
+    </span>
+</ion-content>
+
+<ion-content *ngIf="selectedMra">
+  <ion-item>
+    <ion-label style="font-weight: bold;">Selected Resource</ion-label>
+    <ion-button color="primary" fill="outline" slot="end" style="font-size: 12px;" (click)="clickReselect()">Reselect</ion-button>
+  </ion-item>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{selectedMra.name}}</ion-card-title>
+      <ion-card-subtitle *ngIf="selectedMra.description">{{selectedMra.description}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <span *ngIf="selectedMra.startDate != null">
+        <b>Available from {{selectedMra.startDate.toString().slice(0,15) | date }} to {{selectedMra.endDate.toString().slice(0,15) | date }}</b> 
+        <br/>
+      </span>
+      {{selectedMra.quantity | number:'1.0-2'}} {{selectedMra.units}} available
+      <br/>
+      <ion-badge color="warning" style="margin-top: 5px; font-size: 11px;">
+        At location {{selectedMra.latitude | number:'1.1-6'}}, {{selectedMra.longitude | number:'1.1-6'}}
+      </ion-badge>
+      <br/>
+      <span *ngIf="selectedMra.tags.length > 0">
+          <ion-label *ngFor="let tag of selectedMra.tags" style="margin-right: 5px;">
+            <ion-badge color="primary" style="font-size: 11px;">{{tag.name}}</ion-badge>
+          </ion-label>
+      </span>
+    </ion-card-content>
+  </ion-card>
+  <ion-item>
+    <ion-label style="font-weight: bold;">Enter Quantity to Donate</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-input type="number" id="quantity" [(ngModel)]="totalPledgedQuantity" [max]="maxQuantity" name="quantity" required></ion-input>
+    <span style="font-size: small; margin-left: 5px;">{{selectedMra.units}} / {{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required</span>
+  </ion-item>
+  <br/>
+  <ion-button expand="block" size ="small" (click)="fulfillPosting()">Submit</ion-button>
+</ion-content>

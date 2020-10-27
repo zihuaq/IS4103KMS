@@ -18,17 +18,17 @@
         <ion-list>
 
           <ion-item>
-            <ion-label><b>Name: </b></ion-label>
+            <ion-label position="stacked"><b>Name: </b></ion-label>
             <ion-input type="text" id="name" name="name" [(ngModel)]="newProject.name" required #name="ngModel"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label><b>Description: </b></ion-label>
+            <ion-label position="stacked"><b>Description: </b></ion-label>
             <ion-textarea id="description" name="description" [(ngModel)]="newProject.description" required #description="ngModel"></ion-textarea>
           </ion-item>
 
           <ion-item>
-            <ion-label><b>Country: </b></ion-label>
+            <ion-label position="stacked"><b>Country: </b></ion-label>
             <input list="country-list" id="country" name="country" [(ngModel)]="newProject.country" required #country="ngModel" style="background: local; border: hidden;">              
               <datalist id="country-list"> 
                 <option value="Afghanistan">Afghanistan</option>
@@ -279,17 +279,28 @@
           </ion-item>
 
           <ion-item>
-            <ion-label text-wrap><b>Monetary Funding Required(USD): </b></ion-label>
+            <ion-label position="stacked"><b>Monetary Funding Required(USD): </b></ion-label>
             <ion-input id="amount" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" required #amount="ngModel"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label>SDG Tags: </ion-label>
+            <ion-label position="stacked">SDG Tags: </ion-label>
             <ion-select id="sdgs" name="sdgs" [(ngModel)]="newProject.sdgs" required #sdgs="ngModel" multiple="true">
-              <span *ngFor="let tag of tagList">
+              <span *ngFor="let tag of tags">
                 <ion-select-option [value]="tag">{{tag.name}}</ion-select-option>
               </span>              
             </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-avatar slot="start">
+              <img *ngIf="newProject.profilePicture" class="ion-border" [src]="newProject.profilePicture"
+                alt="Project profile picture">
+              <img *ngIf="!newProject.profilePicture" class="ion-border"
+                src="https://www.showplacerents.com/img/image-placeholder.png"
+                alt="Project profile picture">
+            </ion-avatar>
+            <ion-button (click)="choosePictureActionSheet()">Add profile picture</ion-button>
           </ion-item>
 
           <ion-button expand="full" type="submit" [disabled]="!createProjectForm.valid">

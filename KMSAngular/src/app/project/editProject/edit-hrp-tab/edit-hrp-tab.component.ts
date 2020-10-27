@@ -112,6 +112,8 @@ export class EditHrpTabComponent implements OnInit {
     console.log(event);
     this.newHrp.latitude = event.latLng.lat();
     this.newHrp.longitude = event.latLng.lng();
+    this.hrpToEdit.latitude = event.latLng.lat();
+    this.hrpToEdit.longitude = event.latLng.lng();
   }
 
   createHrp(hrpForm: NgForm) {

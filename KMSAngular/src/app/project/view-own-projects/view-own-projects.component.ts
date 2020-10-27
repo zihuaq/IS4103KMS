@@ -29,7 +29,11 @@ export class ViewOwnProjectsComponent implements OnInit {
   constructor(public projectService: ProjectService,
     public userService: UserService,
     private sessionService: SessionService,
-    private router: Router) { }
+    private router: Router) {
+      this.projectsJoined = [];
+      this.projectsManaged = [];
+      this.projectsOwned = [];
+     }
 
   ngOnInit(): void {
     this.checkAccessRight();

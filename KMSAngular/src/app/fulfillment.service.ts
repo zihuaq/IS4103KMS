@@ -60,6 +60,12 @@ export class FulfillmentService {
     );
   }
 
+  acceptFulfillment(fulfillmentId: number) {
+    return this.httpClient.post<any>(this.baseUrl + "/acceptFulfillment", fulfillmentId, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   deleteFulfillment(fulfillmentId: number): Observable<any> {
     return this.httpClient.delete<any>(this.baseUrl + "/deleteFulfillment/" + fulfillmentId).pipe(
       catchError(this.handleError)

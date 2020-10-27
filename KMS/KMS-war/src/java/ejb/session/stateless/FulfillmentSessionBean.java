@@ -99,7 +99,9 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
     public void updateQuantity(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
         
-        fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + (fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity()));
+        Double difference = fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity();
+        fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + difference);
+        fulfillment.getMra().setQuantity(fulfillment.getMra().getQuantity() + difference.intValue());
         fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
         fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity() - fulfillmentToUpdate.getReceivedQuantity());
         fulfillment.setStatus(fulfillmentToUpdate.getStatus());
@@ -111,6 +113,13 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         
         fulfillment.setStatus(FulfillmentStatusEnum.REJECTED);
         fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + fulfillment.getTotalPledgedQuantity());
+    }
+    
+    @Override
+    public void acceptFulfillment(Long fulfillmentId) throws NoResultException {
+        FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentId);
+        
+        fulfillment.setStatus(FulfillmentStatusEnum.ACCEPTED);
     }
     
     @Override
@@ -131,6 +140,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         }
         
         if (fulfillmentToDelete.getMra()!= null) {
+            fulfillmentToDelete.getMra().setQuantity(fulfillmentToDelete.getMra().getQuantity() + fulfillmentToDelete.getTotalPledgedQuantity().intValue());
             fulfillmentToDelete.setMra(null);
         }
         em.remove(fulfillmentToDelete);

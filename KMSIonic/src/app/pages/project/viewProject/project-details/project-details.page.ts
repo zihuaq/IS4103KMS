@@ -4,14 +4,15 @@ import { UserService } from 'src/app/services/user.service';
 import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
+import { ToastController, AlertController, ModalController } from '@ionic/angular';
 
 import { User } from 'src/app/classes/user';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/services/project.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { forkJoin } from 'rxjs';
+import { ProjectType } from 'src/app/enum/project-type.enum';
+import { ReportProjectPage } from '../report-project/report-project.page';
 
 @Component({
   selector: 'app-project-details',
@@ -29,10 +30,11 @@ export class ProjectDetailsPage implements OnInit {
   segment: string;
   loggedInUser: User;
   newsfeedPosts: Post[];
+  hasLoaded: boolean = false;
 
-  constructor(
-    private toastController: ToastController,
-    private alertController: AlertController,
+  constructor(public modalController: ModalController,
+    public toastController: ToastController,
+    public alertController: AlertController,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private projectService: ProjectService,
@@ -76,6 +78,7 @@ export class ProjectDetailsPage implements OnInit {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
         this.project = result[2];
+        this.hasLoaded = true;
         this.noOfMembers = this.project.projectMembers.length;
 
         this.owner = this.project.projectOwner;
@@ -176,5 +179,17 @@ export class ProjectDetailsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  get projectType(): typeof ProjectType{
+    return ProjectType;
+  }
+
+  async reportProject() {
+    const modal = await this.modalController.create({
+      component: ReportProjectPage,
+      componentProps: {projectId: this.projectId}
+    });
+    return await modal.present();
   }
 }
