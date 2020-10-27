@@ -257,13 +257,6 @@ const routes: Routes = [
       )
   },
   {
-    path: 'edit-hrp',
-    loadChildren: () =>
-      import('./pages/project/editProject/edit-hrp/edit-hrp.module').then(
-        (m) => m.EditHrpPageModule
-      )
-  },
-  {
     path: 'create-post',
     loadChildren: () =>
       import('./pages/create-post/create-post.module').then(
@@ -271,11 +264,81 @@ const routes: Routes = [
       )
   },
   {
-    path: 'hrp-details/:hrpId',
-    loadChildren: () =>
-      import('./pages/project/viewProject/hrp-details/hrp-details.module').then(
-        (m) => m.HrpDetailsPageModule
+    path: 'edit-post-comment-modal',
+    loadChildren: () => 
+      import('./pages/edit-post-comment-modal/edit-post-comment-modal.module').then( 
+        (m) => m.EditPostCommentModalPageModule
       )
+  },
+  {
+    path: 'share-post-modal',
+    loadChildren: () => 
+      import('./pages/share-post-modal/share-post-modal.module').then( 
+        (m) => m.SharePostModalPageModule
+      )
+  },
+  {
+    path: 'hrp-details/:hrpId',
+    loadChildren: () => 
+    import('./pages/project/viewProject/hrp-details/hrp-details.module').then( 
+      m => m.HrpDetailsPageModule
+      )
+  },
+  {
+    path: 'report-post-modal',
+    loadChildren: () => import('./pages/report-post-modal/report-post-modal.module').then( m => m.ReportPostModalPageModule)
+  },
+  {
+    path: 'create-hrp/:projectId',
+    loadChildren: () => import('./pages/project/editProject/create-hrp/create-hrp.module').then( m => m.CreateHrpPageModule)
+  },
+  {
+    path: 'edit-hrp-details/:hrpId',
+    loadChildren: () => import('./pages/project/editProject/edit-hrp-details/edit-hrp-details.module').then( m => m.EditHrpDetailsPageModule)
+  },
+  {
+    path: 'view-mrp/:mrpId',
+    loadChildren: () => import('./pages/project/viewProject/view-mrp/view-mrp.module').then( m => m.ViewMrpPageModule)
+  },
+  {
+    path: 'edit-mrp-details/:mrpId',
+    loadChildren: () => import('./pages/project/editProject/edit-mrp-details/edit-mrp-details.module').then( m => m.EditMrpDetailsPageModule)
+  },
+  {
+    path: 'create-mrp/:projectId',
+    loadChildren: () => import('./pages/project/editProject/create-mrp/create-mrp.module').then( m => m.CreateMrpPageModule)
+  },
+  {
+    path: 'report-project',
+    loadChildren: () => import('./pages/project/viewProject/report-project/report-project.module').then( m => m.ReportProjectPageModule)
+  },
+  {
+    path: 'mrp-details/:mrpId',
+    loadChildren: () => import('./pages/project/viewProject/mrp-details/mrp-details.module').then( m => m.MrpDetailsPageModule)
+  },
+  {
+    path: 'fulfill-posting/:mrpId',
+    loadChildren: () => import('./pages/project/viewProject/mrp-details/fulfill-posting/fulfill-posting.module').then( m => m.FulfillPostingPageModule)
+  },
+  {
+    path: 'add-mra-modal',
+    loadChildren: () => import('./pages/project/viewProject/mrp-details/add-mra-modal/add-mra-modal.module').then( m => m.AddMraModalPageModule)
+  },
+  {
+    path: 'view-my-fulfillments/:projectId',
+    loadChildren: () => import('./pages/project/viewProject/view-mrp/view-my-fulfillments/view-my-fulfillments.module').then( m => m.ViewMyFulfillmentsPageModule)
+  },
+  {
+    path: 'manage-fulfillments-modal',
+    loadChildren: () => import('./pages/project/editProject/manage-fulfillments-modal/manage-fulfillments-modal.module').then( m => m.ManageFulfillmentsModalPageModule)
+  },
+  {
+    path: 'update-quantity-modal',
+    loadChildren: () => import('./pages/project/editProject/manage-fulfillments-modal/update-quantity-modal/update-quantity-modal.module').then( m => m.UpdateQuantityModalPageModule)
+  },
+  {
+    path: 'receive-resource-modal',
+    loadChildren: () => import('./pages/project/editProject/manage-fulfillments-modal/receive-resource-modal/receive-resource-modal.module').then( m => m.ReceiveResourceModalPageModule)
   }
 ];
 

@@ -33,6 +33,7 @@ export class ViewAllProjectComponent implements OnInit {
     private sessionService: SessionService,
     private router: Router) {
       this.projects = [];
+      this.projectsJoined = [];
      }
 
   ngOnInit(): void {

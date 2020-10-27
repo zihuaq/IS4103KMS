@@ -6,12 +6,21 @@
       <span *ngIf="isMember">
         <ion-label tappable (click)="viewHrpDetails($event, hrp)">
           <h2>
-            <b>{{hrp.name}}</b>
+            <b style="font-size: large;">{{hrp.name}}</b>
             <span *ngIf="hasApplied(hrp.humanResourcePostingId)">
               (Joined)
             </span>
           </h2>
-          <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
+          <p><b>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</b></p>
+          <p>{{hrp.lackingSlots}} slots needed</p>
+          <p>
+            <ion-badge color="warning" style="font-size: 12px;">
+            At location {{hrp.latitude | number:'1.1-6'}}, {{hrp.longitude | number:'1.1-6'}}
+            </ion-badge>
+          </p>
+          <span *ngFor="let tag of hrp.tags" style="margin-right: 5px;">
+            <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
+          </span>
         </ion-label>
       </span>
       <span *ngIf="!isMember">
@@ -22,7 +31,16 @@
               (Filled)
             </span>
           </h2>
-          <p>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</p>
+          <p><b>{{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</b></p>
+          <p>{{hrp.lackingSlots}} slots needed</p>
+          <p>
+            <ion-badge color="warning" style="font-size: 12px;">
+              At location {{hrp.latitude | number:'1.1-6'}}, {{hrp.longitude | number:'1.1-6'}}
+            </ion-badge>
+          </p>
+          <span *ngFor="let tag of hrp.tags" style="margin-right: 5px;">
+            <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
+          </span>
         </ion-label>
       </span>
     </ion-item>

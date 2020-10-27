@@ -56,6 +56,7 @@ export class ViewOwnProjectsPage implements OnInit {
         this.userService.getProjectsJoined(this.loggedInUser.userId).subscribe(
           response => {
             this.projectsJoined = response;
+            this.filteredProjects = this.projectsJoined;
             if (this.projectsJoined.length > 0) {
               this.noProjects = false;
             }
@@ -81,13 +82,13 @@ export class ViewOwnProjectsPage implements OnInit {
     console.log(searchTerm)
 
     if (searchTerm && searchTerm != "") {
-      this.filteredProjects = this.projectsOwned.filter(
+      this.filteredProjects = this.projectsJoined.filter(
         (project) => {
           return project.name.toLowerCase().includes(searchTerm.toLowerCase())
         }
       )
     } else {
-      this.filteredProjects = this.projectsOwned
+      this.filteredProjects = this.projectsJoined;
     }
     this.preliminarySearchProject = this.filteredProjects.slice(0, 6)
   }

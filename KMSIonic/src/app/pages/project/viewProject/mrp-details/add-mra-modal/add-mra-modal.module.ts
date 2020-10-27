@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { EditHrpPageRoutingModule } from './edit-hrp-routing.module';
+import { AddMraModalPageRoutingModule } from './add-mra-modal-routing.module';
 
-import { EditHrpPage } from './edit-hrp.page';
+import { AddMraModalPage } from './add-mra-modal.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    EditHrpPageRoutingModule
+    AddMraModalPageRoutingModule
   ],
-  declarations: [EditHrpPage]
+  declarations: [AddMraModalPage]
 })
-export class EditHrpPageModule {}
+export class AddMraModalPageModule {}

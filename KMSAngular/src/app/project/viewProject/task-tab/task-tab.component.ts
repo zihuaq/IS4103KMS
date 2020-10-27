@@ -8,7 +8,7 @@ import { forkJoin } from 'rxjs';
 
 import * as moment from 'moment';
 import { gantt } from 'dhtmlx-gantt';
-import "./api.js";
+import "./../../../../assets/gantt-chart-api";
 
 declare var $: any;
 
@@ -25,236 +25,29 @@ export class TaskTabComponent implements OnInit {
   links: Link[];
   projectId: number;
   searchInput: string = "";
+  events: string[];
 
   constructor(private taskService: TaskService,
     private linkService: LinkService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router) {
-    
+    private activatedRoute: ActivatedRoute) {
+    this.events = [];
   }
 
   ngOnInit(): void {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
-    
-    forkJoin([this.taskService.getTasksByProject(this.projectId), this.linkService.getLinksByProject(this.projectId)]).subscribe(
-			response => {
-				this.tasks = response[0];
-				this.links = response[1];
-        console.log({tasks: this.tasks, links: this.links});
-        // var start = this.tasks[0].start_date.toString().substring(0, 20);
-        // var end = this.tasks[0].end_date.toString().substring(0, 20);
-        // console.log(start, new Date(start), moment(this.tasks[0].start_date.toString().substring(0, 20)).format("YYYY-MM-DD HH:mm"));
-				gantt.parse({tasks: this.tasks, links: this.links});
-			}
-    )
-    
-    //crud of tasks and links
-    gantt.attachEvent("onAfterTaskAdd", (id, task) => {
-      this.taskService.createNewTask(task, this.projectId).subscribe(
-        response => {
-          console.log(task, response);
-          gantt.changeTaskId(id, response);
-          $(document).Toasts('create', {
-            class: 'bg-success',
-            title: 'Success',
-            autohide: true,
-            delay: 2500,
-            body: 'Task is successfully created!',
-          });
-        });
-    }, null);
-
-    gantt.attachEvent("onAfterTaskUpdate", (id, task) => {
-      this.taskService.updateTask(task).subscribe(
-        response => {
-          $(document).Toasts('create', {
-            class: 'bg-success',
-            title: 'Success',
-            autohide: true,
-            delay: 2500,
-            body: 'Task is successfully updated!',
-          });
-        });
-    }, null);
-
-    gantt.attachEvent("onAfterTaskDelete", (id) => {
-      this.taskService.deleteTask(id).subscribe(
-        response => {
-          $(document).Toasts('create', {
-            class: 'bg-success',
-            title: 'Success',
-            autohide: true,
-            delay: 2500,
-            body: 'Task is successfully deleted!',
-          });
-        });
-    }, null);
-
-    gantt.attachEvent("onAfterLinkAdd", (id, link) => {
-      this.linkService.createNewLink(link).subscribe(
-        response => {
-          console.log(link, response);
-          gantt.changeLinkId(id, response);
-          $(document).Toasts('create', {
-            class: 'bg-success',
-            title: 'Success',
-            autohide: true,
-            delay: 2500,
-            body: 'Link is successfully created!',
-          });
-        });
-    }, null);
-
-    gantt.attachEvent("onAfterLinkDelete", (id) => {
-      this.linkService.deleteLink(id).subscribe(
-        response => {
-          $(document).Toasts('create', {
-            class: 'bg-success',
-            title: 'Success',
-            autohide: true,
-            delay: 2500,
-            body: 'Link is successfully deleted!',
-          });
-        });
-    }, null);
 
     //for search tasks
-    gantt.attachEvent("onBeforeTaskDisplay", (id) => {
-      if (this.hasSubstr(id)) {
-        return true;
-      } else {
-        return false;
-      }
-    }, null);
-
-    //for link validation
-    gantt.attachEvent("onLinkCreated", (link) => {
-      var check = this.checkLink(link, "link", null);
-
-      if (check[0] == false) {
-        $(document).Toasts('create', {
-          class: 'bg-warning',
-          title: 'Warning',
-          autohide: true,
-          delay: 6000,
-          body: check[1],
-        });
-        return false;
-      } else {
-        return true;
-      }
-    }, null);
-
-    gantt.attachEvent("onBeforeTaskChanged", (id, mode, task) => {
-      var sourceLinks = task.$source; 
-      var targetLinks = task.$target;
-      var isValid = true;
-      var body;
-
-      for (let linkId of sourceLinks) {
-        const link = gantt.getLink(linkId);
-        var check = this.checkLink(link, "sourceDrag", task);
-        if (check[0] == false) {
-          body = check[1];
-          isValid = false;
-          break;
-        }
-      }
-
-      if (!isValid) {
-        $(document).Toasts('create', {
-          class: 'bg-warning',
-          title: 'Warning',
-          autohide: true,
-          delay: 6000,
-          body: body,
-        });
-        return false;
-      } else {
-        for (let linkId of targetLinks) {
-          const link = gantt.getLink(linkId);
-          var check = this.checkLink(link, "targetDrag", task);
-          if (check[0] == false) {
-            body = check[1];
-            isValid = false;
-            break;
-          }
-        }
-        if (!isValid) {
-          $(document).Toasts('create', {
-            class: 'bg-warning',
-            title: 'Warning',
-            autohide: true,
-            delay: 6000,
-            body: body,
-          });
-          return false;
-        } else {
+    this.events.push(
+      gantt.attachEvent("onBeforeTaskDisplay", (id) => {
+        if (this.hasSubstr(id)) {
           return true;
-        }
-      }
-    }, null);
-
-    gantt.attachEvent("onLightboxSave", (id, task, is_new) => {
-      if (!is_new) {
-        var sourceLinks = task.$source; 
-        var targetLinks = task.$target;
-        var isValid = true;
-        var body;
-
-        for (let linkId of sourceLinks) {
-          const link = gantt.getLink(linkId);
-          var check = this.checkLink(link, "sourceLightbox", task);
-          if (check[0] == false) {
-            body = check[1];
-            isValid = false;
-            break;
-          }
-        }
-
-        if (!isValid) {
-          $(document).Toasts('create', {
-            class: 'bg-warning',
-            title: 'Warning',
-            autohide: true,
-            delay: 6000,
-            body: body,
-          });
-          return false;
         } else {
-          for (let linkId of targetLinks) {
-            const link = gantt.getLink(linkId);
-            var check = this.checkLink(link, "targetLightbox", task);
-            if (check[0] == false) {
-              body = check[1];
-              isValid = false;
-              break;
-            }
-          }
-          if (!isValid) {
-            $(document).Toasts('create', {
-              class: 'bg-warning',
-              title: 'Warning',
-              autohide: true,
-              delay: 6000,
-              body: body,
-            });
-            return false;
-          } else {
-            return true;
-          }
+          return false;
         }
-      }
-    }, null);
+      }, null)
+    );
 
-    gantt.config.lightbox.sections = [
-        {name:"description", height:50, map_to:"text", type:"textarea", focus:true},
-        {name:"period", height:50, map_to:"auto", type:"time", time_format:["%d","%m","%Y","%H:%i"]}
-    ];
-    gantt.locale.labels["section_description"] = "Task Name";
-    gantt.locale.labels["section_period"] = "Time Period";
-    gantt.config.time_picker = "%g:%i %A";
-
+    //quick info configuration
     gantt.plugins({
       quick_info: true,
     });
@@ -280,19 +73,9 @@ export class TaskTabComponent implements OnInit {
       "<br/><b>Duration:</b> " + durationStr +
       "<br/><b>Progress:</b> " + Math.round(task.progress * 100) + "%";
     };
-
-    gantt.templates.task_class = () => {return "task_color"};
+    gantt.config.quickinfo_buttons = [];
 
     //scaling - zooming in/out
-    var hourToStr = gantt.date.date_to_str("%h:%i %A");
-    var hourRangeFormat = (step) => {
-      return (date) => {
-        date = moment(date).startOf('date').toDate()
-        console.log(moment(date).startOf('date').toDate());
-        var intervalEnd = new Date(gantt.date.add(date, step, "hour").valueOf() - 1)
-        return hourToStr(date) + " - " + hourToStr(intervalEnd);
-      };
-    };
     var zoomConfig = {
       maxColumnWidth: 72,
       minColumnWidth: 32,
@@ -351,6 +134,7 @@ export class TaskTabComponent implements OnInit {
     gantt.ext.zoom.init(zoomConfig);
     gantt.ext.zoom.setLevel("day1");
 
+    gantt.templates.task_class = () => {return "task_color"};
     gantt.config.round_dnd_dates = false;
     gantt.config.fit_tasks = true;
     gantt.config.sort = true;
@@ -364,13 +148,31 @@ export class TaskTabComponent implements OnInit {
       }},
       {name:"end_date", label:"End Date", align: "center", width: 130, template: (task) => {
         return moment(task.end_date).format("DD/MM/YY h:mm A")
-      }},
-      {name:"add", label:""},
+      }}
     ];
+    gantt.clearAll();
+    gantt.config.readonly = true;
   }
   
   ngAfterViewInit() {
     gantt.init(this.ganttChart.nativeElement);
+    forkJoin([this.taskService.getTasksByProject(this.projectId), this.linkService.getLinksByProject(this.projectId)]).subscribe(
+			response => {
+				this.tasks = response[0];
+				this.links = response[1];
+        console.log({tasks: this.tasks, links: this.links});
+        // var start = this.tasks[0].start_date.toString().substring(0, 20);
+        // var end = this.tasks[0].end_date.toString().substring(0, 20);
+        // console.log(start, new Date(start), moment(this.tasks[0].start_date.toString().substring(0, 20)).format("YYYY-MM-DD HH:mm"));
+				gantt.parse({tasks: this.tasks, links: this.links});
+			}
+    )
+  }
+
+  ngOnDestroy(){
+    while (this.events.length) {
+      gantt.detachEvent(this.events.pop());
+    }
   }
   
   onChange() {
@@ -388,60 +190,6 @@ export class TaskTabComponent implements OnInit {
         return true;
     }
     return false;
-  }
-
-  checkLink(link, type, task) {
-    var source = gantt.getTask(link.source);
-    var target = gantt.getTask(link.target);
-    var isValid;
-    var body;
-
-    if (type == "sourceLightbox") {
-      source = task;
-    } else if (type == "targetLightbox") {
-      target = task;
-    }
-
-    if (link.type == 0 && target.start_date < source.end_date) { //finish_to_start
-      if (type == "link") {
-        body = "Target task cannot start before source task ends";
-      } else if (type == "sourceLightbox" || type == "sourceDrag") {
-        body = "Selected task cannot end after " + target.text + " starts"
-      } else if (type == "targetLightbox" || type == "targetDrag") {
-        body = "Selected task cannot start before " + source.text + " ends"
-      }
-      isValid = false;
-    } else if (link.type == 1 && target.start_date < source.start_date) { //start_to_start
-      if (type == "link") {
-        body = "Target task cannot start before source task starts";
-      } else if (type == "sourceLightbox" || type == "sourceDrag") {
-        body = "Selected task cannot start after " + target.text + " starts"
-      } else if (type == "targetLightbox" || type == "targetDrag") {
-        body = "Selected task cannot start before " + source.text + " starts"
-      }
-      isValid = false;
-    } else if (link.type == 2 && target.end_date < source.end_date) { //finish_to_finish
-      if (type == "link") {
-        body = "Target task cannot end before source task ends";
-      } else if (type == "sourceLightbox" || type == "sourceDrag") {
-        body = "Selected task cannot end after " + target.text + " ends"
-      } else if (type == "targetLightbox" || type == "targetDrag") {
-        body = "Selected task cannot end before " + source.text + " ends"
-      }
-      isValid = false;
-    } else if (link.type == 3 && target.end_date < source.start_date) { //start_to_finish
-      if (type == "link") {
-        body = "Target task cannot end before source task starts";
-      } else if (type == "sourceLightbox" || type == "sourceDrag") {
-        body = "Selected task cannot start after " + target.text + " ends"
-      } else if (type == "targetLightbox" || type == "targetDrag") {
-        body = "Selected task cannot end before " + source.text + " starts"
-      }
-      isValid = false;
-    } else {
-      isValid = true;
-    }
-    return [isValid, body];
   }
 
   export(type: string) {

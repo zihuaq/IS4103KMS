@@ -75,6 +75,30 @@ export class ActivityService {
     );
   }
 
+  getAllocatedResources(activityId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl+"/getAllocatedResources/" + activityId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  allocateResource(activityId: number, mrpId: number, quantity: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/allocateResource/" + activityId + "/" + mrpId + "/" + quantity, null, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateAllocateQuantity(activityId: number, mrpId: number, newQuantity: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/updateAllocateQuantity/" + activityId + "/" + mrpId + "/" + newQuantity, null, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  removeAllocation(activityId: number, mrpId: number) {
+    return this.httpClient.post<any>(this.baseUrl+"/removeAllocation/" + activityId + "/" + mrpId, null, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
     
