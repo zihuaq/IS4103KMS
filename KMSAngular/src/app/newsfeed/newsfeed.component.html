@@ -45,7 +45,7 @@
                             <a *ngIf="post.project"> {{post.project.name}}</a>
                             <a *ngIf="post.group"> {{post.group.name}}</a>
                         </span>
-                        <span class="description">{{post.postDate| date:'dd/MM/yyyy'}}</span>
+                        <span class="description">{{post.postDate| date}}</span>
                     </div>
                     <!-- /.user-block -->
                     <div class="card-tools">
@@ -80,7 +80,7 @@
                                 <a *ngIf="post.originalPost.project"> {{post.originalPost.project.name}}</a>
                                 <a *ngIf="post.originalPost.group"> {{post.originalPost.group.name}}</a>
                             </span>
-                            <span class="description">{{post.originalPost.postDate}}</span>
+                            <span class="description">{{post.originalPost.postDate | date}}</span>
                         </div>
                         <div class="card-body">
                             <br />
@@ -144,7 +144,7 @@
                                     *ngIf="loggedInUser.userId != comment.commentOwner.userId">
                                     <i class="fas fa-exclamation-circle"></i>
                                 </button>
-                                <span class="text-muted float-right"> {{comment.dateTime}} </span>
+                                <span class="text-muted float-right"> {{comment.dateTime | date}} </span>
                             </span><!-- /.username -->
                             <span class="text-muted float-right"
                                 *ngIf="!userHaveLikedComment(post.postId, comment.postCommentId)">
