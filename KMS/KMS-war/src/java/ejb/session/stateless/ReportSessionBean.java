@@ -11,10 +11,12 @@ import entity.PostCommentEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.ReportEntity;
+import entity.TagEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -34,8 +36,13 @@ import util.enumeration.ReportTypeEnum;
 @Stateless
 public class ReportSessionBean implements ReportSessionBeanLocal {
 
+    @EJB
+    private TagSessionBeanLocal tagSessionBean;
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
+    
+    
 
     @Override
     public ReportEntity reportProfile(ReportEntity report) throws NoResultException {
@@ -80,6 +87,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     public ReportEntity reportGroup(ReportEntity report) throws NoResultException {
         UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
         GroupEntity reportedGroup = em.find(GroupEntity.class, report.getReportedGroup().getGroupId());
+        
         if (reportOwner != null && reportedGroup != null) {
             em.persist(report);
             em.flush();
@@ -95,6 +103,24 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     public ReportEntity reportPost(ReportEntity report) throws NoResultException {
         UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
         PostEntity reportedPost = em.find(PostEntity.class, report.getReportedPost().getPostId());
+        if (reportOwner != null && reportedPost != null) {
+            em.persist(report);
+            em.flush();
+            return report;
+        } else if (reportedPost == null) {
+            throw new NoResultException("Post not found");
+        } else {
+            throw new NoResultException("User not found");
+        }
+    }
+    
+     public ReportEntity createPostReport(ReportEntity report, List<Long> tagIds) throws NoResultException {
+        UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
+        PostEntity reportedPost = em.find(PostEntity.class, report.getReportedPost().getPostId());
+        for (Long tagId : tagIds) {
+                TagEntity tag = tagSessionBean.getTagById(tagId);
+                report.getReportTags().add(tag);
+            }
         if (reportOwner != null && reportedPost != null) {
             em.persist(report);
             em.flush();

@@ -86,6 +86,13 @@ public class PostEntity implements Serializable {
         this.postOwner = postOwner;
         this.originalPost = originalPost;
     }
+
+    public PostEntity(Date postDate, String text) {
+        this.postDate = postDate;
+        this.text = text;
+    }
+    
+    
      
     public Long getPostId() {
         return postId;

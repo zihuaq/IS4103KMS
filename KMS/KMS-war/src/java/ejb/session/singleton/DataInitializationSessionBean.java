@@ -10,12 +10,15 @@ import Exception.CreateGroupException;
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
+import Exception.UserNotFoundException;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.MaterialResourcePostingSessionBeanLocal;
+import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.ProjectSessionBeanLocal;
+import ejb.session.stateless.ReportSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.FulfillmentEntity;
@@ -26,6 +29,8 @@ import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import entity.GroupEntity;
+import entity.PostEntity;
+import entity.ReportEntity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +52,12 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB
+    private ReportSessionBeanLocal reportSessionBean;
+
+    @EJB
+    private PostSessionBeanLocal postSessionBean;
 
     @EJB
     private FulfillmentSessionBeanLocal fulfillmentSessionBean;
@@ -71,6 +82,7 @@ public class DataInitializationSessionBean {
 
     @EJB
     private TagSessionBeanLocal tagSessionBean;
+    
     
     
 
@@ -134,13 +146,14 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("SDG 16", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 17", TagTypeEnum.SDG));
         
-        
+        UserEntity user5 = new UserEntity("Wendy", "Ang", new Date(), "Female", "5@5.com", "pw5", UserTypeEnum.INDIVIDUAL);
+        UserEntity user6 = new UserEntity("Lester", "Choo", new Date(), "Male", "6@6.com", "pw6", UserTypeEnum.INDIVIDUAL);
         userSessionBean.createNewUser(new UserEntity("Emma", "Tan", new Date(), "Female", "1@1.com", "pw1", new Date(), UserTypeEnum.ADMIN));
         userSessionBean.createNewUser(new UserEntity("Jason", "Lim", new Date(), "Male", "2@2.com", "pw2", new Date(), UserTypeEnum.ADMIN));
         userSessionBean.createNewUser(new UserEntity("Susan", "Chew", new Date(), "Female", "3@3.com", "pw3", new Date(), UserTypeEnum.ADMIN));
         userSessionBean.createNewUser(new UserEntity("Joshua", "Chua", new Date(), "Male", "4@4.com", "pw4", new Date(), UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("Wendy", "Ang", new Date(), "Female", "5@5.com", "pw5", UserTypeEnum.INDIVIDUAL));
-        userSessionBean.createNewUser(new UserEntity("Lester", "Choo", new Date(), "Male", "6@6.com", "pw6", UserTypeEnum.INDIVIDUAL));
+        userSessionBean.createNewUser(user5);
+        userSessionBean.createNewUser(user6);
         userSessionBean.createNewUser(new UserEntity("Qi Qi", "Chia", new Date(), "Female", "7@7.com", "pw7", UserTypeEnum.INDIVIDUAL));
         userSessionBean.createNewUser(new UserEntity("Benjamin", "Chu", new Date(), "Male", "8@8.com", "pw8", UserTypeEnum.INSTITUTE));
         userSessionBean.createNewUser(new UserEntity("Jasmin", "Xie", new Date(), "Female", "9@9.com", "pw9", UserTypeEnum.INSTITUTE));
@@ -210,6 +223,16 @@ public class DataInitializationSessionBean {
             groupSessionBean.joinGroup(4l, 6l);
             groupSessionBean.addAdmin(4l, 6l);
         } catch (CreateGroupException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            PostEntity post1 = new PostEntity(new Date(), "this is a post");
+            post1.setPostOwner(userSessionBean.getUserById(5L));
+            postSessionBean.createPost(post1);
+            //reportSessionBean.createPostReport(new ReportEntity(userSessionBean.getUserById(6L),"this is not a post", postSessionBean.getPostById(1L)), Arrays.asList(50L));
+            
+        } catch (UserNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
         
