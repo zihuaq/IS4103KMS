@@ -1,0 +1,9 @@
+<span *ngIf="files.length == 0">
+    There is no documents.
+</span>
+
+<span *ngIf="files.length > 0">
+    <ul class="list-group" *ngFor="let file of files">
+        <a class="list-group-item" (click)="viewFile(file)" style="color: blue;">{{formatFileKey(file)}}</a>
+    </ul>
+</span>

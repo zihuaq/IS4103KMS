@@ -80,7 +80,10 @@
                         </li>
                         <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
                           <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab">project Settings</a>
-                      </li>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-documents" data-toggle="pill" href="#document-tab">Documents</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body" id="custom-tabs-four-tabContent">
@@ -174,6 +177,9 @@
                               </div>
                             </div>
                           </form>
+                        </div>
+                        <div class="tab-pane fade" id="document-tab" role="tabpanel">
+                            <app-view-documents></app-view-documents>
                         </div>
                     </div>
                 </div>
