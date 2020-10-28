@@ -3,7 +3,8 @@ import { Location } from "@angular/common";
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
-
+import { Tag } from 'src/app/classes/tag';
+import { TagService } from 'src/app/services/tag.service';
 import { User } from 'src/app/classes/user';
 import { Group } from 'src/app/classes/group';
 import { GroupService } from 'src/app/services/group.service';

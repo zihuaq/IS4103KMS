@@ -64,6 +64,7 @@ public class GroupEntity implements Serializable {
     public GroupEntity() {
         groupMembers = new ArrayList<>();
         groupAdmins = new ArrayList<>();
+        this.sdgs = new ArrayList<>();
         this.posts = new ArrayList<>();
     }
 
