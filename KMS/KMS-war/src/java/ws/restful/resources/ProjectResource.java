@@ -15,7 +15,6 @@ import entity.ActivityEntity;
 import entity.DonationEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
-import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TaskEntity;
@@ -223,10 +222,7 @@ public class ProjectResource {
                 task.setProject(null);
                 task.setParentTask(null);
             }
-            for (PostEntity post : project.getPosts()) {
-                post.setPostOwner(null);
-                post.setProject(null);
-            }
+            project.getPosts().clear();
             for (ReviewEntity review: project.getReviews()) {
                 review.setProject(null);
                 review.setFrom(null);
