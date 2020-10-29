@@ -73,14 +73,18 @@
                         </button>
                         <button type="button" class="btn btn-tool"
                             *ngIf="loggedInUser.userId == post.postOwner.userId || isAdminOrOwner || loggedInUser.userType == UserType.ADMIN"
-                            data-toggle="modal" data-target="#modal-danger-post" (click)="postToDeleteId = post.postId"><i class="fas fa-times"></i>
+                            data-toggle="modal" data-target="#modal-danger-post"
+                            (click)="postToDeleteId = post.postId"><i class="fas fa-times"></i>
                         </button>
                     </div>
                     <!-- /.card-tools -->
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <span *ngIf="post.picture">
+
+                    <p>{{post.text}}</p>
+
+                    <span *ngIf="post.picture && !post.sharedGroupId && !post.sharedProjectId">
                         <div class="image-layer" data-toggle="modal" data-target="#modal-postPicture"
                             (click)="setPostImageToEnlarge(post)" style="position: relative;">
                             <img class="img-fluid pad" [src]="post.picture" alt="Photo"
@@ -91,7 +95,53 @@
                         </div>
                     </span>
 
-                    <p>{{post.text}}</p>
+                    <span *ngIf="post.sharedGroupId || post.sharedProjectId"
+                        style="display: flex; flex-direction: row; justify-content: center;">
+                        <div *ngIf="post.sharedGroupId" style="margin:2%;">
+                            <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo"
+                                style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
+                            <img *ngIf="!post.picture" class="img-fluid pad"
+                                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                alt="Photo" title="Click to view group!"
+                                style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
+                        </div>
+                        <div *ngIf="post.sharedProjectId" style="margin:2%;">
+                            <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo"
+                                style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
+                            <img *ngIf="!post.picture" class="img-fluid pad"
+                                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                alt="Photo" title="Click to view group!"
+                                style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
+                        </div>
+                        <div *ngIf="post.sharedGroupOrProjectDescription && post.sharedGroupOrProjectDescription != ''"
+                            style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                            <label> {{post.sharedGroupOrProjectName}} </label>
+                            <br />
+                            {{post.sharedGroupOrProjectDescription}}
+                            <br />
+                            <br />
+                            <a *ngIf="post.sharedGroupId" href="/groupDetails/{{post.sharedGroupId}}">
+                                <button type="button" class="btn btn-block btn-info btn-sm"
+                                    style="width: 50%; justify-self: center;"> View Group </button>
+                            </a>
+                            <a *ngIf="post.sharedProjectId" href="/projectDetails/{{post.sharedProjectId}}">
+                                <button type="button" class="btn btn-block btn-info btn-sm"
+                                    style="width: 50%; justify-self: center;"> View Project </button>
+                            </a>
+                        </div>
+                        <div *ngIf="!post.sharedGroupOrProjectDescription || post.sharedGroupOrProjectDescription == ''"
+                            style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                            <label> {{post.sharedGroupOrProjectName}} </label>
+                            <br />
+                            <p>No Description Available</p>
+                            <br />
+                            <br />
+                            <button type="button" class="btn btn-block btn-info btn-sm" *ngIf="post.sharedGroupId"
+                                routerLink="/groupDetails/{{post.sharedGroupId}}"> View Group </button>
+                            <button type="button" class="btn btn-block btn-info btn-sm" *ngIf="post.sharedProjectId"
+                                routerLink="/projectDetails/{{post.sharedProjectId}}"> View Project </button>
+                        </div>
+                    </span>
 
                     <div *ngIf="post.originalPost && !post.originalPostDeleted" class="shared-post">
                         <div class="user-block">
@@ -116,7 +166,10 @@
                         </div>
                         <div class="card-body">
                             <br />
-                            <span *ngIf="post.originalPost.picture">
+                            <p>{{post.originalPost.text}}</p>
+                            <br />
+                            <span
+                                *ngIf="post.originalPost.picture && !post.originalPost.sharedGroupId && !post.originalPost.sharedProjectId">
                                 <div class="image-layer" data-toggle="modal" data-target="#modal-postPicture"
                                     (click)="setPostImageToEnlarge(post.originalPost)" style="position: relative;">
                                     <img *ngIf="post.originalPost.picture" class="img-fluid pad"
@@ -128,8 +181,59 @@
                                     </div>
                                 </div>
                             </span>
-                            <br />
-                            <p>{{post.originalPost.text}}</p>
+                            <span *ngIf="post.originalPost.sharedGroupId || post.originalPost.sharedProjectId"
+                                style="display: flex; flex-direction: row; justify-content: center;">
+                                <div *ngIf="post.originalPost.sharedGroupId" style="margin:2%;">
+                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad" [src]="post.originalPost.picture" alt="Photo"
+                                        style="display: flex; margin-left: auto;margin-right: auto;" width=250
+                                        height=250>
+                                    <img *ngIf="!post.originalPost.picture" class="img-fluid pad"
+                                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                        alt="Photo" title="Click to view group!"
+                                        style="display: flex; margin-left: auto;margin-right: auto;" width=250
+                                        height=250>
+                                </div>
+                                <div *ngIf="post.originalPost.sharedProjectId" style="margin:2%;">
+                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad" [src]="post.originalPost.picture" alt="Photo"
+                                        style="display: flex; margin-left: auto;margin-right: auto;" width=250
+                                        height=250>
+                                    <img *ngIf="!post.originalPost.picture" class="img-fluid pad"
+                                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                        alt="Photo" title="Click to view group!"
+                                        style="display: flex; margin-left: auto;margin-right: auto;" width=250
+                                        height=250>
+                                </div>
+                                <div *ngIf="post.originalPost.sharedGroupOrProjectDescription && post.originalPost.sharedGroupOrProjectDescription != ''"
+                                    style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                                    <label> {{post.originalPost.sharedGroupOrProjectName}} </label>
+                                    <br />
+                                    {{post.originalPost.sharedGroupOrProjectDescription}}
+                                    <br />
+                                    <br />
+                                    <a *ngIf="post.originalPost.sharedGroupId" href="/groupDetails/{{post.originalPost.sharedGroupId}}">
+                                        <button type="button" class="btn btn-block btn-info btn-sm"
+                                            style="width: 50%; justify-self: center;"> View Group </button>
+                                    </a>
+                                    <a *ngIf="post.originalPost.sharedProjectId" href="/projectDetails/{{post.originalPost.sharedProjectId}}">
+                                        <button type="button" class="btn btn-block btn-info btn-sm"
+                                            style="width: 50%; justify-self: center;"> View Project </button>
+                                    </a>
+                                </div>
+                                <div *ngIf="!post.originalPost.sharedGroupOrProjectDescription || post.originalPost.sharedGroupOrProjectDescription == ''"
+                                    style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                                    <label> {{post.originalPost.sharedGroupOrProjectName}} </label>
+                                    <br />
+                                    <p>No Description Available</p>
+                                    <br />
+                                    <br />
+                                    <button type="button" class="btn btn-block btn-info btn-sm"
+                                        *ngIf="post.originalPost.sharedGroupId" routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}">
+                                        View Group </button>
+                                    <button type="button" class="btn btn-block btn-info btn-sm"
+                                        *ngIf="post.originalPost.sharedProjectId"
+                                        routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}"> View Project </button>
+                                </div>
+                            </span>
                         </div>
                     </div>
 
@@ -282,8 +386,7 @@
     <div class="modal-dialog">
         <div class="modal-content bg-secondary">
             <div class="modal-header">
-                <h4 class="modal-title">Share
-                    Post</h4>
+                <h4 class="modal-title">Share Post</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
             </div>
