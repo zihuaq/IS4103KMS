@@ -9,6 +9,7 @@ import Exception.DuplicateLikeException;
 import Exception.LikeNotFoundException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.GroupEntity;
 import entity.PostCommentEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
@@ -31,6 +32,9 @@ import ws.restful.model.SharePostToProjectOrGroupsReq;
  */
 @Stateless
 public class PostSessionBean implements PostSessionBeanLocal {
+
+    @EJB
+    private GroupSessionBeanLocal groupSessionBean;
 
     @EJB
     private ProjectSessionBeanLocal projectSessionBean;
@@ -73,6 +77,16 @@ public class PostSessionBean implements PostSessionBeanLocal {
                     project.getPosts().add(post);
                 } else {
                     throw new NoResultException("Project does not exist.");
+                }
+            } else if (post.getGroup() != null) {
+                GroupEntity group = groupSessionBean.getGroupById(post.getGroup().getGroupId());
+                if (group != null) {
+                    em.persist(post);
+                    em.flush();
+                    user.getPosts().add(post);
+                    group.getPosts().add(post);
+                } else {
+                    throw new NoResultException("Group does not exist.");
                 }
             } else {
                 em.persist(post);
@@ -135,6 +149,21 @@ public class PostSessionBean implements PostSessionBeanLocal {
             Collections.sort(postForProjectNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
             Collections.reverse(postForProjectNewsFeed);
             return postForProjectNewsFeed;
+        } else {
+            throw new NoResultException("Project does not exist.");
+        }
+    }
+
+    @Override
+    public List<PostEntity> getPostForGroupNewsfeed(Long groupId) throws NoResultException {
+        GroupEntity group = groupSessionBean.getGroupById(groupId);
+
+        if (group != null) {
+            List<PostEntity> postForGroupNewsFeed = group.getPosts();
+
+            Collections.sort(postForGroupNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
+            Collections.reverse(postForGroupNewsFeed);
+            return postForGroupNewsFeed;
         } else {
             throw new NoResultException("Project does not exist.");
         }
@@ -332,6 +361,41 @@ public class PostSessionBean implements PostSessionBeanLocal {
     }
 
     @Override
+    public void sharePostToGroups(Long postToShareId, Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) throws NoResultException {
+        List<Long> groupIds = sharePostToProjectOrGroupsReq.getProjectsOrGroupsIds();
+        PostEntity postToShare = em.find(PostEntity.class, postToShareId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (postToShare != null && user != null) {
+            for (int i = 0; i < groupIds.size(); i++) {
+                GroupEntity group = em.find(GroupEntity.class, groupIds.get(i));
+                if (group != null) {
+                    PostEntity post = new PostEntity();
+                    post.setText(sharePostToProjectOrGroupsReq.getText());
+                    post.setPostDate(sharePostToProjectOrGroupsReq.getPostDate());
+                    post.setPostOwner(user);
+                    if (postToShare.getOriginalPost() == null) {
+                        post.setOriginalPost(postToShare);
+                    } else {
+                        post.setOriginalPost(postToShare.getOriginalPost());
+                    }
+                    post.setGroup(group);
+                    em.persist(post);
+                    em.flush();
+                    postToShare.getSharedPosts().add(post);
+                    user.getPosts().add(post);
+                    group.getPosts().add(post);
+                } else {
+                    throw new NoResultException("Project not found");
+                }
+            }
+
+        } else {
+            throw new NoResultException("Post or comment owner not found");
+        }
+    }
+    
+    @Override
     public void deletePostById(Long postId) throws NoResultException {
         PostEntity post = em.find(PostEntity.class, postId);
 
@@ -362,6 +426,8 @@ public class PostSessionBean implements PostSessionBeanLocal {
 
             if (post.getProject() != null) {
                 post.getProject().getPosts().remove(post);
+            } else if (post.getGroup() != null) {
+                post.getGroup().getPosts().remove(post);
             }
             em.remove(post);
         } else {

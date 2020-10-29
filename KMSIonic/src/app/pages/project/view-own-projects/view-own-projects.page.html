@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      My Projects      
+      My Projects
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="createProject()">
@@ -12,8 +12,7 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm"
-    (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm" (ionChange)="setFilteredItems(searchTerm)" #searchBar>
   </ion-searchbar>
 </ion-header>
 

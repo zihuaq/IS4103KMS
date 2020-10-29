@@ -14,6 +14,10 @@ import { ProjectService } from '../project.service';
 import { Project } from '../classes/project';
 import { SharePostToProjectOrGroupsReq } from '../models/SharePostToProjectOrGroupsReq';
 import { number } from 'currency-codes';
+import { ReportType } from '../classes/report-type.enum';
+import { ReportService } from '../report.service';
+import { GroupService } from '../group.service';
+import { Group } from '../classes/group';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -37,41 +41,47 @@ export class NewsfeedComponent implements OnInit {
   commentToDeleteId: number;
   postToShare: Post;
   report: Report;
-  reportTags: Tag[];
-  selectedTags: Tag[];
-  selectedTagNames: string[];
+  postReportTags: Tag[];
+  commentReportTags: Tag[];
   postToReport: Post;
+  commentToReport: PostComment;
   isAdminOrOwner: boolean;
   isMember: boolean;
   project: Project;
   shareOption: any = [
     { id: "follower", value: "Followers" },
-    { id: "project", value: "Project(s)" }
+    { id: "project", value: "Project(s)" },
+    { id: "group", value: "Group(s)" }
   ];
   selectedShareOption: string;
+  sharePostText: string = "";
+  group: Group;
 
   constructor(
     private sessionService: SessionService,
     private userService: UserService,
     private postService: PostService,
     private tagService: TagService,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private reportService: ReportService,
+    private groupService: GroupService
   ) { }
 
   ngOnInit(): void {
-    bsCustomFileInput.init();
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     if (this.newsfeedType == "project") {
       forkJoin([
         this.userService.getUser(loggedInUserId.toString()),
         this.postService.getPostForProjectNewsfeed(this.id),
         this.tagService.getAllPostReportTags(),
-        this.projectService.getProjectById(this.id)
+        this.projectService.getProjectById(this.id),
+        this.tagService.getAllCommentReportTags()
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
-        this.reportTags = result[2];
+        this.postReportTags = result[2];
         this.project = result[3];
+        this.commentReportTags = result[4];
         let memberIndex = this.project.projectMembers.findIndex(
           (user) => user.userId == this.loggedInUser.userId
         );
@@ -84,8 +94,14 @@ export class NewsfeedComponent implements OnInit {
         } else if (memberIndex > -1) {
           this.isMember = true
         }
-        $('#reportnewsfeedselect2').select2({
-          data: this.reportTags.map((item) => {
+        $('#reportPostselect2').select2({
+          data: this.postReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#reportCommentselect2').select2({
+          data: this.commentReportTags.map((item) => {
             return item.name;
           }),
           allowClear: true,
@@ -96,19 +112,84 @@ export class NewsfeedComponent implements OnInit {
           }),
           allowClear: true,
         });
-        console.log(this.loggedInUser.projectsJoined)
+        $('#shareToGroupselect2').select2({
+          data: this.loggedInUser.groupsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        bsCustomFileInput.init();
+      });
+    } else if (this.newsfeedType == "group") {
+      forkJoin([
+        this.userService.getUser(loggedInUserId.toString()),
+        this.postService.getPostForGroupNewsfeed(this.id),
+        this.tagService.getAllPostReportTags(),
+        this.groupService.getGroupById(this.id),
+        this.tagService.getAllCommentReportTags()
+      ]).subscribe((result) => {
+        this.loggedInUser = result[0];
+        this.newsfeedPosts = result[1];
+        this.postReportTags = result[2];
+        this.group = result[3];
+        this.commentReportTags = result[4];
+        let memberIndex = this.group.groupMembers.findIndex(
+          (user) => user.userId == this.loggedInUser.userId
+        );
+        let adminIndex = this.group.groupAdmins.findIndex(
+          (user) => user.userId == this.loggedInUser.userId
+        );
+        if (this.group.groupOwner.userId == this.loggedInUser.userId || adminIndex > -1) {
+          this.isAdminOrOwner = true;
+          this.isMember = true;
+        } else if (memberIndex > -1) {
+          this.isMember = true
+        }
+        $('#reportPostselect2').select2({
+          data: this.postReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#reportCommentselect2').select2({
+          data: this.commentReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#shareToProjectselect2').select2({
+          data: this.loggedInUser.projectsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#shareToGroupselect2').select2({
+          data: this.loggedInUser.groupsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        bsCustomFileInput.init();
       });
     } else {
       forkJoin([
         this.userService.getUser(loggedInUserId.toString()),
         this.postService.getPostForUserNewsfeed(loggedInUserId),
         this.tagService.getAllPostReportTags(),
+        this.tagService.getAllCommentReportTags()
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
-        this.reportTags = result[2];
-        $('#reportnewsfeedselect2').select2({
-          data: this.reportTags.map((item) => {
+        this.postReportTags = result[2];
+        this.commentReportTags = result[3];
+        $('#reportPostselect2').select2({
+          data: this.postReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#reportCommentselect2').select2({
+          data: this.commentReportTags.map((item) => {
             return item.name;
           }),
           allowClear: true,
@@ -119,6 +200,13 @@ export class NewsfeedComponent implements OnInit {
           }),
           allowClear: true,
         });
+        $('#shareToGroupselect2').select2({
+          data: this.loggedInUser.groupsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        bsCustomFileInput.init();
       });
     }
   }
@@ -157,6 +245,8 @@ export class NewsfeedComponent implements OnInit {
         this.createdPost.postOwner = this.loggedInUser;
         if (this.newsfeedType == "project") {
           this.createdPost.project = this.project;
+        } else if (this.newsfeedType == "group") {
+          this.createdPost.group = this.group;
         }
 
         this.postService.createPost(this.createdPost).subscribe(
@@ -220,6 +310,12 @@ export class NewsfeedComponent implements OnInit {
     if (this.newsfeedType == "project") {
       this.postService
         .getPostForProjectNewsfeed(this.id)
+        .subscribe((result) => {
+          this.newsfeedPosts = result;
+        });
+    } else if (this.newsfeedType == "group") {
+      this.postService
+        .getPostForGroupNewsfeed(this.id)
         .subscribe((result) => {
           this.newsfeedPosts = result;
         });
@@ -299,10 +395,10 @@ export class NewsfeedComponent implements OnInit {
     });
   }
 
-  sharePost(text: string) {
+  sharePost() {
     if (this.selectedShareOption == "project") {
       let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
-      sharePostToProjectOrGroupsReq.text = text;
+      sharePostToProjectOrGroupsReq.text = this.sharePostText;
       sharePostToProjectOrGroupsReq.postDate = new Date();
       let selectedProjectNames = $('#shareToProjectselect2').val();
       let selectedProjectIds = [];
@@ -333,11 +429,54 @@ export class NewsfeedComponent implements OnInit {
               body: 'Post Shared!',
             });
             this.updateNewsfeed();
+            $('#shareToProjectselect2').val(null).trigger('change');
+            this.sharePostText = "";
+            this.selectedShareOption = "";
+            $('#project').prop('checked', false);
+          });
+      }
+    } else if (this.selectedShareOption == "group") {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = this.sharePostText;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedGroupNames = $('#shareToGroupselect2').val();
+      let selectedGroupIds = [];
+      this.loggedInUser.groupsJoined.forEach((element) => {
+        if (selectedGroupNames.includes(element.name)) {
+          selectedGroupIds.push(element.groupId);
+        }
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedGroupIds;
+      if (selectedGroupIds.length == 0) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Please select an audience for your shared post.",
+        });
+      } else {
+        this.postService
+          .sharePostToGroups(this.postToShare.postId, this.loggedInUser.userId, sharePostToProjectOrGroupsReq)
+          .subscribe(() => {
+            this.postToShare = null;
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 2500,
+              body: 'Post Shared!',
+            });
+            this.updateNewsfeed();
+            $('#shareToGroupselect2').val(null).trigger('change');
+            this.sharePostText = "";
+            this.selectedShareOption = "";
+            $('#group').prop('checked', false);
           });
       }
     } else if (this.selectedShareOption == "follower") {
       let post = new Post();
-      post.text = text;
+      post.text = this.sharePostText;
       post.postDate = new Date();
       this.postService
         .sharePost(this.postToShare.postId, this.loggedInUser.userId, post)
@@ -351,6 +490,9 @@ export class NewsfeedComponent implements OnInit {
             body: 'Post Shared!',
           });
           this.updateNewsfeed();
+          this.sharePostText = "";
+          this.selectedShareOption = "";
+          $('#follower').prop('checked', false);
         });
     } else {
       $(document).Toasts('create', {
@@ -363,7 +505,40 @@ export class NewsfeedComponent implements OnInit {
     }
   }
 
-  reportPost() { }
+  reportPost() {
+    let selectedTags = [];
+    let selectedTagNames = $('#reportPostselect2').val();
+    if (selectedTagNames.length == 0) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Report',
+        autohide: true,
+        delay: 2500,
+        body: 'Please select at least one concern',
+      });
+      return;
+    }
+    this.postReportTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        selectedTags.push(element);
+      }
+    });
+    this.report.reportType = ReportType.POST;
+    this.report.reportOwner = this.loggedInUser;
+    this.report.reportedPost = this.postToReport;
+    this.report.reportTags = selectedTags;
+    this.report.resolved = false;
+    this.reportService.reportPost(this.report).subscribe(() => {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Report Submitted Successfully',
+        autohide: true,
+        delay: 2500,
+      });
+      $('#report-post-modal').modal('hide');
+      $('#reportPostselect2').val(null).trigger('change');
+    });
+  }
 
   setPostToShare(postId: number) {
     let post = this.newsfeedPosts.find((post) => post.postId == postId);
@@ -409,6 +584,50 @@ export class NewsfeedComponent implements OnInit {
       (comment) => comment.postCommentId == commentId
     );
     this.editingComment = comment;
+  }
+
+  setCommentToReport(postId: number, commentId: number) {
+    let post = this.newsfeedPosts.find((post) => post.postId == postId);
+    let comment = post.comments.find(
+      (comment) => comment.postCommentId == commentId
+    );
+    this.commentToReport = comment;
+    this.report = new Report();
+  }
+
+  reportComment() {
+    let selectedTags = [];
+    let selectedTagNames = $('#reportCommentselect2').val();
+    if (selectedTagNames.length == 0) {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Unable to submit Report',
+        autohide: true,
+        delay: 2500,
+        body: 'Please select at least one concern',
+      });
+      return;
+    }
+    this.commentReportTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        selectedTags.push(element);
+      }
+    });
+    this.report.reportType = ReportType.COMMENT;
+    this.report.reportOwner = this.loggedInUser;
+    this.report.reportedComment = this.commentToReport;
+    this.report.reportTags = selectedTags;
+    this.report.resolved = false;
+    this.reportService.reportComment(this.report).subscribe(() => {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Report Submitted Successfully',
+        autohide: true,
+        delay: 2500,
+      });
+      $('#report-comment-modal').modal('hide');
+      $('#reportCommentselect2').val(null).trigger('change');
+    });
   }
 
   onSelectedShareOptionChange(event) {

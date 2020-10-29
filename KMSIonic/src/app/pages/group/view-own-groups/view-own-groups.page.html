@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      My Groups      
+      My Groups
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="createGroup()">
@@ -12,20 +12,19 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm"
-    (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm" (ionChange)="setFilteredItems(searchTerm)" #searchBar>
   </ion-searchbar>
 </ion-header>
 
 <ion-content>
-  <span *ngFor="let group of groupsOwned">
+  <span *ngFor="let group of groupsJoined">
     <ion-card tappable (click)="viewGroupDetails($event, group)">
       <ion-card-header>
         <b>{{group.name}}</b>&nbsp;
         <ion-badge color="primary">{{group.status}}</ion-badge>
       </ion-card-header>
       <ion-card-content>
-        {{group.description}}    
+        {{group.description}}
       </ion-card-content>
     </ion-card>
   </span>
