@@ -18,6 +18,7 @@ import { ReportType } from '../classes/report-type.enum';
 import { ReportService } from '../report.service';
 import { GroupService } from '../group.service';
 import { Group } from '../classes/group';
+import { UserType } from '../classes/user-type.enum';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -33,11 +34,14 @@ export class NewsfeedComponent implements OnInit {
   @Input()
   id: number
   selectedFile: string | ArrayBuffer;
+  selectedFileName: string | ArrayBuffer;
   postContent: string;
   createdPost: Post;
   loggedInUser: User;
   newsfeedPosts: Post[];
+  filteredNewsfeedPosts: Post[];
   editingComment: PostComment;
+  postToDeleteId: number;
   commentToDeleteId: number;
   postToShare: Post;
   report: Report;
@@ -56,6 +60,15 @@ export class NewsfeedComponent implements OnInit {
   selectedShareOption: string;
   sharePostText: string = "";
   group: Group;
+  searchString: string = "";
+  filterOptions: any = [
+    { id: "All", value: "All" },
+    { id: "Shared posts", value: "Shared Posts" },
+    { id: "Posts with images", value: "Posts with images" }
+  ]
+  selectedFilterOption: string
+  postImageToEnlarge: Post
+  UserType = UserType;
 
   constructor(
     private sessionService: SessionService,
@@ -79,6 +92,7 @@ export class NewsfeedComponent implements OnInit {
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
+        this.filteredNewsfeedPosts = this.newsfeedPosts;
         this.postReportTags = result[2];
         this.project = result[3];
         this.commentReportTags = result[4];
@@ -130,6 +144,7 @@ export class NewsfeedComponent implements OnInit {
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
+        this.filteredNewsfeedPosts = this.newsfeedPosts;
         this.postReportTags = result[2];
         this.group = result[3];
         this.commentReportTags = result[4];
@@ -180,6 +195,7 @@ export class NewsfeedComponent implements OnInit {
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
+        this.filteredNewsfeedPosts = this.newsfeedPosts;
         this.postReportTags = result[2];
         this.commentReportTags = result[3];
         $('#reportPostselect2').select2({
@@ -220,6 +236,7 @@ export class NewsfeedComponent implements OnInit {
       };
       console.log(event.target.files[0]);
       reader.readAsDataURL(event.target.files[0]);
+      this.selectedFileName = event.target.files[0].name;
     } else {
       this.selectedFile = undefined;
     }
@@ -258,6 +275,8 @@ export class NewsfeedComponent implements OnInit {
               delay: 2500,
               body: 'Post created!',
             });
+            this.postContent = null;
+            this.selectedFile = null;
             this.updateNewsfeed();
           },
           (err) => {
@@ -312,18 +331,21 @@ export class NewsfeedComponent implements OnInit {
         .getPostForProjectNewsfeed(this.id)
         .subscribe((result) => {
           this.newsfeedPosts = result;
+          this.updateNewsFeedAccordingToRefineOptions();
         });
     } else if (this.newsfeedType == "group") {
       this.postService
         .getPostForGroupNewsfeed(this.id)
         .subscribe((result) => {
           this.newsfeedPosts = result;
+          this.updateNewsFeedAccordingToRefineOptions();
         });
     } else {
       this.postService
         .getPostForUserNewsfeed(this.loggedInUser.userId)
         .subscribe((result) => {
           this.newsfeedPosts = result;
+          this.updateNewsFeedAccordingToRefineOptions();
         });
     }
   }
@@ -632,5 +654,56 @@ export class NewsfeedComponent implements OnInit {
 
   onSelectedShareOptionChange(event) {
     this.selectedShareOption = event.target.value;
+  }
+
+  handleSearchStringChanged(event) {
+    this.searchString = event;
+    this.updateNewsFeedAccordingToRefineOptions();
+  }
+
+  updateNewsFeedAccordingToRefineOptions() {
+    this.filteredNewsfeedPosts = [];
+    if (this.selectedFilterOption == "Shared posts") {
+      this.newsfeedPosts.forEach(post => {
+        if (this.postMatchSearchString(post) && post.originalPost) {
+          this.filteredNewsfeedPosts.push(post);
+        }
+      });
+    } else if (this.selectedFilterOption == "Posts with images") {
+      this.newsfeedPosts.forEach(post => {
+        if (this.postMatchSearchString(post) && post.picture) {
+          this.filteredNewsfeedPosts.push(post);
+        }
+      });
+    } else {
+      this.newsfeedPosts.forEach(post => {
+        if (this.postMatchSearchString(post)) {
+          this.filteredNewsfeedPosts.push(post);
+        }
+      });
+    }
+  }
+
+  postMatchSearchString(post: Post) {
+    if(this.searchString == null || this.searchString == ""){
+      return true;
+    }
+    if (post.text && post.text.toLowerCase().includes(this.searchString.toLowerCase()) || post.originalPost &&
+      post.originalPost.text.toLowerCase().includes(this.searchString.toLowerCase())) {
+      return true;
+    }
+  }
+
+  onSelectedFilterOptionChange(event) {
+    if (event.target.value == "All") {
+      this.selectedFilterOption = null;
+    } else {
+      this.selectedFilterOption = event.target.value;
+    }
+    this.updateNewsFeedAccordingToRefineOptions();
+  }
+
+  setPostImageToEnlarge(post) {
+    this.postImageToEnlarge = post;
   }
 }
