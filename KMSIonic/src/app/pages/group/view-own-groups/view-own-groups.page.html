@@ -17,14 +17,17 @@
 </ion-header>
 
 <ion-content>
-  <span *ngFor="let group of groupsJoined">
+  <span *ngFor="let group of filteredGroups">
     <ion-card tappable (click)="viewGroupDetails($event, group)">
       <ion-card-header>
         <b>{{group.name}}</b>&nbsp;
-        <ion-badge color="primary">{{group.status}}</ion-badge>
       </ion-card-header>
       <ion-card-content>
         {{group.description}}
+        <br />
+        <span *ngFor="let sdg of sortSDG(group.sdgs)">
+          <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
+        </span>
       </ion-card-content>
     </ion-card>
   </span>
