@@ -200,7 +200,7 @@ export class SharePostModalPage implements OnInit {
           .shareGroupToProjects(
             this.loggedInUser.userId,
             sharePostToProjectOrGroupsReq,
-            this.projectId
+            this.groupId
           )
           .subscribe(async () => {
             const toast = await this.toastController.create({

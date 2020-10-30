@@ -220,7 +220,12 @@ export class CreatePostPage implements OnInit {
         !this.oldPost.originalPost &&
         this.oldPost.originalPostDeleted) ||
       (this.oldPost && this.oldPost.sharedGroupId) ||
-      (this.oldPost && this.oldPost.sharedProjectId)
+      (this.oldPost && this.oldPost.sharedProjectId) ||
+      (this.oldPost &&
+        !this.oldPost.originalPost &&
+        !this.oldPost.originalPostDeleted &&
+        ((this.postContent != null && this.postContent != '') ||
+          this.uploadedPicture != null))
     ) {
       this.canPost = true;
     } else {

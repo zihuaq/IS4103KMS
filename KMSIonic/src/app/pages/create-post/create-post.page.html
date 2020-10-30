@@ -123,7 +123,7 @@
       *ngIf="oldPost.originalPost.picture && !oldPost.originalPost.sharedGroupId && !oldPost.originalPost.sharedProjectId" />
   </ion-card>
 
-  <ion-card *ngIf="oldPost.originalPostDeleted">
+  <ion-card *ngIf="oldPost && oldPost.originalPostDeleted">
     <ion-card-content>
       <ion-text class="text-muted">The original post have been deleted.</ion-text>
     </ion-card-content>
