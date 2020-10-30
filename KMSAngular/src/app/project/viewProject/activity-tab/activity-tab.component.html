@@ -75,6 +75,7 @@
                 <th>Description</th>
                 <th>Start Date</th>
                 <th>End Date</th>
+                <th>Status</th>
                 <th>Location</th> 
                 <th *ngIf="isMember">Action</th>
             </thead>
@@ -96,6 +97,9 @@
                         {{formatDate(activity.endDate) | date}}
                         <br/>
                         {{formatDate(activity.endDate) | date: 'HH:mm'}}
+                    </td>
+                    <td>
+                        {{activity.activityStatus}}
                     </td>
                     <td>
                         <a class="badge badge-secondary" style="cursor: pointer; color: white;" (click)="changehref(activity.latitude, activity.longitude)">
