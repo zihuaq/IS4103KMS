@@ -8,6 +8,7 @@ package ejb.session.singleton;
 import Exception.CreateProjectException;
 import Exception.CreateGroupException;
 import Exception.DuplicateEmailException;
+import Exception.DuplicateTagInProfileException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
 
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -67,7 +70,6 @@ public class DataInitializationSessionBean {
 
     private ActivitySessionBeanLocal activitySessionBeanLocal;
 
-
     @EJB
     private FulfillmentSessionBeanLocal fulfillmentSessionBean;
 
@@ -91,15 +93,12 @@ public class DataInitializationSessionBean {
 
     @EJB
     private TagSessionBeanLocal tagSessionBean;
-    
-    
-    
 
     public DataInitializationSessionBean() {
     }
 
     @PostConstruct
-    public void postConstruct(){
+    public void postConstruct() {
         try {
             tagSessionBean.getTagById(1l);
         } catch (NoResultException ex) {
@@ -111,7 +110,7 @@ public class DataInitializationSessionBean {
         }
     }
 
-    private void initializeData() throws TagNameExistException, DuplicateEmailException, NoResultException, java.text.ParseException  {
+    private void initializeData() throws TagNameExistException, DuplicateEmailException, NoResultException, java.text.ParseException {
         tagSessionBean.createNewTag(new TagEntity("Project Management", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Content Marketing", TagTypeEnum.SKILL));
         tagSessionBean.createNewTag(new TagEntity("Digital Marketing", TagTypeEnum.SKILL));
@@ -135,8 +134,8 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Audiovisual", TagTypeEnum.MATERIALRESOURCE));
         tagSessionBean.createNewTag(new TagEntity("Clothing", TagTypeEnum.MATERIALRESOURCE));
         tagSessionBean.createNewTag(new TagEntity("Construction Equipment", TagTypeEnum.MATERIALRESOURCE));
- //       userSessionBean.createNewUser(new UserEntity("test1", "last name", new Date(), "Female", "1@1.com", "pw"));
- //       materialResourceAvailableSessionBean.createMaterialResourceAvailable(new MaterialResourceAvailableEntity("name", 100, "description", new Date(), new Date(), "country", new ArrayList<TagEntity>()), 1);
+        //       userSessionBean.createNewUser(new UserEntity("test1", "last name", new Date(), "Female", "1@1.com", "pw"));
+        //       materialResourceAvailableSessionBean.createMaterialResourceAvailable(new MaterialResourceAvailableEntity("name", 100, "description", new Date(), new Date(), "country", new ArrayList<TagEntity>()), 1);
         tagSessionBean.createNewTag(new TagEntity("SDG 1", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 2", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 3", TagTypeEnum.SDG));
@@ -154,7 +153,6 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("SDG 15", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 16", TagTypeEnum.SDG));
         tagSessionBean.createNewTag(new TagEntity("SDG 17", TagTypeEnum.SDG));
-        
 
         userSessionBean.createNewUser(new UserEntity("Emma", "Tan", new Date(), "Female", "1@1.com", "pw1", new Date(), UserTypeEnum.ADMIN));
         userSessionBean.createNewUser(new UserEntity("Jason", "Lim", new Date(), "Male", "2@2.com", "pw2", new Date(), UserTypeEnum.ADMIN));
@@ -167,6 +165,39 @@ public class DataInitializationSessionBean {
         userSessionBean.createNewUser(new UserEntity("Benjamin", "Chu", new Date(), "Male", "8@8.com", "pw8", UserTypeEnum.INSTITUTE));
         userSessionBean.createNewUser(new UserEntity("Jasmin", "Xie", new Date(), "Female", "9@9.com", "pw9", UserTypeEnum.INSTITUTE));
         userSessionBean.createNewUser(new UserEntity("Samuel", "Chow", new Date(), "Male", "10@10.com", "pw10", UserTypeEnum.INSTITUTE));
+        userSessionBean.createNewUser(new UserEntity("Jeremy", "Chua", new Date(), "Male", "j3r3my1996@gmail.com", "1", new Date(), UserTypeEnum.ADMIN));
+
+        try {
+            userSessionBean.addSDGsToProfile(1l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(24l), tagSessionBean.getTagById(29l))));
+            userSessionBean.addSDGsToProfile(2l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(25l), tagSessionBean.getTagById(30l))));
+            userSessionBean.addSDGsToProfile(3l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(26l), tagSessionBean.getTagById(31l))));
+            userSessionBean.addSDGsToProfile(4l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(27l), tagSessionBean.getTagById(32l))));
+            userSessionBean.addSDGsToProfile(5l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(28l), tagSessionBean.getTagById(33l))));
+            userSessionBean.addSDGsToProfile(6l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(29l), tagSessionBean.getTagById(34l))));
+            userSessionBean.addSDGsToProfile(7l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(30l), tagSessionBean.getTagById(35l))));
+            userSessionBean.addSDGsToProfile(8l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(31l), tagSessionBean.getTagById(36l))));
+            userSessionBean.addSDGsToProfile(9l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(32l), tagSessionBean.getTagById(37l))));
+            userSessionBean.addSDGsToProfile(10l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(33l), tagSessionBean.getTagById(38l))));
+            userSessionBean.addSDGsToProfile(11l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(34l), tagSessionBean.getTagById(39l))));
+            userSessionBean.addSDGsToProfile(12l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(35l), tagSessionBean.getTagById(40l))));
+            
+            userSessionBean.addSkillsToProfile(1l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(1l), tagSessionBean.getTagById(12l))));
+            userSessionBean.addSkillsToProfile(2l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(2l), tagSessionBean.getTagById(13l))));
+            userSessionBean.addSkillsToProfile(3l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(3l), tagSessionBean.getTagById(14l))));
+            userSessionBean.addSkillsToProfile(4l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(4l), tagSessionBean.getTagById(15l))));
+            userSessionBean.addSkillsToProfile(5l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(5l), tagSessionBean.getTagById(16l))));
+            userSessionBean.addSkillsToProfile(6l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(6l), tagSessionBean.getTagById(17l))));
+            userSessionBean.addSkillsToProfile(7l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(7l), tagSessionBean.getTagById(18l))));
+            userSessionBean.addSkillsToProfile(8l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(8l), tagSessionBean.getTagById(19l))));
+            userSessionBean.addSkillsToProfile(9l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(9l), tagSessionBean.getTagById(20l))));
+            userSessionBean.addSkillsToProfile(10l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(10l), tagSessionBean.getTagById(21l))));
+            userSessionBean.addSkillsToProfile(11l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(11l), tagSessionBean.getTagById(22l))));
+            userSessionBean.addSkillsToProfile(12l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(12l), tagSessionBean.getTagById(23l))));
+
+        } catch (DuplicateTagInProfileException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         tagSessionBean.createNewTag(new TagEntity("Fake Account", TagTypeEnum.REPORTPROFILE));
         tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTPROFILE));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Posts", TagTypeEnum.REPORTPROFILE));
@@ -201,7 +232,7 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
-        
+
         try {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
             projectSessionBean.createNewProject(new ProjectEntity("Improve Sanitation in Nigeria", "Inadequate sanitation is a leading cause of poverty, largely due to premature mortality. Less than one third of the Nigerian population has access to basic sanitation.", new Date(), "Nigeria", "", 5000.0, "YPYAZ5KNH42QL"), 3l, new ArrayList<>(Arrays.asList(24l, 26l, 29l)));
@@ -217,24 +248,24 @@ public class DataInitializationSessionBean {
         } catch (CreateProjectException ex) {
             System.out.println(ex.getMessage());
         }
-        
+
         try {
-            
+
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l, Arrays.asList(24l, 26l, 29l));
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ","Malaysia"), 3l, Arrays.asList(25l, 35l));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ", "Malaysia"), 3l, Arrays.asList(25l, 35l));
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l, Arrays.asList(26l, 27l, 29l, 33l, 37l));
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 4", "About SDG 4. Greetings From Korea. Started from locals who love kimchi and cucumber", "Korea"), 5l, Arrays.asList(30l, 32l, 34l, 36l));
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 5", "About SDG 5. Greetings From Japan. Started froma group of locals who love sushi and expensive fruits", "Japan"), 6l, Arrays.asList(31l, 39l));
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "About SDG 6. Greetings From Thailand. Started from a group of local street food seller in Bangkok", "Thailand"), 6l, Arrays.asList(32l, 38l));      
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "About SDG 6. Greetings From Thailand. Started from a group of local street food seller in Bangkok", "Thailand"), 6l, Arrays.asList(32l, 38l));
             groupSessionBean.joinGroup(4l, 1l);
             groupSessionBean.joinGroup(4l, 2l);
-            groupSessionBean.joinGroup(4l, 3l);                  
+            groupSessionBean.joinGroup(4l, 3l);
             groupSessionBean.joinGroup(4l, 6l);
             groupSessionBean.addAdmin(4l, 6l);
         } catch (CreateGroupException ex) {
             System.out.println(ex.getMessage());
         }
-        
+
 //        try {
 //            PostEntity post1 = new PostEntity(new Date(), "this is a post");
 //            post1.setPostOwner(userSessionBean.getUserById(5L));
@@ -244,7 +275,6 @@ public class DataInitializationSessionBean {
 //        } catch (UserNotFoundException ex) {
 //            System.out.println(ex.getMessage());
 //        }
-        
         try {
             Date startDate = new Date();
             Date endDate = new Date();
@@ -252,30 +282,30 @@ public class DataInitializationSessionBean {
             endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
             List<Long> tagIds = new ArrayList<>();
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 1l, tagIds);
-            
+
             tagIds.add(9l);
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.3008, 103.9122), 1l, tagIds);
             projectSessionBean.joinProject(1l, 3l);
             humanResourcePostingSessionBean.joinHrp(3l, 2l);
-            
+
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 10:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
-            
+
             activitySessionBeanLocal.createNewActivity(new ActivityEntity("Litter picking at East Coast Park", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 1l);
-            
+
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 10:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 15:00");
-            
+
             activitySessionBeanLocal.createNewActivity(new ActivityEntity("Litter picking at East Coast Park", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 1l);
-            
+
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 10:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 12:00");
-            
+
             activitySessionBeanLocal.createNewActivity(new ActivityEntity("Meeting", startDate, endDate, 1.4491, 103.8185, "Meeting to discuss about budget", ActivityStatusEnum.COMPLETED), 1l);
-            
+
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-30"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(23l)));
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 10.0, 0.0, 10.0, "Any laptops", startDate, endDate, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
-            
+
             List<TagEntity> tags = new ArrayList<>();
             tags.add(tagSessionBean.getTagById(12l));
             MaterialResourceAvailableEntity mra = new MaterialResourceAvailableEntity("Pens", 8, "item(s)", "Ballpoint pens", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-4"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-6-4"), "35.929673", "-78.948237", tags);
@@ -286,10 +316,10 @@ public class DataInitializationSessionBean {
             mra = new MaterialResourceAvailableEntity("Wood", 10, "kg", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-11"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-2-20"), "1.384667", "103.770707", tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
-            
+
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 0.0, 5.0), 5l, 1l, 2l);
-        } catch(NoResultException ex) {
-           System.out.println(ex.getMessage()); 
-        } 
+        } catch (NoResultException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }
