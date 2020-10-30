@@ -16,11 +16,17 @@
                             <input type="file" class="custom-file-input" id="postPictureFile" ngModel
                                 name="postPictureFile" accept="image/*" (change)="getFiles($event)">
                             <label class="custom-file-label" *ngIf="!selectedFile" for="postPictureFile">Choose
-                                File</label>
+                                Image</label>
                             <label class="custom-file-label" *ngIf="selectedFile"
                                 for="postPictureFile">{{selectedFileName}}</label>
                         </div>
                     </div>
+                    <img class="img-fluid pad" [src]="selectedFile" alt="Photo" *ngIf="selectedFile"
+                        style="display: block; margin-left: auto;margin-right: auto;" width=250 height=250>
+                    <button type="button" *ngIf="selectedFile" class="btn btn-block btn-danger btn-sm"
+                        style="width: 30%; margin-left: auto;margin-right: auto;" (click)="selectedFile = null"> Remove
+                        selected image
+                    </button>
                 </div>
             </div>
             <div class="card-footer">
@@ -69,8 +75,9 @@
                     </div>
                     <!-- /.user-block -->
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool"
-                            *ngIf="loggedInUser.userId == post.postOwner.userId"><i class="fas fa-edit"></i>
+                        <button type="button" class="btn btn-tool" *ngIf="loggedInUser.userId == post.postOwner.userId"
+                            data-toggle="modal" data-target="#modal-edit-post" (click)="postToEdit = post"><i
+                                class="fas fa-edit"></i>
                         </button>
                         <button type="button" class="btn btn-tool"
                             *ngIf="loggedInUser.userId == post.postOwner.userId || isAdminOrOwner || loggedInUser.userType == UserType.ADMIN"
@@ -381,6 +388,27 @@
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-outline-light" (click)="deletePost(postToDeleteId)"
                     data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-edit-post">
+    <div class="modal-dialog">
+        <div class="modal-content bg-primary">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Post</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" (click)="editPost()"
+                    data-dismiss="modal">Save</button>
             </div>
         </div>
         <!-- /.modal-content -->

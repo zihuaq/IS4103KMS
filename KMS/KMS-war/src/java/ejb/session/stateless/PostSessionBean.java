@@ -130,10 +130,31 @@ public class PostSessionBean implements PostSessionBeanLocal {
                     }
                 }
             }
+            for (int i = 0; i < user.getGroupsJoined().size(); i++) {
+                for (int j = 0; j < user.getGroupsJoined().get(i).getPosts().size(); j++) {
+                    if (user.getGroupsJoined().get(i).getPosts().get(j).getPostOwner() != user) {
+                        postForUserNewsFeed.add(user.getGroupsJoined().get(i).getPosts().get(j));
+                    }
+                }
+            }
 
             Collections.sort(postForUserNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
             Collections.reverse(postForUserNewsFeed);
             return postForUserNewsFeed;
+        } else {
+            throw new UserNotFoundException("User does not exist.");
+        }
+    }
+
+    @Override
+    public List<PostEntity> getPostForProfileNewsfeed(Long userId) throws UserNotFoundException, NoResultException {
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
+        List<PostEntity> postForProfileNewsFeed = new ArrayList<>();
+        if (user != null) {
+            postForProfileNewsFeed.addAll(user.getPosts());
+            Collections.sort(postForProfileNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
+            Collections.reverse(postForProfileNewsFeed);
+            return postForProfileNewsFeed;
         } else {
             throw new UserNotFoundException("User does not exist.");
         }
