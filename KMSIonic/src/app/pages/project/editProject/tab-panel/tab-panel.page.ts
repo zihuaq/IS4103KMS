@@ -74,6 +74,8 @@ export class TabPanelPage implements OnInit {
     this.authenticationService.getCurrentUser().then(
       (user: User) => {
         this.currentUserId = user.userId;
+        console.log("currenct user: " + this.currentUserId);
+        this.refreshProject();
       }
     );
     this.s3 = new this.aws.S3({
@@ -82,7 +84,7 @@ export class TabPanelPage implements OnInit {
       accessKeyId: "AKIAIY62RH5Q6ADCWR6Q",
       secretAccessKey: "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"
     });
-    this.refreshProject();
+    
     
   }
 
@@ -101,11 +103,12 @@ export class TabPanelPage implements OnInit {
         this.projectToEdit = response;
         if (this.projectToEdit.projectOwner.userId == this.currentUserId) {
           this.isOwner = true;
+          console.log("isOwner");
         }
         this.noOfMembers = this.projectToEdit.projectMembers.length;
 
         this.owner = this.projectToEdit.projectOwner;
-
+        console.log("owner: " + this.owner.userId);
         this.dateCreated = this.projectToEdit.dateCreated.toString().slice(0,10);
       }
     )
@@ -170,6 +173,7 @@ export class TabPanelPage implements OnInit {
   }
 
   async deleteProject() {
+    console.log(this.isOwner);
     if (this.isOwner) {
       this.projectService.deleteProject(this.projectId).subscribe(
         async response => {

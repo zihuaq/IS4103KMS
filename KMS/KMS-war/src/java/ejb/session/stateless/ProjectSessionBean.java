@@ -250,7 +250,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             user.getProjectsManaged().remove(projectToDelete);
         }
         projectToDelete.getProjectAdmins().clear();
-        
+
         for (UserEntity user : projectToDelete.getProjectMembers()) {
             user.getProjectsJoined().remove(projectToDelete);
         }
@@ -270,25 +270,25 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         }
         
         projectToDelete.getActivities().clear();
-        
+                
         for (HumanResourcePostingEntity hrp : projectToDelete.getHumanResourcePostings()) {
             hrp.setProject(null);
             humanResourcePostingSessionBeanLocal.deleteHumanResourcePosting(hrp.getHumanResourcePostingId());
         }
         projectToDelete.getHumanResourcePostings().clear();
-        
+
         for (MaterialResourcePostingEntity mrp : projectToDelete.getMaterialResourcePostings()) {
             mrp.setProject(null);
             materialResourcePostingSessionBeanLocal.deleteMaterialResourcePosting(mrp.getMaterialResourcePostingId());
         }
         projectToDelete.getMaterialResourcePostings().clear();
-        
+
         for (TaskEntity task : projectToDelete.getTasks()) {
             task.setProject(null);
             taskSessionBeanLocal.deleteTask(task.getId());
         }
         projectToDelete.getTasks().clear();
-        
+
         for (PostEntity post : projectToDelete.getPosts()) {
             postSessionBeanLocal.deletePostInProjectFeed(post.getPostId());
         }
