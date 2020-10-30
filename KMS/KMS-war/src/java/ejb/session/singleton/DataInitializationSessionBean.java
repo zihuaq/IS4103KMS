@@ -65,6 +65,7 @@ public class DataInitializationSessionBean {
     @EJB
     private PostSessionBeanLocal postSessionBean;
 
+    @EJB
     private ActivitySessionBeanLocal activitySessionBeanLocal;
 
     @EJB
@@ -289,9 +290,7 @@ public class DataInitializationSessionBean {
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 9:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
             
-            System.out.println("before activity");
             activitySessionBeanLocal.createNewActivity(new ActivityEntity("Information Session on Children in Sri Lanka", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.ONGOING), 4l);
-            System.out.println("after activity");
             activitySessionBeanLocal.addMemberToActivity(1l, 2l);
             activitySessionBeanLocal.addMemberToActivity(1l, 3l);
             
