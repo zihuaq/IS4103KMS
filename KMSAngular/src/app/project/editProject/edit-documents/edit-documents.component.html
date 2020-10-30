@@ -41,7 +41,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="file">Choose File</label>
-                    <input type="file" id="file" class="form-control" (change)="handleFileInput($event.target.files)">
+                    <input style="text-overflow: ellipsis; overflow: hidden;" type="file" id="file" class="form-control" (change)="handleFileInput($event.target.files)">
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
