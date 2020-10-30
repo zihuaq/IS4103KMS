@@ -28,7 +28,7 @@
               </textarea>
           </div>
           <div>
-            <label *ngIf = "!selectedReport === undefined">Set comment Status</label>
+            <label *ngIf = "selectedReport != null">Set comment Status</label>
             <div class = "radio" *ngFor = "let status of settingStatus" >
               <label>
                 <input type = "radio" name = "status" [value] = "status" ngModel required>

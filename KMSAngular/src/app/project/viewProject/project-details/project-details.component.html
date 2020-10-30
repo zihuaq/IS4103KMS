@@ -1,11 +1,11 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
-<div class="content-wrapper" *ngIf = "projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN'" >
+<div class="content-wrapper" *ngIf = "projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId">
   <p>This group has been deactivated for violationg our T&C</p>
   </div>
 
-<div class="content-wrapper" *ngIf = "projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN'">
+<div class="content-wrapper" *ngIf = "projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId">
     <div class="loading" *ngIf="!loaded">
         <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
     </div>
@@ -80,7 +80,7 @@
                             <a class="nav-link" id="details-tab-projectfeed" data-toggle="pill" href="#projectfeed-tab">Project Feed</a>
                         </li>
                         <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
-                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab">project Settings</a>
+                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab">Project Settings</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-documents" data-toggle="pill" href="#document-tab">Documents</a>
@@ -164,7 +164,7 @@
                         <div class="tab-pane fade" id="setting-tab" role="tabpanel">
                           <form class="form-horizontal" (ngSubmit)="onEditProjectSetting(disableForm)" #disableForm="ngForm">
                             <div>
-                              <label>Account Status</label>
+                              <label>Project Status</label>
                               <div class = "radio" *ngFor = "let status of settingStatus">
                                 <label style="padding-right: 10px;" >
                                   <input type = "radio" name = "status" [ngModel] = "projectToView.isActive ? 'Active' : 'Deactive'" [value] = "status">

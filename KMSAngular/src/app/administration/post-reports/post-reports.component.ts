@@ -15,7 +15,7 @@ export class PostReportsComponent implements OnInit {
   reports: Report[]
   selectedReport: Report;
   @ViewChild('verdictModal', {static:false}) verdictModal: ModalDirective;
-  settingStatus = ['Keep Active', 'Deactivate'];
+  settingStatus = ['Keep Post', 'Delete Post'];
   mdlSampleIsOpen : boolean = false;
   constructor(private reportService: ReportService) { }
 
@@ -32,10 +32,10 @@ export class PostReportsComponent implements OnInit {
 
   onPassVerdict(verdictForm: NgForm){
     console.log(verdictForm)
-    this.selectedReport.resolved = !this.selectedReport.resolved
-    this.selectedReport.verdictComments = verdictForm.value.verdict;
+    //this.selectedReport.resolved = !this.selectedReport.resolved
+    //this.selectedReport.verdictComments = verdictForm.value.verdict;
     let activeStatus: Boolean
-    if (verdictForm.value.status == "Deactivate"){
+    if (verdictForm.value.status == "Delete Post"){
       activeStatus = false;
     }
     else{
@@ -43,7 +43,11 @@ export class PostReportsComponent implements OnInit {
     }
     this.reportService.passPostReportVerdict(this.selectedReport,activeStatus)
     .subscribe((response)=>{
-      this.reports = response;
+      for (var i = this.reports.length - 1; i >=0; --i){
+        if(this.reports[i].reportId == this.selectedReport.reportId){
+          this.reports.splice(i,1);
+        }
+      }
       this.verdictModal.hide();
     })
   }

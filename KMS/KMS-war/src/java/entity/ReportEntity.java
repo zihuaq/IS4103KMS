@@ -83,7 +83,18 @@ public class ReportEntity implements Serializable {
         this.reportedProject = reportedProject;
         this.reportContent = reportContent;
         this.reportTags = tags;
+        this.resolved = false;
     }
+
+    public ReportEntity(UserEntity reportOwner, String reportContent, PostEntity reportedPost) {
+        this.reportOwner = reportOwner;
+        this.reportType = ReportTypeEnum.POST;
+        this.reportContent = reportContent;
+        this.reportedPost = reportedPost;
+        this.resolved = false;
+    }
+    
+    
     
     public Long getReportId() {
         return reportId;
