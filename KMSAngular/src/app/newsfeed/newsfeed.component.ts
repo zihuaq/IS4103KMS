@@ -44,6 +44,7 @@ export class NewsfeedComponent implements OnInit {
   postToDeleteId: number;
   commentToDeleteId: number;
   postToShare: Post;
+  postToEdit: Post;
   report: Report;
   postReportTags: Tag[];
   commentReportTags: Tag[];
@@ -169,7 +170,7 @@ export class NewsfeedComponent implements OnInit {
     }
   }
 
-  initElements(){
+  initElements() {
     console.log("init elements called!")
     $('#reportPostselect2').select2({
       data: this.postReportTags.map((item) => {
@@ -683,5 +684,16 @@ export class NewsfeedComponent implements OnInit {
 
   setPostImageToEnlarge(post) {
     this.postImageToEnlarge = post;
+  }
+
+  editPost() {
+    this.postService.updatePost(this.postToEdit).subscribe(() => {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Post Edited Successfully',
+        autohide: true,
+        delay: 2500,
+      });
+    });
   }
 }
