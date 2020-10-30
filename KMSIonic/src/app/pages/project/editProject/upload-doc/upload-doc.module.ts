@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ViewAllGroupPageRoutingModule } from './view-all-group-routing.module';
-import { ViewAllGroupPage } from './view-all-group.page';
+import { UploadDocPageRoutingModule } from './upload-doc-routing.module';
 
+import { UploadDocPage } from './upload-doc.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ViewAllGroupPageRoutingModule
+    UploadDocPageRoutingModule
   ],
-  declarations: [ViewAllGroupPage]
+  declarations: [UploadDocPage]
 })
-export class ViewAllGroupPageModule {}
+export class UploadDocPageModule {}

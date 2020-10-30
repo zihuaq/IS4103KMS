@@ -22,6 +22,9 @@
       <ion-segment-button value="mrp">
         <ion-label>Material Resource Posting</ion-label>
       </ion-segment-button>
+      <ion-segment-button value="docs">
+        <ion-label>Documents</ion-label>
+      </ion-segment-button>
       <ion-segment-button value="delete">
         <ion-label>Delete</ion-label>
       </ion-segment-button>
@@ -120,6 +123,38 @@
       </span>
     </ion-card-content>
   </span>
+
+  <ion-card *ngIf="segment == 'docs'">
+    <ion-card-content class="ion-no-margin">
+      <ion-button expand="full" style="font-size: 12px;" (click)="uploadModal()">
+        <ion-icon name="cloud-upload-outline"></ion-icon> 
+        Upload Documents
+      </ion-button>
+      <span *ngIf="!hasLoad">
+        Loading...
+      </span>
+      
+      <span *ngIf="hasLoad">
+        <span *ngIf="files.length == 0">
+          There is no documents.
+        </span>
+      
+        <span *ngIf="files.length > 0">
+          <ion-card *ngFor="let file of files" style="margin: 10px 0 0 0; padding: 5px;">
+            <ion-item lines="full">
+              <ion-card-title style="padding: 10px 0 10px 0">
+                {{formatFileKey(file)}}
+              </ion-card-title>
+              <ion-buttons slot="end">
+                <ion-icon class="iconButton" name="document-outline" style="margin-right: 5px;" (click)="viewFile(file)" ></ion-icon>
+                <ion-icon class="iconButton" name="close-circle-outline" (click)="deleteDocs(file)"></ion-icon>
+              </ion-buttons>
+            </ion-item>
+          </ion-card>
+        </span>
+      </span>
+    </ion-card-content>
+  </ion-card>
 
   <ion-card *ngIf="segment == 'delete'">
     <ion-card-content>

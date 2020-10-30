@@ -26,9 +26,22 @@
     <!-- /.content-header -->
     <section class="content">
         <div class="card card-solid">
-            <div class="input-group" style="margin: 15px 20px; width: auto">
-                <input class="form-control" placeholder="Search projects" [(ngModel)]="searchModel" (ngModelChange)="updateSearchModel($event)">
+            <div class="row">
+                <div class="col-8">
+                    <div class="input-group" style="margin: 15px 20px; width: auto">
+                        <input class="form-control" placeholder="Search projects" [(ngModel)]="searchModel" (ngModelChange)="updateSearchModel($event)">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group" style="margin: 15px 20px; width: auto">
+                        <select class="select2" id="sdgselect2" multiple="multiple" (ngModelChange)="sdgFilter()" [(ngModel)]="searchModel"
+                            data-placeholder="Filter SDG tags" data-dropdown-css-class="select2-blue"
+                            style="width: 100%;">
+                        </select>
+                    </div>
+                </div>
             </div>
+            
             <div class="card-body pb-0">
                 <span class="text-muted" *ngIf="noProjects"> 
                     <p style="padding-bottom: 1em;">No projects found.</p>

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Group } from 'src/app/classes/group';
 import { GroupService } from 'src/app/services/group.service';
 import { IonSearchbar } from '@ionic/angular';
+import { Tag } from 'src/app/classes/tag';
 
 @Component({
   selector: 'app-view-all-group',

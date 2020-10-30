@@ -1,0 +1,73 @@
+<div class="row mb-3">
+    <h5 style="margin-right: 10px;">Documents</h5>
+    <button type="button" class="btn bg-gradient-info" data-toggle="modal" data-target="#upload-modal" data-backdrop="static" style="margin-top: -8px;">
+        <i class="fas fa-upload"></i> 
+        Upload Document
+    </button>
+</div>
+
+
+<span *ngIf="files.length == 0">
+    <div class="card">
+        <div class="card-body">
+            There is no documents.
+        </div>
+    </div>
+</span>
+
+<span *ngIf="files.length > 0">
+    <ul class="list-group" *ngFor="let file of files">
+        <li class="list-group-item" style="color: blue;">
+            {{formatFileKey(file)}}                    
+            <button type="button" class="btn bg-gradient-danger float-right" rel="tooltip" title="Delete" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" (click)="clickDelete(file)">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+            <button type="button" class="btn bg-gradient-primary float-right" rel="tooltip" title="File" (click)="viewFile(file)">
+                <i class="fas fa-file"></i>
+            </button>
+        </li>                
+    </ul>
+</span>
+
+<div class="modal fade" id="upload-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Upload Document</h4>
+                <button type="button" id="uploadCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="file">Choose File</label>
+                    <input style="text-overflow: ellipsis; overflow: hidden;" type="file" id="file" class="form-control" (change)="handleFileInput($event.target.files)">
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                <button type="button" type="submit" class="btn btn-outline-dark" (click)="uploadFile()">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Delete Document</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this document?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="delete-hrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteFile()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
