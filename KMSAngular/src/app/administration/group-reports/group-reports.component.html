@@ -28,7 +28,7 @@
               </textarea>
           </div>
           <div>
-            <label *ngIf = "!selectedReport === undefined">Set {{selectedReport.reportedGroup.name}} Status</label>
+            <label *ngIf = "selectedReport != null">Set {{selectedReport.reportedGroup.name}} Status</label>
             <div class = "radio" *ngFor = "let status of settingStatus" >
               <label>
                 <input type = "radio" name = "status" [value] = "status" ngModel required>

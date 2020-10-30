@@ -56,7 +56,7 @@ export class GroupService {
   }
 
   addAdmin(groupId: number, userId: number) {
-    return this.httpClient.post<any>(this.baseUrl+"/addGroupAdmin/"+groupId+"/"+userId, null).pipe(
+    return this.httpClient.post<any>(this.baseUrl+"/addAdmin/"+groupId+"/"+userId, null).pipe(
       catchError(this.handleError)
     );
   }
@@ -68,7 +68,7 @@ export class GroupService {
   }
 
   changeOwner(groupId: number, userId: number) {
-    return this.httpClient.post<any>(this.baseUrl+"/changeGroupOwner/"+groupId+"/"+userId, null).pipe(
+    return this.httpClient.post<any>(this.baseUrl+"/changeOwner/"+groupId+"/"+userId, null).pipe(
       catchError(this.handleError)
     );
   }

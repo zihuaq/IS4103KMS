@@ -240,7 +240,7 @@ export class UserService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = 'An unknown error has occurred: ' + error.error.message;
     } else {
-      errorMessage = error.error.error;
+      errorMessage = error.error.message;
     }
 
     console.error(errorMessage);

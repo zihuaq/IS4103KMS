@@ -60,7 +60,14 @@ export class GroupMembersTabComponent implements OnInit {
         delay: 2500,
         body: 'Successfully promoted ' + user.firstName + ' ' + user.lastName + ' to Admin!',
       })
-      location.reload();
+      this.groupService.getGroupById(this.groupId).subscribe(
+        response => {
+          this.groupToEdit = response;
+          if (this.groupToEdit.groupOwner.userId == this.loggedInUser.userId) {
+            this.isOwner = true;
+          }
+        }
+      );
     },
     error => {
       $(document).Toasts('create', {
@@ -83,7 +90,14 @@ export class GroupMembersTabComponent implements OnInit {
         delay: 2500,
         body: 'Owner status succesfully changed to ' + user.firstName + ' ' + user.lastName + '!',
       })
-      location.reload();
+      this.groupService.getGroupById(this.groupId).subscribe(
+        response => {
+          this.groupToEdit = response;
+          if (this.groupToEdit.groupOwner.userId == this.loggedInUser.userId) {
+            this.isOwner = true;
+          }
+        }
+      );
     },
     error => {
       $(document).Toasts('create', {
@@ -106,7 +120,14 @@ export class GroupMembersTabComponent implements OnInit {
         delay: 2500,
         body: 'Successfully removed ' + user.firstName + ' ' + user.lastName + ' as Admin!',
       })
-      location.reload();
+      this.groupService.getGroupById(this.groupId).subscribe(
+        response => {
+          this.groupToEdit = response;
+          if (this.groupToEdit.groupOwner.userId == this.loggedInUser.userId) {
+            this.isOwner = true;
+          }
+        }
+      );
     },
     error => {
       $(document).Toasts('create', {
@@ -129,7 +150,14 @@ export class GroupMembersTabComponent implements OnInit {
         delay: 2500,
         body: 'Successfully removed ' + user.firstName + ' ' + user.lastName + ' as Member!',
       })
-      location.reload();
+      this.groupService.getGroupById(this.groupId).subscribe(
+        response => {
+          this.groupToEdit = response;
+          if (this.groupToEdit.groupOwner.userId == this.loggedInUser.userId) {
+            this.isOwner = true;
+          }
+        }
+      );
     },
     error => {
       $(document).Toasts('create', {

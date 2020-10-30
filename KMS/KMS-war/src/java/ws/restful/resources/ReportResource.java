@@ -253,23 +253,27 @@ public class ReportResource {
      @Path("passPostReportVerdict")
      @Consumes(MediaType.APPLICATION_JSON)
      @Produces(MediaType.APPLICATION_JSON)
-    
      public Response passPostReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
+            System.out.println("**************reportResource: passPostReportVerdict");
             PostEntity reportedPost = postSessionBean.getPostById(passProfileReportVerdictReq.getReport().getReportedPost().getPostId());
             //reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
             Long reportId = 0L;
             if(!passProfileReportVerdictReq.getActive()){
+                System.out.println("**************passPostReportVerdict: active = false");
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
+                System.out.println("**************passPostReportVerdict email sent");
                 reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
+                System.out.println("**************passPostReportVerdict delete report");
                 postSessionBean.deletePostById(reportedPost.getPostId());
+                System.out.println("**************passPostReportVerdict delete post");
             }else{
                 reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
             }
             
-            return Response.status(Status.OK).entity(getPostReports()).build();
+            return Response.status(Status.OK).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
@@ -298,7 +302,8 @@ public class ReportResource {
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
 
             }
-            return Response.status(Status.OK).entity(getCommentReports()).build();
+            
+            return Response.status(Status.OK).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
@@ -432,7 +437,7 @@ public class ReportResource {
     @Path("/getCommentReports")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCommentReports() {
-        System.out.println("******** ReportResource: getPostReports");
+        System.out.println("******** ReportResource: getCommentReports");
         try {
             List<ReportEntity> commentReports = reportSessionBean.getCommentReports();
             List<ReportEntity> commentReportsResponse = getCommentReportResponse(commentReports);
