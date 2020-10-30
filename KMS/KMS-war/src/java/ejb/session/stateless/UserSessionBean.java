@@ -214,7 +214,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
                 return user;
             } else {
                 
-                throw new InvalidLoginCredentialException("Email does not exist of invalid password");
+                throw new InvalidLoginCredentialException("Email does not exist or invalid password");
             }
         } catch (UserNotFoundException ex) {
             throw new InvalidLoginCredentialException("Email does not exist or invalid password!");

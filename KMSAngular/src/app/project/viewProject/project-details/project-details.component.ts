@@ -229,7 +229,7 @@ export class ProjectDetailsComponent implements OnInit {
           title: 'Success',
           autohide: true,
           delay: 2500,
-          body: 'Profile picture updated successfully',
+          body: 'Project Setting updated successfully',
         })
       },
       error => {
@@ -241,8 +241,7 @@ export class ProjectDetailsComponent implements OnInit {
         });
       }
     );
-    this.profilePicture = this.selectedProfilePicture;
-    this.selectedProfilePicture = undefined;
+
   }
 
 }

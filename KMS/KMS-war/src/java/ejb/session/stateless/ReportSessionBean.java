@@ -287,7 +287,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setFrom(new InternetAddress("4103kms@gmail.com"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedUser().getEmail()));
                 message.setSubject("Your KMS Account has been deactivated");
-                message.setText("Dear User," +'\n' + "Your account has been deactivated for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+                message.setText("Dear User," +'\n' + "Your account has been deactivated for violating our terms of service" + '\n' + currentReport.getVerdictComments());
 
                 Transport.send(message);
             }
@@ -296,7 +296,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setFrom(new InternetAddress("4103kms@gmail.com"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedProject().getProjectOwner().getEmail()));
                 message.setSubject("The KMS Project " + currentReport.getReportedProject().getName() + " has been deactivated");
-                message.setText("Dear User," +'\n' + "Your project has been deactivated for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+                message.setText("Dear User," +'\n' + "Your project has been deactivated for violating our terms of service" + '\n' + currentReport.getVerdictComments());
 
                 Transport.send(message);
             }
@@ -304,8 +304,8 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress("4103kms@gmail.com"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedGroup().getGroupOwner().getEmail()));
-                message.setSubject("The KMS Project " + currentReport.getReportedGroup().getName() + " has been deactivated");
-                message.setText("Dear User," +'\n' + "Your Group has been deactivated for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+                message.setSubject("The KMS Group " + currentReport.getReportedGroup().getName() + " has been deactivated");
+                message.setText("Dear User," +'\n' + "Your group has been deactivated for violating our terms of service" + '\n' + currentReport.getVerdictComments());
 
                 Transport.send(message);
             }
@@ -314,7 +314,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setFrom(new InternetAddress("4103kms@gmail.com"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedPost().getPostOwner().getEmail()));
                 message.setSubject("A post you created has been deleted");
-                message.setText("Dear User," +'\n' + "Your Post has been deleted for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+                message.setText("Dear User," +'\n' + "Your post has been deleted for violating our terms of service" + '\n' + currentReport.getVerdictComments());
 
                 Transport.send(message);
             }
@@ -323,7 +323,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setFrom(new InternetAddress("4103kms@gmail.com"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedComment().getCommentOwner().getEmail()));
                 message.setSubject("A comment you created has been deleted");
-                message.setText("Dear User," +'\n' + "Your Comment has been deleted for violaing our terms of service" + '\n' + currentReport.getVerdictComments());
+                message.setText("Dear User," +'\n' + "Your comment has been deleted for violating our terms of service" + '\n' + currentReport.getVerdictComments());
 
                 Transport.send(message);
             }
