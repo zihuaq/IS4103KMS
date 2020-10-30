@@ -13,6 +13,8 @@ import { ProjectDetailsPage } from './project-details.page';
 import { ViewHrpPage } from '../view-hrp/view-hrp.page';
 import { ViewMrpPage } from '../view-mrp/view-mrp.page';
 
+import { ViewDocumentsComponent } from '../view-documents/view-documents.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -23,6 +25,6 @@ import { ViewMrpPage } from '../view-mrp/view-mrp.page';
     PostModule,
     ViewMrpPageRoutingModule
   ],
-  declarations: [ProjectDetailsPage, ViewHrpPage, ViewMrpPage]
+  declarations: [ProjectDetailsPage, ViewHrpPage, ViewMrpPage, ViewDocumentsComponent]
 })
 export class ProjectDetailsPageModule {}
