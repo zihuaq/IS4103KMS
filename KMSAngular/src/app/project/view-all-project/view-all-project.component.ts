@@ -197,8 +197,8 @@ export class ViewAllProjectComponent implements OnInit {
           for (let tag of selectedTag) {
             for (let project of allProject) {
               for (let sdg of project.sdgs) {
-                if (sdg.name === tag.name) {
-                  this.projects.push(project)
+                if (sdg.name === tag.name && !this.containProject(project)) {
+                  this.projects.push(project);                  
                 }
               }
             }
@@ -206,6 +206,15 @@ export class ViewAllProjectComponent implements OnInit {
         }    
       }
     );   
+  }
+
+  containProject(project: Project) {
+    for (let proj of this.projects) {
+      if (project.projectId == proj.projectId) {
+        return true;
+      }
+    }
+    false;
   }
   
 }
