@@ -147,8 +147,10 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     public void deleteActivity(Long activityId) throws NoResultException {
         ActivityEntity activityToDelete = getActivityById(activityId);
         
+        if (activityToDelete.getProject() != null) {
             activityToDelete.getProject().getActivities().remove(activityToDelete);
             activityToDelete.setProject(null);
+        } 
         
         if (!activityToDelete.getHumanResourcePostings().isEmpty()) {
             for (HumanResourcePostingEntity hrp : activityToDelete.getHumanResourcePostings()) {
