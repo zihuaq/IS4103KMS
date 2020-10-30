@@ -95,6 +95,7 @@ public class ActivityEntity implements Serializable {
     }
 
     public ActivityEntity(String name, Date startDate, Date endDate, Double latitude, Double longitude, String description, ActivityStatusEnum activityStatus) {
+        this();
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
