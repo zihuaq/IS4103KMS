@@ -30,7 +30,11 @@
                     </span>
                 </div>
                 <div class="card-body">
-                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{projectToView.name}}</p>
+                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{projectToView.name}}
+                      <span *ngIf= "!projectToView.isActive" class="badge badge-danger" style = "margin-right: 5px;">
+                        Deactivated
+                      </span>
+                    </p>
                     <span class="badge badge-info" *ngIf="projectToView.status == projectType.ACTIVE" style="margin-top: 10px;">{{projectToView.status}}</span>
                     <span class="badge badge-warning" *ngIf="projectToView.status == projectType.INACTIVE" style="margin-top: 10px;">{{projectToView.status}}</span>
                     <span class="badge badge-success" *ngIf="projectToView.status == projectType.COMPLETED" style="margin-top: 10px;">{{projectToView.status}}</span>

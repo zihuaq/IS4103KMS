@@ -231,6 +231,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         
         group.getGroupOwner().getGroupsOwned().remove(group);
         group.setGroupOwner(user);
+        
         user.getGroupsOwned().add(group);
     }
     

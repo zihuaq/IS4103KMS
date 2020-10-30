@@ -30,7 +30,11 @@
                     </span>
                 </div>
                 <div class="card-body">
-                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{groupToView.name}}</p>
+                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{groupToView.name}}
+                      <span *ngIf= "!groupToView.isActive" class="badge badge-danger" style = "margin-right: 5px;">
+                        Deactivated
+                      </span>
+                    </p>
                     <!-- <span class="badge badge-info" *ngIf="groupToView.status == groupType.ACTIVE" style="margin-top: 10px;">{{groupToView.status}}</span>
                     <span class="badge badge-warning" *ngIf="groupToView.status == groupType.INACTIVE" style="margin-top: 10px;">{{groupToView.status}}</span>
                     <span class="badge badge-success" *ngIf="groupToView.status == groupType.COMPLETED" style="margin-top: 10px;">{{groupToView.status}}</span> -->
