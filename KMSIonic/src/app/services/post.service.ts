@@ -184,6 +184,84 @@ export class PostService {
     );
   }
 
+  shareGroupToProjects(
+    userId: number,
+    shareReq: SharePostToProjectOrGroupsReq,
+    groupId: number
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/shareGroupToProjects/' + userId + '/' + groupId,
+        shareReq
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  shareGroupToGroups(
+    userId: number,
+    shareReq: SharePostToProjectOrGroupsReq,
+    groupId: number
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/shareGroupToGroups/' + userId + '/' + groupId,
+        shareReq
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  shareGroupToFollowers(
+    userId: number,
+    post: Post,
+    groupId: number
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/shareGroupToFollowers/' + userId + '/' + groupId,
+        post
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  shareProjectToProjects(
+    userId: number,
+    shareReq: SharePostToProjectOrGroupsReq,
+    projectId: number
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/shareProjectToProjects/' + userId + '/' + projectId,
+        shareReq
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  shareProjectToGroups(
+    userId: number,
+    shareReq: SharePostToProjectOrGroupsReq,
+    projectId: number
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/shareProjectToGroups/' + userId + '/' + projectId,
+        shareReq
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  shareProjectToFollowers(
+    userId: number,
+    post: Post,
+    projectId: number
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/shareProjectToFollowers/' + userId + '/' + projectId,
+        post
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   getPostForUserNewsfeed(userId: number): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/userNewsFeed/' + userId).pipe(
       map((data) => {

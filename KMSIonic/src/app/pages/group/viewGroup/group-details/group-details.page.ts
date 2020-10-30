@@ -1,10 +1,15 @@
+import { SharePostModalPage } from './../../../share-post-modal/share-post-modal.page';
 import { UserService } from './../../../../services/user.service';
 import { PostService } from './../../../../services/post.service';
 import { Post } from './../../../../classes/post';
 import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import {
+  ActionSheetController,
+  ModalController,
+  ToastController
+} from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 
 import { User } from 'src/app/classes/user';
@@ -31,6 +36,7 @@ export class GroupDetailsPage implements OnInit {
   newsfeedPosts: Post[];
 
   constructor(
+    public modalController: ModalController,
     public toastController: ToastController,
     public alertController: AlertController,
     private router: Router,
@@ -40,7 +46,8 @@ export class GroupDetailsPage implements OnInit {
     private location: Location,
     private userService: UserService,
     private app: ApplicationRef,
-    private postService: PostService
+    private postService: PostService,
+    private actionSheetController: ActionSheetController
   ) {
     this.group = new Group();
     this.owner = new User();
@@ -178,5 +185,73 @@ export class GroupDetailsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async reportGroup() {
+    const modal = await this.modalController.create({
+      component: ReportGroupPage,
+      componentProps: { groupId: this.groupId }
+    });
+    return await modal.present();
+  }
+
+  async groupActionSheet() {
+    let actionSheet;
+    if (this.isMember) {
+      actionSheet = await this.actionSheetController.create({
+        buttons: [
+          {
+            text: 'Leave Group',
+            icon: 'exit',
+            handler: () => {
+              this.leaveGroupDialog();
+            }
+          },
+          {
+            text: 'Share Group',
+            icon: 'arrow-redo',
+            handler: () => {
+              this.share();
+            }
+          }
+        ]
+      });
+    } else {
+      actionSheet = await this.actionSheetController.create({
+        buttons: [
+          {
+            text: 'Report Group',
+            icon: 'flag',
+            handler: async () => {
+              console.log('Report chosen');
+              this.reportGroup();
+            }
+          }
+        ]
+      });
+    }
+    actionSheet.onDidDismiss().then(() => {
+      console.log('Dismissed');
+    });
+
+    await actionSheet.present();
+  }
+
+  async share() {
+    console.log('share', this.groupId);
+    const modal = await this.modalController.create({
+      component: SharePostModalPage,
+      swipeToClose: true,
+      showBackdrop: true,
+      cssClass: 'share-post-modal',
+      componentProps: {
+        groupId: this.groupId,
+        loggedInUser: this.loggedInUser
+      }
+    });
+    modal.present();
+    modal.onDidDismiss().then(() => {
+      this.refreshGroup();
+    });
   }
 }

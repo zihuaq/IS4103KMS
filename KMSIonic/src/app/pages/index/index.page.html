@@ -11,8 +11,8 @@
 </ion-header>
 
 <ion-content>
-  <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" newsfeedType="user"
-    (init)="ionViewWillEnter()">
+  <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" [filteredPosts]="newsfeedPosts"
+    newsfeedType="user" (init)="ionViewWillEnter()">
   </app-newsfeed>
   <!-- <ion-item-divider class="ion-no-padding">
     <ion-toolbar>
