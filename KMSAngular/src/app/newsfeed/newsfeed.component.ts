@@ -214,6 +214,20 @@ export class NewsfeedComponent implements OnInit {
     }
   }
 
+  getFilesForEditPost(event) {
+    if (event.target.files[0] != undefined) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.postToEdit.picture = e.target.result;
+        console.log(this.selectedFile);
+      };
+      console.log(event.target.files[0]);
+      reader.readAsDataURL(event.target.files[0]);
+    } else {
+      this.postToEdit.picture = undefined;
+    }
+  }
+
   onCreatePost(createPostForm: NgForm) {
     this.createdPost = new Post();
 
@@ -686,14 +700,37 @@ export class NewsfeedComponent implements OnInit {
     this.postImageToEnlarge = post;
   }
 
+  setPostToEdit(post: Post) {
+    this.postToEdit = new Post();
+    this.postToEdit.postId = post.postId;
+    this.postToEdit.text = post.text;
+    this.postToEdit.picture = post.picture;
+    this.postToEdit.originalPost = post.originalPost;
+    this.postToEdit.originalPostDeleted = post.originalPostDeleted;
+    this.postToEdit.sharedGroupId = post.sharedGroupId;
+    this.postToEdit.sharedProjectId = post.sharedProjectId;
+  }
+
   editPost() {
-    this.postService.updatePost(this.postToEdit).subscribe(() => {
+    if ((this.postToEdit.text == null || this.postToEdit.text == "") && this.postToEdit.picture == null) {
       $(document).Toasts('create', {
-        class: 'bg-success',
-        title: 'Post Edited Successfully',
+        class: 'bg-danger',
+        title: 'Error',
         autohide: true,
         delay: 2500,
+        body: 'Please select a picture or add some text to your post!',
       });
-    });
+      return;
+    } else {
+      this.postService.updatePost(this.postToEdit).subscribe(() => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Post Edited Successfully',
+          autohide: true,
+          delay: 2500,
+        });
+        this.updateNewsfeed();
+      });
+    }
   }
 }

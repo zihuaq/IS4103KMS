@@ -75,7 +75,7 @@
                     <!-- /.user-block -->
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" *ngIf="loggedInUser.userId == post.postOwner.userId"
-                            data-toggle="modal" data-target="#modal-edit-post" (click)="postToEdit = post"><i
+                            data-toggle="modal" data-target="#modal-edit-post" (click)="setPostToEdit(post)"><i
                                 class="fas fa-edit"></i>
                         </button>
                         <button type="button" class="btn btn-tool"
@@ -395,7 +395,7 @@
 </div>
 <!-- /.modal -->
 
-<div class="modal fade" id="modal-edit-post">
+<div class="modal fade" id="modal-edit-post" *ngIf="postToEdit">
     <div class="modal-dialog">
         <div class="modal-content bg-primary">
             <div class="modal-header">
@@ -404,8 +404,34 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <div class="modal-body" style="background-color: whitesmoke;">
+                <textarea class="form-control" rows="3" [(ngModel)]="postToEdit.text"></textarea>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="editPostPictureFile" ngModel
+                            name="editPostPictureFile" accept="image/*" (change)="getFilesForEditPost($event)">
+                        <label class="custom-file-label"
+                            *ngIf="!postToEdit.picture && !postToEdit.sharedGroupId && !postToEdit.sharedProjectId && !postToEdit.originalPost && !postToEdit.originalPostDeleted"
+                            for="postPictureFile">
+                            Add Image</label>
+                        <label class="custom-file-label"
+                            *ngIf="postToEdit.picture && !postToEdit.sharedGroupId && !postToEdit.sharedProjectId"
+                            for="postPictureFile">Change Image</label>
+                    </div>
+                </div>
+                <img class="img-fluid pad" [src]="postToEdit.picture" alt="Photo"
+                    *ngIf="postToEdit.picture && !postToEdit.sharedGroupId && !postToEdit.sharedProjectId"
+                    style="display: block; margin-left: auto;margin-right: auto;" width=250 height=250>
+                <button type="button"
+                    *ngIf="postToEdit.picture && !postToEdit.sharedGroupId && !postToEdit.sharedProjectId"
+                    class="btn btn-block btn-danger btn-sm" style="width: 30%; margin-left: auto;margin-right: auto;"
+                    (click)="postToEdit.picture = null"> Remove
+                    selected image
+                </button>
+            </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light"
+                    data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-outline-light" (click)="editPost()"
                     data-dismiss="modal">Save</button>
             </div>
