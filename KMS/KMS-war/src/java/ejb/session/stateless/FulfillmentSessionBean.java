@@ -48,8 +48,16 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         
         newFulfillment.setReceivedQuantity(0.0);
         newFulfillment.setUnreceivedQuantity(newFulfillment.getTotalPledgedQuantity());
-        mra.setQuantity(newFulfillment.getMra().getQuantity());
-        posting.setLackingQuantity(newFulfillment.getPosting().getLackingQuantity());
+        if (newFulfillment.getMra() != null) {
+            mra.setQuantity(newFulfillment.getMra().getQuantity());
+        } else {
+            mra.setQuantity(mra.getQuantity() - newFulfillment.getTotalPledgedQuantity().intValue());
+        }
+        if (newFulfillment.getPosting() != null) {
+            posting.setLackingQuantity(newFulfillment.getPosting().getLackingQuantity());
+        } else {
+            posting.setLackingQuantity(posting.getLackingQuantity() - newFulfillment.getTotalPledgedQuantity());
+        }
         
         newFulfillment.setFulfillmentOwner(fulfillmentOwner);
         fulfillmentOwner.getFulfillments().add(newFulfillment);

@@ -93,6 +93,7 @@ public class HrpResource {
             if (hrp.getActivity() != null) {
                 hrp.getActivity().getHumanResourcePostings().clear();
                 hrp.getActivity().getMaterialResourcePostings().clear();
+                hrp.getActivity().getJoinedUsers().clear();
                 hrp.getActivity().setProject(null);
             }
             
