@@ -9,7 +9,6 @@ import { GroupService } from 'src/app/services/group.service';
 import { User } from 'src/app/classes/user';
 import { UserService } from 'src/app/services/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { Tag } from 'src/app/classes/tag';
 
 @Component({
   selector: 'app-view-own-groups',
@@ -100,9 +99,5 @@ export class ViewOwnGroupsPage implements OnInit {
 
   sortSDG(sdgList: Tag[]): Tag[] {
     return sdgList.sort((a, b) => a.tagId - b.tagId);
-  }
-
-  sortSDG(sdgList: Tag[]): Tag[] {
-    return sdgList.sort((a, b) => (a.tagId - b.tagId));
   }
 }
