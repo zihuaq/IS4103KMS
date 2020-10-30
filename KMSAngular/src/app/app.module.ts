@@ -90,6 +90,8 @@ import { GroupReportItemComponent } from './administration/group-reports/group-r
 import { PostReportItemComponent } from './administration/post-reports/post-report-item/post-report-item.component';
 import { CommentReportItemComponent } from './administration/comment-reports/comment-report-item/comment-report-item.component';
 import { EditTaskTabComponent } from './project/editProject/edit-task-tab/edit-task-tab.component';
+import { ViewDocumentsComponent } from './project/viewProject/view-documents/view-documents.component';
+import { EditDocumentsComponent } from './project/editProject/edit-documents/edit-documents.component';
 
 @NgModule({
   declarations: [
@@ -169,7 +171,9 @@ import { EditTaskTabComponent } from './project/editProject/edit-task-tab/edit-t
     GroupReportItemComponent,
     PostReportItemComponent,
     CommentReportItemComponent,
-    EditTaskTabComponent
+    EditTaskTabComponent,
+    ViewDocumentsComponent,
+    EditDocumentsComponent
   ],
   imports: [
     BrowserModule,

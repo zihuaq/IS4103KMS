@@ -32,12 +32,6 @@ export class ReportService {
       .pipe(catchError(this.handleError));
   }
 
-  reportProject(report: Report): Observable<any> {
-    return this.http
-      .post<any>(this.baseUrl + '/reportProject', report, httpOptions)
-      .pipe(catchError(this.handleError));
-  }
-
   reportGroup(report: Report): Observable<any> {
     return this.http
       .post<any>(this.baseUrl + '/reportGroup', report, httpOptions)

@@ -15,7 +15,6 @@ import entity.ActivityEntity;
 import entity.DonationEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
-import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TaskEntity;
