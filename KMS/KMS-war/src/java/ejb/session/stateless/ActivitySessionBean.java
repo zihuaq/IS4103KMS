@@ -47,8 +47,9 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
     @Override
     public Long createNewActivity(ActivityEntity newActivity, Long projectId) throws NoResultException {
+        System.out.println("before find project");
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
-        
+        System.out.println("after find project");
         LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
         LocalDateTime startDate = LocalDateTime.parse(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(newActivity.getStartDate()));
 
