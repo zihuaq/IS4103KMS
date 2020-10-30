@@ -44,6 +44,7 @@
                             <button type="button" [disabled] class="btn btn-light float-right">Joined</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Project</a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#modal-share-project">Share Project</a>
                                 <a class="dropdown-item" data-toggle="modal" data-target="#modal-confirm-leave-project">Leave Project</a>
                             </div>
                         </span>
@@ -288,5 +289,52 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="modal-share-project">
+    <div class="modal-dialog">
+        <div class="modal-content bg-secondary">
+            <div class="modal-header">
+                <h4 class="modal-title">Share Project</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" style="background-color: whitesmoke;">
+                <h6 style="color: black;"> Thoughts </h6>
+                <input placeholder="Say something about this group..." [(ngModel)]="shareProjectText" style="width: 100%;">
+                <br />
+                <br />
+                <h6 style="color: black;"> Share with* </h6>
+                <div class="radio" *ngFor="let option of shareOption">
+                    <label style="color:black; font-size: .8em;">
+                        <input type="radio" name="option" id="{{option.id}}" [value]="option.id"
+                            (change)="onSelectedShareOptionChange($event)" />
+                        {{option.value}}
+                    </label>
+                </div>
+                <div class="select2-dark" [ngClass]="{'d-none': selectedShareOption != 'project'}">
+                    <select class="select2" id="shareProjectToProjectselect2" multiple="multiple"
+                        data-placeholder="Share post with selected project(s)" data-dropdown-css-class="select2-dark"
+                        style="width: 100%;">
+                    </select>
+                </div>
+                <div class="select2-dark" [ngClass]="{'d-none': selectedShareOption != 'group'}">
+                    <select class="select2" id="shareProjectToGroupselect2" multiple="multiple"
+                        data-placeholder="Share post with selected group(s)" data-dropdown-css-class="select2-dark"
+                        style="width: 100%;">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal"
+                    (click)="shareProject()">Share Project</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 <app-footer></app-footer>

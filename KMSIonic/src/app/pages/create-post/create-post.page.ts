@@ -86,64 +86,53 @@ export class CreatePostPage implements OnInit {
 
   async createPost() {
     let createdPost = new Post();
-    if (
-      (this.postContent == null || this.postContent == '') &&
-      this.uploadedPicture == null
-    ) {
-      const toast = await this.toastController.create({
-        message: 'Please select a picture or add some text to your post!',
-        duration: 2000
-      });
-      toast.present();
-    } else {
-      if (!this.isEditPage) {
-        createdPost.postDate = new Date();
-        createdPost.text = this.postContent;
-        createdPost.picture = this.uploadedPicture;
-        createdPost.postOwner = this.loggedInUser;
-        createdPost.project = this.project;
-        createdPost.group = this.group;
+    if (!this.isEditPage) {
+      createdPost.postDate = new Date();
+      createdPost.text = this.postContent;
+      createdPost.picture = this.uploadedPicture;
+      createdPost.postOwner = this.loggedInUser;
+      createdPost.project = this.project;
+      createdPost.group = this.group;
 
-        this.postService.createPost(createdPost).subscribe(
-          async (data: Post) => {
-            const toast = await this.toastController.create({
-              message: 'Post created!',
-              duration: 2000
-            });
-            toast.present();
-            this.location.back();
-          },
-          async (err) => {
-            const toast = await this.toastController.create({
-              message: err,
-              duration: 2000
-            });
-            toast.present();
-            this.location.back();
-          }
-        );
-      } else {
-        this.oldPost.text = this.postContent;
-        this.oldPost.picture = this.uploadedPicture;
-        this.postService.updatePost(this.oldPost).subscribe(
-          async () => {
-            const toast = await this.toastController.create({
-              message: 'Post updated!',
-              duration: 2000
-            });
-            toast.present();
-            this.location.back();
-          },
-          async (err) => {
-            const toast = await this.toastController.create({
-              message: err,
-              duration: 2000
-            });
-            toast.present();
-            this.location.back();
-          }
-        );
-      }
+      this.postService.createPost(createdPost).subscribe(
+        async (data: Post) => {
+          const toast = await this.toastController.create({
+            message: 'Post created!',
+            duration: 2000
+          });
+          toast.present();
+          this.location.back();
+        },
+        async (err) => {
+          const toast = await this.toastController.create({
+            message: err,
+            duration: 2000
+          });
+          toast.present();
+          this.location.back();
+        }
+      );
+    } else {
+      this.oldPost.text = this.postContent;
+      this.oldPost.picture = this.uploadedPicture;
+      this.postService.updatePost(this.oldPost).subscribe(
+        async () => {
+          const toast = await this.toastController.create({
+            message: 'Post updated!',
+            duration: 2000
+          });
+          toast.present();
+          this.location.back();
+        },
+        async (err) => {
+          const toast = await this.toastController.create({
+            message: err,
+            duration: 2000
+          });
+          toast.present();
+          this.location.back();
+        }
+      );
     }
   }
 
@@ -223,12 +212,19 @@ export class CreatePostPage implements OnInit {
 
   checkCanPost() {
     if (
-      (this.postContent == null || this.postContent == '') &&
-      this.uploadedPicture == null
+      (!this.oldPost &&
+        ((this.postContent != null && this.postContent != '') ||
+          this.uploadedPicture != null)) ||
+      (this.oldPost && this.oldPost.originalPost) ||
+      (this.oldPost &&
+        !this.oldPost.originalPost &&
+        this.oldPost.originalPostDeleted) ||
+      (this.oldPost && this.oldPost.sharedGroupId) ||
+      (this.oldPost && this.oldPost.sharedProjectId)
     ) {
-      this.canPost = false;
-    } else {
       this.canPost = true;
+    } else {
+      this.canPost = false;
     }
   }
 }

@@ -71,6 +71,14 @@ public class PostEntity implements Serializable {
     private boolean originalPostDeleted;
     
     private Boolean isActive;
+    
+    private String sharedGroupId;
+    
+    private String sharedProjectId;
+    
+    private String sharedGroupOrProjectDescription;
+    
+    private String sharedGroupOrProjectName;
 
     public PostEntity() {
         this.likers = new ArrayList<>();
@@ -218,6 +226,36 @@ public class PostEntity implements Serializable {
     public void setGroup(GroupEntity group) {
         this.group = group;
     }
-    
 
+    public String getSharedGroupId() {
+        return sharedGroupId;
+    }
+
+    public void setSharedGroupId(String sharedGroupId) {
+        this.sharedGroupId = sharedGroupId;
+    }
+
+    public String getSharedProjectId() {
+        return sharedProjectId;
+    }
+
+    public void setSharedProjectId(String sharedProjectId) {
+        this.sharedProjectId = sharedProjectId;
+    }
+
+    public String getSharedGroupOrProjectDescription() {
+        return sharedGroupOrProjectDescription;
+    }
+
+    public void setSharedGroupOrProjectDescription(String sharedGroupOrProjectDescription) {
+        this.sharedGroupOrProjectDescription = sharedGroupOrProjectDescription;
+    }
+
+    public String getSharedGroupOrProjectName() {
+        return sharedGroupOrProjectName;
+    }
+
+    public void setSharedGroupOrProjectName(String sharedGroupOrProjectName) {
+        this.sharedGroupOrProjectName = sharedGroupOrProjectName;
+    }
 }

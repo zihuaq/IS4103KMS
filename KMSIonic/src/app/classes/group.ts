@@ -11,8 +11,9 @@ export class Group {
   groupOwner: User;
   groupMembers: User[];
   groupAdmins: User[];
-  posts: Post[];
   sdgs: Tag[];
+  isActive: boolean;
+  posts: Post[];
 
   constructor(
     groupId?: number,
@@ -23,9 +24,8 @@ export class Group {
     groupOwner?: User,
     groupMembers?: User[],
     groupAdmins?: User[],
-    posts?: Post[],
-    sdgs?: Tag[]
-    
+    sdgs?: Tag[],
+    posts?: Post[]
   ) {
     this.groupId = groupId;
     this.name = name;

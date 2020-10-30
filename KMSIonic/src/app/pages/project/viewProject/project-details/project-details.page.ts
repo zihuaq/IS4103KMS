@@ -1,10 +1,16 @@
+import { SharePostModalPage } from './../../../share-post-modal/share-post-modal.page';
 import { PostService } from './../../../../services/post.service';
 import { Post } from './../../../../classes/post';
 import { UserService } from 'src/app/services/user.service';
 import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController, AlertController, ModalController } from '@ionic/angular';
+import {
+  ToastController,
+  AlertController,
+  ModalController,
+  ActionSheetController
+} from '@ionic/angular';
 
 import { User } from 'src/app/classes/user';
 import { Project } from 'src/app/classes/project';
@@ -32,7 +38,8 @@ export class ProjectDetailsPage implements OnInit {
   newsfeedPosts: Post[];
   hasLoaded: boolean = false;
 
-  constructor(public modalController: ModalController,
+  constructor(
+    public modalController: ModalController,
     public toastController: ToastController,
     public alertController: AlertController,
     private router: Router,
@@ -42,7 +49,8 @@ export class ProjectDetailsPage implements OnInit {
     private location: Location,
     private userService: UserService,
     private app: ApplicationRef,
-    private postService: PostService
+    private postService: PostService,
+    private actionSheetController: ActionSheetController
   ) {
     this.project = new Project();
     this.owner = new User();
@@ -181,15 +189,75 @@ export class ProjectDetailsPage implements OnInit {
     await alert.present();
   }
 
-  get projectType(): typeof ProjectType{
+  get projectType(): typeof ProjectType {
     return ProjectType;
   }
 
   async reportProject() {
     const modal = await this.modalController.create({
       component: ReportProjectPage,
-      componentProps: {projectId: this.projectId}
+      componentProps: { projectId: this.projectId }
     });
     return await modal.present();
+  }
+
+  async projectActionSheet() {
+    let actionSheet;
+    if (this.isMember) {
+      actionSheet = await this.actionSheetController.create({
+        buttons: [
+          {
+            text: 'Leave Project',
+            icon: 'exit',
+            handler: () => {
+              this.leaveProjectDialog();
+            }
+          },
+          {
+            text: 'Share Project',
+            icon: 'arrow-redo',
+            handler: () => {
+              this.share();
+            }
+          }
+        ]
+      });
+    } else {
+      actionSheet = await this.actionSheetController.create({
+        buttons: [
+          {
+            text: 'Report Project',
+            icon: 'flag',
+            handler: async () => {
+              console.log('Report chosen');
+              this.reportProject();
+            }
+          }
+        ]
+      });
+    }
+    actionSheet.onDidDismiss().then(() => {
+      console.log('Dismissed');
+    });
+
+    await actionSheet.present();
+  }
+
+  async share() {
+    console.log('share', this.projectId);
+    const modal = await this.modalController.create({
+      component: SharePostModalPage,
+      swipeToClose: true,
+      showBackdrop: true,
+      cssClass: 'share-post-modal',
+      componentProps: {
+        projectId: this.projectId,
+        loggedInUser: this.loggedInUser
+      }
+    });
+    modal.present();
+    modal.onDidDismiss().then(() => {
+      this.refreshProject();
+    });
   }
 }
