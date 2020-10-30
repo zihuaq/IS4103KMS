@@ -13,6 +13,7 @@ import entity.GroupEntity;
 import entity.PostCommentEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
+import entity.ReportEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -293,6 +294,14 @@ public class PostSessionBean implements PostSessionBeanLocal {
             PostEntity post = em.find(PostEntity.class, comment.getPost().getPostId());
             if (post != null) {
                 post.getComments().remove(comment);
+                Query q = em.createQuery("SELECT r FROM ReportEntity r");
+                List<ReportEntity> allReports = q.getResultList();
+                for (int i = 0; i < allReports.size(); i++) {
+                    if (allReports.get(i).getReportedComment() != null && allReports.get(i).getReportedComment().getPostCommentId() == commentId) {
+                        ReportEntity report = em.find(ReportEntity.class, allReports.get(i).getReportId());
+                        em.remove(report);
+                    }
+                }
                 em.remove(comment);
             } else {
                 throw new NoResultException("Post is not found");
@@ -604,6 +613,15 @@ public class PostSessionBean implements PostSessionBeanLocal {
                     if (allPosts.get(i).getSharedPosts().contains(post)) {
                         allPosts.get(i).getSharedPosts().remove(post);
                     }
+                }
+            }
+
+            Query q3 = em.createQuery("SELECT r FROM ReportEntity r");
+            List<ReportEntity> allReports = q3.getResultList();
+            for (int i = 0; i < allReports.size(); i++) {
+                if (allReports.get(i).getReportedPost() != null && allReports.get(i).getReportedPost().getPostId() == postId) {
+                    ReportEntity report = em.find(ReportEntity.class, allReports.get(i).getReportId());
+                    em.remove(report);
                 }
             }
 
