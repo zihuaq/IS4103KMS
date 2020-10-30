@@ -45,7 +45,7 @@ public class PostCommentEntity implements Serializable {
     
     @NotNull
     @JoinColumn(nullable=false)
-    @OneToOne
+    @ManyToOne
     private PostEntity post;
     
     @NotNull

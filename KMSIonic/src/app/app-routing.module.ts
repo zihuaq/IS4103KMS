@@ -339,7 +339,11 @@ const routes: Routes = [
   {
     path: 'receive-resource-modal',
     loadChildren: () => import('./pages/project/editProject/manage-fulfillments-modal/receive-resource-modal/receive-resource-modal.module').then( m => m.ReceiveResourceModalPageModule)
+  },  {
+    path: 'report-group',
+    loadChildren: () => import('./pages/group/viewGroup/report-group/report-group.module').then( m => m.ReportGroupPageModule)
   }
+
 ];
 
 @NgModule({

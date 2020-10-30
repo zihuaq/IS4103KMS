@@ -28,5 +28,8 @@
         </ion-chip>
       </ion-row>
     </ion-grid>
+    <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" newsfeedType="profile"
+      [filteredPosts]="newsfeedPosts" (init)="ionViewWillEnter()">
+    </app-newsfeed>
   </div>
 </ion-content>

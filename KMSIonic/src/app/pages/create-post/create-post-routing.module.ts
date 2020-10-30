@@ -13,6 +13,14 @@ const routes: Routes = [
     component: CreatePostPage
   },
   {
+    path: 'profile/create',
+    component: CreatePostPage
+  },
+  {
+    path: 'profile/edit/:postid',
+    component: CreatePostPage
+  },
+  {
     path: 'group/edit/:postid',
     component: CreatePostPage
   },

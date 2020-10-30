@@ -21,10 +21,10 @@
         </h1>
         <p>Owner: {{owner.firstName}} {{owner.lastName}}</p>
       </ion-card-subtitle>
-      <ion-button expand="full" size="small" *ngIf="!isMember" (click)="joinGroup()">Join</ion-button>
+      <ion-button style="width: 80%;" *ngIf="!isMember" (click)="joinGroup()">Join</ion-button>
       <ion-button style="width: 80%;" *ngIf="isMember" disabled>Joined</ion-button>
-      <ion-button style="width: 15%;" *ngIf="isMember" (click)="leaveGroupDialog()">
-        <ion-icon name="exit-outline"></ion-icon>
+      <ion-button style="width: 15%;" (click)="groupActionSheet()">
+        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
       </ion-button>
     </ion-card-header>
   </ion-card>
@@ -55,7 +55,7 @@
 
   <ion-card *ngIf="segment === 'newsfeed'">
     <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" newsfeedType="group"
-      [isMember]="isMember" [groupId]="groupId" (init)="ionViewWillEnter()">
+      [isMember]="isMember" [groupId]="groupId" [filteredPosts]="newsfeedPosts" (init)="ionViewWillEnter()">
     </app-newsfeed>
   </ion-card>
 

@@ -47,7 +47,7 @@ export class UserLoginPageComponent implements OnInit {
 
           if (user != null) {
             this.sessionService.setIsLogin(true);
-            if(user.userType.toString() == "ADMIN"){
+            if (user.userType.toString() == 'ADMIN') {
               this.sessionService.setIsAdmin(true);
             }
             this.sessionService.setCurrentUser(user);
@@ -55,7 +55,7 @@ export class UserLoginPageComponent implements OnInit {
             this.userService.loggedIn = true;
             this.loginError = false;
             this.isLoading = false;
-            this.router.navigate(['profile/' + user.userId]);
+            this.router.navigate(['index']);
           } else {
             this.loginError = true;
             this.isLoading = false;

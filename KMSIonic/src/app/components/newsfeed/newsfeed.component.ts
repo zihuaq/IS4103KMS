@@ -29,6 +29,7 @@ import { ReportPostModalPage } from '../../pages/report-post-modal/report-post-m
 export class NewsfeedComponent implements OnInit {
   @Input() loggedInUser: User;
   @Input() newsfeedPosts: Post[];
+  @Input() filteredPosts: Post[];
   @Input() newsfeedType: string;
   @Input() isMember: boolean;
   @Input() projectId: number;
@@ -36,11 +37,8 @@ export class NewsfeedComponent implements OnInit {
   @Output() init = new EventEmitter();
 
   constructor(
-    private authenticationService: AuthenticationService,
-    private userService: UserService,
     private postService: PostService,
     private actionSheetController: ActionSheetController,
-    private app: ApplicationRef,
     private toastController: ToastController,
     private modalController: ModalController,
     private router: Router
@@ -117,23 +115,7 @@ export class NewsfeedComponent implements OnInit {
           duration: 2000
         });
         toast.present();
-        if (this.newsfeedType == 'user') {
-          this.postService
-            .getPostForUserNewsfeed(this.loggedInUser.userId)
-            .subscribe((result) => {
-              this.newsfeedPosts = result;
-            });
-        }
-        if (this.newsfeedType == 'project') {
-          this.postService
-            .getPostForProjectNewsfeed(this.projectId)
-            .subscribe((result) => {
-              this.newsfeedPosts = result;
-            });
-        }
-        if (this.newsfeedType == 'group') {
-          //TODO: get post for group news feed
-        }
+        this.init.emit();
       },
       async (err) => {
         const toast = await this.toastController.create({
@@ -158,23 +140,7 @@ export class NewsfeedComponent implements OnInit {
     this.postService
       .likePost(this.loggedInUser.userId, postId)
       .subscribe(() => {
-        if (this.newsfeedType == 'user') {
-          this.postService
-            .getPostForUserNewsfeed(this.loggedInUser.userId)
-            .subscribe((result) => {
-              this.newsfeedPosts = result;
-            });
-        }
-        if (this.newsfeedType == 'project') {
-          this.postService
-            .getPostForProjectNewsfeed(this.projectId)
-            .subscribe((result) => {
-              this.newsfeedPosts = result;
-            });
-        }
-        if (this.newsfeedType == 'group') {
-          //TODO: get post for group news feed
-        }
+        this.init.emit();
       });
   }
 
@@ -182,23 +148,7 @@ export class NewsfeedComponent implements OnInit {
     this.postService
       .removeLikeForPost(this.loggedInUser.userId, postId)
       .subscribe(() => {
-        if (this.newsfeedType == 'user') {
-          this.postService
-            .getPostForUserNewsfeed(this.loggedInUser.userId)
-            .subscribe((result) => {
-              this.newsfeedPosts = result;
-            });
-        }
-        if (this.newsfeedType == 'project') {
-          this.postService
-            .getPostForProjectNewsfeed(this.projectId)
-            .subscribe((result) => {
-              this.newsfeedPosts = result;
-            });
-        }
-        if (this.newsfeedType == 'group') {
-          //TODO: get post for group news feed
-        }
+        this.init.emit();
       });
   }
 
@@ -235,5 +185,16 @@ export class NewsfeedComponent implements OnInit {
     modal.onDidDismiss().then(() => {
       this.init.emit();
     });
+  }
+
+  setFilteredItems(event) {
+    let searchTerm = event.srcElement.value;
+    if (searchTerm && searchTerm != '') {
+      this.filteredPosts = this.newsfeedPosts.filter((post) => {
+        return post.text.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    } else {
+      this.filteredPosts = this.newsfeedPosts;
+    }
   }
 }

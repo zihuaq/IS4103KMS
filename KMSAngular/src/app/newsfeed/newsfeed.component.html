@@ -57,12 +57,13 @@
                             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                             alt="User Image">
                         <span class="username">
-                            <a href="/profile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
+                            <a routerLink="/profile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
                                 {{post.postOwner.lastName}} </a>
                             <i *ngIf="post.project || post.group" class="fas fa-caret-right"></i>
-                            <a href="/projectDetails/{{post.project.projectId}}" *ngIf="post.project">
+                            <a routerLink="/projectDetails/{{post.project.projectId}}" *ngIf="post.project">
                                 {{post.project.name}}</a>
-                            <a href="/groupDetails/{{post.group.groupId}}" *ngIf="post.group"> {{post.group.name}}</a>
+                            <a routerLink="/groupDetails/{{post.group.groupId}}" *ngIf="post.group">
+                                {{post.group.name}}</a>
                         </span>
                         <span class="description">{{post.postDate| date}}</span>
                     </div>
@@ -110,7 +111,7 @@
                                 style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
                             <img *ngIf="!post.picture" class="img-fluid pad"
                                 src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
-                                alt="Photo" title="Click to view group!"
+                                alt="Photo" title="Click to view project!"
                                 style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
                         </div>
                         <div *ngIf="post.sharedGroupOrProjectDescription && post.sharedGroupOrProjectDescription != ''"
@@ -120,11 +121,11 @@
                             {{post.sharedGroupOrProjectDescription}}
                             <br />
                             <br />
-                            <a *ngIf="post.sharedGroupId" href="/groupDetails/{{post.sharedGroupId}}">
+                            <a *ngIf="post.sharedGroupId" routerLink="/groupDetails/{{post.sharedGroupId}}">
                                 <button type="button" class="btn btn-block btn-info btn-sm"
                                     style="width: 50%; justify-self: center;"> View Group </button>
                             </a>
-                            <a *ngIf="post.sharedProjectId" href="/projectDetails/{{post.sharedProjectId}}">
+                            <a *ngIf="post.sharedProjectId" routerLink="/projectDetails/{{post.sharedProjectId}}">
                                 <button type="button" class="btn btn-block btn-info btn-sm"
                                     style="width: 50%; justify-self: center;"> View Project </button>
                             </a>
@@ -151,14 +152,14 @@
                                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                                 alt="User Image">
                             <span class="username">
-                                <a href="/profile/{{post.postOwner.userId}}">{{post.originalPost.postOwner.firstName}}
+                                <a routerLink="/profile/{{post.originalPost.postOwner.userId}}">{{post.originalPost.postOwner.firstName}}
                                     {{post.originalPost.postOwner.lastName}} </a>
                                 <i *ngIf="post.originalPost.project || post.originalPost.group"
                                     class="fas fa-caret-right"></i>
-                                <a href="/projectDetails/{{post.originalPost.project.projectId}}"
+                                <a routerLink="/projectDetails/{{post.originalPost.project.projectId}}"
                                     *ngIf="post.originalPost.project">
                                     {{post.originalPost.project.name}}</a>
-                                <a href="/groupDetails/{{post.originalPost.group.groupId}}"
+                                <a routerLink="/groupDetails/{{post.originalPost.group.groupId}}"
                                     *ngIf="post.originalPost.group">
                                     {{post.originalPost.group.name}}</a>
                             </span>
@@ -184,7 +185,8 @@
                             <span *ngIf="post.originalPost.sharedGroupId || post.originalPost.sharedProjectId"
                                 style="display: flex; flex-direction: row; justify-content: center;">
                                 <div *ngIf="post.originalPost.sharedGroupId" style="margin:2%;">
-                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad" [src]="post.originalPost.picture" alt="Photo"
+                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad"
+                                        [src]="post.originalPost.picture" alt="Photo"
                                         style="display: flex; margin-left: auto;margin-right: auto;" width=250
                                         height=250>
                                     <img *ngIf="!post.originalPost.picture" class="img-fluid pad"
@@ -194,7 +196,8 @@
                                         height=250>
                                 </div>
                                 <div *ngIf="post.originalPost.sharedProjectId" style="margin:2%;">
-                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad" [src]="post.originalPost.picture" alt="Photo"
+                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad"
+                                        [src]="post.originalPost.picture" alt="Photo"
                                         style="display: flex; margin-left: auto;margin-right: auto;" width=250
                                         height=250>
                                     <img *ngIf="!post.originalPost.picture" class="img-fluid pad"
@@ -210,11 +213,13 @@
                                     {{post.originalPost.sharedGroupOrProjectDescription}}
                                     <br />
                                     <br />
-                                    <a *ngIf="post.originalPost.sharedGroupId" href="/groupDetails/{{post.originalPost.sharedGroupId}}">
+                                    <a *ngIf="post.originalPost.sharedGroupId"
+                                        routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}">
                                         <button type="button" class="btn btn-block btn-info btn-sm"
                                             style="width: 50%; justify-self: center;"> View Group </button>
                                     </a>
-                                    <a *ngIf="post.originalPost.sharedProjectId" href="/projectDetails/{{post.originalPost.sharedProjectId}}">
+                                    <a *ngIf="post.originalPost.sharedProjectId"
+                                        routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}">
                                         <button type="button" class="btn btn-block btn-info btn-sm"
                                             style="width: 50%; justify-self: center;"> View Project </button>
                                     </a>
@@ -227,11 +232,13 @@
                                     <br />
                                     <br />
                                     <button type="button" class="btn btn-block btn-info btn-sm"
-                                        *ngIf="post.originalPost.sharedGroupId" routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}">
+                                        *ngIf="post.originalPost.sharedGroupId"
+                                        routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}">
                                         View Group </button>
                                     <button type="button" class="btn btn-block btn-info btn-sm"
                                         *ngIf="post.originalPost.sharedProjectId"
-                                        routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}"> View Project </button>
+                                        routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}"> View Project
+                                    </button>
                                 </div>
                             </span>
                         </div>
