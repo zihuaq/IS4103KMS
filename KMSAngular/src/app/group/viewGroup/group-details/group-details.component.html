@@ -2,7 +2,7 @@
 <app-side-navbar></app-side-navbar>
 
 <div class="content-wrapper" *ngIf = "groupToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId" >
-<p>This group has been deactivated for violationg our T&C</p>
+<p>This group has been deactivated for violating our T&C</p>
 </div>
 
 <div class="content-wrapper" *ngIf = "groupToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId">
