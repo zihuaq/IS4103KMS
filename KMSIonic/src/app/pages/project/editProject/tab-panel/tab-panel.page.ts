@@ -169,24 +169,32 @@ export class TabPanelPage implements OnInit {
     this.segment;
   }
 
-  deleteProject() {
-    this.projectService.deleteProject(this.projectId).subscribe(
-      async response => {
-        const toast = await this.toastController.create({
-          message: 'Project deleted successfully.',
-          duration: 2000
-        });
-        toast.present();
-        this.router.navigate(["view-all-project"]);
-      },
-      async error => {
-        const toast = await this.toastController.create({
-          message: error,
-          duration: 2000
-        });
-        toast.present();
-      }
-    );
+  async deleteProject() {
+    if (this.isOwner) {
+      this.projectService.deleteProject(this.projectId).subscribe(
+        async response => {
+          const toast = await this.toastController.create({
+            message: 'Project deleted successfully.',
+            duration: 2000
+          });
+          toast.present();
+          this.router.navigate(["view-all-project"]);
+        },
+        async error => {
+          const toast = await this.toastController.create({
+            message: error,
+            duration: 2000
+          });
+          toast.present();
+        }
+      );
+    } else {
+      const toast = await this.toastController.create({
+        message: "Only owner of project can delete this project",
+        duration: 2000
+      });
+      toast.present();
+    }
   }
 
   async presentAlert() {
