@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/classes/user';
 import { Group } from 'src/app/classes/group';
 import { GroupService } from 'src/app/services/group.service';
-// import { Tag } from 'src/app/classes/tag';
-// import { TagService } from 'src/app/services/tag.service';
+import { Tag } from 'src/app/classes/tag';
+import { TagService } from 'src/app/services/tag.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
@@ -19,15 +19,16 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class CreateNewGroupPage implements OnInit {
 
   newGroup: Group;
-  // tagList: Tag[];
+  tagList: Tag[];
   currentUserId: number;
 
   constructor(public toastController: ToastController,
     private router: Router,
     private groupService: GroupService,
-    // private tagService: TagService,
+    private tagService: TagService,
     private authenticationService: AuthenticationService) { 
       this.newGroup = new Group();
+      this.tagList = [];
     }
 
   ngOnInit() {
@@ -39,22 +40,38 @@ export class CreateNewGroupPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    // this.tagService.getAllSDGTags().subscribe(
-    //   response => {
-    //     this.tagList = response;
-    //   }
-    // )
+    this.tagService.getAllSDGTags().subscribe(
+      response => {
+        this.tagList = response;
+      }
+    )
   }
 
-  create(createGroupForm: NgForm) {
-    // let tagIds: number[] = [];
-    // for (let tag of this.newGroup.sdgs) {
-    //   tagIds.push(tag.tagId);
-    // }
-    // this.newGroup.sdgs = [];
+  // create(createGroupForm: NgForm) {
+  //   let tagIds: number[] = [];
+  //   for (let tag of this.newGroup.sdgs) {
+  //     tagIds.push(tag.tagId);
+  //   }
+
+  async create(createGroupForm: NgForm) {
+    let tagIds: number[] = [];
+    if (this.newGroup.sdgs.length > 0) {
+      for (let tag of this.newGroup.sdgs) {
+        tagIds.push(tag.tagId);
+      }
+    } else {
+      const toast = await this.toastController.create({
+        message: "Please select at least one SDG tags.",
+        duration: 2000
+      })
+      toast.present();
+      return;
+    }
+
+    this.newGroup.sdgs = [];
     if (createGroupForm.valid) {
       //this.newGroup.dateCreated = new Date();
-      this.groupService.createNewGroup(this.newGroup, this.currentUserId,).subscribe(
+      this.groupService.createNewGroup(this.newGroup, this.currentUserId, tagIds).subscribe(
         async response => {
           const toast = await this.toastController.create({
             message: 'Group created successfully.',

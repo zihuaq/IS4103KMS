@@ -142,6 +142,7 @@ public class GroupResource {
             group.getGroupOwner().setFulfillments(new ArrayList<>());
             group.getGroupOwner().setActivityJoined(new ArrayList<>());  
             group.getGroupOwner().setDonations(new ArrayList<>());
+            group.getPosts().clear();
             for (UserEntity member : group.getGroupMembers()) {
                 member.setReviewsGiven(new ArrayList<>());
                 member.setReviewsReceived(new ArrayList<>());

@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <form class="form-horizontal" (ngSubmit)="onCreatePost(createPostForm)" #createPostForm="ngForm"
-        *ngIf="!newsfeedType || newsfeedType == 'project' && isMember">
+        *ngIf="!newsfeedType || newsfeedType == 'project' && isMember || newsfeedType == 'group' && isMember">
         <div class="card card-outline card-info">
             <div class="card-header">
                 <h3 class="card-title">
@@ -41,10 +41,11 @@
                         <span class="username">
                             <a href="#">{{post.postOwner.firstName}}
                                 {{post.postOwner.lastName}} </a>
-                            <i *ngIf="post.project" class="fas fa-caret-right"></i>
+                            <i *ngIf="post.project || post.group" class="fas fa-caret-right"></i>
                             <a *ngIf="post.project"> {{post.project.name}}</a>
+                            <a *ngIf="post.group"> {{post.group.name}}</a>
                         </span>
-                        <span class="description">{{post.postDate| date:'dd/MM/yyyy'}}</span>
+                        <span class="description">{{post.postDate| date}}</span>
                     </div>
                     <!-- /.user-block -->
                     <div class="card-tools">
@@ -75,10 +76,11 @@
                             <span class="username">
                                 <a href="#">{{post.originalPost.postOwner.firstName}}
                                     {{post.originalPost.postOwner.lastName}} </a>
-                                <i *ngIf="post.originalPost.project" class="fas fa-caret-right"></i>
+                                <i *ngIf="post.originalPost.project || post.originalPost.group" class="fas fa-caret-right"></i>
                                 <a *ngIf="post.originalPost.project"> {{post.originalPost.project.name}}</a>
+                                <a *ngIf="post.originalPost.group"> {{post.originalPost.group.name}}</a>
                             </span>
-                            <span class="description">{{post.originalPost.postDate}}</span>
+                            <span class="description">{{post.originalPost.postDate | date}}</span>
                         </div>
                         <div class="card-body">
                             <br />
@@ -108,10 +110,8 @@
                     <button type="button" *ngIf="userHaveSharedPost(post.postId)" class="btn btn-default btn-sm"
                         data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
                         <i class="fas fa-share"></i> shared </button>
-                    <button type="button" class="btn btn-default btn-sm"
-
-                         data-toggle="modal"
-                        data-target="#modal-default" (click)="setPostToReport(post.postId)">
+                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal"
+                        data-target="#report-post-modal" (click)="setPostToReport(post.postId)" *ngIf="loggedInUser.userId != post.postOwner.userId">
                         <i class="fas fa-flag"></i> report </button>
                     <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}
                         comments - {{post.sharedPosts.length}} shares</span>
@@ -138,7 +138,13 @@
                                     *ngIf="loggedInUser.userId == comment.commentOwner.userId">
                                     <i class="fas fa-edit fa-sm"></i>
                                 </button>
-                                <span class="text-muted float-right"> {{comment.dateTime}} </span>
+                                <button type="button" class="btn btn-tool float-right"
+                                    (click)="setCommentToReport(post.postId, comment.postCommentId)"
+                                    data-toggle="modal" data-target="#report-comment-modal"
+                                    *ngIf="loggedInUser.userId != comment.commentOwner.userId">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </button>
+                                <span class="text-muted float-right"> {{comment.dateTime | date}} </span>
                             </span><!-- /.username -->
                             <span class="text-muted float-right"
                                 *ngIf="!userHaveLikedComment(post.postId, comment.postCommentId)">
@@ -220,14 +226,14 @@
             </div>
             <div class="modal-body" style="background-color: whitesmoke;">
                 <h6 style="color: black;"> Thoughts </h6>
-                <input placeholder="Say something about this post..." #text style="width: 100%;">
+                <input placeholder="Say something about this post..." [(ngModel)]="sharePostText" style="width: 100%;">
                 <br />
                 <br />
                 <h6 style="color: black;"> Share with* </h6>
                 <div class="radio" *ngFor="let option of shareOption">
                     <label style="color:black; font-size: .8em;">
-                        <input type="radio" name="option" id="{{option.id}}" [value]="option.id"
-                            (change)="onSelectedShareOptionChange($event)" />
+                        <input type="radio" name="option" id="{{option.id}}"
+                            [value]="option.id" (change)="onSelectedShareOptionChange($event)" />
                         {{option.value}}
                     </label>
                 </div>
@@ -237,11 +243,17 @@
                         style="width: 100%;">
                     </select>
                 </div>
+                <div class="select2-dark" [ngClass]="{'d-none': selectedShareOption != 'group'}">
+                    <select class="select2" id="shareToGroupselect2" multiple="multiple"
+                        data-placeholder="Share post with selected group(s)" data-dropdown-css-class="select2-dark"
+                        style="width: 100%;">
+                    </select>
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal"
-                    (click)="sharePost(text.value)">Post</button>
+                    (click)="sharePost()">Post</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -250,30 +262,59 @@
 </div>
 <!-- /.modal -->
 
-<div class="modal fade" id="modal-default" *ngIf="postToReport && reportTags">
+<div class="modal fade" id="report-post-modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Report {{postToReport.postOwner.firstName}}
-                    {{postToReport.postOwner.lastName}}'s Post</h4>
+                <h4 class="modal-title">Report Post</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
                 <p>Help us understand what is happening, please select your concerns. </p>
-                <div class="select2-red">
-                    <select class="select2" id="reportnewsfeedselect2" multiple="multiple"
+                <div class="select2-red" [ngClass]="{'d-none': !postToReport}">
+                    <select class="select2" id="reportPostselect2" multiple="multiple"
                         data-placeholder="Select concerns" data-dropdown-css-class="select2-red" style="width: 100%;">
                     </select>
                 </div>
                 <br />
-                <textarea class="form-control" id="content" rows="3" placeholder="Elaboration if necessary"
-                    [(ngModel)]="report.reportContent"></textarea>
+                <textarea *ngIf="report" class="form-control" id="content" rows="3"
+                    placeholder="Elaboration if necessary" [(ngModel)]="report.reportContent"></textarea>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
                 <button type="button" class="btn btn-primary" (click)="reportPost()"
+                    data-dismiss="modal">Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<div class="modal fade" id="report-comment-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Report Comment</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Help us understand what is happening, please select your concerns. </p>
+                <div class="select2-red" [ngClass]="{'d-none': !commentToReport}">
+                    <select class="select2" id="reportCommentselect2" multiple="multiple"
+                        data-placeholder="Select concerns" data-dropdown-css-class="select2-red" style="width: 100%;">
+                    </select>
+                </div>
+                <br />
+                <textarea *ngIf="report" class="form-control" id="content" rows="3"
+                    placeholder="Elaboration if necessary" [(ngModel)]="report.reportContent"></textarea>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" (click)="reportComment()"
                     data-dismiss="modal">Submit</button>
             </div>
         </div>

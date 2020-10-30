@@ -147,6 +147,19 @@ export class PostService {
       .pipe(catchError(this.handleError));
   }
 
+  sharePostToGroups(
+    postToShareId: number,
+    userId: number,
+    shareReq: SharePostToProjectOrGroupsReq
+  ): Observable<any> {
+    return this.http
+      .put<any>(
+        this.baseUrl + '/sharePostToGroups/' + postToShareId + '/' + userId,
+        shareReq
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   getCommentsForPost(postId: number): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/postComments/' + postId).pipe(
       map((data) => {
@@ -319,11 +332,81 @@ export class PostService {
                 )
               };
             });
+            if (post.originalPost) {
+              post.originalPost = {
+                ...post.originalPost,
+                postDate: new Date(
+                  Date.UTC(
+                    post.originalPost.postDate.substring(0, 4),
+                    post.originalPost.postDate.substring(5, 7) - 1,
+                    post.originalPost.postDate.substring(8, 10),
+                    post.originalPost.postDate.substring(11, 13),
+                    post.originalPost.postDate.substring(14, 16),
+                    post.originalPost.postDate.substring(17, 19)
+                  )
+                )
+              };
+            }
             return post;
           });
         }),
         catchError(this.handleError)
       );
+  }
+
+  getPostForGroupNewsfeed(groupId: number): Observable<any> {
+    return this.http.get<any>(this.baseUrl + '/groupNewsFeed/' + groupId).pipe(
+      map((data) => {
+        // return data.map((post) => {this.parsePostDate})
+        return data.map((post) => {
+          post = {
+            ...post,
+            postDate: new Date(
+              Date.UTC(
+                post.postDate.substring(0, 4),
+                post.postDate.substring(5, 7) - 1,
+                post.postDate.substring(8, 10),
+                post.postDate.substring(11, 13),
+                post.postDate.substring(14, 16),
+                post.postDate.substring(17, 19)
+              )
+            )
+          };
+          post.comments.map((postComment) => {
+            return {
+              ...postComment,
+              dateTime: new Date(
+                Date.UTC(
+                  postComment.dateTime.substring(0, 4),
+                  postComment.dateTime.substring(5, 7) - 1,
+                  postComment.dateTime.substring(8, 10),
+                  postComment.dateTime.substring(11, 13),
+                  postComment.dateTime.substring(14, 16),
+                  postComment.dateTime.substring(17, 19)
+                )
+              )
+            };
+          });
+          if (post.originalPost) {
+            post.originalPost = {
+              ...post.originalPost,
+              postDate: new Date(
+                Date.UTC(
+                  post.originalPost.postDate.substring(0, 4),
+                  post.originalPost.postDate.substring(5, 7) - 1,
+                  post.originalPost.postDate.substring(8, 10),
+                  post.originalPost.postDate.substring(11, 13),
+                  post.originalPost.postDate.substring(14, 16),
+                  post.originalPost.postDate.substring(17, 19)
+                )
+              )
+            };
+          }
+          return post;
+        });
+      }),
+      catchError(this.handleError)
+    );
   }
 
   private parsePostDate(post: any) {

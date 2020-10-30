@@ -31,10 +31,11 @@ export class GroupService {
     return this.httpClient.get<any>(this.baseUrl+"/getAllGroup").pipe();
   }
 
-  createNewGroup(newGroup: Group, ownerId: number): Observable<any> {
+  createNewGroup(newGroup: Group, ownerId: number, tagIdsSelected: number[]): Observable<any> {
     let createGroupReq = {
       "newGroup": newGroup,
-      "ownerId": ownerId
+      "ownerId": ownerId,
+      "tagIds": tagIdsSelected
     }
 
     return this.httpClient.put<any>(this.baseUrl+"/createNewGroup", createGroupReq, httpOptions).pipe(

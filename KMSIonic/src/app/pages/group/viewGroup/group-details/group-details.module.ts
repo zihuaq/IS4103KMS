@@ -1,3 +1,4 @@
+import { PostModule } from './../../../../shared/post/post.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +14,8 @@ import { GroupDetailsPage } from './group-details.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    GroupDetailsPageRoutingModule
+    GroupDetailsPageRoutingModule,
+    PostModule
   ],
   declarations: [GroupDetailsPage]
 })

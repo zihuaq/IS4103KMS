@@ -32,6 +32,8 @@ public interface PostSessionBeanLocal {
     
     public List<PostEntity> getPostForProjectNewsfeed(Long projectId) throws NoResultException;
 
+    public List<PostEntity> getPostForGroupNewsfeed(Long groupId) throws NoResultException;
+            
     public PostEntity updatePost(PostEntity postToUpdate) throws NoResultException;
 
     public void likePost(Long postId, Long userId) throws NoResultException, DuplicateLikeException;
@@ -53,6 +55,8 @@ public interface PostSessionBeanLocal {
     public void sharePost(Long postToShareId, Long userId, PostEntity post) throws NoResultException;
     
     public void sharePostToProjects(Long postToShareId, Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) throws NoResultException;
+    
+    public void sharePostToGroups(Long postToShareId, Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) throws NoResultException ;
     
     public void deletePostById(Long postId) throws NoResultException;
 

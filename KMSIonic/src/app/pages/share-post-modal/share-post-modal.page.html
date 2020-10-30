@@ -29,7 +29,7 @@
   </ion-item>
   <ion-item *ngIf="shareLocation == 'group'">
     <ion-label>Group:</ion-label>
-    <ion-select [(ngModel)]="groups" multiple="true" placeholder="Select Group">
+    <ion-select [(ngModel)]="shareToGroups" multiple="true" placeholder="Select Group">
       <ion-select-option *ngFor="let group of groups" [value]="group">{{group.name}}</ion-select-option>
     </ion-select>
   </ion-item>

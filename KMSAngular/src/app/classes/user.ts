@@ -8,6 +8,7 @@ import { HumanResourcePosting } from './human-resource-posting';
 import { Post } from './post';
 import { Project } from './project';
 import { Activity } from './activity';
+import { Group } from './group';
 
 export class User {
   userId: number;
@@ -40,6 +41,7 @@ export class User {
   likedPosts: Post[];
   projectsJoined: Project[];
   activityJoined: Activity[];
+  groupsJoined: Group[];
 
   constructor(
     userId?: number,
@@ -71,7 +73,8 @@ export class User {
     posts?: Post[],
     likedPosts?: Post[],
     projectsJoined?: Project[],
-    activityJoined?: Activity[]
+    activityJoined?: Activity[],
+    groupsJoined?: Group[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -103,5 +106,6 @@ export class User {
     this.likedPosts = likedPosts;
     this.projectsJoined = projectsJoined;
     this.activityJoined = activityJoined;
+    this.groupsJoined = groupsJoined;
   }
 }

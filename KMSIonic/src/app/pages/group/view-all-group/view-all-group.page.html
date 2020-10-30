@@ -26,6 +26,10 @@
       </ion-card-header>
       <ion-card-content>
         {{group.country}}    
+        <br/>
+        <span *ngFor="let sdg of sortSDG(group.sdgs)">
+          <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
+        </span> 
       </ion-card-content>
     </ion-card>
   </span>

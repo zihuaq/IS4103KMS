@@ -1,3 +1,4 @@
+import { GroupService } from './../../services/group.service';
 import { Project } from './../../classes/project';
 import { Group } from './../../classes/group';
 import { ProjectService } from './../../services/project.service';
@@ -46,7 +47,8 @@ export class CreatePostPage implements OnInit {
     private authenticationService: AuthenticationService,
     private activatedRoute: ActivatedRoute,
     private projectService: ProjectService,
-    private location: Location
+    private location: Location,
+    private groupService: GroupService
   ) {}
 
   ngOnInit() {}
@@ -72,7 +74,9 @@ export class CreatePostPage implements OnInit {
     }
     if (this.newsfeedType == 'group') {
       this.groupId = this.activatedRoute.snapshot.params.groupid;
-      //TODO: get group
+      this.groupService.getGroupById(this.groupId).subscribe((group) => {
+        this.group = group;
+      });
     }
 
     this.authenticationService.getCurrentUser().then((user: any) => {

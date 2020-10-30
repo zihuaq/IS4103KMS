@@ -10,6 +10,7 @@ import Exception.LikeNotFoundException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import ejb.session.stateless.PostSessionBeanLocal;
+import entity.GroupEntity;
 import entity.PostCommentEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
@@ -128,6 +129,22 @@ public class PostResource {
     public Response getPostForProjectNewsfeed(@PathParam("projectId") Long projectId) {
         try {
             List<PostEntity> posts = postSessionBean.getPostForProjectNewsfeed(projectId);
+            posts = getPostsResponse(posts);
+            return Response.status(200).entity(posts).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/groupNewsFeed/{groupId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPostForGroupNewsfeed(@PathParam("groupId") Long groupId) {
+        try {
+            List<PostEntity> posts = postSessionBean.getPostForGroupNewsfeed(groupId);
             posts = getPostsResponse(posts);
             return Response.status(200).entity(posts).build();
         } catch (NoResultException ex) {
@@ -300,6 +317,22 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
+    
+    @PUT
+    @Path("/sharePostToGroups/{postToShareId}/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sharePostToGroups(@PathParam("postToShareId") Long postToShareId, @PathParam("userId") Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) {
+        try {
+            postSessionBean.sharePostToGroups(postToShareId, userId, sharePostToProjectOrGroupsReq);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
 
     @DELETE
     @Path("/post/{postId}")
@@ -391,6 +424,11 @@ public class PostResource {
                 project.setProjectId(postToProcess.getOriginalPost().getProject().getProjectId());
                 project.setName(postToProcess.getOriginalPost().getProject().getName());
                 originalPost.setProject(project);
+            } else if (postToProcess.getOriginalPost().getGroup()!= null) {
+                GroupEntity group = new GroupEntity();
+                group.setGroupId(postToProcess.getOriginalPost().getGroup().getGroupId());
+                group.setName(postToProcess.getOriginalPost().getGroup().getName());
+                originalPost.setGroup(group);
             }
             post.setOriginalPost(originalPost);
         }
@@ -400,7 +438,14 @@ public class PostResource {
             project.setProjectId(postToProcess.getProject().getProjectId());
             project.setName(postToProcess.getProject().getName());
             post.setProject(project);
+        } else if (postToProcess.getGroup() != null) {
+            GroupEntity group = new GroupEntity();
+            group.setGroupId(postToProcess.getGroup().getGroupId());
+            group.setName(postToProcess.getGroup().getName());
+            post.setGroup(group);
         }
+        System.out.println(post);
+        System.out.println(postToProcess);
         return post;
     }
 
