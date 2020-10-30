@@ -29,6 +29,8 @@ public interface PostSessionBeanLocal {
     public PostEntity getPostById(Long postId) throws NoResultException;
 
     public List<PostEntity> getPostForUserNewsfeed(Long userId) throws UserNotFoundException, NoResultException;
+    
+    public List<PostEntity> getPostForProfileNewsfeed(Long userId) throws UserNotFoundException, NoResultException;
 
     public List<PostEntity> getPostForProjectNewsfeed(Long projectId) throws NoResultException;
 

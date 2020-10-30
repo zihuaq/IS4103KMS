@@ -124,6 +124,22 @@ public class PostResource {
     }
 
     @GET
+    @Path("/profileNewsFeed/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPostForProfileNewsfeed(@PathParam("userId") Long userId) {
+        try {
+            List<PostEntity> posts = postSessionBean.getPostForProfileNewsfeed(userId);
+            posts = getPostsResponse(posts);
+            return Response.status(200).entity(posts).build();
+        } catch (UserNotFoundException | NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
     @Path("/projectNewsFeed/{projectId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPostForProjectNewsfeed(@PathParam("projectId") Long projectId) {
@@ -333,7 +349,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/shareGroupToProjects/{userId}/{groupId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -365,8 +381,6 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
-    
 
     @PUT
     @Path("/shareGroupToFollowers/{userId}/{groupId}")
@@ -383,8 +397,8 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
-     @PUT
+
+    @PUT
     @Path("/shareProjectToProjects/{userId}/{projectId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -415,7 +429,6 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
 
     @PUT
     @Path("/shareProjectToFollowers/{userId}/{projectId}")

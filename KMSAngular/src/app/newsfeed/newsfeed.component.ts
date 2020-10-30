@@ -186,6 +186,44 @@ export class NewsfeedComponent implements OnInit {
         });
         bsCustomFileInput.init();
       });
+    } else if (this.newsfeedType == "profile") {
+      forkJoin([
+        this.userService.getUser(loggedInUserId.toString()),
+        this.postService.getPostForProfileNewsfeed(this.id),
+        this.tagService.getAllPostReportTags(),
+        this.tagService.getAllCommentReportTags()
+      ]).subscribe((result) => {
+        this.loggedInUser = result[0];
+        this.newsfeedPosts = result[1];
+        this.filteredNewsfeedPosts = this.newsfeedPosts;
+        this.postReportTags = result[2];
+        this.commentReportTags = result[3];
+        $('#reportPostselect2').select2({
+          data: this.postReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#reportCommentselect2').select2({
+          data: this.commentReportTags.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#shareToProjectselect2').select2({
+          data: this.loggedInUser.projectsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#shareToGroupselect2').select2({
+          data: this.loggedInUser.groupsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        bsCustomFileInput.init();
+      });
     } else {
       forkJoin([
         this.userService.getUser(loggedInUserId.toString()),
@@ -336,6 +374,13 @@ export class NewsfeedComponent implements OnInit {
     } else if (this.newsfeedType == "group") {
       this.postService
         .getPostForGroupNewsfeed(this.id)
+        .subscribe((result) => {
+          this.newsfeedPosts = result;
+          this.updateNewsFeedAccordingToRefineOptions();
+        });
+    } else if (this.newsfeedType == "profile") {
+      this.postService
+        .getPostForProfileNewsfeed(this.id)
         .subscribe((result) => {
           this.newsfeedPosts = result;
           this.updateNewsFeedAccordingToRefineOptions();
@@ -671,7 +716,7 @@ export class NewsfeedComponent implements OnInit {
       });
     } else if (this.selectedFilterOption == "Posts with images") {
       this.newsfeedPosts.forEach(post => {
-        if (this.postMatchSearchString(post) && post.picture) {
+        if (this.postMatchSearchString(post) && post.picture || this.postMatchSearchString(post) && (post.sharedProjectId || post.sharedGroupId)) {
           this.filteredNewsfeedPosts.push(post);
         }
       });
@@ -685,7 +730,7 @@ export class NewsfeedComponent implements OnInit {
   }
 
   postMatchSearchString(post: Post) {
-    if(this.searchString == null || this.searchString == ""){
+    if (this.searchString == null || this.searchString == "") {
       return true;
     }
     if (post.text && post.text.toLowerCase().includes(this.searchString.toLowerCase()) || post.originalPost &&
