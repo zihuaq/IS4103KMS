@@ -10,14 +10,13 @@ import Exception.CreateProjectReviewException;
 import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
-import Exception.ProjectNotFoundException;
 import entity.ActivityEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
-import entity.TagEntity;
 import entity.ReviewEntity;
+import entity.TagEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
 import java.util.List;
@@ -257,10 +256,19 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         }
         projectToDelete.getProjectMembers().clear();
         
-        for (ActivityEntity activity : projectToDelete.getActivities()) {            
+//        List<Long> activityIds = new ArrayList<>();
+//        for (ActivityEntity activity: projectToDelete.getActivities()) {
+//            activityIds.add(activity.getActivityId());
+//        }
+//        
+//        for (Long activityId: activityIds) {
+//            activitySessionBeanLocal.deleteActivity(activityId);
+//        }
+        for (ActivityEntity activity: projectToDelete.getActivities()) {
             activity.setProject(null);
-            activitySessionBeanLocal.deleteActivity(activity.getActivityId());            
+            activitySessionBeanLocal.deleteActivity(activity.getActivityId());
         }
+        
         projectToDelete.getActivities().clear();
         
         for (HumanResourcePostingEntity hrp : projectToDelete.getHumanResourcePostings()) {
