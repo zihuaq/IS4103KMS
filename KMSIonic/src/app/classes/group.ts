@@ -1,5 +1,6 @@
 import { User } from './user';
 import { Post } from './post';
+import { Tag } from './tag';
 
 export class Group {
   groupId: number;
@@ -10,6 +11,8 @@ export class Group {
   groupOwner: User;
   groupMembers: User[];
   groupAdmins: User[];
+  sdgs: Tag[];
+  isActive: boolean;
   posts: Post[];
 
   constructor(
@@ -21,6 +24,7 @@ export class Group {
     groupOwner?: User,
     groupMembers?: User[],
     groupAdmins?: User[],
+    sdgs?: Tag[],
     posts?: Post[]
   ) {
     this.groupId = groupId;
@@ -31,6 +35,7 @@ export class Group {
     this.groupOwner = groupOwner;
     this.groupMembers = groupMembers;
     this.groupAdmins = groupAdmins;
+    this.sdgs = sdgs;
     this.posts = posts;
   }
 }

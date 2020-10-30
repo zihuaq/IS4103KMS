@@ -10,6 +10,7 @@ import Exception.CreateGroupException;
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
+import ejb.session.stateless.ActivitySessionBeanLocal;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
@@ -18,6 +19,7 @@ import ejb.session.stateless.MaterialResourcePostingSessionBeanLocal;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.ActivityEntity;
 import entity.FulfillmentEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
@@ -36,6 +38,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import util.enumeration.ActivityStatusEnum;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
 
@@ -47,6 +50,9 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB
+    private ActivitySessionBeanLocal activitySessionBeanLocal;
 
     @EJB
     private FulfillmentSessionBeanLocal fulfillmentSessionBean;
@@ -138,7 +144,7 @@ public class DataInitializationSessionBean {
         userSessionBean.createNewUser(new UserEntity("Emma", "Tan", new Date(), "Female", "1@1.com", "pw1", new Date(), UserTypeEnum.ADMIN));
         userSessionBean.createNewUser(new UserEntity("Jason", "Lim", new Date(), "Male", "2@2.com", "pw2", new Date(), UserTypeEnum.ADMIN));
         userSessionBean.createNewUser(new UserEntity("Susan", "Chew", new Date(), "Female", "3@3.com", "pw3", new Date(), UserTypeEnum.ADMIN));
-        userSessionBean.createNewUser(new UserEntity("Joshua", "Chua", new Date(), "Male", "4@4.com", "pw4", new Date(), UserTypeEnum.ADMIN));
+        userSessionBean.createNewUser(new UserEntity("Jonathan", "Chew", new Date(), "Male", "4@4.com", "pw4", new Date(), UserTypeEnum.ADMIN));
         userSessionBean.createNewUser(new UserEntity("Wendy", "Ang", new Date(), "Female", "5@5.com", "pw5", UserTypeEnum.INDIVIDUAL));
         userSessionBean.createNewUser(new UserEntity("Lester", "Choo", new Date(), "Male", "6@6.com", "pw6", UserTypeEnum.INDIVIDUAL));
         userSessionBean.createNewUser(new UserEntity("Qi Qi", "Chia", new Date(), "Female", "7@7.com", "pw7", UserTypeEnum.INDIVIDUAL));
@@ -198,12 +204,12 @@ public class DataInitializationSessionBean {
         
         try {
             
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l, Arrays.asList(2L));
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ","Malaysia"), 3l, Arrays.asList(3L));
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l, Arrays.asList(6L));
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 4", "About SDG 4. Greetings From Korea. Started from locals who love kimchi and cucumber", "Korea"), 5l, Arrays.asList(4L));
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 5", "About SDG 5. Greetings From Japan. Started froma group of locals who love sushi and expensive fruits", "Japan"), 6l, Arrays.asList(8L));
-            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "About SDG 6. Greetings From Thailand. Started from a group of local street food seller in Bangkok", "Thailand"), 6l, Arrays.asList(9L));      
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l, Arrays.asList(24l, 26l, 29l));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ","Malaysia"), 3l, Arrays.asList(25l, 35l));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l, Arrays.asList(26l, 27l, 29l, 33l, 37l));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 4", "About SDG 4. Greetings From Korea. Started from locals who love kimchi and cucumber", "Korea"), 5l, Arrays.asList(30l, 32l, 34l, 36l));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 5", "About SDG 5. Greetings From Japan. Started froma group of locals who love sushi and expensive fruits", "Japan"), 6l, Arrays.asList(31l, 39l));
+            groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 6", "About SDG 6. Greetings From Thailand. Started from a group of local street food seller in Bangkok", "Thailand"), 6l, Arrays.asList(32l, 38l));      
             groupSessionBean.joinGroup(4l, 1l);
             groupSessionBean.joinGroup(4l, 2l);
             groupSessionBean.joinGroup(4l, 3l);                  
@@ -216,15 +222,30 @@ public class DataInitializationSessionBean {
         try {
             Date startDate = new Date();
             Date endDate = new Date();
-            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-10");
-            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-20");
+            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
             List<Long> tagIds = new ArrayList<>();
-            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.4491, 103.8185), 1l, tagIds);
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 1l, tagIds);
             
             tagIds.add(9l);
-            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.4491, 103.8185), 1l, tagIds);
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.3008, 103.9122), 1l, tagIds);
             projectSessionBean.joinProject(1l, 3l);
             humanResourcePostingSessionBean.joinHrp(3l, 2l);
+            
+            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 10:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
+            
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Litter picking at East Coast Park", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 1l);
+            
+            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 10:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 15:00");
+            
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Litter picking at East Coast Park", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 1l);
+            
+            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 10:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 12:00");
+            
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Meeting", startDate, endDate, 1.4491, 103.8185, "Meeting to discuss about budget", ActivityStatusEnum.COMPLETED), 1l);
             
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-30"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(23l)));
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 10.0, 0.0, 10.0, "Any laptops", startDate, endDate, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));

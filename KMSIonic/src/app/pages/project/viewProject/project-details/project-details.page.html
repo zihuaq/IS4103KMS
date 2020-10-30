@@ -60,6 +60,10 @@
         <ion-label>Material Resource Posting</ion-label>
       </ion-segment-button>
 
+      <ion-segment-button value="docs">
+        <ion-label>Documents</ion-label>
+      </ion-segment-button>
+
     </ion-segment>
   </ion-card>
 
@@ -118,6 +122,12 @@
   <ion-card *ngIf="segment === 'mrp'">
     <ion-card-content>
       <app-view-mrp></app-view-mrp>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment === 'docs'">
+    <ion-card-content>
+      <app-view-documents></app-view-documents>
     </ion-card-content>
   </ion-card>
 

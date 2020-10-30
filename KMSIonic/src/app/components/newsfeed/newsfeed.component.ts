@@ -2,23 +2,14 @@ import { SharePostModalPage } from './../../pages/share-post-modal/share-post-mo
 import { PostCommentModalPage } from './../../pages/post-comment-modal/post-comment-modal.page';
 import { Post } from './../../classes/post';
 import { User } from './../../classes/user';
-import {
-  ApplicationRef,
-  Component,
-  Input,
-  OnInit,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ActionSheetController,
   ToastController,
   ModalController
 } from '@ionic/angular';
-import { AuthenticationService } from '../../services/authentication.service';
 import { PostService } from '../../services/post.service';
-import { UserService } from '../../services/user.service';
 import { ReportPostModalPage } from '../../pages/report-post-modal/report-post-modal.page';
 
 @Component({
@@ -34,6 +25,7 @@ export class NewsfeedComponent implements OnInit {
   @Input() isMember: boolean;
   @Input() projectId: number;
   @Input() groupId: number;
+  @Input() profileId: number;
   @Output() init = new EventEmitter();
 
   constructor(

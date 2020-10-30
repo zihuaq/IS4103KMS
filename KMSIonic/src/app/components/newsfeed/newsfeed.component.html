@@ -1,5 +1,5 @@
 <ion-item-divider class="ion-no-padding"
-  *ngIf="newsfeedType == 'profile' || newsfeedType == 'user' || (newsfeedType=='project' && isMember) || (newsfeedType=='group' && isMember)">
+  *ngIf="(newsfeedType == 'profile' && loggedInUser.userId == profileId) || newsfeedType == 'user' || (newsfeedType=='project' && isMember) || (newsfeedType=='group' && isMember)">
   <ion-toolbar>
     <ion-avatar slot="start" style="width: 40px; height: 40px;" *ngIf="loggedInUser" class="ion-margin-start">
       <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
@@ -29,8 +29,11 @@
     </ion-button>
   </ion-toolbar>
 </ion-item-divider>
-<ion-searchbar (ionChange)="setFilteredItems($event)">
+<ion-searchbar (ionChange)="setFilteredItems($event)" placeholder="Search Posts">
 </ion-searchbar>
+<ion-item *ngIf="filteredPosts && filteredPosts.length == 0">
+  No Post found
+</ion-item>
 <ion-card *ngFor="let post of filteredPosts">
   <ion-toolbar lines="none">
     <ion-avatar slot="start" style="width: 40px; height: 40px; margin-left: 5px;">
@@ -165,7 +168,9 @@
       <ion-icon name="thumbs-up"></ion-icon>
     </ion-badge>
     <ion-label style="margin-left: 5px;">{{post.likers.length}}</ion-label>
-    <ion-label slot="end" class="ion-text-end ion-margin-end" color="medium">{{post.comments.length}} comments
+    <ion-label slot="end" class="ion-text-end ion-margin-end ion-activatable" color="medium"
+      (click)="showPostCommentModal(post.postId)">{{post.comments.length}} comments
+      <ion-ripple-effect></ion-ripple-effect>
     </ion-label>
   </ion-item-divider>
   <ion-grid class="ion-no-padding" style="height: 100%;">

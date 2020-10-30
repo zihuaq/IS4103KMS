@@ -88,6 +88,7 @@ export class ActivityTabComponent implements OnInit {
     this.activityService.getActivitiesByProject(this.projectId, this.dateToString(this.viewDate)).subscribe(
       response => {
         this.activities = response;
+        this.activities.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
         this.events = [];
         for (let activity of this.activities) {
           let event = {

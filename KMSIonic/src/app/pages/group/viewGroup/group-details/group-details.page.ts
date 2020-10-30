@@ -17,6 +17,7 @@ import { Group } from 'src/app/classes/group';
 import { GroupService } from 'src/app/services/group.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { forkJoin } from 'rxjs';
+import { ReportGroupPage } from '../report-group/report-group.page';
 
 @Component({
   selector: 'app-group-details',

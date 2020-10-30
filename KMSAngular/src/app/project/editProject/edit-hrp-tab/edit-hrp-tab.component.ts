@@ -85,6 +85,7 @@ export class EditHrpTabComponent implements OnInit {
     this.hrpService.getHrpByProject(this.projectId).subscribe(
       response => {
         this.hrpList = response;
+        this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
       }
     );
   }
@@ -166,6 +167,7 @@ export class EditHrpTabComponent implements OnInit {
           this.hrpService.getHrpByProject(this.projectId).subscribe(
             response => {
               this.hrpList = response;
+              this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
             }
           );
         },
@@ -273,6 +275,7 @@ export class EditHrpTabComponent implements OnInit {
           this.hrpService.getHrpByProject(this.projectId).subscribe(
             response => {
               this.hrpList = response;
+              this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
             }
           );
         }
@@ -294,6 +297,7 @@ export class EditHrpTabComponent implements OnInit {
         this.hrpService.getHrpByProject(this.projectId).subscribe(
           response => {
             this.hrpList = response;
+            this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
           }
         );
         $("#edit-modal").modal("hide");

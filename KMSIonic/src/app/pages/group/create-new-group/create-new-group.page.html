@@ -278,7 +278,7 @@
           <!-- <ion-item>
             <ion-label text-wrap><b>Monetary Funding Required(USD): </b></ion-label>
             <ion-input id="amount" name="amount" [(ngModel)]="newGroup.monetaryFundingRequired" required #amount="ngModel"></ion-input>
-          </ion-item>
+          </ion-item>-->
 
           <ion-item>
             <ion-label>SDG Tags: </ion-label>
@@ -287,7 +287,8 @@
                 <ion-select-option [value]="tag">{{tag.name}}</ion-select-option>
               </span>              
             </ion-select>
-          </ion-item> -->
+
+         </ion-item>
 
           <ion-button expand="full" type="submit" [disabled]="!createGroupForm.valid">
             Create
