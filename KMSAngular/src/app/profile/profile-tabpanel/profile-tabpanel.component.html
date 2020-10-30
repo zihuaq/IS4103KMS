@@ -22,7 +22,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="profile-tab-newsfeed-tabname" data-toggle="pill" href="#profile-tab-newsfeed"
-                    role="tab" aria-controls="profile-tab-newsfeed" aria-selected="false">Newsfeed</a>
+                    role="tab" aria-controls="profile-tab-newsfeed" aria-selected="false" *ngIf="!shared">Newsfeed</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="profile-tab-reviews-recieved-tabname" data-toggle="pill"
@@ -35,7 +35,7 @@
                     aria-selected="false">Reviews Written</a>
             </li>
             <!-- <li class="nav-item"> -->
-            <li class="nav-item" *ngIf="loggedInUser.userType.toString() == 'ADMIN'">
+            <li class="nav-item" *ngIf="loggedInUser.userType.toString() == 'ADMIN' && !shared">
                 <a class="nav-link" id="profile-tab-settings-tabname" data-toggle="pill" href="#profile-tab-settings"
                     role="tab" aria-controls="profile-tab-reviews-setting" aria-selected="false">User Settings</a>
                 <!-- <li class="nav-item" *ngIf="profile.userId == loggedInUser.userId"> -->
