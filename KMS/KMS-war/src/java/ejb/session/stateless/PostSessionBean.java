@@ -13,6 +13,7 @@ import entity.GroupEntity;
 import entity.PostCommentEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
+import entity.ReportEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,10 +131,31 @@ public class PostSessionBean implements PostSessionBeanLocal {
                     }
                 }
             }
+            for (int i = 0; i < user.getGroupsJoined().size(); i++) {
+                for (int j = 0; j < user.getGroupsJoined().get(i).getPosts().size(); j++) {
+                    if (user.getGroupsJoined().get(i).getPosts().get(j).getPostOwner() != user) {
+                        postForUserNewsFeed.add(user.getGroupsJoined().get(i).getPosts().get(j));
+                    }
+                }
+            }
 
             Collections.sort(postForUserNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
             Collections.reverse(postForUserNewsFeed);
             return postForUserNewsFeed;
+        } else {
+            throw new UserNotFoundException("User does not exist.");
+        }
+    }
+
+    @Override
+    public List<PostEntity> getPostForProfileNewsfeed(Long userId) throws UserNotFoundException, NoResultException {
+        UserEntity user = userSessionBeanLocal.getUserById(userId);
+        List<PostEntity> postForProfileNewsFeed = new ArrayList<>();
+        if (user != null) {
+            postForProfileNewsFeed.addAll(user.getPosts());
+            Collections.sort(postForProfileNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
+            Collections.reverse(postForProfileNewsFeed);
+            return postForProfileNewsFeed;
         } else {
             throw new UserNotFoundException("User does not exist.");
         }
@@ -272,6 +294,14 @@ public class PostSessionBean implements PostSessionBeanLocal {
             PostEntity post = em.find(PostEntity.class, comment.getPost().getPostId());
             if (post != null) {
                 post.getComments().remove(comment);
+                Query q = em.createQuery("SELECT r FROM ReportEntity r");
+                List<ReportEntity> allReports = q.getResultList();
+                for (int i = 0; i < allReports.size(); i++) {
+                    if (allReports.get(i).getReportedComment() != null && allReports.get(i).getReportedComment().getPostCommentId() == commentId) {
+                        ReportEntity report = em.find(ReportEntity.class, allReports.get(i).getReportId());
+                        em.remove(report);
+                    }
+                }
                 em.remove(comment);
             } else {
                 throw new NoResultException("Post is not found");
@@ -394,7 +424,175 @@ public class PostSessionBean implements PostSessionBeanLocal {
             throw new NoResultException("Post or comment owner not found");
         }
     }
-    
+
+    @Override
+    public void shareGroupToProjects(Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, Long groupId) throws NoResultException {
+        List<Long> projectIds = sharePostToProjectOrGroupsReq.getProjectsOrGroupsIds();
+        GroupEntity groupToShare = em.find(GroupEntity.class, groupId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (groupToShare != null && user != null) {
+            for (int i = 0; i < projectIds.size(); i++) {
+                ProjectEntity project = em.find(ProjectEntity.class, projectIds.get(i));
+                if (project != null) {
+                    PostEntity post = new PostEntity();
+                    post.setText(sharePostToProjectOrGroupsReq.getText());
+                    post.setPostDate(sharePostToProjectOrGroupsReq.getPostDate());
+                    post.setPostOwner(user);
+                    post.setPicture(groupToShare.getProfilePicture());
+                    post.setSharedGroupId(groupToShare.getGroupId().toString());
+                    post.setSharedGroupOrProjectDescription(groupToShare.getDescription());
+                    post.setSharedGroupOrProjectName(groupToShare.getName());
+                    post.setProject(project);
+                    em.persist(post);
+                    em.flush();
+                    user.getPosts().add(post);
+                    project.getPosts().add(post);
+                } else {
+                    throw new NoResultException("Project not found");
+                }
+            }
+
+        } else {
+            throw new NoResultException("Group or user not found");
+        }
+    }
+
+    @Override
+    public void shareGroupToGroups(Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, Long groupId) throws NoResultException {
+        List<Long> groupIds = sharePostToProjectOrGroupsReq.getProjectsOrGroupsIds();
+        GroupEntity groupToShare = em.find(GroupEntity.class, groupId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (groupToShare != null && user != null) {
+            for (int i = 0; i < groupIds.size(); i++) {
+                GroupEntity group = em.find(GroupEntity.class, groupIds.get(i));
+                if (group != null) {
+                    PostEntity post = new PostEntity();
+                    post.setText(sharePostToProjectOrGroupsReq.getText());
+                    post.setPostDate(sharePostToProjectOrGroupsReq.getPostDate());
+                    post.setPostOwner(user);
+                    post.setPicture(groupToShare.getProfilePicture());
+                    post.setSharedGroupId(groupToShare.getGroupId().toString());
+                    post.setSharedGroupOrProjectDescription(groupToShare.getDescription());
+                    post.setSharedGroupOrProjectName(groupToShare.getName());
+                    post.setGroup(group);
+                    em.persist(post);
+                    em.flush();
+                    user.getPosts().add(post);
+                    group.getPosts().add(post);
+                } else {
+                    throw new NoResultException("Group not found");
+                }
+            }
+        } else {
+            throw new NoResultException("Group or user not found");
+        }
+    }
+
+    @Override
+    public void shareGroupToFollowers(Long userId, PostEntity post, Long groupId) throws NoResultException {
+        GroupEntity groupToShare = em.find(GroupEntity.class, groupId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (groupToShare != null && user != null) {
+            post.setPostOwner(user);
+            post.setPicture(groupToShare.getProfilePicture());
+            post.setSharedGroupId(groupToShare.getGroupId().toString());
+            post.setSharedGroupOrProjectDescription(groupToShare.getDescription());
+            post.setSharedGroupOrProjectName(groupToShare.getName());
+            em.persist(post);
+            em.flush();
+            user.getPosts().add(post);
+        } else {
+            throw new NoResultException("Group or user not found");
+        }
+    }
+
+    @Override
+    public void shareProjectToProjects(Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, Long projectId) throws NoResultException {
+        List<Long> projectIds = sharePostToProjectOrGroupsReq.getProjectsOrGroupsIds();
+        ProjectEntity projectToShare = em.find(ProjectEntity.class, projectId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (projectToShare != null && user != null) {
+            for (int i = 0; i < projectIds.size(); i++) {
+                ProjectEntity project = em.find(ProjectEntity.class, projectIds.get(i));
+                if (project != null) {
+                    PostEntity post = new PostEntity();
+                    post.setText(sharePostToProjectOrGroupsReq.getText());
+                    post.setPostDate(sharePostToProjectOrGroupsReq.getPostDate());
+                    post.setPostOwner(user);
+                    post.setPicture(projectToShare.getProfilePicture());
+                    post.setSharedProjectId(projectToShare.getProjectId().toString());
+                    post.setSharedGroupOrProjectDescription(projectToShare.getDescription());
+                    post.setSharedGroupOrProjectName(projectToShare.getName());
+                    post.setProject(project);
+                    em.persist(post);
+                    em.flush();
+                    user.getPosts().add(post);
+                    project.getPosts().add(post);
+                } else {
+                    throw new NoResultException("Project not found");
+                }
+            }
+
+        } else {
+            throw new NoResultException("Project or user not found");
+        }
+    }
+
+    @Override
+    public void shareProjectToGroups(Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, Long projectId) throws NoResultException {
+        List<Long> groupIds = sharePostToProjectOrGroupsReq.getProjectsOrGroupsIds();
+        ProjectEntity projectToShare = em.find(ProjectEntity.class, projectId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (projectToShare != null && user != null) {
+            for (int i = 0; i < groupIds.size(); i++) {
+                GroupEntity group = em.find(GroupEntity.class, groupIds.get(i));
+                if (group != null) {
+                    PostEntity post = new PostEntity();
+                    post.setText(sharePostToProjectOrGroupsReq.getText());
+                    post.setPostDate(sharePostToProjectOrGroupsReq.getPostDate());
+                    post.setPostOwner(user);
+                    post.setPicture(projectToShare.getProfilePicture());
+                    post.setSharedProjectId(projectToShare.getProjectId().toString());
+                    post.setSharedGroupOrProjectDescription(projectToShare.getDescription());
+                    post.setSharedGroupOrProjectName(projectToShare.getName());
+                    post.setGroup(group);
+                    em.persist(post);
+                    em.flush();
+                    user.getPosts().add(post);
+                    group.getPosts().add(post);
+                } else {
+                    throw new NoResultException("Group not found");
+                }
+            }
+        } else {
+            throw new NoResultException("Group or user not found");
+        }
+    }
+
+    @Override
+    public void shareProjectToFollowers(Long userId, PostEntity post, Long projectId) throws NoResultException {
+        ProjectEntity projectToShare = em.find(ProjectEntity.class, projectId);
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (projectToShare != null && user != null) {
+            post.setPostOwner(user);
+            post.setPicture(projectToShare.getProfilePicture());
+            post.setSharedProjectId(projectToShare.getProjectId().toString());
+            post.setSharedGroupOrProjectDescription(projectToShare.getDescription());
+            post.setSharedGroupOrProjectName(projectToShare.getName());
+            em.persist(post);
+            em.flush();
+            user.getPosts().add(post);
+        } else {
+            throw new NoResultException("Group or user not found");
+        }
+    }
+
     @Override
     public void deletePostById(Long postId) throws NoResultException {
         PostEntity post = em.find(PostEntity.class, postId);
@@ -415,6 +613,15 @@ public class PostSessionBean implements PostSessionBeanLocal {
                     if (allPosts.get(i).getSharedPosts().contains(post)) {
                         allPosts.get(i).getSharedPosts().remove(post);
                     }
+                }
+            }
+
+            Query q3 = em.createQuery("SELECT r FROM ReportEntity r");
+            List<ReportEntity> allReports = q3.getResultList();
+            for (int i = 0; i < allReports.size(); i++) {
+                if (allReports.get(i).getReportedPost() != null && allReports.get(i).getReportedPost().getPostId() == postId) {
+                    ReportEntity report = em.find(ReportEntity.class, allReports.get(i).getReportId());
+                    em.remove(report);
                 }
             }
 

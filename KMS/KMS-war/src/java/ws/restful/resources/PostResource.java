@@ -124,6 +124,22 @@ public class PostResource {
     }
 
     @GET
+    @Path("/profileNewsFeed/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPostForProfileNewsfeed(@PathParam("userId") Long userId) {
+        try {
+            List<PostEntity> posts = postSessionBean.getPostForProfileNewsfeed(userId);
+            posts = getPostsResponse(posts);
+            return Response.status(200).entity(posts).build();
+        } catch (UserNotFoundException | NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
     @Path("/projectNewsFeed/{projectId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPostForProjectNewsfeed(@PathParam("projectId") Long projectId) {
@@ -317,7 +333,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @PUT
     @Path("/sharePostToGroups/{postToShareId}/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -325,6 +341,102 @@ public class PostResource {
     public Response sharePostToGroups(@PathParam("postToShareId") Long postToShareId, @PathParam("userId") Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) {
         try {
             postSessionBean.sharePostToGroups(postToShareId, userId, sharePostToProjectOrGroupsReq);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/shareGroupToProjects/{userId}/{groupId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response shareGroupToProjects(@PathParam("userId") Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, @PathParam("groupId") Long groupId) {
+        try {
+            postSessionBean.shareGroupToProjects(userId, sharePostToProjectOrGroupsReq, groupId);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/shareGroupToGroups/{userId}/{groupId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response shareGroupToGroups(@PathParam("userId") Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, @PathParam("groupId") Long groupId) {
+        try {
+            postSessionBean.shareGroupToGroups(userId, sharePostToProjectOrGroupsReq, groupId);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/shareGroupToFollowers/{userId}/{groupId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response shareGroupToFollowers(@PathParam("userId") Long userId, PostEntity post, @PathParam("groupId") Long groupId) {
+        try {
+            postSessionBean.shareGroupToFollowers(userId, post, groupId);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/shareProjectToProjects/{userId}/{projectId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response shareProjectToProjects(@PathParam("userId") Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, @PathParam("projectId") Long projectId) {
+        try {
+            postSessionBean.shareProjectToProjects(userId, sharePostToProjectOrGroupsReq, projectId);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/shareProjectToGroups/{userId}/{projectId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response shareProjectToGroups(@PathParam("userId") Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, @PathParam("projectId") Long projectId) {
+        try {
+            postSessionBean.shareProjectToGroups(userId, sharePostToProjectOrGroupsReq, projectId);
+            return Response.status(204).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/shareProjectToFollowers/{userId}/{projectId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response shareProjectToFollowers(@PathParam("userId") Long userId, PostEntity post, @PathParam("projectId") Long projectId) {
+        try {
+            postSessionBean.shareProjectToFollowers(userId, post, projectId);
             return Response.status(204).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -380,6 +492,10 @@ public class PostResource {
         post.setPostDate(postToProcess.getPostDate());
         post.setText(postToProcess.getText());
         post.setPicture(postToProcess.getPicture());
+        post.setSharedGroupId(postToProcess.getSharedGroupId());
+        post.setSharedProjectId(postToProcess.getSharedProjectId());
+        post.setSharedGroupOrProjectDescription(postToProcess.getSharedGroupOrProjectDescription());
+        post.setSharedGroupOrProjectName(postToProcess.getSharedGroupOrProjectName());
         UserEntity user = new UserEntity();
         user.setUserId(postToProcess.getPostOwner().getUserId());
         user.setFirstName(postToProcess.getPostOwner().getFirstName());
@@ -419,12 +535,16 @@ public class PostResource {
             originalPost.setText(postToProcess.getOriginalPost().getText());
             originalPost.setPostId(postToProcess.getOriginalPost().getPostId());
             originalPost.setPostDate(postToProcess.getOriginalPost().getPostDate());
+            originalPost.setSharedGroupId(postToProcess.getOriginalPost().getSharedGroupId());
+            originalPost.setSharedProjectId(postToProcess.getOriginalPost().getSharedProjectId());
+            originalPost.setSharedGroupOrProjectDescription(postToProcess.getOriginalPost().getSharedGroupOrProjectDescription());
+            originalPost.setSharedGroupOrProjectName(postToProcess.getOriginalPost().getSharedGroupOrProjectName());
             if (postToProcess.getOriginalPost().getProject() != null) {
                 ProjectEntity project = new ProjectEntity();
                 project.setProjectId(postToProcess.getOriginalPost().getProject().getProjectId());
                 project.setName(postToProcess.getOriginalPost().getProject().getName());
                 originalPost.setProject(project);
-            } else if (postToProcess.getOriginalPost().getGroup()!= null) {
+            } else if (postToProcess.getOriginalPost().getGroup() != null) {
                 GroupEntity group = new GroupEntity();
                 group.setGroupId(postToProcess.getOriginalPost().getGroup().getGroupId());
                 group.setName(postToProcess.getOriginalPost().getGroup().getName());

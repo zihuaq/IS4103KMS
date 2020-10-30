@@ -12,8 +12,10 @@
 
 <ion-content>
   <div *ngIf="profile && loggedInUser">
-    <app-overview [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
-      (userChanged)="loggedInUser=$event"></app-overview>
+    <app-overview [profile]="profile" [loggedInUser]="loggedInUser" [isFollowing]="isFollowing"
+      [hasSentFollowRequest]="hasSentFollowRequest" [isAffiliated]="isAffiliated"
+      [hasSentAffiliationRequest]="hasSentAffiliationRequest" (init)="getFollowersFollowingAndAffiliatedUsers()">
+    </app-overview>
     <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
       (userchanged)="loggedInUser=$event"></app-material-resource-available>
     <app-skills [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
@@ -28,5 +30,18 @@
         </ion-chip>
       </ion-row>
     </ion-grid>
+    <ion-card>
+      <app-newsfeed *ngIf="isFollowing || profile.userId == loggedInUser.userId" [loggedInUser]="loggedInUser"
+        [newsfeedPosts]="newsfeedPosts" [profileId]="profile.userId" newsfeedType="profile"
+        [filteredPosts]="newsfeedPosts" (init)="ionViewWillEnter()">
+      </app-newsfeed>
+
+      <ion-item *ngIf="!isFollowing && profile.userId != loggedInUser.userId" lines="none">
+        <ion-label>This account is private</ion-label>
+      </ion-item>
+      <ion-card-content *ngIf="!isFollowing && profile.userId != loggedInUser.userId">
+        Follow this account to see his posts.
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>

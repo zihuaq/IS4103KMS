@@ -10,7 +10,11 @@ import Exception.CreateGroupException;
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
+
 import Exception.UserNotFoundException;
+
+import ejb.session.stateless.ActivitySessionBeanLocal;
+
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
@@ -21,6 +25,7 @@ import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.ReportSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.ActivityEntity;
 import entity.FulfillmentEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
@@ -41,6 +46,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import util.enumeration.ActivityStatusEnum;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
 
@@ -58,6 +64,9 @@ public class DataInitializationSessionBean {
 
     @EJB
     private PostSessionBeanLocal postSessionBean;
+
+    private ActivitySessionBeanLocal activitySessionBeanLocal;
+
 
     @EJB
     private FulfillmentSessionBeanLocal fulfillmentSessionBean;
@@ -239,15 +248,30 @@ public class DataInitializationSessionBean {
         try {
             Date startDate = new Date();
             Date endDate = new Date();
-            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-10");
-            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-20");
+            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
             List<Long> tagIds = new ArrayList<>();
-            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.4491, 103.8185), 1l, tagIds);
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 1l, tagIds);
             
             tagIds.add(9l);
-            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.4491, 103.8185), 1l, tagIds);
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.3008, 103.9122), 1l, tagIds);
             projectSessionBean.joinProject(1l, 3l);
             humanResourcePostingSessionBean.joinHrp(3l, 2l);
+            
+            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 10:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
+            
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Litter picking at East Coast Park", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 1l);
+            
+            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 10:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 15:00");
+            
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Litter picking at East Coast Park", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 1l);
+            
+            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 10:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 12:00");
+            
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Meeting", startDate, endDate, 1.4491, 103.8185, "Meeting to discuss about budget", ActivityStatusEnum.COMPLETED), 1l);
             
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-30"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(23l)));
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 10.0, 0.0, 10.0, "Any laptops", startDate, endDate, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));

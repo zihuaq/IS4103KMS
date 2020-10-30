@@ -15,6 +15,8 @@ import { SharePostToProjectOrGroupsReq } from '../../models/SharePostToProjectOr
 })
 export class SharePostModalPage implements OnInit {
   @ViewChild('sharePostInput') sharePostInput: IonTextarea;
+  @Input() projectId: number;
+  @Input() groupId: number;
   @Input() sharedPost: Post;
   @Input() loggedInUser: User;
   postContent: string;
@@ -54,7 +56,7 @@ export class SharePostModalPage implements OnInit {
   }
 
   async sharePost() {
-    if (this.shareLocation == 'profile') {
+    if (this.shareLocation == 'profile' && !this.projectId && !this.groupId) {
       let post = new Post();
       post.text = this.postContent;
       post.postDate = new Date();
@@ -68,7 +70,47 @@ export class SharePostModalPage implements OnInit {
           toast.present();
           this.dismiss();
         });
-    } else if (this.shareLocation == 'project') {
+    } else if (
+      this.shareLocation == 'profile' &&
+      this.projectId &&
+      !this.groupId
+    ) {
+      let post = new Post();
+      post.text = this.postContent;
+      post.postDate = new Date();
+      this.postService
+        .shareProjectToFollowers(this.loggedInUser.userId, post, this.projectId)
+        .subscribe(async () => {
+          const toast = await this.toastController.create({
+            message: 'Project shared!',
+            duration: 2000
+          });
+          toast.present();
+          this.dismiss();
+        });
+    } else if (
+      this.shareLocation == 'profile' &&
+      !this.projectId &&
+      this.groupId
+    ) {
+      let post = new Post();
+      post.text = this.postContent;
+      post.postDate = new Date();
+      this.postService
+        .shareGroupToFollowers(this.loggedInUser.userId, post, this.groupId)
+        .subscribe(async () => {
+          const toast = await this.toastController.create({
+            message: 'Group shared!',
+            duration: 2000
+          });
+          toast.present();
+          this.dismiss();
+        });
+    } else if (
+      this.shareLocation == 'project' &&
+      !this.projectId &&
+      !this.groupId
+    ) {
       let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
       sharePostToProjectOrGroupsReq.text = this.postContent;
       sharePostToProjectOrGroupsReq.postDate = new Date();
@@ -78,7 +120,7 @@ export class SharePostModalPage implements OnInit {
       sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedProjectIds;
       if (selectedProjectIds.length == 0) {
         const toast = await this.toastController.create({
-          message: 'Please select an audience for your shared post.',
+          message: 'Please select an audience to share to.',
           duration: 2000,
           color: 'red'
         });
@@ -99,7 +141,81 @@ export class SharePostModalPage implements OnInit {
             this.dismiss();
           });
       }
-    } else if (this.shareLocation == 'group') {
+    } else if (
+      this.shareLocation == 'project' &&
+      this.projectId &&
+      !this.groupId
+    ) {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = this.postContent;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedProjectIds = this.shareToProjects.map((project) => {
+        return project.projectId;
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedProjectIds;
+      if (selectedProjectIds.length == 0) {
+        const toast = await this.toastController.create({
+          message: 'Please select an audience to share to.',
+          duration: 2000,
+          color: 'red'
+        });
+        toast.present();
+      } else {
+        this.postService
+          .shareProjectToProjects(
+            this.loggedInUser.userId,
+            sharePostToProjectOrGroupsReq,
+            this.projectId
+          )
+          .subscribe(async () => {
+            const toast = await this.toastController.create({
+              message: 'Project shared!',
+              duration: 2000
+            });
+            toast.present();
+            this.dismiss();
+          });
+      }
+    } else if (
+      this.shareLocation == 'project' &&
+      !this.projectId &&
+      this.groupId
+    ) {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = this.postContent;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedProjectIds = this.shareToProjects.map((project) => {
+        return project.projectId;
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedProjectIds;
+      if (selectedProjectIds.length == 0) {
+        const toast = await this.toastController.create({
+          message: 'Please select an audience to share to.',
+          duration: 2000,
+          color: 'red'
+        });
+        toast.present();
+      } else {
+        this.postService
+          .shareGroupToProjects(
+            this.loggedInUser.userId,
+            sharePostToProjectOrGroupsReq,
+            this.projectId
+          )
+          .subscribe(async () => {
+            const toast = await this.toastController.create({
+              message: 'Group shared!',
+              duration: 2000
+            });
+            toast.present();
+            this.dismiss();
+          });
+      }
+    } else if (
+      this.shareLocation == 'group' &&
+      !this.projectId &&
+      !this.groupId
+    ) {
       let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
       sharePostToProjectOrGroupsReq.text = this.postContent;
       sharePostToProjectOrGroupsReq.postDate = new Date();
@@ -109,7 +225,7 @@ export class SharePostModalPage implements OnInit {
       sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedGroupIds;
       if (selectedGroupIds.length == 0) {
         const toast = await this.toastController.create({
-          message: 'Please select an audience for your shared post.',
+          message: 'Please select an audience to share to.',
           duration: 2000,
           color: 'red'
         });
@@ -124,6 +240,76 @@ export class SharePostModalPage implements OnInit {
           .subscribe(async () => {
             const toast = await this.toastController.create({
               message: 'Post shared!',
+              duration: 2000
+            });
+            toast.present();
+            this.dismiss();
+          });
+      }
+    } else if (
+      this.shareLocation == 'group' &&
+      this.projectId &&
+      !this.groupId
+    ) {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = this.postContent;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedGroupIds = this.shareToGroups.map((group) => {
+        return group.groupId;
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedGroupIds;
+      if (selectedGroupIds.length == 0) {
+        const toast = await this.toastController.create({
+          message: 'Please select an audience to share to.',
+          duration: 2000,
+          color: 'red'
+        });
+        toast.present();
+      } else {
+        this.postService
+          .shareProjectToGroups(
+            this.loggedInUser.userId,
+            sharePostToProjectOrGroupsReq,
+            this.projectId
+          )
+          .subscribe(async () => {
+            const toast = await this.toastController.create({
+              message: 'Post shared!',
+              duration: 2000
+            });
+            toast.present();
+            this.dismiss();
+          });
+      }
+    } else if (
+      this.shareLocation == 'group' &&
+      !this.projectId &&
+      this.groupId
+    ) {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = this.postContent;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedGroupIds = this.shareToGroups.map((group) => {
+        return group.groupId;
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedGroupIds;
+      if (selectedGroupIds.length == 0) {
+        const toast = await this.toastController.create({
+          message: 'Please select an audience to share to.',
+          duration: 2000,
+          color: 'red'
+        });
+        toast.present();
+      } else {
+        this.postService
+          .shareGroupToGroups(
+            this.loggedInUser.userId,
+            sharePostToProjectOrGroupsReq,
+            this.groupId
+          )
+          .subscribe(async () => {
+            const toast = await this.toastController.create({
+              message: 'Group shared!',
               duration: 2000
             });
             toast.present();

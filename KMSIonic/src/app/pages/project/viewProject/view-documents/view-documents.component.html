@@ -1,0 +1,17 @@
+<span *ngIf="!hasLoad">
+  Loading...
+</span>
+
+<span *ngIf="hasLoad">
+  <span *ngIf="files.length == 0">
+    There is no documents.
+  </span>
+
+  <span *ngIf="files.length > 0">
+    <ion-list *ngFor="let file of files">
+      <ion-label tappable (click)="viewFile(file)">
+        <p style="color: blue;">{{formatFileKey(file)}}</p>
+      </ion-label>
+    </ion-list>
+  </span>
+</span>

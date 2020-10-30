@@ -3,6 +3,7 @@ import { Location } from "@angular/common";
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController, ActionSheetController, ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
 
 import { User } from 'src/app/classes/user';
 import { Project } from 'src/app/classes/project';
@@ -37,8 +38,15 @@ export class TabPanelPage implements OnInit {
   mrpTags: Tag[];
   mrpList: MaterialResourcePosting[];
   noMrp: boolean = true;
+  aws = require('aws-sdk');
+  files;
+  fileToDelete;
+  bucket: string = "is4103kms";
+  s3;
+  hasLoad = false;
 
-  constructor(public toastController: ToastController,
+  constructor(private fileChooser: FileChooser,
+    public toastController: ToastController,
     public modalController: ModalController,
     public actionSheetController: ActionSheetController,
     public alertController: AlertController,
@@ -58,6 +66,7 @@ export class TabPanelPage implements OnInit {
       this.hrpList = [];
       this.mrpTags = [];
       this.mrpList = [];
+      this.files = [];
     }
 
   ngOnInit() {
@@ -67,6 +76,12 @@ export class TabPanelPage implements OnInit {
         this.currentUserId = user.userId;
       }
     );
+    this.s3 = new this.aws.S3({
+      signatureVersion: 'v4',
+      region: 'eu-east-2',
+      accessKeyId: "AKIAIY62RH5Q6ADCWR6Q",
+      secretAccessKey: "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"
+    });
     this.refreshProject();
     
   }
@@ -76,6 +91,7 @@ export class TabPanelPage implements OnInit {
     this.refreshHrp();
     this.refreshProject();
     this.refreshMrp();
+    this.refreshDocs();
   }
 
   refreshProject() {
@@ -116,7 +132,6 @@ export class TabPanelPage implements OnInit {
         }
       }
     );
-
   }
 
   refreshMrp() {
@@ -141,28 +156,45 @@ export class TabPanelPage implements OnInit {
     );
   }
 
+  async refreshDocs() {
+    const { Contents } = await this.s3
+    .listObjectsV2({ Bucket: this.bucket, Prefix: this.projectId.toString(), StartAfter: this.projectId.toString() + "/"})
+    .promise();
+    this.files = Contents;
+    this.hasLoad = true;
+    console.log(this.files)
+  }
+
   async segmentChanged() {
     this.segment;
   }
 
-  deleteProject() {
-    this.projectService.deleteProject(this.projectId).subscribe(
-      async response => {
-        const toast = await this.toastController.create({
-          message: 'Project deleted successfully.',
-          duration: 2000
-        });
-        toast.present();
-        this.router.navigate(["view-all-project"]);
-      },
-      async error => {
-        const toast = await this.toastController.create({
-          message: error,
-          duration: 2000
-        });
-        toast.present();
-      }
-    );
+  async deleteProject() {
+    if (this.isOwner) {
+      this.projectService.deleteProject(this.projectId).subscribe(
+        async response => {
+          const toast = await this.toastController.create({
+            message: 'Project deleted successfully.',
+            duration: 2000
+          });
+          toast.present();
+          this.router.navigate(["view-all-project"]);
+        },
+        async error => {
+          const toast = await this.toastController.create({
+            message: error,
+            duration: 2000
+          });
+          toast.present();
+        }
+      );
+    } else {
+      const toast = await this.toastController.create({
+        message: "Only owner of project can delete this project",
+        duration: 2000
+      });
+      toast.present();
+    }
   }
 
   async presentAlert() {
@@ -355,5 +387,64 @@ export class TabPanelPage implements OnInit {
   changehref(lat: number, long: number) {
     var url = "http://maps.google.com/?q=" + lat + "," + long;
     window.open(url, '_blank');
+  }
+
+  viewFile(file) {
+    var params = {
+      Bucket: this.bucket,
+      Key: file.Key,
+    }
+    console.log(params);
+    let url = this.s3.getSignedUrl("getObject", params)
+    window.open(url);
+  }
+
+  formatFileKey(file) {
+    let index = file.Key.indexOf("/");
+    return file.Key.substring(index + 1);
+  }
+
+  async deleteDocs(file) {
+    this.fileToDelete = file;
+    const alert = await this.alertController.create({
+      header: "Delete Documents",
+      message: "Are you sure you want to delete this document?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: 'cancel'
+        },
+        {
+          text: "Delete",
+          handler: () => {
+            this.deleteFile();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  deleteFile() {
+    const params = {
+      Bucket: this.bucket,
+      Key: this.fileToDelete.Key
+    }
+
+    this.s3.deleteObject(params).promise().then(
+      async () => {
+        const toast = await this.toastController.create({
+          message: 'Document is deleted successfully.',
+          duration: 2500
+        });
+        toast.present();
+        this.refreshDocs();
+      }
+    );        
+  }
+
+  uploadModal() {
+    this.router.navigate(["upload-doc/" + this.projectId]);
   }
 }

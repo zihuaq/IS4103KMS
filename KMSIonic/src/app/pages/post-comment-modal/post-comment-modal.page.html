@@ -10,10 +10,10 @@
 <ion-content>
   <ion-list>
     <ion-item *ngFor="let comment of comments" appLongPress (press)="postCommentActionSheet(comment)">
-      <ion-avatar slot="start">
+      <ion-avatar slot="start" class="ion-no-margin" style="height: 50px; width: 50px; margin-bottom: 20px;">
         <img *ngIf="comment.commentOwner.profilePicture" class="ion-border" [src]="comment.commentOwner.profilePicture"
           alt="User profile picture" />
-        <img *ngIf="!comment.commentOwner.profilePicture" class="ion-border"
+        <img *ngIf="!comment.commentOwner.profilePicture" style="height: 50px; width: 50px;" class="ion-border"
           src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
           alt="User profile picture" />
       </ion-avatar>
