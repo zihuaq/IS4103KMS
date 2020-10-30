@@ -218,10 +218,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="input-group" style="width: auto">
+                <div *ngIf="fulfillmentList.length > 0" class="input-group" style="width: auto">
                     <input class="form-control" placeholder="Search fulfillments by user or resource name" [(ngModel)]="searchInput" (ngModelChange)="filter()">
                 </div>
-                <div class="form-row" style="width: auto; margin: 10px 5px 5px 5px">
+                <div *ngIf="fulfillmentList.length > 0" class="form-row" style="width: auto; margin: 10px 5px 5px 5px">
                     <label class="col-sm-3">Filter by Status: </label>
                     <div class="col-sm-9">
                         <div class="form-check form-check-inline">
@@ -252,13 +252,12 @@
                                     <span class="badge badge-primary" *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; vertical-align: 30%;">{{fulfillment.status}}</span>
                                     <span class="badge badge-info" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px; vertical-align: 30%;">PARTIALLY FULFILLED</span>
                                     <span class="badge badge-success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{fulfillment.status}}</span>
-                                    <span class="badge badge-danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px; vertical-align: 30%;">{{fulfillment.status}}</span>
                                 </h6>
-                                <button type="button" class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 10px;"><i class="fas fa-ellipsis-h"></i></button> 
+                                <button *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" type="button" class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 10px;"><i class="fas fa-ellipsis-h"></i></button> 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED || fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" class="dropdown-item" data-toggle="modal" data-target="#modal-receive" (click)="clickReceive(fulfillment)">Receive Resources</a>
                                     <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-accept" (click)="clickAcceptReject(fulfillment)">Accept</a>
-                                    <div *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" class="dropdown-divider"></div>
+                                    <div class="dropdown-divider"></div>
                                     <a *ngIf="fulfillment.status != fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-update" (click)="clickUpdate(fulfillment)">Update Quantity</a>
                                     <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-reject-fulfillment" (click)="clickAcceptReject(fulfillment)">Reject</a>
                                 </div>
