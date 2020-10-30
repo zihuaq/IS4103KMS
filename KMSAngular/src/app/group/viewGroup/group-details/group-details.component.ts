@@ -8,6 +8,9 @@ import { GroupService } from 'src/app/group.service';
 import { SessionService } from 'src/app/session.service';
 import { UserService } from 'src/app/user.service';
 import { NgForm } from '@angular/forms';
+import { SharePostToProjectOrGroupsReq } from 'src/app/models/SharePostToProjectOrGroupsReq';
+import { PostService } from 'src/app/post.service';
+import { Post } from 'src/app/classes/post';
 // import { GroupType } from 'src/app/classes/group-type.enum';
 
 declare var $: any;
@@ -32,56 +35,80 @@ export class GroupDetailsComponent implements OnInit {
   selectedProfilePictureName: string;
   noOfMembers: number;
   settingStatus = ['Active', 'Deactive'];
+  shareOption: any = [
+    { id: "follower", value: "Followers" },
+    { id: "project", value: "Project(s)" },
+    { id: "group", value: "Group(s)" }
+  ];
+  selectedShareOption: string;
+  shareGroupText: string = "";
 
   constructor(public groupService: GroupService,
     private userService: UserService,
     private sessionService: SessionService,
     private activatedRoute: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private postService: PostService) {
       this.groupToView = new Group();
       this.owner = new User();
     }
 
   ngOnInit(): void {
     this.checkAccessRight();
-    this.loggedInUser = this.sessionService.getCurrentUser();
+    let loggedInUserId = this.sessionService.getCurrentUser().userId;
     this.groupId = parseInt(this.activatedRoute.snapshot.paramMap.get("groupId"));
-
-    this.groupService.getGroupById(this.groupId).subscribe(
-      response => {
-        console.log(response)
-        this.groupToView = response;
-        this.loaded = true;
-        this.noOfMembers = this.groupToView.groupMembers.length;
-        this.profilePicture = this.groupToView.profilePicture;
-        //console.log(this.profilePicture);
-        this.owner = this.groupToView.groupOwner;
-
-        for (let admin of this.groupToView.groupAdmins) {
-          if (this.sessionService.getCurrentUser().userId == admin.userId) {
-            this.isMember = true;
-            this.isAdmin = true;
-          }
-        }
-
-        if (!this.isAdmin) {
-          for (let member of this.groupToView.groupMembers) {
-            if (this.sessionService.getCurrentUser().userId == member.userId) {
-              this.isMember = true;
+    this.userService.getUser(loggedInUserId.toString()).subscribe(
+      (data) => {
+        this.loggedInUser = data;
+        $('#shareGroupToProjectselect2').select2({
+          data: this.loggedInUser.projectsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        $('#shareGroupToGroupselect2').select2({
+          data: this.loggedInUser.groupsJoined.map((item) => {
+            return item.name;
+          }),
+          allowClear: true,
+        });
+        this.groupService.getGroupById(this.groupId).subscribe(
+          response => {
+            console.log(response)
+            this.groupToView = response;
+            this.loaded = true;
+            this.noOfMembers = this.groupToView.groupMembers.length;
+            this.profilePicture = this.groupToView.profilePicture;
+            //console.log(this.profilePicture);
+            this.owner = this.groupToView.groupOwner;
+    
+            for (let admin of this.groupToView.groupAdmins) {
+              if (this.sessionService.getCurrentUser().userId == admin.userId) {
+                this.isMember = true;
+                this.isAdmin = true;
+              }
             }
+    
+            if (!this.isAdmin) {
+              for (let member of this.groupToView.groupMembers) {
+                if (this.sessionService.getCurrentUser().userId == member.userId) {
+                  this.isMember = true;
+                }
+              }
+            }
+            // this.dateCreated = this.groupToView.dateCreated.toString().substring(0,10);
+          },
+          error => {
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: 'Error',
+              autohide: true,
+              delay: 2500,
+              body: error,
+            })
+            this.router.navigate(["/error"]);
           }
-        }
-        // this.dateCreated = this.groupToView.dateCreated.toString().substring(0,10);
-      },
-      error => {
-        $(document).Toasts('create', {
-          class: 'bg-danger',
-          title: 'Error',
-          autohide: true,
-          delay: 2500,
-          body: error,
-        })
-        this.router.navigate(["/error"]);
+        )
       }
     )
   }
@@ -241,4 +268,111 @@ export class GroupDetailsComponent implements OnInit {
   //   return GroupType;
   // }
 
+  onSelectedShareOptionChange(event) {
+    this.selectedShareOption = event.target.value;
+  }
+  
+  shareGroup() {
+    if (this.selectedShareOption == "project") {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = this.shareGroupText;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedProjectNames = $('#shareGroupToProjectselect2').val();
+      let selectedProjectIds = [];
+      this.loggedInUser.projectsJoined.forEach((element) => {
+        if (selectedProjectNames.includes(element.name)) {
+          selectedProjectIds.push(element.projectId);
+        }
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedProjectIds;
+      if (selectedProjectIds.length == 0) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Please select an audience for your shared post.",
+        });
+      } else {
+        this.postService
+          .shareGroupToProjects(this.loggedInUser.userId, sharePostToProjectOrGroupsReq, this.groupId)
+          .subscribe(() => {
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 2500,
+              body: 'Group Shared!',
+            });
+            $('#shareGroupToProjectselect2').val(null).trigger('change');
+            this.shareGroupText = "";
+            this.selectedShareOption = "";
+            $('#project').prop('checked', false);
+          });
+      }
+    } else if (this.selectedShareOption == "group") {
+      let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
+      sharePostToProjectOrGroupsReq.text = this.shareGroupText;
+      sharePostToProjectOrGroupsReq.postDate = new Date();
+      let selectedGroupNames = $('#shareGroupToGroupselect2').val();
+      let selectedGroupIds = [];
+      this.loggedInUser.groupsJoined.forEach((element) => {
+        if (selectedGroupNames.includes(element.name)) {
+          selectedGroupIds.push(element.groupId);
+        }
+      });
+      sharePostToProjectOrGroupsReq.projectsOrGroupsIds = selectedGroupIds;
+      if (selectedGroupIds.length == 0) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Please select an audience for your shared post.",
+        });
+      } else {
+        this.postService
+          .shareGroupToGroups(this.loggedInUser.userId, sharePostToProjectOrGroupsReq, this.groupId)
+          .subscribe(() => {
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 2500,
+              body: 'Post Shared!',
+            });
+            $('#shareGroupToGroupselect2').val(null).trigger('change');
+            this.shareGroupText = "";
+            this.selectedShareOption = "";
+            $('#group').prop('checked', false);
+          });
+      }
+    } else if (this.selectedShareOption == "follower") {
+      let post = new Post();
+      post.text = this.shareGroupText;
+      post.postDate = new Date();
+      this.postService
+        .shareGroupToFollowers(this.loggedInUser.userId, post, this.groupId)
+        .subscribe(() => {
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Post Shared!',
+          });
+          this.shareGroupText = "";
+          this.selectedShareOption = "";
+          $('#follower').prop('checked', false);
+        });
+    } else {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: "Please select an audience for your shared post"
+      });
+    }
+  }
 }

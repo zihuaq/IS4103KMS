@@ -30,10 +30,12 @@ public interface PostSessionBeanLocal {
 
     public List<PostEntity> getPostForUserNewsfeed(Long userId) throws UserNotFoundException, NoResultException;
     
+    public List<PostEntity> getPostForProfileNewsfeed(Long userId) throws UserNotFoundException, NoResultException;
+
     public List<PostEntity> getPostForProjectNewsfeed(Long projectId) throws NoResultException;
 
     public List<PostEntity> getPostForGroupNewsfeed(Long groupId) throws NoResultException;
-            
+
     public PostEntity updatePost(PostEntity postToUpdate) throws NoResultException;
 
     public void likePost(Long postId, Long userId) throws NoResultException, DuplicateLikeException;
@@ -51,13 +53,25 @@ public interface PostSessionBeanLocal {
     public void updateComment(PostCommentEntity comment) throws NoResultException;
 
     public List<PostCommentEntity> getCommentsForPost(Long postId) throws NoResultException;
-    
+
     public void sharePost(Long postToShareId, Long userId, PostEntity post) throws NoResultException;
-    
+
     public void sharePostToProjects(Long postToShareId, Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) throws NoResultException;
-    
-    public void sharePostToGroups(Long postToShareId, Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) throws NoResultException ;
-    
+
+    public void sharePostToGroups(Long postToShareId, Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq) throws NoResultException;
+
+    public void shareGroupToProjects(Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, Long groupId) throws NoResultException;
+
+    public void shareGroupToGroups(Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, Long groupId) throws NoResultException;
+
+    public void shareGroupToFollowers(Long userId, PostEntity post, Long groupId) throws NoResultException;
+
+    public void shareProjectToProjects(Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, Long projectId) throws NoResultException;
+
+    public void shareProjectToGroups(Long userId, SharePostToProjectOrGroupsReq sharePostToProjectOrGroupsReq, Long projectId) throws NoResultException;
+
+    public void shareProjectToFollowers(Long userId, PostEntity post, Long projectId) throws NoResultException;
+
     public void deletePostById(Long postId) throws NoResultException;
 
     public void deletePostInProjectFeed(Long postId) throws NoResultException;

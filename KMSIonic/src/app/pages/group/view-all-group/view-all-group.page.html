@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Discover Groups      
+      Discover Groups
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="createGroup()">
@@ -12,8 +12,7 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm"
-    (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm" (ionChange)="setFilteredItems(searchTerm)" #searchBar>
   </ion-searchbar>
 </ion-header>
 
@@ -22,14 +21,13 @@
     <ion-card tappable (click)="viewGroupDetails($event, group)">
       <ion-card-header>
         <b>{{group.name}}</b>&nbsp;
-        <!-- <ion-badge color="primary">{{group.status}}</ion-badge> -->
       </ion-card-header>
       <ion-card-content>
-        {{group.country}}    
-        <br/>
+        {{group.description}}
+        <br />
         <span *ngFor="let sdg of sortSDG(group.sdgs)">
           <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
-        </span> 
+        </span>
       </ion-card-content>
     </ion-card>
   </span>

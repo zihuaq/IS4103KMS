@@ -15,9 +15,18 @@
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="postPictureFile" ngModel
                                 name="postPictureFile" accept="image/*" (change)="getFiles($event)">
-                            <label class="custom-file-label" for="postPictureFile">Choose File</label>
+                            <label class="custom-file-label" *ngIf="!selectedFile" for="postPictureFile">Choose
+                                Image</label>
+                            <label class="custom-file-label" *ngIf="selectedFile"
+                                for="postPictureFile">{{selectedFileName}}</label>
                         </div>
                     </div>
+                    <img class="img-fluid pad" [src]="selectedFile" alt="Photo" *ngIf="selectedFile"
+                        style="display: block; margin-left: auto;margin-right: auto;" width=250 height=250>
+                    <button type="button" *ngIf="selectedFile" class="btn btn-block btn-danger btn-sm"
+                        style="width: 30%; margin-left: auto;margin-right: auto;" (click)="selectedFile = null"> Remove
+                        selected image
+                    </button>
                 </div>
             </div>
             <div class="card-footer">
@@ -27,8 +36,23 @@
         </div>
     </form>
 
-    <span *ngIf="newsfeedPosts && newsfeedPosts.length > 0">
-        <div *ngFor="let post of newsfeedPosts">
+    <div class=searchBar>
+        <app-searchbar [searchString]="searchString" query="posts"
+            (searchStringChanged)="handleSearchStringChanged($event)">
+        </app-searchbar>
+        <div class="radio" *ngFor="let option of filterOptions">
+            <label style="font-size: .75rem;">
+                <input *ngIf="option.value == 'All'" type="radio" name="option" [value]="option.id"
+                    (change)="onSelectedFilterOptionChange($event)" checked />
+                <input *ngIf="option.value != 'All'" type="radio" name="option" [value]="option.id"
+                    (change)="onSelectedFilterOptionChange($event)" />
+                {{option.value}}
+            </label>
+        </div>
+    </div>
+    <br />
+    <span *ngIf="filteredNewsfeedPosts && filteredNewsfeedPosts.length > 0">
+        <div *ngFor="let post of filteredNewsfeedPosts">
             <!-- Box Comment -->
             <div class="card card-widget">
                 <div class="card-header">
@@ -39,32 +63,93 @@
                             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                             alt="User Image">
                         <span class="username">
-                            <a href="#">{{post.postOwner.firstName}}
+                            <a routerLink="/profile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
                                 {{post.postOwner.lastName}} </a>
                             <i *ngIf="post.project || post.group" class="fas fa-caret-right"></i>
-                            <a *ngIf="post.project"> {{post.project.name}}</a>
-                            <a *ngIf="post.group"> {{post.group.name}}</a>
+                            <a routerLink="/projectDetails/{{post.project.projectId}}" *ngIf="post.project">
+                                {{post.project.name}}</a>
+                            <a routerLink="/groupDetails/{{post.group.groupId}}" *ngIf="post.group">
+                                {{post.group.name}}</a>
                         </span>
                         <span class="description">{{post.postDate| date}}</span>
                     </div>
                     <!-- /.user-block -->
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool"
-                            *ngIf="loggedInUser.userId == post.postOwner.userId"><i class="fas fa-edit"></i>
+                        <button type="button" class="btn btn-tool" *ngIf="loggedInUser.userId == post.postOwner.userId"
+                            data-toggle="modal" data-target="#modal-edit-post" (click)="setPostToEdit(post)"><i
+                                class="fas fa-edit"></i>
                         </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove"
-                            *ngIf="loggedInUser.userId == post.postOwner.userId || isAdminOrOwner"
-                            (click)="deletePost(post.postId)"><i class="fas fa-times"></i>
+                        <button type="button" class="btn btn-tool"
+                            *ngIf="loggedInUser.userId == post.postOwner.userId || isAdminOrOwner || loggedInUser.userType == UserType.ADMIN"
+                            data-toggle="modal" data-target="#modal-danger-post"
+                            (click)="postToDeleteId = post.postId"><i class="fas fa-times"></i>
                         </button>
                     </div>
                     <!-- /.card-tools -->
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo"
-                        style="display: block; margin-left: auto;margin-right: auto" width=250 height=250>
 
                     <p>{{post.text}}</p>
+
+                    <span *ngIf="post.picture && !post.sharedGroupId && !post.sharedProjectId">
+                        <div class="image-layer" data-toggle="modal" data-target="#modal-postPicture"
+                            (click)="setPostImageToEnlarge(post)" style="position: relative;">
+                            <img class="img-fluid pad" [src]="post.picture" alt="Photo"
+                                style="display: block; margin-left: auto;margin-right: auto;" width=250 height=250>
+                            <div class="after">
+                                <i class="fas fa-search-plus" style="font-size: 25px;"></i>
+                            </div>
+                        </div>
+                    </span>
+
+                    <span *ngIf="post.sharedGroupId || post.sharedProjectId"
+                        style="display: flex; flex-direction: row; justify-content: center;">
+                        <div *ngIf="post.sharedGroupId" style="margin:2%;">
+                            <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo"
+                                style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
+                            <img *ngIf="!post.picture" class="img-fluid pad"
+                                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                alt="Photo" title="Click to view group!"
+                                style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
+                        </div>
+                        <div *ngIf="post.sharedProjectId" style="margin:2%;">
+                            <img *ngIf="post.picture" class="img-fluid pad" [src]="post.picture" alt="Photo"
+                                style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
+                            <img *ngIf="!post.picture" class="img-fluid pad"
+                                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                alt="Photo" title="Click to view project!"
+                                style="display: flex; margin-left: auto;margin-right: auto;" width=250 height=250>
+                        </div>
+                        <div *ngIf="post.sharedGroupOrProjectDescription && post.sharedGroupOrProjectDescription != ''"
+                            style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                            <label> {{post.sharedGroupOrProjectName}} </label>
+                            <br />
+                            {{post.sharedGroupOrProjectDescription}}
+                            <br />
+                            <br />
+                            <a *ngIf="post.sharedGroupId" routerLink="/groupDetails/{{post.sharedGroupId}}">
+                                <button type="button" class="btn btn-block btn-info btn-sm"
+                                    style="width: 50%; justify-self: center;"> View Group </button>
+                            </a>
+                            <a *ngIf="post.sharedProjectId" routerLink="/projectDetails/{{post.sharedProjectId}}">
+                                <button type="button" class="btn btn-block btn-info btn-sm"
+                                    style="width: 50%; justify-self: center;"> View Project </button>
+                            </a>
+                        </div>
+                        <div *ngIf="!post.sharedGroupOrProjectDescription || post.sharedGroupOrProjectDescription == ''"
+                            style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                            <label> {{post.sharedGroupOrProjectName}} </label>
+                            <br />
+                            <p>No Description Available</p>
+                            <br />
+                            <br />
+                            <button type="button" class="btn btn-block btn-info btn-sm" *ngIf="post.sharedGroupId"
+                                routerLink="/groupDetails/{{post.sharedGroupId}}"> View Group </button>
+                            <button type="button" class="btn btn-block btn-info btn-sm" *ngIf="post.sharedProjectId"
+                                routerLink="/projectDetails/{{post.sharedProjectId}}"> View Project </button>
+                        </div>
+                    </span>
 
                     <div *ngIf="post.originalPost && !post.originalPostDeleted" class="shared-post">
                         <div class="user-block">
@@ -74,21 +159,95 @@
                                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                                 alt="User Image">
                             <span class="username">
-                                <a href="#">{{post.originalPost.postOwner.firstName}}
+                                <a routerLink="/profile/{{post.originalPost.postOwner.userId}}">{{post.originalPost.postOwner.firstName}}
                                     {{post.originalPost.postOwner.lastName}} </a>
-                                <i *ngIf="post.originalPost.project || post.originalPost.group" class="fas fa-caret-right"></i>
-                                <a *ngIf="post.originalPost.project"> {{post.originalPost.project.name}}</a>
-                                <a *ngIf="post.originalPost.group"> {{post.originalPost.group.name}}</a>
+                                <i *ngIf="post.originalPost.project || post.originalPost.group"
+                                    class="fas fa-caret-right"></i>
+                                <a routerLink="/projectDetails/{{post.originalPost.project.projectId}}"
+                                    *ngIf="post.originalPost.project">
+                                    {{post.originalPost.project.name}}</a>
+                                <a routerLink="/groupDetails/{{post.originalPost.group.groupId}}"
+                                    *ngIf="post.originalPost.group">
+                                    {{post.originalPost.group.name}}</a>
                             </span>
                             <span class="description">{{post.originalPost.postDate | date}}</span>
                         </div>
                         <div class="card-body">
                             <br />
-                            <img *ngIf="post.originalPost.picture" class="img-fluid pad"
-                                [src]="post.originalPost.picture" alt="Photo"
-                                style="display: block; margin-left: auto;margin-right: auto;" width=150 height=150>
-                            <br />
                             <p>{{post.originalPost.text}}</p>
+                            <br />
+                            <span
+                                *ngIf="post.originalPost.picture && !post.originalPost.sharedGroupId && !post.originalPost.sharedProjectId">
+                                <div class="image-layer" data-toggle="modal" data-target="#modal-postPicture"
+                                    (click)="setPostImageToEnlarge(post.originalPost)" style="position: relative;">
+                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad"
+                                        [src]="post.originalPost.picture" alt="Photo"
+                                        style="display: block; margin-left: auto;margin-right: auto; position: relative;"
+                                        width=150 height=150>
+                                    <div class="after">
+                                        <i class="fas fa-search-plus" style="font-size: 25px;"></i>
+                                    </div>
+                                </div>
+                            </span>
+                            <span *ngIf="post.originalPost.sharedGroupId || post.originalPost.sharedProjectId"
+                                style="display: flex; flex-direction: row; justify-content: center;">
+                                <div *ngIf="post.originalPost.sharedGroupId" style="margin:2%;">
+                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad"
+                                        [src]="post.originalPost.picture" alt="Photo"
+                                        style="display: flex; margin-left: auto;margin-right: auto;" width=250
+                                        height=250>
+                                    <img *ngIf="!post.originalPost.picture" class="img-fluid pad"
+                                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                        alt="Photo" title="Click to view group!"
+                                        style="display: flex; margin-left: auto;margin-right: auto;" width=250
+                                        height=250>
+                                </div>
+                                <div *ngIf="post.originalPost.sharedProjectId" style="margin:2%;">
+                                    <img *ngIf="post.originalPost.picture" class="img-fluid pad"
+                                        [src]="post.originalPost.picture" alt="Photo"
+                                        style="display: flex; margin-left: auto;margin-right: auto;" width=250
+                                        height=250>
+                                    <img *ngIf="!post.originalPost.picture" class="img-fluid pad"
+                                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                        alt="Photo" title="Click to view group!"
+                                        style="display: flex; margin-left: auto;margin-right: auto;" width=250
+                                        height=250>
+                                </div>
+                                <div *ngIf="post.originalPost.sharedGroupOrProjectDescription && post.originalPost.sharedGroupOrProjectDescription != ''"
+                                    style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                                    <label> {{post.originalPost.sharedGroupOrProjectName}} </label>
+                                    <br />
+                                    {{post.originalPost.sharedGroupOrProjectDescription}}
+                                    <br />
+                                    <br />
+                                    <a *ngIf="post.originalPost.sharedGroupId"
+                                        routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}">
+                                        <button type="button" class="btn btn-block btn-info btn-sm"
+                                            style="width: 50%; justify-self: center;"> View Group </button>
+                                    </a>
+                                    <a *ngIf="post.originalPost.sharedProjectId"
+                                        routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}">
+                                        <button type="button" class="btn btn-block btn-info btn-sm"
+                                            style="width: 50%; justify-self: center;"> View Project </button>
+                                    </a>
+                                </div>
+                                <div *ngIf="!post.originalPost.sharedGroupOrProjectDescription || post.originalPost.sharedGroupOrProjectDescription == ''"
+                                    style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                                    <label> {{post.originalPost.sharedGroupOrProjectName}} </label>
+                                    <br />
+                                    <p>No Description Available</p>
+                                    <br />
+                                    <br />
+                                    <button type="button" class="btn btn-block btn-info btn-sm"
+                                        *ngIf="post.originalPost.sharedGroupId"
+                                        routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}">
+                                        View Group </button>
+                                    <button type="button" class="btn btn-block btn-info btn-sm"
+                                        *ngIf="post.originalPost.sharedProjectId"
+                                        routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}"> View Project
+                                    </button>
+                                </div>
+                            </span>
                         </div>
                     </div>
 
@@ -111,7 +270,8 @@
                         data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
                         <i class="fas fa-share"></i> shared </button>
                     <button type="button" class="btn btn-default btn-sm" data-toggle="modal"
-                        data-target="#report-post-modal" (click)="setPostToReport(post.postId)" *ngIf="loggedInUser.userId != post.postOwner.userId">
+                        data-target="#report-post-modal" (click)="setPostToReport(post.postId)"
+                        *ngIf="loggedInUser.userId != post.postOwner.userId">
                         <i class="fas fa-flag"></i> report </button>
                     <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}
                         comments - {{post.sharedPosts.length}} shares</span>
@@ -128,7 +288,7 @@
                             <span class="username">
                                 {{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}
                                 <button type="button" class="btn btn-tool float-right"
-                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId || isAdminOrOwner"
+                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId || isAdminOrOwner || loggedInUser.userType == UserType.ADMIN"
                                     data-toggle="modal" data-target="#modal-danger"
                                     (click)="commentToDeleteId = comment.postCommentId">
                                     <i class="fas fa-times fa-sm"></i>
@@ -139,8 +299,8 @@
                                     <i class="fas fa-edit fa-sm"></i>
                                 </button>
                                 <button type="button" class="btn btn-tool float-right"
-                                    (click)="setCommentToReport(post.postId, comment.postCommentId)"
-                                    data-toggle="modal" data-target="#report-comment-modal"
+                                    (click)="setCommentToReport(post.postId, comment.postCommentId)" data-toggle="modal"
+                                    data-target="#report-comment-modal"
                                     *ngIf="loggedInUser.userId != comment.commentOwner.userId">
                                     <i class="fas fa-exclamation-circle"></i>
                                 </button>
@@ -189,7 +349,7 @@
         </div>
         <!-- /.col -->
     </span>
-    <span *ngIf="newsfeedPosts && newsfeedPosts.length == 0">
+    <span *ngIf="filteredNewsfeedPosts && filteredNewsfeedPosts.length == 0">
         No posts yet.
     </span>
 </div>
@@ -215,12 +375,79 @@
 </div>
 <!-- /.modal -->
 
+<div class="modal fade" id="modal-danger-post">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Do you want to delete this post?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" (click)="deletePost(postToDeleteId)"
+                    data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-edit-post" *ngIf="postToEdit">
+    <div class="modal-dialog">
+        <div class="modal-content bg-primary">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Post</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background-color: whitesmoke;">
+                <textarea class="form-control" rows="3" [(ngModel)]="postToEdit.text"></textarea>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="editPostPictureFile" ngModel
+                            name="editPostPictureFile" accept="image/*" (change)="getFilesForEditPost($event)">
+                        <label class="custom-file-label"
+                            *ngIf="!postToEdit.picture && !postToEdit.sharedGroupId && !postToEdit.sharedProjectId && !postToEdit.originalPost && !postToEdit.originalPostDeleted"
+                            for="postPictureFile">
+                            Add Image</label>
+                        <label class="custom-file-label"
+                            *ngIf="postToEdit.picture && !postToEdit.sharedGroupId && !postToEdit.sharedProjectId"
+                            for="postPictureFile">Change Image</label>
+                    </div>
+                </div>
+                <img class="img-fluid pad" [src]="postToEdit.picture" alt="Photo"
+                    *ngIf="postToEdit.picture && !postToEdit.sharedGroupId && !postToEdit.sharedProjectId"
+                    style="display: block; margin-left: auto;margin-right: auto;" width=250 height=250>
+                <button type="button"
+                    *ngIf="postToEdit.picture && !postToEdit.sharedGroupId && !postToEdit.sharedProjectId"
+                    class="btn btn-block btn-danger btn-sm" style="width: 30%; margin-left: auto;margin-right: auto;"
+                    (click)="postToEdit.picture = null"> Remove
+                    selected image
+                </button>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light"
+                    data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" (click)="editPost()"
+                    data-dismiss="modal">Save</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
 <div class="modal fade" id="modal-secondary">
     <div class="modal-dialog">
         <div class="modal-content bg-secondary">
             <div class="modal-header">
-                <h4 class="modal-title">Share
-                    Post</h4>
+                <h4 class="modal-title">Share Post</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
             </div>
@@ -232,8 +459,8 @@
                 <h6 style="color: black;"> Share with* </h6>
                 <div class="radio" *ngFor="let option of shareOption">
                     <label style="color:black; font-size: .8em;">
-                        <input type="radio" name="option" id="{{option.id}}"
-                            [value]="option.id" (change)="onSelectedShareOptionChange($event)" />
+                        <input type="radio" name="option" id="{{option.id}}" [value]="option.id"
+                            (change)="onSelectedShareOptionChange($event)" />
                         {{option.value}}
                     </label>
                 </div>
@@ -321,3 +548,24 @@
         <!-- /.modal-content -->
     </div>
 </div>
+
+<div *ngIf="postImageToEnlarge" class="modal fade" id="modal-postPicture">
+    <div class="modal-dialog modal-dialog-centered modal-lg ">
+        <div class="modal-content">
+            <div class="modal-body " style="margin-top: -1.5%;">
+                <div class="row d-flex justify-content-end">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <img style="max-width: 100%; max-height: 100%; padding-top: 1%; justify-items: center;"
+                        [src]="postImageToEnlarge.picture" alt="Project Profile Picture">
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

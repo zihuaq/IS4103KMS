@@ -18,6 +18,10 @@ export class Post {
   originalPostDeleted: boolean;
   group: Group;
   isActive: boolean;
+  sharedGroupId: string;
+  sharedProjectId: string;
+  sharedGroupOrProjectDescription: string;
+  sharedGroupOrProjectName: string;
 
   constructor(
     postId?: number,
@@ -32,7 +36,11 @@ export class Post {
     comments?: PostComment[],
     project?: Project,
     originalPostDeleted?: boolean,
-    group?: Group
+    group?: Group,
+    sharedGroupId?: string,
+    sharedProjectId?: string,
+    sharedGroupOrProjectDescription?: string,
+    sharedGroupOrProjectName?: string
   ) {
     this.postId = postId;
     this.postDate = postDate;
@@ -47,5 +55,9 @@ export class Post {
     this.project = project;
     this.originalPostDeleted = originalPostDeleted;
     this.group = group;
+    this.sharedGroupId = sharedGroupId;
+    this.sharedProjectId = sharedProjectId;
+    this.sharedGroupOrProjectDescription = sharedGroupOrProjectDescription;
+    this.sharedGroupOrProjectName = sharedGroupOrProjectName;
   }
 }

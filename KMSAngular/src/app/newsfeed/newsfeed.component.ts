@@ -18,6 +18,7 @@ import { ReportType } from '../classes/report-type.enum';
 import { ReportService } from '../report.service';
 import { GroupService } from '../group.service';
 import { Group } from '../classes/group';
+import { UserType } from '../classes/user-type.enum';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -33,13 +34,17 @@ export class NewsfeedComponent implements OnInit {
   @Input()
   id: number
   selectedFile: string | ArrayBuffer;
+  selectedFileName: string | ArrayBuffer;
   postContent: string;
   createdPost: Post;
   loggedInUser: User;
   newsfeedPosts: Post[];
+  filteredNewsfeedPosts: Post[];
   editingComment: PostComment;
+  postToDeleteId: number;
   commentToDeleteId: number;
   postToShare: Post;
+  postToEdit: Post;
   report: Report;
   postReportTags: Tag[];
   commentReportTags: Tag[];
@@ -56,6 +61,15 @@ export class NewsfeedComponent implements OnInit {
   selectedShareOption: string;
   sharePostText: string = "";
   group: Group;
+  searchString: string = "";
+  filterOptions: any = [
+    { id: "All", value: "All" },
+    { id: "Shared posts", value: "Shared Posts" },
+    { id: "Posts with images", value: "Posts with images" }
+  ]
+  selectedFilterOption: string
+  postImageToEnlarge: Post
+  UserType = UserType;
 
   constructor(
     private sessionService: SessionService,
@@ -79,6 +93,7 @@ export class NewsfeedComponent implements OnInit {
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
+        this.filteredNewsfeedPosts = this.newsfeedPosts;
         this.postReportTags = result[2];
         this.project = result[3];
         this.commentReportTags = result[4];
@@ -94,31 +109,7 @@ export class NewsfeedComponent implements OnInit {
         } else if (memberIndex > -1) {
           this.isMember = true
         }
-        $('#reportPostselect2').select2({
-          data: this.postReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#reportCommentselect2').select2({
-          data: this.commentReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToProjectselect2').select2({
-          data: this.loggedInUser.projectsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToGroupselect2').select2({
-          data: this.loggedInUser.groupsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        bsCustomFileInput.init();
+        this.initElements();
       });
     } else if (this.newsfeedType == "group") {
       forkJoin([
@@ -130,6 +121,7 @@ export class NewsfeedComponent implements OnInit {
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
+        this.filteredNewsfeedPosts = this.newsfeedPosts;
         this.postReportTags = result[2];
         this.group = result[3];
         this.commentReportTags = result[4];
@@ -145,31 +137,21 @@ export class NewsfeedComponent implements OnInit {
         } else if (memberIndex > -1) {
           this.isMember = true
         }
-        $('#reportPostselect2').select2({
-          data: this.postReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#reportCommentselect2').select2({
-          data: this.commentReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToProjectselect2').select2({
-          data: this.loggedInUser.projectsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToGroupselect2').select2({
-          data: this.loggedInUser.groupsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        bsCustomFileInput.init();
+        this.initElements();
+      });
+    } else if (this.newsfeedType == "profile") {
+      forkJoin([
+        this.userService.getUser(loggedInUserId.toString()),
+        this.postService.getPostForProfileNewsfeed(this.id),
+        this.tagService.getAllPostReportTags(),
+        this.tagService.getAllCommentReportTags()
+      ]).subscribe((result) => {
+        this.loggedInUser = result[0];
+        this.newsfeedPosts = result[1];
+        this.filteredNewsfeedPosts = this.newsfeedPosts;
+        this.postReportTags = result[2];
+        this.commentReportTags = result[3];
+        this.initElements();
       });
     } else {
       forkJoin([
@@ -180,35 +162,41 @@ export class NewsfeedComponent implements OnInit {
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
+        this.filteredNewsfeedPosts = this.newsfeedPosts;
         this.postReportTags = result[2];
         this.commentReportTags = result[3];
-        $('#reportPostselect2').select2({
-          data: this.postReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#reportCommentselect2').select2({
-          data: this.commentReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToProjectselect2').select2({
-          data: this.loggedInUser.projectsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToGroupselect2').select2({
-          data: this.loggedInUser.groupsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        bsCustomFileInput.init();
+        this.initElements();
       });
     }
+  }
+
+  initElements() {
+    console.log("init elements called!")
+    $('#reportPostselect2').select2({
+      data: this.postReportTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#reportCommentselect2').select2({
+      data: this.commentReportTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#shareToProjectselect2').select2({
+      data: this.loggedInUser.projectsJoined.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#shareToGroupselect2').select2({
+      data: this.loggedInUser.groupsJoined.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    bsCustomFileInput.init();
   }
 
   getFiles(event) {
@@ -220,8 +208,23 @@ export class NewsfeedComponent implements OnInit {
       };
       console.log(event.target.files[0]);
       reader.readAsDataURL(event.target.files[0]);
+      this.selectedFileName = event.target.files[0].name;
     } else {
       this.selectedFile = undefined;
+    }
+  }
+
+  getFilesForEditPost(event) {
+    if (event.target.files[0] != undefined) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.postToEdit.picture = e.target.result;
+        console.log(this.selectedFile);
+      };
+      console.log(event.target.files[0]);
+      reader.readAsDataURL(event.target.files[0]);
+    } else {
+      this.postToEdit.picture = undefined;
     }
   }
 
@@ -258,6 +261,8 @@ export class NewsfeedComponent implements OnInit {
               delay: 2500,
               body: 'Post created!',
             });
+            this.postContent = null;
+            this.selectedFile = null;
             this.updateNewsfeed();
           },
           (err) => {
@@ -312,18 +317,28 @@ export class NewsfeedComponent implements OnInit {
         .getPostForProjectNewsfeed(this.id)
         .subscribe((result) => {
           this.newsfeedPosts = result;
+          this.updateNewsFeedAccordingToRefineOptions();
         });
     } else if (this.newsfeedType == "group") {
       this.postService
         .getPostForGroupNewsfeed(this.id)
         .subscribe((result) => {
           this.newsfeedPosts = result;
+          this.updateNewsFeedAccordingToRefineOptions();
+        });
+    } else if (this.newsfeedType == "profile") {
+      this.postService
+        .getPostForProfileNewsfeed(this.id)
+        .subscribe((result) => {
+          this.newsfeedPosts = result;
+          this.updateNewsFeedAccordingToRefineOptions();
         });
     } else {
       this.postService
         .getPostForUserNewsfeed(this.loggedInUser.userId)
         .subscribe((result) => {
           this.newsfeedPosts = result;
+          this.updateNewsFeedAccordingToRefineOptions();
         });
     }
   }
@@ -632,5 +647,90 @@ export class NewsfeedComponent implements OnInit {
 
   onSelectedShareOptionChange(event) {
     this.selectedShareOption = event.target.value;
+  }
+
+  handleSearchStringChanged(event) {
+    this.searchString = event;
+    this.updateNewsFeedAccordingToRefineOptions();
+  }
+
+  updateNewsFeedAccordingToRefineOptions() {
+    this.filteredNewsfeedPosts = [];
+    if (this.selectedFilterOption == "Shared posts") {
+      this.newsfeedPosts.forEach(post => {
+        if (this.postMatchSearchString(post) && post.originalPost) {
+          this.filteredNewsfeedPosts.push(post);
+        }
+      });
+    } else if (this.selectedFilterOption == "Posts with images") {
+      this.newsfeedPosts.forEach(post => {
+        if (this.postMatchSearchString(post) && post.picture || this.postMatchSearchString(post) && (post.sharedProjectId || post.sharedGroupId)) {
+          this.filteredNewsfeedPosts.push(post);
+        }
+      });
+    } else {
+      this.newsfeedPosts.forEach(post => {
+        if (this.postMatchSearchString(post)) {
+          this.filteredNewsfeedPosts.push(post);
+        }
+      });
+    }
+  }
+
+  postMatchSearchString(post: Post) {
+    if (this.searchString == null || this.searchString == "") {
+      return true;
+    }
+    if (post.text && post.text.toLowerCase().includes(this.searchString.toLowerCase()) || post.originalPost &&
+      post.originalPost.text.toLowerCase().includes(this.searchString.toLowerCase())) {
+      return true;
+    }
+  }
+
+  onSelectedFilterOptionChange(event) {
+    if (event.target.value == "All") {
+      this.selectedFilterOption = null;
+    } else {
+      this.selectedFilterOption = event.target.value;
+    }
+    this.updateNewsFeedAccordingToRefineOptions();
+  }
+
+  setPostImageToEnlarge(post) {
+    this.postImageToEnlarge = post;
+  }
+
+  setPostToEdit(post: Post) {
+    this.postToEdit = new Post();
+    this.postToEdit.postId = post.postId;
+    this.postToEdit.text = post.text;
+    this.postToEdit.picture = post.picture;
+    this.postToEdit.originalPost = post.originalPost;
+    this.postToEdit.originalPostDeleted = post.originalPostDeleted;
+    this.postToEdit.sharedGroupId = post.sharedGroupId;
+    this.postToEdit.sharedProjectId = post.sharedProjectId;
+  }
+
+  editPost() {
+    if ((this.postToEdit.text == null || this.postToEdit.text == "") && this.postToEdit.picture == null) {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Error',
+        autohide: true,
+        delay: 2500,
+        body: 'Please select a picture or add some text to your post!',
+      });
+      return;
+    } else {
+      this.postService.updatePost(this.postToEdit).subscribe(() => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Post Edited Successfully',
+          autohide: true,
+          delay: 2500,
+        });
+        this.updateNewsfeed();
+      });
+    }
   }
 }

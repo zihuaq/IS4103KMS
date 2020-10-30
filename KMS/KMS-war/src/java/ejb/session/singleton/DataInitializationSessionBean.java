@@ -5,8 +5,8 @@
  */
 package ejb.session.singleton;
 
-import Exception.CreateProjectException;
 import Exception.CreateGroupException;
+import Exception.CreateProjectException;
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
@@ -21,13 +21,13 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.ActivityEntity;
 import entity.FulfillmentEntity;
+import entity.GroupEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.UserEntity;
-import entity.GroupEntity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -190,13 +190,14 @@ public class DataInitializationSessionBean {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
             projectSessionBean.createNewProject(new ProjectEntity("Improve Sanitation in Nigeria", "Inadequate sanitation is a leading cause of poverty, largely due to premature mortality. Less than one third of the Nigerian population has access to basic sanitation.", new Date(), "Nigeria", "", 5000.0, "YPYAZ5KNH42QL"), 3l, new ArrayList<>(Arrays.asList(24l, 26l, 29l)));
             projectSessionBean.createNewProject(new ProjectEntity("Educating Farmers", "Educate market gardeners and farmers on protecting land, soil degradation and more efficient agricultural techniques.", new Date(), "Bolivia", "", 1000.0, "WUTXB4YPU76ZY"), 4l, new ArrayList<>(Arrays.asList(25l, 35l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", 0.0, null), 5l, new ArrayList<>(Arrays.asList(26l, 27l, 29l, 33l, 37l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", 1000.0, null), 5l, new ArrayList<>(Arrays.asList(26l, 27l, 29l, 33l, 37l)));
             projectSessionBean.createNewProject(new ProjectEntity("Green City Solutions", "Create and implement new green inventions such as city trees that are plant-based air filters and smart street pathway that converts kinetic energy of footsteps into electricity.", new Date(), "United Kingdom", "", 10000.0, "SDFU9MD6FJC2Q"), 5l, new ArrayList<>(Arrays.asList(30l, 32l, 34l, 36l)));
             projectSessionBean.createNewProject(new ProjectEntity("Resilience and Response Systems", "Promoting social cohesion and investing in community-led resilience and response systems. Helping people cope with adversity, through social protection and basic services.", new Date(), "Hong Kong", "", 3000.0, "3MRY2XUU4FMFC"), 6l, new ArrayList<>(Arrays.asList(31l, 39l)));
             projectSessionBean.joinProject(4l, 1l);
             projectSessionBean.joinProject(4l, 2l);
             projectSessionBean.joinProject(4l, 3l);
             projectSessionBean.joinProject(4l, 6l);
+            projectSessionBean.addAdmin(4l, 1l);
             projectSessionBean.addAdmin(4l, 6l);
         } catch (CreateProjectException ex) {
             System.out.println(ex.getMessage());
@@ -257,11 +258,16 @@ public class DataInitializationSessionBean {
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
             tags.clear();
             tags.add(tagSessionBean.getTagById(23l));
-            mra = new MaterialResourceAvailableEntity("Wood", 10, "kg", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-11"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-2-20"), "1.384667", "103.770707", tags);
-            mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
+            mra = new MaterialResourceAvailableEntity("Wood", 10, "kg", "", null, null, "1.384667", "103.770707", tags);
+            mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(1l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
             
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 0.0, 5.0), 5l, 1l, 2l);
+            mra = new MaterialResourceAvailableEntity("Wood", 25, "kg", "", null, null, "36.379450", "-75.830290", tags);
+            mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(5l));
+            materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
+            
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0), 1l, 1l, 2l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0), 5l, 1l, 3l);
         } catch(NoResultException ex) {
            System.out.println(ex.getMessage()); 
         } 

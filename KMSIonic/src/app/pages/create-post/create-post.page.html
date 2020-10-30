@@ -32,36 +32,105 @@
   </ion-item>
   <ion-textarea (ionChange)="checkCanPost()" placeholder="What's on your mind?" [(ngModel)]="postContent" autoGrow=true>
   </ion-textarea>
-  <ion-card *ngIf="oldPost && oldPost.originalPost">
+
+  <ion-card *ngIf="oldPost && (oldPost.sharedGroupId || oldPost.sharedProjectId)">
+    <img *ngIf="oldPost.picture" [src]="oldPost.picture" alt="Photo">
+    <img *ngIf="!oldPost.picture" class="img-fluid pad"
+      src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+      alt="Photo">
+    <ion-card-header>
+      <ion-card-title>{{oldPost.sharedGroupOrProjectName}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="oldPost.sharedGroupOrProjectDescription && oldPost.sharedGroupOrProjectDescription != ''">
+      {{oldPost.sharedGroupOrProjectDescription}}
+    </ion-card-content>
+    <ion-card-content *ngIf="!oldPost.sharedGroupOrProjectDescription && oldPost.sharedGroupOrProjectDescription != ''">
+      No Description Available
+    </ion-card-content>
+    <ion-item button *ngIf="oldPost.sharedGroupId" routerLink="/group-details/{{oldPost.sharedGroupId}}">
+      <ion-label>View Group</ion-label>
+    </ion-item>
+    <ion-item button *ngIf="oldPost.sharedProjectId" routerLink="/project-details/{{oldPost.sharedProjectId}}">
+      <ion-label>View Project</ion-label>
+    </ion-item>
+  </ion-card>
+
+  <ion-card *ngIf="oldPost && oldPost.originalPost && !oldPost.originalPostDeleted">
     <ion-item lines="none">
-      <ion-avatar slot="start" class="ion-margin-start">
+      <ion-avatar slot="start" style="width: 40px; height: 40px; margin-left: 5px;">
         <img *ngIf="oldPost.originalPost.postOwner.profilePicture" class="ion-border"
-          [src]="oldPost.originalPost.postOwner.profilePicture" alt="User profile picture">
+          [src]="oldPost.originalPost.postOwner.profilePicture" alt="User profile picture"
+          routerLink="/profile/{{oldPost.originalPost.postOwner.userId}}">
         <img *ngIf="!oldPost.originalPost.postOwner.profilePicture" class="ion-border"
           src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-          alt="User profile picture">
+          alt="User profile picture" routerLink="/profile/{{oldPost.originalPost.postOwner.userId}}">
       </ion-avatar>
       <ion-grid fixed>
         <ion-row>
-          <ion-col size="12">
-            <ion-card-title>{{oldPost.originalPost.postOwner.firstName}} {{oldPost.originalPost.postOwner.lastName}}
-            </ion-card-title>
+          <ion-col class="ion-no-padding" size="12">
+            <ion-label routerLink="/profile/{{oldPost.originalPost.postOwner.userId}}">
+              {{oldPost.originalPost.postOwner.firstName}}
+              {{oldPost.originalPost.postOwner.lastName}}
+            </ion-label>
+            <ion-icon *ngIf="oldPost.originalPost.group || oldPost.originalPost.project" name="caret-forward">
+            </ion-icon>
+            <a routerLink="/project-details/{{oldPost.originalPost.project.projectId}}"
+              *ngIf="oldPost.originalPost.project" style="font-size: smaller;">
+              {{oldPost.originalPost.project.name}}</a>
+            <a routerLink="/group-details/{{oldPost.originalPost.group.groupId}}" *ngIf="oldPost.originalPost.group"
+              style="font-size: smaller;">
+              {{oldPost.originalPost.group.name}}</a>
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col size="12">
-            <ion-card-subtitle>{{oldPost.originalPost.postDate | date}}</ion-card-subtitle>
+          <ion-col class="ion-no-padding" size="12">
+            <ion-card-subtitle style="font-size: smaller;">{{oldPost.originalPost.postDate | date}}</ion-card-subtitle>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-item>
     <ion-card-content>
       {{oldPost.originalPost.text}}
+
+      <ion-card *ngIf="oldPost.originalPost.sharedGroupId || oldPost.originalPost.sharedProjectId">
+        <img *ngIf="oldPost.originalPost.picture" [src]="oldPost.originalPost.picture" alt="Photo">
+        <img *ngIf="!oldPost.originalPost.picture" class="img-fluid pad"
+          src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+          alt="Photo">
+        <ion-card-header>
+          <ion-card-title>{{oldPost.originalPost.sharedGroupOrProjectName}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content
+          *ngIf="oldPost.originalPost.sharedGroupOrProjectDescription && oldPost.originalPost.sharedGroupOrProjectDescription != ''">
+          {{oldPost.originalPost.sharedGroupOrProjectDescription}}
+        </ion-card-content>
+        <ion-card-content
+          *ngIf="!oldPost.originalPost.sharedGroupOrProjectDescription && oldPost.originalPost.sharedGroupOrProjectDescription != ''">
+          No Description Available
+        </ion-card-content>
+        <ion-item button *ngIf="oldPost.originalPost.sharedGroupId"
+          routerLink="/group-details/{{oldPost.originalPost.sharedGroupId}}">
+          <ion-label>View Group</ion-label>
+        </ion-item>
+        <ion-item button *ngIf="oldPost.originalPost.sharedProjectId"
+          routerLink="/project-details/{{oldPost.originalPost.sharedProjectId}}">
+          <ion-label>View Project</ion-label>
+        </ion-item>
+      </ion-card>
+
     </ion-card-content>
-    <img [src]="oldPost.originalPost.picture" *ngIf="oldPost.originalPost.picture" />
+    <img [src]="oldPost.originalPost.picture"
+      *ngIf="oldPost.originalPost.picture && !oldPost.originalPost.sharedGroupId && !oldPost.originalPost.sharedProjectId" />
+  </ion-card>
+
+  <ion-card *ngIf="oldPost.originalPostDeleted">
+    <ion-card-content>
+      <ion-text class="text-muted">The original post have been deleted.</ion-text>
+    </ion-card-content>
   </ion-card>
 </ion-content>
-<ion-footer class="ion-no-border" *ngIf="!oldPost || (oldPost && !oldPost.originalPost)">
+<ion-footer class="ion-no-border"
+  *ngIf="!(oldPost && oldPost.originalPost || oldPost && !oldPost.originalPost && oldPost.originalPostDeleted || oldPost && oldPost.sharedGroupId || oldPost && oldPost.sharedProjectId)">
   <ion-toolbar>
     <ion-button (click)="choosePictureActionSheet()" expand="block" shape="round">
       Upload Picture
