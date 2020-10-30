@@ -339,7 +339,12 @@ const routes: Routes = [
   {
     path: 'receive-resource-modal',
     loadChildren: () => import('./pages/project/editProject/manage-fulfillments-modal/receive-resource-modal/receive-resource-modal.module').then( m => m.ReceiveResourceModalPageModule)
+  },
+  {
+    path: 'upload-doc/:projectId',
+    loadChildren: () => import('./pages/project/editProject/upload-doc/upload-doc.module').then( m => m.UploadDocPageModule)
   }
+
 ];
 
 @NgModule({
