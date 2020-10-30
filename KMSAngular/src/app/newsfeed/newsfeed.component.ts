@@ -108,31 +108,7 @@ export class NewsfeedComponent implements OnInit {
         } else if (memberIndex > -1) {
           this.isMember = true
         }
-        $('#reportPostselect2').select2({
-          data: this.postReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#reportCommentselect2').select2({
-          data: this.commentReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToProjectselect2').select2({
-          data: this.loggedInUser.projectsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToGroupselect2').select2({
-          data: this.loggedInUser.groupsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        bsCustomFileInput.init();
+        this.initElements();
       });
     } else if (this.newsfeedType == "group") {
       forkJoin([
@@ -160,31 +136,7 @@ export class NewsfeedComponent implements OnInit {
         } else if (memberIndex > -1) {
           this.isMember = true
         }
-        $('#reportPostselect2').select2({
-          data: this.postReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#reportCommentselect2').select2({
-          data: this.commentReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToProjectselect2').select2({
-          data: this.loggedInUser.projectsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToGroupselect2').select2({
-          data: this.loggedInUser.groupsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        bsCustomFileInput.init();
+        this.initElements();
       });
     } else if (this.newsfeedType == "profile") {
       forkJoin([
@@ -198,31 +150,7 @@ export class NewsfeedComponent implements OnInit {
         this.filteredNewsfeedPosts = this.newsfeedPosts;
         this.postReportTags = result[2];
         this.commentReportTags = result[3];
-        $('#reportPostselect2').select2({
-          data: this.postReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#reportCommentselect2').select2({
-          data: this.commentReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToProjectselect2').select2({
-          data: this.loggedInUser.projectsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToGroupselect2').select2({
-          data: this.loggedInUser.groupsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        bsCustomFileInput.init();
+        this.initElements();
       });
     } else {
       forkJoin([
@@ -236,33 +164,38 @@ export class NewsfeedComponent implements OnInit {
         this.filteredNewsfeedPosts = this.newsfeedPosts;
         this.postReportTags = result[2];
         this.commentReportTags = result[3];
-        $('#reportPostselect2').select2({
-          data: this.postReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#reportCommentselect2').select2({
-          data: this.commentReportTags.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToProjectselect2').select2({
-          data: this.loggedInUser.projectsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        $('#shareToGroupselect2').select2({
-          data: this.loggedInUser.groupsJoined.map((item) => {
-            return item.name;
-          }),
-          allowClear: true,
-        });
-        bsCustomFileInput.init();
+        this.initElements();
       });
     }
+  }
+
+  initElements(){
+    console.log("init elements called!")
+    $('#reportPostselect2').select2({
+      data: this.postReportTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#reportCommentselect2').select2({
+      data: this.commentReportTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#shareToProjectselect2').select2({
+      data: this.loggedInUser.projectsJoined.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#shareToGroupselect2').select2({
+      data: this.loggedInUser.groupsJoined.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    bsCustomFileInput.init();
   }
 
   getFiles(event) {
