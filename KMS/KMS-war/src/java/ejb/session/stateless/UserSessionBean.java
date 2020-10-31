@@ -17,6 +17,7 @@ import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
+import entity.ReportEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -47,8 +49,13 @@ import util.security.CryptographicHelper;
 @Stateless
 public class UserSessionBean implements UserSessionBeanLocal {
 
+    @EJB
+    private ReportSessionBeanLocal reportSessionBean;
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
+    
+    
 
     @Override
     public UserEntity createNewUser(UserEntity user) throws DuplicateEmailException {
@@ -424,7 +431,39 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.remove(posts.get(i));
         }
         posts.clear();
-
+        
+        try{
+            List<ReportEntity> reports = reportSessionBean.getProfileReports();
+            List<Long> reportIds = new ArrayList<>();
+            for(ReportEntity report: reports){
+                if(report.getReportedUser().getUserId() == userId){
+                    reportIds.add(report.getReportId());
+                }
+            }
+            for(int i = 0; i < reportIds.size(); i++){
+                reportSessionBean.deleteReport(reportIds.get(i));
+            }
+        }
+        catch(NoResultException ex){
+            System.out.println("no Reports made against user");
+        }
+        
+        try{
+            List<ReportEntity> reports = reportSessionBean.getAllReports();
+            List<Long> reportIds = new ArrayList<>();
+            for(ReportEntity report: reports){
+                if(report.getReportOwner().getUserId() == userId){
+                    reportIds.add(report.getReportId());
+                }
+            }
+            for(int i = 0; i < reportIds.size(); i++){
+                reportSessionBean.deleteReport(reportIds.get(i));
+            }
+        }
+        catch(NoResultException ex){
+            System.out.println("User made no reports");
+        }
+        
         List<ProjectEntity> projectAdmins = user.getProjectsManaged();
         for(int i = 0; i < projectAdmins.size(); i++){
             projectAdmins.get(i).getProjectAdmins().remove(user);
@@ -910,6 +949,10 @@ public class UserSessionBean implements UserSessionBeanLocal {
         review.setRating(rating);
         
         return review.getReviewId();
+    }
+
+    public void persist(Object object) {
+        em.persist(object);
     }
     
     

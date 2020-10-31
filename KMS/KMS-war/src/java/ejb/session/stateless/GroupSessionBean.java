@@ -16,10 +16,12 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
 import entity.GroupEntity;
+import entity.ReportEntity;
 import entity.TagEntity;
 import entity.ReviewEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -35,6 +37,9 @@ import javax.persistence.Query;
 @Stateless
 public class GroupSessionBean implements GroupSessionBeanLocal {
 
+    @EJB
+    private ReportSessionBeanLocal reportSessionBean;
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
     
@@ -46,6 +51,8 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     
     @EJB(name = "TagSessionBeanLocal")
     private TagSessionBeanLocal tagSessionBeanLocal;
+    
+    
 
     @Override
     public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException {
@@ -228,6 +235,23 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
            postSessionBeanLocal.deletePostInGroupFeed(post.getPostId());
        }
         groupToDelete.getPosts().clear();
+        
+        try{
+            List<ReportEntity> reports = reportSessionBean.getGroupReports();
+            
+            List<Long> reportIds = new ArrayList<>();
+            for(ReportEntity report: reports){
+                if(report.getReportedGroup().getGroupId() == groupId){
+                    reportIds.add(report.getReportId());
+                }
+            }
+            for(int i = 0; i < reportIds.size(); i++){
+                reportSessionBean.deleteReport(reportIds.get(i));
+            }
+        }
+        catch(NoResultException ex){
+            System.out.println("No reports  made against group");
+        }
 //        
             em.remove(groupToDelete);
     }

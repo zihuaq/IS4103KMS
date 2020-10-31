@@ -15,10 +15,12 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
+import entity.ReportEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -33,6 +35,9 @@ import util.enumeration.ProjectStatusEnum;
  */
 @Stateless
 public class ProjectSessionBean implements ProjectSessionBeanLocal {
+
+    @EJB
+    private ReportSessionBeanLocal reportSessionBean;
 
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
@@ -57,6 +62,8 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     @EJB(name = "TaskSessionBeanLocal")
     private TaskSessionBeanLocal taskSessionBeanLocal;
+    
+    
     
     @Override
     public Long createNewProject(ProjectEntity newProject, Long userId, List<Long> tagIds) throws CreateProjectException {
@@ -293,6 +300,23 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             postSessionBeanLocal.deletePostInProjectFeed(post.getPostId());
         }
         projectToDelete.getPosts().clear();
+        
+        try{
+            List<ReportEntity> reports = reportSessionBean.getProjectReports();
+            
+            List<Long> reportIds = new ArrayList<>();
+            for(ReportEntity report: reports){
+                if(report.getReportedProject().getProjectId() == projectId){
+                    reportIds.add(report.getReportId());
+                }
+            }
+            for(int i = 0; i < reportIds.size(); i++){
+                reportSessionBean.deleteReport(reportIds.get(i));
+            }
+        }
+        catch(NoResultException ex){
+            System.out.println("No reports  made against project");
+        }
         
         em.remove(projectToDelete);
     }
