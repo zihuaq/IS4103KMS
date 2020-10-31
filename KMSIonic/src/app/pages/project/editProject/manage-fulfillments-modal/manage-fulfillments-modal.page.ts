@@ -118,16 +118,6 @@ export class ManageFulfillmentsModalPage implements OnInit {
         text: 'Cancel',
         role: 'cancel'
       }]
-    } else if (fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED) {
-      buttons = [{
-        text: 'Update Quantity',
-        handler: () => {
-          this.updateQuantityModal(fulfillmentToUpdate); 
-        }
-      }, {
-        text: 'Cancel',
-        role: 'cancel'
-      }]
     }
     return buttons;
   }

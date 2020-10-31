@@ -46,10 +46,22 @@ export class UserSettingComponent implements OnInit {
           sdgs: responsedata.sdgs,
           isActive: responsedata.isActive
         };
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Profile picture updated successfully',
+        })
         this.userChanged.emit(this.user);
       },
       (error)=>{
-        console.log('error');
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
       }
     )
 

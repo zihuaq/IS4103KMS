@@ -489,12 +489,11 @@ public class UserResource {
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
             System.out.println(ex.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            ErrorRsp errorRsp =  new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.UNAUTHORIZED).entity(errorRsp).build();
         } catch (DeactivatedEntityException ex){
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(ex.getMessage()).build();
+             ErrorRsp errorRsp =  new ErrorRsp(ex.getMessage());
+            return Response.status(404).entity(errorRsp).build();
         }
 
     }

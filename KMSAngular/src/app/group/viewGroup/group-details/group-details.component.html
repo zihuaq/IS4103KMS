@@ -1,11 +1,11 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
-<div class="content-wrapper" *ngIf = "groupToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN'" >
-<p>This group has been deactivated for violationg our T&C</p>
+<div class="content-wrapper" *ngIf = "groupToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId" >
+<p>This group has been deactivated for violating our T&C</p>
 </div>
 
-<div class="content-wrapper" *ngIf = "groupToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN'">
+<div class="content-wrapper" *ngIf = "groupToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId">
     <div class="loading" *ngIf="!loaded">
         <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
     </div>
@@ -30,7 +30,11 @@
                     </span>
                 </div>
                 <div class="card-body">
-                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{groupToView.name}}</p>
+                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{groupToView.name}}
+                      <span *ngIf= "!groupToView.isActive" class="badge badge-danger" style = "margin-right: 5px;">
+                        Deactivated
+                      </span>
+                    </p>
                     <!-- <span class="badge badge-info" *ngIf="groupToView.status == groupType.ACTIVE" style="margin-top: 10px;">{{groupToView.status}}</span>
                     <span class="badge badge-warning" *ngIf="groupToView.status == groupType.INACTIVE" style="margin-top: 10px;">{{groupToView.status}}</span>
                     <span class="badge badge-success" *ngIf="groupToView.status == groupType.COMPLETED" style="margin-top: 10px;">{{groupToView.status}}</span> -->
@@ -43,7 +47,8 @@
                             <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
                             <button type="button" [disabled] class="btn btn-light float-right">Joined</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Group</a>
+                                <a class="dropdown-item" *ngIf = "isAdmin || this.owner.userId == loggedInUser.userId" (click)="onSelect()">Manage Group</a>
+
                                 <a class="dropdown-item" data-toggle="modal" data-target="#modal-share-group">Share Group</a>
                                 <a class="dropdown-item" data-toggle="modal" data-target="#modal-confirm-leave-group">Leave Group</a>
                             </div>
@@ -64,6 +69,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab-groupfeed" data-toggle="pill" href="#groupfeed-tab">Group Feed <span class="badge badge-light"></span></a>
                         </li>
+                        <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
+                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab">Group Settings</a>
+                      </li>
                         <!-- <li class="nav-item">
                             <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
                         </li>
@@ -155,6 +163,24 @@
                         <div class="tab-pane fade" id="review-tab" role="tabpanel">
                             <p>review-tab works</p>
                         </div> -->
+                        <div class="tab-pane fade" id="setting-tab" role="tabpanel">
+                          <form class="form-horizontal" (ngSubmit)="onEditGroupSetting(disableForm)" #disableForm="ngForm">
+                            <div>
+                              <label>Groups Status</label>
+                              <div class = "radio" *ngFor = "let status of settingStatus">
+                                <label style="padding-right: 10px;" >
+                                  <input type = "radio" name = "status" [ngModel] = "groupToView.isActive ? 'Active' : 'Deactive'" [value] = "status">
+                                  {{status}}
+                                </label>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <div class="offset-sm-2 col-sm-10">
+                                <button type="submit" class="btn btn-danger" style="float: right;" [disabled]="!disableForm.valid">Submit</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
                         <div class="tab-pane fade" id="groupfeed-tab" role="tabpanel">
                             <app-newsfeed newsfeedType="group" id="{{groupId}}"></app-newsfeed>
                         </div>

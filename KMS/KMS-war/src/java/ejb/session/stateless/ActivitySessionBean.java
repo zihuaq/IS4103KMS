@@ -47,6 +47,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
     @Override
     public Long createNewActivity(ActivityEntity newActivity, Long projectId) throws NoResultException {
+        
         ProjectEntity project = projectSessionBeanLocal.getProjectById(projectId);
         
         LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
@@ -147,8 +148,10 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     public void deleteActivity(Long activityId) throws NoResultException {
         ActivityEntity activityToDelete = getActivityById(activityId);
         
-        activityToDelete.getProject().getActivities().remove(activityToDelete);
-        activityToDelete.setProject(null);
+        if (activityToDelete.getProject() != null) {
+            activityToDelete.getProject().getActivities().remove(activityToDelete);
+            activityToDelete.setProject(null);
+        } 
         
         if (!activityToDelete.getHumanResourcePostings().isEmpty()) {
             for (HumanResourcePostingEntity hrp : activityToDelete.getHumanResourcePostings()) {
