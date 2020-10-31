@@ -339,7 +339,7 @@ export class GroupDetailsComponent implements OnInit {
               title: 'Success',
               autohide: true,
               delay: 2500,
-              body: 'Post Shared!',
+              body: 'Group Shared!',
             });
             $('#shareGroupToGroupselect2').val(null).trigger('change');
             this.shareGroupText = "";
@@ -359,7 +359,7 @@ export class GroupDetailsComponent implements OnInit {
             title: 'Success',
             autohide: true,
             delay: 2500,
-            body: 'Post Shared!',
+            body: 'Group Shared!',
           });
           this.shareGroupText = "";
           this.selectedShareOption = "";
