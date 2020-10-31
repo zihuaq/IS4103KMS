@@ -57,6 +57,7 @@ export class GroupDetailsComponent implements OnInit {
     this.checkAccessRight();
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     this.groupId = parseInt(this.activatedRoute.snapshot.paramMap.get("groupId"));
+    this.loggedInUser = this.sessionService.getCurrentUser();
     this.userService.getUser(loggedInUserId.toString()).subscribe(
       (data) => {
         this.loggedInUser = data;
@@ -81,14 +82,14 @@ export class GroupDetailsComponent implements OnInit {
             this.profilePicture = this.groupToView.profilePicture;
             //console.log(this.profilePicture);
             this.owner = this.groupToView.groupOwner;
-    
+
             for (let admin of this.groupToView.groupAdmins) {
               if (this.sessionService.getCurrentUser().userId == admin.userId) {
                 this.isMember = true;
                 this.isAdmin = true;
               }
             }
-    
+
             if (!this.isAdmin) {
               for (let member of this.groupToView.groupMembers) {
                 if (this.sessionService.getCurrentUser().userId == member.userId) {
@@ -271,7 +272,7 @@ export class GroupDetailsComponent implements OnInit {
   onSelectedShareOptionChange(event) {
     this.selectedShareOption = event.target.value;
   }
-  
+
   shareGroup() {
     if (this.selectedShareOption == "project") {
       let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();

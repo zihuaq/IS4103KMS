@@ -80,7 +80,7 @@ public class GroupResource {
 //            p.getHumanResourcePostings().clear();
 //            p.getMaterialResourcePostings().clear();
 //            p.getTasks().clear();
-//            p.getPosts().clear();
+            p.setPosts(new ArrayList<>());
         }
         return Response.status(Status.OK).entity(new RetrieveAllGroupRsp(groups)).build();
     }

@@ -654,6 +654,19 @@ public class PostSessionBean implements PostSessionBeanLocal {
 
         em.remove(postToDelete);
     }
+    
+    
+    public void deletePostInGroupFeed(Long postId) throws NoResultException {
+        PostEntity postToDelete = getPostById(postId);
+
+        postToDelete.getPostOwner().getPosts().remove(postToDelete);
+        postToDelete.setPostOwner(null);
+
+        postToDelete.getGroup().getPosts().remove(postToDelete);
+        postToDelete.setGroup(null);
+
+        em.remove(postToDelete);
+    }
 
     @Override
     public PostCommentEntity getPostCommentById(Long commentId) throws NoResultException {
