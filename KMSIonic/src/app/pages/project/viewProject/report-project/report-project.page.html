@@ -35,7 +35,7 @@
         </ion-item>
         <ion-item>
           <ion-label position="stacked"><b>Description: </b></ion-label>
-          <ion-textarea id="description" name="description" [(ngModel)]="report.reportContent" #description="ngModel"></ion-textarea>
+          <ion-textarea id="description" name="description" placeholder="Enter elaboration if necessary" [(ngModel)]="report.reportContent" #description="ngModel"></ion-textarea>
         </ion-item>
         <ion-button type="submit" [disabled]="!reportForm.valid" expand="block">Submit</ion-button>
       </form>

@@ -60,9 +60,8 @@ public class TaskEntity implements Serializable {
     public TaskEntity() {
     }
 
-    public TaskEntity(Long taskId, String name, Date startDate, Date endDate, Double progress, Long parent) {
+    public TaskEntity(String name, Date startDate, Date endDate, Double progress, Long parent) {
         this();
-        this.id = taskId;
         this.text = name;
         this.start_date = startDate;
         this.end_date = endDate;

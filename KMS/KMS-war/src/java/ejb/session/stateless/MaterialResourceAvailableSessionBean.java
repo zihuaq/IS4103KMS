@@ -26,6 +26,7 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
         System.out.println(materialResourceAvailableOwner);
         if (materialResourceAvailableOwner != null) {
             em.persist(materialResourceAvailable);
+            em.flush();
             List<MaterialResourceAvailableEntity> mras = materialResourceAvailableOwner.getMras();
             mras.add(materialResourceAvailable);
             materialResourceAvailableOwner.setMras(mras);

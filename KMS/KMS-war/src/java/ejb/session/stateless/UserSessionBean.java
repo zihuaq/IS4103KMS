@@ -54,7 +54,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
     public UserEntity createNewUser(UserEntity user) throws DuplicateEmailException {
         Query q = em.createQuery("SELECT u FROM UserEntity u WHERE u.email = :email");
         q.setParameter("email", user.getEmail());
-        System.out.println(user);
+        
         if (!q.getResultList().isEmpty()) {
             throw new DuplicateEmailException("Email already exist!");
         }
@@ -63,6 +63,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.setIsVerified(Boolean.FALSE);
         em.persist(user);
         em.flush();
+        System.out.println(user);
         return user;
     }
 
