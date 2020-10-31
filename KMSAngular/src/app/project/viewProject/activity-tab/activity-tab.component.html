@@ -153,8 +153,8 @@
                             <h5 class="card-title"><b>Members</b></h5>
                         </div>
                         <ul class="list-group" *ngFor="let member of activitySelected.joinedUsers">
-                            <li class="list-group-item">
-                                <span *ngIf="!inContributors(member.userId)">
+                            <li class="list-group-item" *ngIf="!inContributors(member.userId)">
+                                <span>
                                     {{member.firstName}} {{member.lastName}}
                                 </span>
                             </li>
