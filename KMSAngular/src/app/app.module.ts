@@ -93,6 +93,23 @@ import { EditTaskTabComponent } from './project/editProject/edit-task-tab/edit-t
 import { ViewDocumentsComponent } from './project/viewProject/view-documents/view-documents.component';
 import { EditDocumentsComponent } from './project/editProject/edit-documents/edit-documents.component';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { ChatComponent } from './chat/chat.component';
+
+export const environment = {
+  production: false,
+  firebase: {
+    apiKey: "AIzaSyBl7TP2OFBQJ4X2N9oRkUHTh33cK6y299c",
+    authDomain: "is4103kms-4e0e3.firebaseapp.com",
+    databaseURL: "https://is4103kms-4e0e3.firebaseio.com",
+    projectId: "is4103kms-4e0e3",
+    storageBucket: "is4103kms-4e0e3.appspot.com",
+    messagingSenderId: "973751042539",
+    appId: "1:973751042539:web:cdc10c50839ec3a7e319ae"
+  }
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -173,7 +190,8 @@ import { EditDocumentsComponent } from './project/editProject/edit-documents/edi
     CommentReportItemComponent,
     EditTaskTabComponent,
     ViewDocumentsComponent,
-    EditDocumentsComponent
+    EditDocumentsComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,
@@ -185,7 +203,9 @@ import { EditDocumentsComponent } from './project/editProject/edit-documents/edi
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     ModalModule.forRoot(),
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+    AngularFireModule.initializeApp(environment.firebase), 
+    AngularFireDatabaseModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],
