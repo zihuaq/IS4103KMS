@@ -24,6 +24,8 @@ export class ChatComponent implements OnInit {
   chatMessage: string;
   sender: User;
   receiver: User;
+  hasMessage = false;
+  hasUsers = false;
 
   constructor(private sessionService: SessionService,
     private userService: UserService,
@@ -34,24 +36,45 @@ export class ChatComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.receiverId = parseInt(this.activatedRoute.snapshot.paramMap.get("userId"));
+
+    this.receiverId = 2;
     this.sender = this.sessionService.getCurrentUser();
 
-    this.users = this.chatService.getChatHistoryUser(this.sender.firstName + " " + this.sender.lastName).snapshotChanges();
-
+    this.users = this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).snapshotChanges();
     
-
-    this.userService.getUser(this.receiverId.toString()).subscribe(
-      response => {
-        this.receiver = response;
-        this.messages = this.chatService.getMessages(this.sender.firstName + " " + this.sender.lastName, this.receiver.firstName + " " + this.receiver.lastName).snapshotChanges();
+    this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).valueChanges().subscribe(
+      (data) => {
+        if (data.length > 0) {
+          this.hasUsers = true;
+        }
       }
-    );
-    
+    )
   }
 
   postMessage() {
     this.chatService.sendMessage(this.sender, this.chatMessage, this.receiver);
+    this.chatMessage = "";
+  }
+
+  loadMessage(key) {
+    this.messages = this.chatService.getMessages(this.sender.userId, this.sender.firstName + " " + this.sender.lastName, key).snapshotChanges();    
+    this.hasMessage = true;
+    let id = this.getUserIdFromKey(key);
+    this.userService.getUser(id).subscribe(
+      response => {
+        this.receiver = response;
+      }
+    );
+  }
+
+  getUserIdFromKey(key) {
+    let index = key.indexOf("_");
+    return key.substring(0, index);
+  }
+
+  getNameFromKey(key) {
+    let index = key.indexOf("_");
+    return key.substring(index + 1);
   }
 
 }

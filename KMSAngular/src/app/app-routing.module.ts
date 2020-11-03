@@ -173,7 +173,7 @@ const routes: Routes = [
     component: DonateToProjectComponent
   },
   {
-    path: 'chat/:userId',
+    path: 'chat',
     component: ChatComponent
   }
 

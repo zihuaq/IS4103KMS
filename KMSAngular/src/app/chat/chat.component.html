@@ -4,27 +4,72 @@
 <div class="content-wrapper">
     <div class="content-header">
         <div class="content-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Real Time Chat</h1>
+            <div>
+                <!-- <h1>Real Time Chat</h1>
 
-                    <input type="text" placeholder="Your message.." for="msg" [(ngModel)]="chatMessage">
-                    
-                    <button (click)="postMessage()">Send message</button>
-                    
-                    <!-- <div class="list-group" *ngFor="let user of users | async">
-                        {{ user.payload.key }}
-                    </div> -->
+                <input type="text" placeholder="Your message.." for="msg" [(ngModel)]="chatMessage">
+                
+                <button (click)="postMessage()">Send message</button>
+                
+                <div class="list-group" *ngFor="let user of users | async">
+                    {{ user.payload.key }}
+                </div>
 
-                    <div class="list-group" *ngFor="let msg of messages | async">
-                        {{ msg.payload.val().senderName }}: {{ msg.payload.val().msg }}
+                <div class="list-group" *ngFor="let msg of messages | async">
+                    {{ msg.payload.val().senderName }}: {{ msg.payload.val().msg }}
+                </div> -->
+
+                <div class="row">
+                    <div class="col-4">
+                        <h4>Chat</h4>
+                        <div class="card card-tabs" style="height: 500px; overflow-y: auto;">
+                            <div class="class-header p-0 pt-1 border-bottom-0">   
+                                <div *ngIf="!hasUsers" style="padding: 5px;">
+                                    No chat
+                                </div>                           
+                                <ul class="nav nav-tabs" role="tablist" orientation="vertical" *ngFor="let user of users | async">
+                                    <a class="list-group-item list-group-item-action" (click)="loadMessage(user.payload.key)">
+                                        {{ getNameFromKey(user.payload.key) }}                                         
+                                    </a>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <h4>Messages</h4>
+                        <div class="card tab-content" style="height: 500px; overflow-y: auto;">
+                            <div class="card-body" style="position: relative; overflow-y: auto; bottom:0;">
+                                <div *ngIf="!hasMessage" style="padding: 5px;">
+                                    Select a chat to view messages
+                                </div>
+                                <span *ngIf="hasMessage">
+                                    <div class="list-group" *ngFor="let msg of messages | async">
+                                        <span *ngIf="sender.userId != msg.payload.val().senderId">
+                                            <div class="speech-bubble-left" style="padding: 5px 5px 5px 5px;width: fit-content;">
+                                                <h6 class="card-text" style="color: white;">{{ msg.payload.val().msg }}</h6>
+                                            </div>
+                                            &nbsp;
+                                        </span>
+                                        <span *ngIf="sender.userId == msg.payload.val().senderId">
+                                            <div class="ml-auto speech-bubble-right" style="padding: 5px 5px 5px 5px;width: fit-content;">
+                                                <h6 class="card-text" style="color: white;">{{ msg.payload.val().msg }}</h6>
+                                            </div>
+                                            &nbsp;
+                                        </span>
+                                    </div>
+                                </span>                                
+                            </div>
+                            <div class="card-footer" *ngIf="hasMessage" >
+                                <form (ngSubmit)="postMessage()">
+                                    <input id="msg" type="text" style="width: 95%;" placeholder="Your message.." name="msg" #msg="ngModel" [(ngModel)]="chatMessage">
+                        
+                                    <button class="float-right" type="submit" style="width: 5%;"><i class="fas fa-greater-than"></i></button>
+                                </form>                                
+                            </div>                           
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
-<app-footer></app-footer>

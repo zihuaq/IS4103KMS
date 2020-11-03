@@ -14,19 +14,19 @@ export class ChatService {
     private firestore: AngularFirestore) { 
     }
 
-  getChatHistoryUser(senderName: string) {
-    return this.db.list(senderName);
+  getChatHistoryUser(senderId: number, senderName: string) {
+    return this.db.list(senderId + "_" + senderName);
   }
 
-  getMessages(senderName: string, receiverName: string) {
-    return this.db.list(senderName + "/" + receiverName, ref => {
+  getMessages(senderId: number, senderName: string, receiverName: string) {
+    return this.db.list(senderId + "_" + senderName + "/" + receiverName, ref => {
       return ref.orderByChild("timeStamp");
     });
   }
 
   sendMessage(sender: User, message: string, receiver: User) {
 
-    this.db.list(sender.firstName + " " + sender.lastName + "/" + receiver.firstName + " " + receiver.lastName).push({
+    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName + "/" + receiver.userId + "_" + receiver.firstName + " " + receiver.lastName).push({
       'senderId': sender.userId,
       'senderName': sender.firstName + " " + sender.lastName,
       'receiverId': receiver.userId, 
@@ -35,7 +35,7 @@ export class ChatService {
       'timeStamp': new Date().getTime()
     }).then(
       () => {
-        this.db.list(receiver.firstName + " " + receiver.lastName + "/" + sender.firstName + " " + sender.lastName).push({
+        this.db.list(receiver.userId + "_" + receiver.firstName + " " + receiver.lastName + "/" + sender.userId + "_" + sender.firstName + " " + sender.lastName).push({
           'senderId': sender.userId,
           'senderName': sender.firstName + " " + sender.lastName,
           'receiverId': receiver.userId, 
