@@ -17,7 +17,6 @@ import entity.ReportEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.EJB;
@@ -649,9 +648,11 @@ public class PostSessionBean implements PostSessionBeanLocal {
         postToDelete.getPostOwner().getPosts().remove(postToDelete);
         postToDelete.setPostOwner(null);
 
-        postToDelete.getProject().getPosts().remove(postToDelete);
-        postToDelete.setProject(null);
-
+        if (postToDelete.getProject() != null) {
+            postToDelete.getProject().getPosts().remove(postToDelete);
+            postToDelete.setProject(null);
+        }
+        
         em.remove(postToDelete);
     }
 
