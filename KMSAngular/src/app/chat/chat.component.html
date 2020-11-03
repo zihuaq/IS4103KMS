@@ -38,11 +38,11 @@
                     <div class="col-7">
                         <h4>Messages</h4>
                         <div class="card tab-content" style="height: 500px; overflow-y: auto;">
-                            <div class="card-body" style="position: relative; overflow-y: auto; bottom:0;">
-                                <div *ngIf="!hasMessage" style="padding: 5px;">
-                                    Select a chat to view messages
-                                </div>
-                                <span *ngIf="hasMessage">
+                            <div *ngIf="!hasMessage" style="padding: 5px;">
+                                Select a chat to view messages
+                            </div>
+                            <div class="card-body" *ngIf="hasMessage" style="position: relative; overflow-y: auto; display: flex; flex-direction: column-reverse;">                                
+                                <span >
                                     <div class="list-group" *ngFor="let msg of messages | async">
                                         <span *ngIf="sender.userId != msg.payload.val().senderId">
                                             <div class="speech-bubble-left" style="padding: 5px 5px 5px 5px;width: fit-content;">
