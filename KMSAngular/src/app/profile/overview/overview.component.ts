@@ -6,6 +6,7 @@ import { FollowRequest } from '../../classes/follow-request';
 import { AffiliationRequest } from '../../classes/affiliation-request';
 import { AccountPrivacySettingEnum } from '../../classes/privacy-settings.enum';
 import { UserType } from 'src/app/classes/user-type.enum';
+import { ChatService } from 'src/app/chat.service';
 
 declare var $: any;
 
@@ -26,7 +27,12 @@ export class OverviewComponent implements OnInit {
   hasSentAffiliationRequest: boolean;
   UserType = UserType;
 
-  constructor(private userService: UserService) {}
+  messages;
+  chatMessage;
+
+  constructor(private chatService: ChatService,
+    private userService: UserService) {
+    }
 
   ngOnInit(): void {
     this.getFollowersFollowingAndAffiliatedUsers();
@@ -146,5 +152,27 @@ export class OverviewComponent implements OnInit {
         })
         .includes(this.profile.userId);
     });
+  }
+
+  clickUser() {
+    this.loadMessage();
+  }
+
+  loadMessage() {
+    this.chatService.getMessages(this.loggedInUser, this.profile.userId + "_" + this.profile.firstName + " " + this.profile.lastName).valueChanges().subscribe(
+      (data) => {
+        this.messages = data;
+      }
+    )
+  }
+
+  postMessage() {
+    if (this.messages.length > 0) {
+      this.chatService.sendMessage(this.loggedInUser, this.chatMessage, this.profile);
+    } else {
+      this.chatService.createChat(this.loggedInUser, this.chatMessage, this.profile);
+    }
+    
+    this.chatMessage = "";
   }
 }

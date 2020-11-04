@@ -76,6 +76,9 @@
                                         <a routerLink="/profile/{{user.userId}}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-user"></i> View Profile
                                         </a>
+                                        <button *ngIf="user.userId != loggedInUserId" type="button" class="btn bg-gradient-dark btn-sm" data-toggle="modal" href="#chat-modal" data-backdrop="static" (click)="clickUser(user)">
+                                            <i class="fas fa-comment"></i> Chat
+                                        </button>
                                         <button
                                             *ngIf="user.userId != loggedInUserId && !checkLoginUserHasFollowed(user.userId) && !checkLoginUserHaveSentFollowReq(user.userId)"
                                             type="button" class="btn bg-gradient-info btn-sm"
@@ -135,3 +138,43 @@
 </div>
 
 <app-footer></app-footer>
+
+<div class="modal fade" id="chat-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="card tab-content" style="height: 500px; overflow-y: auto;">                            
+                <div class="card-header">
+                    {{selectedUser.firstName}} {{selectedUser.lastName}}
+                    <button type="button" id="userListModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="card-body" style="position: relative; overflow-y: auto; display: flex; flex-direction: column-reverse;">                                
+                    <span>                                    
+                        <div class="list-group" *ngFor="let msg of messages">
+                            <span *ngIf="loggedInUser.userId != msg.senderId && msg.msg != null">
+                                <div class="speech-bubble-left" style="padding: 5px 5px 5px 5px;width: fit-content;">
+                                    <h6 class="card-text" style="color: white;">{{ msg.msg }}</h6>
+                                </div>
+                                &nbsp;
+                            </span>
+                            <span *ngIf="loggedInUser.userId == msg.senderId && msg.msg != null">
+                                <div class="ml-auto speech-bubble-right" style="padding: 5px 5px 5px 5px;width: fit-content;">
+                                    <h6 class="card-text" style="color: white;">{{ msg.msg }}</h6>
+                                </div>
+                                &nbsp;
+                            </span>
+                        </div>
+                    </span>                                
+                </div>
+                <div class="card-footer">
+                    <form (ngSubmit)="postMessage()">
+                        <input id="msg" type="text" style="width: 93%; height: 30px" placeholder="Your message.." name="msg" #msg="ngModel" [(ngModel)]="chatMessage">
+            
+                        <button class="btn btn-primary float-right" type="submit" style="width: 5%; height: 30px"><i class="fas fa-greater-than"></i></button>
+                    </form>                                
+                </div>                                                    
+            </div>
+        </div>
+    </div>
+</div>

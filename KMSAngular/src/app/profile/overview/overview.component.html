@@ -48,24 +48,73 @@
       <li class="list-group-item">
         <b>Reputation points</b> <a class="float-right">{{profile.reputationPoints}}</a>
       </li>
-    </ul>
+    </ul>    
     <div *ngIf="!shared && profile.userId != loggedInUser.userId">
-      <a class="btn btn-primary btn-block" *ngIf="!isFollowing && !hasSentFollowRequest"
-        (click)="follow()"><b>Follow</b></a>
-      <a class="btn btn-primary btn-block" *ngIf="isFollowing" (click)="unfollow()"><b>Unfollow</b></a>
-      <a class="btn bg-gradient-info btn-block" *ngIf="!isFollowing && hasSentFollowRequest" disabled=true>
-        <i class="fas fa-check"></i> Follow Request Sent
-      </a>
-      <a class="btn btn-primary btn-block"
-        *ngIf="!(loggedInUser.userType != UserType.INSTITUTE && profile.userType != UserType.INSTITUTE) && !isAffiliated && !hasSentAffiliationRequest"
-        (click)="sendAffiliationRequest()"><b>Send Affiliation Request</b></a>
-      <a class="btn btn-primary btn-block" *ngIf="isAffiliated" (click)="removeAffiliation()"><b>Remove
-          Affiliation</b></a>
-      <a class="btn bg-gradient-info btn-block" *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true>
-        <i class="fas fa-check"></i> Affiliation Request Sent
-      </a>
+      <div class="row">
+        <div class="col-6">
+          <a class="btn btn-primary btn-block" *ngIf="!isFollowing && !hasSentFollowRequest"
+          (click)="follow()"><b>Follow</b></a>
+          <a class="btn btn-primary btn-block" *ngIf="isFollowing" (click)="unfollow()"><b>Unfollow</b></a>
+          <a class="btn bg-gradient-info btn-block" *ngIf="!isFollowing && hasSentFollowRequest" disabled=true>
+            <i class="fas fa-check"></i> Follow Request Sent
+          </a>
+          <a class="btn btn-primary btn-block"
+            *ngIf="!(loggedInUser.userType != UserType.INSTITUTE && profile.userType != UserType.INSTITUTE) && !isAffiliated && !hasSentAffiliationRequest"
+            (click)="sendAffiliationRequest()"><b>Send Affiliation Request</b></a>
+          <a class="btn btn-primary btn-block" *ngIf="isAffiliated" (click)="removeAffiliation()"><b>Remove
+              Affiliation</b></a>
+          <a class="btn bg-gradient-info btn-block" *ngIf="!isAffiliated && hasSentAffiliationRequest" disabled=true>
+            <i class="fas fa-check"></i> Affiliation Request Sent
+          </a> 
+        </div>
+        <div class="col-6">
+          <button *ngIf="profile.userId != loggedInUser.userId" type="button" class="btn bg-gradient-dark btn-block" data-toggle="modal" href="#chat-modal" data-backdrop="static" (click)="clickUser()">
+            Chat
+          </button>
+        </div>
+      </div>           
     </div>
   </div>
   <!-- /.card-body -->
 </div>
 <!-- /.card -->
+
+<div class="modal fade" id="chat-modal">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="card tab-content" style="height: 500px; overflow-y: auto;">                            
+              <div class="card-header">
+                  {{profile.firstName}} {{profile.lastName}}
+                  <button type="button" id="userListModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="card-body" style="position: relative; overflow-y: auto; display: flex; flex-direction: column-reverse;">                                
+                  <span>                                    
+                      <div class="list-group" *ngFor="let msg of messages">
+                          <span *ngIf="loggedInUser.userId != msg.senderId && msg.msg != null">
+                              <div class="speech-bubble-left" style="padding: 5px 5px 5px 5px;width: fit-content;">
+                                  <h6 class="card-text" style="color: white;">{{ msg.msg }}</h6>
+                              </div>
+                              &nbsp;
+                          </span>
+                          <span *ngIf="loggedInUser.userId == msg.senderId && msg.msg != null">
+                              <div class="ml-auto speech-bubble-right" style="padding: 5px 5px 5px 5px;width: fit-content;">
+                                  <h6 class="card-text" style="color: white;">{{ msg.msg }}</h6>
+                              </div>
+                              &nbsp;
+                          </span>
+                      </div>
+                  </span>                                
+              </div>
+              <div class="card-footer">
+                  <form (ngSubmit)="postMessage()">
+                      <input id="msg" type="text" style="width: 93%; height: 30px" placeholder="Your message.." name="msg" #msg="ngModel" [(ngModel)]="chatMessage">
+          
+                      <button class="btn btn-primary float-right" type="submit" style="width: 5%; height: 30px"><i class="fas fa-greater-than"></i></button>
+                  </form>                                
+              </div>                                                    
+          </div>
+      </div>
+  </div>
+</div>

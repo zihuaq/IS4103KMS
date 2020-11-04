@@ -86,9 +86,8 @@ export class ChatComponent implements OnInit {
 
   loadMessage(key) {
     this.isNewChat = false;
-    this.selectedUser = key;
-    // this.messages = this.chatService.getMessages(this.sender.userId, this.sender.firstName + " " + this.sender.lastName, key).snapshotChanges();    
-    this.chatService.getMessages(this.sender.userId, this.sender.firstName + " " + this.sender.lastName, key).valueChanges().subscribe(
+    this.selectedUser = key;   
+    this.chatService.getMessages(this.sender, key).valueChanges().subscribe(
       (data) => {
         this.messages = data;
         this.hasMessage = true;
@@ -149,37 +148,6 @@ export class ChatComponent implements OnInit {
     this.searchModel = value;
     this.searchModelChange.emit(this.searchModel);
   }
-
-  // handleSearchStringChanged(event) {
-  //   this.filteredUsers = [];
-  //   this.searchString = event + "";
-  //   if (this.searchString && this.searchString != "") {
-  //     this.allUsers.forEach((user) => {
-  //       if (this.userMatchSearchString(user)) {
-  //         this.filteredUsers.push(user);
-  //       }
-  //     })
-  //   } else {
-  //     this.filteredUsers = this.allUsers;
-  //     console.log(this.allUsers)
-  //   }
-    
-  // }
-
-  // userMatchSearchString(user: User) {
-  //   if (user.userType == UserType.INDIVIDUAL || user.userType == UserType.ADMIN) {
-  //     if (!user.firstName.toLowerCase().includes(this.searchString.toLowerCase()) &&
-  //       !user.lastName.toLowerCase().includes(this.searchString.toLowerCase())) {
-  //       return false;
-  //     }
-  //   } else if (user.userType == UserType.INSTITUTE) {
-  //     if (!user.firstName.toLowerCase().includes(this.searchString.toLowerCase())) {
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-
 
 }
 

@@ -20,8 +20,8 @@ export class ChatService {
     });
   }
 
-  getMessages(senderId: number, senderName: string, receiverName: string) {
-    return this.db.list(senderId + "_" + senderName + "/" + receiverName, ref => {
+  getMessages(sender: User, receiver: string) {
+    return this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName + "/" + receiver, ref => {
       return ref.orderByChild("timeStamp");
     });
   }
