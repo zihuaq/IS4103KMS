@@ -96,6 +96,7 @@ import { EditDocumentsComponent } from './project/editProject/edit-documents/edi
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { ChatComponent } from './chat/chat.component';
+import { UserFilterPipe } from './chat/user-filter.pipe';
 
 export const environment = {
   production: false,
@@ -191,7 +192,8 @@ export const environment = {
     EditTaskTabComponent,
     ViewDocumentsComponent,
     EditDocumentsComponent,
-    ChatComponent
+    ChatComponent,
+    UserFilterPipe
   ],
   imports: [
     BrowserModule,

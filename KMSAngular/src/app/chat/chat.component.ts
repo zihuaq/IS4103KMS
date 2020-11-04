@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AngularFireList } from '@angular/fire/database';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { User } from 'src/app/classes/user';
+import { UserType } from '../classes/user-type.enum';
 import { UserService } from 'src/app/user.service';
 import { SessionService } from 'src/app/session.service';
 import { ChatService } from 'src/app/chat.service';
@@ -20,6 +21,9 @@ declare var $: any;
 
 export class ChatComponent implements OnInit {
 
+  @Input() searchModel;
+  @Output() searchModelChange: EventEmitter<any> = new EventEmitter();
+  
   receiverId: number;
   users;
   messages;
@@ -34,6 +38,8 @@ export class ChatComponent implements OnInit {
   userIdList;
   isNewChat = false;
   newChatUser;
+  searchString: string;
+  filteredUsers: User[];
 
   constructor(private sessionService: SessionService,
     private userService: UserService,
@@ -44,6 +50,7 @@ export class ChatComponent implements OnInit {
       this.messages = [];
       this.allUsers = [];
       this.userIdList = [];
+      this.filteredUsers = [];
     }
 
   ngOnInit(): void {
@@ -51,6 +58,7 @@ export class ChatComponent implements OnInit {
     this.userService.getAllUsers().subscribe(
       response => {
         this.allUsers = response;
+        this.filteredUsers = this.allUsers;
       }
     );
 
@@ -136,6 +144,42 @@ export class ChatComponent implements OnInit {
     this.loadMessage(name);
     this.userIdList.push(this.receiver.userId);
   }
+
+  updateSearchModel(value) {
+    this.searchModel = value;
+    this.searchModelChange.emit(this.searchModel);
+  }
+
+  // handleSearchStringChanged(event) {
+  //   this.filteredUsers = [];
+  //   this.searchString = event + "";
+  //   if (this.searchString && this.searchString != "") {
+  //     this.allUsers.forEach((user) => {
+  //       if (this.userMatchSearchString(user)) {
+  //         this.filteredUsers.push(user);
+  //       }
+  //     })
+  //   } else {
+  //     this.filteredUsers = this.allUsers;
+  //     console.log(this.allUsers)
+  //   }
+    
+  // }
+
+  // userMatchSearchString(user: User) {
+  //   if (user.userType == UserType.INDIVIDUAL || user.userType == UserType.ADMIN) {
+  //     if (!user.firstName.toLowerCase().includes(this.searchString.toLowerCase()) &&
+  //       !user.lastName.toLowerCase().includes(this.searchString.toLowerCase())) {
+  //       return false;
+  //     }
+  //   } else if (user.userType == UserType.INSTITUTE) {
+  //     if (!user.firstName.toLowerCase().includes(this.searchString.toLowerCase())) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
+
 
 }
 

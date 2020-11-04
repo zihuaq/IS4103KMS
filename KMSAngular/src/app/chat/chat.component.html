@@ -103,7 +103,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <span *ngFor="let user of allUsers">
+                <div class="input-group" style="margin: 15px 20px; width: auto">
+                    <input class="form-control" placeholder="Search users" [(ngModel)]="searchModel" (ngModelChange)="updateSearchModel($event)">
+                </div>
+                <span *ngFor="let user of allUsers | userFilter: searchModel">
                     <span *ngIf="!hasChatHistory(user)">
                         <ul class="nav nav-tabs" role="tablist" orientation="vertical">
                             <a class="list-group-item list-group-item-action" (click)="newChat(user)">
