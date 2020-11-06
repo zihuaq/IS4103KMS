@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { FollowRequest } from '../classes/follow-request';
 import { User } from '../classes/user';
 import { SessionService } from '../session.service';
@@ -44,6 +45,7 @@ export class SearchUsersComponent implements OnInit {
   selectedUser: User;
   messages;
   chatMessage;
+  users;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -54,6 +56,8 @@ export class SearchUsersComponent implements OnInit {
     private router: Router
   ) {
     this.selectedUser = new User();
+    this.users = [];
+    this.messages = [];
    }
 
   ngOnInit(): void {
@@ -349,11 +353,44 @@ export class SearchUsersComponent implements OnInit {
   }
 
   loadMessage() {
-    this.chatService.getMessages(this.loggedInUser, this.selectedUser.userId + "_" + this.selectedUser.firstName + " " + this.selectedUser.lastName).valueChanges().subscribe(
-      (data) => {
-        this.messages = data;
+    let key = this.selectedUser.userId + "_" + this.selectedUser.firstName + " " + this.selectedUser.lastName
+
+    this.chatService.getChatHistoryUser(this.loggedInUser.userId, this.loggedInUser.firstName + " " + this.loggedInUser.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        this.users = data;
+        this.messages = [];
+        for (let user of this.users) {
+          if (user.key == key) {
+            let m = user.data;
+            for (let x in m) {
+              if (m.hasOwnProperty(x)) {
+                this.messages.push(m[x]);
+              }
+            }
+            break;
+          }
+        }
+        
       }
-    )
+    );
+
+    for (let user of this.users) {
+      if (user.key == key) {
+        let m = user.data;
+        for (let x in m) {
+          if (x != 'userId' && x !='timeStamp') {
+            this.chatService.readMessage(this.loggedInUser, key, x);
+          }
+        }
+        break;
+      }
+    }
   }
 
   postMessage() {

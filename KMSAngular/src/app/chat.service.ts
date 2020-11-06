@@ -35,7 +35,8 @@ export class ChatService {
         'receiverId': receiver.userId, 
         'receiverName': receiver.firstName + " " + receiver.lastName,
         'msg': message, 
-        'timeStamp': new Date().getTime()
+        'timeStamp': new Date().getTime(),
+        'hasRead': true
       }
     ).then(
       () => {
@@ -46,7 +47,8 @@ export class ChatService {
             'receiverId': receiver.userId, 
             'receiverName': receiver.firstName + " " + receiver.lastName,
             'msg': message, 
-            'timeStamp': new Date().getTime()
+            'timeStamp': new Date().getTime(),
+            'hasRead': false
           }
         );
       }
@@ -68,6 +70,12 @@ export class ChatService {
     this.db.list(receiver.userId + "_" + receiver.firstName + " " + receiver.lastName).update(
       sender.userId + "_" + sender.firstName + " " + sender.lastName, { 'userId': sender.userId }
     ) 
+  }
+
+  readMessage(sender: User, receiver: string, key: string) {
+    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName + "/" + receiver).update(
+      key, { 'hasRead': true }
+    )
   }
 
 

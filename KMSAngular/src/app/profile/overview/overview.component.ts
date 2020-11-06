@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { UserService } from 'src/app/user.service';
 import { User } from '../../classes/user';
 import { FollowRequest } from '../../classes/follow-request';
@@ -29,9 +30,12 @@ export class OverviewComponent implements OnInit {
 
   messages;
   chatMessage;
+  users;
 
   constructor(private chatService: ChatService,
     private userService: UserService) {
+      this.users = [];
+      this.messages = [];
     }
 
   ngOnInit(): void {
@@ -154,16 +158,45 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  clickUser() {
-    this.loadMessage();
-  }
-
   loadMessage() {
-    this.chatService.getMessages(this.loggedInUser, this.profile.userId + "_" + this.profile.firstName + " " + this.profile.lastName).valueChanges().subscribe(
-      (data) => {
-        this.messages = data;
+    let key = this.profile.userId + "_" + this.profile.firstName + " " + this.profile.lastName;
+
+    this.chatService.getChatHistoryUser(this.loggedInUser.userId, this.loggedInUser.firstName + " " + this.loggedInUser.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        this.users = data;
+        this.messages = [];
+        for (let user of this.users) {
+          if (user.key == key) {
+            let m = user.data;
+            for (let x in m) {
+              if (m.hasOwnProperty(x)) {
+                this.messages.push(m[x]);
+              }
+            }
+            break;
+          }
+        }
+        
       }
-    )
+    );
+
+    for (let user of this.users) {
+      if (user.key == key) {
+        let m = user.data;
+        for (let x in m) {
+          if (x != 'userId' && x !='timeStamp') {
+            this.chatService.readMessage(this.loggedInUser, key, x);
+          }
+        }
+        break;
+      }
+    }
   }
 
   postMessage() {

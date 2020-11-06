@@ -51,6 +51,7 @@ export class ChatComponent implements OnInit {
       this.allUsers = [];
       this.userIdList = [];
       this.filteredUsers = [];
+      this.users = [];
     }
 
   ngOnInit(): void {
@@ -64,11 +65,11 @@ export class ChatComponent implements OnInit {
 
     this.sender = this.sessionService.getCurrentUser();
 
-    this.users = this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).snapshotChanges();    
+    // this.users = this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).snapshotChanges();    
     this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).valueChanges().subscribe(
       (data) => {   
         this.userIdList = [];
-        let list: any[] = data;    
+        let list: any[] = data;
         if (list.length > 0) {
           this.hasUsers = true;
         } 
@@ -76,7 +77,25 @@ export class ChatComponent implements OnInit {
           this.userIdList.push(a.userId);
         }
       }
-    )    
+    );
+
+    this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        this.users = data;
+      }
+    );
+
+  }
+
+  ngOnDestroy() {
+    console.log("chat component: ngOnDestroy()")
+    this.loadMessage("");
   }
 
   postMessage() {
@@ -87,12 +106,46 @@ export class ChatComponent implements OnInit {
   loadMessage(key) {
     this.isNewChat = false;
     this.selectedUser = key;   
-    this.chatService.getMessages(this.sender, key).valueChanges().subscribe(
-      (data) => {
-        this.messages = data;
-        this.hasMessage = true;
+
+    this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        this.users = data;
+        this.messages = [];
+        for (let user of this.users) {
+          if (user.key == key) {
+            this.hasMessage = true;
+            let m = user.data;
+            for (let x in m) {
+              if (m.hasOwnProperty(x)) {
+                this.messages.push(m[x]);
+              }
+            }
+            break;
+          }
+        }
+        
       }
-    )
+    );
+
+    for (let user of this.users) {
+      if (user.key == key) {
+        this.hasMessage = true;
+        let m = user.data;
+        for (let x in m) {
+          if (x != 'userId' && x !='timeStamp') {
+            this.chatService.readMessage(this.sender, key, x);
+          }
+        }
+        break;
+      }
+    }
+    
     let id = this.getUserIdFromKey(key);
     this.userService.getUser(id).subscribe(
       response => {
@@ -147,6 +200,10 @@ export class ChatComponent implements OnInit {
   updateSearchModel(value) {
     this.searchModel = value;
     this.searchModelChange.emit(this.searchModel);
+  }
+
+  clickNewChat() {
+    this.loadMessage("");
   }
 
 }

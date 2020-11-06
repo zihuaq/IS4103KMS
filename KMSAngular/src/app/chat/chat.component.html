@@ -9,14 +9,14 @@
                     <div class="col-4">
                         <h4>Chat</h4>                        
                         <div class="card card-tabs" style="height: 500px; overflow-y: auto;">
-                            <button class="btn btn-light" data-toggle="modal" data-target="#user-list-modal" data-backdrop="static"><i class="fas fa-plus"></i> New Chat</button>
+                            <button class="btn btn-light" data-toggle="modal" data-target="#user-list-modal" data-backdrop="static" (click)="clickNewChat()"><i class="fas fa-plus"></i> New Chat</button>
                             <div class="class-header p-0 pt-1 border-bottom-0">   
                                 <div *ngIf="!hasUsers" style="padding: 5px;">
                                     No chat
                                 </div>                           
-                                <ul class="nav nav-tabs" role="tablist" orientation="vertical" *ngFor="let user of (users | async)?.slice().reverse()">
-                                    <a class="list-group-item list-group-item-action" [ngClass]="{'active': selectedUser == user.payload.key}" (click)="loadMessage(user.payload.key)">
-                                        {{ getNameFromKey(user.payload.key) }}                                         
+                                <ul class="nav nav-tabs" role="tablist" orientation="vertical" *ngFor="let user of users.reverse()">
+                                    <a class="list-group-item list-group-item-action" [ngClass]="{'active': selectedUser == user.key}" (click)="loadMessage(user.key)">
+                                        {{ getNameFromKey(user.key) }}                                         
                                     </a>
                                 </ul>
                             </div>
