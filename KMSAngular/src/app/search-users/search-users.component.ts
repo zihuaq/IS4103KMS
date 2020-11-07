@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { FollowRequest } from '../classes/follow-request';
 import { User } from '../classes/user';
 import { SessionService } from '../session.service';
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 import { UserType } from '../classes/user-type.enum';
 import { TagService } from '../tag.service';
 import { Tag } from '../classes/tag';
+import { ChatService } from 'src/app/chat.service';
 
 declare var $: any;
 
@@ -23,6 +25,7 @@ export class SearchUsersComponent implements OnInit {
   filteredUsers: User[];
   searchString: string = "";
   loggedInUserId: number;
+  loggedInUser: User;
   loggedInUserFollowing: User[];
   loggedInUserFollowRequestMade: FollowRequest[];
   user: User;
@@ -39,17 +42,28 @@ export class SearchUsersComponent implements OnInit {
     { id: UserType.INSTITUTE, value: "Institute" }
   ]
 
+  selectedUser: User;
+  messages;
+  chatMessage;
+  users;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private sessionService: SessionService,
     private tagService: TagService,
+    private chatService: ChatService,
     private router: Router
-  ) { }
+  ) {
+    this.selectedUser = new User();
+    this.users = [];
+    this.messages = [];
+   }
 
   ngOnInit(): void {
     let userId = this.activatedRoute.snapshot.params.userid;
     this.query = this.activatedRoute.snapshot.url[1]?.path;
+    this.loggedInUser = this.sessionService.getCurrentUser();
     this.loggedInUserId = this.sessionService.getCurrentUser().userId;
     if (this.query && userId) {
       if (this.query == 'followers') {
@@ -331,5 +345,61 @@ export class SearchUsersComponent implements OnInit {
         }
       }
     });
+  }
+
+  clickUser(user: User) {
+    this.selectedUser = user;
+    this.loadMessage();
+  }
+
+  loadMessage() {
+    let key = this.selectedUser.userId + "_" + this.selectedUser.firstName + " " + this.selectedUser.lastName
+
+    this.chatService.getChatHistoryUser(this.loggedInUser.userId, this.loggedInUser.firstName + " " + this.loggedInUser.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        this.users = data;
+        this.messages = [];
+        for (let user of this.users) {
+          if (user.key == key) {
+            let m = user.data;
+            for (let x in m) {
+              if (m.hasOwnProperty(x)) {
+                this.messages.push(m[x]);
+              }
+            }
+            break;
+          }
+        }
+        
+      }
+    );
+
+    for (let user of this.users) {
+      if (user.key == key) {
+        let m = user.data;
+        for (let x in m) {
+          if (x != 'userId' && x !='timeStamp') {
+            this.chatService.readMessage(this.loggedInUser, key, x);
+          }
+        }
+        break;
+      }
+    }
+  }
+
+  postMessage() {
+    if (this.messages.length > 0) {
+      this.chatService.sendMessage(this.loggedInUser, this.chatMessage, this.selectedUser);
+    } else {
+      this.chatService.createChat(this.loggedInUser, this.chatMessage, this.selectedUser);
+    }
+    
+    this.chatMessage = "";
   }
 }

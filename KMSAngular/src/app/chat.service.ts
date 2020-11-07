@@ -15,39 +15,73 @@ export class ChatService {
     }
 
   getChatHistoryUser(senderId: number, senderName: string) {
-    return this.db.list(senderId + "_" + senderName);
+    return this.db.list(senderId + "_" + senderName, ref => {
+      return ref.orderByChild("timeStamp");
+    });
   }
 
-  getMessages(senderId: number, senderName: string, receiverName: string) {
-    return this.db.list(senderId + "_" + senderName + "/" + receiverName, ref => {
+  getMessages(sender: User, receiver: string) {
+    return this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName + "/" + receiver, ref => {
       return ref.orderByChild("timeStamp");
     });
   }
 
   sendMessage(sender: User, message: string, receiver: User) {
 
-    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName + "/" + receiver.userId + "_" + receiver.firstName + " " + receiver.lastName).push({
-      'senderId': sender.userId,
-      'senderName': sender.firstName + " " + sender.lastName,
-      'receiverId': receiver.userId, 
-      'receiverName': receiver.firstName + " " + receiver.lastName,
-      'msg': message, 
-      'timeStamp': new Date().getTime()
-    }).then(
+    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName + "/" + receiver.userId + "_" + receiver.firstName + " " + receiver.lastName).push(
+      {
+        'senderId': sender.userId,
+        'senderName': sender.firstName + " " + sender.lastName,
+        'receiverId': receiver.userId, 
+        'receiverName': receiver.firstName + " " + receiver.lastName,
+        'msg': message, 
+        'timeStamp': new Date().getTime(),
+        'hasRead': true
+      }
+    ).then(
       () => {
-        this.db.list(receiver.userId + "_" + receiver.firstName + " " + receiver.lastName + "/" + sender.userId + "_" + sender.firstName + " " + sender.lastName).push({
-          'senderId': sender.userId,
-          'senderName': sender.firstName + " " + sender.lastName,
-          'receiverId': receiver.userId, 
-          'receiverName': receiver.firstName + " " + receiver.lastName,
-          'msg': message, 
-          'timeStamp': new Date().getTime()
-        });
+        this.db.list(receiver.userId + "_" + receiver.firstName + " " + receiver.lastName + "/" + sender.userId + "_" + sender.firstName + " " + sender.lastName).push(
+          {
+            'senderId': sender.userId,
+            'senderName': sender.firstName + " " + sender.lastName,
+            'receiverId': receiver.userId, 
+            'receiverName': receiver.firstName + " " + receiver.lastName,
+            'msg': message, 
+            'timeStamp': new Date().getTime(),
+            'hasRead': false
+          }
+        );
       }
     )
-
     
+    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName).update(
+      receiver.userId + "_" + receiver.firstName + " " + receiver.lastName, { 'timeStamp': new Date().getTime() }
+    )
+    this.db.list(receiver.userId + "_" + receiver.firstName + " " + receiver.lastName).update(
+      sender.userId + "_" + sender.firstName + " " + sender.lastName, { 'timeStamp': new Date().getTime() }
+    )
   }
 
+  createChat(sender: User, message: string, receiver: User) {
+    this.sendMessage(sender, message,receiver);
+    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName).update(
+      receiver.userId + "_" + receiver.firstName + " " + receiver.lastName, { 'userId': receiver.userId }
+    )
+    this.db.list(receiver.userId + "_" + receiver.firstName + " " + receiver.lastName).update(
+      sender.userId + "_" + sender.firstName + " " + sender.lastName, { 'userId': sender.userId }
+    ) 
+  }
+
+  readMessage(sender: User, receiver: string, key: string) {
+    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName + "/" + receiver).update(
+      key, { 'hasRead': true }
+    )
+  }
+
+  updateUnreadCount(sender: User, receiver: string, count: number) {
+    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName).update(
+      receiver, { 'count': count }
+    )
+  }
 
 }
