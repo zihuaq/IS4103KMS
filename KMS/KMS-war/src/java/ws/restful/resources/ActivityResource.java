@@ -100,6 +100,7 @@ public class ActivityResource {
                     user.setFulfillments(new ArrayList<>());
                     user.setActivityJoined(new ArrayList<>());  
                     user.setDonations(new ArrayList<>());
+                    user.setNotifications(new ArrayList<>());
                 }
             }
             a.setProject(null);
@@ -158,6 +159,7 @@ public class ActivityResource {
                     user.setFulfillments(new ArrayList<>());
                     user.setActivityJoined(new ArrayList<>());   
                     user.setDonations(new ArrayList<>());
+                    user.setNotifications(new ArrayList<>());
                 }
             }
             

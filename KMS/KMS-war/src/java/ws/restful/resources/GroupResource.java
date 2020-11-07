@@ -142,6 +142,7 @@ public class GroupResource {
             group.getGroupOwner().setFulfillments(new ArrayList<>());
             group.getGroupOwner().setActivityJoined(new ArrayList<>());  
             group.getGroupOwner().setDonations(new ArrayList<>());
+            group.getGroupOwner().setNotifications(new ArrayList<>());
             group.getPosts().clear();
             for (UserEntity member : group.getGroupMembers()) {
                 member.setReviewsGiven(new ArrayList<>());
@@ -169,6 +170,7 @@ public class GroupResource {
                 member.setFulfillments(new ArrayList<>());
                 member.setActivityJoined(new ArrayList<>());  
                 member.setDonations(new ArrayList<>());
+                member.setNotifications(new ArrayList<>());
             }
             for (UserEntity admin : group.getGroupAdmins()) {
                 admin.setReviewsGiven(new ArrayList<>());
@@ -196,6 +198,7 @@ public class GroupResource {
                 admin.setFulfillments(new ArrayList<>());
                 admin.setActivityJoined(new ArrayList<>());  
                 admin.setDonations(new ArrayList<>());
+                admin.setNotifications(new ArrayList<>());
             }
             return Response.status(Status.OK).entity(group).build();
         } catch (NoResultException ex) {
