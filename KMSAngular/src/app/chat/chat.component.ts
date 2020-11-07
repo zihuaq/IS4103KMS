@@ -64,8 +64,7 @@ export class ChatComponent implements OnInit {
     );
 
     this.sender = this.sessionService.getCurrentUser();
-
-    // this.users = this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).snapshotChanges();    
+    
     this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).valueChanges().subscribe(
       (data) => {   
         this.userIdList = [];
@@ -87,7 +86,32 @@ export class ChatComponent implements OnInit {
       )
     ).subscribe(
       data => {
+        let msgs = [];
+        let count = 0;
         this.users = data;
+        console.log(this.users.length)
+        for (let user of this.users) {          
+          let m = user.data;
+          for (let x in m) {
+            count = 0;
+            if (m.hasOwnProperty(x)) {
+              if (x != 'userId' && x != 'timeStamp' && x != 'count') {
+                msgs.push(m[x]);
+              }
+            }
+            msgs.sort((a, b) => (a.timeStamp < b.timeStamp ? 1 : a.timeStamp > b.timeStamp ? -1 : 0))
+            for (let i = 0; i < msgs.length; i++) {
+              if (msgs[i].senderId != this.sender.userId) {
+                if (!msgs[i].hasRead) {
+                  count++;              
+                } else {
+                  break;
+                }
+              }              
+            }            
+          }
+          this.chatService.updateUnreadCount(this.sender, user.key, count);
+        }
       }
     );
 
@@ -123,9 +147,12 @@ export class ChatComponent implements OnInit {
             let m = user.data;
             for (let x in m) {
               if (m.hasOwnProperty(x)) {
-                this.messages.push(m[x]);
+                if (x != 'userId' && x !='timeStamp' && x != 'count') {
+                  this.messages.push(m[x]);
+                }                
               }
             }
+            this.messages.sort((a, b) => (a.timeStamp > b.timeStamp ? 1 : a.timeStamp < b.timeStamp ? -1 : 0))
             break;
           }
         }
@@ -137,10 +164,10 @@ export class ChatComponent implements OnInit {
       if (user.key == key) {
         this.hasMessage = true;
         let m = user.data;
-        for (let x in m) {
-          if (x != 'userId' && x !='timeStamp') {
+        for (let x in m) {          
+          if (x != 'userId' && x !='timeStamp' && x != 'count') {
             this.chatService.readMessage(this.sender, key, x);
-          }
+          } 
         }
         break;
       }
@@ -200,10 +227,6 @@ export class ChatComponent implements OnInit {
   updateSearchModel(value) {
     this.searchModel = value;
     this.searchModelChange.emit(this.searchModel);
-  }
-
-  clickNewChat() {
-    this.loadMessage("");
   }
 
 }

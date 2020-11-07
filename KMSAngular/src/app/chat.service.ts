@@ -62,7 +62,7 @@ export class ChatService {
     )
   }
 
-  createChat(sender: User, message: string,receiver: User) {
+  createChat(sender: User, message: string, receiver: User) {
     this.sendMessage(sender, message,receiver);
     this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName).update(
       receiver.userId + "_" + receiver.firstName + " " + receiver.lastName, { 'userId': receiver.userId }
@@ -78,5 +78,10 @@ export class ChatService {
     )
   }
 
+  updateUnreadCount(sender: User, receiver: string, count: number) {
+    this.db.list(sender.userId + "_" + sender.firstName + " " + sender.lastName).update(
+      receiver, { 'count': count }
+    )
+  }
 
 }
