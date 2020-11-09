@@ -158,6 +158,42 @@ export class ChatComponent implements OnInit {
         }
       }
     );
+
+    this.chatService.getChatHistoryUser(this.receiver.userId, this.receiver.firstName + " " + this.receiver.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        let msgs = [];
+        let count = 0;
+        let userList: any[] = data;
+        for (let user of userList) {          
+          let m = user.data;
+          for (let x in m) {
+            count = 0;
+            if (m.hasOwnProperty(x)) {
+              if (x != 'userId' && x != 'timeStamp' && x != 'count') {
+                msgs.push(m[x]);
+              }
+            }
+            msgs.sort((a, b) => (a.timeStamp < b.timeStamp ? 1 : a.timeStamp > b.timeStamp ? -1 : 0))
+            for (let i = 0; i < msgs.length; i++) {
+              if (msgs[i].receiver != this.receiver.userId) {
+                if (!msgs[i].hasRead) {
+                  count++;              
+                } else {
+                  break;
+                }
+              }              
+            }            
+          }
+          this.chatService.updateUnreadCount(this.receiver, user.key, count);
+        }
+      }
+    );
   }
 
   loadMessage(key) {
@@ -271,6 +307,42 @@ export class ChatComponent implements OnInit {
           newNotification.projectId = null;
           newNotification.groupId = null;
           this.notificationService.createNewNotification(newNotification, this.receiver.userId).subscribe();
+        }
+      }
+    );
+
+    this.chatService.getChatHistoryUser(this.receiver.userId, this.receiver.firstName + " " + this.receiver.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        let msgs = [];
+        let count = 0;
+        let userList: any[] = data;
+        for (let user of userList) {          
+          let m = user.data;
+          for (let x in m) {
+            count = 0;
+            if (m.hasOwnProperty(x)) {
+              if (x != 'userId' && x != 'timeStamp' && x != 'count') {
+                msgs.push(m[x]);
+              }
+            }
+            msgs.sort((a, b) => (a.timeStamp < b.timeStamp ? 1 : a.timeStamp > b.timeStamp ? -1 : 0))
+            for (let i = 0; i < msgs.length; i++) {
+              if (msgs[i].receiver != this.receiver.userId) {
+                if (!msgs[i].hasRead) {
+                  count++;              
+                } else {
+                  break;
+                }
+              }              
+            }            
+          }
+          this.chatService.updateUnreadCount(this.receiver, user.key, count);
         }
       }
     );
