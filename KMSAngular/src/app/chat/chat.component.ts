@@ -67,6 +67,17 @@ export class ChatComponent implements OnInit {
     );
 
     this.sender = this.sessionService.getCurrentUser();
+
+    this.notificationService.getNotification(this.sender.userId).subscribe(
+      response => {
+        let notifications = response;
+        for (let notification of notifications) {
+          if (notification.groupId == null && notification.projectId == null) {
+            this.notificationService.deleteNotification(notification.notificationId).subscribe();
+          }
+        } 
+      }
+    )
     
     this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).valueChanges().subscribe(
       (data) => {   
@@ -92,7 +103,6 @@ export class ChatComponent implements OnInit {
         let msgs = [];
         let count = 0;
         this.users = data;
-        console.log(this.users.length)
         for (let user of this.users) {          
           let m = user.data;
           for (let x in m) {
@@ -129,7 +139,7 @@ export class ChatComponent implements OnInit {
     this.chatService.sendMessage(this.sender, this.chatMessage, this.receiver);
     this.chatMessage = "";
 
-    this.notificationService.getNewNotification(this.receiver.userId).subscribe(
+    this.notificationService.getNotification(this.receiver.userId).subscribe(
       response => {
         let hasMsgNotification = false;
         let notifications = response;
@@ -141,16 +151,13 @@ export class ChatComponent implements OnInit {
         }
         if (!hasMsgNotification) {
           let newNotification = new Notification();
-          newNotification.date = new Date();
           newNotification.msg = "You have new message(s)";
           newNotification.projectId = null;
           newNotification.groupId = null;
-          newNotification.hasRead = false;
           this.notificationService.createNewNotification(newNotification, this.receiver.userId).subscribe();
         }
       }
     );
-    console.log("test")
   }
 
   loadMessage(key) {
@@ -248,6 +255,25 @@ export class ChatComponent implements OnInit {
     let name = this.receiver.userId + "_" + this.receiver.firstName + " " + this.receiver.lastName;
     this.loadMessage(name);
     this.userIdList.push(this.receiver.userId);
+    this.notificationService.getNotification(this.receiver.userId).subscribe(
+      response => {
+        let hasMsgNotification = false;
+        let notifications = response;
+        for (let n of notifications) {
+          if (n.projectId == null && n.groupId == null) {
+            hasMsgNotification = true;
+            break;
+          }
+        }
+        if (!hasMsgNotification) {
+          let newNotification = new Notification();
+          newNotification.msg = "You have new message(s)";
+          newNotification.projectId = null;
+          newNotification.groupId = null;
+          this.notificationService.createNewNotification(newNotification, this.receiver.userId).subscribe();
+        }
+      }
+    );
   }
 
   updateSearchModel(value) {

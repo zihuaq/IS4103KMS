@@ -37,14 +37,13 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body p-0">
+              <div class="item" style="margin-top: 3%;" *ngIf="notifications.length == 0">
+                <h6 class="d-flex justify-content-around">No notifications</h6>
+              </div>
               <ul class="list-group" *ngFor="let notification of notifications">
-                <li class="list-group-item"  (click)="clickNotification(notification)">
-                  <span class="dot" *ngIf="!notification.hasRead"></span>   
+                <li class="list-group-item"  (click)="clickNotification(notification)">  
                   {{notification.msg}}                                   
-                </li>
-                <li class="item" *ngIf="notifications.length == 0">
-                  <h6 class="d-flex justify-content-around">No notifications</h6>
-                </li>
+                </li>                
               </ul>
             </div>
             <div class="card-footer text-center">

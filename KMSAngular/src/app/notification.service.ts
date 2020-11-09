@@ -23,10 +23,6 @@ export class NotificationService {
     return this.httpClient.get<any>(this.baseUrl + "/getNotification/" + userId).pipe();
   }
 
-  getNewNotification(userId: number): Observable<any> {
-    return this.httpClient.get<any>(this.baseUrl + "/getNewNotification/" + userId).pipe();
-  }
-
   createNewNotification(newNotification: Notification, userId: number): Observable<any> {
     let createNotificationReq = {
       "newNotification": newNotification,
@@ -40,12 +36,6 @@ export class NotificationService {
 
   deleteNotification(notificationId: number) {
     return this.httpClient.delete(this.baseUrl + "/deleteNotification/" + notificationId).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  readNotification(notificationId: number) {
-    return this.httpClient.post<any>(this.baseUrl + "/readNotification/" + notificationId, null).pipe(
       catchError(this.handleError)
     );
   }

@@ -43,7 +43,30 @@ export class TopNavbarComponent implements OnInit {
         this.affiliationRequests = affiliationRequests;
       });
 
-    this.notificationService.getNewNotification(this.loggedInUserId)
+    this.notificationService.getNotification(this.loggedInUserId)
+    .subscribe((notifications) => {
+      this.notifications = notifications;
+    });
+  }
+
+  clickNotification(notification: Notification) {
+    if (notification.groupId == null && notification.projectId == null) {
+      this.router.navigate(['/chat']);
+    }
+    
+    if (notification.projectId != null) {
+      this.router.navigate(['projectDetails/' + notification.projectId]);
+    }
+
+    if (notification.groupId != null) {
+      this.router.navigate(['groupDetails/' + notification.groupId]);
+    }
+
+    this.notificationService.deleteNotification(notification.notificationId).subscribe();
+  }
+
+  refreshNotification() {
+    this.notificationService.getNotification(this.loggedInUserId)
     .subscribe((notifications) => {
       this.notifications = notifications;
     });

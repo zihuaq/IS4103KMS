@@ -6,8 +6,6 @@ export class Notification {
     projectId: number;
     groupId: number;
     to: User;
-    hasRead: boolean;
-    date: Date;
 
     constructor(notificationId?: number, msg?: string, projectId?: number, groupId?: number, to?: User, hasRead?: boolean, date?: Date) {
         this.notificationId = notificationId;
@@ -15,8 +13,6 @@ export class Notification {
         this.projectId = projectId;
         this.groupId = groupId;
         this.to = to;
-        this.hasRead = hasRead;
-        this.date = date;
     }
 
 }

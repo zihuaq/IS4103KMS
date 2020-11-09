@@ -63,20 +63,6 @@ public class NotificationResource {
         return Response.status(Status.OK).entity(notifications).build();
     }
     
-    @Path("getNewNotification/{userId}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getNewNotification(@PathParam("userId") Long userId) {
-        System.out.println("******** NotificationResource: getNewNotification()");
-        List<NotificationEntity> notifications = notificationSessionBean.getNewNotificationByUserId(userId);
-        
-        for (NotificationEntity n : notifications) {
-            n.setTo(null);
-        }
-        
-        return Response.status(Status.OK).entity(notifications).build();
-    }
-    
     @Path("createNewNotification")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -107,22 +93,6 @@ public class NotificationResource {
         System.out.println("******** NotificationResource: deleteNotification()");
         try {
             notificationSessionBean.deleteNotification(notificationId);
-            
-            return Response.status(Status.OK).build();
-        } catch (NoResultException ex) {
-            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
-        }
-    }
-    
-    @Path("readNotification/{notificationId}")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response readNotification(@PathParam("notificationId") Long notificationId) {
-        System.out.println("******** NotificationResource: readNotification()");
-        
-        try {
-            notificationSessionBean.readNotification(notificationId);
             
             return Response.status(Status.OK).build();
         } catch (NoResultException ex) {

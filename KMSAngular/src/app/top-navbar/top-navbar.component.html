@@ -17,12 +17,12 @@
   <ul class="navbar-nav ml-auto">
     <!-- Notifications Dropdown Menu -->
     <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#">
+      <a class="nav-link" data-toggle="dropdown" href="#" (click)="refreshNotification()">
         <i class="far fa-bell"></i>
         <span class="badge badge-warning navbar-badge"
           *ngIf="followRequests && followRequests.length > 0 || affiliationRequests && affiliationRequests.length > 0 || notifications && notifications.length > 0">{{followRequests.length + affiliationRequests.length + notifications.length}}</span>
       </a>
-      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" *ngIf="followRequests && affiliationRequests">
+      <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" *ngIf="followRequests && affiliationRequests && notifications">
         <span class="dropdown-item dropdown-header"
           *ngIf="followRequests.length > 0 || affiliationRequests.length > 0 || notifications.length > 0">{{followRequests.length + affiliationRequests.length + notifications.length}}
           Notifications</span>
@@ -44,9 +44,13 @@
         </a>
         <div class="dropdown-divider"></div>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" routerLink="/notifications" *ngIf="notifications.length > 0">
-          <i class="fas fa-users mr-2"></i>{{notifications.length}} new notifications
-        </a>
+        <span *ngFor="let notification of notifications">
+          <button class="dropdown-item" type="button" (click)="clickNotification(notification)">
+            <span class="dot"></span>
+            {{notification.msg}}
+          </button>
+        </span>
+        
         <div class="dropdown-divider"></div>
         <!-- <a href="#" class="dropdown-item">
           <i class="fas fa-file mr-2"></i> 3 new reports

@@ -37,16 +37,8 @@ public class NotificationEntity implements Serializable {
     private Long projectId;
      
     private Long groupId;
-    
-    private Boolean hasRead;
-    
-    @NotNull
-    @Column(nullable=false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
 
     public NotificationEntity() {
-        this.hasRead = Boolean.FALSE;
     }        
 
     public Long getNotificationId() {
@@ -112,22 +104,6 @@ public class NotificationEntity implements Serializable {
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
-    }
-
-    public Boolean getHasRead() {
-        return hasRead;
-    }
-
-    public void setHasRead(Boolean hasRead) {
-        this.hasRead = hasRead;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
 }
