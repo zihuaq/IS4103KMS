@@ -62,6 +62,15 @@ public class NotificationSessionBean implements NotificationSessionBeanLocal {
     }
     
     @Override
+    public List<NotificationEntity> getNewNotificationByUserId(Long userId) {
+        Query query = em.createQuery("SELECT n FROM NotificationEntity n WHERE n.to.userId = :inUserId AND n.hasRead = :inHasRead");
+        query.setParameter("inUserId", userId);
+        query.setParameter("inHasRead", Boolean.FALSE);
+        
+        return query.getResultList();
+    }
+    
+    @Override
     public void deleteNotification(Long notificationId) throws NoResultException {
         NotificationEntity notification = em.find(NotificationEntity.class, notificationId);
         UserEntity user = userSessionBeanLocal.getUserById(notification.getTo().getUserId());
@@ -70,5 +79,12 @@ public class NotificationSessionBean implements NotificationSessionBeanLocal {
         notification.setTo(null);
         
         em.remove(notification);
+    }
+    
+    @Override
+    public void readNotification(Long notificationId) throws NoResultException {
+        NotificationEntity notification = em.find(NotificationEntity.class, notificationId);
+        
+        notification.setHasRead(Boolean.TRUE);
     }
 }

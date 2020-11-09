@@ -23,5 +23,9 @@ public interface NotificationSessionBeanLocal {
     public List<NotificationEntity> getNotificationByUserId(Long userId);
 
     public void deleteNotification(Long notificationId) throws NoResultException;
+
+    public void readNotification(Long notificationId) throws NoResultException;
+
+    public List<NotificationEntity> getNewNotificationByUserId(Long userId);
     
 }

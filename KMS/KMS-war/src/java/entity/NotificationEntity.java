@@ -6,11 +6,16 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -32,8 +37,16 @@ public class NotificationEntity implements Serializable {
     private Long projectId;
      
     private Long groupId;
+    
+    private Boolean hasRead;
+    
+    @NotNull
+    @Column(nullable=false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
 
     public NotificationEntity() {
+        this.hasRead = Boolean.FALSE;
     }        
 
     public Long getNotificationId() {
@@ -91,6 +104,30 @@ public class NotificationEntity implements Serializable {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Boolean getHasRead() {
+        return hasRead;
+    }
+
+    public void setHasRead(Boolean hasRead) {
+        this.hasRead = hasRead;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
 }
