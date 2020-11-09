@@ -30,6 +30,27 @@
         <div class="col-md-4">
           <app-affiliation-requests></app-affiliation-requests>
         </div>
+        <div class="col-md-4">
+          <div class="card" style="height: 60vh; overflow-y: auto;">
+            <div class="card-header">
+              <h3 class="card-title">Notifications</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+              <ul class="list-group" *ngFor="let notification of notifications">
+                <li class="list-group-item"  (click)="clickNotification(notification)">
+                  <span class="dot" *ngIf="!notification.hasRead"></span>   
+                  {{notification.msg}}                                   
+                </li>
+                <li class="item" *ngIf="notifications.length == 0">
+                  <h6 class="d-flex justify-content-around">No notifications</h6>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer text-center">
+            </div>
+          </div>
+        </div>
         <!-- /.col -->
       </div>
       <!-- /.row -->

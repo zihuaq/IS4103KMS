@@ -44,6 +44,7 @@ export class ProjectDetailsComponent implements OnInit {
   ];
   selectedShareOption: string;
   shareProjectText: string = "";
+  hasLoad = false;
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
@@ -62,6 +63,7 @@ export class ProjectDetailsComponent implements OnInit {
 
     this.userService.getUser(loggedInUserId.toString()).subscribe(
       (data) => {
+        this.hasLoad = true;
         this.loggedInUser = data;
         $('#shareProjectToProjectselect2').select2({
           data: this.loggedInUser.projectsJoined.map((item) => {

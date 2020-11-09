@@ -14,7 +14,9 @@ export class FollowRequestsComponent implements OnInit {
   constructor(
     private sessionService: SessionService,
     private userService: UserService
-  ) {}
+  ) {
+    this.followRequests = [];
+  }
 
   ngOnInit(): void {
     this.loggedInUserId = this.sessionService.getCurrentUser().userId;

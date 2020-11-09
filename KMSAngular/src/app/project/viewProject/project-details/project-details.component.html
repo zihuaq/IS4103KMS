@@ -1,11 +1,11 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
-<div class="content-wrapper" *ngIf = "projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId">
+<div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId)">
   <p>This project has been deactivated for violating our T&C</p>
   </div>
 
-<div class="content-wrapper" *ngIf = "projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId">
+<div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId)">
     <div class="loading" *ngIf="!loaded">
         <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
     </div>

@@ -9,6 +9,8 @@ import { UserType } from '../classes/user-type.enum';
 import { UserService } from 'src/app/user.service';
 import { SessionService } from 'src/app/session.service';
 import { ChatService } from 'src/app/chat.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/notification.service';
 
 declare var $: any;
 
@@ -44,6 +46,7 @@ export class ChatComponent implements OnInit {
   constructor(private sessionService: SessionService,
     private userService: UserService,
     private chatService: ChatService,
+    private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,) { 
       this.sender = new User();
       this.receiver = new User();
@@ -125,6 +128,29 @@ export class ChatComponent implements OnInit {
   postMessage() {
     this.chatService.sendMessage(this.sender, this.chatMessage, this.receiver);
     this.chatMessage = "";
+
+    this.notificationService.getNewNotification(this.receiver.userId).subscribe(
+      response => {
+        let hasMsgNotification = false;
+        let notifications = response;
+        for (let n of notifications) {
+          if (n.projectId == null && n.groupId == null) {
+            hasMsgNotification = true;
+            break;
+          }
+        }
+        if (!hasMsgNotification) {
+          let newNotification = new Notification();
+          newNotification.date = new Date();
+          newNotification.msg = "You have new message(s)";
+          newNotification.projectId = null;
+          newNotification.groupId = null;
+          newNotification.hasRead = false;
+          this.notificationService.createNewNotification(newNotification, this.receiver.userId).subscribe();
+        }
+      }
+    );
+    console.log("test")
   }
 
   loadMessage(key) {
