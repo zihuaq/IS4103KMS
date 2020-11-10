@@ -55,7 +55,7 @@ export class TopNavbarComponent implements OnInit {
     }
     
     if (notification.projectId != null) {
-      this.router.navigate(['projectDetails/' + notification.projectId]);
+      this.router.navigate(['projectDetails/' + notification.projectId + "/" + notification.projectTab]);
     }
 
     if (notification.groupId != null) {

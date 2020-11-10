@@ -45,6 +45,7 @@ export class ProjectDetailsComponent implements OnInit {
   selectedShareOption: string;
   shareProjectText: string = "";
   hasLoad = false;
+  activeTab: string;
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
@@ -57,6 +58,8 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.activeTab = this.activatedRoute.snapshot.paramMap.get("tabName");
+    console.log(this.activeTab);
     this.checkAccessRight();
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));

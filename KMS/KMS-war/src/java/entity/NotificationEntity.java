@@ -37,6 +37,8 @@ public class NotificationEntity implements Serializable {
     private Long projectId;
      
     private Long groupId;
+    
+    private String projectTab;
 
     public NotificationEntity() {
     }        
@@ -104,6 +106,14 @@ public class NotificationEntity implements Serializable {
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
+    }
+
+    public String getProjectTab() {
+        return projectTab;
+    }
+
+    public void setProjectTab(String projectTab) {
+        this.projectTab = projectTab;
     }
 
 }

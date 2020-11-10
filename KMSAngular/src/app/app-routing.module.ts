@@ -153,7 +153,7 @@ const routes: Routes = [
 
   { path: '', canActivate: [RouteGuard], component: IndexComponent },
   {
-    path: 'projectDetails/:projectId',
+    path: 'projectDetails/:projectId/:tabName',
     canActivate: [RouteGuard],
     component: ProjectDetailsComponent,
   },

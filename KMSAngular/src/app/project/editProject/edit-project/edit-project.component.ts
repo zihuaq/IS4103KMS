@@ -47,7 +47,7 @@ export class EditProjectComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(["/projectDetails/" + this.projectToEdit.projectId]);
+    this.router.navigate(["/projectDetails/" + this.projectToEdit.projectId + "/basic-details"]);
   }
 
   handleProjectChanged(event) {

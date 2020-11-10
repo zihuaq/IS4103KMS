@@ -34,6 +34,7 @@ export class JobAppliedComponent implements OnInit {
       response => {
         this.user = response;
         this.hrpList = this.user.hrpApplied;
+        this.hrpList.sort((a, b) => (a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0));
       }
     );
   }
