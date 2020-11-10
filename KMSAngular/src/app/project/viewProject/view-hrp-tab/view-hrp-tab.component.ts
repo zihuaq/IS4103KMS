@@ -125,7 +125,7 @@ export class ViewHrpTabComponent implements OnInit {
               this.hrpService.getHrp(hrp.humanResourcePostingId).subscribe(
                 response => {
                   this.hrpList.push(response);
-                  this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
+                  this.hrpList.sort((a, b) => (a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0));
                 }
               );
             }
@@ -161,7 +161,7 @@ export class ViewHrpTabComponent implements OnInit {
               this.hrpService.getHrp(hrp.humanResourcePostingId).subscribe(
                 response => {
                   this.hrpList.push(response);
-                  this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
+                  this.hrpList.sort((a, b) => (a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0));
                 }
               );
             }

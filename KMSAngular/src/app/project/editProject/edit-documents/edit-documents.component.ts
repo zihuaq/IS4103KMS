@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import * as AWS from 'aws-sdk';
 import { ActivatedRoute } from '@angular/router';
+import { SessionService } from 'src/app/session.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/notification.service';
+import { Project } from 'src/app/classes/project';
+import { ProjectService } from 'src/app/project.service';
 
 declare var $: any;
 
@@ -22,13 +27,22 @@ export class EditDocumentsComponent implements OnInit {
   files;
   fileToUpload: File = null;
   fileToDelete;
+  project: Project;
 
-  constructor(private activatedRouter: ActivatedRoute) { 
+  constructor(private activatedRouter: ActivatedRoute,
+    private sessionService: SessionService,
+    private notificationService: NotificationService,
+    private projectService: ProjectService) { 
     this.files = [];
   }
 
   ngOnInit(): void {
     this.projectId = parseInt(this.activatedRouter.snapshot.paramMap.get("projectId"));
+    this.projectService.getProjectById(this.projectId).subscribe(
+      response => {
+        this.project = response;
+      }
+    );
 
     AWS.config.update(this.awsCredential);
     this.s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -86,6 +100,17 @@ export class EditDocumentsComponent implements OnInit {
       }
     }).promise().then(
       () => {
+        let currentUser = this.sessionService.getCurrentUser();
+        let newNotification = new Notification();
+        newNotification.msg = "A new document has been uploaded to " + this.project.name;
+        newNotification.projectId = this.projectId;
+        newNotification.groupId = null;
+        newNotification.projectTab = "document-tab";
+        for (let member of this.project.projectMembers) {
+          if (member.userId != currentUser.userId) {
+            this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+          }
+        }
         $('#uploadCloseBtn').click();
         $(document).Toasts('create', {
           class: 'bg-success',
