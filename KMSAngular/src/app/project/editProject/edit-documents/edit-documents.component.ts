@@ -169,14 +169,14 @@ export class EditDocumentsComponent implements OnInit {
     )    
   }
 
-  clickDelete(file) {
-    this.fileToDelete = file;
+  clickDelete(key) {
+    this.fileToDelete = key;
   }
 
   deleteFile() {
     const params = {
       Bucket: this.bucket,
-      Key: this.fileToDelete.Key
+      Key: this.fileToDelete
     }
 
     this.s3.deleteObject(params).promise().then(
