@@ -1,11 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { UserService } from 'src/app/user.service';
 import { User } from '../../classes/user';
 import { FollowRequest } from '../../classes/follow-request';
 import { AffiliationRequest } from '../../classes/affiliation-request';
 import { AccountPrivacySettingEnum } from '../../classes/privacy-settings.enum';
 import { UserType } from 'src/app/classes/user-type.enum';
+import { ChatService } from 'src/app/chat.service';
 
 declare var $: any;
 
@@ -26,7 +28,15 @@ export class OverviewComponent implements OnInit {
   hasSentAffiliationRequest: boolean;
   UserType = UserType;
 
-  constructor(private userService: UserService) {}
+  messages;
+  chatMessage;
+  users;
+
+  constructor(private chatService: ChatService,
+    private userService: UserService) {
+      this.users = [];
+      this.messages = [];
+    }
 
   ngOnInit(): void {
     this.getFollowersFollowingAndAffiliatedUsers();
@@ -146,5 +156,56 @@ export class OverviewComponent implements OnInit {
         })
         .includes(this.profile.userId);
     });
+  }
+
+  loadMessage() {
+    let key = this.profile.userId + "_" + this.profile.firstName + " " + this.profile.lastName;
+
+    this.chatService.getChatHistoryUser(this.loggedInUser.userId, this.loggedInUser.firstName + " " + this.loggedInUser.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        this.users = data;
+        this.messages = [];
+        for (let user of this.users) {
+          if (user.key == key) {
+            let m = user.data;
+            for (let x in m) {
+              if (m.hasOwnProperty(x)) {
+                this.messages.push(m[x]);
+              }
+            }
+            break;
+          }
+        }
+        
+      }
+    );
+
+    for (let user of this.users) {
+      if (user.key == key) {
+        let m = user.data;
+        for (let x in m) {
+          if (x != 'userId' && x !='timeStamp') {
+            this.chatService.readMessage(this.loggedInUser, key, x);
+          }
+        }
+        break;
+      }
+    }
+  }
+
+  postMessage() {
+    if (this.messages.length > 0) {
+      this.chatService.sendMessage(this.loggedInUser, this.chatMessage, this.profile);
+    } else {
+      this.chatService.createChat(this.loggedInUser, this.chatMessage, this.profile);
+    }
+    
+    this.chatMessage = "";
   }
 }

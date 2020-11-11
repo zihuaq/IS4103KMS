@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "is4103kms-4e0e3": {
+      "hosting": {
+        "KMSAngular": [
+          "is4103kms-4e0e3"
+        ]
+      }
+    }
+  }
+}

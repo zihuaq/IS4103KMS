@@ -342,6 +342,7 @@ public class UserResource {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
 
+
             user.getReviewsGiven().clear();
             user.getReviewsReceived().clear();
             user.getProjectsOwned().clear();
@@ -367,6 +368,34 @@ public class UserResource {
             user.getActivityJoined().clear();
             user.getDonations().clear();
             user.getReceivedAwards().clear();
+
+            user.setReviewsGiven(new ArrayList<>());
+            user.setReviewsReceived(new ArrayList<>());
+            user.setProjectsOwned(new ArrayList<>());
+            user.setProjectsJoined(new ArrayList<>());
+            user.setProjectsManaged(new ArrayList<>());
+            user.setGroupsManaged(new ArrayList<>());
+            user.setPosts(new ArrayList<>());
+            user.setGroupsOwned(new ArrayList<>());
+            user.setGroupsJoined(new ArrayList<>());
+            user.setGroupAdmins(new ArrayList<>());
+            user.setBadges(new ArrayList<>());
+            user.setMras(new ArrayList<>());
+            user.setSkills(new ArrayList<>());
+            user.setFollowing(new ArrayList<>());
+            user.setFollowers(new ArrayList<>());
+            user.setSdgs(new ArrayList<>());
+            user.setFollowRequestMade(new ArrayList<>());
+            user.setFollowRequestReceived(new ArrayList<>());
+            user.setAffiliatedUsers(new ArrayList<>());
+            user.setAffiliationRequestMade(new ArrayList<>());
+            user.setAffiliationRequestReceived(new ArrayList<>());
+            user.setHrpApplied(new ArrayList<>());
+            user.setFulfillments(new ArrayList<>());
+            user.setActivityJoined(new ArrayList<>());  
+            user.setDonations(new ArrayList<>());
+            user.setNotifications(new ArrayList<>());
+
             for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
                 hrp.setActivity(null);
                 hrp.getAppliedUsers().clear();
@@ -467,32 +496,32 @@ public class UserResource {
             UserEntity user = this.userSessionBeanLocal.userLogin(email, password);
             System.out.println("here");
 
-            user.getReviewsGiven().clear();
-            user.getReviewsReceived().clear();
-            user.getProjectsOwned().clear();
-            user.getProjectsJoined().clear();
-            user.getProjectsManaged().clear();
-            user.getGroupsManaged().clear();
-            user.getGroupsJoined().clear();
-            user.getGroupAdmins().clear();
-            user.getPosts().clear();
-            user.getGroupsOwned().clear();
-            user.getBadges().clear();
-            user.getMras().clear();
-            user.getSkills().clear();
-            user.getFollowing().clear();
-            user.getFollowers().clear();
-            user.getSdgs().clear();
-            user.getFollowRequestMade().clear();
-            user.getFollowRequestReceived().clear();
-            user.getAffiliationRequestMade().clear();
-            user.getAffiliationRequestReceived().clear();
-            user.getAffiliatedUsers().clear();
-            user.getHrpApplied().clear();
-            user.getFulfillments().clear();
-            user.setPassword("");
-            user.getActivityJoined().clear();
-            user.getDonations().clear();
+            user.setReviewsGiven(new ArrayList<>());
+            user.setReviewsReceived(new ArrayList<>());
+            user.setProjectsOwned(new ArrayList<>());
+            user.setProjectsJoined(new ArrayList<>());
+            user.setProjectsManaged(new ArrayList<>());
+            user.setGroupsManaged(new ArrayList<>());
+            user.setPosts(new ArrayList<>());
+            user.setGroupsOwned(new ArrayList<>());
+            user.setGroupsJoined(new ArrayList<>());
+            user.setGroupAdmins(new ArrayList<>());
+            user.setBadges(new ArrayList<>());
+            user.setMras(new ArrayList<>());
+            user.setSkills(new ArrayList<>());
+            user.setFollowing(new ArrayList<>());
+            user.setFollowers(new ArrayList<>());
+            user.setSdgs(new ArrayList<>());
+            user.setFollowRequestMade(new ArrayList<>());
+            user.setFollowRequestReceived(new ArrayList<>());
+            user.setAffiliatedUsers(new ArrayList<>());
+            user.setAffiliationRequestMade(new ArrayList<>());
+            user.setAffiliationRequestReceived(new ArrayList<>());
+            user.setHrpApplied(new ArrayList<>());
+            user.setFulfillments(new ArrayList<>());
+            user.setActivityJoined(new ArrayList<>());  
+            user.setDonations(new ArrayList<>());
+            user.setNotifications(new ArrayList<>());
 
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {

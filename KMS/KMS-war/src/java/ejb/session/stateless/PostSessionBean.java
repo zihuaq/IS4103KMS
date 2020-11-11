@@ -664,9 +664,11 @@ public class PostSessionBean implements PostSessionBeanLocal {
         postToDelete.getPostOwner().getPosts().remove(postToDelete);
         postToDelete.setPostOwner(null);
 
-        postToDelete.getProject().getPosts().remove(postToDelete);
-        postToDelete.setProject(null);
-
+        if (postToDelete.getProject() != null) {
+            postToDelete.getProject().getPosts().remove(postToDelete);
+            postToDelete.setProject(null);
+        }
+        
         em.remove(postToDelete);
     }
     

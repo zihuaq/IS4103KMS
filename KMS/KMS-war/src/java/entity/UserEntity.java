@@ -151,6 +151,7 @@ public class UserEntity implements Serializable {
     @OneToMany
     private List<DonationEntity> donations;
     
+
     @JoinTable(name = "receivedAwards")
     @ManyToMany
     private List<AwardEntity> receivedAwards;
@@ -171,6 +172,10 @@ public class UserEntity implements Serializable {
     private Integer CountOfCommentsCreated;
     
     private Integer CountOfReviewsCreated;
+
+    @OneToMany 
+    private List<NotificationEntity> notifications;
+
     
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
@@ -210,6 +215,8 @@ public class UserEntity implements Serializable {
         this.CountOfPostCreated = 0;
         this.CountOfCommentsCreated = 0;
         this.CountOfReviewsCreated = 0;
+        this.notifications = new ArrayList<>();
+
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, UserTypeEnum usertype) {
@@ -687,6 +694,12 @@ public class UserEntity implements Serializable {
     }
 
     
-    
-    
+    public List<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<NotificationEntity> notifications) {
+        this.notifications = notifications;
+    }
+
 }

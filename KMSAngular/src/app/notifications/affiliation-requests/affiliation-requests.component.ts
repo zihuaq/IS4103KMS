@@ -12,7 +12,9 @@ export class AffiliationRequestsComponent implements OnInit {
   loggedInUserId: number;
   affiliationRequests: AffiliationRequest[];
 
-  constructor(private sessionService: SessionService, private userService: UserService) { }
+  constructor(private sessionService: SessionService, private userService: UserService) {
+    this.affiliationRequests = [];
+   }
 
   ngOnInit(): void {
     this.loggedInUserId = this.sessionService.getCurrentUser().userId;

@@ -173,6 +173,10 @@
               "browserTarget": "KMSAngular:build:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
     }

@@ -1,11 +1,11 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
-<div class="content-wrapper" *ngIf = "projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId">
+<div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId)">
   <p>This project has been deactivated for violating our T&C</p>
   </div>
 
-<div class="content-wrapper" *ngIf = "projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId">
+<div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId)">
     <div class="loading" *ngIf="!loaded">
         <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
     </div>
@@ -60,40 +60,40 @@
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="details-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" role="tab">Details</a>
+                            <a class="nav-link" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" [ngClass]="{ 'active':activeTab==='basic-details'}" role="tab">Details</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
+                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab" [ngClass]="{ 'active':activeTab==='members-tab'}" role="tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab">Reviews</a>
+                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab" [ngClass]="{ 'active':activeTab==='review-tab'}" role="tab">Reviews</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
+                            <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab" [ngClass]="{ 'active':activeTab==='mrp-tab'}" role="tab">Material Resource Postings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab">Human Resource Postings</a>
+                            <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab" [ngClass]="{ 'active':activeTab==='hrp-tab'}" role="tab">Human Resource Postings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-activity" data-toggle="pill" href="#activity-tab">Activities</a>
+                            <a class="nav-link" id="details-tab-activity" data-toggle="pill" href="#activity-tab" [ngClass]="{ 'active':activeTab==='activity-tab'}" role="tab">Activities</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-task" data-toggle="pill" href="#task-tab">Tasks</a>
+                            <a class="nav-link" id="details-tab-task" data-toggle="pill" href="#task-tab" [ngClass]="{ 'active':activeTab==='task-tab'}" role="tab">Tasks</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-projectfeed" data-toggle="pill" href="#projectfeed-tab">Project Feed</a>
+                            <a class="nav-link" id="details-tab-projectfeed" data-toggle="pill" href="#projectfeed-tab" [ngClass]="{ 'active':activeTab==='projectfeed-tab'}" role="tab">Project Feed</a>
                         </li>
                         <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
-                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab">Project Settings</a>
+                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab" [ngClass]="{ 'active':activeTab==='setting-tab'}" role="tab">Project Settings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-documents" data-toggle="pill" href="#document-tab">Documents</a>
+                            <a class="nav-link" id="details-tab-documents" data-toggle="pill" href="#document-tab" [ngClass]="{ 'active':activeTab==='document-tab'}" role="tab">Documents</a>
                         </li>
                     </ul>
                 </div>
-                <div class="card-body" id="custom-tabs-four-tabContent">
+                <div class="card-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel" style="position: relative;">
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel" [ngClass]="{ 'active':activeTab==='basic-details'}" style="position: relative;">
                             <p><b>Description:</b> {{projectToView.description}}</p>
                             <p><b>Country:</b> {{projectToView.country}}</p>
                             <button *ngIf="projectToView.monetaryFundingRequired && isMember" type="button" class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;" [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project</button>
@@ -106,7 +106,7 @@
                             </p>
                             <!-- <p>Project status: {{projectToView.status}}</p> -->
                         </div>
-                        <div class="tab-pane fade" id="members-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="members-tab" [ngClass]="{ 'active':activeTab==='members-tab'}" role="tabpanel">
                             <div class="row">
                                 <div class="col-6" style="padding-right: 40px">
                                     <h5>Admins</h5>
@@ -147,25 +147,25 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="review-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="review-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='review-tab'}">
                             <p>review-tab works</p>
                         </div>
-                        <div class="tab-pane fade" id="mrp-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="mrp-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='mrp-tab'}">
                             <app-view-mrp-tab></app-view-mrp-tab>
                         </div>
-                        <div class="tab-pane fade" id="hrp-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="hrp-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='hrp-tab'}">
                             <app-view-hrp-tab></app-view-hrp-tab>
                         </div>
-                        <div class="tab-pane fade" id="activity-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="activity-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='activity-tab'}">
                             <app-activity-tab></app-activity-tab>
                         </div>
-                        <div class="tab-pane fade" id="task-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="task-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='task-tab'}">
                             <app-task-tab></app-task-tab>
                         </div>
-                        <div class="tab-pane fade" id="projectfeed-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="projectfeed-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='projectfeed-tab'}">
                             <app-newsfeed newsfeedType="project" id="{{projectId}}"></app-newsfeed>
                         </div>
-                        <div class="tab-pane fade" id="setting-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="setting-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='setting-tab'}">
                           <form class="form-horizontal" (ngSubmit)="onEditProjectSetting(disableForm)" #disableForm="ngForm">
                             <div>
                               <label>Project Status</label>
@@ -183,7 +183,7 @@
                             </div>
                           </form>
                         </div>
-                        <div class="tab-pane fade" id="document-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="document-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='document-tab'}">
                             <app-view-documents></app-view-documents>
                         </div>
                     </div>

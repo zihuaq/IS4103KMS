@@ -145,7 +145,7 @@ export class ViewAllProjectComponent implements OnInit {
   }
 
   onSelect(project: Project): void {
-    this.router.navigate(["/projectDetails/" + project.projectId]);
+    this.router.navigate(["/projectDetails/" + project.projectId + "/basic-details"]);
   }
 
   checkAccessRight() {
