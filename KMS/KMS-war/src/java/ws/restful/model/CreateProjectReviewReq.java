@@ -15,16 +15,19 @@ public class CreateProjectReviewReq {
     private ReviewEntity review;
     private Long from;
     private Long project;
+    private Long madeFromActivityId;
 
     public CreateProjectReviewReq() {
     }
 
-    public CreateProjectReviewReq(ReviewEntity review, Long from, Long project) {
+    public CreateProjectReviewReq(ReviewEntity review, Long from, Long project, Long madeFromActivityId) {
         this.review = review;
         this.from = from;
         this.project = project;
+        this.madeFromActivityId = madeFromActivityId;
     }
 
+ 
     public ReviewEntity getReview() {
         return review;
     }
@@ -47,6 +50,14 @@ public class CreateProjectReviewReq {
 
     public void setProject(Long project) {
         this.project = project;
+    }
+
+    public Long getMadeFromActivityId() {
+        return madeFromActivityId;
+    }
+
+    public void setMadeFromActivityId(Long madeFromActivityId) {
+        this.madeFromActivityId = madeFromActivityId;
     }
     
     

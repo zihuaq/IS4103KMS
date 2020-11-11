@@ -6,12 +6,11 @@
 package ws.restful.resources;
 
 import Exception.CreateProjectException;
-import Exception.CreateProjectReviewException;
-import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import entity.ActivityEntity;
+import entity.AwardEntity;
 import entity.DonationEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
@@ -43,11 +42,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import util.enumeration.ProjectStatusEnum;
 import ws.restful.model.CreateProjectReq;
-import ws.restful.model.CreateProjectReviewReq;
-import ws.restful.model.CreateProjectReviewRsp;
 import ws.restful.model.CreateProjectRsp;
-import ws.restful.model.CreateUserReviewReq;
-import ws.restful.model.CreateUserReviewRsp;
 import ws.restful.model.ErrorRsp;
 import ws.restful.model.RetrieveAllProjectRsp;
 
@@ -231,6 +226,10 @@ public class ProjectResource {
             for (DonationEntity donation: project.getDonations()) {
                 donation.setProject(null);
             }
+            for (AwardEntity award: project.getAwards()){
+                award.setProject(null);
+                award.getUsersReceived().clear();
+            }
             return Response.status(Status.OK).entity(project).build();
         } catch (NoResultException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
@@ -383,60 +382,10 @@ public class ProjectResource {
         ProjectStatusEnum[] enumList = ProjectStatusEnum.values();
         
         return Response.status(Response.Status.OK).entity(enumList).build();
-    }
-
-    @Path("createNewProjectReview")
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewProjectReview(CreateProjectReviewReq createProjectReviewReq) {
-        System.out.println("******** ProjectResource: createNewProjectReview()");
-        if (createProjectReviewReq != null) {
-            System.out.println("Project: " + createProjectReviewReq.getReview());
-            try {
-                Long reviewId = projectSessionBeanLocal.createNewProjectReview(createProjectReviewReq.getReview(), createProjectReviewReq.getProject(),createProjectReviewReq.getFrom());
-                CreateProjectReviewRsp createProjectReviewRsp = new CreateProjectReviewRsp(reviewId);
-                System.out.println("******** Project created");
-                return Response.status(Status.OK).entity(createProjectReviewRsp).build();
-            } catch (CreateProjectReviewException ex) {
-                ErrorRsp errorRsp = new ErrorRsp("Invalid request");
-            
-                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
-            }
-        } else {
-            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
-            
-            return Response.status(Status.BAD_REQUEST).entity(errorRsp).build(); 
-        }
-    }
-    
-    @Path("createNewUserReview")
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewUserReview(CreateUserReviewReq createUserReviewReq) {
-        System.out.println("******** ProjectResource: createNewProjectReview()");
-        if (createUserReviewReq != null) {
-            System.out.println("Project: " + createUserReviewReq.getReview());
-            try {
-                Long reviewId = projectSessionBeanLocal.createNewUserReview(createUserReviewReq.getReview(), createUserReviewReq.getProject(),createUserReviewReq.getFrom(), createUserReviewReq.getTo());
-                CreateUserReviewRsp createUserReviewRsp = new CreateUserReviewRsp(reviewId);
-                System.out.println("******** Project created");
-                return Response.status(Status.OK).entity(createUserReviewRsp).build();
-            } catch (CreateUserReviewException ex) {
-                ErrorRsp errorRsp = new ErrorRsp("Invalid request");
-            
-                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
-            }
-        } else {
-            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
-            
-            return Response.status(Status.BAD_REQUEST).entity(errorRsp).build(); 
-        }
-    }
+    }    
     
     @GET
-    @Path("/projectreviews/{projectId}")
+    @Path("/getProjectReviews/{projectId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProjectReviews(@PathParam("projectId") Long projectId) {
         try {
@@ -482,6 +431,8 @@ public class ProjectResource {
         }
         return projectReviewsResponse;
     }
+    
+    
     
     private ProjectSessionBeanLocal lookupProjectSessionBeanLocal() {
         try {

@@ -62,6 +62,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             em.flush();
             newGroup.setIsActive(Boolean.TRUE);
             user.getGroupsOwned().add(newGroup);
+            user.setCountOfGroupsCreated(user.getCountOfGroupsCreated() + 1);
             newGroup.setGroupOwner(user);
             newGroup.getGroupAdmins().add(user);
             user.getGroupsManaged().add(newGroup);
@@ -84,6 +85,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             UserEntity fromUser = userSessionBeanLocal.getUserById(fromUserId);
             UserEntity toUser = userSessionBeanLocal.getUserById(toUserId);
             GroupEntity group = getGroupById(groupId);
+            fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
             em.persist(newReview);
             em.flush();
             
@@ -124,7 +126,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     public void joinGroup(Long groupId, Long userId) throws NoResultException {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
-        
+        user.setCountOfGroupsJoined(user.getCountOfGroupsJoined() + 1);
         user.getGroupsJoined().add(group);
         group.getGroupMembers().add(user); 
 
@@ -146,6 +148,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             }
             user.getGroupsJoined().remove(group);
             group.getGroupMembers().remove(user);
+            user.setCountOfGroupsJoined(user.getCountOfGroupsJoined() - 1);
         }
         
     }
@@ -207,7 +210,9 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     public void changeOwner(Long groupId, Long newOwnerId) throws NoResultException {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(newOwnerId);
+        user.setCountOfGroupsCreated(user.getCountOfGroupsCreated()+1);
         
+        group.getGroupOwner().setCountOfGroupsCreated(group.getGroupOwner().getCountOfGroupsCreated()-1);
         group.getGroupOwner().getGroupsOwned().remove(group);
         group.setGroupOwner(user);
         
@@ -218,6 +223,8 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     public void deleteGroup(Long groupId)  throws NoResultException {
         GroupEntity groupToDelete = getGroupById(groupId);
         
+        groupToDelete.getGroupOwner().setCountOfGroupsCreated(groupToDelete.getGroupOwner().getCountOfGroupsCreated() - 1);
+        Long groupOwnerId = groupToDelete.getGroupOwner().getUserId();
         groupToDelete.getGroupOwner().getGroupsOwned().remove(groupToDelete);
         groupToDelete.setGroupOwner(null);
         
@@ -228,6 +235,9 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         
         for (UserEntity user : groupToDelete.getGroupMembers()) {
             user.getGroupsJoined().remove(groupToDelete);
+            if(user.getUserId() != groupOwnerId){
+                user.setCountOfGroupsJoined(user.getCountOfGroupsJoined() - 1);
+            }
         }
         groupToDelete.getGroupMembers().clear();
     

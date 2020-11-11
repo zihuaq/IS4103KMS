@@ -10,9 +10,11 @@ import entity.ActivityEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.UserEntity;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -119,6 +121,9 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
         if (today.isAfter(endDate)) {
             activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+            for(UserEntity user: activity.getJoinedUsers()){
+                user.setCountOfActivitiesCompleted(user.getCountOfActivitiesCompleted()+1);
+            }
         } else if (today.isBefore(startDate)) {
             activity.setActivityStatus(ActivityStatusEnum.PLANNED);
         } else {
@@ -173,6 +178,13 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
             }
             activityToDelete.getJoinedUsers().clear();
         }
+        
+        if (!activityToDelete.getReviews().isEmpty()){
+            for (ReviewEntity review: activityToDelete.getReviews()){
+                review.setMadeFromActivity(null);
+            }
+        }
+        activityToDelete.getReviews().clear();
         
         em.remove(activityToDelete);
     }
@@ -266,5 +278,86 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         activity.getMaterialResourcePostings().remove(mrp);
         activity.getAllocatedQuantities().remove(mrpId);
     }
+    
+    public List<ReviewEntity> getAllUserWrittenReviewsForCurrentActivity(Long userId, Long activityId){
+        Query query = em.createQuery("SELECT r FROM ReviewEntity r WHERE r.madeFromActivity.activityId = :activityId AND r.from.userId = :userId");
+        query.setParameter("activityId", activityId).setParameter("userId", userId);
         
+        return query.getResultList();
+    }
+        
+    @Override
+    public List<ReviewEntity> getToUserWrittenReviewsForCurrentActivity(Long userId, Long activityId){
+        List<ReviewEntity> allUserReviews = getAllUserWrittenReviewsForCurrentActivity(userId, activityId); 
+        List<ReviewEntity> toUserReviews = new ArrayList<>();
+        if(!allUserReviews.isEmpty()){
+            for (ReviewEntity review : allUserReviews){
+                if(review.getTo() != null){
+                    toUserReviews.add(review);
+                }
+            }
+        }
+        return toUserReviews;
+    }
+    
+    @Override
+    public List<ReviewEntity> getToProjectWrittenReviewsForCurrentActivity(Long userId, Long activityId){
+        List<ReviewEntity> allUserReviews = getAllUserWrittenReviewsForCurrentActivity(userId, activityId); 
+        List<ReviewEntity> toProjectReviews = new ArrayList<>();
+        if(!allUserReviews.isEmpty()){
+            for (ReviewEntity review : allUserReviews){
+                if(review.getProject() != null){
+                    toProjectReviews.add(review);
+                }
+            }
+        }
+        return toProjectReviews;
+    }
+    
+
+    @Override
+    public Long createNewUserReview(ReviewEntity review, Long fromId, Long toId, Long activityId) throws NoResultException {
+        
+        em.persist(review);
+        em.flush();
+        
+        UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
+        UserEntity toUser = userSessionBeanLocal.getUserById(toId);
+        ActivityEntity madeFromActivity = getActivityById(activityId);
+        
+        review.setFrom(fromUser);
+        fromUser.getReviewsGiven().add(review);
+        
+        review.setTo(toUser);
+        toUser.getReviewsReceived().add(review);
+        
+        review.setMadeFromActivity(madeFromActivity);
+        madeFromActivity.getReviews().add(review);
+        fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+        
+        return review.getReviewId();
+    }
+    
+    @Override
+    public Long createNewProjectReview(ReviewEntity review, Long fromId, Long toProjectId, Long activityId) throws NoResultException {
+        
+        em.persist(review);
+        em.flush();
+        
+        UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
+        ProjectEntity toProject = projectSessionBeanLocal.getProjectById(toProjectId);
+        ActivityEntity madeFromActivity = getActivityById(activityId);
+        
+        review.setFrom(fromUser);
+        fromUser.getReviewsGiven().add(review);
+        
+        review.setProject(toProject);
+        toProject.getReviews().add(review);
+        
+        review.setMadeFromActivity(madeFromActivity);
+        madeFromActivity.getReviews().add(review);
+        
+        fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+        return review.getReviewId();
+    }
 }

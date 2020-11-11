@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import Exception.NoResultException;
 import entity.ActivityEntity;
 import entity.MaterialResourcePostingEntity;
+import entity.ReviewEntity;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -48,5 +49,13 @@ public interface ActivitySessionBeanLocal {
     public void updateAllocateQuantity(Long activityId, Long mrpId, Double newQuantity) throws NoResultException;
 
     public void removeAllocation(Long activityId, Long mrpId) throws NoResultException;
+
+    public List<ReviewEntity> getToUserWrittenReviewsForCurrentActivity(Long userId, Long activityId);
+
+    public List<ReviewEntity> getToProjectWrittenReviewsForCurrentActivity(Long userId, Long activityId);
+
+    public Long createNewUserReview(ReviewEntity review, Long fromId, Long toId, Long activityId) throws NoResultException;
+
+    public Long createNewProjectReview(ReviewEntity review, Long fromId, Long toProjectId, Long activityId) throws NoResultException;
         
 }

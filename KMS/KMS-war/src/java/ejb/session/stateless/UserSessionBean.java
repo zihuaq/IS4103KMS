@@ -11,6 +11,7 @@ import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
+import entity.AwardEntity;
 import entity.FollowRequestEntity;
 import entity.FulfillmentEntity;
 import entity.GroupEntity;
@@ -68,6 +69,14 @@ public class UserSessionBean implements UserSessionBeanLocal {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         user.setVerificationCode(uuid);
         user.setIsVerified(Boolean.FALSE);
+        user.setCountOfActivitiesCompleted(0);
+        user.setCountOfCommentsCreated(0);
+        user.setCountOfGroupsCreated(0);
+        user.setCountOfGroupsJoined(0);
+        user.setCountOfPostCreated(0);
+        user.setCountOfProjectsCreated(0);
+        user.setCountOfProjectsJoined(0);
+        user.setCountOfReviewsCreated(0);
         em.persist(user);
         em.flush();
         System.out.println(user);
@@ -953,6 +962,14 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
     public void persist(Object object) {
         em.persist(object);
+    }
+    
+    
+    public List<AwardEntity> getReceivedAwards(Long userId) throws UserNotFoundException {
+        UserEntity user = em.find(UserEntity.class, userId);
+        
+        user.getReceivedAwards().size();
+        return user.getReceivedAwards();
     }
     
     

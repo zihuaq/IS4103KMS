@@ -10,6 +10,8 @@ import ejb.session.stateless.ActivitySessionBeanLocal;
 import entity.ActivityEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
+import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.UserEntity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +36,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.CreateActivityReq;
+import ws.restful.model.CreateProjectReviewReq;
+import ws.restful.model.CreateProjectReviewRsp;
+import ws.restful.model.CreateUserReviewReq;
+import ws.restful.model.CreateUserReviewRsp;
 import ws.restful.model.ErrorRsp;
 
 /**
@@ -360,6 +366,149 @@ public class ActivityResource {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("getUserReviewsForActivity/{activityId}/{userId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserReviewsForActivity(@PathParam("activityId") Long activityId, @PathParam("userId") Long userId) {
+        System.out.println("******** ActivityResource: getToReviewForActivity");
+        
+        try {
+            List<ReviewEntity> userReviews = activitySessionBean.getToUserWrittenReviewsForCurrentActivity(userId, activityId);
+            List<ReviewEntity> userReviewsResponse = getUserReviewsForActivityResponse(userReviews);
+
+            return Response.status(Status.OK).entity(userReviewsResponse).build();  
+            
+        } catch (Exception ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }   
+    }
+    
+     private List<ReviewEntity> getUserReviewsForActivityResponse(List<ReviewEntity> userReviews) {
+         List<ReviewEntity> userReviewsResponse = new ArrayList<>();
+         for(ReviewEntity review: userReviews){
+             ReviewEntity temp = new ReviewEntity();
+             
+             UserEntity to = new UserEntity();
+             to.setUserId(review.getTo().getUserId());
+             to.setFirstName(review.getTo().getFirstName());
+             to.setLastName(review.getTo().getLastName());
+             to.setProfilePicture(review.getTo().getProfilePicture());
+             
+             UserEntity from = new UserEntity();
+             from.setUserId(review.getFrom().getUserId());
+             from.setFirstName(review.getFrom().getFirstName());
+             from.setLastName(review.getFrom().getLastName());
+             from.setProfilePicture(review.getFrom().getProfilePicture());
+            
+             temp.setReviewId(review.getReviewId());
+             temp.setReviewField(review.getReviewField());
+             temp.setTitle(review.getTitle());
+             temp.setRating(review.getRating());
+             temp.setTo(to);
+             temp.setFrom(from);
+             
+             userReviewsResponse.add(temp);
+             
+         }
+        return userReviewsResponse;
+    }
+     
+    @Path("getProjectReviewForActivity/{activityId}/{userId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectReviewForActivity(@PathParam("activityId") Long activityId, @PathParam("userId") Long userId) {
+        System.out.println("******** ActivityResource: getToReviewForActivity");
+        
+        try {
+            List<ReviewEntity> projectReviews = activitySessionBean.getToProjectWrittenReviewsForCurrentActivity(userId, activityId);
+            List<ReviewEntity> projectReviewsResponse = getProjectReviewsForActivityResponse(projectReviews);
+
+            return Response.status(Status.OK).entity(projectReviewsResponse).build();  
+            
+        } catch (Exception ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }   
+    }
+    
+     private List<ReviewEntity> getProjectReviewsForActivityResponse(List<ReviewEntity> projectReviews) {
+         List<ReviewEntity> projectReviewsResponse = new ArrayList<>();
+         for(ReviewEntity review: projectReviews){
+             ReviewEntity temp = new ReviewEntity();
+             
+             UserEntity from = new UserEntity();
+             from.setUserId(review.getFrom().getUserId());
+             from.setFirstName(review.getFrom().getFirstName());
+             from.setLastName(review.getFrom().getLastName());
+             from.setProfilePicture(review.getFrom().getProfilePicture());
+             
+             ProjectEntity project = new ProjectEntity();
+             project.setProjectId(review.getProject().getProjectId());
+             project.setName(review.getProject().getName());
+            
+             temp.setReviewId(review.getReviewId());
+             temp.setReviewField(review.getReviewField());
+             temp.setTitle(review.getTitle());
+             temp.setRating(review.getRating());
+             temp.setFrom(from);
+             temp.setProject(project);
+             projectReviewsResponse.add(temp);
+             
+         }
+        return projectReviewsResponse;
+    }
+     
+  
+    @Path("createNewUserReview")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewUserReview(CreateUserReviewReq createUserReviewReq) {
+        System.out.println("******** ActivityResource: createNewUserReview");
+        if (createUserReviewReq != null) {
+            try {
+                Long reviewId = activitySessionBean.createNewUserReview(createUserReviewReq.getReview(), createUserReviewReq.getFrom(), createUserReviewReq.getTo(), createUserReviewReq.getMadeFromActivityId());
+                return Response.status(Status.OK).entity(new CreateUserReviewRsp(reviewId)).build();
+            } catch (NoResultException ex) {
+                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
+            }
+        } else {
+            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            
+            return Response.status(Status.BAD_REQUEST).entity(errorRsp).build(); 
+        }
+    }
+    
+    
+    @Path("createNewUserReview")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewProjectReview(CreateProjectReviewReq createprojectReviewReq) {
+        System.out.println("******** ActivityResource: createNewUserReview");
+        if (createprojectReviewReq != null) {
+            try {
+                Long reviewId = activitySessionBean.createNewUserReview(createprojectReviewReq.getReview(), createprojectReviewReq.getFrom(), createprojectReviewReq.getProject(), createprojectReviewReq.getMadeFromActivityId());
+                return Response.status(Status.OK).entity(new CreateProjectReviewRsp(reviewId)).build();
+            } catch (NoResultException ex) {
+                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
+            }
+        } else {
+            ErrorRsp errorRsp = new ErrorRsp("Invalid request");
+            
+            return Response.status(Status.BAD_REQUEST).entity(errorRsp).build(); 
         }
     }
 

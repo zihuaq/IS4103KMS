@@ -10,7 +10,9 @@ import Exception.CreateProjectReviewException;
 import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
+import Exception.UserNotFoundException;
 import entity.ActivityEntity;
+import entity.AwardEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
@@ -35,6 +37,10 @@ import util.enumeration.ProjectStatusEnum;
  */
 @Stateless
 public class ProjectSessionBean implements ProjectSessionBeanLocal {
+
+
+    @EJB
+    private AwardSessionBeanLocal awardSessionBean;
 
     @EJB
     private ReportSessionBeanLocal reportSessionBean;
@@ -65,12 +71,15 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     
     
     
+    
+    
     @Override
     public Long createNewProject(ProjectEntity newProject, Long userId, List<Long> tagIds) throws CreateProjectException {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
             em.persist(newProject);
             em.flush();
+            user.setCountOfProjectsCreated(user.getCountOfProjectsCreated() + 1);
             newProject.setIsActive(Boolean.TRUE);
             user.getProjectsOwned().add(newProject);
             newProject.setProjectOwner(user);
@@ -90,45 +99,45 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         }
     }
     
-    @Override
-    public Long createNewProjectReview(ReviewEntity newReview, Long projectId, Long fromUserId)throws CreateProjectReviewException{
-        try {
-            UserEntity user = userSessionBeanLocal.getUserById(fromUserId);
-            ProjectEntity project = getProjectById(projectId);
-            em.persist(newReview);
-            em.flush();
-            
-            user.getReviewsGiven().add(newReview);
-            project.getReviews().add(newReview);
-            newReview.setFrom(user);
-            newReview.setProject(project);
-            
-            return newReview.getReviewId();
-        } catch (NoResultException ex) {
-            throw new CreateProjectReviewException("User not found");
-        }
-    }
-    
-    public Long createNewUserReview(ReviewEntity newReview, Long projectId, Long fromUserId, Long toUserId)throws CreateUserReviewException{
-        try {
-            UserEntity fromUser = userSessionBeanLocal.getUserById(fromUserId);
-            UserEntity toUser = userSessionBeanLocal.getUserById(toUserId);
-            ProjectEntity project = getProjectById(projectId);
-            em.persist(newReview);
-            em.flush();
-            
-            fromUser.getReviewsGiven().add(newReview);
-            toUser.getReviewsGiven().add(newReview);
-            project.getReviews().add(newReview);
-            newReview.setFrom(fromUser);
-            newReview.setTo(toUser);
-            newReview.setProject(project);
-            
-            return newReview.getReviewId();
-        } catch (NoResultException ex) {
-            throw new CreateUserReviewException("User not found");
-        }
-    }
+//    @Override
+//    public Long createNewProjectReview(ReviewEntity newReview, Long projectId, Long fromUserId)throws CreateProjectReviewException{
+//        try {
+//            UserEntity user = userSessionBeanLocal.getUserById(fromUserId);
+//            ProjectEntity project = getProjectById(projectId);
+//            em.persist(newReview);
+//            em.flush();
+//            
+//            user.getReviewsGiven().add(newReview);
+//            project.getReviews().add(newReview);
+//            newReview.setFrom(user);
+//            newReview.setProject(project);
+//            
+//            return newReview.getReviewId();
+//        } catch (NoResultException ex) {
+//            throw new CreateProjectReviewException("User not found");
+//        }
+//    }
+//    
+//    public Long createNewUserReview(ReviewEntity newReview, Long projectId, Long fromUserId, Long toUserId)throws CreateUserReviewException{
+//        try {
+//            UserEntity fromUser = userSessionBeanLocal.getUserById(fromUserId);
+//            UserEntity toUser = userSessionBeanLocal.getUserById(toUserId);
+//            ProjectEntity project = getProjectById(projectId);
+//            em.persist(newReview);
+//            em.flush();
+//            
+//            fromUser.getReviewsGiven().add(newReview);
+//            toUser.getReviewsGiven().add(newReview);
+//            project.getReviews().add(newReview);
+//            newReview.setFrom(fromUser);
+//            newReview.setTo(toUser);
+//            newReview.setProject(project);
+//            
+//            return newReview.getReviewId();
+//        } catch (NoResultException ex) {
+//            throw new CreateUserReviewException("User not found");
+//        }
+//    }
     
     @Override
     public List<ProjectEntity> retrieveAllProject() {
@@ -160,7 +169,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     public void joinProject(Long projectId, Long userId) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
-        
+        user.setCountOfProjectsJoined(user.getCountOfProjectsJoined() + 1);
         user.getProjectsJoined().add(project);
         project.getProjectMembers().add(user); 
 
@@ -178,6 +187,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         } else {
             if (project.getProjectAdmins().contains(user)) {
                 project.getProjectAdmins().remove(user);
+                user.setCountOfProjectsJoined(user.getCountOfProjectsJoined() - 1);
                 user.getProjectsManaged().remove(project);
             }
             user.getProjectsJoined().remove(project);
@@ -240,8 +250,11 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     public void changeOwner(Long projectId, Long newOwnerId) throws NoResultException {
         ProjectEntity project = getProjectById(projectId);
         UserEntity user = userSessionBeanLocal.getUserById(newOwnerId);
+        user.setCountOfGroupsCreated(user.getCountOfGroupsCreated() + 1);
         
         project.getProjectOwner().getProjectsOwned().remove(project);
+        project.getProjectOwner().setCountOfGroupsCreated(project.getProjectOwner().getCountOfGroupsCreated() - 1);
+        
         project.setProjectOwner(user);
         user.getProjectsOwned().add(project);
     }
@@ -251,6 +264,8 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         ProjectEntity projectToDelete = getProjectById(projectId);
         
         projectToDelete.getProjectOwner().getProjectsOwned().remove(projectToDelete);
+        Long projectOwnerId = projectToDelete.getProjectOwner().getUserId();
+        projectToDelete.getProjectOwner().setCountOfGroupsCreated(projectToDelete.getProjectOwner().getCountOfGroupsCreated() - 1);
         projectToDelete.setProjectOwner(null);
         
         for (UserEntity user : projectToDelete.getProjectAdmins()) {
@@ -260,6 +275,9 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
 
         for (UserEntity user : projectToDelete.getProjectMembers()) {
             user.getProjectsJoined().remove(projectToDelete);
+            if(user.getUserId() != projectOwnerId){
+                user.setCountOfGroupsJoined(user.getCountOfGroupsJoined() - 1);
+            }
         }
         projectToDelete.getProjectMembers().clear();
         
@@ -274,6 +292,10 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         for (ActivityEntity activity: projectToDelete.getActivities()) {
             activity.setProject(null);
             activitySessionBeanLocal.deleteActivity(activity.getActivityId());
+        }
+        
+        for (AwardEntity award: projectToDelete.getAwards()){
+            awardSessionBean.deleteProjectAward(award.getAwardId());
         }
         
         projectToDelete.getActivities().clear();
@@ -328,4 +350,6 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         return project.getReviews();
         
     }
+    
+   
 }

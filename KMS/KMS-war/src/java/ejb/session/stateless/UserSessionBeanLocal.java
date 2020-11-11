@@ -16,6 +16,7 @@ import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
+import entity.AwardEntity;
 import entity.FollowRequestEntity;
 import entity.GroupEntity;
 import entity.ProjectEntity;
@@ -117,5 +118,7 @@ public interface UserSessionBeanLocal {
     public List<GroupEntity> getGroupsJoined(Long userId) throws UserNotFoundException;
 
     public List<GroupEntity> getGroupsOwned(Long userId) throws UserNotFoundException;
+
+    public List<AwardEntity> getReceivedAwards(Long userId) throws UserNotFoundException;
 
 }
