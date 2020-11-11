@@ -5,6 +5,11 @@ import { LinkService } from '../../../link.service';
 import { TaskService } from '../../../task.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/notification.service';
+import { Project } from 'src/app/classes/project';
+import { ProjectService } from 'src/app/project.service';
+import { SessionService } from 'src/app/session.service';
 
 import * as moment from 'moment';
 import { gantt } from 'dhtmlx-gantt';
@@ -28,15 +33,24 @@ export class EditTaskTabComponent implements OnInit {
   searchInput: string = "";
   isReady: boolean = false;
   events: string[];
+  project: Project;
 
   constructor(private taskService: TaskService,
     private linkService: LinkService,
+    private sessionService: SessionService,
+    private notificationService: NotificationService,
+    private projectService: ProjectService,
     private activatedRoute: ActivatedRoute) {
     this.events = [];
   }
 
   ngOnInit(): void {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+    this.projectService.getProjectById(this.projectId).subscribe(
+      response => {
+        this.project = response;
+      }
+    );
 
     //crud of tasks and links
     this.events.push(
@@ -45,6 +59,17 @@ export class EditTaskTabComponent implements OnInit {
           response => {
             console.log(task, response);
             gantt.changeTaskId(id, response);
+            let currentUser = this.sessionService.getCurrentUser();
+            let newNotification = new Notification();
+            newNotification.msg = "A new task has been added to " + this.project.name;
+            newNotification.projectId = this.projectId;
+            newNotification.groupId = null;
+            newNotification.projectTab = "task-tab";
+            for (let member of this.project.projectMembers) {
+              if (member.userId != currentUser.userId) {
+                this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+              }
+            }
             $(document).Toasts('create', {
               class: 'bg-success',
               title: 'Success',

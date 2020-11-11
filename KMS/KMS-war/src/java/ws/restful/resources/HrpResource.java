@@ -124,6 +124,7 @@ public class HrpResource {
                     appliedUser.setFulfillments(new ArrayList<>());
                     appliedUser.setActivityJoined(new ArrayList<>());  
                     appliedUser.setDonations(new ArrayList<>());
+                    appliedUser.setNotifications(new ArrayList<>());
                 }
             }
             
@@ -293,6 +294,7 @@ public class HrpResource {
                     appliedUser.setFulfillments(new ArrayList<>());
                     appliedUser.setActivityJoined(new ArrayList<>());  
                     appliedUser.setDonations(new ArrayList<>());
+                    appliedUser.setNotifications(new ArrayList<>());
                 }
             }
         }
