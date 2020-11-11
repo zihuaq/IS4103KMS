@@ -311,7 +311,7 @@ export class ProjectDetailsComponent implements OnInit {
               title: 'Success',
               autohide: true,
               delay: 2500,
-              body: 'Group Shared!',
+              body: 'Project Shared!',
             });
             $('#shareProjectToProjectselect2').val(null).trigger('change');
             this.shareProjectText = "";
@@ -348,7 +348,7 @@ export class ProjectDetailsComponent implements OnInit {
               title: 'Success',
               autohide: true,
               delay: 2500,
-              body: 'Post Shared!',
+              body: 'Project Shared!',
             });
             $('#shareProjectToGroupselect2').val(null).trigger('change');
             this.shareProjectText = "";
@@ -368,7 +368,7 @@ export class ProjectDetailsComponent implements OnInit {
             title: 'Success',
             autohide: true,
             delay: 2500,
-            body: 'Post Shared!',
+            body: 'Project Shared!',
           });
           this.shareProjectText = "";
           this.selectedShareOption = "";

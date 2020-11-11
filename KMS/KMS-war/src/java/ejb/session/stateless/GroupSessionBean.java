@@ -16,10 +16,12 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.PostEntity;
 import entity.GroupEntity;
+import entity.ReportEntity;
 import entity.TagEntity;
 import entity.ReviewEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -35,6 +37,9 @@ import javax.persistence.Query;
 @Stateless
 public class GroupSessionBean implements GroupSessionBeanLocal {
 
+    @EJB
+    private ReportSessionBeanLocal reportSessionBean;
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
     
@@ -46,6 +51,8 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
     
     @EJB(name = "TagSessionBeanLocal")
     private TagSessionBeanLocal tagSessionBeanLocal;
+    
+    
 
     @Override
     public Long createNewGroup(GroupEntity newGroup, Long userId, List<Long> tagIds) throws CreateGroupException {
@@ -70,23 +77,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         }
     }
     
-//    public Long createNewGroupReview(ReviewEntity newReview, Long groupId, Long fromUserId)throws CreateGroupReviewException{
-//        try {
-//            UserEntity user = userSessionBeanLocal.getUserById(fromUserId);
-//            GroupEntity group = getGroupById(groupId);
-//            em.persist(newReview);
-//            em.flush();
-//            
-//            user.getReviewsGiven().add(newReview);
-////            group.getReviews().add(newReview);
-////            newReview.setFrom(user);
-////            newReview.setGroup(group);
-//            
-//            return newReview.getReviewId();
-//        } catch (NoResultException ex) {
-//            //throw new CreateGroupReviewException("User not found");
-//        }
-//    }
+
     
     public Long createNewUserReview(ReviewEntity newReview, Long groupId, Long fromUserId, Long toUserId)throws CreateUserReviewException{
         try {
@@ -116,13 +107,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         return query.getResultList();
     }
     
-//    @Override
-//    public List<GroupEntity> retrieveGroupByStatus(GroupStatusEnum status) {
-//        Query query = em.createQuery("SELECT p from GroupEntity p WHERE p.status = :inStatus");
-//        query.setParameter("inStatus", status);
-//        
-//        return query.getResultList();
-//    }
+
     
     @Override
     public GroupEntity getGroupById(Long groupId) throws NoResultException {
@@ -181,27 +166,21 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         }
         group.setSdgs(groupToUpdate.getSdgs());
         group.setIsActive(groupToUpdate.getIsActive());
-        //group.setStatus(groupToUpdate.getStatus());
+        
 
-//        for (int i = 0; i < groupToUpdate.getSdgs().size(); i++) {
-//            TagEntity tag = em.find(TagEntity.class, groupToUpdate.getSdgs().get(i).getTagId());
-//           if (tag == null) {
-//               throw new NoResultException("SDG tag not found.");
-//           }
-//        }
-//        group.setSdgs(groupToUpdate.getSdgs());
+        for (int i = 0; i < groupToUpdate.getSdgs().size(); i++) {
+            TagEntity tag = em.find(TagEntity.class, groupToUpdate.getSdgs().get(i).getTagId());
+           if (tag == null) {
+               throw new NoResultException("SDG tag not found.");
+           }
+        }
+        group.setSdgs(groupToUpdate.getSdgs());
 
         group.setProfilePicture(groupToUpdate.getProfilePicture());
         
     }
     
-//    //Change group status
-//    @Override
-//    public void updateStatus(Long groupId, String status) throws NoResultException {
-//        GroupEntity group = getGroupById(groupId);
-//
-//        group.setStatus(GroupStatusEnum.valueOf(status));
-//    }
+
     
     //Promote Member to Admin
     @Override
@@ -251,50 +230,32 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             user.getGroupsJoined().remove(groupToDelete);
         }
         groupToDelete.getGroupMembers().clear();
+    
+       for (PostEntity post : groupToDelete.getPosts()) {
+           postSessionBeanLocal.deletePostInGroupFeed(post.getPostId());
+       }
+        groupToDelete.getPosts().clear();
         
-//        for (ActivityEntity activity : groupToDelete.getActivities()) {
-//            activity.setGroup(null);
-//        }
-//        groupToDelete.getActivities().clear();
+        try{
+            List<ReportEntity> reports = reportSessionBean.getGroupReports();
+            
+            List<Long> reportIds = new ArrayList<>();
+            for(ReportEntity report: reports){
+                if(report.getReportedGroup().getGroupId() == groupId){
+                    reportIds.add(report.getReportId());
+                }
+            }
+            for(int i = 0; i < reportIds.size(); i++){
+                reportSessionBean.deleteReport(reportIds.get(i));
+            }
+        }
+        catch(NoResultException ex){
+            System.out.println("No reports  made against group");
+        }
 //        
-//        for (HumanResourcePostingEntity hrp : groupToDelete.getHumanResourcePostings()) {
-//            hrp.setGroup(null);
-//            // Delete hrp here
-//        }
-//        groupToDelete.getHumanResourcePostings().clear();
-//        
-//        for (MaterialResourcePostingEntity mrp : groupToDelete.getMaterialResourcePostings()) {
-//            mrp.setGroup(null);
-//            // Delete mrp here
-//        }
-//        groupToDelete.getMaterialResourcePostings().clear();
-//        
-//        for (TaskEntity task : groupToDelete.getTasks()) {
-//            task.setGroup(null);
-//            // Delete task here
-//        }
-//        groupToDelete.getTasks().clear();
-//        
-//        for (PostEntity post : groupToDelete.getPosts()) {
-//            postSessionBeanLocal.deletePostInGroupFeed(post.getPostId());
-//        }
-//        groupToDelete.getPosts().clear();
-//        
-//        em.remove(groupToDelete);
-//    }
-//    
-//    @Override
-//    public List<ReviewEntity> getGroupReviews(Long groupId) throws NoResultException {
-//        GroupEntity group = getGroupById(groupId);
-//        group.getReviews().size();
-//        return group.getReviews();
-//        
-//    }
-//
-//    @Override
-//    public Long createNewGroup(GroupEntity newGroup, Long userId) throws CreateGroupException {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-}
+            em.remove(groupToDelete);
+    }
+
+
 }
     
