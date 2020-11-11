@@ -9,6 +9,8 @@ import { UserType } from '../classes/user-type.enum';
 import { UserService } from 'src/app/user.service';
 import { SessionService } from 'src/app/session.service';
 import { ChatService } from 'src/app/chat.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/notification.service';
 
 declare var $: any;
 
@@ -44,6 +46,7 @@ export class ChatComponent implements OnInit {
   constructor(private sessionService: SessionService,
     private userService: UserService,
     private chatService: ChatService,
+    private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,) { 
       this.sender = new User();
       this.receiver = new User();
@@ -64,6 +67,17 @@ export class ChatComponent implements OnInit {
     );
 
     this.sender = this.sessionService.getCurrentUser();
+
+    this.notificationService.getNotification(this.sender.userId).subscribe(
+      response => {
+        let notifications = response;
+        for (let notification of notifications) {
+          if (notification.groupId == null && notification.projectId == null) {
+            this.notificationService.deleteNotification(notification.notificationId).subscribe();
+          }
+        } 
+      }
+    )
     
     this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).valueChanges().subscribe(
       (data) => {   
@@ -89,7 +103,6 @@ export class ChatComponent implements OnInit {
         let msgs = [];
         let count = 0;
         this.users = data;
-        console.log(this.users.length)
         for (let user of this.users) {          
           let m = user.data;
           for (let x in m) {
@@ -125,6 +138,62 @@ export class ChatComponent implements OnInit {
   postMessage() {
     this.chatService.sendMessage(this.sender, this.chatMessage, this.receiver);
     this.chatMessage = "";
+
+    this.notificationService.getNotification(this.receiver.userId).subscribe(
+      response => {
+        let hasMsgNotification = false;
+        let notifications = response;
+        for (let n of notifications) {
+          if (n.projectId == null && n.groupId == null) {
+            hasMsgNotification = true;
+            break;
+          }
+        }
+        if (!hasMsgNotification) {
+          let newNotification = new Notification();
+          newNotification.msg = "You have new message(s)";
+          newNotification.projectId = null;
+          newNotification.groupId = null;
+          this.notificationService.createNewNotification(newNotification, this.receiver.userId).subscribe();
+        }
+      }
+    );
+
+    this.chatService.getChatHistoryUser(this.receiver.userId, this.receiver.firstName + " " + this.receiver.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        let msgs = [];
+        let count = 0;
+        let userList: any[] = data;
+        for (let user of userList) {          
+          let m = user.data;
+          for (let x in m) {
+            count = 0;
+            if (m.hasOwnProperty(x)) {
+              if (x != 'userId' && x != 'timeStamp' && x != 'count') {
+                msgs.push(m[x]);
+              }
+            }
+            msgs.sort((a, b) => (a.timeStamp < b.timeStamp ? 1 : a.timeStamp > b.timeStamp ? -1 : 0))
+            for (let i = 0; i < msgs.length; i++) {
+              if (msgs[i].receiver != this.receiver.userId) {
+                if (!msgs[i].hasRead) {
+                  count++;              
+                } else {
+                  break;
+                }
+              }              
+            }            
+          }
+          this.chatService.updateUnreadCount(this.receiver, user.key, count);
+        }
+      }
+    );
   }
 
   loadMessage(key) {
@@ -222,6 +291,61 @@ export class ChatComponent implements OnInit {
     let name = this.receiver.userId + "_" + this.receiver.firstName + " " + this.receiver.lastName;
     this.loadMessage(name);
     this.userIdList.push(this.receiver.userId);
+    this.notificationService.getNotification(this.receiver.userId).subscribe(
+      response => {
+        let hasMsgNotification = false;
+        let notifications = response;
+        for (let n of notifications) {
+          if (n.projectId == null && n.groupId == null) {
+            hasMsgNotification = true;
+            break;
+          }
+        }
+        if (!hasMsgNotification) {
+          let newNotification = new Notification();
+          newNotification.msg = "You have new message(s)";
+          newNotification.projectId = null;
+          newNotification.groupId = null;
+          this.notificationService.createNewNotification(newNotification, this.receiver.userId).subscribe();
+        }
+      }
+    );
+
+    this.chatService.getChatHistoryUser(this.receiver.userId, this.receiver.firstName + " " + this.receiver.lastName).snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, data: c.payload.val() })
+        )
+      )
+    ).subscribe(
+      data => {
+        let msgs = [];
+        let count = 0;
+        let userList: any[] = data;
+        for (let user of userList) {          
+          let m = user.data;
+          for (let x in m) {
+            count = 0;
+            if (m.hasOwnProperty(x)) {
+              if (x != 'userId' && x != 'timeStamp' && x != 'count') {
+                msgs.push(m[x]);
+              }
+            }
+            msgs.sort((a, b) => (a.timeStamp < b.timeStamp ? 1 : a.timeStamp > b.timeStamp ? -1 : 0))
+            for (let i = 0; i < msgs.length; i++) {
+              if (msgs[i].receiver != this.receiver.userId) {
+                if (!msgs[i].hasRead) {
+                  count++;              
+                } else {
+                  break;
+                }
+              }              
+            }            
+          }
+          this.chatService.updateUnreadCount(this.receiver, user.key, count);
+        }
+      }
+    );
   }
 
   updateSearchModel(value) {

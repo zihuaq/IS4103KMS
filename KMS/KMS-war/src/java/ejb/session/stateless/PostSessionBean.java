@@ -17,6 +17,7 @@ import entity.ReportEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.EJB;
@@ -34,6 +35,9 @@ import ws.restful.model.SharePostToProjectOrGroupsReq;
 public class PostSessionBean implements PostSessionBeanLocal {
 
     @EJB
+    private ReportSessionBeanLocal reportSessionBean;
+
+    @EJB
     private GroupSessionBeanLocal groupSessionBean;
 
     @EJB
@@ -47,6 +51,8 @@ public class PostSessionBean implements PostSessionBeanLocal {
 
     @EJB(name = "UserSessionBeanLocal")
     private UserSessionBeanLocal userSessionBeanLocal;
+    
+    
 
     @Override
     public Long createNewPostInProjectFeed(PostEntity newPost, Long projectId, Long userId) throws NoResultException {
@@ -625,8 +631,18 @@ public class PostSessionBean implements PostSessionBeanLocal {
             }
 
             post.getPostOwner().getPosts().remove(post);
-
+            
+            //get all comment reports
+            List<ReportEntity> commentReports =  reportSessionBean.getCommentReports();
+             
             for (int i = 0; i < post.getComments().size(); i++) {
+                Iterator<ReportEntity> itr = commentReports.iterator();
+                while(itr.hasNext()){
+                    ReportEntity commentReport = itr.next();
+                    if(commentReport.getReportedComment().getPostCommentId() == post.getComments().get(i).getPostCommentId()){
+                        em.remove(commentReport);
+                    }
+                }
                 em.remove(post.getComments().get(i));
             }
 
@@ -655,6 +671,19 @@ public class PostSessionBean implements PostSessionBeanLocal {
         
         em.remove(postToDelete);
     }
+    
+    
+    public void deletePostInGroupFeed(Long postId) throws NoResultException {
+        PostEntity postToDelete = getPostById(postId);
+
+        postToDelete.getPostOwner().getPosts().remove(postToDelete);
+        postToDelete.setPostOwner(null);
+
+        postToDelete.getGroup().getPosts().remove(postToDelete);
+        postToDelete.setGroup(null);
+
+        em.remove(postToDelete);
+    }
 
     @Override
     public PostCommentEntity getPostCommentById(Long commentId) throws NoResultException {
@@ -664,6 +693,10 @@ public class PostSessionBean implements PostSessionBeanLocal {
         } else {
             throw new NoResultException("Comment not found");
         }
+    }
+
+    public void persist(Object object) {
+        em.persist(object);
     }
 
 }

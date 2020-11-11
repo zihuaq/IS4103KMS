@@ -3,7 +3,27 @@
 </span>
 
 <span *ngIf="files.length > 0">
-    <ul class="list-group" *ngFor="let file of files">
-        <a class="list-group-item" (click)="viewFile(file)" style="color: blue;">{{formatFileKey(file)}}</a>
-    </ul>
+    <div *ngFor="let doc of docs">
+        <div class="card" style="width: 100%;">
+            <div class="card-header">
+                <h6 class="card-title" style="font-size: 20px; margin-top: 7px;">
+                    <a style="color: blue;" (click)="viewFile(doc.key)"><u>{{formatFileKey(doc.key)}}</u></a>
+                    <br/>
+                    <span class="text-muted" style="font-size: 15px;">Upload date: {{doc.timeStamp}}</span>
+                </h6>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: block;">
+                <p style="margin: 0 7 px 0 7px">
+                    Uploaded By: {{doc.author}}
+                    <br/>
+                    Description: {{doc.description}}
+                </p>
+            </div>
+        </div>               
+    </div>
 </span>

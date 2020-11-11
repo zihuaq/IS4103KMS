@@ -314,7 +314,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setFrom(new InternetAddress("4103kms@gmail.com"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedPost().getPostOwner().getEmail()));
                 message.setSubject("A post you created has been deleted");
-                message.setText("Dear User," +'\n' + "Your post has been deleted for violating our terms of service" + '\n' + currentReport.getVerdictComments());
+                message.setText("Dear User," +'\n' + "Your post has been deleted for violating our terms of service" + '\n');
 
                 Transport.send(message);
             }
@@ -323,7 +323,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setFrom(new InternetAddress("4103kms@gmail.com"));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedComment().getCommentOwner().getEmail()));
                 message.setSubject("A comment you created has been deleted");
-                message.setText("Dear User," +'\n' + "Your comment has been deleted for violating our terms of service" + '\n' + currentReport.getVerdictComments());
+                message.setText("Dear User," +'\n' + "Your comment has been deleted for violating our terms of service" + '\n');
 
                 Transport.send(message);
             }

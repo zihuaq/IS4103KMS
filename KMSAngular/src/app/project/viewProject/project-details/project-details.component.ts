@@ -44,6 +44,8 @@ export class ProjectDetailsComponent implements OnInit {
   ];
   selectedShareOption: string;
   shareProjectText: string = "";
+  hasLoad = false;
+  activeTab: string;
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
@@ -56,12 +58,15 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.activeTab = this.activatedRoute.snapshot.paramMap.get("tabName");
+    console.log(this.activeTab);
     this.checkAccessRight();
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
 
     this.userService.getUser(loggedInUserId.toString()).subscribe(
       (data) => {
+        this.hasLoad = true;
         this.loggedInUser = data;
         $('#shareProjectToProjectselect2').select2({
           data: this.loggedInUser.projectsJoined.map((item) => {
@@ -306,7 +311,7 @@ export class ProjectDetailsComponent implements OnInit {
               title: 'Success',
               autohide: true,
               delay: 2500,
-              body: 'Group Shared!',
+              body: 'Project Shared!',
             });
             $('#shareProjectToProjectselect2').val(null).trigger('change');
             this.shareProjectText = "";
@@ -343,7 +348,7 @@ export class ProjectDetailsComponent implements OnInit {
               title: 'Success',
               autohide: true,
               delay: 2500,
-              body: 'Post Shared!',
+              body: 'Project Shared!',
             });
             $('#shareProjectToGroupselect2').val(null).trigger('change');
             this.shareProjectText = "";
@@ -363,7 +368,7 @@ export class ProjectDetailsComponent implements OnInit {
             title: 'Success',
             autohide: true,
             delay: 2500,
-            body: 'Post Shared!',
+            body: 'Project Shared!',
           });
           this.shareProjectText = "";
           this.selectedShareOption = "";

@@ -78,4 +78,6 @@ public interface PostSessionBeanLocal {
 
     public PostCommentEntity getPostCommentById(Long commentId) throws NoResultException;
 
+    public void deletePostInGroupFeed(Long postId) throws NoResultException;
+
 }

@@ -16,17 +16,32 @@
 </span>
 
 <span *ngIf="files.length > 0">
-    <ul class="list-group" *ngFor="let file of files">
-        <li class="list-group-item" style="color: blue;">
-            {{formatFileKey(file)}}                    
-            <button type="button" class="btn bg-gradient-danger float-right" rel="tooltip" title="Delete" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" (click)="clickDelete(file)">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-            <button type="button" class="btn bg-gradient-primary float-right" rel="tooltip" title="File" (click)="viewFile(file)">
-                <i class="fas fa-file"></i>
-            </button>
-        </li>                
-    </ul>
+    <div *ngFor="let doc of docs">
+        <div class="card" style="width: 100%;">
+            <div class="card-header">
+                <h6 class="card-title" style="font-size: 20px; margin-top: 7px;">
+                    <a style="color: blue;" (click)="viewFile(doc.key)"><u>{{formatFileKey(doc.key)}}</u></a>
+                    <br/>
+                    <span class="text-muted" style="font-size: 15px;">Upload date: {{doc.timeStamp}}</span>
+                </h6>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#delete-modal" data-backdrop="static" (click)="clickDelete(file)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: block;">
+                <p style="margin: 0 7 px 0 7px">
+                    Uploaded By: {{doc.author}}
+                    <br/>
+                    Description: {{doc.description}}
+                </p>
+            </div>
+        </div>               
+    </div>
 </span>
 
 <div class="modal fade" id="upload-modal">
@@ -38,16 +53,22 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="file">Choose File</label>
-                    <input style="text-overflow: ellipsis; overflow: hidden;" type="file" id="file" class="form-control" (change)="handleFileInput($event.target.files)">
+            <form (ngSubmit)="uploadFile()" #uploadForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="file">Choose File</label>
+                        <input style="text-overflow: ellipsis; overflow: hidden;" type="file" id="file" class="form-control" (change)="handleFileInput($event.target.files)">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description *</label>
+                        <textarea id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="description" required></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
-                <button type="button" type="submit" class="btn btn-outline-dark" (click)="uploadFile()">Upload</button>
-            </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                    <button type="button" type="submit" class="btn btn-outline-dark" [disabled]="!uploadForm.valid">Upload</button>                
+                </div>
+            </form>            
         </div>
     </div>
 </div>
