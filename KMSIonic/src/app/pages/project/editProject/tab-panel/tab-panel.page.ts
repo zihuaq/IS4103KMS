@@ -17,6 +17,7 @@ import { HrpService } from 'src/app/services/hrp.service';
 import { MrpService } from 'src/app/services/mrp.service';
 import { ManageFulfillmentsModalPage } from '../manage-fulfillments-modal/manage-fulfillments-modal.page';
 import { FulfillmentService } from '../../../../services/fulfillment.service';
+import { Document } from 'src/app/classes/document';
 
 @Component({
   selector: 'app-tab-panel',
@@ -44,6 +45,7 @@ export class TabPanelPage implements OnInit {
   bucket: string = "is4103kms";
   s3;
   hasLoad = false;
+  docs: Document[];
 
   constructor(private fileChooser: FileChooser,
     public toastController: ToastController,
@@ -67,6 +69,7 @@ export class TabPanelPage implements OnInit {
       this.mrpTags = [];
       this.mrpList = [];
       this.files = [];
+      this.docs = [];
     }
 
   ngOnInit() {
@@ -160,12 +163,36 @@ export class TabPanelPage implements OnInit {
   }
 
   async refreshDocs() {
+    this.docs = [];
     const { Contents } = await this.s3
     .listObjectsV2({ Bucket: this.bucket, Prefix: this.projectId.toString(), StartAfter: this.projectId.toString() + "/"})
     .promise();
     this.files = Contents;
+
+    for (let i = 0; i < this.files.length; i++) {
+      let doc = new Document();
+      doc.key = this.files[i].Key;
+      doc.timeStamp = this.files[i].LastModified;
+      var par = {
+        Bucket: this.bucket, 
+        Key: this.files[i].Key
+       };
+      await this.s3.getObjectTagging(par, function(err, data) {
+        if (err) {
+          // error
+        }
+        else {
+          doc.author = data.TagSet[0].Value;
+          doc.description = data.TagSet[1].Value;
+        }        
+      }).promise().then(
+        () => {
+          this.docs.push(doc);
+        }        
+      )      
+    }
     this.hasLoad = true;
-    console.log(this.files)
+    
   }
 
   async segmentChanged() {
@@ -393,23 +420,22 @@ export class TabPanelPage implements OnInit {
     window.open(url, '_blank');
   }
 
-  viewFile(file) {
+  viewFile(key) {
     var params = {
       Bucket: this.bucket,
-      Key: file.Key,
+      Key: key,
     }
-    console.log(params);
     let url = this.s3.getSignedUrl("getObject", params)
     window.open(url);
   }
 
-  formatFileKey(file) {
-    let index = file.Key.indexOf("/");
-    return file.Key.substring(index + 1);
+  formatFileKey(key) {
+    let index = key.indexOf("/");
+    return key.substring(index + 1);
   }
 
-  async deleteDocs(file) {
-    this.fileToDelete = file;
+  async deleteDocs(key) {
+    this.fileToDelete = key;
     const alert = await this.alertController.create({
       header: "Delete Documents",
       message: "Are you sure you want to delete this document?",
@@ -433,7 +459,7 @@ export class TabPanelPage implements OnInit {
   deleteFile() {
     const params = {
       Bucket: this.bucket,
-      Key: this.fileToDelete.Key
+      Key: this.fileToDelete
     }
 
     this.s3.deleteObject(params).promise().then(
