@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/chat"></ion-back-button>
+    </ion-buttons>
+    <ion-title>New Chat</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <span *ngIf="!hasLoad">
+    <ion-card style="box-shadow: none !important;">
+      <ion-card-header>
+        Loading...
+      </ion-card-header>
+    </ion-card>
+  </span>
+  <span *ngIf="hasLoad">
+    <span *ngFor="let user of users">
+      <span *ngIf="user.userId != currentUser.userId">
+        <ion-item tappable (click)="viewChat(user)">
+          <ion-label><br/>{{user.firstName}} {{user.lastName}}<br/></ion-label>
+        </ion-item>
+      </span>
+    </span>
+  </span>
+</ion-content>

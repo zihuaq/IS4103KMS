@@ -1,0 +1,25 @@
+.innermsg {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    font-weight: 500;
+    font-size: 16px;
+    border-radius: 15px;
+    margin-bottom: 5px;
+}
+
+.innermsg.left {
+    background-color: #F1F0F0;
+    color: black;
+}
+
+.innermsg.right {
+    background-color: #0084FF;
+    color: white;
+    right: 0px;
+    position: absolute;
+}
+
+.msgbubble {
+    margin-bottom: 10px;
+}

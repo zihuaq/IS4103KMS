@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Chat     
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="newChat()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <span *ngIf="!hasLoad">
+    <ion-card style="box-shadow: none !important;">
+      <ion-card-header>
+        Loading...
+      </ion-card-header>
+    </ion-card>    
+  </span>
+  <span *ngIf="hasLoad">
+<span *ngIf="!hasUsers">
+    <ion-card style="box-shadow: none !important; text-align: center;">
+      <ion-card-header>
+        No Chat
+      </ion-card-header>
+    </ion-card>
+  </span>
+  <span *ngIf="hasUsers">
+    <span *ngFor="let user of users.reverse()">
+      <ion-item tappable (click)="viewChat(user)">
+        <ion-label><br/>{{ getNameFromKey(user.key) }}<br/></ion-label>
+        <ion-badge color="primary" slot="end" *ngIf="user.data.count != 0">{{user.data.count}}</ion-badge>
+      </ion-item>
+    </span>
+  </span>
+  </span>
+  
+</ion-content>
