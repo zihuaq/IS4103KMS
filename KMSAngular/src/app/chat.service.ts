@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 import { User } from 'src/app/classes/user';
