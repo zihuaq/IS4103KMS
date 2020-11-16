@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -100,5 +101,11 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
         } else {
             throw new NoResultException("User or Material Resource Available not found");
         }
+    }
+    
+    @Override
+    public List<MaterialResourceAvailableEntity> getAllMaterialResourceAvailable(){
+        Query query = em.createQuery("SELECT mra FROM MaterialResourceAvailableEntity MRA");
+        return query.getResultList();
     }
 }
