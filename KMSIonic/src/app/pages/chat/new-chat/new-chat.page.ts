@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from "@angular/common";
-import { ModalController } from '@ionic/angular';
+import { ModalController, IonSearchbar } from '@ionic/angular';
 
 import { User } from '../../../classes/user';
+import { UserType } from "../../../enum/user-type.enum"
 import { UserService } from '../../../services/user.service';
 import { AuthenticationService } from '../../../services/authentication.service';
 
@@ -14,8 +15,10 @@ import { AuthenticationService } from '../../../services/authentication.service'
 })
 export class NewChatPage implements OnInit {
 
+  @ViewChild("searchBar") searchBar: IonSearchbar
   currentUser: User;
-  users: User[];
+  allUsers: User[];
+  filteredUsers: User[];
   hasLoad = false;
 
   constructor(public modalCtrl: ModalController,
@@ -23,7 +26,8 @@ export class NewChatPage implements OnInit {
     private authenticationService: AuthenticationService,
     private router: Router,
     private location: Location,) { 
-    this.users = [];
+    this.allUsers = [];
+    this.filteredUsers = [];
     this.currentUser = new User();
   }
 
@@ -36,7 +40,8 @@ export class NewChatPage implements OnInit {
 
     this.userService.getAllUsers().subscribe(
       response => {
-        this.users = response;
+        this.allUsers = response;
+        this.filteredUsers = this.allUsers;
         this.hasLoad = true;
       }
     )
@@ -51,6 +56,26 @@ export class NewChatPage implements OnInit {
 
   goBack() {
     this.location.back()
+  }
+
+  setFilteredItems(searchTerm) {
+    if (searchTerm && searchTerm != "") {
+      this.filteredUsers = this.allUsers.filter((user) => {
+        if (
+          user.userType == UserType.INDIVIDUAL ||
+          user.userType == UserType.ADMIN
+        ) {
+          return (
+            user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        } else if (user.userType == UserType.INSTITUTE) {
+          return user.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+        }
+      })
+    } else {
+      this.filteredUsers = this.allUsers
+    }
   }
 
 }

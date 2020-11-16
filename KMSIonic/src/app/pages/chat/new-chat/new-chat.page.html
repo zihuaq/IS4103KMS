@@ -5,6 +5,9 @@
     </ion-buttons>
     <ion-title>New Chat</ion-title>
   </ion-toolbar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm"
+    (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  </ion-searchbar>
 </ion-header>
 
 <ion-content>
@@ -16,7 +19,7 @@
     </ion-card>
   </span>
   <span *ngIf="hasLoad">
-    <span *ngFor="let user of users">
+    <span *ngFor="let user of filteredUsers">
       <span *ngIf="user.userId != currentUser.userId">
         <ion-item tappable (click)="viewChat(user)">
           <ion-label><br/>{{user.firstName}} {{user.lastName}}<br/></ion-label>
