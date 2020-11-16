@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
@@ -27,37 +28,43 @@ public class ProfileEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @NotNull
-    @Column(nullable=false)
+
     private String name;
-    
+
+    @Lob
     private String organization;
-    
+
+    @Lob
     private String productsOrServices;
-    
+
+    @Lob
     private String description;
-    
+
+    @Lob
+    private String industry;
+
     private String website;
-    
+
     @ManyToMany
     private List<TagEntity> sdgs;
-    
+
     @ManyToMany
     private List<TagEntity> sdgTargets;
-    
+
+    @Lob
     private String targetPopulation;
-    
+
     private String focusRegions;
-    
+
+    @Lob
     private String region;
-    
+
     private String country;
-    
+
     private String cityState;
-    
+
     private String yearOfEstablishment;
-    
+
     private String contactDetails;
 
     public ProfileEntity() {
@@ -65,12 +72,13 @@ public class ProfileEntity implements Serializable {
         this.sdgTargets = new ArrayList<>();
     }
 
-    public ProfileEntity(String name, String organization, String productsOrServices, String description, String website, List<TagEntity> sdgs, List<TagEntity> sdgTargets, String targetPopulation, String focusRegions, String region, String country, String cityState, String yearOfEstablishment, String contactDetails) {
+    public ProfileEntity(String name, String organization, String productsOrServices, String description, String industry, String website, List<TagEntity> sdgs, List<TagEntity> sdgTargets, String targetPopulation, String focusRegions, String region, String country, String cityState, String yearOfEstablishment, String contactDetails) {
         this();
         this.name = name;
         this.organization = organization;
         this.productsOrServices = productsOrServices;
         this.description = description;
+        this.industry = industry;
         this.website = website;
         this.sdgs = sdgs;
         this.sdgTargets = sdgTargets;
@@ -121,6 +129,14 @@ public class ProfileEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
     }
 
     public String getWebsite() {
@@ -227,5 +243,5 @@ public class ProfileEntity implements Serializable {
     public String toString() {
         return "entity.ProfileEntity[ id=" + id + " ]";
     }
-    
+
 }
