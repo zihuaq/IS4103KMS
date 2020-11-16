@@ -189,8 +189,8 @@ public class DataInitializationSessionBean {
             userSessionBean.addSkillsToProfile(1l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(1l), tagSessionBean.getTagById(7l))));
             userSessionBean.addSkillsToProfile(2l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(2l), tagSessionBean.getTagById(6l))));
             userSessionBean.addSkillsToProfile(3l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(3l), tagSessionBean.getTagById(5l))));
-            userSessionBean.addSkillsToProfile(4l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(4l), tagSessionBean.getTagById(4l))));
-            userSessionBean.addSkillsToProfile(5l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(5l), tagSessionBean.getTagById(3l))));
+            userSessionBean.addSkillsToProfile(4l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(4l), tagSessionBean.getTagById(3l))));
+            userSessionBean.addSkillsToProfile(5l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(5l), tagSessionBean.getTagById(4l))));
             userSessionBean.addSkillsToProfile(6l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(6l), tagSessionBean.getTagById(2l))));
             userSessionBean.addSkillsToProfile(7l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(7l), tagSessionBean.getTagById(1l))));
             userSessionBean.addSkillsToProfile(8l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(8l), tagSessionBean.getTagById(2l))));

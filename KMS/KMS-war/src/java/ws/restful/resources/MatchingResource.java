@@ -83,6 +83,8 @@ public class MatchingResource {
         for (int i = 0; i < mras.size(); i++) {
             UserEntity user = new UserEntity();
             user.setUserId(mras.get(i).getMaterialResourceAvailableOwner().getUserId());
+            user.setFirstName(mras.get(i).getMaterialResourceAvailableOwner().getFirstName());
+            user.setLastName(mras.get(i).getMaterialResourceAvailableOwner().getLastName());
             mras.get(i).setMaterialResourceAvailableOwner(user);
         }
         return mras;

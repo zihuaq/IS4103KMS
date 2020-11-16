@@ -86,7 +86,9 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
             if (hasMatchingTags(mrp.getTags(), allMras.get(i).getTags())) {
                 String mraString = removeStopWords(allMras.get(i).getName()) + removeStopWords(allMras.get(i).getDescription());
                 double fuzzyScore = new FuzzyScore(Locale.getDefault()).fuzzyScore(mraString, mrpString);
-                mras.put(allMras.get(i), fuzzyScore);
+                if (fuzzyScore > 3) {
+                    mras.put(allMras.get(i), fuzzyScore);
+                }
             }
         }
         System.out.println(mras);
