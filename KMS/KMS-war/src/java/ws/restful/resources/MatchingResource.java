@@ -9,6 +9,7 @@ import Exception.NoResultException;
 import ejb.session.stateless.MatchingSessionBeanLocal;
 import entity.MaterialResourceAvailableEntity;
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,6 +63,22 @@ public class MatchingResource {
         }
     }
 
+    @GET
+    @Path("/getMatchesForHrp/{hrpId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMatchesForHrp(@PathParam("hrpId") Long hrpId) {
+        try {
+            List<UserEntity> users = matchingSessionBean.getMatchesForHrp(hrpId);
+            users = getUserResponse(users);
+            return Response.status(200).entity(users).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
     private List<MaterialResourceAvailableEntity> getMraResponse(List<MaterialResourceAvailableEntity> mras) {
         for (int i = 0; i < mras.size(); i++) {
             UserEntity user = new UserEntity();
@@ -69,6 +86,27 @@ public class MatchingResource {
             mras.get(i).setMaterialResourceAvailableOwner(user);
         }
         return mras;
+    }
+
+    private List<UserEntity> getUserResponse(List<UserEntity> users) {
+        List<UserEntity> usersResponse = new ArrayList<>();
+        for (UserEntity user : users) {
+            UserEntity temp = new UserEntity();
+            temp.setUserId(user.getUserId());
+            temp.setFirstName(user.getFirstName());
+            temp.setLastName(user.getLastName());
+            temp.setEmail(user.getEmail());
+            temp.setDob(user.getDob());
+            temp.setGender(user.getGender());
+            temp.setJoinedDate(user.getJoinedDate());
+            temp.setProfilePicture(user.getProfilePicture());
+            temp.setSkills(user.getSkills());
+            temp.setSdgs(user.getSdgs());
+            temp.setUserType(user.getUserType());
+            temp.setReputationPoints(user.getReputationPoints());
+            usersResponse.add(temp);
+        }
+        return usersResponse;
     }
 
     private MatchingSessionBeanLocal lookupMatchingSessionBeanLocal() {

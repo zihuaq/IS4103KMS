@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.MaterialResourceAvailableEntity;
+import entity.UserEntity;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -19,4 +20,5 @@ public interface MatchingSessionBeanLocal {
     
     public List<MaterialResourceAvailableEntity> getMatchesForMrp(long mrpId) throws NoResultException;
     
+    public List<UserEntity> getMatchesForHrp(long hrpId) throws NoResultException;
 }

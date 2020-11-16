@@ -6,9 +6,11 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
+import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.TagEntity;
+import entity.UserEntity;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -42,6 +44,9 @@ import org.apache.commons.text.similarity.FuzzyScore;
 @Stateless
 public class MatchingSessionBean implements MatchingSessionBeanLocal {
 
+    @EJB
+    private UserSessionBeanLocal userSessionBean;
+
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
 
@@ -51,7 +56,10 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
     @EJB
     private MaterialResourceAvailableSessionBeanLocal materialResourceAvailableSessionBean;
 
-    private List<String> stopwords = new ArrayList<String>();
+    @EJB
+    private HumanResourcePostingSessionBeanLocal humanResourcePostingSessionBean;
+
+    private List<String> stopwords = new ArrayList<>();
     private String filePath = "stopwords.txt";
 
     @PostConstruct
@@ -89,6 +97,27 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         return matches;
     }
 
+    @Override
+    public List<UserEntity> getMatchesForHrp(long hrpId) throws NoResultException {
+        HumanResourcePostingEntity hrp = humanResourcePostingSessionBean.getHrpById(hrpId);
+        System.out.println("HRP Tags:" + hrp.getTags());
+        List<UserEntity> allUsers = userSessionBean.getAllUsers();
+        Map<UserEntity, Integer> hrpMatches = new HashMap<>();
+
+        for (int i = 0; i < allUsers.size(); i++) {
+            int numMatches = getNumTagMatches(hrp.getTags(), allUsers.get(i).getSkills());
+            if (numMatches > 0) {
+                hrpMatches.put(allUsers.get(i), numMatches);
+            }
+        }
+        System.out.println(hrpMatches);
+        LinkedHashMap<UserEntity, Integer> sortedHrpMatches = new LinkedHashMap<>();
+        hrpMatches.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> sortedHrpMatches.put(x.getKey(), x.getValue()));
+        System.out.println(sortedHrpMatches);
+        List<UserEntity> matches = new ArrayList<>(sortedHrpMatches.keySet());
+        return matches;
+    }
+
     private String removeStopWords(String original) {
         ArrayList<String> allWords;
 
@@ -109,5 +138,16 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
             }
         }
         return false;
+    }
+
+    private int getNumTagMatches(List<TagEntity> tagsToMatch, List<TagEntity> tagsToCheck) {
+        int result = 0;
+
+        for (int i = 0; i < tagsToMatch.size(); i++) {
+            if (tagsToCheck.contains(tagsToMatch.get(i))) {
+                result += 1;
+            }
+        }
+        return result;
     }
 }

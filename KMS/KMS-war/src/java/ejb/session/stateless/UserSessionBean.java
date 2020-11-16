@@ -583,11 +583,13 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
     @Override
     public List<UserEntity> getAllUsers() throws NoResultException {
-        Query q = em.createQuery("SELECT u FROM UserEntity u");
+        Query q = em.createQuery("SELECT u FROM UserEntity U");
         List<UserEntity> users = q.getResultList();
         for (UserEntity userEntity : users) {
             userEntity.getFollowers().size();
             userEntity.getFollowing().size();
+            userEntity.getSkills().size();
+            userEntity.getSdgs().size();
         }
         return users;
     }
