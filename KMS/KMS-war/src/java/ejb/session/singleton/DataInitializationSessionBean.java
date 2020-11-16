@@ -186,18 +186,18 @@ public class DataInitializationSessionBean {
             userSessionBean.addSDGsToProfile(11l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(34l), tagSessionBean.getTagById(39l))));
             userSessionBean.addSDGsToProfile(12l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(35l), tagSessionBean.getTagById(40l))));
 
-            userSessionBean.addSkillsToProfile(1l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(1l), tagSessionBean.getTagById(12l))));
-            userSessionBean.addSkillsToProfile(2l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(2l), tagSessionBean.getTagById(13l))));
-            userSessionBean.addSkillsToProfile(3l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(3l), tagSessionBean.getTagById(14l))));
-            userSessionBean.addSkillsToProfile(4l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(4l), tagSessionBean.getTagById(15l))));
-            userSessionBean.addSkillsToProfile(5l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(5l), tagSessionBean.getTagById(16l))));
-            userSessionBean.addSkillsToProfile(6l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(6l), tagSessionBean.getTagById(17l))));
-            userSessionBean.addSkillsToProfile(7l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(7l), tagSessionBean.getTagById(18l))));
-            userSessionBean.addSkillsToProfile(8l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(8l), tagSessionBean.getTagById(19l))));
-            userSessionBean.addSkillsToProfile(9l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(9l), tagSessionBean.getTagById(20l))));
-            userSessionBean.addSkillsToProfile(10l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(10l), tagSessionBean.getTagById(21l))));
-            userSessionBean.addSkillsToProfile(11l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(11l), tagSessionBean.getTagById(22l))));
-            userSessionBean.addSkillsToProfile(12l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(12l), tagSessionBean.getTagById(23l))));
+            userSessionBean.addSkillsToProfile(1l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(1l), tagSessionBean.getTagById(7l))));
+            userSessionBean.addSkillsToProfile(2l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(2l), tagSessionBean.getTagById(6l))));
+            userSessionBean.addSkillsToProfile(3l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(3l), tagSessionBean.getTagById(5l))));
+            userSessionBean.addSkillsToProfile(4l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(4l), tagSessionBean.getTagById(4l))));
+            userSessionBean.addSkillsToProfile(5l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(5l), tagSessionBean.getTagById(3l))));
+            userSessionBean.addSkillsToProfile(6l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(6l), tagSessionBean.getTagById(2l))));
+            userSessionBean.addSkillsToProfile(7l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(7l), tagSessionBean.getTagById(1l))));
+            userSessionBean.addSkillsToProfile(8l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(8l), tagSessionBean.getTagById(2l))));
+            userSessionBean.addSkillsToProfile(9l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(9l), tagSessionBean.getTagById(3l))));
+            userSessionBean.addSkillsToProfile(10l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(10l), tagSessionBean.getTagById(4l))));
+            userSessionBean.addSkillsToProfile(11l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(9l), tagSessionBean.getTagById(5l))));
+            userSessionBean.addSkillsToProfile(12l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(8l), tagSessionBean.getTagById(6l))));
 
         } catch (DuplicateTagInProfileException ex) {
             System.out.println(ex.getMessage());
