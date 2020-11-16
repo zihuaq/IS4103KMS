@@ -77,6 +77,7 @@ export class CreateNewProjectComponent implements OnInit {
       this.selectedProfilePictureName = event.target.files[0].name;
       console.log(event.target.files[0].name);
       reader.readAsDataURL(event.target.files[0]);
+      event.target.value = null;
     } else {
       this.selectedProfilePicture = undefined;
     }

@@ -15,7 +15,7 @@
                     <h1 class="m-0 text-dark">New Project</h1>
                     <form (ngSubmit)="create(createProjectForm)" #createProjectForm="ngForm">
                         <div class="form-group">
-                            <label for="name">Project Name *:</label>
+                            <label for="name">Project Name *</label>
                             <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="newProject.name" required="true">
                             <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project name cannot be empty!</span>
                         </div>
@@ -24,7 +24,7 @@
                             <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="newProject.description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="country">Country *:</label>
+                            <label for="country">Country *</label>
                             <input id="country" name="country" required list ="country-list" class="form-control" #country="ngModel" name="country" [(ngModel)]="newProject.country" required="true">
                             <datalist id="country-list"> 
                                 <option value="" disabled selected hidden>Select a Country</option>
@@ -275,11 +275,11 @@
                             </datalist>
                         </div>
                         <div class="form-group">
-                            <label for="amount">Monetary Funding Required(USD) *:</label>
+                            <label for="amount">Monetary Funding Required (USD) *</label>
                             <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" value="0" min="0">
                         </div>
                         <div class="form-group">
-                            <label>SDG Tags:</label>
+                            <label>SDG Tags *</label>
                             <div class="select2-blue">
                                 <select class="select2" id="sdgselect2" multiple="multiple"
                                     data-placeholder="Select relevant SDG tags" data-dropdown-css-class="select2-blue"
@@ -288,7 +288,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="profilePictureFile">Profile Picture:</label>
+                            <label for="profilePictureFile">Profile Picture</label>
+                            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Project Profile Picture">
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="selectedProfilePicture" accept="image/*" (change)="getFiles($event)">
