@@ -33,6 +33,7 @@ import { GroupDetailsComponent } from './group/viewGroup/group-details/group-det
 import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.component';
 
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
+import { ChatComponent } from './chat/chat.component';
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -152,7 +153,7 @@ const routes: Routes = [
 
   { path: '', canActivate: [RouteGuard], component: IndexComponent },
   {
-    path: 'projectDetails/:projectId',
+    path: 'projectDetails/:projectId/:tabName',
     canActivate: [RouteGuard],
     component: ProjectDetailsComponent,
   },
@@ -170,6 +171,10 @@ const routes: Routes = [
     path: 'donateToProject/:projectId',
     canActivate: [RouteGuard],
     component: DonateToProjectComponent
+  },
+  {
+    path: 'chat',
+    component: ChatComponent
   }
 
 ];

@@ -13,6 +13,10 @@ import { Fulfillment } from '../../../classes/fulfillment';
 import { FulfillmentStatus } from 'src/app/classes/fulfillment-status.enum';
 import { filter } from 'rxjs/operators';
 import { MaterialResourceAvailable } from 'src/app/classes/material-resource-available';
+import { User } from 'src/app/classes/user';
+import { SessionService } from 'src/app/session.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/notification.service';
 
 declare var $: any;
 
@@ -74,6 +78,8 @@ export class EditMrpTabComponent implements OnInit {
     public tagService: TagService,
     public matchingService: MatchingService,
     private activatedRoute: ActivatedRoute,
+    private sessionService: SessionService,
+    private notificationService: NotificationService,
     private router: Router) {
     this.projectToEdit = new Project();
     this.newMrp = new MaterialResourcePosting();
@@ -205,6 +211,18 @@ export class EditMrpTabComponent implements OnInit {
             }
           )
           $('#modal-create-mrp').modal('hide');
+          
+          let currentUser = this.sessionService.getCurrentUser();
+          let newNotification = new Notification();
+          newNotification.msg = "A new Material Resource Posting has been added to " + this.projectToEdit.name;
+          newNotification.projectId = this.projectId;
+          newNotification.groupId = null;
+          newNotification.projectTab = "mrp-tab";
+          for (let member of this.projectToEdit.projectMembers) {
+            if (member.userId != currentUser.userId) {
+              this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+            }
+          }
 
           $(document).Toasts('create', {
             class: 'bg-success',

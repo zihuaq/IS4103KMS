@@ -1,0 +1,108 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="content-fluid">
+            <div>
+                <div class="row">
+                    <div class="col-4">
+                        <h4>Chat</h4>                        
+                        <div class="card card-tabs" style="height: 500px; overflow-y: auto;">
+                            <button class="btn btn-light" data-toggle="modal" data-target="#user-list-modal" data-backdrop="static"><i class="fas fa-plus"></i> New Chat</button>
+                            <div class="class-header p-0 pt-1 border-bottom-0">   
+                                <div *ngIf="!hasUsers" style="padding: 5px;">
+                                    No chat
+                                </div>                           
+                                <ul class="nav nav-tabs" role="tablist" orientation="vertical" *ngFor="let user of users.reverse()">
+                                    <a class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" [ngClass]="{'active': selectedUser == user.key}" (click)="loadMessage(user.key)">
+                                        {{ getNameFromKey(user.key) }}
+                                        <span class="badge badge-primary badge-pill" *ngIf="user.data.count != 0">{{user.data.count}}</span>                               
+                                    </a>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <h4>Messages</h4>
+                        <span *ngIf="!isNewChat">
+                            <div class="card tab-content" style="height: 500px; overflow-y: auto;">                            
+                                <div *ngIf="!hasMessage" style="padding: 5px;">
+                                    Select a chat to view messages
+                                </div>
+                                <div class="card-header" *ngIf="hasMessage">{{receiver.firstName}} {{receiver.lastName}}</div>
+                                <div class="card-body" *ngIf="hasMessage" style="position: relative; overflow-y: auto; display: flex; flex-direction: column-reverse;">                                
+                                    <span>                                    
+                                        <div class="list-group" *ngFor="let msg of messages">
+                                            <span *ngIf="sender.userId != msg.senderId && msg.msg != null">
+                                                <div class="speech-bubble-left" style="padding: 5px 5px 5px 5px;width: fit-content;">
+                                                    <h6 class="card-text" style="color: white;">{{ msg.msg }}</h6>
+                                                </div>
+                                                &nbsp;
+                                            </span>
+                                            <span *ngIf="sender.userId == msg.senderId && msg.msg != null">
+                                                <div class="ml-auto speech-bubble-right" style="padding: 5px 5px 5px 5px;width: fit-content;">
+                                                    <h6 class="card-text" style="color: white;">{{ msg.msg }}</h6>
+                                                </div>
+                                                &nbsp;
+                                            </span>
+                                        </div>
+                                    </span>                                
+                                </div>
+                                <div class="card-footer" *ngIf="hasMessage" >
+                                    <form (ngSubmit)="postMessage()">
+                                        <input id="msg" type="text" style="width: 93%; height: 30px" placeholder="Your message.." name="msg" #msg="ngModel" [(ngModel)]="chatMessage">
+                            
+                                        <button class="btn btn-primary float-right" type="submit" style="width: 5%; height: 30px"><i class="fas fa-greater-than"></i></button>
+                                    </form>                                
+                                </div>                                                    
+                            </div>
+                        </span>
+                        <span *ngIf="isNewChat">
+                            <div class="card tab-content" style="height: 500px; overflow-y: auto;">
+                                <div class="card-header">{{ newChatUser.firstName }} {{ newChatUser.lastName }}</div>
+                                <div class="card-body" style="position: relative; overflow-y: auto; display: flex; flex-direction: column-reverse;">                                
+                                    <!--message body-->
+                                </div>
+                                <div class="card-footer">
+                                    <form (ngSubmit)="sendMessageToNewChat()">
+                                        <input id="msg" type="text" style="width: 93%; height: 30px" placeholder="Your message.." name="msg" #msg="ngModel" [(ngModel)]="chatMessage">
+                            
+                                        <button class="btn btn-primary float-right" type="submit" style="width: 5%; height: 30px"><i class="fas fa-greater-than"></i></button>
+                                    </form>                                
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="user-list-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Select a user</h4>
+                <button type="button" id="userListModalCloseBtn" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group" style="margin: 15px 20px; width: auto">
+                    <input class="form-control" placeholder="Search users" [(ngModel)]="searchModel" (ngModelChange)="updateSearchModel($event)">
+                </div>
+                <span *ngFor="let user of allUsers | userFilter: searchModel">
+                    <span *ngIf="!hasChatHistory(user)">
+                        <ul class="nav nav-tabs" role="tablist" orientation="vertical">
+                            <a class="list-group-item list-group-item-action" (click)="newChat(user)">
+                                {{ user.firstName }} {{ user.lastName }}                                   
+                            </a>
+                        </ul>
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

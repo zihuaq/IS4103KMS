@@ -80,8 +80,10 @@ public class TaskSessionBean implements TaskSessionBeanLocal {
     public void deleteTask(Long taskId) throws NoResultException {
         TaskEntity taskToDelete = this.getTaskById(taskId);
         
-        taskToDelete.getProject().getTasks().remove(taskToDelete);
-        taskToDelete.setProject(null);
+        if (taskToDelete.getProject() != null) {
+            taskToDelete.getProject().getTasks().remove(taskToDelete);
+            taskToDelete.setProject(null);
+        }
         
         taskToDelete.setParentTask(null);
         

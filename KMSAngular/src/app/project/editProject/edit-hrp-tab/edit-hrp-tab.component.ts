@@ -6,9 +6,14 @@ import { DatePipe } from '@angular/common';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/project.service';
 import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
+import { HrpService } from 'src/app/hrp.service';
 import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/tag.service';
-import { HrpService } from 'src/app/hrp.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/notification.service';
+import { User } from 'src/app/classes/user';
+import { SessionService } from 'src/app/session.service';
+
 
 declare var $: any;
 
@@ -39,12 +44,15 @@ export class EditHrpTabComponent implements OnInit {
     scrollwheel: true,
     disableDoubleClickZoom: true,
   };
+  currentUser: User;
 
   constructor(private projectService: ProjectService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private tagService: TagService,
     private hrpService: HrpService,
+    private notificationService: NotificationService,
+    private sessionService: SessionService,
     private datePipe: DatePipe) { 
       this.projectToEdit = new Project();
       this.newHrp = new HumanResourcePosting();
@@ -53,6 +61,8 @@ export class EditHrpTabComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    this.currentUser = this.sessionService.getCurrentUser();
+
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
 
     this.projectService.getProjectById(this.projectId).subscribe(
@@ -85,7 +95,7 @@ export class EditHrpTabComponent implements OnInit {
     this.hrpService.getHrpByProject(this.projectId).subscribe(
       response => {
         this.hrpList = response;
-        this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
+        this.hrpList.sort((a, b) => (a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0));
       }
     );
   }
@@ -164,10 +174,20 @@ export class EditHrpTabComponent implements OnInit {
             delay: 2500,
             body: 'Human Resource Posting created successfully',
           });
+          let newNotification = new Notification();
+          newNotification.msg = "A new Human Resource Posting has been added to " + this.projectToEdit.name;
+          newNotification.projectId = this.projectId;
+          newNotification.groupId = null;
+          newNotification.projectTab = "hrp-tab";
+          for (let member of this.projectToEdit.projectMembers) {
+            if (member.userId != this.currentUser.userId) {
+              this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+            }
+          }
           this.hrpService.getHrpByProject(this.projectId).subscribe(
             response => {
               this.hrpList = response;
-              this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
+              this.hrpList.sort((a, b) => (a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0));
             }
           );
         },
@@ -275,7 +295,7 @@ export class EditHrpTabComponent implements OnInit {
           this.hrpService.getHrpByProject(this.projectId).subscribe(
             response => {
               this.hrpList = response;
-              this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
+              this.hrpList.sort((a, b) => (a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0));
             }
           );
         }
@@ -297,7 +317,7 @@ export class EditHrpTabComponent implements OnInit {
         this.hrpService.getHrpByProject(this.projectId).subscribe(
           response => {
             this.hrpList = response;
-            this.hrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
+            this.hrpList.sort((a, b) => (a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0));
           }
         );
         $("#edit-modal").modal("hide");

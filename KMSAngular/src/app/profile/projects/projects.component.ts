@@ -37,7 +37,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   onSelect(project: Project): void {
-    this.router.navigate(['/projectDetails/' + project.projectId]);
+    this.router.navigate(['/projectDetails/' + project.projectId + "/basic-details"]);
   }
 
   get projectType(): typeof ProjectType {

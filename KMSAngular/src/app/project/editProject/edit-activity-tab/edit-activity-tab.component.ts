@@ -16,6 +16,8 @@ import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
 import { HrpService } from 'src/app/hrp.service';
 import { MaterialResourcePosting } from '../../../classes/material-resource-posting';
 import { MaterialResourcePostingService } from '../../../material-resource-posting.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/notification.service';
 
 declare var $: any;
 
@@ -94,6 +96,7 @@ export class EditActivityTabComponent implements OnInit {
     private activityService: ActivityService,
     private projectService: ProjectService,
     private mrpService: MaterialResourcePostingService,
+    private notificationService: NotificationService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private datePipe: DatePipe) { 
@@ -214,6 +217,16 @@ export class EditActivityTabComponent implements OnInit {
       this.newActivity.endDate = new Date(this.newActivity.endDate);
       this.activityService.createNewActivity(this.newActivity, this.projectId).subscribe(
         response => {
+          let newNotification = new Notification();
+          newNotification.msg = "A new activity has been added to " + this.project.name;
+          newNotification.projectId = this.projectId;
+          newNotification.groupId = null;
+          newNotification.projectTab = "activity-tab";
+          for (let member of this.project.projectMembers) {
+            if (member.userId != this.loggedInUser.userId) {
+              this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+            }
+          }
           $(document).Toasts('create', {
             class: 'bg-success',
             title: 'Success',

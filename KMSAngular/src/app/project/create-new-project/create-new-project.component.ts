@@ -119,7 +119,7 @@ export class CreateNewProjectComponent implements OnInit {
             delay: 2500,
             body: 'Project created successfully',
           })
-          this.router.navigate(["/projectDetails/" + response.projectId]);
+          this.router.navigate(["/projectDetails/" + response.projectId + "/basic-details"]);
           this.projectCreated = true;
           this.projectCreationError = false;
         },
