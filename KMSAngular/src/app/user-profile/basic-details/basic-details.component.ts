@@ -29,7 +29,7 @@ export class BasicDetailsComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     const parsedUrl = new URL(window.location.href);
     this.profileUrl =
-      parsedUrl.origin + '/profile/shared/' + this.profile.userId;
+      parsedUrl.origin + '/userProfile/shared/' + this.profile.userId;
     this.userSdgs = this.profile.sdgs;
   }
 

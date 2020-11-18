@@ -138,8 +138,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
     @Override
     public UserEntity getUserById(long userId) throws NoResultException {
-        System.out.println(em);
-        System.out.println("UserId: " + userId);
         UserEntity user = em.find(UserEntity.class, userId);
         if (user != null) {
             user.getFollowers().size();
