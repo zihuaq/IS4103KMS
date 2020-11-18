@@ -8,14 +8,13 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -46,9 +45,11 @@ public class ProfileEntity implements Serializable {
     private String website;
 
     @ManyToMany
+    @JoinTable(name = "profile_sdg")
     private List<TagEntity> sdgs;
 
     @ManyToMany
+    @JoinTable(name = "profile_sdgtargets")
     private List<TagEntity> sdgTargets;
 
     @Lob
@@ -72,7 +73,7 @@ public class ProfileEntity implements Serializable {
         this.sdgTargets = new ArrayList<>();
     }
 
-    public ProfileEntity(String name, String organization, String productsOrServices, String description, String industry, String website, List<TagEntity> sdgs, List<TagEntity> sdgTargets, String targetPopulation, String focusRegions, String region, String country, String cityState, String yearOfEstablishment, String contactDetails) {
+    public ProfileEntity(String name, String organization, String productsOrServices, String description, String industry, String website, String targetPopulation, String focusRegions, String region, String country, String cityState, String yearOfEstablishment, String contactDetails) {
         this();
         this.name = name;
         this.organization = organization;
@@ -80,8 +81,6 @@ public class ProfileEntity implements Serializable {
         this.description = description;
         this.industry = industry;
         this.website = website;
-        this.sdgs = sdgs;
-        this.sdgTargets = sdgTargets;
         this.targetPopulation = targetPopulation;
         this.focusRegions = focusRegions;
         this.region = region;

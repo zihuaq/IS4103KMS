@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import Exception.NoResultException;
 import entity.ProfileEntity;
 import entity.TagEntity;
 import java.io.File;
@@ -15,9 +16,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -29,6 +34,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 @Stateless
 public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
+
+    @EJB(name = "TagSessionBeanLocal")
+    private TagSessionBeanLocal tagSessionBean;
 
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
@@ -76,8 +84,8 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
         String description;
         String industry = "";
         String website;
-        List<TagEntity> sdgs = new ArrayList<>();
-        List<TagEntity> sdgTargets = new ArrayList<>();
+        List<TagEntity> sdgs;
+        List<TagEntity> sdgTargets;
         String targetPopulation;
         String focusRegions;
         String region;
@@ -146,24 +154,30 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
             switch (row.getCell(sdgsColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
                     goals = row.getCell(sdgsColumn).getStringCellValue();
+                    sdgs = getSdgs(goals);
                     break;
                 case NUMERIC:
                     goals = new BigDecimal(String.valueOf(row.getCell(sdgsColumn).getNumericCellValue())).toBigInteger().toString();
+                    sdgs = getSdgs(goals);
                     break;
                 default:
                     goals = "";
+                    sdgs = getSdgs(goals);
             }
             //TODO
             String targets;
             switch (row.getCell(sdgTargetsColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
                     targets = row.getCell(sdgTargetsColumn).getStringCellValue();
+                    sdgTargets = getTargets(targets);
                     break;
                 case NUMERIC:
                     targets = new BigDecimal(String.valueOf(row.getCell(sdgTargetsColumn).getNumericCellValue())).toBigInteger().toString();
+                    sdgTargets = getTargets(targets);
                     break;
                 default:
                     targets = "";
+                    sdgTargets = getTargets(targets);
             }
             switch (row.getCell(targetPopulationColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
@@ -235,9 +249,11 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
                 default:
                     contactDetails = "";
             }
-            ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, sdgs, sdgTargets, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
+            ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
             em.persist(profileEntity);
             em.flush();
+            profileEntity.getSdgs().addAll(sdgs);
+            profileEntity.getSdgTargets().addAll(sdgTargets);
         }
     }
 
@@ -296,9 +312,11 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
             newRow = !"".equals(rowNumber);
             if (newRow) {
                 if (!"".equals(name) || !"".equals(organization)) {
-                    ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, sdgs, sdgTargets, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
+                    ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
                     em.persist(profileEntity);
                     em.flush();
+                    profileEntity.getSdgs().addAll(sdgs);
+                    profileEntity.getSdgTargets().addAll(sdgTargets);
                 }
                 name = "";
                 organization = "";
@@ -399,23 +417,29 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
             switch (row.getCell(sdgsColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
                     goals = row.getCell(sdgsColumn).getStringCellValue();
+                    sdgs = getSdgs(goals);
                     break;
                 case NUMERIC:
                     goals = new BigDecimal(String.valueOf(row.getCell(sdgsColumn).getNumericCellValue())).toBigInteger().toString();
+                    sdgs = getSdgs(goals);
                     break;
                 default:
                     goals = "";
+                    sdgs = getSdgs(goals);
             }
             //TODO
             switch (row.getCell(sdgTargetsColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
                     targets = row.getCell(sdgTargetsColumn).getStringCellValue();
+                    sdgTargets = getTargets(targets);
                     break;
                 case NUMERIC:
                     targets = new BigDecimal(String.valueOf(row.getCell(sdgTargetsColumn).getNumericCellValue())).toBigInteger().toString();
+                    sdgTargets = getTargets(targets);
                     break;
                 default:
                     targets = "";
+                    sdgTargets = getTargets(targets);
             }
             switch (row.getCell(targetPopulationColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
@@ -480,12 +504,14 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
         }
 
         if (!"".equals(name) || !"".equals(organization)) {
-            ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, sdgs, sdgTargets, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
+            ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
             em.persist(profileEntity);
             em.flush();
+            profileEntity.getSdgs().addAll(sdgs);
+            profileEntity.getSdgTargets().addAll(sdgTargets);
         }
     }
-    
+
     private void processAcumenSheet(Sheet acumenSheet) {
         Iterator<Row> rowIterator = acumenSheet.iterator();
         Row header = rowIterator.next();
@@ -510,8 +536,8 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
         String description;
         String industry = "";
         String website;
-        List<TagEntity> sdgs = new ArrayList<>();
-        List<TagEntity> sdgTargets = new ArrayList<>();
+        List<TagEntity> sdgs;
+        List<TagEntity> sdgTargets;
         String targetPopulation;
         String focusRegions;
         String region;
@@ -580,24 +606,30 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
             switch (row.getCell(sdgsColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
                     goals = row.getCell(sdgsColumn).getStringCellValue();
+                    sdgs = getSdgs(goals);
                     break;
                 case NUMERIC:
                     goals = new BigDecimal(String.valueOf(row.getCell(sdgsColumn).getNumericCellValue())).toBigInteger().toString();
+                    sdgs = getSdgs(goals);
                     break;
                 default:
                     goals = "";
+                    sdgs = getSdgs(goals);
             }
             //TODO
             String targets;
             switch (row.getCell(sdgTargetsColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
                     targets = row.getCell(sdgTargetsColumn).getStringCellValue();
+                    sdgTargets = getTargets(targets);
                     break;
                 case NUMERIC:
                     targets = new BigDecimal(String.valueOf(row.getCell(sdgTargetsColumn).getNumericCellValue())).toBigInteger().toString();
+                    sdgTargets = getTargets(targets);
                     break;
                 default:
                     targets = "";
+                    sdgTargets = getTargets(targets);
             }
             switch (row.getCell(targetPopulationColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
@@ -669,12 +701,14 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
                 default:
                     contactDetails = "";
             }
-            ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, sdgs, sdgTargets, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
+            ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
             em.persist(profileEntity);
             em.flush();
+            profileEntity.getSdgs().addAll(sdgs);
+            profileEntity.getSdgTargets().addAll(sdgTargets);
         }
     }
-    
+
     public void processSkollSheet(Sheet skollSheet) {
         Iterator<Row> rowIterator = skollSheet.iterator();
         Row header = rowIterator.next();
@@ -699,8 +733,8 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
         String description;
         String industry = "";
         String website;
-        List<TagEntity> sdgs = new ArrayList<>();
-        List<TagEntity> sdgTargets = new ArrayList<>();
+        List<TagEntity> sdgs;
+        List<TagEntity> sdgTargets;
         String targetPopulation;
         String focusRegions;
         String region;
@@ -769,24 +803,30 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
             switch (row.getCell(sdgsColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
                     goals = row.getCell(sdgsColumn).getStringCellValue();
+                    sdgs = getSdgs(goals);
                     break;
                 case NUMERIC:
                     goals = new BigDecimal(String.valueOf(row.getCell(sdgsColumn).getNumericCellValue())).toBigInteger().toString();
+                    sdgs = getSdgs(goals);
                     break;
                 default:
                     goals = "";
+                    sdgs = getSdgs(goals);
             }
             //TODO
             String targets;
             switch (row.getCell(sdgTargetsColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
                     targets = row.getCell(sdgTargetsColumn).getStringCellValue();
+                    sdgTargets = getTargets(targets);
                     break;
                 case NUMERIC:
                     targets = new BigDecimal(String.valueOf(row.getCell(sdgTargetsColumn).getNumericCellValue())).toBigInteger().toString();
+                    sdgTargets = getTargets(targets);
                     break;
                 default:
                     targets = "";
+                    sdgTargets = getTargets(targets);
             }
             switch (row.getCell(targetPopulationColumn, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).getCellType()) {
                 case STRING:
@@ -858,10 +898,26 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
                 default:
                     contactDetails = "";
             }
-            ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, sdgs, sdgTargets, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
+            ProfileEntity profileEntity = new ProfileEntity(name, organization, productsOrServices, description, industry, website, targetPopulation, focusRegions, region, country, cityState, yearOfEstablishment, contactDetails);
             em.persist(profileEntity);
             em.flush();
+            profileEntity.getSdgs().addAll(sdgs);
+            profileEntity.getSdgTargets().addAll(sdgTargets);
         }
+    }
+
+    @Override
+    public List<ProfileEntity> getAllProfiles() throws NoResultException {
+        Query q = em.createQuery("SELECT p FROM ProfileEntity P");
+        List<ProfileEntity> profiles = q.getResultList();
+        if (profiles == null || profiles.isEmpty()) {
+            throw new NoResultException("No profile found.");
+        }
+        for (ProfileEntity profileEntity : profiles) {
+            profileEntity.getSdgTargets().size();
+            profileEntity.getSdgs().size();
+        }
+        return profiles;
     }
 
     private int getColumn(Row row, String header) {
@@ -888,5 +944,38 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
             }
         }
         return -1;
+    }
+
+    private List<TagEntity> getSdgs(String text) {
+        List<TagEntity> allSdgs = tagSessionBean.getAllSDGTags();
+        List<TagEntity> sdgs = new ArrayList<>();
+        String sdg;
+        String[] tokenizeText = text.split(" ");
+        for (int i = 0; i < allSdgs.size(); i++) {
+            sdg = allSdgs.get(i).getName().split(" ")[1];
+            for (String token : tokenizeText) {
+                if (token.equals(sdg)) {
+                    sdgs.add(allSdgs.get(i));
+                }
+            }
+        }
+        return sdgs;
+    }
+
+    //TODO: after the target tags are created
+    private List<TagEntity> getTargets(String text) {
+        List<TagEntity> allTargets = tagSessionBean.getAllSDGTags(); //change to get target
+        List<TagEntity> targets = new ArrayList<>();
+        String target;
+        String[] tokenizeText = text.split(" ");
+        for (int i = 0; i < allTargets.size(); i++) {
+            target = allTargets.get(i).getName().split(" ")[1];
+            for (String token : tokenizeText) {
+                if (token.equals(target)) {
+                    targets.add(allTargets.get(i));
+                }
+            }
+        }
+        return targets;
     }
 }

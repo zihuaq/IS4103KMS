@@ -1,3 +1,4 @@
+import { SearchProfileComponent } from './search-profile/search-profile.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ProfileComponent } from './profile/profile.component';
@@ -10,7 +11,6 @@ import { CreateNewProjectComponent } from './project/create-new-project/create-n
 import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
 
 import { NotificationsComponent } from './notifications/notifications.component';
-// import { ViewAllUsersComponent } from './view-all-users/view-all-users.component';
 import { AccountVerificationComponent } from './account-verification/account-verification.component';
 import { RouteGuard } from './route-guard.service';
 import { AdminGuard } from './admin-guard.service';
@@ -175,8 +175,12 @@ const routes: Routes = [
   {
     path: 'chat',
     component: ChatComponent
-  }
-
+  },
+  {
+    path: 'searchProfiles',
+    canActivate: [RouteGuard],
+    component: SearchProfileComponent,
+  },
 ];
 
 @NgModule({

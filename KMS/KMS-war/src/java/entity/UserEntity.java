@@ -107,7 +107,7 @@ public class UserEntity implements Serializable {
     private List<BadgeEntity> badges;
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
     private List<MaterialResourceAvailableEntity> mras;
-    @JoinTable(name = "skills")
+    @JoinTable(name = "user_skills")
     @OneToMany
     private List<TagEntity> skills;
     @JoinTable(name = "following")
@@ -116,7 +116,7 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "followers")
     @OneToMany
     private List<UserEntity> followers;
-    @JoinTable(name = "sdgs")
+    @JoinTable(name = "user_sdgs")
     @OneToMany
     private List<TagEntity> sdgs;
     @OneToMany(mappedBy = "from")

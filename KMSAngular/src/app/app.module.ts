@@ -97,6 +97,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { ChatComponent } from './chat/chat.component';
 import { UserFilterPipe } from './chat/user-filter.pipe';
+import { SearchProfileComponent } from './search-profile/search-profile.component';
+import { UserComponent } from './user/user.component';
 
 export const environment = {
   production: false,
@@ -193,7 +195,9 @@ export const environment = {
     ViewDocumentsComponent,
     EditDocumentsComponent,
     ChatComponent,
-    UserFilterPipe
+    UserFilterPipe,
+    SearchProfileComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

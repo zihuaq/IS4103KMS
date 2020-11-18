@@ -5,7 +5,10 @@
  */
 package ejb.session.stateless;
 
+import Exception.NoResultException;
+import entity.ProfileEntity;
 import java.io.IOException;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,5 +19,7 @@ import javax.ejb.Local;
 public interface DataMappingSessionBeanLocal {
 
     public void createProfileFromFiles(String filePath) throws IOException;
+
+    public List<ProfileEntity> getAllProfiles() throws NoResultException;
     
 }
