@@ -7,10 +7,12 @@ package ws.restful.resources;
 
 import Exception.NoResultException;
 import ejb.session.stateless.MatchingSessionBeanLocal;
+import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -27,6 +29,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import ws.restful.model.FollowingOfFollowingRsp;
+import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
 
 /**
  * REST Web Service
@@ -69,8 +73,85 @@ public class MatchingResource {
     public Response getMatchesForHrp(@PathParam("hrpId") Long hrpId) {
         try {
             List<UserEntity> users = matchingSessionBean.getMatchesForHrp(hrpId);
-            users = getUserResponse(users);
+            users = getUsersResponse(users);
             return Response.status(200).entity(users).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/getFollowingofFollowing/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowingofFollowing(@PathParam("userId") Long userId) {
+        try {
+            List<FollowingOfFollowingRsp> result = matchingSessionBean.getFollowingofFollowing(userId);
+            for (int i = 0; i < result.size(); i++) {
+                List<UserEntity> users = getUsersResponse(result.get(i).getUsersFollowing());
+                result.get(i).setUsersFollowing(users);
+                result.get(i).setUserToRecommend(getUserResponse(result.get(i).getUserToRecommend()));
+            }
+            return Response.status(200).entity(result).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/getFollowersToFollow/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowersToFollow(@PathParam("userId") Long userId) {
+        try {
+            List<UserEntity> users = matchingSessionBean.getFollowersToFollow(userId);
+            users = getUsersResponse(users);
+            return Response.status(200).entity(users).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/getGroupRecommendationsBasedOnSDG/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupRecommendationsBasedOnSDG(@PathParam("userId") Long userId) {
+        try {
+            List<GroupEntity> groups = matchingSessionBean.getGroupRecommendationsBasedOnSDG(userId);
+            groups = getGroupResponse(groups);
+            return Response.status(200).entity(groups).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/getGroupRecommendationsBasedOnFollowing/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupRecommendationsBasedOnFollowing(@PathParam("userId") Long userId) {
+        try {
+            List<GroupRecommendationBasedOnFollowingRsp> result = matchingSessionBean.getGroupRecommendationsBasedOnFollowing(userId);
+            for (int i = 0; i < result.size(); i++) {
+                List<UserEntity> users = getUsersResponse(result.get(i).getFollowingInGroup());
+                result.get(i).setFollowingInGroup(users);
+                GroupEntity group = result.get(i).getGroupToRecommend();
+                group.getGroupAdmins().clear();
+                group.getGroupMembers().clear();
+                group.getPosts().clear();
+                group.setGroupOwner(null);
+                result.get(i).setGroupToRecommend(group);
+            }
+            return Response.status(200).entity(result).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -90,7 +171,7 @@ public class MatchingResource {
         return mras;
     }
 
-    private List<UserEntity> getUserResponse(List<UserEntity> users) {
+    private List<UserEntity> getUsersResponse(List<UserEntity> users) {
         List<UserEntity> usersResponse = new ArrayList<>();
         for (UserEntity user : users) {
             UserEntity temp = new UserEntity();
@@ -109,6 +190,33 @@ public class MatchingResource {
             usersResponse.add(temp);
         }
         return usersResponse;
+    }
+
+    private UserEntity getUserResponse(UserEntity user) {
+        UserEntity temp = new UserEntity();
+        temp.setUserId(user.getUserId());
+        temp.setFirstName(user.getFirstName());
+        temp.setLastName(user.getLastName());
+        temp.setEmail(user.getEmail());
+        temp.setDob(user.getDob());
+        temp.setGender(user.getGender());
+        temp.setJoinedDate(user.getJoinedDate());
+        temp.setProfilePicture(user.getProfilePicture());
+        temp.setSkills(user.getSkills());
+        temp.setSdgs(user.getSdgs());
+        temp.setUserType(user.getUserType());
+        temp.setReputationPoints(user.getReputationPoints());
+        return temp;
+    }
+
+    private List<GroupEntity> getGroupResponse(List<GroupEntity> groups) {
+        for (GroupEntity group : groups) {
+            group.getGroupAdmins().clear();
+            group.getGroupMembers().clear();
+            group.getPosts().clear();
+            group.setGroupOwner(null);
+        }
+        return groups;
     }
 
     private MatchingSessionBeanLocal lookupMatchingSessionBeanLocal() {
