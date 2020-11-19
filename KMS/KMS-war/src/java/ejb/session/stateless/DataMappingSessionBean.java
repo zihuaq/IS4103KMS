@@ -919,6 +919,18 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
         }
         return profiles;
     }
+    
+    @Override
+    public ProfileEntity getProfile(long id) throws NoResultException {
+        ProfileEntity profileEntity = em.find(ProfileEntity.class, id);
+        if(profileEntity != null) {
+            profileEntity.getSdgTargets().size();
+            profileEntity.getSdgs().size();
+            return profileEntity;
+        } else {
+            throw new NoResultException("Profile not found.");
+        }
+    }
 
     private int getColumn(Row row, String header) {
         Iterator<Cell> cellIterator = row.cellIterator();

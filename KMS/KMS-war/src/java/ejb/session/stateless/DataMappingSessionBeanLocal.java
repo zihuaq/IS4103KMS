@@ -21,5 +21,7 @@ public interface DataMappingSessionBeanLocal {
     public void createProfileFromFiles(String filePath) throws IOException;
 
     public List<ProfileEntity> getAllProfiles() throws NoResultException;
+
+    public ProfileEntity getProfile(long id) throws NoResultException;
     
 }

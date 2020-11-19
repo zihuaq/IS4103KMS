@@ -34,6 +34,7 @@ import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.comp
 
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 import { ChatComponent } from './chat/chat.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -42,11 +43,12 @@ const routes: Routes = [
   { path: 'signupSelection', component: CreateNewUserSelectorComponent },
   { path: 'login', component: UserLoginPageComponent },
   { path: 'error', component: ErrorPageComponent },
-  { path: 'review', component: ReviewsItemComponent},
+  { path: 'review', component: ReviewsItemComponent },
   {
     path: 'admin',
     canActivate: [AdminGuard],
-    component: AdministrationComponent},
+    component: AdministrationComponent,
+  },
   {
     path: 'notifications',
     canActivate: [RouteGuard],
@@ -74,18 +76,18 @@ const routes: Routes = [
   },
   { path: 'forgotPassword', component: ForgotPasswordComponent },
   {
-    path: 'profile/:userid',
+    path: 'userProfile/:userid',
     canActivate: [RouteGuard],
-    component: ProfileComponent,
+    component: UserProfileComponent,
   },
   {
-    path: 'profile/shared/:userid',
-    component: ProfileComponent,
+    path: 'userProfile/shared/:userid',
+    component: UserProfileComponent,
   },
   {
-    path: 'profile',
+    path: 'userProfile',
     canActivate: [RouteGuard],
-    component: ProfileComponent,
+    component: UserProfileComponent,
   },
   {
     path: 'accountVerification/:email/:uuid',
@@ -121,10 +123,7 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: SdgInfoComponent,
   },
-  { path: '',
-  canActivate: [RouteGuard],
-  component: IndexComponent
-  },
+  { path: '', canActivate: [RouteGuard], component: IndexComponent },
 
   //groups
   {
@@ -142,13 +141,15 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: CreateNewGroupComponent,
   },
-  { path: 'groupDetails/:groupId',
+  {
+    path: 'groupDetails/:groupId',
     canActivate: [RouteGuard],
-    component: GroupDetailsComponent
+    component: GroupDetailsComponent,
   },
-  { path: 'editGroup/:groupId',
+  {
+    path: 'editGroup/:groupId',
     canActivate: [RouteGuard],
-    component: EditGroupComponent
+    component: EditGroupComponent,
   },
 
   { path: '', canActivate: [RouteGuard], component: IndexComponent },
@@ -170,16 +171,21 @@ const routes: Routes = [
   {
     path: 'donateToProject/:projectId',
     canActivate: [RouteGuard],
-    component: DonateToProjectComponent
+    component: DonateToProjectComponent,
   },
   {
     path: 'chat',
-    component: ChatComponent
+    component: ChatComponent,
   },
   {
     path: 'searchProfiles',
     canActivate: [RouteGuard],
     component: SearchProfileComponent,
+  },
+  {
+    path: 'profile/:id',
+    canActivate: [RouteGuard],
+    component: ProfileComponent,
   },
 ];
 

@@ -5,6 +5,8 @@ import { Profile } from '../classes/profile';
 import { TagService } from '../tag.service';
 import { Tag } from '../classes/tag';
 
+declare var $: any;
+
 @Component({
   selector: 'app-search-profile',
   templateUrl: './search-profile.component.html',
@@ -14,8 +16,9 @@ export class SearchProfileComponent implements OnInit {
   filteredProfiles: Profile[];
   allProfiles: Profile[];
   sdgTags: Tag[];
-  selectedsdgTags: Tag[];
-  selectedsdgTargetsTags: Tag[];
+  sdgTargetsTags: Tag[];
+  selectedSdgTags: Tag[];
+  selectedSdgTargetsTags: Tag[];
   searchString: string = '';
   constructor(
     private tagService: TagService,
@@ -28,8 +31,54 @@ export class SearchProfileComponent implements OnInit {
       this.tagService.getAllSDGTags(),
     ]).subscribe((result) => {
       this.allProfiles = result[0];
+      this.filteredProfiles = this.allProfiles;
       this.sdgTags = result[1];
+      this.sdgTargetsTags = []; // TODO: change this after targets populated
+      this.initialiseSelect2();
     });
+  }
+
+  initialiseSelect2() {
+    $('#searchsdgselect2').select2({
+      data: this.sdgTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#searchsdgTargetselect2').select2({
+      data: this.sdgTargetsTags.map((item) => {
+        return item.name;
+      }),
+      allowClear: true,
+    });
+    $('#searchsdgselect2').on('change', () => {
+      this.sdgChanged();
+    });
+    $('#searchsdgTargetselect2').on('change', () => {
+      this.sdgTargetsChanged();
+    });
+  }
+
+  sdgChanged() {
+    let selectedTagNames = $('#searchsdgselect2').val();
+    this.selectedSdgTargetsTags = [];
+    this.sdgTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        this.selectedSdgTags.push(element);
+      }
+    });
+    this.updateFilteredProfilesAccordingToRefineOptions();
+  }
+
+  sdgTargetsChanged() {
+    let selectedTagNames = $('#searchsdgTargetselect2').val();
+    this.selectedSdgTargetsTags = [];
+    this.sdgTargetsTags.forEach((element) => {
+      if (selectedTagNames.includes(element.name)) {
+        this.selectedSdgTargetsTags.push(element);
+      }
+    });
+    this.updateFilteredProfilesAccordingToRefineOptions();
   }
 
   handleSearchStringChanged(event) {
@@ -40,20 +89,20 @@ export class SearchProfileComponent implements OnInit {
   updateFilteredProfilesAccordingToRefineOptions() {
     this.filteredProfiles = [];
     if (
-      this.selectedsdgTags.length > 0 ||
-      this.selectedsdgTargetsTags.length > 0
+      this.selectedSdgTags.length > 0 ||
+      this.selectedSdgTargetsTags.length > 0
     ) {
       this.allProfiles.forEach((profile) => {
         let numSDGMatch = 0;
         let numSDGTargetMatch = 0;
         profile.sdgs.forEach((sdg) => {
-          if (this.selectedsdgTags.some((tag) => tag.tagId == sdg.tagId)) {
+          if (this.selectedSdgTags.some((tag) => tag.tagId == sdg.tagId)) {
             numSDGMatch++;
           }
         });
         profile.sdgTargets.forEach((sdgTarget) => {
           if (
-            this.selectedsdgTargetsTags.some(
+            this.selectedSdgTargetsTags.some(
               (tag) => tag.tagId == sdgTarget.tagId
             )
           ) {
@@ -61,8 +110,8 @@ export class SearchProfileComponent implements OnInit {
           }
         });
         if (
-          numSDGTargetMatch == this.selectedsdgTargetsTags.length &&
-          numSDGMatch == this.selectedsdgTags.length &&
+          numSDGTargetMatch == this.selectedSdgTargetsTags.length &&
+          numSDGMatch == this.selectedSdgTags.length &&
           !this.filteredProfiles.some(
             (filteredProfile) => filteredProfile.id == profile.id
           )
@@ -84,7 +133,9 @@ export class SearchProfileComponent implements OnInit {
   profileMatchSearchString(profile: Profile) {
     if (
       !profile.name.toLowerCase().includes(this.searchString.toLowerCase()) &&
-      !profile.organization.toLowerCase().includes(this.searchString.toLowerCase())
+      !profile.organization
+        .toLowerCase()
+        .includes(this.searchString.toLowerCase())
     ) {
       return false;
     }

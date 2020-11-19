@@ -23,6 +23,12 @@ export class ProfileService {
     return this.http.get<any>(this.baseUrl).pipe(catchError(this.handleError));
   }
 
+  getProfile(id: String): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/' + id)
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
 
