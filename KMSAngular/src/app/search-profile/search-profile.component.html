@@ -30,25 +30,27 @@
         <div class="card-body pb-0">
           <div class="row d-flex align-items-stretch">
             <div *ngFor="let profile of filteredProfiles" class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
-              <div class="card bg-light">
+              <div class="card bg-light" style="width: 100%;">
+                <div class="card-header border-bottom-0" style="min-height: 56px;">
+                  <h2 class="lead">
+                    <b>{{profile.name}}</b>
+                  </h2>
+                </div>
                 <div class="card-body pt-0">
                   <div class="row">
                     <div class="col-12">
-                      <h2 class="lead">
-                        <b>{{profile.name}}</b></h2>
-                      <p class="text-muted text-sm">
-                        <b>{{profile.organization}}</b>
-                      </p>
-                      <p class="text-muted text-sm">
-                        <span *ngIf="profile.sdgs.length == 0">Profile has no SDG indicated</span>
-                        <span class="d-flex flex-wrap" *ngIf="profile.sdgs.length > 0">
-                          <p *ngFor="let sdg of profile.sdgs" class="SDGs">
-                            <small class="badge badge-dark">
-                              {{sdg.name}}
-                            </small>
-                          </p>
-                        </span>
-                      </p>
+                      <b>Organization: </b>
+                      <b class="text-muted text-sm">{{profile.organization}}</b>
+                      <br>
+                      <b>Interested SDGs: </b>
+                      <span *ngIf="profile.sdgs.length == 0">Profile has no SDG indicated</span>
+                      <span class="d-flex flex-wrap" *ngIf="profile.sdgs.length > 0">
+                        <p *ngFor="let sdg of profile.sdgs" class="SDGs">
+                          <small class="badge badge-dark">
+                            {{sdg.name}}
+                          </small>
+                        </p>
+                      </span>
                     </div>
                   </div>
                 </div>

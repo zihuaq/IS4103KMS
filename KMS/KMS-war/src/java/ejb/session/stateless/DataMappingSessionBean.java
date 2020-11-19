@@ -6,8 +6,10 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
+import entity.ClaimProfileRequestEntity;
 import entity.ProfileEntity;
 import entity.TagEntity;
+import entity.UserEntity;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,6 +36,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 @Stateless
 public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
+
+    @EJB
+    private UserSessionBeanLocal userSessionBean;
 
     @EJB(name = "TagSessionBeanLocal")
     private TagSessionBeanLocal tagSessionBean;
@@ -919,17 +924,43 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
         }
         return profiles;
     }
-    
+
     @Override
     public ProfileEntity getProfile(long id) throws NoResultException {
         ProfileEntity profileEntity = em.find(ProfileEntity.class, id);
-        if(profileEntity != null) {
+        if (profileEntity != null) {
             profileEntity.getSdgTargets().size();
             profileEntity.getSdgs().size();
             return profileEntity;
         } else {
             throw new NoResultException("Profile not found.");
         }
+    }
+
+    @Override
+    public void settleProfileClaim(long claimProfileRequestId) throws NoResultException {
+        ClaimProfileRequestEntity claimProfileRequestEntity = em.find(ClaimProfileRequestEntity.class, claimProfileRequestId);
+        if (claimProfileRequestEntity == null) {
+            throw new NoResultException("Claim profile request not found.");
+        } else {
+            ProfileEntity profileEntity = getProfile(claimProfileRequestEntity.getProfile().getId());
+            UserEntity userEntity = userSessionBean.getUserById(claimProfileRequestEntity.getUser().getUserId());
+            profileEntity.setUserEntity(userEntity);
+            userEntity.setProfile(profileEntity);
+            profileEntity.getClaimProfileRequestMade().remove(claimProfileRequestEntity);
+            userEntity.getClaimProfileRequestMade().remove(claimProfileRequestEntity);
+            claimProfileRequestEntity.setProfile(null);
+            claimProfileRequestEntity.setUser(null);
+            em.remove(claimProfileRequestEntity);
+        }
+    }
+
+    @Override
+    public void makeProfileClaim(long userId, long profileId) throws NoResultException {
+        ProfileEntity profile = getProfile(profileId);
+        UserEntity user = userSessionBean.getUserById(userId);
+        ClaimProfileRequestEntity claimProfileRequestEntity = new ClaimProfileRequestEntity(profile, user);
+        em.persist(claimProfileRequestEntity);
     }
 
     private int getColumn(Row row, String header) {

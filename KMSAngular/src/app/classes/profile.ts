@@ -1,4 +1,6 @@
+import { ClaimProfileRequest } from './claim-profile-request';
 import { Tag } from './tag';
+import { User } from './user';
 
 export class Profile {
   id: number;
@@ -17,6 +19,8 @@ export class Profile {
   cityState: String;
   yearOfEstablishment: String;
   contactDetails: String;
+  userEntity: User;
+  claimProfileRequestMade: ClaimProfileRequest[];
 
   constructor(
     id?: number,
@@ -34,7 +38,9 @@ export class Profile {
     country?: String,
     cityState?: String,
     yearOfEstablishment?: String,
-    contactDetails?: String
+    contactDetails?: String,
+    userEntity?: User,
+    claimProfileRequestMade?: ClaimProfileRequest[]
   ) {
     this.id = id;
     this.name = name;
@@ -52,5 +58,7 @@ export class Profile {
     this.cityState = cityState;
     this.yearOfEstablishment = yearOfEstablishment;
     this.contactDetails = contactDetails;
+    this.userEntity = userEntity;
+    this.claimProfileRequestMade = claimProfileRequestMade;
   }
 }
