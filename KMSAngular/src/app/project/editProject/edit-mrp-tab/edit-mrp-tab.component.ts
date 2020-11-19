@@ -445,7 +445,6 @@ export class EditMrpTabComponent implements OnInit {
     )
   }
 
-
   clickRecommendation(mrp: MaterialResourcePosting) {
     this.mrpToRecommend = mrp;
     this.refreshRecommendations(this.mrpToRecommend.materialResourcePostingId);

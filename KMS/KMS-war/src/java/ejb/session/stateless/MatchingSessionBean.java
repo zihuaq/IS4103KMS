@@ -120,6 +120,43 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         return matches;
     }
 
+    @Override
+    public Map<UserEntity, List<UserEntity>> getFollowingofFollowing(long userId) throws NoResultException {
+        UserEntity user = userSessionBean.getUserById(userId);
+        List<UserEntity> following = user.getFollowing();
+        Map<UserEntity, List<UserEntity>> result = new HashMap<>();
+        for(int i=0; i< following.size(); i++){
+            List<UserEntity> followingFollowing = following.get(i).getFollowing();
+            for(int j=0; j< followingFollowing.size(); j++) {
+                if(result.containsKey(followingFollowing.get(j))){
+                    List<UserEntity> value = result.get(followingFollowing.get(j));
+                    value.add(following.get(i));
+                    result.replace(followingFollowing.get(j), value);
+                } else {
+                    List<UserEntity> value = new ArrayList<UserEntity>();
+                    value.add(following.get(i));
+                    result.put(followingFollowing.get(j), value);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<UserEntity> getFollowersToFollow(long userId) throws NoResultException {
+        UserEntity user = userSessionBean.getUserById(userId);
+        List<UserEntity> followers = user.getFollowers();
+        List<UserEntity> followersToFollow = new ArrayList<>();
+
+        for (int i = 0; i < followers.size(); i++) {
+            UserEntity follower = followers.get(i);
+            if (!follower.getFollowers().contains(user)) {
+                followersToFollow.add(follower);
+            }
+        }
+        return followersToFollow;
+    }
+
     private String removeStopWords(String original) {
         ArrayList<String> allWords;
 
