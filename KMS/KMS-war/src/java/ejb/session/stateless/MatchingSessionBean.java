@@ -10,6 +10,7 @@ import entity.GroupEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
+import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.io.IOException;
@@ -37,6 +38,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.commons.text.similarity.FuzzyScore;
+import util.enumeration.ProjectStatusEnum;
 import ws.restful.model.FollowingOfFollowingRsp;
 import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
 
@@ -126,6 +128,29 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         hrpMatches.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> sortedHrpMatches.put(x.getKey(), x.getValue()));
         System.out.println(sortedHrpMatches);
         List<UserEntity> matches = new ArrayList<>(sortedHrpMatches.keySet());
+        return matches;
+    }
+
+    @Override
+    public List<ProjectEntity> getMatchesForProjects(long projectId) throws NoResultException {
+        ProjectEntity project = projectSessionBean.getProjectById(projectId);
+        String projectString = removeStopWords(project.getName()) + removeStopWords(project.getDescription());
+
+        List<ProjectEntity> completedProjects = projectSessionBean.retrieveProjectByStatus(ProjectStatusEnum.COMPLETED);
+        Map<ProjectEntity, Double> projects = new HashMap<>();
+
+        for (int i = 0; i < completedProjects.size(); i++) {
+            if (hasMatchingTags(project.getSdgs(), completedProjects.get(i).getSdgs())) {
+                String projectString2 = removeStopWords(completedProjects.get(i).getName()) + removeStopWords(completedProjects.get(i).getDescription());
+                double fuzzyScore = new FuzzyScore(Locale.getDefault()).fuzzyScore(projectString, projectString2);
+                if (fuzzyScore > 3) {
+                    projects.put(completedProjects.get(i), fuzzyScore);
+                }
+            }
+        }
+        LinkedHashMap<ProjectEntity, Double> sortedProjects = new LinkedHashMap<>();
+        projects.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> sortedProjects.put(x.getKey(), x.getValue()));
+        List<ProjectEntity> matches = new ArrayList<>(sortedProjects.keySet());
         return matches;
     }
 

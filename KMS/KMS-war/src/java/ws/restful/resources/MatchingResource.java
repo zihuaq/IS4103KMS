@@ -9,6 +9,7 @@ import Exception.NoResultException;
 import ejb.session.stateless.MatchingSessionBeanLocal;
 import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
+import entity.ProjectEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,22 @@ public class MatchingResource {
             List<UserEntity> users = matchingSessionBean.getMatchesForHrp(hrpId);
             users = getUsersResponse(users);
             return Response.status(200).entity(users).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/getMatchesForProjects/{projectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMatchesForProjects(@PathParam("projectId") Long projectId) {
+        try {
+            List<ProjectEntity> projects = matchingSessionBean.getMatchesForProjects(projectId);
+            projects = getProjectsResponse(projects);
+            return Response.status(200).entity(projects).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -169,6 +186,22 @@ public class MatchingResource {
             mras.get(i).setMaterialResourceAvailableOwner(user);
         }
         return mras;
+    }
+
+    private List<ProjectEntity> getProjectsResponse(List<ProjectEntity> projects) {
+        for (ProjectEntity project : projects) {
+            project.getActivities().clear();
+            project.getDonations().clear();
+            project.getHumanResourcePostings().clear();
+            project.getMaterialResourcePostings().clear();
+            project.getPosts().clear();
+            project.getProjectAdmins().clear();
+            project.getProjectMembers().clear();
+            project.getTasks().clear();
+            project.getReviews().clear();
+            project.setProjectOwner(null);
+        }
+        return projects;
     }
 
     private List<UserEntity> getUsersResponse(List<UserEntity> users) {

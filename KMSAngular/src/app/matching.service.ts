@@ -64,6 +64,12 @@ export class MatchingService {
             .pipe(catchError(this.handleError));
     }
 
+    getMatchesForProjects(projectId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getMatchesForProjects/' + projectId)
+            .pipe(catchError(this.handleError));
+    }
+
     getFollowingofFollowing(userId: number): Observable<any> {
         return this.http
             .get<any>(this.baseUrl + '/getFollowingofFollowing/' + userId)

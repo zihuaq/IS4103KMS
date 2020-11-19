@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import Exception.NoResultException;
 import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
+import entity.ProjectEntity;
 import entity.UserEntity;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ public interface MatchingSessionBeanLocal {
     public List<MaterialResourceAvailableEntity> getMatchesForMrp(long mrpId) throws NoResultException;
 
     public List<UserEntity> getMatchesForHrp(long hrpId) throws NoResultException;
+    
+    public List<ProjectEntity> getMatchesForProjects(long projectId) throws NoResultException;
 
     public List<FollowingOfFollowingRsp> getFollowingofFollowing(long userId) throws NoResultException;
 
