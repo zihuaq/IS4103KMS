@@ -94,6 +94,18 @@ export class MatchingService {
             .pipe(catchError(this.handleError));
     }
 
+    getProjectRecommendationsBasedOnSDG(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getProjectRecommendationsBasedOnSDG/' + userId)
+            .pipe(catchError(this.handleError));
+    }
+
+    getProjectRecommendationsBasedOnFollowing(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getProjectRecommendationsBasedOnFollowing/' + userId)
+            .pipe(catchError(this.handleError));
+    }
+
     private handleError(error: HttpErrorResponse) {
         let errorMessage: string = '';
 

@@ -41,6 +41,7 @@ import org.apache.commons.text.similarity.FuzzyScore;
 import util.enumeration.ProjectStatusEnum;
 import ws.restful.model.FollowingOfFollowingRsp;
 import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
+import ws.restful.model.ProjectRecommendationBasedOnFollowingRsp;
 
 /**
  *
@@ -118,9 +119,11 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         Map<UserEntity, Integer> hrpMatches = new HashMap<>();
 
         for (int i = 0; i < allUsers.size(); i++) {
-            int numMatches = getNumTagMatches(hrp.getTags(), allUsers.get(i).getSkills());
-            if (numMatches > 0) {
-                hrpMatches.put(allUsers.get(i), numMatches);
+            if (!hrp.getAppliedUsers().contains(allUsers.get(i))) {
+                int numMatches = getNumTagMatches(hrp.getTags(), allUsers.get(i).getSkills());
+                if (numMatches > 0) {
+                    hrpMatches.put(allUsers.get(i), numMatches);
+                }
             }
         }
         System.out.println(hrpMatches);
@@ -162,14 +165,16 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         for (int i = 0; i < following.size(); i++) {
             List<UserEntity> followingFollowing = following.get(i).getFollowing();
             for (int j = 0; j < followingFollowing.size(); j++) {
-                if (result.containsKey(followingFollowing.get(j))) {
-                    List<UserEntity> value = result.get(followingFollowing.get(j));
-                    value.add(following.get(i));
-                    result.replace(followingFollowing.get(j), value);
-                } else {
-                    List<UserEntity> value = new ArrayList<>();
-                    value.add(following.get(i));
-                    result.put(followingFollowing.get(j), value);
+                if (!following.contains(followingFollowing.get(j))) {
+                    if (result.containsKey(followingFollowing.get(j))) {
+                        List<UserEntity> value = result.get(followingFollowing.get(j));
+                        value.add(following.get(i));
+                        result.replace(followingFollowing.get(j), value);
+                    } else {
+                        List<UserEntity> value = new ArrayList<>();
+                        value.add(following.get(i));
+                        result.put(followingFollowing.get(j), value);
+                    }
                 }
             }
         }
@@ -205,14 +210,16 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
     @Override
     public List<GroupEntity> getGroupRecommendationsBasedOnSDG(long userId) throws NoResultException {
         UserEntity user = userSessionBean.getUserById(userId);
-
+        List<GroupEntity> groupsJoined = user.getGroupsJoined();
         List<GroupEntity> allGroups = groupSessionBean.retrieveAllGroup();
         Map<GroupEntity, Integer> matches = new HashMap<>();
 
         for (int i = 0; i < allGroups.size(); i++) {
-            int numMatches = getNumTagMatches(user.getSdgs(), allGroups.get(i).getSdgs());
-            if (numMatches > 0) {
-                matches.put(allGroups.get(i), numMatches);
+            if (!groupsJoined.contains(allGroups.get(i))) {
+                int numMatches = getNumTagMatches(user.getSdgs(), allGroups.get(i).getSdgs());
+                if (numMatches > 0) {
+                    matches.put(allGroups.get(i), numMatches);
+                }
             }
         }
         LinkedHashMap<GroupEntity, Integer> sortedMatches = new LinkedHashMap<>();
@@ -224,20 +231,23 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
     @Override
     public List<GroupRecommendationBasedOnFollowingRsp> getGroupRecommendationsBasedOnFollowing(long userId) throws NoResultException {
         UserEntity user = userSessionBean.getUserById(userId);
+        List<GroupEntity> groupsJoined = user.getGroupsJoined();
         List<UserEntity> following = user.getFollowing();
         Map<GroupEntity, List<UserEntity>> result = new HashMap<>();
 
         for (int i = 0; i < following.size(); i++) {
             List<GroupEntity> followingGroups = following.get(i).getGroupsJoined();
             for (int j = 0; j < followingGroups.size(); j++) {
-                if (result.containsKey(followingGroups.get(j))) {
-                    List<UserEntity> value = result.get(followingGroups.get(j));
-                    value.add(following.get(i));
-                    result.replace(followingGroups.get(j), value);
-                } else {
-                    List<UserEntity> value = new ArrayList<>();
-                    value.add(following.get(i));
-                    result.put(followingGroups.get(j), value);
+                if (!groupsJoined.contains(followingGroups.get(j))) {
+                    if (result.containsKey(followingGroups.get(j))) {
+                        List<UserEntity> value = result.get(followingGroups.get(j));
+                        value.add(following.get(i));
+                        result.replace(followingGroups.get(j), value);
+                    } else {
+                        List<UserEntity> value = new ArrayList<>();
+                        value.add(following.get(i));
+                        result.put(followingGroups.get(j), value);
+                    }
                 }
             }
         }
@@ -250,6 +260,65 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
             GroupRecommendationBasedOnFollowingRsp rsp = new GroupRecommendationBasedOnFollowingRsp();
             rsp.setGroupToRecommend(entry.getKey());
             rsp.setFollowingInGroup(entry.getValue());
+            responses.add(rsp);
+        }
+        return responses;
+    }
+
+    @Override
+    public List<ProjectEntity> getProjectRecommendationsBasedOnSDG(long userId) throws NoResultException {
+        UserEntity user = userSessionBean.getUserById(userId);
+        List<ProjectEntity> projectsJoined = user.getProjectsJoined();
+
+        List<ProjectEntity> activeProjects = projectSessionBean.retrieveProjectByStatus(ProjectStatusEnum.ACTIVE);
+        Map<ProjectEntity, Integer> matches = new HashMap<>();
+
+        for (int i = 0; i < activeProjects.size(); i++) {
+            if (!projectsJoined.contains(activeProjects.get(i))) {
+                int numMatches = getNumTagMatches(user.getSdgs(), activeProjects.get(i).getSdgs());
+                if (numMatches > 0) {
+                    matches.put(activeProjects.get(i), numMatches);
+                }
+            }
+        }
+        LinkedHashMap<ProjectEntity, Integer> sortedMatches = new LinkedHashMap<>();
+        matches.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> sortedMatches.put(x.getKey(), x.getValue()));
+        List<ProjectEntity> projectMatches = new ArrayList<>(sortedMatches.keySet());
+        return projectMatches;
+    }
+
+    @Override
+    public List<ProjectRecommendationBasedOnFollowingRsp> getProjectRecommendationsBasedOnFollowing(long userId) throws NoResultException {
+        UserEntity user = userSessionBean.getUserById(userId);
+        List<UserEntity> following = user.getFollowing();
+        List<ProjectEntity> projectsJoined = user.getProjectsJoined();
+        Map<ProjectEntity, List<UserEntity>> result = new HashMap<>();
+
+        for (int i = 0; i < following.size(); i++) {
+            List<ProjectEntity> followingProjects = following.get(i).getProjectsJoined();
+            for (int j = 0; j < followingProjects.size(); j++) {
+                if (!projectsJoined.contains(followingProjects.get(j))) {
+                    if (result.containsKey(followingProjects.get(j))) {
+                        List<UserEntity> value = result.get(followingProjects.get(j));
+                        value.add(following.get(i));
+                        result.replace(followingProjects.get(j), value);
+                    } else {
+                        List<UserEntity> value = new ArrayList<>();
+                        value.add(following.get(i));
+                        result.put(followingProjects.get(j), value);
+                    }
+                }
+            }
+        }
+
+        result = result.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getValue().size(), e1.getValue().size()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        List<ProjectRecommendationBasedOnFollowingRsp> responses = new ArrayList<>();
+        for (Map.Entry<ProjectEntity, List<UserEntity>> entry : result.entrySet()) {
+            ProjectRecommendationBasedOnFollowingRsp rsp = new ProjectRecommendationBasedOnFollowingRsp();
+            rsp.setProjectToRecommend(entry.getKey());
+            rsp.setFollowingInProject(entry.getValue());
             responses.add(rsp);
         }
         return responses;

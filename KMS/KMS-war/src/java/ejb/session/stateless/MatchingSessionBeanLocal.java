@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.ejb.Local;
 import ws.restful.model.FollowingOfFollowingRsp;
 import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
+import ws.restful.model.ProjectRecommendationBasedOnFollowingRsp;
 
 /**
  *
@@ -26,7 +27,7 @@ public interface MatchingSessionBeanLocal {
     public List<MaterialResourceAvailableEntity> getMatchesForMrp(long mrpId) throws NoResultException;
 
     public List<UserEntity> getMatchesForHrp(long hrpId) throws NoResultException;
-    
+
     public List<ProjectEntity> getMatchesForProjects(long projectId) throws NoResultException;
 
     public List<FollowingOfFollowingRsp> getFollowingofFollowing(long userId) throws NoResultException;
@@ -36,4 +37,8 @@ public interface MatchingSessionBeanLocal {
     public List<GroupEntity> getGroupRecommendationsBasedOnSDG(long userId) throws NoResultException;
 
     public List<GroupRecommendationBasedOnFollowingRsp> getGroupRecommendationsBasedOnFollowing(long userId) throws NoResultException;
+
+    public List<ProjectEntity> getProjectRecommendationsBasedOnSDG(long userId) throws NoResultException;
+
+    public List<ProjectRecommendationBasedOnFollowingRsp> getProjectRecommendationsBasedOnFollowing(long userId) throws NoResultException;
 }

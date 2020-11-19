@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import ws.restful.model.FollowingOfFollowingRsp;
 import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
+import ws.restful.model.ProjectRecommendationBasedOnFollowingRsp;
 
 /**
  * REST Web Service
@@ -167,6 +168,53 @@ public class MatchingResource {
                 group.getPosts().clear();
                 group.setGroupOwner(null);
                 result.get(i).setGroupToRecommend(group);
+            }
+            return Response.status(200).entity(result).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/getProjectRecommendationsBasedOnSDG/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectRecommendationsBasedOnSDG(@PathParam("userId") Long userId) {
+        try {
+            List<ProjectEntity> projects = matchingSessionBean.getProjectRecommendationsBasedOnSDG(userId);
+            projects = getProjectsResponse(projects);
+            return Response.status(200).entity(projects).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Path("/getProjectRecommendationsBasedOnFollowing/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectRecommendationsBasedOnFollowing(@PathParam("userId") Long userId) {
+        try {
+            List<ProjectRecommendationBasedOnFollowingRsp> result = matchingSessionBean.getProjectRecommendationsBasedOnFollowing(userId);
+            for (int i = 0; i < result.size(); i++) {
+                List<UserEntity> users = getUsersResponse(result.get(i).getFollowingInProject());
+                result.get(i).setFollowingInProject(users);
+                ProjectEntity project = result.get(i).getProjectToRecommend();
+                project.getActivities().clear();
+                project.getDonations().clear();
+                project.getHumanResourcePostings().clear();
+                project.getMaterialResourcePostings().clear();
+                project.getPosts().clear();
+                project.getProjectAdmins().clear();
+                project.getProjectMembers().clear();
+                project.getTasks().clear();
+                project.getReviews().clear();
+                project.setProjectOwner(null);
+                result.get(i).setProjectToRecommend(project);
             }
             return Response.status(200).entity(result).build();
         } catch (NoResultException ex) {
