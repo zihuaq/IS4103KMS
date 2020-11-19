@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -68,6 +70,12 @@ public class ProfileEntity implements Serializable {
 
     private String contactDetails;
 
+    @OneToOne(mappedBy = "profile")
+    private UserEntity userEntity;
+
+    @OneToMany(mappedBy = "profile")
+    private List<ClaimProfileRequestEntity> claimProfileRequestMade;
+
     public ProfileEntity() {
         this.sdgs = new ArrayList<>();
         this.sdgTargets = new ArrayList<>();
@@ -88,6 +96,31 @@ public class ProfileEntity implements Serializable {
         this.cityState = cityState;
         this.yearOfEstablishment = yearOfEstablishment;
         this.contactDetails = contactDetails;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof ProfileEntity)) {
+            return false;
+        }
+        ProfileEntity other = (ProfileEntity) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entity.ProfileEntity[ id=" + id + " ]";
     }
 
     public Long getId() {
@@ -218,29 +251,20 @@ public class ProfileEntity implements Serializable {
         this.contactDetails = contactDetails;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProfileEntity)) {
-            return false;
-        }
-        ProfileEntity other = (ProfileEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
-    @Override
-    public String toString() {
-        return "entity.ProfileEntity[ id=" + id + " ]";
+    public List<ClaimProfileRequestEntity> getClaimProfileRequestMade() {
+        return claimProfileRequestMade;
+    }
+
+    public void setClaimProfileRequestMade(List<ClaimProfileRequestEntity> claimProfileRequestMade) {
+        this.claimProfileRequestMade = claimProfileRequestMade;
     }
 
 }

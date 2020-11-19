@@ -23,5 +23,9 @@ public interface DataMappingSessionBeanLocal {
     public List<ProfileEntity> getAllProfiles() throws NoResultException;
 
     public ProfileEntity getProfile(long id) throws NoResultException;
+
+    public void settleProfileClaim(long claimProfileRequestId) throws NoResultException;
+
+    public void makeProfileClaim(long userId, long profileId) throws NoResultException;
     
 }
