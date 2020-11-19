@@ -64,6 +64,36 @@ export class MatchingService {
             .pipe(catchError(this.handleError));
     }
 
+    getMatchesForProjects(projectId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getMatchesForProjects/' + projectId)
+            .pipe(catchError(this.handleError));
+    }
+
+    getFollowingofFollowing(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getFollowingofFollowing/' + userId)
+            .pipe(catchError(this.handleError));
+    }
+
+    getFollowersToFollow(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getFollowersToFollow/' + userId)
+            .pipe(catchError(this.handleError));
+    }
+
+    getGroupRecommendationsBasedOnSDG(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getGroupRecommendationsBasedOnSDG/' + userId)
+            .pipe(catchError(this.handleError));
+    }
+
+    getGroupRecommendationsBasedOnFollowing(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getGroupRecommendationsBasedOnFollowing/' + userId)
+            .pipe(catchError(this.handleError));
+    }
+
     private handleError(error: HttpErrorResponse) {
         let errorMessage: string = '';
 
