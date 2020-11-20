@@ -412,7 +412,22 @@ const routes: Routes = [
       import('./pages/group/viewGroup/report-group/report-group.module').then(
         (m) => m.ReportGroupPageModule
       )
+  },
+  {
+    path: 'chat',
+    loadChildren: () => 
+    import('./pages/chat/chat.module').then(
+       m => m.ChatPageModule
+    )
+  },
+  {
+    path: 'messages/:user',
+    loadChildren: () => 
+    import('./pages/chat/messages/messages.module').then(
+      m => m.MessagesPageModule
+    )
   }
+
 ];
 
 @NgModule({

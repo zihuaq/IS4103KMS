@@ -7,6 +7,7 @@ import { Notification } from 'src/app/classes/notification';
 import { NotificationService } from 'src/app/notification.service';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/project.service';
+import { Document } from 'src/app/classes/document';
 
 declare var $: any;
 
@@ -195,16 +196,3 @@ export class EditDocumentsComponent implements OnInit {
 
 }
 
-export class Document {
-  key: string;
-  author: string;
-  description: string;
-  timeStamp: string;
-
-  constructor(key?: string, author?: string, description?: string, timeStamp?: string) {
-    this.key = key;
-    this.author = author;
-    this.description = description;
-    this.timeStamp = timeStamp;
-  }
-}

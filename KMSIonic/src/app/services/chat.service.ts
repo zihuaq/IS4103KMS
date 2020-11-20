@@ -1,5 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -85,5 +84,4 @@ export class ChatService {
       receiver, { 'count': count }
     )
   }
-
 }

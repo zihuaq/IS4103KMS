@@ -8,10 +8,21 @@
   </span>
 
   <span *ngIf="files.length > 0">
-    <ion-list *ngFor="let file of files">
-      <ion-label tappable (click)="viewFile(file)">
-        <p style="color: blue;">{{formatFileKey(file)}}</p>
-      </ion-label>
-    </ion-list>
+    <ion-card *ngFor="let doc of docs" style="margin: 10px 0 0 0; padding: 5px;">
+      <ion-item lines="full">
+        <ion-card-title style="padding: 10px 0 10px 0; overflow: hidden;">
+          {{formatFileKey(doc.key)}}
+          <ion-card-subtitle style="margin-top: 5px; overflow: hidden;">{{doc.timeStamp}}</ion-card-subtitle>
+        </ion-card-title>
+        <ion-buttons slot="end">
+          <ion-icon class="iconButton" name="document-outline" style="margin-right: 5px;" (click)="viewFile(doc.key)" ></ion-icon>
+        </ion-buttons>
+      </ion-item>
+      <ion-card-content style="padding: 15px">
+        Uploaded By: {{doc.author}}
+        <br/>
+        Description: {{doc.description}}
+      </ion-card-content>
+    </ion-card>
   </span>
 </span>
