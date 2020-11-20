@@ -100,6 +100,10 @@ import { ChatComponent } from './chat/chat.component';
 import { UserFilterPipe } from './chat/user-filter.pipe';
 import { SearchProfileComponent } from './search-profile/search-profile.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ViewRecommendationsComponent } from './view-recommendations/view-recommendations.component';
+import { FollowRecommendationsComponent } from './view-recommendations/follow-recommendations/follow-recommendations.component';
+import { ProjectRecommendationsComponent } from './view-recommendations/project-recommendations/project-recommendations.component';
+import { GroupRecommendationsComponent } from './view-recommendations/group-recommendations/group-recommendations.component';
 
 export const environment = {
   production: false,
@@ -199,7 +203,11 @@ export const environment = {
     ChatComponent,
     UserFilterPipe,
     SearchProfileComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    ViewRecommendationsComponent,
+    FollowRecommendationsComponent,
+    ProjectRecommendationsComponent,
+    GroupRecommendationsComponent
   ],
   imports: [
     BrowserModule,

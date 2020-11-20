@@ -167,7 +167,7 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         for (int i = 0; i < following.size(); i++) {
             List<UserEntity> followingFollowing = following.get(i).getFollowing();
             for (int j = 0; j < followingFollowing.size(); j++) {
-                if (!following.contains(followingFollowing.get(j))) {
+                if (!following.contains(followingFollowing.get(j)) && userId != followingFollowing.get(j).getUserId()) {
                     if (result.containsKey(followingFollowing.get(j))) {
                         List<UserEntity> value = result.get(followingFollowing.get(j));
                         value.add(following.get(i));

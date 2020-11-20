@@ -20,8 +20,13 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <div class="content">
-        <app-newsfeed></app-newsfeed>
+    <div class="content" style="display: flex; flex-direction: row;">
+        <div style="display: flex; width: 70%;">
+            <app-newsfeed style="display: flex; width: 100%;"></app-newsfeed>
+        </div>
+        <div style="display: flex; width: 30%;">
+            <app-view-recommendations></app-view-recommendations>
+        </div>
     </div>
 </div>
 <!-- /.content-wrapper -->
