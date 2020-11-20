@@ -139,19 +139,20 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         ProjectEntity project = projectSessionBean.getProjectById(projectId);
         String projectString = removeStopWords(project.getName()) + removeStopWords(project.getDescription());
 
-        List<ProjectEntity> completedProjects = projectSessionBean.retrieveProjectByStatus(ProjectStatusEnum.COMPLETED);
-        System.out.println("completed projects: " + completedProjects);
+        List<ProjectEntity> completedProjects = projectSessionBean.retrieveAllProject();
         Map<ProjectEntity, Double> projects = new HashMap<>();
 
         for (int i = 0; i < completedProjects.size(); i++) {
-            if (hasMatchingTags(project.getSdgs(), completedProjects.get(i).getSdgs())) {
+            if (hasMatchingTags(project.getSdgs(), completedProjects.get(i).getSdgs()) && completedProjects.get(i).getProjectId() != project.getProjectId()) {
                 String projectString2 = removeStopWords(completedProjects.get(i).getName()) + removeStopWords(completedProjects.get(i).getDescription());
                 double fuzzyScore = new FuzzyScore(Locale.getDefault()).fuzzyScore(projectString, projectString2);
+                System.out.println(fuzzyScore);
                 if (fuzzyScore > 3) {
                     projects.put(completedProjects.get(i), fuzzyScore);
                 }
             }
         }
+        System.out.println(projects);
         LinkedHashMap<ProjectEntity, Double> sortedProjects = new LinkedHashMap<>();
         projects.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> sortedProjects.put(x.getKey(), x.getValue()));
         List<ProjectEntity> matches = new ArrayList<>(sortedProjects.keySet());

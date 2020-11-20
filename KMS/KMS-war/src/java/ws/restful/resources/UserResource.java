@@ -339,12 +339,10 @@ public class UserResource {
             user.setReviewsGiven(new ArrayList<>());
             user.setReviewsReceived(new ArrayList<>());
             user.setProjectsOwned(new ArrayList<>());
-            user.setProjectsJoined(new ArrayList<>());
             user.setProjectsManaged(new ArrayList<>());
             user.setGroupsManaged(new ArrayList<>());
             user.setPosts(new ArrayList<>());
             user.setGroupsOwned(new ArrayList<>());
-            user.setGroupsJoined(new ArrayList<>());
             user.setGroupAdmins(new ArrayList<>());
             user.setBadges(new ArrayList<>());
             user.setMras(new ArrayList<>());

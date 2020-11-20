@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit, SimpleChanges } from '@angular/core';
 import { MatchingService } from 'src/app/matching.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TagService } from 'src/app/tag.service';
 import { Project } from 'src/app/classes/project';
 import { Tag } from 'src/app/classes/tag';
@@ -24,7 +24,8 @@ export class ViewSimilarProjectsComponent implements OnInit {
 
   constructor(public matchingService: MatchingService,
     private activatedRouter: ActivatedRoute,
-    public tagService: TagService) {
+    public tagService: TagService,
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -92,6 +93,8 @@ export class ViewSimilarProjectsComponent implements OnInit {
           }
         }
       }
+    } else {
+      this.filteredProjects = this.projectRecommendations;
     }
   }
 
@@ -102,5 +105,9 @@ export class ViewSimilarProjectsComponent implements OnInit {
       }
     }
     false;
+  }
+
+  onSelect(project: Project): void {
+    this.router.navigate(["/projectDetails/" + project.projectId + "/basic-details"]);
   }
 }
