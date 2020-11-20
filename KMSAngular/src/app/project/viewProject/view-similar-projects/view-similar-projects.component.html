@@ -1,0 +1,63 @@
+<section class="content">
+    <div class="card card-solid">
+        <div class="row">
+            <div class="col-8">
+                <div class="input-group" style="margin: 15px 20px; width: auto">
+                    <input class="form-control" placeholder="Search projects" [(ngModel)]="searchModel"
+                        (ngModelChange)="updateSearchModel($event)">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="input-group" style="margin: 15px 20px; width: auto">
+                    <select class="select2" id="similarprojects-sdg-select2" multiple="multiple"
+                        (ngModelChange)="sdgFilter()" [(ngModel)]="searchModel" data-placeholder="Filter SDG tags"
+                        data-dropdown-css-class="select2-blue" style="width: 100%;">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body pb-0">
+            <span class="text-muted" *ngIf="filteredProjects && filteredProjects.length == 0">
+                <p style="padding-bottom: 1em;">No projects found.</p>
+            </span>
+            <span *ngIf="filteredProjects && filteredProjects.length > 0">
+                <div class="row d-flex align-items-stretch">
+                    <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch"
+                        *ngFor="let project of filteredProjects | listFilter: searchModel">
+                        <div class="card p-3 bg-light">
+                            <div class="image" style="height: 180px; overflow: hidden; position: relative;">
+                                <img class="card-img-top" *ngIf="project.profilePicture" style="transform: scale(1.5)"
+                                    [src]="project.profilePicture" alt="Project Profile Picture">
+                                <img class="card-img-top" *ngIf="!project.profilePicture"
+                                    src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                    alt="Project Profile Picture">
+                            </div>
+                            <div class="row pt-3 pl-2">
+                                <span class="badge badge-info" *ngIf="project.status == ProjectType.ACTIVE"
+                                    style="width: min-content; font-size: 12px; vertical-align: 30%;">{{project.status}}</span>
+                                <span class="badge badge-warning" *ngIf="project.status == ProjectType.INACTIVE"
+                                    style="font-size: 12px; vertical-align: 30%;">{{project.status}}</span>
+                                <span class="badge badge-success" *ngIf="project.status == ProjectType.COMPLETED"
+                                    style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{project.status}}</span>
+                            </div>
+                            <p class="card-title" style="font-size: 20px; font-weight: bold; margin-top: 5px;">
+                                {{project.name}}</p>
+                            <p class="card-text" style="font-size: 15px; color: rgb(92, 92, 92);">
+                                {{project.description}}</p>
+                            <p class="text-muted text-sm" style="margin-left: -5px;">
+                                <span class="d-flex flex-wrap">
+                                    <div *ngFor="let sdg of sortSDG(project.sdgs)" class="col-2">
+                                        <small class="badge badge-dark">
+                                            {{sdg.name}}
+                                        </small>
+                                    </div>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </span>
+        </div>
+    </div>
+</section>

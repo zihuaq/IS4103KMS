@@ -91,6 +91,7 @@ import { PostReportItemComponent } from './administration/post-reports/post-repo
 import { CommentReportItemComponent } from './administration/comment-reports/comment-report-item/comment-report-item.component';
 import { EditTaskTabComponent } from './project/editProject/edit-task-tab/edit-task-tab.component';
 import { ViewDocumentsComponent } from './project/viewProject/view-documents/view-documents.component';
+import { ViewSimilarProjectsComponent } from './project/viewProject/view-similar-projects/view-similar-projects.component';
 import { EditDocumentsComponent } from './project/editProject/edit-documents/edit-documents.component';
 
 import { AngularFireModule } from '@angular/fire';
@@ -193,6 +194,7 @@ export const environment = {
     CommentReportItemComponent,
     EditTaskTabComponent,
     ViewDocumentsComponent,
+    ViewSimilarProjectsComponent,
     EditDocumentsComponent,
     ChatComponent,
     UserFilterPipe,

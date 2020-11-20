@@ -140,6 +140,7 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         String projectString = removeStopWords(project.getName()) + removeStopWords(project.getDescription());
 
         List<ProjectEntity> completedProjects = projectSessionBean.retrieveProjectByStatus(ProjectStatusEnum.COMPLETED);
+        System.out.println("completed projects: " + completedProjects);
         Map<ProjectEntity, Double> projects = new HashMap<>();
 
         for (int i = 0; i < completedProjects.size(); i++) {
