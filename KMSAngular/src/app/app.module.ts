@@ -16,14 +16,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { TopNavbarComponent } from './top-navbar/top-navbar.component';
 import { ProfileComponent } from './profile/profile.component';
-import { BasicDetailsComponent } from './profile/basic-details/basic-details.component';
-import { ProjectsComponent } from './profile/projects/projects.component';
-import { OverviewComponent } from './profile/overview/overview.component';
-import { MaterialResourceAvailableComponent } from './profile/material-resource-available/material-resource-available.component';
-import { SkillsComponent } from './profile/skills/skills.component';
+import { BasicDetailsComponent } from './user-profile/basic-details/basic-details.component';
+import { ProjectsComponent } from './user-profile/projects/projects.component';
+import { OverviewComponent } from './user-profile/overview/overview.component';
+import { MaterialResourceAvailableComponent } from './user-profile/material-resource-available/material-resource-available.component';
+import { SkillsComponent } from './user-profile/skills/skills.component';
 import { SideNavbarComponent } from './side-navbar/side-navbar.component';
 import { FooterComponent } from './footer/footer.component';
-import { ProfileTabpanelComponent } from './profile/profile-tabpanel/profile-tabpanel.component';
+import { ProfileTabpanelComponent } from './user-profile/profile-tabpanel/profile-tabpanel.component';
 import { ViewAllProjectComponent } from './project/view-all-project/view-all-project.component';
 import { CreateNewProjectComponent } from './project/create-new-project/create-new-project.component';
 import { DonateToPlatformComponent } from './donate-to-platform/donate-to-platform.component';
@@ -32,10 +32,10 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 import { AppPasswordDirective } from './app-password.directive';
 import { SearchbarComponent } from './searchbar/searchbar.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
-import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
+import { EditProfileComponent } from './user-profile/edit-profile/edit-profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { FollowRequestsComponent } from './notifications/follow-requests/follow-requests.component';
-import { ReportProfileComponent } from './profile/report-profile/report-profile.component';
+import { ReportProfileComponent } from './user-profile/report-profile/report-profile.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { CreateNewInstitutionComponent } from './create-new-institution/create-new-institution.component';
 import { ProjectDetailsComponent } from './project/viewProject/project-details/project-details.component';
@@ -54,12 +54,12 @@ import { AffiliationRequestsComponent } from './notifications/affiliation-reques
 import { ViewHrpTabComponent } from './project/viewProject/view-hrp-tab/view-hrp-tab.component';
 import { ReviewsComponent } from './reviews/reviews.component';
 import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.component';
-import { ReviewsRecievedComponent } from './profile/reviews-recieved/reviews-recieved.component';
-import { ReviewsWrittenComponent } from './profile/reviews-written/reviews-written.component';
+import { ReviewsRecievedComponent } from './user-profile/reviews-recieved/reviews-recieved.component';
+import { ReviewsWrittenComponent } from './user-profile/reviews-written/reviews-written.component';
 import { AdministrationComponent } from './administration/administration.component';
-import { UserSettingComponent } from './profile/user-setting/user-setting.component';
+import { UserSettingComponent } from './user-profile/user-setting/user-setting.component';
 import { ViewMrpTabComponent } from './project/viewProject/view-mrp-tab/view-mrp-tab.component';
-import { JobAppliedComponent } from './profile/job-applied/job-applied.component';
+import { JobAppliedComponent } from './user-profile/job-applied/job-applied.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
 import { ProfileReportsComponent } from './administration/profile-reports/profile-reports.component';
 import { ProjectReportsComponent } from './administration/project-reports/project-reports.component';
@@ -97,6 +97,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { ChatComponent } from './chat/chat.component';
 import { UserFilterPipe } from './chat/user-filter.pipe';
+import { SearchProfileComponent } from './search-profile/search-profile.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 export const environment = {
   production: false,
@@ -193,7 +195,9 @@ export const environment = {
     ViewDocumentsComponent,
     EditDocumentsComponent,
     ChatComponent,
-    UserFilterPipe
+    UserFilterPipe,
+    SearchProfileComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

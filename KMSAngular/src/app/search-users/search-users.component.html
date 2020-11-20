@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="text-center footer-buttons">
-                                        <a routerLink="/profile/{{user.userId}}" class="btn btn-sm btn-primary">
+                                        <a routerLink="/userProfile/{{user.userId}}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-user"></i> View Profile
                                         </a>
                                         <button *ngIf="user.userId != loggedInUserId" type="button" class="btn bg-gradient-dark btn-sm" data-toggle="modal" href="#chat-modal" data-backdrop="static" (click)="clickUser(user)">

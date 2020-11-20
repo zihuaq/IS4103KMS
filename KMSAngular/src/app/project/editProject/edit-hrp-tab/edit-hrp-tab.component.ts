@@ -13,6 +13,7 @@ import { Notification } from 'src/app/classes/notification';
 import { NotificationService } from 'src/app/notification.service';
 import { User } from 'src/app/classes/user';
 import { SessionService } from 'src/app/session.service';
+import { MatchingService } from 'src/app/matching.service';
 
 
 declare var $: any;
@@ -45,6 +46,8 @@ export class EditHrpTabComponent implements OnInit {
     disableDoubleClickZoom: true,
   };
   currentUser: User;
+  hrpToRecommend: HumanResourcePosting;
+  userRecommendations: User[];
 
   constructor(private projectService: ProjectService,
     private activatedRoute: ActivatedRoute,
@@ -53,11 +56,14 @@ export class EditHrpTabComponent implements OnInit {
     private hrpService: HrpService,
     private notificationService: NotificationService,
     private sessionService: SessionService,
-    private datePipe: DatePipe) { 
+    private datePipe: DatePipe,
+    private matchingService: MatchingService) { 
       this.projectToEdit = new Project();
       this.newHrp = new HumanResourcePosting();
       this.hrpToEdit = new HumanResourcePosting();
       this.hrpList = [];
+      this.hrpToRecommend = new HumanResourcePosting;
+      this.userRecommendations = [];
     }
 
   ngOnInit(): void {
@@ -331,6 +337,21 @@ export class EditHrpTabComponent implements OnInit {
           delay: 2500,
           body: error,
         });
+      }
+    )
+  }
+
+  clickRecommendation(hrp: HumanResourcePosting) {
+    this.hrpToRecommend = hrp;
+    this.refreshRecommendations(this.hrpToRecommend.humanResourcePostingId);
+  }
+
+  refreshRecommendations(hrpId: number) {
+    this.matchingService.getMatchesForHrp(hrpId).subscribe(
+      response => {
+        this.userRecommendations = response;
+        this.userRecommendations.splice(10);
+        console.log(".ts file " + this.userRecommendations)
       }
     )
   }

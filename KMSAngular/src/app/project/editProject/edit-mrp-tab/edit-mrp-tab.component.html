@@ -1,23 +1,25 @@
 <div class="row mb-3">
     <h5 style="margin-right: 10px;">Material Resource Postings</h5>
-    <button type="button" class="btn bg-gradient-info float-right" data-toggle="modal" data-target="#modal-create-mrp" data-backdrop="static" style="margin-top: -8px;"><i class="fas fa-plus"></i> Create Posting</button>
+    <button type="button" class="btn bg-gradient-info float-right" data-toggle="modal" data-target="#modal-create-mrp"
+        data-backdrop="static" style="margin-top: -8px;"><i class="fas fa-plus"></i> Create Posting</button>
 </div>
 
 <span *ngIf="noMrp">There is no material resource posting at the moment.</span>
 
 <span *ngIf="!noMrp">
     <div *ngFor="let mrp of mrpList">
-        <div class="card" style="width: 100%;" >
+        <div class="card" style="width: 100%;">
             <div class="card-header">
                 <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{mrp.name}}</b>
-                <br/>
-                <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
-                </h5> 
+                    <br />
+                    <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
+                </h5>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-edit-mrp" (click)="clickEditMrp(mrp)">
+                    <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-edit-mrp"
+                        (click)="clickEditMrp(mrp)">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button type="button" class="btn btn-tool" (click)="clickDeleteMrp(mrp)">
@@ -27,15 +29,27 @@
             </div>
             <div class="card-body" style="display: block; color: rgb(44, 44, 44);">
                 <p style="margin: 0 7px 0 7px;">
-                    <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b> 
-                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
-                    <br/>
-                    <button type="button" class="btn btn-info float-right" style="margin-right: 2%; font-size: 15px;" data-toggle="modal" data-target="#modal-fulfillments" (click)="clickFulfillment(mrp)" data-backdrop="static">
+                    <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to
+                        {{mrp.endDate.toString().slice(0,15) | date }}</b>
+                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
+                        (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> At location
+                        {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
+                    <br />
+                    <button type="button" class="btn btn-info float-right" style="margin-right: 2%; font-size: 15px;"
+                        data-toggle="modal" data-target="#modal-recommendations" (click)="clickRecommendation(mrp)"
+                        data-backdrop="static">
+                        <i class="fas fa-crown"></i> Recommendations
+                    </button>
+                    <button type="button" class="btn btn-info float-right" style="margin-right: 2%; font-size: 15px;"
+                        data-toggle="modal" data-target="#modal-fulfillments" (click)="clickFulfillment(mrp)"
+                        data-backdrop="static">
                         <i class="fas fa-tasks"></i> Fulfillments
                     </button>
-                    {{mrp.lackingQuantity}} {{mrp.unit}} required<span class="text-muted"> / {{mrp.totalQuantity}} {{mrp.unit}} total</span>
-                    <br/>
-                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
+                    {{mrp.lackingQuantity}} {{mrp.unit}} required<span class="text-muted"> / {{mrp.totalQuantity}}
+                        {{mrp.unit}} total</span>
+                    <br />
+                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;"
+                        *ngIf="mrp.tags.length > 0">
                         <div *ngFor="let tag of mrp.tags">
                             <small class="badge badge-dark ml-2">{{tag.name}}</small>
                         </div>
@@ -59,15 +73,18 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="mrpName">Material Resource Name *</label>
-                        <input type="text" id="mrpName" class="form-control" placeholder="Enter Name" name="name" [(ngModel)]="newMrp.name" required>
+                        <input type="text" id="mrpName" class="form-control" placeholder="Enter Name" name="name"
+                            [(ngModel)]="newMrp.name" required>
                     </div>
                     <div class="form-group">
                         <label for="quantity"> Quantity Required *</label>
-                        <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity" name="quantity" [(ngModel)]="newMrp.totalQuantity" required>
+                        <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity"
+                            name="quantity" [(ngModel)]="newMrp.totalQuantity" required>
                     </div>
                     <div class="form-group">
                         <label for="unit"> Unit *</label>
-                        <select id="unit" class="form-control" placeholder="Select Unit" name="unit" [(ngModel)]="newMrp.unit" required>
+                        <select id="unit" class="form-control" placeholder="Select Unit" name="unit"
+                            [(ngModel)]="newMrp.unit" required>
                             <option disabled value="Select Unit">Select Unit</option>
                             <option value="item(s)">item(s)</option>
                             <option value="kg">kg</option>
@@ -76,38 +93,48 @@
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control" placeholder="Enter Description (eg. specific measurements)" name="description" [(ngModel)]="newMrp.description">
+                        <input type="text" id="description" class="form-control"
+                            placeholder="Enter Description (eg. specific measurements)" name="description"
+                            [(ngModel)]="newMrp.description">
                     </div>
                     <div class="form-group">
                         <label>Date Required From *</label>
-                        <input type="date" id="startDate" class="form-control" name="startDate" [(ngModel)]="newMrp.startDate" [min]="minDate" required/>
+                        <input type="date" id="startDate" class="form-control" name="startDate"
+                            [(ngModel)]="newMrp.startDate" [min]="minDate" required />
                     </div>
                     <div class="form-group">
                         <label>Date Required To *</label>
-                        <input type="date" id="endDate" class="form-control" name="endDate" [(ngModel)]="newMrp.endDate" [min]="newMrp.startDate" required/>
+                        <input type="date" id="endDate" class="form-control" name="endDate" [(ngModel)]="newMrp.endDate"
+                            [min]="newMrp.startDate" required />
                     </div>
                     <div class="form-group">
                         <label>Material Resource Tags *</label>
                         <div class="select2-blue">
-                            <select class="select2" id="mrpselect2" multiple="multiple" data-placeholder="Select Relevant Tags" data-dropdown-css-class="select2-blue" style="width: 100%;"></select>
+                            <select class="select2" id="mrpselect2" multiple="multiple"
+                                data-placeholder="Select Relevant Tags" data-dropdown-css-class="select2-blue"
+                                style="width: 100%;"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Location of Resource</label>
-                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="clickNewLocation($event)"></google-map>
+                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
+                            (mapClick)="clickNewLocation($event)"></google-map>
                     </div>
                     <div class="form-group">
                         <label for="latitude">Latitude *</label>
-                        <input type="text" id="latitude" class="form-control" name="latitude" [(ngModel)]="newMrp.latitude" required disabled>
+                        <input type="text" id="latitude" class="form-control" name="latitude"
+                            [(ngModel)]="newMrp.latitude" required disabled>
                     </div>
                     <div class="form-group">
                         <label for="longitude">Longitude *</label>
-                        <input type="text" id="longitude" class="form-control" name="longitude" [(ngModel)]="newMrp.longitude" required disabled>
+                        <input type="text" id="longitude" class="form-control" name="longitude"
+                            [(ngModel)]="newMrp.longitude" required disabled>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" (click)="cancel()" data-dismiss="modal">Cancel</button>
-                    <button type="button" type="submit" class="btn btn-outline-light" >Create</button>
+                    <button type="button" class="btn btn-outline-light" (click)="cancel()"
+                        data-dismiss="modal">Cancel</button>
+                    <button type="button" type="submit" class="btn btn-outline-light">Create</button>
                 </div>
             </form>
         </div>
@@ -129,19 +156,24 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="mrpName">Material Resource Name *</label>
-                        <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" [(ngModel)]="mrpToEdit.name" required>
+                        <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name"
+                            [(ngModel)]="mrpToEdit.name" required>
                     </div>
                     <div class="form-group">
                         <label for="quantity"> Quantity Required *</label>
-                        <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity" name="quantity" [(ngModel)]="mrpToEdit.totalQuantity" [min]="mrpToEdit.obtainedQuantity" required>
+                        <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity"
+                            name="quantity" [(ngModel)]="mrpToEdit.totalQuantity" [min]="mrpToEdit.obtainedQuantity"
+                            required>
                     </div>
                     <div *ngIf="mrpToEdit.fulfillments.length != 0" class="form-group">
                         <label for="units"> Unit</label>
-                        <input type="text" id="unit" class="form-control" name="unit" [(ngModel)]="mrpToEdit.unit" disabled>
+                        <input type="text" id="unit" class="form-control" name="unit" [(ngModel)]="mrpToEdit.unit"
+                            disabled>
                     </div>
                     <div *ngIf="mrpToEdit.fulfillments.length == 0" class="form-group">
                         <label for="unit"> Unit *</label>
-                        <select id="unit" class="form-control" placeholder="Select Unit" name="unit" [(ngModel)]="mrpToEdit.unit" required>
+                        <select id="unit" class="form-control" placeholder="Select Unit" name="unit"
+                            [(ngModel)]="mrpToEdit.unit" required>
                             <option disabled value="Select Unit">Select Unit</option>
                             <option value="item(s)">item(s)</option>
                             <option value="kg">kg</option>
@@ -150,33 +182,41 @@
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="mrpToEdit.description">
+                        <input type="text" id="description" class="form-control" placeholder="Enter Description"
+                            name="description" [(ngModel)]="mrpToEdit.description">
                     </div>
                     <div class="form-group">
                         <label>Date Required From *</label>
-                        <input type="date" id="startDate" class="form-control" name="startDate" [(ngModel)]="editMrpStartDate" [min]="minDate" required/>
+                        <input type="date" id="startDate" class="form-control" name="startDate"
+                            [(ngModel)]="editMrpStartDate" [min]="minDate" required />
                     </div>
                     <div class="form-group">
                         <label>Date Required To *</label>
-                        <input type="date" id="endDate" class="form-control" name="endDate" [(ngModel)]="editMrpEndDate" [min]="editMrpStartDate" required/>
+                        <input type="date" id="endDate" class="form-control" name="endDate" [(ngModel)]="editMrpEndDate"
+                            [min]="editMrpStartDate" required />
                     </div>
                     <div class="form-group">
                         <label>Material Resource Tags *</label>
                         <div class="select2-blue">
-                            <select class="select2" id="editmrpselect2" multiple="multiple" data-placeholder="Select Relevant Tags" data-dropdown-css-class="select2-blue" style="width: 100%;"></select>
+                            <select class="select2" id="editmrpselect2" multiple="multiple"
+                                data-placeholder="Select Relevant Tags" data-dropdown-css-class="select2-blue"
+                                style="width: 100%;"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Location of Resource</label>
-                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="clickEditLocation($event)"></google-map>
+                        <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
+                            (mapClick)="clickEditLocation($event)"></google-map>
                     </div>
                     <div class="form-group">
                         <label for="latitude">Latitude *</label>
-                        <input type="text" id="latitude" class="form-control" name="latitude" [(ngModel)]="mrpToEdit.latitude" required disabled>
+                        <input type="text" id="latitude" class="form-control" name="latitude"
+                            [(ngModel)]="mrpToEdit.latitude" required disabled>
                     </div>
                     <div class="form-group">
                         <label for="longitude">Longitude *</label>
-                        <input type="text" id="longitude" class="form-control" name="longitude" [(ngModel)]="mrpToEdit.longitude" required disabled>
+                        <input type="text" id="longitude" class="form-control" name="longitude"
+                            [(ngModel)]="mrpToEdit.longitude" required disabled>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -202,7 +242,8 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button id="delete-mrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteMrp()">Delete</button>
+                <button id="delete-mrp" type="button" class="btn btn-danger" data-dismiss="modal"
+                    (click)="deleteMrp()">Delete</button>
             </div>
         </div>
     </div>
@@ -219,63 +260,95 @@
             </div>
             <div class="modal-body">
                 <div *ngIf="fulfillmentList.length > 0" class="input-group" style="width: auto">
-                    <input class="form-control" placeholder="Search fulfillments by user or resource name" [(ngModel)]="searchInput" (ngModelChange)="filter()">
+                    <input class="form-control" placeholder="Search fulfillments by user or resource name"
+                        [(ngModel)]="searchInput" (ngModelChange)="filter()">
                 </div>
                 <div *ngIf="fulfillmentList.length > 0" class="form-row" style="width: auto; margin: 10px 5px 5px 5px">
                     <label class="col-sm-3">Filter by Status: </label>
                     <div class="col-sm-9">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="pledged" [(ngModel)]="pledged" (ngModelChange)="filter()">
+                            <input class="form-check-input" type="checkbox" id="pledged" [(ngModel)]="pledged"
+                                (ngModelChange)="filter()">
                             <label class="form-check-label" for="pledged">Pledged</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="accepted" [(ngModel)]="accepted" (ngModelChange)="filter()">
+                            <input class="form-check-input" type="checkbox" id="accepted" [(ngModel)]="accepted"
+                                (ngModelChange)="filter()">
                             <label class="form-check-label" for="accepted">Accepted</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="partiallyfulfilled" [(ngModel)]="partiallyfulfilled" (ngModelChange)="filter()">
+                            <input class="form-check-input" type="checkbox" id="partiallyfulfilled"
+                                [(ngModel)]="partiallyfulfilled" (ngModelChange)="filter()">
                             <label class="form-check-label" for="partiallyfulfilled">Partially Fulfilled</label>
-                        </div>  
+                        </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="fulfilled" [(ngModel)]="fulfilled" (ngModelChange)="filter()">
+                            <input class="form-check-input" type="checkbox" id="fulfilled" [(ngModel)]="fulfilled"
+                                (ngModelChange)="filter()">
                             <label class="form-check-label" for="fulfilled">Fulfilled</label>
-                        </div> 
+                        </div>
                     </div>
-                </div>  
-                <div *ngIf="fulfillmentList.length == 0" > <b>No fulfillments at the moment</b></div>
+                </div>
+                <div *ngIf="fulfillmentList.length == 0"> <b>No fulfillments at the moment</b></div>
                 <div *ngIf="fulfillmentList.length > 0" style="max-height: 500px; overflow-y: scroll;">
                     <div id="fulfillmentList" *ngFor="let fulfillment of filteredList; let i = index">
-                        <div *ngIf="fulfillment.status != fulfillmentStatus.REJECTED" class="card" style="width: 100%; color: black;">
+                        <div *ngIf="fulfillment.status != fulfillmentStatus.REJECTED" class="card"
+                            style="width: 100%; color: black;">
                             <div class="card-header">
-                                <h6 class="card-title" style="font-size: 20px; margin-top: 5px;"><b>{{fulfillment.fulfillmentOwner.firstName}} {{fulfillment.fulfillmentOwner.lastName}}</b>&nbsp;
-                                    <span class="badge badge-secondary" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px; vertical-align: 30%;">{{fulfillment.status}}</span>
-                                    <span class="badge badge-primary" *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; vertical-align: 30%;">{{fulfillment.status}}</span>
-                                    <span class="badge badge-info" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px; vertical-align: 30%;">PARTIALLY FULFILLED</span>
-                                    <span class="badge badge-success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{fulfillment.status}}</span>
+                                <h6 class="card-title" style="font-size: 20px; margin-top: 5px;">
+                                    <b>{{fulfillment.fulfillmentOwner.firstName}}
+                                        {{fulfillment.fulfillmentOwner.lastName}}</b>&nbsp;
+                                    <span class="badge badge-secondary"
+                                        *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED"
+                                        style="font-size: 12px; vertical-align: 30%;">{{fulfillment.status}}</span>
+                                    <span class="badge badge-primary"
+                                        *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED"
+                                        style="font-size: 12px; vertical-align: 30%;">{{fulfillment.status}}</span>
+                                    <span class="badge badge-info"
+                                        *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED"
+                                        style="font-size: 12px; vertical-align: 30%;">PARTIALLY FULFILLED</span>
+                                    <span class="badge badge-success"
+                                        *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED"
+                                        style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{fulfillment.status}}</span>
                                 </h6>
-                                <button *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" type="button" class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 10px;"><i class="fas fa-ellipsis-h"></i></button> 
+                                <button *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" type="button"
+                                    class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    style="margin-right: 10px;"><i class="fas fa-ellipsis-h"></i></button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED || fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" class="dropdown-item" data-toggle="modal" data-target="#modal-receive" (click)="clickReceive(fulfillment)">Receive Resources</a>
-                                    <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-accept" (click)="clickAcceptReject(fulfillment)">Accept</a>
+                                    <a *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED || fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED"
+                                        class="dropdown-item" data-toggle="modal" data-target="#modal-receive"
+                                        (click)="clickReceive(fulfillment)">Receive Resources</a>
+                                    <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item"
+                                        data-toggle="modal" data-target="#modal-accept"
+                                        (click)="clickAcceptReject(fulfillment)">Accept</a>
                                     <div class="dropdown-divider"></div>
-                                    <a *ngIf="fulfillment.status != fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-update" (click)="clickUpdate(fulfillment)">Update Quantity</a>
-                                    <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item" data-toggle="modal" data-target="#modal-reject-fulfillment" (click)="clickAcceptReject(fulfillment)">Reject</a>
+                                    <a *ngIf="fulfillment.status != fulfillmentStatus.PLEDGED" class="dropdown-item"
+                                        data-toggle="modal" data-target="#modal-update"
+                                        (click)="clickUpdate(fulfillment)">Update Quantity</a>
+                                    <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item"
+                                        data-toggle="modal" data-target="#modal-reject-fulfillment"
+                                        (click)="clickAcceptReject(fulfillment)">Reject</a>
                                 </div>
                             </div>
                             <div class="card-body" style="display: block;">
                                 <b>{{fulfillment.mra.name}}</b>
-                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrpToFulfill.latitude, mrpToFulfill.longitude)" target="_blank"> View location at {{fulfillment.mra.latitude | number:'1.1-6'}}, {{fulfillment.mra.longitude | number:'1.1-6'}}</a>
-                                <br/>
-                                {{fulfillment.receivedQuantity}} {{mrpToFulfill.unit}} received / {{fulfillment.totalPledgedQuantity}} {{mrpToFulfill.unit}} pledged
-                                <br/>
+                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
+                                    (click)="changehref(mrpToFulfill.latitude, mrpToFulfill.longitude)" target="_blank">
+                                    View location at {{fulfillment.mra.latitude | number:'1.1-6'}},
+                                    {{fulfillment.mra.longitude | number:'1.1-6'}}</a>
+                                <br />
+                                {{fulfillment.receivedQuantity}} {{mrpToFulfill.unit}} received /
+                                {{fulfillment.totalPledgedQuantity}} {{mrpToFulfill.unit}} pledged
+                                <br />
                                 <span class="text-muted">{{fulfillment.mra.description}}</span>
-                                <br/>
-                                <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="fulfillment.mra.tags.length > 0">
+                                <br />
+                                <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;"
+                                    *ngIf="fulfillment.mra.tags.length > 0">
                                     <div *ngFor="let tag of fulfillment.mra.tags">
                                         <small class="badge badge-dark ml-2">{{tag.name}}</small>
                                     </div>
                                 </span>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -284,19 +357,99 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-recommendations">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content bg-gradient-info">
+            <div class="modal-header">
+                <h4 class="modal-title">Recommendations</h4>
+                <button type="button" class="close" (click)="closeModal()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="mraRecommendations.length == 0"> <b>No recommendations at the moment</b></div>
+                <div *ngIf="mraRecommendations.length > 0" style="max-height: 500px; overflow-y: scroll;">
+                    <div *ngFor="let mra of mraRecommendations" style="max-width:95%">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between">
+                                    <div class="card-title">
+                                        <h5 style="color: black;"><b>{{mra.materialResourceAvailableOwner.firstName}}
+                                                {{mra.materialResourceAvailableOwner.lastName}}'s {{mra.name}}</b>
+                                        </h5>
+                                    </div>
+                                    <a routerLink="/userProfile/{{mra.materialResourceAvailableOwner.userId}}"
+                                        class="btn btn-sm btn-primary" data-dismiss="modal">
+                                        <i class="fas fa-user"></i> View Profile
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-body p-0" style="display: block;">
+                                <ul class="products-list product-list-in-card pl-2 pr-2">
+                                    <li class="item">
+                                        <div class="product-info">
+                                            <a *ngIf="mra.startDate != null" class="product-title">Available from
+                                                {{mra.startDate.toString().slice(0,15) | date }} to
+                                                {{mra.endDate.toString().slice(0,15) | date}}
+                                                <span class="badge badge-secondary float-right">
+                                                    At location
+                                                    {{mra.latitude | number:'1.1-6'}},
+                                                    {{mra.longitude | number:'1.1-6'}}
+                                                </span>
+                                            </a>
+                                            <a *ngIf="mra.startDate == null" class="product-title"
+                                                style="color: black;">
+                                                No Expiry Date
+                                                <span class="badge badge-secondary float-right">
+                                                    At location
+                                                    {{mra.latitude | number:'1.1-6'}},
+                                                    {{mra.longitude | number:'1.1-6'}}
+                                                </span>
+                                            </a>
+                                            <span class="product-description">
+                                                {{mra.quantity}} {{mra.units}} {{mra.name}}
+                                                <br />
+                                                {{mra.description}}
+                                                <span *ngIf="mra.tags.length > 0">
+                                                    <div *ngFor="let tag of mra.tags">
+                                                        <small class="badge badge-info">
+                                                            {{tag.name}}
+                                                        </small>
+                                                    </div>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                    <!-- /.item -->
+                                </ul>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="modal-receive">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmDialogLabel">Receive Resources</h5>
-                <button type="button" class="close" id="receiveModalCloseBtn" data-dismiss="modal" (click)="close()" aria-label="Close">
+                <button type="button" class="close" id="receiveModalCloseBtn" data-dismiss="modal" (click)="close()"
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <b style="font-size: 18px">Quantity Received</b>
-                <br/>
-                <input type="number" id="quantity" name="quantity" [max]="maxQuantity" [(ngModel)]="quantityReceived" required>
+                <br />
+                <input type="number" id="quantity" name="quantity" [max]="maxQuantity" [(ngModel)]="quantityReceived"
+                    required>
                 <b> {{mrpToFulfill.unit}}</b>
                 <span>
                     <b> / {{fulfillmentToUpdate.unreceivedQuantity}} {{mrpToFulfill.unit}} unreceived</b>
@@ -304,7 +457,8 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Cancel</button>
-                <button id="reject-fulfillment" type="button" class="btn btn-primary" (click)="receiveFulfillment()">Confirm</button>
+                <button id="reject-fulfillment" type="button" class="btn btn-primary"
+                    (click)="receiveFulfillment()">Confirm</button>
             </div>
         </div>
     </div>
@@ -315,19 +469,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmDialogLabel">Update Quantity</h5>
-                <button type="button" class="close" id="updateModalCloseBtn" data-dismiss="modal" (click)="close()" aria-label="Close">
+                <button type="button" class="close" id="updateModalCloseBtn" data-dismiss="modal" (click)="close()"
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <b style="font-size: 18px">Total Pledged Quantity</b>
-                <br/>
-                <input type="number" id="quantityPledged" name="quantityPledged" [max]="maxQuantity" [(ngModel)]="newTotalPledgedQuantity" required>
+                <br />
+                <input type="number" id="quantityPledged" name="quantityPledged" [max]="maxQuantity"
+                    [(ngModel)]="newTotalPledgedQuantity" required>
                 <b> {{mrpToFulfill.unit}}</b>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Cancel</button>
-                <button id="update-fulfillment" type="button" class="btn btn-primary" (click)="updateQuantity()">Confirm</button>
+                <button id="update-fulfillment" type="button" class="btn btn-primary"
+                    (click)="updateQuantity()">Confirm</button>
             </div>
         </div>
     </div>
@@ -347,7 +504,8 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Cancel</button>
-                <button id="accept-fulfillment" type="button" class="btn btn-primary" data-dismiss="modal" (click)="acceptFulfillment()">Confirm</button>
+                <button id="accept-fulfillment" type="button" class="btn btn-primary" data-dismiss="modal"
+                    (click)="acceptFulfillment()">Confirm</button>
             </div>
         </div>
     </div>
@@ -368,7 +526,8 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Cancel</button>
-                <button id="reject-fulfillment" type="button" class="btn btn-danger" data-dismiss="modal" (click)="rejectFulfillment()">Reject</button>
+                <button id="reject-fulfillment" type="button" class="btn btn-danger" data-dismiss="modal"
+                    (click)="rejectFulfillment()">Reject</button>
             </div>
         </div>
     </div>

@@ -18,6 +18,7 @@ import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
 import entity.GroupEntity;
+import entity.ProfileEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -117,5 +118,7 @@ public interface UserSessionBeanLocal {
     public List<GroupEntity> getGroupsJoined(Long userId) throws UserNotFoundException;
 
     public List<GroupEntity> getGroupsOwned(Long userId) throws UserNotFoundException;
+
+    public ProfileEntity getProfileForUser(Long userId) throws NoResultException;
 
 }
