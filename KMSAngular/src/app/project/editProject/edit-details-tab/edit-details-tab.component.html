@@ -1,16 +1,20 @@
 <form (ngSubmit)="edit(editProjectForm)" #editProjectForm="ngForm">
     <div class="form-group">
-        <label for="name">Project Name *:</label>
-        <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="projectToEdit.name" required="true">
-        <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project name cannot be empty!</span>
+        <label for="name">Project Name *</label>
+        <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="projectToEdit.name" required>
+        <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project Name cannot be empty!</span>
     </div>
     <div class='form-group'>
-        <label for="description">Description:</label>
-        <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="projectToEdit.description"></textarea>
+        <label for="description">Description</label>
+        <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="projectToEdit.description" (ngModelChange)="descriptionChange()"></textarea>
+        <small id="descriptionMaxCharacter" class="form-text text-muted float-right">
+            {{descriptionLen}} / 2000 characters
+        </small>
     </div> 
     <div class="form-group">
-        <label for="country">Country *:</label>
-        <input id="country" name="country" required list ="country-list" class="form-control" #country="ngModel" name="country" [(ngModel)]="projectToEdit.country" required="true">
+        <label for="country">Country *</label>
+        <input id="country" name="country" list ="country-list" class="form-control" #country="ngModel" name="country" [(ngModel)]="projectToEdit.country" required>
+        <span class="help-block" style="color: red" *ngIf="!country.valid && country.touched">Country cannot be empty!</span>
         <datalist id="country-list"> 
             <option value="" disabled selected hidden>Select a Country</option>
             <option value="Afghanistan">Afghanistan</option>
@@ -260,11 +264,25 @@
         </datalist>
     </div>
     <div class="form-group">
-        <label for="amount">Monetary Funding Required(USD) *:</label>
-        <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="projectToEdit.monetaryFundingRequired" value="0" min="0">
+        <label for="amount">Monetary Funding Required (USD)</label>
+        <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="projectToEdit.monetaryFundingRequired" min="0">
     </div>
     <div class="form-group">
-        <label>SDG Tags:</label>
+        <label for="merchantId">PayPal Merchant ID 
+            <span *ngIf="projectToEdit.monetaryFundingRequired" class="mr-1">*</span>
+            <button type="button" class="btn btn-link p-0 pb-1 far fa-question-circle" data-toggle="tooltip" data-placement="right" data-html="true" 
+                data-template="<div class='tooltip' role='tooltip'><div class='arrow'></div><div class='tooltip-inner tooltip-wide'></div></div>"
+                title="<b>What is a PayPal Merchant ID?</b><br/> It is a unique 13-character account ID associated with your PayPal Business account. 
+                <br/><b>Is a PayPal Business Account required?</b><br/>Yes if you have monetary funding required. In addition, a PayPal account is also required if you need to get material resources later on.
+                <br/><b>How to get the PayPal Merchant ID?</b><br/>The PayPal Merchant ID can be found under 'Business Information' in your Account Settings.
+                <br/> For more information, click <a href='https://www.paypal.com/sg/smarthelp/article/FAQ3850' target='_blank'><b><u>here</u></b></a>">
+            </button>
+        </label>
+        <input type="text" id="merchantId" class="form-control" #merchantId="ngModel" name="merchantId" [(ngModel)]="projectToEdit.paypalMerchantId" pattern=".{13}" [required]="projectToEdit.monetaryFundingRequired > 0">
+        <span class="help-block" style="color: red" *ngIf="projectToEdit.monetaryFundingRequired && !merchantId.valid && merchantId.dirty">PayPal Merchant ID needs to be 13 characters long!</span>
+    </div>
+    <div class="form-group">
+        <label>SDG Tags *</label>
         <div class="select2-blue">
             <select class="select2" id="sdgselect2" multiple="multiple"
                 data-placeholder="Select relevant sdg tags" data-dropdown-css-class="select2-blue"
@@ -273,7 +291,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="status">Project Status:</label>
+        <label for="status">Project Status</label>
         <select class="form-control" id="status" #status="ngModel" name="status" [(ngModel)]="projectToEdit.status">
             <option *ngFor="let status of projectStatusList" [value]='status'>{{status}}</option>
         </select>

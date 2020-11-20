@@ -33,7 +33,7 @@
                     </div>
                     <div class="form-group">
                         <label for="hrpStartDate">Start Date *</label>
-                        <input id="hrpStartDate" type="date" class="form-control" name="hrpStartDate" [(ngModel)]="newHrp.startDate" [min]="minDate" required>
+                        <input id="hrpStartDate" type="date" class="form-control" name="hrpStartDate" [(ngModel)]="newHrp.startDate" [min]="minDate" [max]="newHrp.endDate" required>
                     </div>
                     <div class="form-group">
                         <label for="hrpEndDate">End Date *</label>
@@ -44,7 +44,7 @@
                         <input id="hrpTotalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="hrpTotalSlots" [(ngModel)]="newHrp.totalSlots" min="1" required>
                     </div>
                     <div class="form-group">
-                        <label>Location of resource</label>
+                        <label>Location of Posting</label>
                         <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
                             (mapClick)="click($event)">
                         </google-map>

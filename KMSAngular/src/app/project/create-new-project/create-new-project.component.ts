@@ -35,6 +35,7 @@ export class CreateNewProjectComponent implements OnInit {
     private sessionService: SessionService,
     private router: Router) {
       this.newProject = new Project();
+      this.newProject.description = ""
   }
 
   ngOnInit(): void {
@@ -51,6 +52,10 @@ export class CreateNewProjectComponent implements OnInit {
         });
       }
     );
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
 
   }
 
@@ -110,7 +115,18 @@ export class CreateNewProjectComponent implements OnInit {
     if (createProjectForm.valid) {
       this.newProject.dateCreated = new Date();
       this.newProject.isActive = true;
-      this.newProject.profilePicture = this.selectedProfilePicture;
+      if (this.selectedProfilePicture) {
+        this.newProject.profilePicture = this.selectedProfilePicture;
+      } else {
+        this.newProject.profilePicture = null;
+      }
+      if (!this.newProject.monetaryFundingRequired) {
+        this.newProject.monetaryFundingRequired = 0.0;
+      }
+      if (!this.newProject.paypalMerchantId) {
+        this.newProject.paypalMerchantId = null;
+      }
+
       this.projectService.createNewProject(this.newProject, this.ownerId, this.tagIdsSelected).subscribe(
         response => {
           $(document).Toasts('create', {
@@ -135,7 +151,7 @@ export class CreateNewProjectComponent implements OnInit {
   }
 
   checkAccessRight() {
-    console.log(this.sessionService.getIsLogin);
+    //console.log(this.sessionService.getIsLogin);
     if(!this.sessionService.getIsLogin) {
       this.router.navigate(["/login"]);
     }

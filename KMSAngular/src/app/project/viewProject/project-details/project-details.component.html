@@ -1,14 +1,15 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
+<div class="loading" *ngIf="!loaded || !hasLoad">
+    <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
+</div>
+
 <div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId)">
   <p>This project has been deactivated for violating our T&C</p>
-  </div>
+</div>
 
-<div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId)">
-    <div class="loading" *ngIf="!loaded">
-        <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
-    </div>
+<div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId)">   
     <div class="content-header" *ngIf="loaded">
         <div class="content-fluid">
             <div class="card">
@@ -94,7 +95,7 @@
                 <div class="card-body">
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="basic-details" role="tabpanel" [ngClass]="{ 'active':activeTab==='basic-details'}" style="position: relative;">
-                            <p><b>Description:</b> {{projectToView.description}}</p>
+                            <p *ngIf="projectToView.description"><b>Description:</b> {{projectToView.description}}</p>
                             <p><b>Country:</b> {{projectToView.country}}</p>
                             <button *ngIf="projectToView.monetaryFundingRequired && isMember" type="button" class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;" [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project</button>
                             <p><b>Date Created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
@@ -341,4 +342,4 @@
 </div>
 <!-- /.modal -->
 
-<app-footer></app-footer>
+<app-footer *ngIf="loaded && hasLoad"></app-footer>

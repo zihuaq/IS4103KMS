@@ -12,20 +12,24 @@
                     <div class="alert alert-success" *ngIf = "projectCreated">
                         <p>{{ successMessage }}</p>
                     </div>
-                    <h1 class="m-0 text-dark">New Project</h1>
+                    <h1 class="m-0 mb-3 text-dark">New Project</h1>
                     <form (ngSubmit)="create(createProjectForm)" #createProjectForm="ngForm">
                         <div class="form-group">
                             <label for="name">Project Name *</label>
-                            <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="newProject.name" required="true">
-                            <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project name cannot be empty!</span>
+                            <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="newProject.name" required>
+                            <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project Name cannot be empty!</span>
                         </div>
                         <div class='form-group'>
-                            <label for="description">Description:</label>
+                            <label for="description">Description</label>
                             <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="newProject.description"></textarea>
+                            <small id="descriptionMaxCharacter" class="form-text text-muted float-right">
+                                {{newProject.description.length}} / 2000 characters
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="country">Country *</label>
-                            <input id="country" name="country" required list ="country-list" class="form-control" #country="ngModel" name="country" [(ngModel)]="newProject.country" required="true">
+                            <input id="country" name="country" list ="country-list" class="form-control" #country="ngModel" name="country" [(ngModel)]="newProject.country" required>
+                            <span class="help-block" style="color: red" *ngIf="!country.valid && country.touched">Country cannot be empty!</span>
                             <datalist id="country-list"> 
                                 <option value="" disabled selected hidden>Select a Country</option>
                                 <option value="Afghanistan">Afghanistan</option>
@@ -275,8 +279,22 @@
                             </datalist>
                         </div>
                         <div class="form-group">
-                            <label for="amount">Monetary Funding Required (USD) *</label>
-                            <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" value="0" min="0">
+                            <label for="amount">Monetary Funding Required (USD)</label>
+                            <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="merchantId">PayPal Merchant ID 
+                                <span *ngIf="newProject.monetaryFundingRequired" class="mr-1">*</span>
+                                <button type="button" class="btn btn-link p-0 pb-1 far fa-question-circle" data-toggle="tooltip" data-placement="right" data-html="true" 
+                                    data-template="<div class='tooltip' role='tooltip'><div class='arrow'></div><div class='tooltip-inner tooltip-wide'></div></div>"
+                                    title="<b>What is a PayPal Merchant ID?</b><br/> It is a unique 13-character account ID associated with your PayPal Business account. 
+                                    <br/><b>Is a PayPal Business Account required?</b><br/>Yes if you have monetary funding required. In addition, a PayPal account is also required if you need to get material resources later on.
+                                    <br/><b>How to get the PayPal Merchant ID?</b><br/>The PayPal Merchant ID can be found under 'Business Information' in your Account Settings.
+                                    <br/> For more information, click <a href='https://www.paypal.com/sg/smarthelp/article/FAQ3850' target='_blank'><b><u>here</u></b></a>">
+                                </button>
+                            </label>
+                            <input type="text" id="merchantId" class="form-control" #merchantId="ngModel" name="merchantId" [(ngModel)]="newProject.paypalMerchantId" pattern=".{13}" [required]="newProject.monetaryFundingRequired > 0">
+                            <span class="help-block" style="color: red" *ngIf="newProject.monetaryFundingRequired && !merchantId.valid && merchantId.dirty">PayPal Merchant ID needs to be 13 characters long!</span>
                         </div>
                         <div class="form-group">
                             <label>SDG Tags *</label>
@@ -303,6 +321,13 @@
                         </div>
                         <button class="btn btn-primary" type="submit" [disabled]="!createProjectForm.valid">Create New Project</button>
                     </form>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+                        <li class="breadcrumb-item"><a routerLink="/viewAllProjects">Project</a></li>
+                        <li class="breadcrumb-item active">Create New Project</li>
+                    </ol>
                 </div>
             </div>
         </div>

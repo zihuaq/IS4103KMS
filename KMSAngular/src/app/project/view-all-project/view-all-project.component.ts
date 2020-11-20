@@ -30,6 +30,7 @@ export class ViewAllProjectComponent implements OnInit {
   loggedInUser: User;
   projectToLeaveId: number;
   tags: Tag[];
+  loaded: boolean = false;
 
   constructor(public projectService: ProjectService,
     public tagService: TagService,
@@ -51,6 +52,7 @@ export class ViewAllProjectComponent implements OnInit {
         if (this.projects.length > 0) {
           this.noProjects = false;
         }
+        this.loaded = true;
       }
     );
 

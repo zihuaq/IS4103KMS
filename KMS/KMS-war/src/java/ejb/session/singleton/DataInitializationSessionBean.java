@@ -362,9 +362,9 @@ public class DataInitializationSessionBean {
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0), 6l, 1l, 5l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0), 7l, 1l, 6l);
             //create tasks
-            taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 30.0, 0l), 4l);
-            taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 100.0, 1l), 4l);
-            taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-16 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 18:00"), 20.0, 1l), 4l);
+            taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 0.3, 0l), 4l);
+            taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);
+            taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-16 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 18:00"), 0.2, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Seek Sponsorship", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-20 12:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 12:00"), 0.0, 0l), 4l);
         } catch(NoResultException ex) {
            System.out.println(ex.getMessage()); 
