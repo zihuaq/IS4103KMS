@@ -120,12 +120,36 @@ public class ProfileResource {
         }
     }
 
-    @POST
-    @Path("/settleClaim/{claimProfileRequestId}")
+    @GET
+    @Path("/claims")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response settleProfileClaim(@PathParam("claimProfileRequestId") Long claimProfileRequestId) {
+    public Response getAllProfileClaims() {
         try {
-            dataMappingSessionBean.settleProfileClaim(claimProfileRequestId);
+            List<ClaimProfileRequestEntity> claimProfileRequestEntitys = dataMappingSessionBean.getAllProfileClaims();
+            for (ClaimProfileRequestEntity claimProfileRequestEntity : claimProfileRequestEntitys) {
+                claimProfileRequestEntity.getProfile().setClaimProfileRequestMade(new ArrayList<>());
+                claimProfileRequestEntity.getProfile().setUserEntity(null);
+                UserEntity user = new UserEntity();
+                user.setUserId(claimProfileRequestEntity.getUser().getUserId());
+                user.setFirstName(claimProfileRequestEntity.getUser().getFirstName());
+                user.setLastName(claimProfileRequestEntity.getUser().getLastName());
+                claimProfileRequestEntity.setUser(user);
+            }
+            return Response.status(200).entity(claimProfileRequestEntitys).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @POST
+    @Path("/settleClaim/{claimProfileRequestId}/{accept}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response settleProfileClaim(@PathParam("claimProfileRequestId") Long claimProfileRequestId, @PathParam("accept") boolean accept) {
+        try {
+            dataMappingSessionBean.settleProfileClaim(claimProfileRequestId, accept);
             return Response.status(204).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()

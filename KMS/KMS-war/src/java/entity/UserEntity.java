@@ -157,9 +157,7 @@ public class UserEntity implements Serializable {
     private List<NotificationEntity> notifications;
 
     @OneToOne
-    @JoinTable(name = "user_profile", joinColumns = {
-        @JoinColumn(name = "userId", referencedColumnName = "userId")}, inverseJoinColumns = {
-        @JoinColumn(name = "profileId", referencedColumnName = "id")})
+    @JoinColumn(name = "profileId")
     private ProfileEntity profile;
 
     @OneToMany(mappedBy = "user")

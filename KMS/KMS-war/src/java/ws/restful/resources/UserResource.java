@@ -359,11 +359,14 @@ public class UserResource {
             user.setAffiliationRequestReceived(new ArrayList<>());
             user.setHrpApplied(new ArrayList<>());
             user.setFulfillments(new ArrayList<>());
-            user.setActivityJoined(new ArrayList<>());  
+            user.setActivityJoined(new ArrayList<>());
             user.setDonations(new ArrayList<>());
             user.setNotifications(new ArrayList<>());
             user.setClaimProfileRequestMade(new ArrayList<>());
-            user.setProfile(null);
+            if (user.getProfile() != null) {
+                user.getProfile().setClaimProfileRequestMade(new ArrayList<>());
+                user.getProfile().setUserEntity(null);
+            }
             for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
                 hrp.setActivity(null);
                 hrp.getAppliedUsers().clear();
@@ -487,7 +490,7 @@ public class UserResource {
             user.setAffiliationRequestReceived(new ArrayList<>());
             user.setHrpApplied(new ArrayList<>());
             user.setFulfillments(new ArrayList<>());
-            user.setActivityJoined(new ArrayList<>());  
+            user.setActivityJoined(new ArrayList<>());
             user.setDonations(new ArrayList<>());
             user.setNotifications(new ArrayList<>());
             user.setClaimProfileRequestMade(new ArrayList<>());
@@ -496,10 +499,10 @@ public class UserResource {
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
             System.out.println(ex.getMessage());
-            ErrorRsp errorRsp =  new ErrorRsp(ex.getMessage());
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.UNAUTHORIZED).entity(errorRsp).build();
-        } catch (DeactivatedEntityException ex){
-             ErrorRsp errorRsp =  new ErrorRsp(ex.getMessage());
+        } catch (DeactivatedEntityException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(404).entity(errorRsp).build();
         }
 
@@ -1155,7 +1158,7 @@ public class UserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @Path("/profile/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)

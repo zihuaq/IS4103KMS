@@ -99,6 +99,7 @@ import { ChatComponent } from './chat/chat.component';
 import { UserFilterPipe } from './chat/user-filter.pipe';
 import { SearchProfileComponent } from './search-profile/search-profile.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ProfileClaimsComponent } from './administration/profile-claims/profile-claims.component';
 
 export const environment = {
   production: false,
@@ -197,7 +198,8 @@ export const environment = {
     ChatComponent,
     UserFilterPipe,
     SearchProfileComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    ProfileClaimsComponent
   ],
   imports: [
     BrowserModule,
