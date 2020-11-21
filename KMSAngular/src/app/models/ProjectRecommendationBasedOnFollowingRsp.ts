@@ -1,7 +1,7 @@
 import { Project } from '../classes/project';
 import { User } from '../classes/user';
 
-export class GroupRecommendationBasedOnFollowingRsp {
+export class ProjectRecommendationBasedOnFollowingRsp {
     projectToRecommend: Project;
     followingInProject: User[];
 
