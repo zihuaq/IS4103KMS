@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { map } from 'rxjs/operators';
@@ -15,6 +15,7 @@ import { ChatService } from 'src/app/services/chat.service';
 })
 export class MessagesPage implements OnInit {
 
+  @ViewChild('content') content:any;
   messages;
   chatMessage: string;
   sender: User;
@@ -87,6 +88,10 @@ export class MessagesPage implements OnInit {
     )
   }
 
+  ionViewDidEnter(){
+    this.content.scrollToBottom(30);
+  }
+
   getUserIdFromKey(key) {
     let index = key.indexOf("_");
     return key.substring(0, index);
@@ -113,6 +118,7 @@ export class MessagesPage implements OnInit {
       )
     ).subscribe(
       data => {
+        this.content.scrollToBottom(30);
         let msgs = [];
         let count = 0;
         let userList: any[] = data;
