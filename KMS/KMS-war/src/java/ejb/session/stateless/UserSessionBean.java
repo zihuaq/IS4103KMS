@@ -139,8 +139,34 @@ public class UserSessionBean implements UserSessionBeanLocal {
     public UserEntity getUserById(long userId) throws NoResultException {
         UserEntity user = em.find(UserEntity.class, userId);
         if (user != null) {
+            user.getActivityJoined().size();
+            user.getAffiliatedUsers().size();
+            user.getAffiliationRequestMade().size();
+            user.getAffiliationRequestReceived().size();
+            user.getBadges().size();
+            user.getClaimProfileRequestMade().size();
+            user.getDonations().size();
+            user.getFollowRequestMade().size();
+            user.getFollowRequestReceived().size();
             user.getFollowers().size();
             user.getFollowing().size();
+            user.getFulfillments().size();
+            user.getGroupAdmins().size();
+            user.getGroupsJoined().size();
+            user.getGroupsManaged().size();
+            user.getGroupsOwned().size();
+            user.getHrpApplied().size();
+            user.getMras().size();
+            user.getNotifications().size();
+            user.getPosts().size();
+            user.getProfiles().size();
+            user.getProjectsJoined().size();
+            user.getProjectsManaged().size();
+            user.getProjectsOwned().size();
+            user.getReviewsGiven().size();
+            user.getReviewsReceived().size();
+            user.getSdgs().size();
+            user.getSkills().size();
             return user;
         } else {
             throw new NoResultException("User not found");
@@ -952,8 +978,9 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public ProfileEntity getProfileForUser(Long userId) throws NoResultException {
+    public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException {
         UserEntity userEntity = getUserById(userId);
-        return userEntity.getProfile();
+        userEntity.getProfiles().size();
+        return userEntity.getProfiles();
     }
 }

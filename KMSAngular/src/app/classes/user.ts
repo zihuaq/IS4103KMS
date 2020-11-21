@@ -44,7 +44,7 @@ export class User {
   projectsJoined: Project[];
   activityJoined: Activity[];
   groupsJoined: Group[];
-  profile: Profile;
+  profiles: Profile[];
   claimProfileRequestMade: ClaimProfileRequest[];
 
   constructor(
@@ -79,7 +79,7 @@ export class User {
     projectsJoined?: Project[],
     activityJoined?: Activity[],
     groupsJoined?: Group[],
-    profile?: Profile,
+    profiles?: Profile[],
     claimProfileRequestMade?: ClaimProfileRequest[]
   ) {
     this.userId = userId;
@@ -113,7 +113,7 @@ export class User {
     this.projectsJoined = projectsJoined;
     this.activityJoined = activityJoined;
     this.groupsJoined = groupsJoined;
-    this.profile = profile;
+    this.profiles = profiles;
     this.claimProfileRequestMade = claimProfileRequestMade;
   }
 }

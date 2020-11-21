@@ -15,8 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 /**
  *
@@ -70,7 +70,7 @@ public class ProfileEntity implements Serializable {
 
     private String contactDetails;
 
-    @OneToOne(mappedBy = "profile")
+    @ManyToOne
     private UserEntity userEntity;
 
     @OneToMany(mappedBy = "profile")

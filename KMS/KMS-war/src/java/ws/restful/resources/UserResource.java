@@ -361,9 +361,9 @@ public class UserResource {
             user.setDonations(new ArrayList<>());
             user.setNotifications(new ArrayList<>());
             user.setClaimProfileRequestMade(new ArrayList<>());
-            if (user.getProfile() != null) {
-                user.getProfile().setClaimProfileRequestMade(new ArrayList<>());
-                user.getProfile().setUserEntity(null);
+            for (ProfileEntity profile : user.getProfiles()) {
+                profile.setClaimProfileRequestMade(new ArrayList<>());
+                profile.setUserEntity(null);
             }
             for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
                 hrp.setActivity(null);
@@ -492,7 +492,7 @@ public class UserResource {
             user.setDonations(new ArrayList<>());
             user.setNotifications(new ArrayList<>());
             user.setClaimProfileRequestMade(new ArrayList<>());
-            user.setProfile(null);
+            user.setProfiles(new ArrayList<>());
 
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
@@ -1162,10 +1162,12 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProfileForUser(@PathParam("userId") Long userId) {
         try {
-            ProfileEntity profileEntity = userSessionBeanLocal.getProfileForUser(userId);
-            profileEntity.setClaimProfileRequestMade(new ArrayList<>());
-            profileEntity.setUserEntity(null);
-            return Response.status(Status.OK).entity(profileEntity).build();
+            List<ProfileEntity> profileEntitys = userSessionBeanLocal.getProfilesForUser(userId);
+            for (ProfileEntity profileEntity : profileEntitys) {
+                profileEntity.setClaimProfileRequestMade(new ArrayList<>());
+                profileEntity.setUserEntity(null);
+            }
+            return Response.status(Status.OK).entity(profileEntitys).build();
 
         } catch (NoResultException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());

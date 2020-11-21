@@ -16,12 +16,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -156,9 +154,8 @@ public class UserEntity implements Serializable {
     @OneToMany
     private List<NotificationEntity> notifications;
 
-    @OneToOne
-    @JoinColumn(name = "profileId")
-    private ProfileEntity profile;
+    @OneToMany(mappedBy = "userEntity")
+    private List<ProfileEntity> profiles;
 
     @OneToMany(mappedBy = "user")
     private List<ClaimProfileRequestEntity> claimProfileRequestMade;
@@ -193,6 +190,7 @@ public class UserEntity implements Serializable {
         this.activityJoined = new ArrayList<>();
         this.donations = new ArrayList<>();
         this.notifications = new ArrayList<>();
+        this.profiles = new ArrayList<>();
         this.claimProfileRequestMade = new ArrayList<>();
         this.reputationPoints = 0;
     }
@@ -596,12 +594,12 @@ public class UserEntity implements Serializable {
         this.notifications = notifications;
     }
 
-    public ProfileEntity getProfile() {
-        return profile;
+    public List<ProfileEntity> getProfiles() {
+        return profiles;
     }
 
-    public void setProfile(ProfileEntity profile) {
-        this.profile = profile;
+    public void setProfiles(List<ProfileEntity> profiles) {
+        this.profiles = profiles;
     }
 
     public List<ClaimProfileRequestEntity> getClaimProfileRequestMade() {

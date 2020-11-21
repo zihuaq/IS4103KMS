@@ -948,21 +948,13 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
             UserEntity userEntity = userSessionBean.getUserById(claimProfileRequestEntity.getUser().getUserId());
             if (accept) {
                 profileEntity.setUserEntity(userEntity);
-                userEntity.setProfile(profileEntity);
-                List<ClaimProfileRequestEntity> claimProfileRequestEntitys = userEntity.getClaimProfileRequestMade();
-                for (ClaimProfileRequestEntity claim : claimProfileRequestEntitys) {
-                    claim.getProfile().getClaimProfileRequestMade().remove(claim);
-                    claim.setProfile(null);
-                    claim.setUser(null);
-                    em.remove(claim);
-                }
-            } else {
-                profileEntity.getClaimProfileRequestMade().remove(claimProfileRequestEntity);
-                userEntity.getClaimProfileRequestMade().remove(claimProfileRequestEntity);
-                claimProfileRequestEntity.setProfile(null);
-                claimProfileRequestEntity.setUser(null);
-                em.remove(claimProfileRequestEntity);
+                userEntity.getProfiles().add(profileEntity);
             }
+            profileEntity.getClaimProfileRequestMade().remove(claimProfileRequestEntity);
+            userEntity.getClaimProfileRequestMade().remove(claimProfileRequestEntity);
+            claimProfileRequestEntity.setProfile(null);
+            claimProfileRequestEntity.setUser(null);
+            em.remove(claimProfileRequestEntity);
         }
     }
 

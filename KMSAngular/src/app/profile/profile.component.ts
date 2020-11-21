@@ -62,9 +62,7 @@ export class ProfileComponent implements OnInit {
   }
 
   hasProfile() {
-    if (this.profile.userEntity || this.loggedInUser.profile) {
-      console.log(this.profile.userEntity);
-      console.log(this.loggedInUser.profile);
+    if (this.profile.userEntity) {
       return true;
     } else {
       return false;
