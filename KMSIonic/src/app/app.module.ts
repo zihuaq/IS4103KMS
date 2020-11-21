@@ -16,6 +16,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 const conifg = {
     apiKey: "AIzaSyBl7TP2OFBQJ4X2N9oRkUHTh33cK6y299c",
@@ -37,7 +38,8 @@ const conifg = {
     FormsModule,
     HttpClientModule,
     AngularFireModule.initializeApp(conifg), 
-    AngularFirestoreModule,    
+    AngularFirestoreModule, 
+    IonicSelectableModule   
   ],
   providers: [
     StatusBar,

@@ -110,6 +110,9 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
       if (!this.projectToEdit.monetaryFundingRequired) {
         this.projectToEdit.monetaryFundingRequired = 0.0;
       }
+      if (!this.projectToEdit.paypalMerchantId) {
+        this.projectToEdit.paypalMerchantId = null;
+      }
       this.projectService.updateProject(this.projectToEdit).subscribe(
         response => {
           $(document).Toasts('create', {

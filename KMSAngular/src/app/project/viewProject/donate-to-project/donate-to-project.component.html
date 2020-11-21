@@ -5,10 +5,10 @@
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Donate to Project: {{projectToDonate.name}}</h1>
+        <div class="col-sm-8">
+          <h1 class="m-0 text-dark">Project Donation to {{projectToDonate.name}}</h1>
         </div><!-- /.col -->
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
             <li class="breadcrumb-item">Project</li>
@@ -34,7 +34,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                     </div>
-                    <input name="donation" type="number" class="form-control" id="donationAmount" [(ngModel)]="donationAmount" placeholder="Enter Amount" [max]="projectToDonate.monetaryFundingRequired">
+                    <input name="donation" type="number" class="form-control" id="donationAmount" [(ngModel)]="donationAmount" placeholder="Enter Amount" [max]="projectToDonate.monetaryFundingRequired - projectToDonate.monetaryFundingObtained">
                 </div>
                 <div class="text-muted">Project's Funding Needed: ${{(projectToDonate.monetaryFundingRequired - projectToDonate.monetaryFundingObtained) | number:'1.0'}}</div>
               </div>

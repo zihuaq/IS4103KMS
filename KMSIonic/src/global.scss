@@ -66,6 +66,13 @@
   display: block;
 }
 
+.donate-to-project-modal .modal-wrapper {
+  height: 70%;
+  top: 30%;
+  position: absolute;
+  display: block;
+}
+
 .sc-ion-modal-ios-h {
   --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
 }
@@ -86,5 +93,11 @@
   }
   button.alert-button.reject-button{
     color: rgb(219, 42, 42);
+  }
+}
+
+.paypalMerchantIdAlertCss{
+  .alert-message{
+    font-size: 13px;
   }
 }

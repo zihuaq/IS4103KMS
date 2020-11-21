@@ -416,16 +416,23 @@ const routes: Routes = [
   {
     path: 'chat',
     loadChildren: () => 
-    import('./pages/chat/chat.module').then(
-       m => m.ChatPageModule
-    )
+      import('./pages/chat/chat.module').then(
+        m => m.ChatPageModule
+      )
   },
   {
     path: 'messages/:user',
     loadChildren: () => 
-    import('./pages/chat/messages/messages.module').then(
-      m => m.MessagesPageModule
-    )
+      import('./pages/chat/messages/messages.module').then(
+        m => m.MessagesPageModule
+      )
+  },
+  {
+    path: 'donate-to-project-modal',
+    loadChildren: () => 
+      import('./pages/project/viewProject/donate-to-project-modal/donate-to-project-modal.module').then( 
+        m => m.DonateToProjectModalPageModule
+      )
   }
 
 ];
