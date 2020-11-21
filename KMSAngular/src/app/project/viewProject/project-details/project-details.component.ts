@@ -55,6 +55,9 @@ export class ProjectDetailsComponent implements OnInit {
     private postService: PostService) {
     this.projectToView = new Project();
     this.owner = new User();
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
   }
 
   ngOnInit(): void {

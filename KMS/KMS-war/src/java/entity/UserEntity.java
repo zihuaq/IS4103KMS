@@ -194,6 +194,7 @@ public class UserEntity implements Serializable {
         this.donations = new ArrayList<>();
         this.notifications = new ArrayList<>();
         this.claimProfileRequestMade = new ArrayList<>();
+        this.reputationPoints = 0;
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, UserTypeEnum usertype) {
@@ -206,6 +207,7 @@ public class UserEntity implements Serializable {
         this.setPassword(password);
         this.joinedDate = new Date();
         this.userType = usertype;
+        this.reputationPoints = 0;
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date adminStartDate, UserTypeEnum userType) {
