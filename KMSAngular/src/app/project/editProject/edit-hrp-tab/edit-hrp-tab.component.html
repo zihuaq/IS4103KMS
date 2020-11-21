@@ -114,7 +114,7 @@
                     </a>
                     <br />
                     <button type="button" class="btn btn-info float-right" style="margin-right: 2%; font-size: 15px;"
-                        data-toggle="modal" data-target="#modal-recommendations" (click)="clickRecommendation(hrp)"
+                        data-toggle="modal" data-target="#modal-hrp-recommendations" (click)="clickRecommendation(hrp)"
                         data-backdrop="static">
                         <i class="fas fa-crown"></i> Recommendations
                     </button>
@@ -229,7 +229,7 @@
 </div>
 
 
-<div class="modal fade" id="modal-recommendations">
+<div class="modal fade" id="modal-hrp-recommendations">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content bg-gradient-info">
             <div class="modal-header">
@@ -239,10 +239,45 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div *ngIf="userRecommendations && userRecommendations.length == 0"> <b>No recommendations at the moment</b></div>
-                <div *ngIf="userRecommendations && userRecommendations.length > 0" style="max-height: 500px; overflow-y: scroll;">
+                <div *ngIf="userRecommendations && userRecommendations.length == 0"> <b>No recommendations at the
+                        moment</b></div>
+                <div *ngIf="userRecommendations && userRecommendations.length > 0"
+                    style="max-height: 500px; overflow-y: scroll; color: black;">
                     <div *ngFor="let user of userRecommendations" style="max-width:95%">
-
+                        <div class="card card-widget">
+                            <div class="card-header">
+                                <div class="user-block">
+                                    <img *ngIf="user.profilePicture" class="img-circle" [src]="user.profilePicture"
+                                        alt="User Image">
+                                    <img *ngIf="!user.profilePicture" class="img-circle"
+                                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                        alt="User Image">
+                                    <span class="username">
+                                        {{user.firstName}} {{user.lastName}}
+                                    </span>
+                                    <span class="description">{{user.reputationPoints}} Reputation Points</span>
+                                </div>
+                                <!-- /.user-block -->
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <p class="text-muted text-sm">
+                                    <span *ngIf="user.skills.length == 0"> User has no Skills indicated</span>
+                                    <span class="d-flex flex-wrap" *ngIf="user.skills.length > 0">
+                                        Skills:
+                                        <p *ngFor="let skill of user.skills" class="SDGs">
+                                            <small class="badge badge-warning"
+                                                style="margin-left: 5px; margin-right: 5px;">
+                                                {{skill.name}}
+                                            </small>
+                                        </p>
+                                    </span>
+                                </p>
+                                <a routerLink="/userProfile/{{user.userId}}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-user"></i> View Profile
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

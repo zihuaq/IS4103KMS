@@ -91,6 +91,7 @@ import { PostReportItemComponent } from './administration/post-reports/post-repo
 import { CommentReportItemComponent } from './administration/comment-reports/comment-report-item/comment-report-item.component';
 import { EditTaskTabComponent } from './project/editProject/edit-task-tab/edit-task-tab.component';
 import { ViewDocumentsComponent } from './project/viewProject/view-documents/view-documents.component';
+import { ViewSimilarProjectsComponent } from './project/viewProject/view-similar-projects/view-similar-projects.component';
 import { EditDocumentsComponent } from './project/editProject/edit-documents/edit-documents.component';
 
 import { AngularFireModule } from '@angular/fire';
@@ -99,6 +100,10 @@ import { ChatComponent } from './chat/chat.component';
 import { UserFilterPipe } from './chat/user-filter.pipe';
 import { SearchProfileComponent } from './search-profile/search-profile.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ViewRecommendationsComponent } from './view-recommendations/view-recommendations.component';
+import { FollowRecommendationsComponent } from './view-recommendations/follow-recommendations/follow-recommendations.component';
+import { ProjectRecommendationsComponent } from './view-recommendations/project-recommendations/project-recommendations.component';
+import { GroupRecommendationsComponent } from './view-recommendations/group-recommendations/group-recommendations.component';
 
 export const environment = {
   production: false,
@@ -193,11 +198,16 @@ export const environment = {
     CommentReportItemComponent,
     EditTaskTabComponent,
     ViewDocumentsComponent,
+    ViewSimilarProjectsComponent,
     EditDocumentsComponent,
     ChatComponent,
     UserFilterPipe,
     SearchProfileComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    ViewRecommendationsComponent,
+    FollowRecommendationsComponent,
+    ProjectRecommendationsComponent,
+    GroupRecommendationsComponent
   ],
   imports: [
     BrowserModule,

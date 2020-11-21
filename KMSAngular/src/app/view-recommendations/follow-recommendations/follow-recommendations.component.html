@@ -1,0 +1,95 @@
+<div class="card" style="width: 100%;">
+    <div class="card-header">
+        <h3 class="card-title"> Recommended Users To Follow </h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div *ngIf="!hasRecommendations">
+            <p style="margin: 5px; text-align: center; width:100%"> No recommendations at the moment</p>
+        </div>
+        <div *ngIf="followersToFollow && followingOfFollowing"
+            style="max-height: 500px; overflow-y: scroll; color: black;">
+            <div *ngFor="let user of followersToFollow" style="max-width:95%">
+                <div class="user-block" style="margin: 10px; width: 100%;">
+                    <img *ngIf="user.profilePicture" class="img-circle" [src]="user.profilePicture" alt="User Image">
+                    <img *ngIf="!user.profilePicture" class="img-circle"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="User Image">
+                    <span class="username">
+                        {{user.firstName}} {{user.lastName}}
+                    </span>
+                    <span class="description">follows you</span>
+                </div>
+                <div class="card-body">
+                    <a routerLink="/userProfile/{{user.userId}}" class="btn btn-sm btn-primary" style="margin: 5px;">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <button
+                        *ngIf="!checkLoginUserHasFollowed(user.userId) && !checkLoginUserHaveSentFollowReq(user.userId)"
+                        type="button" class="btn bg-gradient-info btn-sm" (click)="follow(user.userId)"
+                        style="margin: 5px;">
+                        <i class="fas fa-user-plus"></i> Follow
+                    </button>
+                    <button
+                        *ngIf="!checkLoginUserHasFollowed(user.userId) && checkLoginUserHaveSentFollowReq(user.userId)"
+                        type=" button" class="btn bg-gradient-info btn-sm" disabled=true style="margin: 5px;">
+                        <i class="fas fa-check"></i> Follow Request Sent
+                    </button>
+                </div>
+            </div>
+            <div *ngFor="let followingOfFollowingRsp of followingOfFollowing" style="max-width:95%">
+                <div class="user-block" style="margin: 10px; width: 100%;">
+                    <img *ngIf="followingOfFollowingRsp.userToRecommend.profilePicture" class="img-circle"
+                        [src]="followingOfFollowingRsp.userToRecommend.profilePicture" alt="User Image">
+                    <img *ngIf="!followingOfFollowingRsp.userToRecommend.profilePicture" class="img-circle"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        alt="User Image">
+                    <span class="username">
+                        {{followingOfFollowingRsp.userToRecommend.firstName}}
+                        {{followingOfFollowingRsp.userToRecommend.lastName}}
+                    </span>
+                    <span *ngIf="followingOfFollowingRsp.usersFollowing.length == 1" class="description">
+                        followed by {{followingOfFollowingRsp.usersFollowing[0].firstName}}
+                        {{followingOfFollowingRsp.usersFollowing[0].lastName}}
+                    </span>
+                    <span *ngIf="followingOfFollowingRsp.usersFollowing.length == 2" class="description">
+                        followed by {{followingOfFollowingRsp.usersFollowing[0].firstName}}
+                        {{followingOfFollowingRsp.usersFollowing[0].lastName}}
+                        and {{followingOfFollowingRsp.usersFollowing[1].firstName}}
+                        {{followingOfFollowingRsp.usersFollowing[1].lastName}}
+                    </span>
+                    <span *ngIf="followingOfFollowingRsp.usersFollowing.length > 2" class="description">
+                        followed by {{followingOfFollowingRsp.usersFollowing[0].firstName}}
+                        {{followingOfFollowingRsp.usersFollowing[0].lastName}},
+                        {{followingOfFollowingRsp.usersFollowing[1].firstName}}
+                        {{followingOfFollowingRsp.usersFollowing[1].lastName}} and
+                        {{followingOfFollowingRsp.usersFollowing.length-2}} others
+                    </span>
+                </div>
+                <!-- /.user-block -->
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <a routerLink="/userProfile/{{followingOfFollowingRsp.userToRecommend.userId}}"
+                        class="btn btn-sm btn-primary">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <button
+                        *ngIf="!checkLoginUserHasFollowed(followingOfFollowingRsp.userToRecommend.userId) && !checkLoginUserHaveSentFollowReq(followingOfFollowingRsp.userToRecommend.userId)"
+                        type="button" class="btn bg-gradient-info btn-sm"
+                        (click)="follow(followingOfFollowingRsp.userToRecommend.userId)" style="margin: 5px;">
+                        <i class="fas fa-user-plus"></i> Follow
+                    </button>
+                    <button
+                        *ngIf="!checkLoginUserHasFollowed(followingOfFollowingRsp.userToRecommend.userId) && checkLoginUserHaveSentFollowReq(followingOfFollowingRsp.userToRecommend.userId)"
+                        type=" button" class="btn bg-gradient-info btn-sm" disabled=true style="margin: 5px;">
+                        <i class="fas fa-check"></i> Follow Request Sent
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>

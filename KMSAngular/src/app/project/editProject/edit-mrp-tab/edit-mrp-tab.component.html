@@ -36,7 +36,7 @@
                         {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
                     <br />
                     <button type="button" class="btn btn-info float-right" style="margin-right: 2%; font-size: 15px;"
-                        data-toggle="modal" data-target="#modal-recommendations" (click)="clickRecommendation(mrp)"
+                        data-toggle="modal" data-target="#modal-mrp-recommendations" (click)="clickRecommendation(mrp)"
                         data-backdrop="static">
                         <i class="fas fa-crown"></i> Recommendations
                     </button>
@@ -357,12 +357,12 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-recommendations">
+<div class="modal fade" id="modal-mrp-recommendations">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content bg-gradient-info">
             <div class="modal-header">
                 <h4 class="modal-title">Recommendations</h4>
-                <button type="button" class="close" (click)="closeModal()" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
