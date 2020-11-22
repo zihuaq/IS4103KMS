@@ -433,6 +433,13 @@ const routes: Routes = [
       import('./pages/project/viewProject/donate-to-project-modal/donate-to-project-modal.module').then( 
         m => m.DonateToProjectModalPageModule
       )
+  },
+  {
+    path: 'donate-to-platform-modal',
+    loadChildren: () => 
+      import('./pages/donate-to-platform-modal/donate-to-platform-modal.module').then( 
+        m => m.DonateToPlatformModalPageModule
+      )
   }
 
 ];

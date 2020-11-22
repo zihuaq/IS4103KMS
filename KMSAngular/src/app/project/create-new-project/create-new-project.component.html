@@ -280,21 +280,28 @@
                         </div>
                         <div class="form-group">
                             <label for="amount">Monetary Funding Required (USD)</label>
-                            <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" min="0">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" id="amount" class="form-control" #amount="ngModel" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" min="0">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="merchantId">PayPal Merchant ID 
+                            <label for="paypalEmail">PayPal Email
                                 <span *ngIf="newProject.monetaryFundingRequired" class="mr-1">*</span>
                                 <button type="button" class="btn btn-link p-0 pb-1 far fa-question-circle" data-toggle="tooltip" data-placement="right" data-html="true" 
                                     data-template="<div class='tooltip' role='tooltip'><div class='arrow'></div><div class='tooltip-inner tooltip-wide'></div></div>"
-                                    title="<b>What is a PayPal Merchant ID?</b><br/> It is a unique 13-character account ID associated with your PayPal Business account. 
-                                    <br/><b>Is a PayPal Business Account required?</b><br/>Yes if you have monetary funding required. In addition, a PayPal account is also required if you need to get material resources later on.
-                                    <br/><b>How to get the PayPal Merchant ID?</b><br/>The PayPal Merchant ID can be found under 'Business Information' in your Account Settings.
-                                    <br/> For more information, click <a href='https://www.paypal.com/sg/smarthelp/article/FAQ3850' target='_blank'><b><u>here</u></b></a>">
+                                    title="<b>What is PayPal?</b><br/> It is a digital payments platform that allows you to make secure online transactions and receive payments. 
+                                    <br/><b>Is a PayPal Account required?</b><br/>Yes if your project has monetary funding required. In addition, an account will also be required if you need to get material resources later on.
+                                    <br/><b>Don't have a PayPal account? <a href='https://www.paypal.com/sg/webapps/mpp/account-selection' target='_blank'><u>Sign up here</u></a></b>">
                                 </button>
                             </label>
-                            <input type="text" id="merchantId" class="form-control" #merchantId="ngModel" name="merchantId" [(ngModel)]="newProject.paypalMerchantId" pattern=".{13}" [required]="newProject.monetaryFundingRequired > 0">
-                            <span class="help-block" style="color: red" *ngIf="newProject.monetaryFundingRequired && !merchantId.valid && merchantId.dirty">PayPal Merchant ID needs to be 13 characters long!</span>
+                            <input email type="email" id="paypalEmail" class="form-control" #paypalEmail="ngModel" name="paypalEmail" [(ngModel)]="newProject.paypalEmail" [required]="newProject.monetaryFundingRequired > 0">
+                            <small *ngIf="newProject.monetaryFundingRequired && !(!paypalEmail.valid && paypalEmail.dirty)" class="form-text text-muted">
+                                Please ensure a valid PayPal email address is filled in.
+                            </small>
+                            <span class="help-block" style="color: red" *ngIf="newProject.monetaryFundingRequired && !paypalEmail.valid && paypalEmail.dirty">Please fill in a valid PayPal email address!</span>
                         </div>
                         <div class="form-group">
                             <label>SDG Tags *</label>

@@ -1,11 +1,12 @@
-<span *ngIf="hrpList.length == 0">There is no human resource posting at the moment.</span>
+<span *ngIf="!loaded">Loading...</span>
+<span *ngIf="loaded && hrpList.length == 0">There is no human resource posting at the moment.</span>
 
-<span *ngIf="hrpList.length > 0">
+<span *ngIf="loaded && hrpList.length > 0">
   <ion-list *ngFor="let hrp of hrpList">
     <ion-item>
       <span *ngIf="isMember">
-        <ion-label tappable (click)="viewHrpDetails($event, hrp)">
-          <h2>
+        <ion-label class="ion-text-wrap" tappable (click)="viewHrpDetails($event, hrp)" style="padding-top: 5px; padding-bottom: 10px;">
+          <h2 style="margin-bottom: 5px;">
             <b style="font-size: large;">{{hrp.name}}</b>
             <span *ngIf="hasApplied(hrp.humanResourcePostingId)">
               (Joined)
@@ -18,14 +19,14 @@
             At location {{hrp.latitude | number:'1.1-6'}}, {{hrp.longitude | number:'1.1-6'}}
             </ion-badge>
           </p>
-          <span *ngFor="let tag of hrp.tags" style="margin-right: 5px;">
-            <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
+          <span *ngFor="let tag of hrp.tags">
+            <ion-badge color="primary" style="font-size: 12px; margin-top: 5px; margin-right: 5px;">{{tag.name}}</ion-badge>
           </span>
         </ion-label>
       </span>
       <span *ngIf="!isMember">
-        <ion-label>
-          <h2>
+        <ion-label class="ion-text-wrap" style="padding-top: 5px; padding-bottom: 10px;">
+          <h2 style="margin-bottom: 5px;">
             <b>{{hrp.name}}</b>
             <span *ngIf="!hasApplied(hrp.humanResourcePostingId) && hasFilled(hrp.humanResourcePostingId)">
               (Filled)
@@ -38,8 +39,8 @@
               At location {{hrp.latitude | number:'1.1-6'}}, {{hrp.longitude | number:'1.1-6'}}
             </ion-badge>
           </p>
-          <span *ngFor="let tag of hrp.tags" style="margin-right: 5px;">
-            <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
+          <span *ngFor="let tag of hrp.tags">
+            <ion-badge color="primary" style="font-size: 12px; margin-top: 5px; margin-right: 5px;">{{tag.name}}</ion-badge>
           </span>
         </ion-label>
       </span>

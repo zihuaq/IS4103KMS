@@ -37,6 +37,7 @@ export class CreateNewProjectPage implements OnInit {
     private tagService: TagService,
     private authenticationService: AuthenticationService) { 
       this.newProject = new Project();
+      this.newProject.description = "";
       this.tags = [];
       this.countries = [
         "Afghanistan", "Åland Islands", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", 
@@ -121,8 +122,8 @@ export class CreateNewProjectPage implements OnInit {
         if (!this.newProject.monetaryFundingRequired) {
           this.newProject.monetaryFundingRequired = 0.0;
         }
-        if (!this.newProject.paypalMerchantId) {
-          this.newProject.paypalMerchantId = null;
+        if (!this.newProject.paypalEmail) {
+          this.newProject.paypalEmail = null;
         }
         if (!this.newProject.profilePicture) {
           this.newProject.profilePicture = null;
@@ -231,11 +232,11 @@ export class CreateNewProjectPage implements OnInit {
     return options;
   }
 
-  async presentMerchantIdAlert() {
+  async presentPayPalEmailAlert() {
     const alert = await this.alertController.create({
-      cssClass: "paypalMerchantIdAlertCss",
-      header: 'PayPal Merchant ID',
-      message: '<b>What is a PayPal Merchant ID?</b><br/> It is a unique 13-character account ID associated with your PayPal Business account. <br/><br/><b>Is a PayPal Business Account required?</b><br/>Yes if you have monetary funding required. In addition, a PayPal account is also required if you need to get material resources later on. <br/><br/><b>How to get the PayPal Merchant ID?</b><br/>The PayPal Merchant ID can be found under "Business Information" in your Account Settings. <br/><br/> For more information, click <a href="https://www.paypal.com/sg/smarthelp/article/FAQ3850" target="_blank"><b><u>here</u></b></a>',
+      cssClass: "paypalEmailAlertCss",
+      header: 'PayPal Email',
+      message: '<b>What is PayPal?</b><br/> It is a digital payments platform that allows you to make secure online transactions and receive payments. <br/><br/><b>Is a PayPal Account required?</b><br/>Yes if your project has monetary funding required. In addition, an account will also be required if you need to get resources later on. <br/><br/><b>Don\'t have a PayPal account? <br/><a href="https://www.paypal.com/sg/webapps/mpp/account-selection" target="_blank"><u>Sign up here</u></a></b>',
       buttons: ['OK']
     });
 

@@ -23,7 +23,7 @@ export class ViewMrpPage implements OnInit {
   project: Project;
   tags: Tag[];
   mrpList: MaterialResourcePosting[];
-  noMrp: boolean = true;
+  loaded: boolean = false;
   currentUserId: number;
 
   constructor(private projectService: ProjectService,
@@ -47,6 +47,9 @@ export class ViewMrpPage implements OnInit {
               if (this.currentUserId == member.userId) {
                 this.isMember = true;
               }
+              if (!this.loaded) {
+                this.loaded = true;
+              }
             }
           }
         );        
@@ -57,9 +60,6 @@ export class ViewMrpPage implements OnInit {
       response => {
         this.mrpList = response;
         this.mrpList.sort((a, b) => (a.startDate > b.startDate ? 1 : a.startDate < b.startDate ? -1 : 0));
-        if (this.mrpList.length > 0) {
-          this.noMrp = false;
-        }
       }
     );
   }

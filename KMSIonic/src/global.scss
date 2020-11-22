@@ -73,6 +73,13 @@
   display: block;
 }
 
+.donate-to-platform-modal .modal-wrapper {
+  height: 50%;
+  top: 50%;
+  position: absolute;
+  display: block;
+}
+
 .sc-ion-modal-ios-h {
   --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
 }
@@ -96,7 +103,7 @@
   }
 }
 
-.paypalMerchantIdAlertCss{
+.paypalEmailAlertCss{
   .alert-message{
     font-size: 13px;
   }

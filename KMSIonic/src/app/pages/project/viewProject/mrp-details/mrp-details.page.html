@@ -7,31 +7,26 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="loaded">
   <ion-card-content>
     <p><b>Name:</b></p>
       <p>{{mrp.name}}</p>
-      <br/>
       <span *ngIf="mrp.description">
-        <p><b>Description:</b></p>
+        <p style="margin-top: 15px;"><b>Description:</b></p>
         <p>{{mrp.description}}</p>
-        <br/>
       </span>
-      <p><b>Required Date:</b></p>
+      <p style="margin-top: 15px;"><b>Required Date:</b></p>
       <p>{{startDate | date}} - {{endDate | date}}</p>
-      <br/>
-
-      <p><b>Quantity:</b></p>
+      <p style="margin-top: 15px;"><b>Quantity:</b></p>
       <p>{{mrp.lackingQuantity}} {{mrp.unit}} required / {{mrp.totalQuantity}} {{mrp.unit}} total</p>
-      <br/>
-      <p><b>Location:</b></p>
-      <ion-badge color="warning" (click)="changehref(mrp.latitude, mrp.longitude)">
-        {{mrp.latitude | number:'1.1-6'}},
-        {{mrp.longitude | number:'1.1-6'}}
+      <p style="margin-top: 15px;"><b>Location:</b></p>
+      <ion-badge color="warning">
+        <a [href]="locationLink" style="color: black; text-decoration: none;"> 
+          {{mrp.latitude | number:'1.1-6'}},
+          {{mrp.longitude | number:'1.1-6'}}
+        </a>
       </ion-badge>
-      <br/>  
-      <br/> 
-      <p><b>Tags:</b></p> 
+      <p style="margin-top: 15px;"><b>Tags:</b></p> 
       <span *ngIf="mrp.tags.length > 0" style="margin-right: 5px;">
         <span  *ngFor="let tag of mrp.tags">
           <ion-badge color="primary">{{tag.name}}</ion-badge>

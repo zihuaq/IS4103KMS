@@ -89,7 +89,8 @@ export class DonateToProjectComponent implements OnInit {
             amount: {
               //currency_code: this.selectedCurrency,
               value: this.donationAmount
-            }
+            },
+            description: 'Donation to ' + this.projectToDonate.name
           }]
         });
       }
@@ -152,7 +153,7 @@ export class DonateToProjectComponent implements OnInit {
     this.addScript = true;
     return new Promise((resolve, reject) => {
       let scripttagElement = document.createElement('script'); //<script src=""></script>
-      scripttagElement.src = 'https://www.paypal.com/sdk/js?client-id=AUYlN1aHUFhSZ6teqyLKngzQ9-bpmRoHAa1CQB1Lsp9oZwKEQ20z7yfzuKi95nRrpTG7CsJwC_p2FVTm&merchant-id=' + this.projectToDonate.paypalMerchantId;
+      scripttagElement.src = 'https://www.paypal.com/sdk/js?client-id=AUYlN1aHUFhSZ6teqyLKngzQ9-bpmRoHAa1CQB1Lsp9oZwKEQ20z7yfzuKi95nRrpTG7CsJwC_p2FVTm&merchant-id=' + this.projectToDonate.paypalEmail;
       scripttagElement.onload = resolve;
       document.body.appendChild(scripttagElement); 
     })

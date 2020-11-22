@@ -20,6 +20,7 @@ export class ViewAllProjectPage implements OnInit {
   projects: Project[];
   filteredProjects: Project[];
   preliminarySearchProject: Project[];
+  loaded: boolean = false;
 
   constructor(public modalController: ModalController,
     private location: Location,
@@ -34,6 +35,7 @@ export class ViewAllProjectPage implements OnInit {
       response => {
         this.projects = response.projects;
         this.filteredProjects = this.projects;
+        this.loaded = true;
       }
     );
   }

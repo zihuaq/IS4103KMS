@@ -17,19 +17,24 @@
 </ion-header>
 
 <ion-content>
-  <span *ngIf="noProjects">
+  <span *ngIf="!loaded" style="color: gray;">
+    <ion-card-content>
+      Loading...
+    </ion-card-content>
+  </span>
+  <span *ngIf="loaded && filteredProjects.length == 0">
     No projects found.
   </span>
-  <span *ngIf="!noProjects">
+  <span *ngIf="loaded && filteredProjects.length > 0">
     <span *ngFor="let project of filteredProjects">
       <ion-card tappable (click)="viewProjectDetails($event, project)">
         <ion-card-header>
-          <b>{{project.name}}</b>&nbsp;
           <ion-badge color="primary">{{project.status}}</ion-badge>
+          <p style="font-size: 17px; margin-top: 8px; margin-bottom: -8px;"><b>{{project.name}}</b></p>
         </ion-card-header>
         <ion-card-content>
-          {{project.description}}  
-          <br/>
+          <p *ngIf="project.description" style="margin-bottom: 8px;">{{project.description}}</p>
+          <p *ngIf="!project.description" style="margin-bottom: 8px; font-style: italic;">Project has no description</p>
           <span *ngFor="let sdg of sortSDG(project.sdgs)">
             <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
           </span>   

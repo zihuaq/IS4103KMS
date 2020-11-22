@@ -29,6 +29,7 @@ export class HrpDetailsPage implements OnInit {
   hrp: HumanResourcePosting;
   startDate: string;
   endDate: string;
+  locationLink: string;
 
   constructor(public toastController: ToastController,
     public alertController: AlertController,
@@ -68,6 +69,7 @@ export class HrpDetailsPage implements OnInit {
         this.hrp = response;
         this.startDate = this.formatDate(this.hrp.startDate.toString());
         this.endDate = this.formatDate(this.hrp.endDate.toString());
+        this.locationLink = "http://maps.google.com/?q=" + this.hrp.latitude + "," + this.hrp.longitude;
       }
     )
 
@@ -140,10 +142,5 @@ export class HrpDetailsPage implements OnInit {
   formatDate(date: string) {
     var str = date.slice(0, date.indexOf("["));
     return str;
-  }
-
-  changehref(lat: number, long: number) {
-    var url = "http://maps.google.com/?q=" + lat + "," + long;
-    window.open(url, '_blank');
   }
 }

@@ -9,7 +9,12 @@
 
     <ion-item>
       <ion-label position="stacked"><b>Description </b></ion-label>
-      <ion-textarea id="description" name="description" [(ngModel)]="projectToEdit.description" #description="ngModel" clearInput></ion-textarea>
+      <ion-textarea id="description" name="description" [(ngModel)]="projectToEdit.description" #description="ngModel" 
+        (ngModelChange)="descriptionChange()" clearInput>
+      </ion-textarea>
+      <ion-note style="font-size: small;">
+          {{descriptionLen}} / 2000 characters
+      </ion-note>
     </ion-item>
 
     <ion-item>
@@ -21,20 +26,23 @@
 
     <ion-item>
       <ion-label position="stacked"><b>Monetary Funding Required (USD)</b></ion-label>
-      <ion-input type="number" id="amount" name="amount" [(ngModel)]="projectToEdit.monetaryFundingRequired" #amount="ngModel"></ion-input>
+      <ion-input type="number" id="amount" name="amount" [(ngModel)]="projectToEdit.monetaryFundingRequired" #amount="ngModel">$</ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked"><b>PayPal Merchant ID <span *ngIf="projectToEdit.monetaryFundingRequired">*</span></b>
-        <ion-button fill="clear" style="vertical-align: middle; margin-left: -5px;" (click)="presentMerchantIdAlert()">
+      <ion-label position="stacked"><b>PayPal Email <span *ngIf="projectToEdit.monetaryFundingRequired">*</span></b>
+        <ion-button fill="clear" style="vertical-align: middle; margin-left: -5px;" (click)="presentPayPalEmailAlert()">
           <ion-icon slot="icon-only" name="help-circle-outline"></ion-icon>
         </ion-button>
       </ion-label>
-      <ion-input type="text" id="merchantId" name="merchantId" [(ngModel)]="projectToEdit.paypalMerchantId" #merchantId="ngModel" pattern=".{13}" [required]="projectToEdit.monetaryFundingRequired > 0" clearInput></ion-input>
+      <ion-input email type="email" id="paypalEmail" name="paypalEmail" [(ngModel)]="projectToEdit.paypalEmail" #paypalEmail="ngModel" [required]="projectToEdit.monetaryFundingRequired > 0" clearInput></ion-input>
+      <ion-note *ngIf="projectToEdit.monetaryFundingRequired || projectToEdit.paypalEmail" style="font-size: small;">
+        Please ensure PayPal email address is valid
+      </ion-note>
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked">SDG Tags * </ion-label>
+      <ion-label position="stacked"><b>SDG Tags * </b></ion-label>
       <ion-select id="sdgs" *ngIf="selectedTagNames.length" name="sdgs" [(ngModel)]="selectedTagNames" required #sdgs="ngModel" multiple="true">
         <ion-select-option *ngFor="let tag of tagListString" [value]="tag">{{tag}}</ion-select-option>           
       </ion-select>
@@ -47,18 +55,18 @@
           src="https://www.showplacerents.com/img/image-placeholder.png"
           alt="Project profile picture">
       </ion-avatar>
-      <ion-button (click)="choosePictureActionSheet()">Change profile picture</ion-button>
+      <ion-button (click)="choosePictureActionSheet()">Change Profile Picture</ion-button>
     </ion-item>
     
 
     <ion-item>
-      <ion-label position="stacked">Project Status: </ion-label>
+      <ion-label position="stacked"><b>Project Status </b></ion-label>
       <ion-select id="status" name="status" [(ngModel)]="projectToEdit.status" required #status="ngModel">
         <ion-select-option *ngFor="let status of projectStatusList" [value]='status'>{{status}}</ion-select-option>
       </ion-select>
     </ion-item>
 
-    <ion-button expand="full" type="submit" [disabled]="!editProjectForm.valid">
+    <ion-button style="margin-top: 10px;" expand="full" type="submit" [disabled]="!editProjectForm.valid">
       Update
     </ion-button>
 

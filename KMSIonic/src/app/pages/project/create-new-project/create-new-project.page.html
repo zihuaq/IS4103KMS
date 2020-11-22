@@ -25,6 +25,9 @@
           <ion-item>
             <ion-label position="stacked"><b>Description </b></ion-label>
             <ion-textarea id="description" name="description" [(ngModel)]="newProject.description" #description="ngModel" clearInput></ion-textarea>
+            <ion-note style="font-size: small;">
+              {{newProject.description.length}} / 2000 characters
+            </ion-note>
           </ion-item>
 
           <ion-item>
@@ -36,16 +39,19 @@
 
           <ion-item>
             <ion-label position="stacked"><b>Monetary Funding Required (USD) </b></ion-label>
-            <ion-input id="amount" type="number" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" #amount="ngModel" clearInput></ion-input>
+            <ion-input id="amount" type="number" name="amount" [(ngModel)]="newProject.monetaryFundingRequired" #amount="ngModel" clearInput>$</ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked"><b>PayPal Merchant ID <span *ngIf="newProject.monetaryFundingRequired">*</span></b>
-              <ion-button fill="clear" style="vertical-align: middle; margin-left: -5px;" (click)="presentMerchantIdAlert()">
+            <ion-label position="stacked"><b>PayPal Email <span *ngIf="newProject.monetaryFundingRequired">*</span></b>
+              <ion-button fill="clear" style="vertical-align: middle; margin-left: -5px;" (click)="presentPayPalEmailAlert()">
                 <ion-icon slot="icon-only" name="help-circle-outline"></ion-icon>
               </ion-button>
             </ion-label>
-            <ion-input type="text" id="merchantId" name="merchantId" [(ngModel)]="newProject.paypalMerchantId" #merchantId="ngModel" pattern=".{13}" [required]="newProject.monetaryFundingRequired > 0" clearInput></ion-input>
+            <ion-input email type="email" id="paypalEmail" name="paypalEmail" [(ngModel)]="newProject.paypalEmail" #paypalEmail="ngModel" [required]="newProject.monetaryFundingRequired > 0" clearInput></ion-input>
+            <ion-note *ngIf="newProject.monetaryFundingRequired || newProject.paypalEmail" style="font-size: small;">
+              Please ensure PayPal email address is valid.
+            </ion-note>
           </ion-item>
 
           <ion-item>
@@ -65,7 +71,7 @@
                 src="https://www.showplacerents.com/img/image-placeholder.png"
                 alt="Project profile picture">
             </ion-avatar>
-            <ion-button (click)="choosePictureActionSheet()">Add profile picture</ion-button>
+            <ion-button (click)="choosePictureActionSheet()">Add Profile Picture</ion-button>
           </ion-item>
 
           <ion-button expand="full" type="submit" [disabled]="!createProjectForm.valid">

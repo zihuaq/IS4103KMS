@@ -123,8 +123,8 @@ export class CreateNewProjectComponent implements OnInit {
       if (!this.newProject.monetaryFundingRequired) {
         this.newProject.monetaryFundingRequired = 0.0;
       }
-      if (!this.newProject.paypalMerchantId) {
-        this.newProject.paypalMerchantId = null;
+      if (!this.newProject.paypalEmail) {
+        this.newProject.paypalEmail = null;
       }
 
       this.projectService.createNewProject(this.newProject, this.ownerId, this.tagIdsSelected).subscribe(

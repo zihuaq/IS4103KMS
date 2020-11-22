@@ -24,6 +24,7 @@ export class EditProjectDetailsPage implements OnInit {
 
   projectId: number;
   projectToEdit: Project;
+  descriptionLen: number;
   owner: User;
   dateCreated: string;
   noOfMembers: number;
@@ -120,10 +121,10 @@ export class EditProjectDetailsPage implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToEdit = response;
+        this.descriptionLen = this.projectToEdit.description.length;
         this.hasLoaded = true;
         this.noOfMembers = this.projectToEdit.projectMembers.length;
         this.owner = this.projectToEdit.projectOwner;
-
         this.dateCreated = this.projectToEdit.dateCreated.toString().slice(0,10);
 
         for (let tag of this.projectToEdit.sdgs) {
@@ -135,6 +136,10 @@ export class EditProjectDetailsPage implements OnInit {
 
   async segmentChanged() {
     this.segment;
+  }
+
+  descriptionChange() {
+    this.descriptionLen = this.projectToEdit.description.length;
   }
 
   async edit(editProjectForm: NgForm) {
@@ -167,8 +172,8 @@ export class EditProjectDetailsPage implements OnInit {
         if (!this.projectToEdit.monetaryFundingRequired) {
           this.projectToEdit.monetaryFundingRequired = 0.0;
         }
-        if (!this.projectToEdit.paypalMerchantId) {
-          this.projectToEdit.paypalMerchantId = null;
+        if (!this.projectToEdit.paypalEmail) {
+          this.projectToEdit.paypalEmail = null;
         }
         this.projectService.updateProject(this.projectToEdit).subscribe(
           async response => {
@@ -262,11 +267,11 @@ export class EditProjectDetailsPage implements OnInit {
     return options;
   }
 
-  async presentMerchantIdAlert() {
+  async presentPayPalEmailAlert() {
     const alert = await this.alertController.create({
-      cssClass: "paypalMerchantIdAlertCss",
-      header: 'PayPal Merchant ID',
-      message: '<b>What is a PayPal Merchant ID?</b><br/> It is a unique 13-character account ID associated with your PayPal Business account. <br/><br/><b>Is a PayPal Business Account required?</b><br/>Yes if you have monetary funding required. In addition, a PayPal account is also required if you need to get material resources later on. <br/><br/><b>How to get the PayPal Merchant ID?</b><br/>The PayPal Merchant ID can be found under "Business Information" in your Account Settings. <br/><br/> For more information, click <a href="https://www.paypal.com/sg/smarthelp/article/FAQ3850" target="_blank"><b><u>here</u></b></a>',
+      cssClass: "paypalEmailAlertCss",
+      header: 'PayPal Email',
+      message: '<b>What is PayPal?</b><br/> It is a digital payments platform that allows you to make secure online transactions and receive payments. <br/><br/><b>Is a PayPal Account required?</b><br/>Yes if your project has monetary funding required. In addition, an account will also be required if you need to get resources later on. <br/><br/><b>Don\'t have a PayPal account? <br/><a href="https://www.paypal.com/sg/webapps/mpp/account-selection" target="_blank"><u>Sign up here</u></a></b>',
       buttons: ['OK']
     });
 
