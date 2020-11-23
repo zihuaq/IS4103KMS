@@ -57,5 +57,9 @@ public interface ActivitySessionBeanLocal {
     public Long createNewUserReview(ReviewEntity review, Long fromId, Long toId, Long activityId) throws NoResultException;
 
     public Long createNewProjectReview(ReviewEntity review, Long fromId, Long toProjectId, Long activityId) throws NoResultException;
+
+    public ReviewEntity getReviewById(Long reviewId) throws NoResultException;
+
+    public void deleteReview(Long reviewId) throws NoResultException;
         
 }

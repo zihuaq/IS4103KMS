@@ -76,10 +76,10 @@
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Status</th>
-                <th>Location</th> 
+                <th>Location</th>
                 <th *ngIf="isMember">Action</th>
             </thead>
-    
+
             <tbody>
                 <tr *ngFor="let activity of activities">
                     <td>
@@ -116,10 +116,18 @@
                         </button>
                         <button class="btn bg-gradient-primary" *ngIf="!hasJoined(activity.activityId)" (click)="joinActivity(activity.activityId)">Join</button>
                         <button class="btn btn-light" *ngIf="hasJoined(activity.activityId)" disabled>Joined</button>
-                        <button class="btn bg-gradient-primary" *ngIf="hasJoined(activity.activityId)" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>                        
+                        <button class="btn bg-gradient-warning"
+                          *ngIf="hasJoined(activity.activityId) && activity.activityStatus.toString() == 'COMPLETED'"
+                          rel="tooltip" title="Write a review"
+                          data-backdrop="static"
+                          (click)="clickReview(activity.activityId)">
+                          <i class="fas fa-edit"></i>
+                      </button>
+                        <button class="btn bg-gradient-primary" *ngIf="hasJoined(activity.activityId)" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" (click)="leaveActivity(activity.activityId)">Leave</a>
                         </div>
+
                     </td>
                 </tr>
             </tbody>
@@ -158,9 +166,9 @@
                                     {{member.firstName}} {{member.lastName}}
                                 </span>
                             </li>
-                        </ul> 
-                    </div>                               
-                </span>   
+                        </ul>
+                    </div>
+                </span>
                 <span *ngIf="contributors.length == 0">
                     <div class="card">
                         <div class="card-header">
@@ -180,9 +188,9 @@
                             <li class="list-group-item" >
                                 {{contributor.firstName}} {{contributor.lastName}}
                             </li>
-                        </ul> 
-                    </div>                               
-                </span>          
+                        </ul>
+                    </div>
+                </span>
             </div>
         </div>
     </div>
@@ -203,7 +211,7 @@
                     <span id="allocatedResourceslist" *ngFor="let mrp of allocatedResources; let i = index">
                         <div class="card" style="width: 100%;">
                             <div class="card-header" style="cursor: pointer; " [attr.data-target]="'#openPanel'+ i" data-toggle="collapse">
-                                <h6 class="card-title" style="font-size: 20px; margin-top: 5px; color: black;"><b>{{mrp.name}}</b> 
+                                <h6 class="card-title" style="font-size: 20px; margin-top: 5px; color: black;"><b>{{mrp.name}}</b>
                                     <br/>
                                     <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
                                 </h6>
@@ -221,11 +229,89 @@
                                         </span>
                                     </p>
                                 </div>
-                            </div>    
+                            </div>
                         </div>
                     </span>
                 </span>
             </div>
         </div>
     </div>
+</div>
+
+<div bsModal #reviewModal = "bs-modal" class="modal fade" id="modal-create-review" >
+  <div class="modal-dialog">
+      <div class="modal-content bg-info">
+          <div class="modal-header">
+              <h4 class="modal-title">Write a review</h4>
+              <button type="button" id="createReviewModalCloseBtn" class="close" (click) = "hideReviewModal()" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div>
+            <label style = "position:relative; left:15px; " >Write review for...</label>
+            <div class="radio" *ngFor = "let s of showReviewForm"  style="display: inline; position:relative; left:30px;">
+                <label style="padding-right: 10px;">
+                    <input type="radio"  name="status" [ngModel] = "'User'" [value] = "s" (click) = "showingReviewForm = s"> {{s}}
+                </label>
+            </div>
+          </div>
+            <form *ngIf = "showingReviewForm == 'User' " (ngSubmit)="createNewUserReview(newUserReviewForm)" #newUserReviewForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Title *</label>
+                        <input type="text" id="Title" class="form-control" placeholder="Enter title" name="title" ngModel  required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="review">Review Body *</label>
+                        <textarea type="text" id="review" class="form-control" placeholder="Enter Review" name="review" ngModel  required></textarea>
+                    </div>
+
+                    <label for="rating">Rating * &nbsp;</label>
+                    <div>
+                      <ngb-rating [max]="5" [(rate)]="starRating" [readonly]="false" name = rating></ngb-rating>
+                    </div>
+                    <div class="select">
+                      <label for="toUser">Review User * &nbsp;</label>
+                      <select  class="form-control" name = "selectedToUser" placeholder="Review User" ngModel required>
+                        <option *ngFor = "let user of reviewsUnwrittenForUsers" [value] = "user.userId" >{{user.firstName}} {{user.lastName}}</option>
+                      </select>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" (click) = "hideReviewModal()" >Cancel</button>
+                    <button type="button" type="submit" class="btn btn-outline-light" [disabled] = "!newUserReviewForm.valid">Write review</button>
+                </div>
+            </form>
+
+            <Label *ngIf = "showingReviewForm == 'Project' && projectReviewForActivity.length != 0"
+            style = "justify-content: center;">
+            You have already written a project review for this activity. </Label>
+
+            <form *ngIf = "showingReviewForm == 'Project' && projectReviewForActivity.length == 0" (ngSubmit)="createNewProjectReview(newProjectReviewForm)" #newProjectReviewForm="ngForm">
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="titleForProject">Title *</label>
+                      <input type="text" id="Title" class="form-control" placeholder="Enter title" name="titleForProject" ngModel  required>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="reviewForProject">Review Body *</label>
+                      <textarea type="text" id="review" class="form-control" placeholder="Enter Review" name="reviewForProject" ngModel  required></textarea>
+                  </div>
+
+                  <label for="rating">Rating * &nbsp;</label>
+                  <div>
+                    <ngb-rating [max]="5" [(rate)]="starRating" [readonly]="false" name = rating></ngb-rating>
+                  </div>
+              </div>
+              <div class="modal-footer justify-content-between">
+                  <button type="button" class="btn btn-outline-light" (click) = "hideReviewModal()" >Cancel</button>
+                  <button type="button" type="submit" class="btn btn-outline-light" [disabled] = "!newProjectReviewForm">Write review</button>
+              </div>
+          </form>
+      </div>
+  </div>
 </div>

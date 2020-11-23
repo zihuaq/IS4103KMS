@@ -944,9 +944,14 @@ public class UserResource {
             from.setFirstName(reviewEntity.getFrom().getFirstName());
             from.setLastName(reviewEntity.getFrom().getLastName());
             from.setProfilePicture(reviewEntity.getFrom().getProfilePicture());
-            ProjectEntity project = new ProjectEntity();
-            project.setProjectId(reviewEntity.getProject().getProjectId());
-            project.setName(reviewEntity.getProject().getName());
+            
+            if(reviewEntity.getProject() != null){
+                ProjectEntity project = new ProjectEntity();
+                project.setProjectId(reviewEntity.getProject().getProjectId());
+                project.setName(reviewEntity.getProject().getName());
+                temp.setProject(project);
+            }
+            
             ActivityEntity activity = new ActivityEntity();
             activity.setActivityId(reviewEntity.getMadeFromActivity().getActivityId());
             activity.setName(reviewEntity.getMadeFromActivity().getName());
@@ -955,7 +960,6 @@ public class UserResource {
             temp.setReviewField(reviewEntity.getReviewField());
             temp.setRating(reviewEntity.getRating());
             temp.setFrom(from);
-            temp.setProject(project);
             temp.setMadeFromActivity(activity);
             writtenReviewsResponse.add(temp);
         }
@@ -995,6 +999,7 @@ public class UserResource {
             ActivityEntity activity = new ActivityEntity();
             activity.setActivityId(reviewEntity.getMadeFromActivity().getActivityId());
             activity.setName(reviewEntity.getMadeFromActivity().getName());
+            
             ReviewEntity temp = new ReviewEntity();
             
             temp.setReviewId(reviewEntity.getReviewId());

@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import Exception.DuplicateAwardException;
 import Exception.NoResultException;
 import entity.AwardEntity;
 import entity.ProjectEntity;
@@ -85,9 +86,15 @@ public class AwardSessionBean implements AwardSessionBeanLocal {
     }
     
     @Override
-    public void issueAwardToUser(Long awardId, Long userId) throws NoResultException{
+    public void issueAwardToUser(Long awardId, Long userId) throws NoResultException, DuplicateAwardException{
          AwardEntity award = getAwardById(awardId);   
          UserEntity user = userSessionBean.getUserById(userId);
+         
+         for(AwardEntity awardCheck : user.getReceivedAwards()){
+             if(awardCheck.getAwardId() == award.getAwardId()){
+                 throw new DuplicateAwardException("User Already has this award");
+             }
+         }
          
          award.getUsersReceived().add(user);
          user.getReceivedAwards().add(award);

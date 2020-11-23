@@ -97,6 +97,11 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { ChatComponent } from './chat/chat.component';
 import { UserFilterPipe } from './chat/user-filter.pipe';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectAwardsComponent } from './project/viewProject/project-awards/project-awards.component';
+import { ReviewReportsComponent } from './administration/review-reports/review-reports.component';
+import { ReviewReportItemComponent } from './administration/review-reports/review-report-item/review-report-item.component';
+import { AwardsAndBadgeComponent } from './profile/awards-and-badge/awards-and-badge.component';
 
 export const environment = {
   production: false,
@@ -193,7 +198,11 @@ export const environment = {
     ViewDocumentsComponent,
     EditDocumentsComponent,
     ChatComponent,
-    UserFilterPipe
+    UserFilterPipe,
+    ProjectAwardsComponent,
+    ReviewReportsComponent,
+    ReviewReportItemComponent,
+    AwardsAndBadgeComponent
   ],
   imports: [
     BrowserModule,
@@ -207,7 +216,7 @@ export const environment = {
     ModalModule.forRoot(),
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     AngularFireModule.initializeApp(environment.firebase), 
-    AngularFireDatabaseModule,
+    AngularFireDatabaseModule, NgbModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

@@ -314,50 +314,97 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         return toProjectReviews;
     }
     
+    
+    @Override
+    public ReviewEntity getReviewById(Long reviewId) throws NoResultException{
+        ReviewEntity review = em.find(ReviewEntity.class, reviewId);
+        
+        if (review != null) {
+            return review;
+        } else {
+            throw new NoResultException("Activity with Id " + reviewId + " does not exists!");
+        }
+    }
+    
+    @Override
+    public void deleteReview(Long reviewId) throws NoResultException{
+        ReviewEntity review = getReviewById(reviewId);
+        if (review.getProject() != null){
+            ProjectEntity project = review.getProject();
+            project.getReviews().remove(review);
+            review.setProject(null);
+        }
+        if(review.getTo() != null){
+            UserEntity to = review.getTo();
+            to.getReviewsReceived().remove(review);
+            review.setTo(null);
+        }
+        
+        UserEntity from = review.getFrom();
+        from.getReviewsGiven().remove(review);
+        review.setFrom(null);
+        
+        ActivityEntity activity  = review.getMadeFromActivity();
+        activity.getReviews().remove(review);
+        review.setMadeFromActivity(null);
+        
+        em.remove(review);
+    }
+        
+        
 
     @Override
     public Long createNewUserReview(ReviewEntity review, Long fromId, Long toId, Long activityId) throws NoResultException {
         
-        em.persist(review);
-        em.flush();
+        ReviewEntity newReview = new ReviewEntity(review.getTitle(), review.getReviewField(), review.getRating());
+        
         
         UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
         UserEntity toUser = userSessionBeanLocal.getUserById(toId);
         ActivityEntity madeFromActivity = getActivityById(activityId);
         
-        review.setFrom(fromUser);
-        fromUser.getReviewsGiven().add(review);
+        newReview.setFrom(fromUser);
+        fromUser.getReviewsGiven().add(newReview);
         
-        review.setTo(toUser);
-        toUser.getReviewsReceived().add(review);
+        newReview.setTo(toUser);
+        toUser.getReviewsReceived().add(newReview);
         
-        review.setMadeFromActivity(madeFromActivity);
-        madeFromActivity.getReviews().add(review);
+        newReview.setMadeFromActivity(madeFromActivity);
+        madeFromActivity.getReviews().add(newReview);
+        
+        em.persist(newReview);
+        em.flush();
         fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
         
-        return review.getReviewId();
+        return newReview.getReviewId();
     }
     
     @Override
     public Long createNewProjectReview(ReviewEntity review, Long fromId, Long toProjectId, Long activityId) throws NoResultException {
         
-        em.persist(review);
-        em.flush();
+        ReviewEntity newReview = new ReviewEntity(review.getTitle(), review.getReviewField(), review.getRating());
+        System.out.println(review.getTitle());
+        System.out.println(review.getReviewField());
+        System.out.println(review.getRating());
         
         UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
         ProjectEntity toProject = projectSessionBeanLocal.getProjectById(toProjectId);
         ActivityEntity madeFromActivity = getActivityById(activityId);
         
-        review.setFrom(fromUser);
-        fromUser.getReviewsGiven().add(review);
+        newReview.setFrom(fromUser);
+        fromUser.getReviewsGiven().add(newReview);
         
-        review.setProject(toProject);
-        toProject.getReviews().add(review);
+        newReview.setProject(toProject);
+        toProject.getReviews().add(newReview);
         
-        review.setMadeFromActivity(madeFromActivity);
-        madeFromActivity.getReviews().add(review);
+        newReview.setMadeFromActivity(madeFromActivity);
+        madeFromActivity.getReviews().add(newReview);
+        
+        em.persist(newReview);
+        em.flush();
         
         fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
-        return review.getReviewId();
+        
+        return newReview.getReviewId();
     }
 }

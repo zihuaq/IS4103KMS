@@ -1,5 +1,6 @@
 import { User } from "./user";
 import { Project } from "./project";
+import { Activity } from './activity';
 
 export class review{
 
@@ -7,6 +8,7 @@ export class review{
   to: User;
   from: User;
   project: Project;
+  madeFromActivity: Activity
   title: String;
   reviewField: String;
   rating: number;
@@ -16,6 +18,7 @@ export class review{
     to?: User,
     from?: User,
     project?: Project,
+    madeFromActivity?: Activity,
     title?: String,
     reviewField?: String,
     rating?: number){
@@ -23,6 +26,7 @@ export class review{
       this.to = to;
       this.from = from;
       this.project = project;
+      this.madeFromActivity = madeFromActivity;
       this.title = title;
       this.reviewField = reviewField
       this.rating = rating

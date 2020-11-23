@@ -79,6 +79,7 @@ public class ActivityResource {
         for (ActivityEntity a : activities) {
             a.setHumanResourcePostings(new ArrayList<>());
             a.setMaterialResourcePostings(new ArrayList<>());
+            a.setReviews(new ArrayList<>());
             if (a.getJoinedUsers() != null) {
                 for (UserEntity user: a.getJoinedUsers()) {
                     user.setReviewsGiven(new ArrayList<>());
@@ -136,6 +137,14 @@ public class ActivityResource {
                     mrp.setProject(null);
                     mrp.setTags(new ArrayList<>());
                     mrp.setFulfillments(new ArrayList<>());
+                }
+            }
+            if(activity.getReviews() != null){
+                for (ReviewEntity review: activity.getReviews()){
+                 review.setFrom(null);
+                 review.setMadeFromActivity(null);
+                 review.setTo(null);
+                 review.setProject(null);
                 }
             }
             if (activity.getJoinedUsers() != null) {
@@ -426,7 +435,7 @@ public class ActivityResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProjectReviewForActivity(@PathParam("activityId") Long activityId, @PathParam("userId") Long userId) {
-        System.out.println("******** ActivityResource: getToReviewForActivity");
+        System.out.println("******** ActivityResource: getProjectReviewForActivity");
         
         try {
             List<ReviewEntity> projectReviews = activitySessionBean.getToProjectWrittenReviewsForCurrentActivity(userId, activityId);
@@ -492,7 +501,7 @@ public class ActivityResource {
     }
     
     
-    @Path("createNewUserReview")
+    @Path("createNewProjectReview")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -500,7 +509,7 @@ public class ActivityResource {
         System.out.println("******** ActivityResource: createNewUserReview");
         if (createprojectReviewReq != null) {
             try {
-                Long reviewId = activitySessionBean.createNewUserReview(createprojectReviewReq.getReview(), createprojectReviewReq.getFrom(), createprojectReviewReq.getProject(), createprojectReviewReq.getMadeFromActivityId());
+                Long reviewId = activitySessionBean.createNewProjectReview(createprojectReviewReq.getReview(), createprojectReviewReq.getFrom(), createprojectReviewReq.getProject(), createprojectReviewReq.getMadeFromActivityId());
                 return Response.status(Status.OK).entity(new CreateProjectReviewRsp(reviewId)).build();
             } catch (NoResultException ex) {
                 ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());

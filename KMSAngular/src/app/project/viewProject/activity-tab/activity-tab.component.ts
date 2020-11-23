@@ -3,7 +3,7 @@ import {  startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameM
 import { Subject } from 'rxjs';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DatePipe } from '@angular/common'; 
+import { DatePipe } from '@angular/common';
 
 import { Activity } from 'src/app/classes/activity';
 import { ActivityService } from 'src/app/activity.service';
@@ -14,6 +14,9 @@ import { User } from 'src/app/classes/user';
 import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
 import { HrpService } from 'src/app/hrp.service';
 import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
+import { review } from 'src/app/classes/review';
+import { NgForm } from '@angular/forms';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 declare var $: any;
 
@@ -24,6 +27,7 @@ declare var $: any;
 })
 export class ActivityTabComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+  @ViewChild('reviewModal', {static:false}) reviewModal: ModalDirective;
 
   view: CalendarView = CalendarView.Month;
 
@@ -49,6 +53,16 @@ export class ActivityTabComponent implements OnInit {
   activitySelected: Activity;
   contributors: User[];
   allocatedResources: MaterialResourcePosting[];
+  projectReviewForActivity: review[] = [];
+  userReviewsForActivity: review[] = [];
+  reviewsUnwrittenForUsers: User[] = [];
+  loggedInUser: User;
+  isOwner: boolean = false;
+  isAdmin: boolean = false;
+  showingReviewForm = 'User'
+  starRating = 0;
+  showReviewForm = ['User','Project']
+  //selectedToUser: number = 0;
 
   constructor(private projectService: ProjectService,
     private activityService: ActivityService,
@@ -62,6 +76,7 @@ export class ActivityTabComponent implements OnInit {
     this.activitySelected.joinedUsers = [];
     this.contributors = [];
     this.allocatedResources = [];
+    this.showingReviewForm = 'User'
    }
 
   ngOnInit(): void {
@@ -75,11 +90,19 @@ export class ActivityTabComponent implements OnInit {
             this.isMember = true;
           }
         }
-      }, 
+      },
       error => {
         this.router.navigate(["/error"]);
       }
     );
+
+    this.loggedInUser = this.sessionService.getCurrentUser();
+
+    if (this.project.projectOwner.userId == this.loggedInUser.userId) {
+      this.isOwner = true;
+    }
+
+    this.isAdmin = this.isAdminCheck(this.loggedInUser)
 
     this.refreshActivities();
   }
@@ -148,7 +171,7 @@ export class ActivityTabComponent implements OnInit {
           if (user.userId === this.sessionService.getCurrentUser().userId) {
             return true;
           }
-        }       
+        }
       }
     }
     // this.clickActivity(activityId);
@@ -197,7 +220,7 @@ export class ActivityTabComponent implements OnInit {
         this.activitySelected = response;
       }
     );
-    
+
     this.contributors = [];
     this.hrpService.getHrpByActivityId(activityId).subscribe(
       response => {
@@ -231,6 +254,129 @@ export class ActivityTabComponent implements OnInit {
         this.allocatedResources = response;
       }
     );
+  }
+
+  isAdminCheck(user: User): boolean {
+    for(let member of this.project.projectAdmins) {
+      if (member.userId == user.userId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  clickReview(activityId: number){
+
+    this.activityService.getActivityById(activityId).subscribe(
+      response => {
+        this.activitySelected = response;
+      }
+    );
+
+    this.projectReviewForActivity = [];
+    this.userReviewsForActivity = [];
+    this.reviewsUnwrittenForUsers = [];
+
+    this.activityService.getProjectReviewForActivity(activityId, this.sessionService.getCurrentUser().userId)
+    .subscribe(
+      response => {
+        this.projectReviewForActivity = response;
+    })
+    this.activityService.getUserReviewsForActivity(activityId, this.sessionService.getCurrentUser().userId)
+    .subscribe(
+      response => {
+        this.userReviewsForActivity = response;
+    })
+
+    if(this.hasJoined(activityId)){
+      //is an admin or owner
+      if(this.isAdmin || this.isOwner){
+        for(let user of this.activitySelected.joinedUsers){
+          let hasWritten = false;
+          if (user.userId != this.loggedInUser.userId && !this.isAdminCheck(user)){
+            for(let reviewed of this.userReviewsForActivity){
+              if(user.userId == reviewed.to.userId){
+                hasWritten = true;
+                break
+              }
+            }
+            if(hasWritten == false && user.userId != this.loggedInUser.userId){
+              this.reviewsUnwrittenForUsers.push(user)
+          }
+
+          }
+        }
+      }
+
+      //is not an admin or owner
+      else{
+        for(let user of this.activitySelected.joinedUsers){
+          let hasWritten = false;
+          if (user.userId != this.loggedInUser.userId && this.isAdminCheck(user)){
+            for(let reviewed of this.userReviewsForActivity){
+              if(user.userId == reviewed.to.userId){
+                hasWritten = true;
+                break
+              }
+            }
+            if(hasWritten == false && user.userId != this.loggedInUser.userId){
+              this.reviewsUnwrittenForUsers.push(user)
+          }
+
+          }
+        }
+      }
+
+
+    }
+    this.reviewModal.show();
+  }
+
+  hideReviewModal(){
+    this.reviewModal.hide();
+  }
+
+  // toggleReviewForm(toggle:string){
+  //   this.showReviewForm = toggle;
+  // }
+
+
+  createNewUserReview(createNewUserReviewForm: NgForm){
+    console.log(createNewUserReviewForm);
+    console.log(this.starRating)
+
+    let newReview = new review();
+    newReview.title = createNewUserReviewForm.value.title
+    newReview.reviewField = createNewUserReviewForm.value.review
+    newReview.rating = this.starRating
+
+    this.activityService.createNewUserReview(newReview, this.loggedInUser.userId, createNewUserReviewForm.value.selectedToUser, this.activitySelected.activityId).
+    subscribe(
+      response => {
+        console.log(response.reviewId)
+        this.reviewModal.hide()
+      }
+    )
+
+  }
+
+  createNewProjectReview(createNewProjectReviewForm: NgForm){
+    console.log(createNewProjectReviewForm);
+    console.log(this.starRating)
+
+    let newReview = new review();
+    newReview.title = createNewProjectReviewForm.value.titleForProject
+    newReview.reviewField = createNewProjectReviewForm.value.reviewForProject
+    newReview.rating = this.starRating
+
+    console.log(newReview.title + " " + newReview.rating + " " + newReview.reviewField)
+    this.activityService.createNewProjectReview(newReview, this.loggedInUser.userId, this.projectId, this.activitySelected.activityId).
+    subscribe(
+      response => {
+        console.log(response.newProjectReviewId)
+        this.reviewModal.hide()
+      }
+    )
   }
 
 }

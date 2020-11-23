@@ -171,6 +171,7 @@ public class ProjectResource {
                 member.setActivityJoined(new ArrayList<>());  
                 member.setDonations(new ArrayList<>());
                 member.setNotifications(new ArrayList<>());
+                member.setReceivedAwards(new ArrayList<>());
             }
             for (UserEntity admin : project.getProjectAdmins()) {
                 admin.setReviewsGiven(new ArrayList<>());
@@ -199,12 +200,14 @@ public class ProjectResource {
                 admin.setActivityJoined(new ArrayList<>());  
                 admin.setDonations(new ArrayList<>());
                 admin.setNotifications(new ArrayList<>());
+                admin.setReceivedAwards(new ArrayList<>());
             }
             for (ActivityEntity ae : project.getActivities()) {
                 ae.setProject(null);
                 ae.getHumanResourcePostings().clear();
                 ae.getMaterialResourcePostings().clear();
                 ae.getJoinedUsers().clear();
+                ae.getReviews().clear();
             }
             for (HumanResourcePostingEntity hrp : project.getHumanResourcePostings()) {
                 hrp.setActivity(null);
@@ -233,6 +236,7 @@ public class ProjectResource {
                 award.setProject(null);
                 award.getUsersReceived().clear();
             }
+            project.setReviews(new ArrayList<>());
             return Response.status(Status.OK).entity(project).build();
         } catch (NoResultException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
@@ -422,10 +426,14 @@ public class ProjectResource {
             ProjectEntity project = new ProjectEntity();
             project.setProjectId(reviewEntity.getProject().getProjectId());
             project.setName(reviewEntity.getProject().getName());
+            ActivityEntity activity = new ActivityEntity();
+            activity.setActivityId(reviewEntity.getMadeFromActivity().getActivityId());
+            activity.setName(reviewEntity.getMadeFromActivity().getName());
             temp.setReviewId(reviewEntity.getReviewId());
             temp.setTitle(reviewEntity.getTitle());
             temp.setReviewField(reviewEntity.getReviewField());
             temp.setRating(reviewEntity.getRating());
+            temp.setMadeFromActivity(activity);
 //            temp.setTo(to);
             temp.setFrom(from);
             temp.setProject(project);

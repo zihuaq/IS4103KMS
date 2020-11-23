@@ -5,10 +5,14 @@
  */
 package ws.restful.resources;
 
+import Exception.DuplicateAwardException;
 import Exception.NoResultException;
 import ejb.session.stateless.AwardSessionBeanLocal;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import entity.AwardEntity;
+import entity.UserEntity;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
@@ -18,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
@@ -44,6 +49,42 @@ public class AwardResource {
     private UriInfo context;
     
     
+    
+    @Path("{projectId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAward(@PathParam("projectId") Long projectId) {
+        System.out.println("******** AwardResource: getAwards()");
+        try{
+            List<AwardEntity> awards = projectSessionBean.getProjectById(projectId).getAwards();
+            List<AwardEntity> returnAward = new ArrayList<>();
+            if(awards != null){
+                for(AwardEntity award : awards){
+                  AwardEntity awardItem = new AwardEntity();
+                  awardItem.setProject(null);
+                  awardItem.setAwardId(award.getAwardId());
+                  awardItem.setName(award.getName());
+                  awardItem.setDescription(award.getDescription());
+                  awardItem.setAwardPicture(award.getAwardPicture());
+                  awardItem.setUsersReceived(new ArrayList<>());
+                  for (UserEntity user: award.getUsersReceived()){
+                    UserEntity from = new UserEntity();
+                    from.setUserId(user.getUserId());
+                    from.setFirstName(user.getFirstName());
+                    from.setLastName(user.getLastName());
+                    from.setProfilePicture(user.getProfilePicture());
+                    awardItem.getUsersReceived().add(from);
+                  }
+                  returnAward.add(awardItem);
+                }      
+            }
+            return Response.status(Response.Status.OK).entity(returnAward).build();
+        }
+        catch (NoResultException ex) {
+                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build(); 
+            }
+    }
 
     @Path("createNewAward")
     @PUT
@@ -84,6 +125,10 @@ public class AwardResource {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         } 
+        catch (DuplicateAwardException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        } 
     }
     
     @Path("withdrawAward/{awardId}/{userId}")
@@ -105,7 +150,7 @@ public class AwardResource {
     @Path("deleteAward/{awardId}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteProject(@PathParam("awardId") Long awardId) {
+    public Response deleteAward(@PathParam("awardId") Long awardId) {
         System.out.println("******** AwardResource: deleteAward");
         try {
             awardSessionBean.deleteProjectAward(awardId);
@@ -117,7 +162,7 @@ public class AwardResource {
         }
     }
     
-    @Path("/update")
+    @Path("/updateAward")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

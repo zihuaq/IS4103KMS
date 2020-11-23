@@ -38,4 +38,6 @@ public interface TagSessionBeanLocal {
 
     public List<TagEntity> getAllCommentReportTags();
 
+    public List<TagEntity> getAllReviewReportTags();
+
 }

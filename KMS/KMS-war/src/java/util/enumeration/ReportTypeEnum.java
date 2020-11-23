@@ -14,5 +14,6 @@ public enum ReportTypeEnum {
     GROUP,
     PROJECT,
     POST,
-    COMMENT
+    COMMENT,
+    REVIEW
 }

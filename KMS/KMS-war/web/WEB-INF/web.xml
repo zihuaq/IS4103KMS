@@ -5,7 +5,7 @@
             30
         </session-timeout>
     </session-config>
-    <ejb-local-ref>
+    <!--    <ejb-local-ref>
         <ejb-ref-name>ProjectSessionBean</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
         <local>ejb.session.stateless.ProjectSessionBeanLocal</local>
@@ -22,5 +22,11 @@
         <ejb-ref-type>Session</ejb-ref-type>
         <local>ejb.session.stateless.BadgeSessionBeanLocal</local>
         <ejb-link>#BadgeSessionBean</ejb-link>
-    </ejb-local-ref>
+    </ejb-local-ref>-->
+<!--    <ejb-local-ref>
+        <ejb-ref-name>ActivitySessionBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.ActivitySessionBeanLocal</local>
+        <ejb-link>#ActivitySessionBean</ejb-link>
+    </ejb-local-ref>-->
 </web-app>

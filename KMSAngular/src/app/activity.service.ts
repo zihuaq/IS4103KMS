@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Activity } from 'src/app/classes/activity';
+import { review } from './classes/review';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -99,9 +100,47 @@ export class ActivityService {
     );
   }
 
+  getProjectReviewForActivity(activityId: number, userId: number){
+    return this.httpClient.get<any>(this.baseUrl+"/getProjectReviewForActivity/" + activityId + "/" + userId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getUserReviewsForActivity(activityId: number, userId: number){
+    return this.httpClient.get<any>(this.baseUrl+"/getUserReviewsForActivity/" + activityId + "/" + userId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createNewUserReview(review: review, from: number, to: number, madeFromActivityId: number): Observable<any> {
+    let CreateUserReviewReq = {
+      "review" : review,
+      "from" : from,
+      "to" : to,
+      "madeFromActivityId" : madeFromActivityId,
+    }
+
+    return this.httpClient.put<any>(this.baseUrl+"/createNewUserReview", CreateUserReviewReq, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createNewProjectReview(review: review, from: number, project: number, madeFromActivityId: number): Observable<any> {
+    let CreateProjectReviewReq = {
+      "review" : review,
+      "from" : from,
+      "project" : project,
+      "madeFromActivityId" : madeFromActivityId,
+    }
+
+    return this.httpClient.put<any>(this.baseUrl+"/createNewProjectReview", CreateProjectReviewReq, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
-    
+
     if (error.error instanceof ErrorEvent) {
         errorMessage = 'An unknown error has occurred: ' + error.error.message;
     } else {

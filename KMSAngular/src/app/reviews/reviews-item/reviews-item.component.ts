@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit,Output } from '@angular/core';
+import { SessionService } from 'src/app/session.service';
 import { review } from '../../classes/review'
 
 @Component({
@@ -9,10 +10,17 @@ import { review } from '../../classes/review'
 export class ReviewsItemComponent implements OnInit {
 
   @Input() review: review;
+  @Output() reviewSelected = new EventEmitter<review>();
+  loggedInUserId: number
 
-  constructor() { }
+  constructor(private sessionService: SessionService) { }
 
   ngOnInit(): void {
+    this.loggedInUserId = this.sessionService.getCurrentUser().userId
+  }
+
+  onSelectReport(){
+    this.reviewSelected.emit(this.review);
   }
 
 }

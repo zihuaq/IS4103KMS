@@ -49,5 +49,9 @@ public interface ReportSessionBeanLocal {
 
     public ReportEntity createPostReport(ReportEntity report, List<Long> tagIds) throws NoResultException;
 
+    public List<ReportEntity> getReviewReports() throws NoResultException;
+
+    public ReportEntity reportReview(ReportEntity report) throws NoResultException;
+
 
 }

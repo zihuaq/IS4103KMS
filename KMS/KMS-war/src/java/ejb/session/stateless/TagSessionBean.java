@@ -99,4 +99,12 @@ public class TagSessionBean implements TagSessionBeanLocal {
         q.setParameter("tagType", TagTypeEnum.REPORTCOMMENT);
         return q.getResultList();
     }
+    
+    
+    @Override
+    public List<TagEntity> getAllReviewReportTags() {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
+        q.setParameter("tagType", TagTypeEnum.REPORTREVIEW);
+        return q.getResultList();
+    }
 }

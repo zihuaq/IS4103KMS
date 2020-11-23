@@ -4,6 +4,7 @@ import { Tag } from './tag';
 import { ProjectType } from './project-type.enum';
 import { HumanResourcePosting } from './human-resource-posting';
 import { MaterialResourcePosting } from './material-resource-posting';
+import { Award} from './award';
 
 export class Project {
   projectId: number;
@@ -24,6 +25,7 @@ export class Project {
   materialResourcePostings: MaterialResourcePosting[];
   posts: Post[];
   isActive: boolean;
+  awards: Award[];
 
   constructor(
     projectId?: number,
