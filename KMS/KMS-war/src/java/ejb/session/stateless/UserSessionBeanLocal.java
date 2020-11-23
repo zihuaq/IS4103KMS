@@ -19,6 +19,7 @@ import entity.AffiliationRequestEntity;
 import entity.AwardEntity;
 import entity.FollowRequestEntity;
 import entity.GroupEntity;
+import entity.ProfileEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -42,11 +43,11 @@ public interface UserSessionBeanLocal {
     public List<UserEntity> getAffiliatedUsers(Long userId) throws UserNotFoundException;
 
     public AffiliationRequestEntity sendAffiliateReqToUser(Long userId, Long affiliatedToAddUserId) throws AffiliatedUserExistException, DuplicateAffiliationRequestException, UserNotFoundException;
-        
+
     public void removeAffiliatedUser(Long userId, Long affiliatedToRemoveUserId) throws NoResultException, UserNotFoundException;
-    
+
     public List<AffiliationRequestEntity> getAffiliationRequestsReceived(Long userId) throws UserNotFoundException;
-    
+
     public List<AffiliationRequestEntity> getAffiliationRequestsMade(Long userId) throws UserNotFoundException;
 
     public List<TagEntity> addSkillsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
@@ -58,7 +59,7 @@ public interface UserSessionBeanLocal {
     public List<TagEntity> getSDGsForProfile(long userId) throws UserNotFoundException;
 
     public void addSDGToProfile(long userId, long tagId) throws NoResultException, DuplicateTagInProfileException;
-    
+
     public List<TagEntity> addSDGsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException;
 
     public List<TagEntity> removeSDGFromProfile(long userId, long tagId) throws NoResultException;
@@ -68,11 +69,11 @@ public interface UserSessionBeanLocal {
     public UserEntity userLogin(String email, String password) throws InvalidLoginCredentialException, DeactivatedEntityException;
 
     public void deleteUser(long userId) throws UserNotFoundException;
-    
-    public void makeAffiliationRequest (Long fromUserId, List<Long> toUserIds) throws UserNotFoundException, DuplicateAffiliationRequestException, AffiliatedUserExistException;
-    
+
+    public void makeAffiliationRequest(Long fromUserId, List<Long> toUserIds) throws UserNotFoundException, DuplicateAffiliationRequestException, AffiliatedUserExistException;
+
     public void acceptAffiliationRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
-    
+
     public void rejectAffiliationRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException;
 
     public FollowRequestEntity followUser(Long toUserId, Long fromUserId) throws UserNotFoundException, DuplicateFollowRequestException;
@@ -120,5 +121,8 @@ public interface UserSessionBeanLocal {
     public List<GroupEntity> getGroupsOwned(Long userId) throws UserNotFoundException;
 
     public List<AwardEntity> getReceivedAwards(Long userId) throws UserNotFoundException;
+    
+    public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException;
+
 
 }

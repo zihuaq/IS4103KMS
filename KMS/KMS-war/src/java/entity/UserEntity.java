@@ -63,9 +63,9 @@ public class UserEntity implements Serializable {
     private Date joinedDate;
     @Temporal(TemporalType.DATE)
     private Date adminStartDate;
-    
+
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserTypeEnum userType;
     @Lob
@@ -74,9 +74,9 @@ public class UserEntity implements Serializable {
     private int reputationPoints;
 
     private String verificationCode;
-    
+
     private Boolean isVerified;
-   
+
     private Boolean isActive;
 
     @OneToMany(mappedBy = "from")
@@ -97,17 +97,17 @@ public class UserEntity implements Serializable {
     private List<PostEntity> posts;
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
-    @JoinTable(name= "groupMembers")
+    @JoinTable(name = "groupMembers")
     @ManyToMany
-    private List<GroupEntity> groupsJoined;  
-    @JoinTable(name= "groupAdmins")
+    private List<GroupEntity> groupsJoined;
+    @JoinTable(name = "groupAdmins")
     @ManyToMany
     private List<GroupEntity> groupAdmins;
     @OneToMany
     private List<BadgeEntity> badges;
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
     private List<MaterialResourceAvailableEntity> mras;
-    @JoinTable(name = "skills")
+    @JoinTable(name = "user_skills")
     @OneToMany
     private List<TagEntity> skills;
     @JoinTable(name = "following")
@@ -116,7 +116,7 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "followers")
     @OneToMany
     private List<UserEntity> followers;
-    @JoinTable(name = "sdgs")
+    @JoinTable(name = "user_sdgs")
     @OneToMany
     private List<TagEntity> sdgs;
     @OneToMany(mappedBy = "from")
@@ -127,29 +127,30 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountPrivacySettingEnum accountPrivacySetting;
-    
+
     @JoinTable(name = "affiliatedUsers")
     @OneToMany
     private List<UserEntity> affiliatedUsers;
-    
+
     @OneToMany(mappedBy = "from")
     private List<AffiliationRequestEntity> affiliationRequestMade;
     @OneToMany(mappedBy = "to")
     private List<AffiliationRequestEntity> affiliationRequestReceived;
-    
+
     @JoinTable(name = "humanResourcePostingApplied")
     @ManyToMany
     private List<HumanResourcePostingEntity> hrpApplied;
-    
+
     @OneToMany(mappedBy = "fulfillmentOwner")
     private List<FulfillmentEntity> fulfillments;
 
     @JoinTable(name = "activityJoined")
     @ManyToMany
     private List<ActivityEntity> activityJoined;
-    
+
     @OneToMany
     private List<DonationEntity> donations;
+
     
 
     @JoinTable(name = "receivedAwards")
@@ -176,7 +177,14 @@ public class UserEntity implements Serializable {
     @OneToMany 
     private List<NotificationEntity> notifications;
 
-    
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<ProfileEntity> profiles;
+
+    @OneToMany(mappedBy = "user")
+    private List<ClaimProfileRequestEntity> claimProfileRequestMade;
+
+
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
         this.reviewsReceived = new ArrayList<>();
@@ -216,6 +224,9 @@ public class UserEntity implements Serializable {
         this.CountOfCommentsCreated = 0;
         this.CountOfReviewsCreated = 0;
         this.notifications = new ArrayList<>();
+        this.profiles = new ArrayList<>();
+        this.claimProfileRequestMade = new ArrayList<>();
+        this.reputationPoints = 0;
 
     }
 
@@ -229,6 +240,7 @@ public class UserEntity implements Serializable {
         this.setPassword(password);
         this.joinedDate = new Date();
         this.userType = usertype;
+
         this.CountOfGroupsJoined = 0;
         this.CountOfProjectsJoined = 0;
         this.CountOfProjectsCreated = 0;
@@ -237,6 +249,8 @@ public class UserEntity implements Serializable {
         this.CountOfPostCreated = 0;
         this.CountOfCommentsCreated = 0;
         this.CountOfReviewsCreated = 0;
+        this.reputationPoints = 0;
+
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date adminStartDate, UserTypeEnum userType) {
@@ -284,7 +298,6 @@ public class UserEntity implements Serializable {
     public String toString() {
         return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", userType=" + userType + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
-    
 
     public String getFirstName() {
         return firstName;
@@ -393,8 +406,6 @@ public class UserEntity implements Serializable {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
-    
-    
 
     public List<ReviewEntity> getReviewsGiven() {
         return reviewsGiven;
@@ -479,7 +490,7 @@ public class UserEntity implements Serializable {
     public List<ProjectEntity> getProjectsManaged() {
         return projectsManaged;
     }
-    
+
     public List<GroupEntity> getGroupsManaged() {
         return groupsManaged;
     }
@@ -700,6 +711,22 @@ public class UserEntity implements Serializable {
 
     public void setNotifications(List<NotificationEntity> notifications) {
         this.notifications = notifications;
+    }
+
+    public List<ProfileEntity> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(List<ProfileEntity> profiles) {
+        this.profiles = profiles;
+    }
+
+    public List<ClaimProfileRequestEntity> getClaimProfileRequestMade() {
+        return claimProfileRequestMade;
+    }
+
+    public void setClaimProfileRequestMade(List<ClaimProfileRequestEntity> claimProfileRequestMade) {
+        this.claimProfileRequestMade = claimProfileRequestMade;
     }
 
 }

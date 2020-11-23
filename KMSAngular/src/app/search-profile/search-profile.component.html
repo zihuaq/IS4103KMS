@@ -1,0 +1,96 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Search Profiles</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+            <li class="breadcrumb-item active">Search Profiles</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+  <!-- Main content -->
+  <section class="content">
+    <div class="card card-solid" class="searchResult">
+      <div class=searchBar>
+        <app-searchbar [searchString]="searchString" (searchStringChanged)="handleSearchStringChanged($event)">
+        </app-searchbar>
+      </div>
+      <span *ngIf="filteredProfiles && filteredProfiles.length == 0"> No profiles found.</span>
+      <span *ngIf="filteredProfiles && filteredProfiles.length > 0">
+        <div class="card-body pb-0">
+          <div class="row d-flex align-items-stretch">
+            <div *ngFor="let profile of filteredProfiles" class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light" style="width: 100%;">
+                <div class="card-header border-bottom-0" style="min-height: 56px;">
+                  <h2 class="lead">
+                    <p>
+                      <b *ngIf="profile.name">{{profile.name}}</b>
+                      <span *ngIf="!profile.name" class="text-muted">Profile has no name</span>
+                    </p>
+                  </h2>
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-12">
+                      <b>Organization: </b>
+                      <p>
+                        <b class="text-muted text-sm" *ngIf="profile.organization">{{profile.organization}}</b>
+                        <span class="text-sm" *ngIf="!profile.organization">Profile has no organization</span>
+                      </p>
+                      <b>Interested SDGs: </b>
+                      <p *ngIf="profile.sdgs.length == 0" class="text-sm">Profile has no SDG indicated</p>
+                      <span class="d-flex flex-wrap" *ngIf="profile.sdgs.length > 0">
+                        <p *ngFor="let sdg of profile.sdgs" class="SDGs">
+                          <small class="badge badge-dark">
+                            {{sdg.name}}
+                          </small>
+                        </p>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-center footer-buttons">
+                    <a routerLink="/profile/{{profile.id}}" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> View Profile
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+    <!-- /.col -->
+    <div class="refineSearchColumn">
+      <h3 class="refineTitle"> Refine Search </h3>
+      <h4 class="refineSubtitle"> SDG </h4>
+      <div class="select2-dark">
+        <select class="select2" id="searchsdgselect2" multiple="multiple" data-placeholder="Add SDG filter"
+          data-dropdown-css-class="select2-dark" style="width: 100%">
+        </select>
+      </div>
+      <br />
+      <h4 class="refineSubtitle"> SDG Targets </h4>
+      <div class="select2-dark">
+        <select class="select2" id="searchsdgTargetselect2" multiple="multiple" data-placeholder="Add SDG Target filter"
+          data-dropdown-css-class="select2-dark" style="width: 100%;">
+        </select>
+      </div>
+    </div>
+  </section>
+  <!-- /.content -->
+</div>
+
+<app-footer></app-footer>

@@ -12,7 +12,7 @@
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-2 mb-2 d-flex justify-content-start">
       <div class="info">
-        <a class="d-block text-center" routerLink="/profile">
+        <a class="d-block text-center" routerLink="/userProfile">
           <h5 class="">{{loggedInUser.firstName}} {{loggedInUser.lastName}}</h5>
         </a>
       </div>
@@ -30,9 +30,15 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/profile">
+          <a class="nav-link" routerLink="/userProfile">
             <i class="fas fa-user nav-icon"></i>
             <p>User Profile</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/searchProfiles">
+            <i class="fas fa-user nav-icon"></i>
+            <p>Search Profiles</p>
           </a>
         </li>
         <li class="nav-item has-treeview">
@@ -71,7 +77,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a class="nav-link" routerLink = "/viewAllGroups">
+              <a class="nav-link" routerLink="/viewAllGroups">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Discover Groups</p>
               </a>
@@ -104,7 +110,7 @@
             <p>Chat</p>
           </a>
         </li>
-        <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
+        <li class="nav-item" *ngIf="loggedInUser.userType.toString() == 'ADMIN'">
           <a class="nav-link" routerLink="/admin">
             <i class="fas fa-bell nav-icon"></i>
             <p>Administration</p>

@@ -1,55 +1,73 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
-<div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId)">
-  <p>This project has been deactivated for violating our T&C</p>
-  </div>
+<div class="content-wrapper"
+    *ngIf="hasLoad && (projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId)">
+    <p>This project has been deactivated for violating our T&C</p>
+</div>
 
-<div class="content-wrapper" *ngIf = "hasLoad && (projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId)">
+<div class="content-wrapper"
+    *ngIf="hasLoad && (projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId)">
     <div class="loading" *ngIf="!loaded">
         <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
     </div>
     <div class="content-header" *ngIf="loaded">
         <div class="content-fluid">
             <div class="card">
-                <div class="image"  style="height: 350px; overflow: hidden; position: relative;">
+                <div class="image" style="height: 350px; overflow: hidden; position: relative;">
                     <span *ngIf="projectToView.profilePicture">
-                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Edit</button>
+                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal"
+                            data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i>
+                            Edit</button>
                         <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
-                            <img class="card-img-top" style="display: block;" [src]="projectToView.profilePicture"  alt="Project Profile Picture">
+                            <img class="card-img-top" style="display: block;" [src]="projectToView.profilePicture"
+                                alt="Project Profile Picture">
                             <div class="after">
                                 <i class="fas fa-search-plus" style="font-size: 25px;"></i>
                             </div>
                         </div>
                     </span>
                     <span *ngIf="!projectToView.profilePicture">
-                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" data-target="#modal-addPicture" style="z-index: 2;"><i class="fas fa-camera"></i> Add</button>
+                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal"
+                            data-target="#modal-addPicture" style="z-index: 2;"><i class="fas fa-camera"></i>
+                            Add</button>
                         <div class="image-layer">
-                            <img class="card-img-top" style="margin: -10% 0 0 0; display: block;" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"  alt="Project Profile Picture">
+                            <img class="card-img-top" style="margin: -10% 0 0 0; display: block;"
+                                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                                alt="Project Profile Picture">
                         </div>
                     </span>
                 </div>
                 <div class="card-body">
-                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">{{projectToView.name}}
-                      <span *ngIf= "!projectToView.isActive" class="badge badge-danger" style = "margin-right: 5px;">
-                        Deactivated
-                      </span>
+                    <p class="card-title" style="font-size: x-large; font-weight: bold; margin-right: 5px;">
+                        {{projectToView.name}}
+                        <span *ngIf="!projectToView.isActive" class="badge badge-danger" style="margin-right: 5px;">
+                            Deactivated
+                        </span>
                     </p>
-                    <span class="badge badge-info" *ngIf="projectToView.status == projectType.ACTIVE" style="margin-top: 10px;">{{projectToView.status}}</span>
-                    <span class="badge badge-warning" *ngIf="projectToView.status == projectType.INACTIVE" style="margin-top: 10px;">{{projectToView.status}}</span>
-                    <span class="badge badge-success" *ngIf="projectToView.status == projectType.COMPLETED" style="margin-top: 10px;">{{projectToView.status}}</span>
+                    <span class="badge badge-info" *ngIf="projectToView.status == projectType.ACTIVE"
+                        style="margin-top: 10px;">{{projectToView.status}}</span>
+                    <span class="badge badge-warning" *ngIf="projectToView.status == projectType.INACTIVE"
+                        style="margin-top: 10px;">{{projectToView.status}}</span>
+                    <span class="badge badge-success" *ngIf="projectToView.status == projectType.COMPLETED"
+                        style="margin-top: 10px;">{{projectToView.status}}</span>
                     <p class="card-text">Owner: {{owner.firstName}} {{owner.lastName}}
                         <span *ngIf="!isMember">
-                            <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView"></app-report-project>
-                            <button type="button" class="btn btn-light float-right" (click)="joinProject()">Join Project</button>
+                            <app-report-project [loggedInUser]="loggedInUser" [projectToReport]="projectToView">
+                            </app-report-project>
+                            <button type="button" class="btn btn-light float-right" (click)="joinProject()">Join
+                                Project</button>
                         </span>
                         <span *ngIf="isMember">
-                            <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
+                            <button type="button" class="btn btn-primary float-right" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
                             <button type="button" [disabled] class="btn btn-light float-right">Joined</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" *ngIf="isAdmin" (click)="onSelect()">Manage Project</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#modal-share-project">Share Project</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#modal-confirm-leave-project">Leave Project</a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#modal-share-project">Share
+                                    Project</a>
+                                <a class="dropdown-item" data-toggle="modal"
+                                    data-target="#modal-confirm-leave-project">Leave Project</a>
                             </div>
                         </span>
                     </p>
@@ -60,34 +78,49 @@
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="details-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" [ngClass]="{ 'active':activeTab==='basic-details'}" role="tab">Details</a>
+                            <a class="nav-link" id="details-tab-basic-details" data-toggle="pill" href="#basic-details"
+                                [ngClass]="{ 'active':activeTab==='basic-details'}" role="tab">Details</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab" [ngClass]="{ 'active':activeTab==='members-tab'}" role="tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
+                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab"
+                                [ngClass]="{ 'active':activeTab==='members-tab'}" role="tab">Members <span
+                                    class="badge badge-light">{{noOfMembers}}</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab" [ngClass]="{ 'active':activeTab==='review-tab'}" role="tab">Reviews</a>
+                            <a class="nav-link" id="details-tab-review" data-toggle="pill" href="#review-tab"
+                                [ngClass]="{ 'active':activeTab==='review-tab'}" role="tab">Reviews</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab" [ngClass]="{ 'active':activeTab==='mrp-tab'}" role="tab">Material Resource Postings</a>
+                            <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab"
+                                [ngClass]="{ 'active':activeTab==='mrp-tab'}" role="tab">Material Resource Postings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab" [ngClass]="{ 'active':activeTab==='hrp-tab'}" role="tab">Human Resource Postings</a>
+                            <a class="nav-link" id="details-tab-hrp" data-toggle="pill" href="#hrp-tab"
+                                [ngClass]="{ 'active':activeTab==='hrp-tab'}" role="tab">Human Resource Postings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-activity" data-toggle="pill" href="#activity-tab" [ngClass]="{ 'active':activeTab==='activity-tab'}" role="tab">Activities</a>
+                            <a class="nav-link" id="details-tab-activity" data-toggle="pill" href="#activity-tab"
+                                [ngClass]="{ 'active':activeTab==='activity-tab'}" role="tab">Activities</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-task" data-toggle="pill" href="#task-tab" [ngClass]="{ 'active':activeTab==='task-tab'}" role="tab">Tasks</a>
+                            <a class="nav-link" id="details-tab-task" data-toggle="pill" href="#task-tab"
+                                [ngClass]="{ 'active':activeTab==='task-tab'}" role="tab">Tasks</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-projectfeed" data-toggle="pill" href="#projectfeed-tab" [ngClass]="{ 'active':activeTab==='projectfeed-tab'}" role="tab">Project Feed</a>
+                            <a class="nav-link" id="details-tab-projectfeed" data-toggle="pill" href="#projectfeed-tab"
+                                [ngClass]="{ 'active':activeTab==='projectfeed-tab'}" role="tab">Project Feed</a>
                         </li>
-                        <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
-                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab" [ngClass]="{ 'active':activeTab==='setting-tab'}" role="tab">Project Settings</a>
+                        <li class="nav-item" *ngIf="loggedInUser.userType.toString() == 'ADMIN'">
+                            <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab"
+                                [ngClass]="{ 'active':activeTab==='setting-tab'}" role="tab">Project Settings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-documents" data-toggle="pill" href="#document-tab" [ngClass]="{ 'active':activeTab==='document-tab'}" role="tab">Documents</a>
+                            <a class="nav-link" id="details-tab-documents" data-toggle="pill" href="#document-tab"
+                                [ngClass]="{ 'active':activeTab==='document-tab'}" role="tab">Documents</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab-similar-projects" data-toggle="pill" href="#similar-projects-tab"
+                                [ngClass]="{ 'active':activeTab==='similar-projects-tab'}" role="tab">Similar Projects</a>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link" id="details-tab-awards" data-toggle="pill" href="#awards-tab" [ngClass]="{ 'active':activeTab==='awards-tab'}" role="tab">Awards</a>
@@ -96,41 +129,58 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel" [ngClass]="{ 'active':activeTab==='basic-details'}" style="position: relative;">
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='basic-details'}" style="position: relative;">
                             <p><b>Description:</b> {{projectToView.description}}</p>
                             <p><b>Country:</b> {{projectToView.country}}</p>
-                            <button *ngIf="projectToView.monetaryFundingRequired && isMember" type="button" class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;" [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project</button>
+                            <button *ngIf="projectToView.monetaryFundingRequired && isMember" type="button"
+                                class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;"
+                                [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project</button>
                             <p><b>Date Created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
-                            <p *ngIf="projectToView.monetaryFundingRequired"><b>Monetary Funding (USD):</b> ${{projectToView.monetaryFundingObtained | number:'1.0'}} obtained / ${{projectToView.monetaryFundingRequired | number:'1.0'}} required</p>
+                            <p *ngIf="projectToView.monetaryFundingRequired"><b>Monetary Funding (USD):</b>
+                                ${{projectToView.monetaryFundingObtained | number:'1.0'}} obtained /
+                                ${{projectToView.monetaryFundingRequired | number:'1.0'}} required</p>
                             <p><b>SDGs: </b>
-                                <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary" style="margin-right: 5px;">
+                                <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary"
+                                    style="margin-right: 5px;">
                                     {{tag.name}}
                                 </span>
                             </p>
                             <!-- <p>Project status: {{projectToView.status}}</p> -->
                         </div>
-                        <div class="tab-pane fade show active" id="members-tab" [ngClass]="{ 'active':activeTab==='members-tab'}" role="tabpanel">
+                        <div class="tab-pane fade show active" id="members-tab"
+                            [ngClass]="{ 'active':activeTab==='members-tab'}" role="tabpanel">
                             <div class="row">
                                 <div class="col-6" style="padding-right: 40px">
                                     <h5>Admins</h5>
                                     <!--Owner-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
-                                        <li class="list-group-item"  *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}}
-                                            <span class="badge badge-dark badge-pill" *ngIf="owner.userId == member.userId">Owner</span>
-                                            <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">Me</span>
+                                        <li class="list-group-item" *ngIf="owner.userId == member.userId">
+                                            {{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-dark badge-pill"
+                                                *ngIf="owner.userId == member.userId">Owner</span>
+                                            <span class="badge badge-primary badge-pill"
+                                                *ngIf="loggedInUser.userId == member.userId">Me</span>
                                         </li>
                                     </ul>
                                     <!--If you are an admin but not an owner-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
-                                        <li class="list-group-item"  *ngIf="loggedInUser.userId == member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
-                                            <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
-                                            <span class="badge badge-primary badge-pill" *ngIf="loggedInUser.userId == member.userId">Me</span>
+                                        <li class="list-group-item"
+                                            *ngIf="loggedInUser.userId == member.userId && owner.userId != member.userId">
+                                            {{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-secondary badge-pill"
+                                                *ngIf="owner.userId != member.userId">Admin</span>
+                                            <span class="badge badge-primary badge-pill"
+                                                *ngIf="loggedInUser.userId == member.userId">Me</span>
                                         </li>
                                     </ul>
                                     <!--Admins except you-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectAdmins">
-                                        <li class="list-group-item"  *ngIf="loggedInUser.userId != member.userId && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
-                                            <span class="badge badge-secondary badge-pill" *ngIf="owner.userId != member.userId">Admin</span>
+                                        <li class="list-group-item"
+                                            *ngIf="loggedInUser.userId != member.userId && owner.userId != member.userId">
+                                            {{member.firstName}} {{member.lastName}}
+                                            <span class="badge badge-secondary badge-pill"
+                                                *ngIf="owner.userId != member.userId">Admin</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -138,13 +188,17 @@
                                     <h5>Members</h5>
                                     <!--If you are a member-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectMembers">
-                                        <li class="list-group-item"  *ngIf="loggedInUser.userId == member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                        <li class="list-group-item"
+                                            *ngIf="loggedInUser.userId == member.userId && !checkAdmin(member) && owner.userId != member.userId">
+                                            {{member.firstName}} {{member.lastName}}
                                             <span class="badge badge-primary badge-pill">You</span>
                                         </li>
                                     </ul>
                                     <!--Members except you-->
                                     <ul class="list-group" *ngFor="let member of projectToView.projectMembers">
-                                        <li class="list-group-item" *ngIf="loggedInUser.userId != member.userId && !checkAdmin(member) && owner.userId != member.userId">{{member.firstName}} {{member.lastName}}
+                                        <li class="list-group-item"
+                                            *ngIf="loggedInUser.userId != member.userId && !checkAdmin(member) && owner.userId != member.userId">
+                                            {{member.firstName}} {{member.lastName}}
                                         </li>
                                     </ul>
                                 </div>
@@ -158,44 +212,63 @@
                           </div>
                           <app-reviews [reviews] = "projectReviews"></app-reviews>
                         </div>
-                        <div class="tab-pane fade show active" id="mrp-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='mrp-tab'}">
+                        <div class="tab-pane fade show active" id="mrp-tab" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='mrp-tab'}">
                             <app-view-mrp-tab></app-view-mrp-tab>
                         </div>
-                        <div class="tab-pane fade show active" id="hrp-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='hrp-tab'}">
+                        <div class="tab-pane fade show active" id="hrp-tab" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='hrp-tab'}">
                             <app-view-hrp-tab></app-view-hrp-tab>
                         </div>
-                        <div class="tab-pane fade show active" id="activity-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='activity-tab'}">
+                        <div class="tab-pane fade show active" id="activity-tab" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='activity-tab'}">
                             <app-activity-tab></app-activity-tab>
                         </div>
-                        <div class="tab-pane fade show active" id="task-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='task-tab'}">
+                        <div class="tab-pane fade show active" id="task-tab" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='task-tab'}">
                             <app-task-tab></app-task-tab>
                         </div>
+<<<<<<< HEAD
                         <div class="tab-pane fade show active" id="awards-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='awards-tab'}">
                           <app-project-awards></app-project-awards>
                       </div>
                         <div class="tab-pane fade show active" id="projectfeed-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='projectfeed-tab'}">
+=======
+                        <div class="tab-pane fade show active" id="projectfeed-tab" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='projectfeed-tab'}">
+>>>>>>> 7aa6336aa5bcae86e16eea781b789f5e759a5c56
                             <app-newsfeed newsfeedType="project" id="{{projectId}}"></app-newsfeed>
                         </div>
-                        <div class="tab-pane fade show active" id="setting-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='setting-tab'}">
-                          <form class="form-horizontal" (ngSubmit)="onEditProjectSetting(disableForm)" #disableForm="ngForm">
-                            <div>
-                              <label>Project Status</label>
-                              <div class = "radio" *ngFor = "let status of settingStatus">
-                                <label style="padding-right: 10px;" >
-                                  <input type = "radio" name = "status" [ngModel] = "projectToView.isActive ? 'Active' : 'Deactive'" [value] = "status">
-                                  {{status}}
-                                </label>
-                              </div>
-                            </div>
-                            <div class="form-group row">
-                              <div class="offset-sm-2 col-sm-10">
-                                <button type="submit" class="btn btn-danger" style="float: right;" [disabled]="!disableForm.valid">Submit</button>
-                              </div>
-                            </div>
-                          </form>
+                        <div class="tab-pane fade show active" id="setting-tab" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='setting-tab'}">
+                            <form class="form-horizontal" (ngSubmit)="onEditProjectSetting(disableForm)"
+                                #disableForm="ngForm">
+                                <div>
+                                    <label>Project Status</label>
+                                    <div class="radio" *ngFor="let status of settingStatus">
+                                        <label style="padding-right: 10px;">
+                                            <input type="radio" name="status"
+                                                [ngModel]="projectToView.isActive ? 'Active' : 'Deactive'"
+                                                [value]="status">
+                                            {{status}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="offset-sm-2 col-sm-10">
+                                        <button type="submit" class="btn btn-danger" style="float: right;"
+                                            [disabled]="!disableForm.valid">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="tab-pane fade show active" id="document-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='document-tab'}">
+                        <div class="tab-pane fade show active" id="document-tab" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='document-tab'}">
                             <app-view-documents></app-view-documents>
+                        </div>
+                        <div class="tab-pane fade show active" id="similar-projects-tab" role="tabpanel"
+                            [ngClass]="{ 'active':activeTab==='similar-projects-tab'}">
+                            <app-view-similar-projects></app-view-similar-projects>
                         </div>
                     </div>
                 </div>
@@ -206,86 +279,101 @@
 
 <div class="modal fade" id="modal-addPicture" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title">Add Profile Picture</h4>
-            <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" [src]="profilePicture" alt="Project Profile Picture">
-            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Project Profile Picture">
-            <div class="input-group">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
-                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
-                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Profile Picture</h4>
+                <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture"
+                    [src]="profilePicture" alt="Project Profile Picture">
+                <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture"
+                    [src]="selectedProfilePicture" alt="Project Profile Picture">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="profilePicture" accept="image/*"
+                            (change)="getFiles($event)">
+                        <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose
+                            file</label>
+                        <label class="custom-file-label" *ngIf="selectedProfilePicture"
+                            for="profilePicture">{{selectedProfilePictureName}}</label>
+                    </div>
+                </div>
+                <div style="padding-top: 3%; display: flex; justify-content: center;">
+                    <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()"
+                        data-dismiss="modal" aria-label="Close">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal"
+                        aria-label="Close">Cancel</button>
                 </div>
             </div>
-            <div style="padding-top: 3%; display: flex; justify-content: center;">
-                <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" data-dismiss="modal" aria-label="Close">Save Changes</button>
-                <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal" aria-label="Close">Cancel</button>
-            </div>
         </div>
-      </div>
-      <!-- /.modal-content -->
+        <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
+</div>
+<!-- /.modal -->
 
 <div class="modal fade" id="modal-editPicture" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title">Edit Profile Picture</h4>
-            <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" [src]="profilePicture" alt="Project Profile Picture">
-            <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" [src]="selectedProfilePicture" alt="Project Profile Picture">
-            <div class="input-group">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
-                    <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
-                    <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Profile Picture</h4>
+                <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture"
+                    [src]="profilePicture" alt="Project Profile Picture">
+                <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture"
+                    [src]="selectedProfilePicture" alt="Project Profile Picture">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="profilePicture" accept="image/*"
+                            (change)="getFiles($event)">
+                        <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose
+                            file</label>
+                        <label class="custom-file-label" *ngIf="selectedProfilePicture"
+                            for="profilePicture">{{selectedProfilePictureName}}</label>
+                    </div>
+                    <div class="input-group-append" style="cursor: pointer" *ngIf="profilePicture">
+                        <span class="input-group-text" (click)="removePicture()">Remove Current</span>
+                    </div>
                 </div>
-                <div class="input-group-append" style="cursor: pointer" *ngIf="profilePicture">
-                    <span class="input-group-text" (click)="removePicture()">Remove Current</span>
+                <div style="padding-top: 3%; display: flex; justify-content: center;">
+                    <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()"
+                        data-dismiss="modal" aria-label="Close">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal"
+                        aria-label="Close">Cancel</button>
                 </div>
             </div>
-            <div style="padding-top: 3%; display: flex; justify-content: center;">
-                <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" data-dismiss="modal" aria-label="Close">Save Changes</button>
-                <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal" aria-label="Close">Cancel</button>
-            </div>
         </div>
-      </div>
-      <!-- /.modal-content -->
+        <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
+</div>
+<!-- /.modal -->
 
 <div class="modal fade" id="modal-profilePicture">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-body" style="margin-top: -1.5%;">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-          <img style="width: 100%; padding-top: 1%;" [src]="projectToView.profilePicture" alt="Project Profile Picture">
+        <div class="modal-content">
+            <div class="modal-body" style="margin-top: -1.5%;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <img style="width: 100%; padding-top: 1%;" [src]="projectToView.profilePicture"
+                    alt="Project Profile Picture">
+            </div>
         </div>
-      </div>
-      <!-- /.modal-content -->
+        <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
+</div>
+<!-- /.modal -->
 
-  <div class="modal fade" id="modal-confirm-leave-project">
+<div class="modal fade" id="modal-confirm-leave-project">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -299,7 +387,8 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button id="delete-mrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="leaveProject()">Leave</button>
+                <button id="delete-mrp" type="button" class="btn btn-danger" data-dismiss="modal"
+                    (click)="leaveProject()">Leave</button>
             </div>
         </div>
     </div>
@@ -316,7 +405,8 @@
             </div>
             <div class="modal-body" style="background-color: whitesmoke;">
                 <h6 style="color: black;"> Thoughts </h6>
-                <input placeholder="Say something about this project..." [(ngModel)]="shareProjectText" style="width: 100%;">
+                <input placeholder="Say something about this project..." [(ngModel)]="shareProjectText"
+                    style="width: 100%;">
                 <br />
                 <br />
                 <h6 style="color: black;"> Share with* </h6>
@@ -342,8 +432,8 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal"
-                    (click)="shareProject()">Share Project</button>
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal" (click)="shareProject()">Share
+                    Project</button>
             </div>
         </div>
         <!-- /.modal-content -->

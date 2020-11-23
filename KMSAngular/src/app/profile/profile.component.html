@@ -1,6 +1,6 @@
-<app-top-navbar *ngIf="!shared"></app-top-navbar>
-<app-side-navbar *ngIf="!shared"></app-side-navbar>
-<div [ngClass]="{'content-wrapper': !shared}">
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+<div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
@@ -10,7 +10,8 @@
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item" *ngIf="!shared"><a routerLink="/index">Home</a></li>
+            <li class="breadcrumb-item"><a routerLink="/index">Home</a></li>
+            <li class="breadcrumb-item"><a routerLink="/searchProfiles">Search Profiles</a></li>
             <li class="breadcrumb-item active">Profile</li>
           </ol>
         </div><!-- /.col -->
@@ -19,23 +20,125 @@
   </div>
   <!-- /.content-header -->
   <!-- Main content -->
-  <div class="content" *ngIf="profile && loggedInUser">
+  <div class="content" *ngIf="profile">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-3">
-          <app-overview [shared]="shared" [profile]="profile" [loggedInUser]="loggedInUser"
-            (profileChanged)="profile=$event" (userChanged)="loggedInUser=$event">
-          </app-overview>
-          <app-report-profile *ngIf="!shared && profile.userId != loggedInUser.userId" [profile]="profile"
-            [loggedInUser]="loggedInUser"></app-report-profile>
-          <app-basic-details [profile]="profile"></app-basic-details>
+        <div class="card col-12">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="d-flex justify-content-between">
+                  <h3 class="text-primary">{{profile.name}}</h3>
+                  <button *ngIf="canSendProfileClaimRequest() && !hasProfile()"
+                    class="btn btn-sm btn-primary text-white" style="height: fit-content;"
+                    (click)="makeProfileClaim(profile.id)">Claim Profile</button>
+                  <button *ngIf="!canSendProfileClaimRequest() && !hasProfile()" disabled
+                    class="btn btn-sm btn-primary text-white" style="height: fit-content;">Claim Request Sent</button>
+                </div>
+                <div>
+                  <h5 class="mt-7">Organizaton:
+                    <b class="text-muted">{{profile.organization}}</b>
+                  </h5>
+                </div>
+                <p class="text-muted">{{profile.description}}</p>
+              </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+              <div class=" col-6">
+                <p class="text-sm">Industry
+                  <b class="d-block text-muted" *ngIf="profile.industry">{{profile.industry}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.industry"> - </b>
+                </p>
+                <p class="text-sm">Products or Services
+                  <b class="d-block text-muted" *ngIf="profile.productsOrServices">{{profile.productsOrServices}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.productsOrServices"> - </b>
+                </p>
+                <p class="text-sm">Focus Regions
+                  <b class="d-block text-muted" *ngIf="profile.focusRegions">{{profile.focusRegions}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.focusRegions"> - </b>
+                </p>
+                <p class="text-sm">Region
+                  <b class="d-block text-muted" *ngIf="profile.region">{{profile.region}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.region"> - </b>
+                </p>
+                <p class="text-sm">Target Population
+                  <b class="d-block text-muted" *ngIf="profile.targetPopulation">{{profile.targetPopulation}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.targetPopulation"> - </b>
+                </p>
+              </div>
+              <div class="col-6">
+                <p class="text-sm">Country
+                  <b class="d-block text-muted" *ngIf="profile.country">{{profile.country}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.country"> - </b>
+                </p>
+                <p class="text-sm">City/State
+                  <b class="d-block text-muted" *ngIf="profile.cityState">{{profile.cityState}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.cityState"> - </b>
+                </p>
+                <p class="text-sm">Website
+                  <b class="d-block text-muted" *ngIf="profile.website">{{profile.website}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.website"> - </b>
+                </p>
+                <p class="text-sm">Contact Details
+                  <b class="d-block text-muted" *ngIf="profile.contactDetails">{{profile.contactDetails}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.contactDetails"> - </b>
+                </p>
+                <p class="text-sm">Year of establishment
+                  <b class="d-block text-muted" *ngIf="profile.yearOfEstablishment">{{profile.yearOfEstablishment}}</b>
+                  <b class="d-block text-muted" *ngIf="!profile.yearOfEstablishment"> - </b>
+                </p>
+              </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+              <div class="col-12">
+                <p class="text-sm mb-0">Interested SDGs</p>
+                <b class="d-block text-muted text-sm" *ngIf="profile.sdgs.length == 0">Profile has no SDG indicated</b>
+                <span class="d-flex flex-wrap" *ngIf="profile.sdgs.length > 0">
+                  <p *ngFor="let sdg of profile.sdgs" class="SDGs">
+                    <small class="badge badge-dark">
+                      {{sdg.name}}
+                    </small>
+                  </p>
+                </span>
+              </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+              <div class="col-12">
+                <p class="text-sm mb-0">Interested SDG Targets</p>
+                <b class="d-block text-muted text-sm" *ngIf="profile.sdgTargets.length == 0">Profile has no SDG Targets
+                  indicated</b>
+                <span class="d-flex flex-wrap" *ngIf="profile.sdgTargets.length > 0">
+                  <p *ngFor="let target of profile.sdgTargets" class="SDGs">
+                    <small class="badge badge-dark">
+                      {{target.name}}
+                    </small>
+                  </p>
+                </span>
+              </div>
+            </div>
+            <!-- /.row -->
+          </div>
+          <!-- /.card-body -->
         </div>
-        <div class="col-md-9">
-          <app-profile-tabpanel [shared]="shared" [profile]="profile" [loggedInUser]="loggedInUser"
-            (profileChanged)="profile=$event" (userchanged)="loggedInUser=$event">
-          </app-profile-tabpanel>
-        </div>
-        <!-- /.col -->
+        <!-- /.card -->
+        <!-- {{profile.name}}
+          {{profile.cityState}}
+          {{profile.contactDetails}}
+          {{profile.country}}
+          {{profile.description}}
+          {{profile.focusRegions}}
+          {{profile.industry}}
+          {{profile.organization}}
+          {{profile.productsOrServices}}
+          {{profile.region}}
+          {{profile.sdgs}}
+          {{profile.sdgTargets}}
+          {{profile.targetPopulation}}
+          {{profile.website}}
+          {{profile.yearOfEstablishment}} -->
       </div>
       <!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -43,4 +146,4 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<app-footer [shared]="shared"></app-footer>
+<app-footer></app-footer>

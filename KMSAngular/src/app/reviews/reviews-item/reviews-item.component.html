@@ -7,7 +7,7 @@
     <img *ngIf="!review.from.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
     class = "img-responsive"
     style ="max-height: 20px;">
-    <a routerLink="/profile/{{review.from.userId}}">
+    <a routerLink="/userProfile/{{review.from.userId}}">
       {{review.from.firstName}} {{review.from.lastName}}
     </a>
   </span>
@@ -19,7 +19,7 @@
     <img *ngIf="!review.to.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
     class = "img-responsive"
     style ="max-height: 20px;">
-    <a routerLink="/profile/{{review.to.userId}}">
+    <a routerLink="/userProfile/{{review.to.userId}}">
       {{review.to.firstName}} {{review.to.lastName}}
     </a>
   </span>

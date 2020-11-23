@@ -27,4 +27,6 @@ public interface MaterialResourceAvailableSessionBeanLocal {
     public List<MaterialResourceAvailableEntity> getMaterialResourceAvailableForUser(long userId) throws UserNotFoundException;
 
     public List<MaterialResourceAvailableEntity> deleteMaterialResourceAvailableForUser(long userId, long mraId) throws NoResultException;
+    
+    public List<MaterialResourceAvailableEntity> getAllMaterialResourceAvailable();
 }
