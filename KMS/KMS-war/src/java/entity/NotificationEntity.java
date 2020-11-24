@@ -6,16 +6,11 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -38,7 +33,7 @@ public class NotificationEntity implements Serializable {
      
     private Long groupId;
     
-    private String projectTab;
+    private String tabName;
 
     public NotificationEntity() {
     }        
@@ -108,12 +103,12 @@ public class NotificationEntity implements Serializable {
         this.groupId = groupId;
     }
 
-    public String getProjectTab() {
-        return projectTab;
+    public String getTabName() {
+        return tabName;
     }
 
-    public void setProjectTab(String projectTab) {
-        this.projectTab = projectTab;
+    public void setTabName(String tabName) {
+        this.tabName = tabName;
     }
 
 }
