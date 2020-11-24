@@ -63,7 +63,7 @@ export class ViewOwnGroupComponent implements OnInit {
   }
 
   onSelect(group: Group): void {
-    this.router.navigate(["/groupDetails/" + group.groupId]);
+    this.router.navigate(["/groupDetails/" + group.groupId + "/basic-details"]);
   }
 
   checkAccessRight() {

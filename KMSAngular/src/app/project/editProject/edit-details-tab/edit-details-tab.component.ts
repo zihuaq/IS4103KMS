@@ -27,10 +27,11 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
   infoMessage: string;
   errorMessage: string;
   projectStatusList: ProjectType[];
+  descriptionLen: number;
 
   constructor(public projectService: ProjectService,
     private tagService: TagService,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.tagService.getAllSDGTags().subscribe(
@@ -48,6 +49,7 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToEdit = response;
+        this.descriptionLen = this.projectToEdit.description.length;
         for (let tag of this.projectToEdit.sdgs) {
           this.selectedTagNames.push(tag.name);
         }
@@ -59,6 +61,10 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
         .trigger("change");
       }
     );
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {   
@@ -74,6 +80,10 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
       }
     );
     this.projectToEdit = changes.projectToEdit.currentValue;
+  }
+
+  descriptionChange() {
+    this.descriptionLen = this.projectToEdit.description.length;
   }
 
   edit(editProjectForm: NgForm) {
@@ -97,6 +107,12 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
     });
     if (editProjectForm.valid) {
       this.projectToEdit.sdgs = this.selectedTags;
+      if (!this.projectToEdit.monetaryFundingRequired) {
+        this.projectToEdit.monetaryFundingRequired = 0.0;
+      }
+      if (!this.projectToEdit.paypalEmail) {
+        this.projectToEdit.paypalEmail = null;
+      }
       this.projectService.updateProject(this.projectToEdit).subscribe(
         response => {
           $(document).Toasts('create', {

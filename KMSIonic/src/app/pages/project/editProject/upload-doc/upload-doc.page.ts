@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Location } from "@angular/common";
 
+import { User } from 'src/app/classes/user';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+
 @Component({
   selector: 'app-upload-doc',
   templateUrl: './upload-doc.page.html',
@@ -16,17 +19,26 @@ export class UploadDocPage implements OnInit {
   bucket: string = "is4103kms";
   aws = require('aws-sdk');
   s3;
+  currentUser: User;
+  description: string;
 
   constructor(private activatedRoute: ActivatedRoute,
     private router: Router,
     private fileChooser: FileChooser,
     private location: Location,
     private modalCtrl: ModalController,
-    public toastController: ToastController) {
+    public toastController: ToastController,
+    private authenticationService: AuthenticationService) {
     
    }
 
   ngOnInit() {
+    this.authenticationService.getCurrentUser().then(
+      (user: User) => {
+        this.currentUser = user;
+      }
+    );
+
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
     this.s3 = new this.aws.S3({
       signatureVersion: 'v4',
@@ -38,7 +50,6 @@ export class UploadDocPage implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    console.log(this.fileToUpload)
   }
 
   dismiss() {
@@ -59,7 +70,20 @@ export class UploadDocPage implements OnInit {
       Body: this.fileToUpload
     }
 
-    this.s3.upload(params, function(err, data) {
+    this.s3.upload(params, 
+      {
+        tags: [
+          {
+            Key: 'author',
+            Value: this.currentUser.firstName + " " + this.currentUser.lastName,
+          },
+          {
+              Key: 'description',
+              Value: this.description,
+          },            
+        ],
+    },
+      function(err, data) {
       if (err) {
         console.log(err);
       }

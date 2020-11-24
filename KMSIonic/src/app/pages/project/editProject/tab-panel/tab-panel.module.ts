@@ -11,6 +11,7 @@ import { EditMembersPageRoutingModule } from '../edit-members/edit-members-routi
 import { TabPanelPage } from './tab-panel.page';
 import { EditProjectDetailsPage } from '../edit-project-details/edit-project-details.page';
 import { EditMembersPage } from '../edit-members/edit-members.page';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { EditMembersPage } from '../edit-members/edit-members.page';
     TabPanelPageRoutingModule,
     EditProjectDetailsPageRoutingModule,
     EditMembersPageRoutingModule,
+    IonicSelectableModule
   ],
   declarations: [TabPanelPage, EditProjectDetailsPage, EditMembersPage]
 })

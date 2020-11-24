@@ -29,7 +29,6 @@ export class ChatComponent implements OnInit {
   receiverId: number;
   users;
   messages;
-  msg;
   chatMessage: string;
   sender: User;
   receiver: User;
@@ -132,7 +131,6 @@ export class ChatComponent implements OnInit {
 
   ngOnDestroy() {
     console.log("chat component: ngOnDestroy()")
-    this.loadMessage("");
   }
 
   postMessage() {

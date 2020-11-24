@@ -1,24 +1,26 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
 
-<div class="content-wrapper"
-    *ngIf="hasLoad && (projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId)">
-    <p>This project has been deactivated for violating our T&C</p>
+<div class="loading" *ngIf="!loaded || !hasLoad">
+    <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
 </div>
 
-<div class="content-wrapper"
-    *ngIf="hasLoad && (projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId)">
-    <div class="loading" *ngIf="!loaded">
-        <img src="../../../../assets/preloader.png" style="width: 100px; height: 100px;">
-    </div>
+<div class="content-wrapper" 
+    *ngIf = "hasLoad && (projectToView.isActive === false && loggedInUser.userType.toString() != 'ADMIN' && this.owner.userId != loggedInUser.userId)">
+  <p>This project has been deactivated for violating our T&C</p>
+</div>
+
+<div class="content-wrapper" 
+    *ngIf = "hasLoad && (projectToView.isActive === true || loggedInUser.userType.toString() == 'ADMIN' || this.owner.userId == loggedInUser.userId)">   
     <div class="content-header" *ngIf="loaded">
         <div class="content-fluid">
             <div class="card">
                 <div class="image" style="height: 350px; overflow: hidden; position: relative;">
                     <span *ngIf="projectToView.profilePicture">
-                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal"
-                            data-target="#modal-editPicture" style="z-index: 2;"><i class="fas fa-camera"></i>
-                            Edit</button>
+                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" 
+                            data-target="#modal-editPicture" (click)="clickAddEditPicture()" style="z-index: 2;">
+                            <i class="fas fa-camera"></i> Edit
+                        </button>
                         <div class="image-layer" data-toggle="modal" data-target="#modal-profilePicture">
                             <img class="card-img-top" style="display: block;" [src]="projectToView.profilePicture"
                                 alt="Project Profile Picture">
@@ -28,9 +30,10 @@
                         </div>
                     </span>
                     <span *ngIf="!projectToView.profilePicture">
-                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal"
-                            data-target="#modal-addPicture" style="z-index: 2;"><i class="fas fa-camera"></i>
-                            Add</button>
+                        <button type="button" *ngIf="isAdmin" class="btn btn-secondary float-right" data-toggle="modal" 
+                            data-target="#modal-addPicture" (click)="clickAddEditPicture()"  style="z-index: 2;">
+                            <i class="fas fa-camera"></i> Add
+                        </button>
                         <div class="image-layer">
                             <img class="card-img-top" style="margin: -10% 0 0 0; display: block;"
                                 src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
@@ -129,17 +132,18 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel"
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel" 
                             [ngClass]="{ 'active':activeTab==='basic-details'}" style="position: relative;">
-                            <p><b>Description:</b> {{projectToView.description}}</p>
+                            <p *ngIf="projectToView.description"><b>Description:</b> {{projectToView.description}}</p>
                             <p><b>Country:</b> {{projectToView.country}}</p>
-                            <button *ngIf="projectToView.monetaryFundingRequired && isMember" type="button"
-                                class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;"
-                                [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project</button>
+                            <button *ngIf="projectToView.monetaryFundingObtained < projectToView.monetaryFundingRequired && isMember" type="button" 
+                                class="btn bg-gradient-warning float-right" style="margin-right: 15%; margin-top: 10px;" 
+                                [routerLink]="['/donateToProject/', projectToView.projectId]">Donate to Project
+                            </button>
                             <p><b>Date Created:</b> {{projectToView.dateCreated.toString().slice(0,10) | date}}</p>
                             <p *ngIf="projectToView.monetaryFundingRequired"><b>Monetary Funding (USD):</b>
-                                ${{projectToView.monetaryFundingObtained | number:'1.0'}} obtained /
-                                ${{projectToView.monetaryFundingRequired | number:'1.0'}} required</p>
+                                ${{projectToView.monetaryFundingObtained | number:'1.0'}} obtained / ${{projectToView.monetaryFundingRequired | number:'1.0'}} required
+                            </p>
                             <p><b>SDGs: </b>
                                 <span *ngFor="let tag of projectToView.sdgs" class="badge badge-primary"
                                     style="margin-right: 5px;">
@@ -228,15 +232,10 @@
                             [ngClass]="{ 'active':activeTab==='task-tab'}">
                             <app-task-tab></app-task-tab>
                         </div>
-<<<<<<< HEAD
                         <div class="tab-pane fade show active" id="awards-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='awards-tab'}">
                           <app-project-awards></app-project-awards>
                       </div>
                         <div class="tab-pane fade show active" id="projectfeed-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='projectfeed-tab'}">
-=======
-                        <div class="tab-pane fade show active" id="projectfeed-tab" role="tabpanel"
-                            [ngClass]="{ 'active':activeTab==='projectfeed-tab'}">
->>>>>>> 7aa6336aa5bcae86e16eea781b789f5e759a5c56
                             <app-newsfeed newsfeedType="project" id="{{projectId}}"></app-newsfeed>
                         </div>
                         <div class="tab-pane fade show active" id="setting-tab" role="tabpanel"
@@ -282,30 +281,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Profile Picture</h4>
-                <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture"
+                <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" 
                     [src]="profilePicture" alt="Project Profile Picture">
-                <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture"
+                <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" 
                     [src]="selectedProfilePicture" alt="Project Profile Picture">
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="profilePicture" accept="image/*"
-                            (change)="getFiles($event)">
-                        <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose
-                            file</label>
-                        <label class="custom-file-label" *ngIf="selectedProfilePicture"
-                            for="profilePicture">{{selectedProfilePictureName}}</label>
+                        <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
+                        <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
+                        <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
                     </div>
                 </div>
                 <div style="padding-top: 3%; display: flex; justify-content: center;">
-                    <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()"
+                    <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()" 
                         data-dismiss="modal" aria-label="Close">Save Changes</button>
-                    <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal"
-                        aria-label="Close">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Cancel</button>
                 </div>
             </div>
         </div>
@@ -320,23 +315,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Profile Picture</h4>
-                <button type="button" class="close" (click)="cancel()" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture"
+                <img style="width: 100%; padding-bottom: 3%;" *ngIf="!selectedProfilePicture && profilePicture" 
                     [src]="profilePicture" alt="Project Profile Picture">
-                <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture"
+                <img style="width: 100%; padding-bottom: 3%;" *ngIf="selectedProfilePicture" 
                     [src]="selectedProfilePicture" alt="Project Profile Picture">
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="profilePicture" accept="image/*"
-                            (change)="getFiles($event)">
-                        <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose
-                            file</label>
-                        <label class="custom-file-label" *ngIf="selectedProfilePicture"
-                            for="profilePicture">{{selectedProfilePictureName}}</label>
+                        <input type="file" class="custom-file-input" id="profilePicture" accept="image/*" (change)="getFiles($event)">
+                        <label class="custom-file-label" *ngIf="!selectedProfilePicture" for="profilePicture">Choose file</label>
+                        <label class="custom-file-label" *ngIf="selectedProfilePicture" for="profilePicture">{{selectedProfilePictureName}}</label>
                     </div>
                     <div class="input-group-append" style="cursor: pointer" *ngIf="profilePicture">
                         <span class="input-group-text" (click)="removePicture()">Remove Current</span>
@@ -345,8 +337,7 @@
                 <div style="padding-top: 3%; display: flex; justify-content: center;">
                     <button type="button" class="btn btn-primary" style="margin-right: 20px;" (click)="saveChanges()"
                         data-dismiss="modal" aria-label="Close">Save Changes</button>
-                    <button type="button" class="btn btn-secondary" (click)="cancel()" data-dismiss="modal"
-                        aria-label="Close">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Cancel</button>
                 </div>
             </div>
         </div>
@@ -442,4 +433,4 @@
 </div>
 <!-- /.modal -->
 
-<app-footer></app-footer>
+<app-footer *ngIf="loaded && hasLoad"></app-footer>

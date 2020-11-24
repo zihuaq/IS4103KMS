@@ -121,7 +121,7 @@ export class CreateNewGroupComponent implements OnInit {
             delay: 2500,
             body: 'Group created successfully',
           })
-          this.router.navigate(["/groupDetails/" + response.groupId]);
+          this.router.navigate(["/groupDetails/" + response.groupId + "/basic-details"]);
           this.groupCreated = true;
           this.groupCreationError = false;
         },

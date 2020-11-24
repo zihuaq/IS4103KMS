@@ -19,6 +19,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { forkJoin } from 'rxjs';
 import { ProjectType } from 'src/app/enum/project-type.enum';
 import { ReportProjectPage } from '../report-project/report-project.page';
+import { DonateToProjectModalPage } from '../donate-to-project-modal/donate-to-project-modal.page';
 
 @Component({
   selector: 'app-project-details',
@@ -54,7 +55,7 @@ export class ProjectDetailsPage implements OnInit {
   ) {
     this.project = new Project();
     this.owner = new User();
-    this.segment = 'newsfeed';
+    this.segment = 'projectfeed-tab';
   }
 
   ngOnInit() {
@@ -73,6 +74,7 @@ export class ProjectDetailsPage implements OnInit {
   }
 
   refreshProject() {
+    this.segment = this.activatedRoute.snapshot.paramMap.get('tabName')
     this.projectId = parseInt(
       this.activatedRoute.snapshot.paramMap.get('projectId')
     );
@@ -253,6 +255,23 @@ export class ProjectDetailsPage implements OnInit {
       componentProps: {
         projectId: this.projectId,
         loggedInUser: this.loggedInUser
+      }
+    });
+    modal.present();
+    modal.onDidDismiss().then(() => {
+      this.refreshProject();
+    });
+  }
+
+  async presentDonateToProjectModal() {
+    const modal = await this.modalController.create({
+      component: DonateToProjectModalPage,
+      swipeToClose: true,
+      showBackdrop: true,
+      cssClass: 'donate-to-project-modal',
+      componentProps: {
+        loggedInUser: this.loggedInUser,
+        project: this.project
       }
     });
     modal.present();

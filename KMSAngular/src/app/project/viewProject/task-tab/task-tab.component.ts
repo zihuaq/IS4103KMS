@@ -9,6 +9,8 @@ import { forkJoin } from 'rxjs';
 import * as moment from 'moment';
 import { gantt } from 'dhtmlx-gantt';
 import "./../../../../assets/gantt-chart-api";
+import { ProjectService } from 'src/app/project.service';
+import { SessionService } from 'src/app/session.service';
 
 declare var $: any;
 
@@ -26,15 +28,28 @@ export class TaskTabComponent implements OnInit {
   projectId: number;
   searchInput: string = "";
   events: string[];
+  isMember: boolean = false;
 
   constructor(private taskService: TaskService,
     private linkService: LinkService,
+    private projectService: ProjectService,
+    private sessionService: SessionService,
     private activatedRoute: ActivatedRoute) {
     this.events = [];
   }
 
   ngOnInit(): void {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+
+    this.projectService.getProjectById(this.projectId).subscribe(
+      response => {
+        for (let member of response.projectMembers) {
+          if (this.sessionService.getCurrentUser().userId == member.userId) {
+            this.isMember = true;
+          }
+        }
+      }
+    );
 
     //for search tasks
     this.events.push(

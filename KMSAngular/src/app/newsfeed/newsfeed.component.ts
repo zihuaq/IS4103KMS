@@ -19,6 +19,8 @@ import { ReportService } from '../report.service';
 import { GroupService } from '../group.service';
 import { Group } from '../classes/group';
 import { UserType } from '../classes/user-type.enum';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/notification.service';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -78,7 +80,8 @@ export class NewsfeedComponent implements OnInit {
     private tagService: TagService,
     private projectService: ProjectService,
     private reportService: ReportService,
-    private groupService: GroupService
+    private groupService: GroupService,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit(): void {
@@ -254,6 +257,29 @@ export class NewsfeedComponent implements OnInit {
 
         this.postService.createPost(this.createdPost).subscribe(
           (data: Post) => {
+            if (this.newsfeedType == "project") {
+              let newNotification = new Notification();
+              newNotification.msg = "A new post has been added to " + this.project.name;
+              newNotification.projectId = this.project.projectId;
+              newNotification.groupId = null;
+              newNotification.tabName = "projectfeed-tab";
+              for (let member of this.project.projectMembers) {
+                if (member.userId != this.loggedInUser.userId) {
+                  this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+                }
+              }
+            } else if (this.newsfeedType == "group") {
+              let newNotification = new Notification();
+              newNotification.msg = "A new post has been added to " + this.group.name;
+              newNotification.projectId = null;
+              newNotification.groupId = this.group.groupId;
+              newNotification.tabName = "groupfeed-tab";
+              for (let member of this.group.groupMembers) {
+                if (member.userId != this.loggedInUser.userId) {
+                  this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+                }
+              }
+            }
             $(document).Toasts('create', {
               class: 'bg-success',
               title: 'Success',

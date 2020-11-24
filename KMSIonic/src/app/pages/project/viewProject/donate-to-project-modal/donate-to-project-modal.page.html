@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Project Donation</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h3 style="font-weight: bold; margin-left: 15px;">To: {{project.name}}</h3>
+  <ion-item>
+    <ion-label >Amount to Donate (USD)</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>$</ion-label>
+    <ion-input type="number" id="amount" [(ngModel)]="donationAmount" name="amount"  placeholder="Enter Amount" clearInput></ion-input>
+    <span style="font-size: small; margin-left: 15px; color: gray;">/ ${{(project.monetaryFundingRequired - project.monetaryFundingObtained) | number:'1.0'}} needed</span>
+  </ion-item>
+  <br/>
+  <div *ngIf="!isHybrid" id="paypal-checkout-btn"></div>
+  <ion-button *ngIf="isHybrid" expand="full" color="warning" (click)="payWithPaypal()">Pay with PayPal</ion-button>
+</ion-content>

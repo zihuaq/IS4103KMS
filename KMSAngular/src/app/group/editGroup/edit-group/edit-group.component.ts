@@ -49,7 +49,7 @@ export class EditGroupComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(["/groupDetails/" + this.groupToEdit.groupId]);
+    this.router.navigate(["/groupDetails/" + this.groupToEdit.groupId + "/basic-details"]);
   }
 
   handleGroupChanged(event) {

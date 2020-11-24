@@ -215,18 +215,23 @@ export class ProjectDetailsComponent implements OnInit {
     }
   }
 
+  clickAddEditPicture() {
+    this.profilePicture = this.projectToView.profilePicture;
+    this.selectedProfilePicture = undefined;
+  }
+
   getFiles(event) {
+    // console.log(event)
     if (event.target.files[0] != undefined) {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.selectedProfilePicture = e.target.result;
-        //console.log(this.selectedProfilePicture);
+        // console.log(this.selectedProfilePicture);
       };
       this.selectedProfilePictureName = event.target.files[0].name;
-      //console.log(event.target.files[0].name);
       reader.readAsDataURL(event.target.files[0]);
-    } else {
-      this.selectedProfilePicture = undefined;
+      event.target.value = null;
+      // console.log(event.target.value);
     }
   }
 
@@ -259,11 +264,6 @@ export class ProjectDetailsComponent implements OnInit {
       }
     );
     this.profilePicture = this.selectedProfilePicture;
-    this.selectedProfilePicture = undefined;
-  }
-
-  cancel() {
-    this.profilePicture = this.projectToView.profilePicture;
     this.selectedProfilePicture = undefined;
   }
 

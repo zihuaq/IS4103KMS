@@ -110,7 +110,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'project-details/:projectId',
+    path: 'project-details/:projectId/:tabName',
     loadChildren: () =>
       import(
         './pages/project/viewProject/project-details/project-details.module'
@@ -412,7 +412,36 @@ const routes: Routes = [
       import('./pages/group/viewGroup/report-group/report-group.module').then(
         (m) => m.ReportGroupPageModule
       )
+  },
+  {
+    path: 'chat',
+    loadChildren: () => 
+      import('./pages/chat/chat.module').then(
+        m => m.ChatPageModule
+      )
+  },
+  {
+    path: 'messages/:user',
+    loadChildren: () => 
+      import('./pages/chat/messages/messages.module').then(
+        m => m.MessagesPageModule
+      )
+  },
+  {
+    path: 'donate-to-project-modal',
+    loadChildren: () => 
+      import('./pages/project/viewProject/donate-to-project-modal/donate-to-project-modal.module').then( 
+        m => m.DonateToProjectModalPageModule
+      )
+  },
+  {
+    path: 'donate-to-platform-modal',
+    loadChildren: () => 
+      import('./pages/donate-to-platform-modal/donate-to-platform-modal.module').then( 
+        m => m.DonateToPlatformModalPageModule
+      )
   }
+
 ];
 
 @NgModule({
