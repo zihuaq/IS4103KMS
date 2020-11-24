@@ -120,13 +120,21 @@ export class NotificationsPage implements OnInit {
     }
     
     if (notification.projectId != null) {
-      this.router.navigate(['projectDetails/' + notification.projectId + "/" + notification.tabName]);
+      this.router.navigate(['project-details/' + notification.projectId + "/" + notification.tabName]);    
     }
 
     if (notification.groupId != null) {
-      this.router.navigate(['groupDetails/' + notification.groupId + "/" + notification.tabName]);
+      this.router.navigate(['group-details/' + notification.groupId]);
     }
 
-    this.notificationService.deleteNotification(notification.notificationId).subscribe();
+    this.notificationService.deleteNotification(notification.notificationId).subscribe(
+      response => {
+        this.notificationService.getNotification(this.loggedInUserId).subscribe(
+          response => {
+            this.notifications = response
+          }
+        )
+      }
+    );
   }
 }
