@@ -96,7 +96,7 @@ export class ViewOwnProjectsPage implements OnInit {
   }
 
   viewProjectDetails(event, project) {
-    this.router.navigate(["project-details/" + project.projectId]);
+    this.router.navigate(["project-details/" + project.projectId + "/projectfeed-tab"]);
   }
 
   async createProject() {

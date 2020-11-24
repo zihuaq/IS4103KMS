@@ -40,40 +40,40 @@
   </ion-card>
   <ion-card>
     <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment" mode="md">
-      <ion-segment-button value="newsfeed">
+      <ion-segment-button value="projectfeed-tab">
         <ion-label>Newsfeed</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button value="details">
+      <ion-segment-button value="basic-details">
         <ion-label>Details</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button value="members">
+      <ion-segment-button value="members-tab">
         <ion-label>Members</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button value="hrp">
+      <ion-segment-button value="hrp-tab">
         <ion-label>Human Resource Posting</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button value="mrp">
+      <ion-segment-button value="mrp-tab">
         <ion-label>Material Resource Posting</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button value="docs">
+      <ion-segment-button value="document-tab">
         <ion-label>Documents</ion-label>
       </ion-segment-button>
 
     </ion-segment>
   </ion-card>
 
-  <ion-card *ngIf="segment === 'newsfeed'">
+  <ion-card *ngIf="segment === 'projectfeed-tab'">
     <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" [filteredPosts]="newsfeedPosts"
       newsfeedType="project" [isMember]="isMember" [projectId]="projectId" (init)="ionViewWillEnter()">
     </app-newsfeed>
   </ion-card>
 
-  <ion-card *ngIf="segment === 'details'">
+  <ion-card *ngIf="segment === 'basic-details'">
     <ion-card-content>
       <p *ngIf="project.description"><b>Description:</b> {{project.description}}</p>
       <p><b>Country:</b> {{project.country}}</p>
@@ -92,7 +92,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="segment === 'members'">
+  <ion-card *ngIf="segment === 'members-tab'">
     <ion-card-content>
       <ion-list *ngFor="let member of project.projectAdmins">
         <ion-label *ngIf="owner.userId == member.userId">{{member.firstName}} {{member.lastName}} </ion-label>
@@ -117,19 +117,19 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="segment === 'hrp'">
+  <ion-card *ngIf="segment === 'hrp-tab'">
     <ion-card-content>
       <app-view-hrp></app-view-hrp>
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="segment === 'mrp'">
+  <ion-card *ngIf="segment === 'mrp-tab'">
     <ion-card-content>
       <app-view-mrp></app-view-mrp>
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="segment === 'docs'">
+  <ion-card *ngIf="segment === 'document-tab'">
     <ion-card-content>
       <app-view-documents></app-view-documents>
     </ion-card-content>

@@ -3,6 +3,8 @@ import { User } from "./../../classes/user"
 import { FollowRequest } from "./../../classes/follow-request"
 import { AuthenticationService } from "src/app/services/authentication.service"
 import { UserService } from "./../../services/user.service"
+import { Notification } from './../../classes/notification'
+import { NotificationService } from './../../services/notification.service'
 import { Component, OnInit } from "@angular/core"
 import { Router } from "@angular/router"
 
@@ -17,9 +19,12 @@ export class NotificationsPage implements OnInit {
   preliminaryFollowRequests: FollowRequest[]
   affiliationRequests: AffiliationRequest[]
   preliminaryAffiliationRequests: AffiliationRequest[]
+  notifications: Notification[]
+
   constructor(
     private userService: UserService,
     private authenticationService: AuthenticationService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -41,7 +46,14 @@ export class NotificationsPage implements OnInit {
             3
           )
         })
+
+      this.notificationService.getNotification(this.loggedInUserId).subscribe(
+        response => {
+          this.notifications = response
+        }
+      )
     })
+    
   }
 
   goToProfile(user: User) {
@@ -100,5 +112,21 @@ export class NotificationsPage implements OnInit {
           )
         })
     })
+  }
+
+  clickNotification(notification: Notification) {
+    if (notification.groupId == null && notification.projectId == null) {
+      this.router.navigate(['/chat']);
+    }
+    
+    if (notification.projectId != null) {
+      this.router.navigate(['projectDetails/' + notification.projectId + "/" + notification.tabName]);
+    }
+
+    if (notification.groupId != null) {
+      this.router.navigate(['groupDetails/' + notification.groupId + "/" + notification.tabName]);
+    }
+
+    this.notificationService.deleteNotification(notification.notificationId).subscribe();
   }
 }

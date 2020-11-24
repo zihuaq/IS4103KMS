@@ -55,7 +55,7 @@ export class ProjectDetailsPage implements OnInit {
   ) {
     this.project = new Project();
     this.owner = new User();
-    this.segment = 'newsfeed';
+    this.segment = 'projectfeed-tab';
   }
 
   ngOnInit() {
@@ -74,6 +74,7 @@ export class ProjectDetailsPage implements OnInit {
   }
 
   refreshProject() {
+    this.segment = this.activatedRoute.snapshot.paramMap.get('tabName')
     this.projectId = parseInt(
       this.activatedRoute.snapshot.paramMap.get('projectId')
     );

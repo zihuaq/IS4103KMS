@@ -133,7 +133,7 @@ export class CreateNewProjectPage implements OnInit {
             this.modalCtrl.dismiss({
               'dismissed': true
             });
-            this.router.navigate(["project-details/" + response.projectId]);
+            this.router.navigate(["project-details/" + response.projectId + "/projectfeed-tab"]);
             const toast = await this.toastController.create({
               message: 'Project created successfully.',
               duration: 2000

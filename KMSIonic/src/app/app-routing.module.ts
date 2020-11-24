@@ -110,7 +110,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'project-details/:projectId',
+    path: 'project-details/:projectId/:tabName',
     loadChildren: () =>
       import(
         './pages/project/viewProject/project-details/project-details.module'
