@@ -3,7 +3,7 @@
     <name>KMS</name>
     <description>Knowledge Management System</description>
     <author email="4103kms@gmail.com" href="http://ionicframework.com/">IS4103 ET03</author>
-    <content original-src="http://localhost:8100" src="http://localhost:8100" />
+    <content src="http://localhost:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

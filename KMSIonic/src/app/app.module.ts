@@ -16,6 +16,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 const conifg = {
     apiKey: "AIzaSyBl7TP2OFBQJ4X2N9oRkUHTh33cK6y299c",
@@ -45,7 +46,8 @@ const conifg = {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     FileChooser,
     FirebaseX,
-    AngularFireDatabase
+    AngularFireDatabase,
+    FCM
   ],
   bootstrap: [AppComponent]
 })

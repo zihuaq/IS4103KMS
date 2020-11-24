@@ -15,6 +15,8 @@ import { PostCommentModalPage } from '../post-comment-modal/post-comment-modal.p
 import { Router } from '@angular/router';
 import { SharePostModalPage } from '../share-post-modal/share-post-modal.page';
 import { ReportPostModalPage } from '../report-post-modal/report-post-modal.page';
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-index',
@@ -24,7 +26,7 @@ import { ReportPostModalPage } from '../report-post-modal/report-post-modal.page
 export class IndexPage implements OnInit {
   loggedInUser: User;
   newsfeedPosts: Post[];
-  constructor(
+  constructor(public plt: Platform,
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private postService: PostService,
@@ -33,9 +35,28 @@ export class IndexPage implements OnInit {
     private toastController: ToastController,
     private modalController: ModalController,
     private router: Router
-  ) {}
+  ) {
+    this.plt.ready()
+      .then(() => {
+        FCM.onNotification().subscribe(data => {
+          if (data.wasTapped) {
+            console.log("Received in background");
+          } else {
+            console.log("Received in foreground");
+          };
+        });
 
-  ngOnInit() {}
+        FCM.onTokenRefresh().subscribe(token => {
+          // Register your new token in your back-end if you want
+          // backend.registerToken(token);
+          console.log(token)
+        });
+      })
+  }
+
+  ngOnInit() {
+    this.getToken();
+  }
 
   ionViewWillEnter() {
     this.authenticationService.getCurrentUser().then((user: any) => {
@@ -50,5 +71,19 @@ export class IndexPage implements OnInit {
         this.app.tick();
       });
     });
+  }
+
+  subscribeToTopic() {
+    FCM.subscribeToTopic('enappd');
+  }
+  getToken() {
+    FCM.getToken().then(token => {
+      // Register your new token in your back-end if you want
+      // backend.registerToken(token);
+      console.log(token)
+    });
+  }
+  unsubscribeFromTopic() {
+    FCM.unsubscribeFromTopic('enappd');
   }
 }
