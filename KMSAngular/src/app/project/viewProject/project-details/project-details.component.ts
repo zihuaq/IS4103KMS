@@ -12,6 +12,7 @@ import { NgForm } from '@angular/forms';
 import { PostService } from 'src/app/post.service';
 import { SharePostToProjectOrGroupsReq } from 'src/app/models/SharePostToProjectOrGroupsReq';
 import { Post } from 'src/app/classes/post';
+import { review } from 'src/app/classes/review';
 
 declare var $: any;
 declare let require: any;
@@ -46,6 +47,8 @@ export class ProjectDetailsComponent implements OnInit {
   shareProjectText: string = "";
   hasLoad = false;
   activeTab: string;
+  projectReviews: review[]
+  averageReviewRating: number
 
   constructor(public projectService: ProjectService,
     private userService: UserService,
@@ -123,6 +126,27 @@ export class ProjectDetailsComponent implements OnInit {
           }
         )
       });
+
+      this.projectService.getProjectReview(this.projectId).subscribe(
+        response =>{
+          this.projectReviews = response
+          let totalReview = 0
+          for(let review of this.projectReviews){
+          totalReview += review.rating
+        }
+        this.averageReviewRating = totalReview/this.projectReviews.length
+        },
+        error => {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'Error',
+            autohide: true,
+            delay: 2500,
+            body: error,
+          })
+
+        }
+      )
   }
 
   joinProject() {

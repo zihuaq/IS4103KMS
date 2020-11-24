@@ -235,6 +235,15 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
+        
+        tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTREVIEW));
+        
+        
 
         try {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
@@ -359,7 +368,6 @@ public class DataInitializationSessionBean {
             mra = new MaterialResourceAvailableEntity("Canned Tuna", 18, "item(s)", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-09-18"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-08"), "22.955532", "112.486407", tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(7l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
-
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0), 2l, 3l, 2l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0), 6l, 3l, 3l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 0.0, 30.0), 4l, 3l, 4l);

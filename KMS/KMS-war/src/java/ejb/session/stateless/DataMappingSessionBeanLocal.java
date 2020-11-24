@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import Exception.NoResultException;
+import entity.ClaimProfileRequestEntity;
 import entity.ProfileEntity;
 import java.io.IOException;
 import java.util.List;
@@ -24,8 +25,10 @@ public interface DataMappingSessionBeanLocal {
 
     public ProfileEntity getProfile(long id) throws NoResultException;
 
-    public void settleProfileClaim(long claimProfileRequestId) throws NoResultException;
+    public void settleProfileClaim(long claimProfileRequestId, boolean accept) throws NoResultException;
+
+    public List<ClaimProfileRequestEntity> getAllProfileClaims() throws NoResultException;
 
     public void makeProfileClaim(long userId, long profileId) throws NoResultException;
-    
+
 }

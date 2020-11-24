@@ -39,6 +39,9 @@ public class ReviewEntity implements Serializable {
     private ProjectEntity project;
     
     @ManyToOne
+    private ActivityEntity madeFromActivity;
+    
+    @ManyToOne
     private UserEntity to;
     
     @ManyToOne
@@ -135,6 +138,14 @@ public class ReviewEntity implements Serializable {
 
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public ActivityEntity getMadeFromActivity() {
+        return madeFromActivity;
+    }
+
+    public void setMadeFromActivity(ActivityEntity madeFromActivity) {
+        this.madeFromActivity = madeFromActivity;
     }
     
     

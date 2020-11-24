@@ -1,0 +1,31 @@
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Profile Claims</h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body p-0">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Profile</th>
+          <th>Handle Claim</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let claim of claims | async">
+          <td>{{claim.user.firstName}} {{claim.user.lastName}}</td>
+          <td>
+            {{claim.profile.name}} &bull; {{claim.profile.organization}}
+          </td>
+          <td class="d-flex">
+            <button class="badge bg-danger m-1" (click)="settleProfileClaim(claim.id, true)">Accept</button>
+            <button class="badge bg-danger m-1" (click)="settleProfileClaim(claim.id, false)">Reject</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->

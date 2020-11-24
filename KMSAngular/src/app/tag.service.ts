@@ -67,6 +67,12 @@ export class TagService {
       .pipe(catchError(this.handleError));
   }
 
+  getAllReviewReportTags(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/report/review')
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
 

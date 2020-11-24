@@ -14,18 +14,20 @@ import entity.ReviewEntity;
 public class CreateUserReviewReq {
     private ReviewEntity review;
     private Long from;
-    private Long project;
     private Long to;
+    private Long madeFromActivityId;
 
     public CreateUserReviewReq() {
     }
 
-    public CreateUserReviewReq(ReviewEntity review, Long from, Long project, Long to) {
+    public CreateUserReviewReq(ReviewEntity review, Long from, Long to, Long madeFromActivityId) {
         this.review = review;
         this.from = from;
-        this.project = project;
         this.to = to;
+        this.madeFromActivityId = madeFromActivityId;
     }
+
+  
 
     public ReviewEntity getReview() {
         return review;
@@ -43,14 +45,6 @@ public class CreateUserReviewReq {
         this.from = from;
     }
 
-    public Long getProject() {
-        return project;
-    }
-
-    public void setProject(Long project) {
-        this.project = project;
-    }
-
     public Long getTo() {
         return to;
     }
@@ -58,6 +52,15 @@ public class CreateUserReviewReq {
     public void setTo(Long to) {
         this.to = to;
     }
+
+    public Long getMadeFromActivityId() {
+        return madeFromActivityId;
+    }
+
+    public void setMadeFromActivityId(Long madeFromActivityId) {
+        this.madeFromActivityId = madeFromActivityId;
+    }
+    
     
     
 }

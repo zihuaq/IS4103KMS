@@ -37,5 +37,11 @@
 
 .image-layer:hover .after {
     visibility: visible;
-    opacity: 1;    
+    opacity: 1;
 }
+
+ngb-rating {
+  color: #FFC107;
+  font-size: 20px;
+}
+

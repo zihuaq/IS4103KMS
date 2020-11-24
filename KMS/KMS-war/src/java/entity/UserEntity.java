@@ -16,12 +16,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -153,17 +151,39 @@ public class UserEntity implements Serializable {
     @OneToMany
     private List<DonationEntity> donations;
 
-    @OneToMany
+    
+
+    @JoinTable(name = "receivedAwards")
+    @ManyToMany
+    private List<AwardEntity> receivedAwards;
+    
+    //counters for badges
+    private Integer CountOfGroupsJoined;
+    
+    private Integer CountOfProjectsJoined;
+    
+    private Integer CountOfProjectsCreated;
+    
+    private Integer CountOfGroupsCreated;
+    
+    private Integer CountOfActivitiesCompleted;
+    
+    private Integer CountOfPostCreated;
+    
+    private Integer CountOfCommentsCreated;
+    
+    private Integer CountOfReviewsCreated;
+
+    @OneToMany 
     private List<NotificationEntity> notifications;
 
-    @OneToOne
-    @JoinTable(name = "user_profile", joinColumns = {
-        @JoinColumn(name = "userId", referencedColumnName = "userId")}, inverseJoinColumns = {
-        @JoinColumn(name = "profileId", referencedColumnName = "id")})
-    private ProfileEntity profile;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<ProfileEntity> profiles;
 
     @OneToMany(mappedBy = "user")
     private List<ClaimProfileRequestEntity> claimProfileRequestMade;
+
 
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
@@ -194,9 +214,20 @@ public class UserEntity implements Serializable {
         this.fulfillments = new ArrayList<>();
         this.activityJoined = new ArrayList<>();
         this.donations = new ArrayList<>();
+        this.receivedAwards = new ArrayList<>();
+        this.CountOfGroupsJoined = 0;
+        this.CountOfProjectsJoined = 0;
+        this.CountOfProjectsCreated = 0;
+        this.CountOfGroupsCreated = 0;
+        this.CountOfActivitiesCompleted = 0;
+        this.CountOfPostCreated = 0;
+        this.CountOfCommentsCreated = 0;
+        this.CountOfReviewsCreated = 0;
         this.notifications = new ArrayList<>();
+        this.profiles = new ArrayList<>();
         this.claimProfileRequestMade = new ArrayList<>();
         this.reputationPoints = 0;
+
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, UserTypeEnum usertype) {
@@ -209,7 +240,17 @@ public class UserEntity implements Serializable {
         this.setPassword(password);
         this.joinedDate = new Date();
         this.userType = usertype;
+
+        this.CountOfGroupsJoined = 0;
+        this.CountOfProjectsJoined = 0;
+        this.CountOfProjectsCreated = 0;
+        this.CountOfGroupsCreated = 0;
+        this.CountOfActivitiesCompleted = 0;
+        this.CountOfPostCreated = 0;
+        this.CountOfCommentsCreated = 0;
+        this.CountOfReviewsCreated = 0;
         this.reputationPoints = 0;
+
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date adminStartDate, UserTypeEnum userType) {
@@ -590,6 +631,80 @@ public class UserEntity implements Serializable {
         this.groupsManaged = groupsManaged;
     }
 
+  
+    public Integer getCountOfGroupsJoined() {
+        return CountOfGroupsJoined;
+    }
+
+    public void setCountOfGroupsJoined(Integer CountOfGroupsJoined) {
+        this.CountOfGroupsJoined = CountOfGroupsJoined;
+    }
+
+    public Integer getCountOfProjectsJoined() {
+        return CountOfProjectsJoined;
+    }
+
+    public void setCountOfProjectsJoined(Integer CountOfProjectsJoined) {
+        this.CountOfProjectsJoined = CountOfProjectsJoined;
+    }
+
+    public Integer getCountOfActivitiesCompleted() {
+        return CountOfActivitiesCompleted;
+    }
+
+    public void setCountOfActivitiesCompleted(Integer CountOfActivitiesCompleted) {
+        this.CountOfActivitiesCompleted = CountOfActivitiesCompleted;
+    }
+
+    public Integer getCountOfPostCreated() {
+        return CountOfPostCreated;
+    }
+
+    public void setCountOfPostCreated(Integer CountOfPostCreated) {
+        this.CountOfPostCreated = CountOfPostCreated;
+    }
+
+    public Integer getCountOfCommentsCreated() {
+        return CountOfCommentsCreated;
+    }
+
+    public void setCountOfCommentsCreated(Integer CountOfCommentsCreated) {
+        this.CountOfCommentsCreated = CountOfCommentsCreated;
+    }
+
+    public Integer getCountOfReviewsCreated() {
+        return CountOfReviewsCreated;
+    }
+
+    public void setCountOfReviewsCreated(Integer CountOfReviewsCreated) {
+        this.CountOfReviewsCreated = CountOfReviewsCreated;
+    }
+
+    public List<AwardEntity> getReceivedAwards() {
+        return receivedAwards;
+    }
+
+    public void setReceivedAwards(List<AwardEntity> receivedAwards) {
+        this.receivedAwards = receivedAwards;
+    }
+
+    public Integer getCountOfProjectsCreated() {
+        return CountOfProjectsCreated;
+    }
+
+    public void setCountOfProjectsCreated(Integer CountOfProjectsCreated) {
+        this.CountOfProjectsCreated = CountOfProjectsCreated;
+    }
+
+    public Integer getCountOfGroupsCreated() {
+        return CountOfGroupsCreated;
+    }
+
+    public void setCountOfGroupsCreated(Integer CountOfGroupsCreated) {
+        this.CountOfGroupsCreated = CountOfGroupsCreated;
+    }
+
+    
     public List<NotificationEntity> getNotifications() {
         return notifications;
     }
@@ -598,12 +713,12 @@ public class UserEntity implements Serializable {
         this.notifications = notifications;
     }
 
-    public ProfileEntity getProfile() {
-        return profile;
+    public List<ProfileEntity> getProfiles() {
+        return profiles;
     }
 
-    public void setProfile(ProfileEntity profile) {
-        this.profile = profile;
+    public void setProfiles(List<ProfileEntity> profiles) {
+        this.profiles = profiles;
     }
 
     public List<ClaimProfileRequestEntity> getClaimProfileRequestMade() {

@@ -7,15 +7,18 @@ import { ProfileService } from '../profile.service';
 import { Profile } from '../classes/profile';
 import { User } from '../classes/user';
 
+declare var $: any;
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
+  profileid: string;
+  loggedInUserId: number;
   profile: Profile;
   loggedInUser: User;
-  canSend: boolean;
   constructor(
     private activatedRoute: ActivatedRoute,
     private profileService: ProfileService,
@@ -24,39 +27,57 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let profileid = this.activatedRoute.snapshot.params.id;
-    let loggedInUserId = this.sessionService.getCurrentUser().userId;
-    forkJoin([
-      this.userService.getUser(loggedInUserId.toString()),
-      this.profileService.getProfile(profileid),
-    ]).subscribe((result) => {
-      this.loggedInUser = result[0];
-      this.profile = result[1];
-      this.checkCanSendProfileClaimRequest();
-    });
+    this.profileid = this.activatedRoute.snapshot.params.id;
+    this.loggedInUserId = this.sessionService.getCurrentUser().userId;
+    this.reloadData();
   }
 
   makeProfileClaim(id: String): void {
     this.profileService
       .makeProfileClaim(this.loggedInUser.userId.toString(), id)
       .subscribe(() => {
-        this.checkCanSendProfileClaimRequest();
+        this.reloadData();
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Claim request sent',
+          autohide: true,
+          delay: 2500,
+          body: 'A Request to claim this profile is sent successfully',
+        });
       });
   }
 
-  checkCanSendProfileClaimRequest() {
-    if (this.profile.userEntity) {
-      this.canSend = false;
-    } else if (
+  canSendProfileClaimRequest() {
+    if (
       this.profile.claimProfileRequestMade
         .map((claimProfileRequest) => {
           return claimProfileRequest.user.userId;
         })
         .includes(this.loggedInUser.userId)
     ) {
-      this.canSend = false;
+      return false;
     } else {
-      this.canSend = true;
+      return true;
     }
+  }
+
+  hasProfile() {
+    if (this.profile.userEntity) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  reloadData() {
+    forkJoin([
+      this.userService.getUser(this.loggedInUserId.toString()),
+      this.profileService.getProfile(this.profileid),
+    ]).subscribe((result) => {
+      this.loggedInUser = result[0];
+      this.profile = result[1];
+      console.log(this.profile);
+      console.log(this.loggedInUser);
+    });
   }
 }
