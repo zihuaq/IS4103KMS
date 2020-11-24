@@ -221,7 +221,7 @@ export class EditActivityTabComponent implements OnInit {
           newNotification.msg = "A new activity has been added to " + this.project.name;
           newNotification.projectId = this.projectId;
           newNotification.groupId = null;
-          newNotification.projectTab = "activity-tab";
+          newNotification.tabName = "activity-tab";
           for (let member of this.project.projectMembers) {
             if (member.userId != this.loggedInUser.userId) {
               this.notificationService.createNewNotification(newNotification, member.userId).subscribe();

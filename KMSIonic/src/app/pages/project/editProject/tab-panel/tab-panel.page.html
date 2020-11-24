@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/project-details/{{projectId}}"></ion-back-button>
+      <ion-back-button defaultHref="/project-details/{{projectId}}/projectfeed-tab"></ion-back-button>
     </ion-buttons>
     <ion-title>Manage Project</ion-title>
   </ion-toolbar>
@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-card class="ion-no-padding ion-no-margin">
-    <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
+    <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment" mode="md">
       <ion-segment-button value="details">
         <ion-label>Details</ion-label>
       </ion-segment-button>
@@ -140,16 +140,22 @@
         </span>
       
         <span *ngIf="files.length > 0">
-          <ion-card *ngFor="let file of files" style="margin: 10px 0 0 0; padding: 5px;">
+          <ion-card *ngFor="let doc of docs" style="margin: 10px 0 0 0; padding: 5px;">
             <ion-item lines="full">
-              <ion-card-title style="padding: 10px 0 10px 0">
-                {{formatFileKey(file)}}
+              <ion-card-title style="padding: 10px 0 10px 0; overflow: hidden;">
+                {{formatFileKey(doc.key)}}
+                <ion-card-subtitle style="margin-top: 5px; overflow: hidden;">{{doc.timeStamp}}</ion-card-subtitle>
               </ion-card-title>
               <ion-buttons slot="end">
-                <ion-icon class="iconButton" name="document-outline" style="margin-right: 5px;" (click)="viewFile(file)" ></ion-icon>
-                <ion-icon class="iconButton" name="close-circle-outline" (click)="deleteDocs(file)"></ion-icon>
+                <ion-icon class="iconButton" name="document-outline" style="margin-right: 5px;" (click)="viewFile(doc.key)" ></ion-icon>
+                <ion-icon class="iconButton" name="close-circle-outline" (click)="deleteDocs(doc.key)"></ion-icon>
               </ion-buttons>
             </ion-item>
+            <ion-card-content style="padding: 15px">
+              Uploaded By: {{doc.author}}
+              <br/>
+              Description: {{doc.description}}
+            </ion-card-content>
           </ion-card>
         </span>
       </span>

@@ -3,6 +3,8 @@ import * as AWS from 'aws-sdk';
 import * as async from 'async';
 import { ActivatedRoute } from '@angular/router';
 
+import { Document } from 'src/app/classes/document';
+
 var global = global || window;
 
 @Component({
@@ -18,9 +20,11 @@ export class ViewDocumentsComponent implements OnInit {
   bucket: string = "is4103kms";
   s3;
   hasLoad = false;
+  docs: Document[];
 
   constructor(private activatedRouter: ActivatedRoute) {
     this.files = [];
+    this.docs = [];
    }
 
   ngOnInit() {
@@ -35,28 +39,50 @@ export class ViewDocumentsComponent implements OnInit {
   }
 
   async getObjects() {
+    this.docs = [];
     const { Contents } = await this.s3
      .listObjectsV2({ Bucket: this.bucket, Prefix: this.projectId.toString(), StartAfter: this.projectId.toString() + "/"})
      .promise();
      this.files = Contents;
+     for (let i = 0; i < this.files.length; i++) {
+      let doc = new Document();
+      doc.key = this.files[i].Key;
+      doc.timeStamp = this.files[i].LastModified;
+      var par = {
+        Bucket: this.bucket, 
+        Key: this.files[i].Key
+       };
+      await this.s3.getObjectTagging(par, function(err, data) {
+        if (err) {
+          // error
+        }
+        else {
+          doc.author = data.TagSet[0].Value;
+          doc.description = data.TagSet[1].Value;
+        }        
+      }).promise().then(
+        () => {
+          this.docs.push(doc);
+        }        
+      )      
+    }
      this.hasLoad = true;
-     console.log(this.files)
     return Contents;
    }
 
-  viewFile(file) {
+  viewFile(key) {
     var params = {
       Bucket: this.bucket,
-      Key: file.Key,
+      Key: key,
     }
     console.log(params);
     let url = this.s3.getSignedUrl("getObject", params)
     window.open(url);
   }
 
-  formatFileKey(file) {
-    let index = file.Key.indexOf("/");
-    return file.Key.substring(index + 1);
+  formatFileKey(key) {
+    let index = key.indexOf("/");
+    return key.substring(index + 1);
   }
 
 

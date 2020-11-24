@@ -64,7 +64,7 @@ export class EditTaskTabComponent implements OnInit {
             newNotification.msg = "A new task has been added to " + this.project.name;
             newNotification.projectId = this.projectId;
             newNotification.groupId = null;
-            newNotification.projectTab = "task-tab";
+            newNotification.tabName = "task-tab";
             for (let member of this.project.projectMembers) {
               if (member.userId != currentUser.userId) {
                 this.notificationService.createNewNotification(newNotification, member.userId).subscribe();

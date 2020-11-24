@@ -21,6 +21,8 @@ export class MrpDetailsPage implements OnInit {
   endDate: string;
   currentProject: Project;
   isMember: boolean = false;
+  loaded: boolean = false;
+  locationLink: string;
 
   constructor(private activatedRoute: ActivatedRoute,
     private mrpService: MrpService,
@@ -54,6 +56,7 @@ export class MrpDetailsPage implements OnInit {
         this.mrp = response;
         this.startDate = this.mrp.startDate.toString().slice(0, 19);
         this.endDate = this.mrp.endDate.toString().slice(0, 19);
+        this.locationLink = "http://maps.google.com/?q=" + this.mrp.latitude + "," + this.mrp.longitude;
         
         this.projectService.getProjectById(this.mrp.project.projectId).subscribe(
           response => {
@@ -63,6 +66,7 @@ export class MrpDetailsPage implements OnInit {
                 this.isMember = true;
               }
             }
+            this.loaded = true;
           }
         ); 
       }

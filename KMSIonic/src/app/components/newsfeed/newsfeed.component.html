@@ -50,7 +50,7 @@
             {{post.postOwner.lastName}}
           </ion-label>
           <ion-icon *ngIf="post.group || post.project" name="caret-forward"></ion-icon>
-          <a routerLink="/project-details/{{post.project.projectId}}" *ngIf="post.project" style="font-size: smaller;">
+          <a routerLink="/project-details/{{post.project.projectId}}/projectfeed-tab" *ngIf="post.project" style="font-size: smaller;">
             {{post.project.name}}</a>
           <a routerLink="/group-details/{{post.group.groupId}}" *ngIf="post.group" style="font-size: smaller;">
             {{post.group.name}}</a>
@@ -84,7 +84,7 @@
       <ion-item button *ngIf="post.sharedGroupId" routerLink="/group-details/{{post.sharedGroupId}}">
         <ion-label>View Group</ion-label>
       </ion-item>
-      <ion-item button *ngIf="post.sharedProjectId" routerLink="/project-details/{{post.sharedProjectId}}">
+      <ion-item button *ngIf="post.sharedProjectId" routerLink="/project-details/{{post.sharedProjectId}}/projectfeed-tab">
         <ion-label>View Project</ion-label>
       </ion-item>
     </ion-card>
@@ -107,7 +107,7 @@
                 {{post.originalPost.postOwner.lastName}}
               </ion-label>
               <ion-icon *ngIf="post.originalPost.group || post.originalPost.project" name="caret-forward"></ion-icon>
-              <a routerLink="/project-details/{{post.originalPost.project.projectId}}" *ngIf="post.originalPost.project"
+              <a routerLink="/project-details/{{post.originalPost.project.projectId}}/projectfeed-tab" *ngIf="post.originalPost.project"
                 style="font-size: smaller;">
                 {{post.originalPost.project.name}}</a>
               <a routerLink="/group-details/{{post.originalPost.group.groupId}}" *ngIf="post.originalPost.group"
@@ -146,7 +146,7 @@
             <ion-label>View Group</ion-label>
           </ion-item>
           <ion-item button *ngIf="post.originalPost.sharedProjectId"
-            routerLink="/project-details/{{post.originalPost.sharedProjectId}}">
+            routerLink="/project-details/{{post.originalPost.sharedProjectId}}/projectfeed-tab">
             <ion-label>View Project</ion-label>
           </ion-item>
         </ion-card>

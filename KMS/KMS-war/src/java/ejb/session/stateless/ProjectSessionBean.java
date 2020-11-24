@@ -204,6 +204,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         project.setDescription(projectToUpdate.getDescription());
         project.setCountry(projectToUpdate.getCountry());
         project.setMonetaryFundingRequired(projectToUpdate.getMonetaryFundingRequired());
+        project.setPaypalEmail(projectToUpdate.getPaypalEmail());
         for (int i = 0; i < projectToUpdate.getSdgs().size(); i++) {
             TagEntity tag = em.find(TagEntity.class, projectToUpdate.getSdgs().get(i).getTagId());
            if (tag == null) {

@@ -217,7 +217,7 @@
                     </div>
                     <div *ngIf="hasExpiry" class="form-group">
                         <label>Start Date</label>
-                        <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate" name="startDate" [min]="minDate" required />
+                        <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate" name="startDate" [min]="minDate" [max]="endDate" required />
                     </div>
                     <div *ngIf="hasExpiry" class="form-group">
                         <label>End Date</label>
