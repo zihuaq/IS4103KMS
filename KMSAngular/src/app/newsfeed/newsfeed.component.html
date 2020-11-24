@@ -68,7 +68,7 @@
                             <i *ngIf="post.project || post.group" class="fas fa-caret-right"></i>
                             <a routerLink="/projectDetails/{{post.project.projectId}}/basic-details" *ngIf="post.project">
                                 {{post.project.name}}</a>
-                            <a routerLink="/groupDetails/{{post.group.groupId}}" *ngIf="post.group">
+                            <a routerLink="/groupDetails/{{post.group.groupId}}/basic-details" *ngIf="post.group">
                                 {{post.group.name}}</a>
                         </span>
                         <span class="description">{{post.postDate| date}}</span>
@@ -128,7 +128,7 @@
                             {{post.sharedGroupOrProjectDescription}}
                             <br />
                             <br />
-                            <a *ngIf="post.sharedGroupId" routerLink="/groupDetails/{{post.sharedGroupId}}">
+                            <a *ngIf="post.sharedGroupId" routerLink="/groupDetails/{{post.sharedGroupId}}/basic-details">
                                 <button type="button" class="btn btn-block btn-info btn-sm"
                                     style="width: 50%; justify-self: center;"> View Group </button>
                             </a>
@@ -145,7 +145,7 @@
                             <br />
                             <br />
                             <button type="button" class="btn btn-block btn-info btn-sm" *ngIf="post.sharedGroupId"
-                                routerLink="/groupDetails/{{post.sharedGroupId}}"> View Group </button>
+                                routerLink="/groupDetails/{{post.sharedGroupId}}/basic-details"> View Group </button>
                             <button type="button" class="btn btn-block btn-info btn-sm" *ngIf="post.sharedProjectId"
                                 routerLink="/projectDetails/{{post.sharedProjectId}}/basic-details"> View Project </button>
                         </div>
@@ -166,7 +166,7 @@
                                 <a routerLink="/projectDetails/{{post.originalPost.project.projectId}}/basic-details"
                                     *ngIf="post.originalPost.project">
                                     {{post.originalPost.project.name}}</a>
-                                <a routerLink="/groupDetails/{{post.originalPost.group.groupId}}"
+                                <a routerLink="/groupDetails/{{post.originalPost.group.groupId}}/basic-details"
                                     *ngIf="post.originalPost.group">
                                     {{post.originalPost.group.name}}</a>
                             </span>
@@ -221,7 +221,7 @@
                                     <br />
                                     <br />
                                     <a *ngIf="post.originalPost.sharedGroupId"
-                                        routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}">
+                                        routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}/basic-details">
                                         <button type="button" class="btn btn-block btn-info btn-sm"
                                             style="width: 50%; justify-self: center;"> View Group </button>
                                     </a>
@@ -240,7 +240,7 @@
                                     <br />
                                     <button type="button" class="btn btn-block btn-info btn-sm"
                                         *ngIf="post.originalPost.sharedGroupId"
-                                        routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}">
+                                        routerLink="/groupDetails/{{post.originalPost.sharedGroupId}}/basic-details">
                                         View Group </button>
                                     <button type="button" class="btn btn-block btn-info btn-sm"
                                         *ngIf="post.originalPost.sharedProjectId"

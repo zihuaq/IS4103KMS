@@ -6,15 +6,15 @@ export class Notification {
     projectId: number;
     groupId: number;
     to: User;
-    projectTab: string;
+    tabName: string;
 
-    constructor(notificationId?: number, msg?: string, projectId?: number, groupId?: number, to?: User, projectTab?: string) {
+    constructor(notificationId?: number, msg?: string, projectId?: number, groupId?: number, to?: User, tabName?: string) {
         this.notificationId = notificationId;
         this.msg = msg;
         this.projectId = projectId;
         this.groupId = groupId;
         this.to = to;
-        this.projectTab = projectTab;
+        this.tabName = tabName;
     }
 
 }

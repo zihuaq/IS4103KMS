@@ -142,7 +142,7 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: CreateNewGroupComponent,
   },
-  { path: 'groupDetails/:groupId',
+  { path: 'groupDetails/:groupId/:tabName',
     canActivate: [RouteGuard],
     component: GroupDetailsComponent
   },

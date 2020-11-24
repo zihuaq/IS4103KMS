@@ -178,7 +178,7 @@ export class EditHrpTabComponent implements OnInit {
           newNotification.msg = "A new Human Resource Posting has been added to " + this.projectToEdit.name;
           newNotification.projectId = this.projectId;
           newNotification.groupId = null;
-          newNotification.projectTab = "hrp-tab";
+          newNotification.tabName = "hrp-tab";
           for (let member of this.projectToEdit.projectMembers) {
             if (member.userId != this.currentUser.userId) {
               this.notificationService.createNewNotification(newNotification, member.userId).subscribe();

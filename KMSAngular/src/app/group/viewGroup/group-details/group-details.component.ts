@@ -42,6 +42,7 @@ export class GroupDetailsComponent implements OnInit {
   ];
   selectedShareOption: string;
   shareGroupText: string = "";
+  activeTab: string;
 
   constructor(public groupService: GroupService,
     private userService: UserService,
@@ -55,6 +56,7 @@ export class GroupDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkAccessRight();
+    this.activeTab = this.activatedRoute.snapshot.paramMap.get("tabName");
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     this.groupId = parseInt(this.activatedRoute.snapshot.paramMap.get("groupId"));
     this.loggedInUser = this.sessionService.getCurrentUser();

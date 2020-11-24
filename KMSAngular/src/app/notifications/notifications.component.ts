@@ -39,11 +39,11 @@ export class NotificationsComponent implements OnInit {
     }
     
     if (notification.projectId != null) {
-      this.router.navigate(['projectDetails/' + notification.projectId + "/" + notification.projectTab]);
+      this.router.navigate(['projectDetails/' + notification.projectId + "/" + notification.tabName]);
     }
 
     if (notification.groupId != null) {
-      this.router.navigate(['groupDetails/' + notification.groupId]);
+      this.router.navigate(['groupDetails/' + notification.groupId + "/" + notification.tabName]);
     }
 
     this.notificationService.deleteNotification(notification.notificationId).subscribe();
