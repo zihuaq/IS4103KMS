@@ -1,8 +1,11 @@
+import { UserService } from '../user.service';
+import { forkJoin } from 'rxjs';
+import { SessionService } from '../session.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from '../user.service';
+import { ProfileService } from '../profile.service';
+import { Profile } from '../classes/profile';
 import { User } from '../classes/user';
-import { SessionService } from '../session.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,38 +13,50 @@ import { SessionService } from '../session.service';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  profile: User;
+  profile: Profile;
   loggedInUser: User;
-  shared: boolean;
+  canSend: boolean;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private userService: UserService,
-    private sessionService: SessionService
+    private profileService: ProfileService,
+    private sessionService: SessionService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    this.shared = this.activatedRoute.snapshot.url[1]?.path == 'shared';
-    let profileid = this.activatedRoute.snapshot.params.userid;
+    let profileid = this.activatedRoute.snapshot.params.id;
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
-    if (!profileid || profileid == loggedInUserId) {
-      profileid = loggedInUserId;
-      this.userService.getUser(profileid).subscribe((data: User) => {
-        this.profile = data;
-        this.loggedInUser = data;
-        console.log(data);
-      });
-    } else {
-      this.userService
-        .getUser(loggedInUserId.toString())
-        .subscribe((data: User) => {
-          console.log(data);
-          this.loggedInUser = data;
-        });
+    forkJoin([
+      this.userService.getUser(loggedInUserId.toString()),
+      this.profileService.getProfile(profileid),
+    ]).subscribe((result) => {
+      this.loggedInUser = result[0];
+      this.profile = result[1];
+      this.checkCanSendProfileClaimRequest();
+    });
+  }
 
-      this.userService.getUser(profileid).subscribe((data: User) => {
-        console.log(data);
-        this.profile = data;
+  makeProfileClaim(id: String): void {
+    this.profileService
+      .makeProfileClaim(this.loggedInUser.userId.toString(), id)
+      .subscribe(() => {
+        this.checkCanSendProfileClaimRequest();
       });
+  }
+
+  checkCanSendProfileClaimRequest() {
+    if (this.profile.userEntity) {
+      this.canSend = false;
+    } else if (
+      this.profile.claimProfileRequestMade
+        .map((claimProfileRequest) => {
+          return claimProfileRequest.user.userId;
+        })
+        .includes(this.loggedInUser.userId)
+    ) {
+      this.canSend = false;
+    } else {
+      this.canSend = true;
     }
   }
 }

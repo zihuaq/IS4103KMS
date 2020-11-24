@@ -16,10 +16,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -63,9 +65,9 @@ public class UserEntity implements Serializable {
     private Date joinedDate;
     @Temporal(TemporalType.DATE)
     private Date adminStartDate;
-    
+
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserTypeEnum userType;
     @Lob
@@ -74,9 +76,9 @@ public class UserEntity implements Serializable {
     private int reputationPoints;
 
     private String verificationCode;
-    
+
     private Boolean isVerified;
-   
+
     private Boolean isActive;
 
     @OneToMany(mappedBy = "from")
@@ -97,17 +99,17 @@ public class UserEntity implements Serializable {
     private List<PostEntity> posts;
     @OneToMany(mappedBy = "groupOwner")
     private List<GroupEntity> groupsOwned;
-    @JoinTable(name= "groupMembers")
+    @JoinTable(name = "groupMembers")
     @ManyToMany
-    private List<GroupEntity> groupsJoined;  
-    @JoinTable(name= "groupAdmins")
+    private List<GroupEntity> groupsJoined;
+    @JoinTable(name = "groupAdmins")
     @ManyToMany
     private List<GroupEntity> groupAdmins;
     @OneToMany
     private List<BadgeEntity> badges;
     @OneToMany(mappedBy = "materialResourceAvailableOwner")
     private List<MaterialResourceAvailableEntity> mras;
-    @JoinTable(name = "skills")
+    @JoinTable(name = "user_skills")
     @OneToMany
     private List<TagEntity> skills;
     @JoinTable(name = "following")
@@ -116,7 +118,7 @@ public class UserEntity implements Serializable {
     @JoinTable(name = "followers")
     @OneToMany
     private List<UserEntity> followers;
-    @JoinTable(name = "sdgs")
+    @JoinTable(name = "user_sdgs")
     @OneToMany
     private List<TagEntity> sdgs;
     @OneToMany(mappedBy = "from")
@@ -127,33 +129,42 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountPrivacySettingEnum accountPrivacySetting;
-    
+
     @JoinTable(name = "affiliatedUsers")
     @OneToMany
     private List<UserEntity> affiliatedUsers;
-    
+
     @OneToMany(mappedBy = "from")
     private List<AffiliationRequestEntity> affiliationRequestMade;
     @OneToMany(mappedBy = "to")
     private List<AffiliationRequestEntity> affiliationRequestReceived;
-    
+
     @JoinTable(name = "humanResourcePostingApplied")
     @ManyToMany
     private List<HumanResourcePostingEntity> hrpApplied;
-    
+
     @OneToMany(mappedBy = "fulfillmentOwner")
     private List<FulfillmentEntity> fulfillments;
 
     @JoinTable(name = "activityJoined")
     @ManyToMany
     private List<ActivityEntity> activityJoined;
-    
+
     @OneToMany
     private List<DonationEntity> donations;
-    
-    @OneToMany 
+
+    @OneToMany
     private List<NotificationEntity> notifications;
-    
+
+    @OneToOne
+    @JoinTable(name = "user_profile", joinColumns = {
+        @JoinColumn(name = "userId", referencedColumnName = "userId")}, inverseJoinColumns = {
+        @JoinColumn(name = "profileId", referencedColumnName = "id")})
+    private ProfileEntity profile;
+
+    @OneToMany(mappedBy = "user")
+    private List<ClaimProfileRequestEntity> claimProfileRequestMade;
+
     public UserEntity() {
         this.reviewsGiven = new ArrayList<>();
         this.reviewsReceived = new ArrayList<>();
@@ -184,6 +195,8 @@ public class UserEntity implements Serializable {
         this.activityJoined = new ArrayList<>();
         this.donations = new ArrayList<>();
         this.notifications = new ArrayList<>();
+        this.claimProfileRequestMade = new ArrayList<>();
+        this.reputationPoints = 0;
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, UserTypeEnum usertype) {
@@ -196,6 +209,7 @@ public class UserEntity implements Serializable {
         this.setPassword(password);
         this.joinedDate = new Date();
         this.userType = usertype;
+        this.reputationPoints = 0;
     }
 
     public UserEntity(String firstName, String lastName, Date dob, String gender, String email, String password, Date adminStartDate, UserTypeEnum userType) {
@@ -243,7 +257,6 @@ public class UserEntity implements Serializable {
     public String toString() {
         return "UserEntity{" + "userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", email=" + email + ", password=" + password + ", salt=" + salt + ", joinedDate=" + joinedDate + ", userType=" + userType + ", adminStartDate=" + adminStartDate + ", reputationPoints=" + reputationPoints + ", accountPrivacySetting=" + accountPrivacySetting + '}';
     }
-    
 
     public String getFirstName() {
         return firstName;
@@ -352,8 +365,6 @@ public class UserEntity implements Serializable {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
-    
-    
 
     public List<ReviewEntity> getReviewsGiven() {
         return reviewsGiven;
@@ -438,7 +449,7 @@ public class UserEntity implements Serializable {
     public List<ProjectEntity> getProjectsManaged() {
         return projectsManaged;
     }
-    
+
     public List<GroupEntity> getGroupsManaged() {
         return groupsManaged;
     }
@@ -585,6 +596,22 @@ public class UserEntity implements Serializable {
 
     public void setNotifications(List<NotificationEntity> notifications) {
         this.notifications = notifications;
+    }
+
+    public ProfileEntity getProfile() {
+        return profile;
+    }
+
+    public void setProfile(ProfileEntity profile) {
+        this.profile = profile;
+    }
+
+    public List<ClaimProfileRequestEntity> getClaimProfileRequestMade() {
+        return claimProfileRequestMade;
+    }
+
+    public void setClaimProfileRequestMade(List<ClaimProfileRequestEntity> claimProfileRequestMade) {
+        this.claimProfileRequestMade = claimProfileRequestMade;
     }
 
 }

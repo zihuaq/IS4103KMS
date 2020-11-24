@@ -1,0 +1,115 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"> Recommended Projects To Join </h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div *ngIf="!hasRecommendations">
+            <p style="margin: 5px; text-align: center; width: 100%;"> No recommendations at the moment</p>
+        </div>
+        <div *ngIf="projectRecoBySDG && projectRecoByFollowing"
+            style="max-height: 500px; overflow-y: scroll; color: black;">
+            <div *ngFor="let project of projectRecoBySDG" style="max-width:95%">
+                <div class="user-block" style="margin: 10px; width: 100%;">
+                    <img *ngIf="project.profilePicture" class="img-circle" [src]="project.profilePicture"
+                        alt="User Image">
+                    <img *ngIf="!project.profilePicture" class="img-circle"
+                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                        alt="Project Profile Picture">
+                    <span class="username">
+                        {{project.name}}
+                        <span class="badge badge-info" *ngIf="project.status == ProjectType.ACTIVE"
+                            style="width: min-content; font-size: 10px; vertical-align: 30%;">{{project.status}}</span>
+                        <span class="badge badge-warning" *ngIf="project.status == ProjectType.INACTIVE"
+                            style="font-size: 10px; vertical-align: 30%;">{{project.status}}</span>
+                        <span class="badge badge-success" *ngIf="project.status == ProjectType.COMPLETED"
+                            style="font-size: 10px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{project.status}}</span>
+                    </span>
+                    <span class="description">has relevant SDGs</span>
+                </div>
+                <div class="card-body">
+                    {{project.description}}
+                    <p class="text-muted text-sm" style="margin-left: -5px;">
+                        <span class="d-flex flex-wrap">
+                            <div *ngFor="let sdg of sortSDG(project.sdgs)" class="col-2">
+                                <small class="badge badge-dark">
+                                    {{sdg.name}}
+                                </small>
+                            </div>
+                        </span>
+                    </p>
+                    <a routerLink="/projectDetails/{{project.projectId}}/basic-details">
+                        <button type="button" class="btn btn-info btn-block mt-auto"
+                            style="font-weight: bold;"> View Project </button>
+                    </a>
+                    <button type="button" class="btn btn-light btn-block mt-auto" (click)="joinProject(project)"
+                        style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87);"><i
+                            class="far fa-handshake"></i> Join</button>
+                </div>
+            </div>
+            <div *ngFor="let projectReco of projectRecoByFollowing" style="max-width:95%">
+                <div class="user-block" style="margin: 10px; width:100%">
+                    <img *ngIf="projectReco.projectToRecommend.profilePicture" class="img-circle"
+                        [src]="projectReco.projectToRecommend.profilePicture" alt="User Image">
+                    <img *ngIf="!projectReco.projectToRecommend.profilePicture" class="img-circle"
+                        src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                        alt="Project Profile Picture">
+                    <span class="username">
+                        {{projectReco.projectToRecommend.name}}
+                        <span class="badge badge-info"
+                            *ngIf="projectReco.projectToRecommend.status == ProjectType.ACTIVE"
+                            style="width: min-content; font-size: 10px; vertical-align: 30%;">{{projectReco.projectToRecommend.status}}</span>
+                        <span class="badge badge-warning"
+                            *ngIf="projectReco.projectToRecommend.status == ProjectType.INACTIVE"
+                            style="font-size: 10px; vertical-align: 30%;">{{projectReco.projectToRecommend.status}}</span>
+                        <span class="badge badge-success"
+                            *ngIf="projectReco.projectToRecommend.status == ProjectType.COMPLETED"
+                            style="font-size: 10px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{projectReco.projectToRecommend.status}}</span>
+                    </span>
+                    <span *ngIf="projectReco.followingInProject.length == 1" class="description">
+                        joined by {{projectReco.followingInProject[0].firstName}}
+                        {{projectReco.followingInProject[0].lastName}}
+                    </span>
+                    <span *ngIf="projectReco.followingInProject.length == 2" class="description">
+                        joined by {{projectReco.followingInProject[0].firstName}}
+                        {{projectReco.followingInProject[0].lastName}}
+                        and {{projectReco.followingInProject[1].firstName}}
+                        {{projectReco.followingInProject[1].lastName}}
+                    </span>
+                    <span *ngIf="projectReco.followingInProject.length > 2" class="description">
+                        followed by {{projectReco.followingInProject[0].firstName}}
+                        {{projectReco.followingInProject[0].lastName}},
+                        {{projectReco.followingInProject[1].firstName}}
+                        {{projectReco.followingInProject[1].lastName}} and
+                        {{projectReco.followingInProject.length-2}} others
+                    </span>
+                </div>
+                <div class="card-body">
+                    {{projectReco.projectToRecommend.description}}
+                    <p class="text-muted text-sm" style="margin-left: -5px;">
+                        <span class="d-flex flex-wrap">
+                            <div *ngFor="let sdg of sortSDG(projectReco.projectToRecommend.sdgs)" class="col-2">
+                                <small class="badge badge-dark">
+                                    {{sdg.name}}
+                                </small>
+                            </div>
+                        </span>
+                    </p>
+                    <a routerLink="/projectDetails/{{projectReco.projectToRecommend.projectId}}/basic-details">
+                        <button type="button" class="btn btn-info btn-block mt-auto"
+                            style="font-weight: bold;"> View Project </button>
+                    </a>
+                    <button type="button" class="btn btn-light btn-block mt-auto"
+                        (click)="joinProject(projectReco.projectToRecommend)"
+                        style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87); "><i
+                            class="far fa-handshake"></i> Join</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

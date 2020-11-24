@@ -1,6 +1,7 @@
 <div class="row mb-3">
     <h5 style="margin-right: 10px;">Human Resource Postings</h5>
-    <button type="button" class="btn bg-gradient-info float-right" data-toggle="modal" data-target=#hrp-modal data-backdrop="static" style="margin-top: -8px;">
+    <button type="button" class="btn bg-gradient-info float-right" data-toggle="modal" data-target=#hrp-modal
+        data-backdrop="static" style="margin-top: -8px;">
         <i class="fas fa-plus"></i>
         Create Posting
     </button>
@@ -19,48 +20,58 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="hrpName">Human Resource Posting Name *</label>
-                        <input type="text" id="hrpName" class="form-control" placeholder="Enter Name" name="hrpName" [(ngModel)]="newHrp.name" required>
+                        <input type="text" id="hrpName" class="form-control" placeholder="Enter Name" name="hrpName"
+                            [(ngModel)]="newHrp.name" required>
                     </div>
                     <div class="form-group">
                         <label for="hrpDescription">Description *</label>
-                        <textarea id="hrpDescription" class="form-control" placeholder="Enter Description" name="hrpDescription" [(ngModel)]="newHrp.description" required></textarea>
+                        <textarea id="hrpDescription" class="form-control" placeholder="Enter Description"
+                            name="hrpDescription" [(ngModel)]="newHrp.description" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="hrpSkillTag">Skill Tags</label>
                         <div class="select2-blue">
-                            <select class="select2" id="hrpselect2" multiple="multiple" data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue" style="width: 100%;"></select>                        
-                        </div>                   
+                            <select class="select2" id="hrpselect2" multiple="multiple"
+                                data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue"
+                                style="width: 100%;"></select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="hrpStartDate">Start Date *</label>
-                        <input id="hrpStartDate" type="date" class="form-control" name="hrpStartDate" [(ngModel)]="newHrp.startDate" [min]="minDate" required>
+                        <input id="hrpStartDate" type="date" class="form-control" name="hrpStartDate"
+                            [(ngModel)]="newHrp.startDate" [max]="newHrp.endDate" [min]="minDate" required>
                     </div>
                     <div class="form-group">
                         <label for="hrpEndDate">End Date *</label>
-                        <input id="hrpEndDate" type="date" class="form-control" name="hrpEndDate" [(ngModel)]="newHrp.endDate" [min]="newHrp.startDate" required>
+                        <input id="hrpEndDate" type="date" class="form-control" name="hrpEndDate"
+                            [(ngModel)]="newHrp.endDate" [min]="newHrp.startDate" required>
                     </div>
                     <div class="form-group">
                         <label for="hrpTotalSlots">Total Slots Needed *</label>
-                        <input id="hrpTotalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="hrpTotalSlots" [(ngModel)]="newHrp.totalSlots" min="1" required>
+                        <input id="hrpTotalSlots" type="number" class="form-control" placeholder="Enter slots needed"
+                            name="hrpTotalSlots" [(ngModel)]="newHrp.totalSlots" min="1" required>
                     </div>
                     <div class="form-group">
-                        <label>Location of resource</label>
+                        <label>Location of Posting</label>
                         <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
                             (mapClick)="click($event)">
                         </google-map>
                     </div>
                     <div class="form-group">
                         <label for="hrpLat">Latitude *</label>
-                        <input id="hrpLat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="hrpLat" [(ngModel)]="newHrp.latitude" required disabled>
+                        <input id="hrpLat" type=number steps="any" class="form-control" placeholder="Enter latitude"
+                            name="hrpLat" [(ngModel)]="newHrp.latitude" required disabled>
                     </div>
                     <div class="form-group">
                         <label for="hrpLong">Longitude *</label>
-                        <input id="hrpLong" type=number steps="any" class="form-control" placeholder="Enter longitude" name="hrpLong" [(ngModel)]="newHrp.longitude" required disabled>
+                        <input id="hrpLong" type=number steps="any" class="form-control" placeholder="Enter longitude"
+                            name="hrpLong" [(ngModel)]="newHrp.longitude" required disabled>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
-                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!hrpForm.valid">Create</button>
+                    <button type="button" type="submit" class="btn btn-outline-light"
+                        [disabled]="!hrpForm.valid">Create</button>
                 </div>
             </form>
         </div>
@@ -71,35 +82,46 @@
 
 <span *ngIf="hrpList.length > 0">
     <div *ngFor="let hrp of hrpList">
-        <div class="card" style="width: 100%;" >
+        <div class="card" style="width: 100%;">
             <div class="card-header">
-                <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{hrp.name}}</b> 
-                    <br/>
+                <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{hrp.name}}</b>
+                    <br />
                     <span class="text-muted" style="font-size: 15px;">{{hrp.description}}</span>
                 </h5>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-toggle="modal" href="#edit-modal" (click)="clickHrp(hrp.humanResourcePostingId)">
+                    <button type="button" class="btn btn-tool" data-toggle="modal" href="#edit-modal"
+                        (click)="clickHrp(hrp.humanResourcePostingId)">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-toggle="modal" href="#delete-confirm-dialog" (click)="clickHrp(hrp.humanResourcePostingId)">
+                    <button type="button" class="btn btn-tool" data-toggle="modal" href="#delete-confirm-dialog"
+                        (click)="clickHrp(hrp.humanResourcePostingId)">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
             </div>
             <div class="card-body" style="display: block;">
                 <p style="margin: 0 7px 0 7px;">
-                    <b>Required from {{formatDate(hrp.startDate.toString()) | date}} to {{formatDate(hrp.endDate.toString()) | date}}</b>
-                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(hrp.latitude, hrp.longitude)" target="_blank">
+                    <b>Required from {{formatDate(hrp.startDate.toString()) | date}} to
+                        {{formatDate(hrp.endDate.toString()) | date}}</b>
+                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
+                        (click)="changehref(hrp.latitude, hrp.longitude)" target="_blank">
                         At location
                         {{hrp.latitude | number:'1.1-6'}},
                         {{hrp.longitude | number:'1.1-6'}}
                     </a>
-                    <br/>
-                    {{hrp.obtainedSlots}} (filled) / {{hrp.totalSlots}}  <span class="text-muted">({{hrp.lackingSlots}} needed)</span>
-                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="hrp.tags.length > 0">
+                    <br />
+                    <button type="button" class="btn btn-info float-right" style="margin-right: 2%; font-size: 15px;"
+                        data-toggle="modal" data-target="#modal-hrp-recommendations" (click)="clickRecommendation(hrp)"
+                        data-backdrop="static">
+                        <i class="fas fa-crown"></i> Recommendations
+                    </button>
+                    {{hrp.obtainedSlots}} (filled) / {{hrp.totalSlots}} <span class="text-muted">({{hrp.lackingSlots}}
+                        needed)</span>
+                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;"
+                        *ngIf="hrp.tags.length > 0">
                         <div *ngFor="let tag of hrp.tags">
                             <small class="badge badge-dark ml-2">
                                 {{tag.name}}
@@ -125,29 +147,37 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="editHrpName">Human Resource Posting Name *</label>
-                        <input type="text" id="editHrpName" class="form-control" placeholder="Enter Name" name="editHrpName" [(ngModel)]="hrpToEdit.name" required>
+                        <input type="text" id="editHrpName" class="form-control" placeholder="Enter Name"
+                            name="editHrpName" [(ngModel)]="hrpToEdit.name" required>
                     </div>
                     <div class="form-group">
                         <label for="editHrpDescription">Description *</label>
-                        <textarea id="description" class="form-control" placeholder="Enter Description" name="description" [(ngModel)]="hrpToEdit.description" required></textarea>
+                        <textarea id="description" class="form-control" placeholder="Enter Description"
+                            name="description" [(ngModel)]="hrpToEdit.description" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="editskillselect2">Skill Tags</label>
                         <div class="select2-blue">
-                            <select class="select2" id="editskillselect2" multiple="multiple" data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue" style="width: 100%;"></select>                        
-                        </div>                   
+                            <select class="select2" id="editskillselect2" multiple="multiple"
+                                data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue"
+                                style="width: 100%;"></select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="editHrpStartDate">Start Date *</label>
-                        <input id="editHrpStartDate" type="date" class="form-control" name="editHrpStartDate" [(ngModel)]="startDate" [min]="minDate" required>
+                        <input id="editHrpStartDate" type="date" class="form-control" name="editHrpStartDate"
+                            [(ngModel)]="startDate" [min]="minDate" required>
                     </div>
                     <div class="form-group">
                         <label for="editHrpEndDate">End Date *</label>
-                        <input id="editHrpEndDate" type="date" class="form-control" name="editHrpEndDate" [(ngModel)]="endDate" [min]="startDate" required>
+                        <input id="editHrpEndDate" type="date" class="form-control" name="editHrpEndDate"
+                            [(ngModel)]="endDate" [min]="startDate" required>
                     </div>
                     <div class="form-group">
                         <label for="editHrpTotalSlots">Total Slots Needed *</label>
-                        <input id="editHrpTotalSlots" type="number" class="form-control" placeholder="Enter slots needed" name="editHrpTotalSlots" [(ngModel)]="hrpToEdit.totalSlots" min="1" required>
+                        <input id="editHrpTotalSlots" type="number" class="form-control"
+                            placeholder="Enter slots needed" name="editHrpTotalSlots" [(ngModel)]="hrpToEdit.totalSlots"
+                            min="1" required>
                     </div>
                     <div class="form-group">
                         <label>Location of resource</label>
@@ -157,16 +187,20 @@
                     </div>
                     <div class="form-group">
                         <label for="editHrpLat">Latitude *</label>
-                        <input id="editHrpLat" type=number steps="any" class="form-control" placeholder="Enter latitude" name="editHrpLat" [(ngModel)]="hrpToEdit.latitude" required>
+                        <input id="editHrpLat" type=number steps="any" class="form-control" placeholder="Enter latitude"
+                            name="editHrpLat" [(ngModel)]="hrpToEdit.latitude" required>
                     </div>
                     <div class="form-group">
                         <label for="editHrpLong">Longitude *</label>
-                        <input id="editHrpLong" type=number steps="any" class="form-control" placeholder="Enter longitude" name="editHrpLong" [(ngModel)]="hrpToEdit.longitude" required>
+                        <input id="editHrpLong" type=number steps="any" class="form-control"
+                            placeholder="Enter longitude" name="editHrpLong" [(ngModel)]="hrpToEdit.longitude" required>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-confirm-dialog">Delete</button>
-                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!editHrpForm.valid">Update</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                        data-target="#delete-confirm-dialog">Delete</button>
+                    <button type="button" type="submit" class="btn btn-outline-light"
+                        [disabled]="!editHrpForm.valid">Update</button>
                 </div>
             </form>
         </div>
@@ -187,7 +221,65 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="delete-hrp" type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteHrp()">Delete</button>
+                <button id="delete-hrp" type="button" class="btn btn-danger" data-dismiss="modal"
+                    (click)="deleteHrp()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-hrp-recommendations">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content bg-gradient-info">
+            <div class="modal-header">
+                <h4 class="modal-title">Recommendations</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="userRecommendations && userRecommendations.length == 0"> <b>No recommendations at the
+                        moment</b></div>
+                <div *ngIf="userRecommendations && userRecommendations.length > 0"
+                    style="max-height: 500px; overflow-y: scroll; color: black;">
+                    <div *ngFor="let user of userRecommendations" style="max-width:95%">
+                        <div class="card card-widget">
+                            <div class="card-header">
+                                <div class="user-block">
+                                    <img *ngIf="user.profilePicture" class="img-circle" [src]="user.profilePicture"
+                                        alt="User Image">
+                                    <img *ngIf="!user.profilePicture" class="img-circle"
+                                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                        alt="User Image">
+                                    <span class="username">
+                                        {{user.firstName}} {{user.lastName}}
+                                    </span>
+                                    <span class="description">{{user.reputationPoints}} Reputation Points</span>
+                                </div>
+                                <!-- /.user-block -->
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <p class="text-muted text-sm">
+                                    <span *ngIf="user.skills.length == 0"> User has no Skills indicated</span>
+                                    <span class="d-flex flex-wrap" *ngIf="user.skills.length > 0">
+                                        Skills:
+                                        <p *ngFor="let skill of user.skills" class="SDGs">
+                                            <small class="badge badge-warning"
+                                                style="margin-left: 5px; margin-right: 5px;">
+                                                {{skill.name}}
+                                            </small>
+                                        </p>
+                                    </span>
+                                </p>
+                                <a routerLink="/userProfile/{{user.userId}}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-user"></i> View Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

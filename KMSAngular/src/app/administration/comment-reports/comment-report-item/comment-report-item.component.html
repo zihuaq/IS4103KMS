@@ -6,7 +6,7 @@
     <img *ngIf="!report.reportOwner.profilePicture" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
     class = "img-responsive"
     style ="max-height: 20px;">
-    <a routerLink="/profile/{{report.reportOwner.userId}}">
+    <a routerLink="/userProfile/{{report.reportOwner.userId}}">
       {{report.reportOwner.firstName}} {{report.reportOwner.lastName}}
     </a>
     made a report against a Comment:

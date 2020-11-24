@@ -1,0 +1,6 @@
+<h4>My written reviews</h4>
+<hr>
+<h1 *ngIf = "reviewsWritten === undefined || reviewsWritten.length == 0">
+  No Reviews Written
+</h1>
+<app-reviews [reviews] = "reviewsWritten"></app-reviews>

@@ -11,41 +11,35 @@
   <ion-card-content>
     <p><b>Name:</b></p>
     <p>{{hrp.name}}</p>
-    <br/>
-    <p><b>Description:</b></p>
+    <p style="margin-top: 15px;"><b>Description:</b></p>
     <p>{{hrp.description}}</p>
-    <br/>
-    <p><b>Start Date:</b></p>
+    <p style="margin-top: 15px;"><b>Start Date:</b></p>
     <p>{{startDate | date}}</p>
-    <br/>
-    <p><b>End Date:</b></p>
+    <p style="margin-top: 15px;"><b>End Date:</b></p>
     <p>{{endDate | date}}</p>
-    <br/>
-    <p><b>Location:</b></p>
-    <ion-badge color="warning" (click)="changehref(hrp.latitude, hrp.longitude)">
-      {{hrp.latitude | number:'1.1-6'}},
-      {{hrp.longitude | number:'1.1-6'}}
+    <p style="margin-top: 15px;"><b>Location:</b></p>
+    <ion-badge color="warning">
+      <a [href]="locationLink" style="color: black; text-decoration: none;"> 
+        {{hrp.latitude | number:'1.1-6'}},
+        {{hrp.longitude | number:'1.1-6'}}
+      </a>
     </ion-badge>
-    <br/>
-    <p><b>Total slots:</b></p>
+    <p style="margin-top: 15px;"><b>Total slots:</b></p>
     <p>{{hrp.totalSlots}}</p>
-    <br/>
-    <p><b>Obtained slots:</b></p>
+    <p style="margin-top: 15px;"><b>Obtained slots:</b></p>
     <p>{{hrp.obtainedSlots}}</p>
-    <br/>
-    <p><b>Lacking slots:</b></p>
-    <p>{{hrp.lackingSlots}}</p>
-    <br/>   
-    <p><b>Skills needed:</b></p> 
+    <p style="margin-top: 15px;"><b>Lacking slots:</b></p>
+    <p>{{hrp.lackingSlots}}</p>  
+    <p style="margin-top: 15px;"><b>Skills needed:</b></p> 
     <span *ngIf="hrp.tags.length > 0">
       <span  *ngFor="let tag of hrp.tags">
-        <ion-badge color="primary">{{tag.name}}</ion-badge>
+        <ion-badge color="primary" style="margin-right: 5px; margin-bottom: 5px;">{{tag.name}}</ion-badge>
       </span>      
     </span>
-    <p  *ngIf="hrp.tags.length == 0">No skills needed</p>
-    <ion-button expand="full" size ="small" *ngIf="!hasApplied() && !hasFilled()" (click)="applyHrp()" >Apply</ion-button>
-    <ion-button expand="full" size ="small" *ngIf="!hasApplied() && hasFilled()" disabled>Filled</ion-button>
-    <ion-button expand="full" size ="small" *ngIf="hasApplied()" (click)="leaveHrp()" >Leave</ion-button>
+    <p *ngIf="hrp.tags.length == 0">No skills needed</p>
+    <ion-button expand="full" size ="small" *ngIf="!hasApplied() && !hasFilled()" (click)="applyHrp()" style="margin-top: 15px;">Apply</ion-button>
+    <ion-button expand="full" size ="small" *ngIf="!hasApplied() && hasFilled()" style="margin-top: 15px;" disabled>Filled</ion-button>
+    <ion-button expand="full" size ="small" *ngIf="hasApplied()" (click)="leaveHrp()" style="margin-top: 15px;">Leave</ion-button>
   </ion-card-content>
   
 </ion-content>

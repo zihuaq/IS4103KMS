@@ -4,6 +4,7 @@ import { Project } from 'src/app/classes/project';
 import { Tag } from 'src/app/classes/tag';
 import { ProjectService } from 'src/app/project.service';
 import { TagService } from '../../../tag.service';
+import { MatchingService } from '../../../matching.service';
 import { MaterialResourcePosting } from '../../../classes/material-resource-posting';
 import { MaterialResourcePostingService } from '../../../material-resource-posting.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +12,7 @@ import { FulfillmentService } from '../../../fulfillment.service';
 import { Fulfillment } from '../../../classes/fulfillment';
 import { FulfillmentStatus } from 'src/app/classes/fulfillment-status.enum';
 import { filter } from 'rxjs/operators';
+import { MaterialResourceAvailable } from 'src/app/classes/material-resource-available';
 import { User } from 'src/app/classes/user';
 import { SessionService } from 'src/app/session.service';
 import { Notification } from 'src/app/classes/notification';
@@ -67,24 +69,30 @@ export class EditMrpTabComponent implements OnInit {
   fulfilled: boolean = false;
   rejected: boolean = false;
 
+  mrpToRecommend: MaterialResourcePosting;
+  mraRecommendations: MaterialResourceAvailable[];
+
   constructor(public projectService: ProjectService,
     public materialResourcePostingService: MaterialResourcePostingService,
     private fulfillmentService: FulfillmentService,
     public tagService: TagService,
+    public matchingService: MatchingService,
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionService,
     private notificationService: NotificationService,
     private router: Router) {
-      this.projectToEdit = new Project();
-      this.newMrp = new MaterialResourcePosting();
-      this.mrpToEdit = new MaterialResourcePosting;
-      this.mrpToEdit.fulfillments = new Array();
-      this.mrpToDelete = new MaterialResourcePosting;
-      this.mrpList = [];
-      this.fulfillmentList = [];
-      this.mrpToFulfill = new MaterialResourcePosting;
-      this.fulfillmentToUpdate = new Fulfillment;
-    }
+    this.projectToEdit = new Project();
+    this.newMrp = new MaterialResourcePosting();
+    this.mrpToEdit = new MaterialResourcePosting;
+    this.mrpToEdit.fulfillments = new Array();
+    this.mrpToDelete = new MaterialResourcePosting;
+    this.mrpList = [];
+    this.fulfillmentList = [];
+    this.mrpToFulfill = new MaterialResourcePosting;
+    this.fulfillmentToUpdate = new Fulfillment;
+    this.mrpToRecommend = new MaterialResourcePosting;
+    this.mraRecommendations = [];
+  }
 
   ngOnInit(): void {
     /*
@@ -94,13 +102,13 @@ export class EditMrpTabComponent implements OnInit {
       });
     });
     */
-  
+
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
 
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToEdit = response;
-      }, 
+      },
       error => {
         this.router.navigate(["/error"]);
       }
@@ -145,7 +153,7 @@ export class EditMrpTabComponent implements OnInit {
     this.newMrp.latitude = event.latLng.lat();
     this.newMrp.longitude = event.latLng.lng();
   }
-  
+
 
   createMrp(createMrpForm: NgForm) {
     this.selectedTagIds = [];
@@ -227,7 +235,7 @@ export class EditMrpTabComponent implements OnInit {
           $('#mrpselect2').val(null).trigger('change');
           this.selectedTagIds = [];
           this.newMrp = new MaterialResourcePosting();
-        });  
+        });
     }
   }
 
@@ -310,10 +318,10 @@ export class EditMrpTabComponent implements OnInit {
       }
 
       var totalPledgedQuantity: number = 0;
-        this.mrpToEdit.fulfillments.forEach((element) => {
-          totalPledgedQuantity += element.totalPledgedQuantity;
-        });
-      if(this.mrpToEdit.totalQuantity < totalPledgedQuantity) {
+      this.mrpToEdit.fulfillments.forEach((element) => {
+        totalPledgedQuantity += element.totalPledgedQuantity;
+      });
+      if (this.mrpToEdit.totalQuantity < totalPledgedQuantity) {
         $(document).Toasts('create', {
           class: 'bg-danger',
           title: 'Error',
@@ -338,15 +346,15 @@ export class EditMrpTabComponent implements OnInit {
             }
           )
           $('#modal-edit-mrp').modal('hide');
-          
+
           $(document).Toasts('create', {
-          class: 'bg-success',
-          title: 'Success',
-          autohide: true,
-          delay: 2500,
-          body: 'Material Resource Posting updated successfully',
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Material Resource Posting updated successfully',
           })
-      });
+        });
     }
   }
 
@@ -367,7 +375,7 @@ export class EditMrpTabComponent implements OnInit {
           unreceivedQuantity += element.unreceivedQuantity;
         });
 
-        if(this.mrpToDelete.fulfillments.length > 0) {
+        if (this.mrpToDelete.fulfillments.length > 0) {
           $(document).Toasts('create', {
             class: 'bg-danger',
             title: 'Error',
@@ -415,7 +423,7 @@ export class EditMrpTabComponent implements OnInit {
     window.open(url, '_blank');
   }
 
-  clickFulfillment(mrp: MaterialResourcePosting){
+  clickFulfillment(mrp: MaterialResourcePosting) {
     this.mrpToFulfill = mrp;
     this.refreshFulfillment(this.mrpToFulfill.materialResourcePostingId);
   }
@@ -426,13 +434,28 @@ export class EditMrpTabComponent implements OnInit {
         this.fulfillmentList = response;
         var list: Fulfillment[] = [];
         this.fulfillmentList.forEach(
-          (fulfillment: Fulfillment) => { 
+          (fulfillment: Fulfillment) => {
             if (fulfillment.status != FulfillmentStatus.REJECTED) {
               list.push(fulfillment);
             }
           });
         this.fulfillmentList = list;
         this.filter();
+      }
+    )
+  }
+
+  clickRecommendation(mrp: MaterialResourcePosting) {
+    this.mrpToRecommend = mrp;
+    this.refreshRecommendations(this.mrpToRecommend.materialResourcePostingId);
+  }
+
+  refreshRecommendations(mrpId: number) {
+    this.matchingService.getMatchesForMrp(mrpId).subscribe(
+      response => {
+        this.mraRecommendations = response;
+        this.mraRecommendations.splice(10);
+        console.log("Recommendations" + this.mraRecommendations);
       }
     )
   }
@@ -464,8 +487,8 @@ export class EditMrpTabComponent implements OnInit {
     if (statusSelected.length != 0 && statusSelected.length != 4) {
       this.filteredList = this.filteredList.filter(
         (fulfillment: Fulfillment) => {
-        return statusSelected.indexOf(fulfillment.status) > -1;
-      });
+          return statusSelected.indexOf(fulfillment.status) > -1;
+        });
     }
   }
 
@@ -473,7 +496,7 @@ export class EditMrpTabComponent implements OnInit {
     this.fulfillmentList = new Array();
   }
 
-  get fulfillmentStatus(): typeof FulfillmentStatus{
+  get fulfillmentStatus(): typeof FulfillmentStatus {
     return FulfillmentStatus;
   }
 
@@ -484,7 +507,7 @@ export class EditMrpTabComponent implements OnInit {
   }
 
   receiveFulfillment() {
-    if(this.quantityReceived == null){
+    if (this.quantityReceived == null) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
@@ -492,7 +515,7 @@ export class EditMrpTabComponent implements OnInit {
         delay: 3200,
         body: 'Quantity received is required',
       });
-    } else if(!(this.quantityReceived > 0)){
+    } else if (!(this.quantityReceived > 0)) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
@@ -543,7 +566,7 @@ export class EditMrpTabComponent implements OnInit {
   }
 
   updateQuantity() {
-    if(this.newTotalPledgedQuantity == null){
+    if (this.newTotalPledgedQuantity == null) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Invalid Quantity',
@@ -551,7 +574,7 @@ export class EditMrpTabComponent implements OnInit {
         delay: 3200,
         body: 'Total pledged quantity is required',
       });
-    } else if(!(this.newTotalPledgedQuantity > 0)){
+    } else if (!(this.newTotalPledgedQuantity > 0)) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Invalid Quantity',
@@ -559,7 +582,7 @@ export class EditMrpTabComponent implements OnInit {
         delay: 3200,
         body: 'Total pledged quantity is invalid',
       });
-    } else if(this.newTotalPledgedQuantity < this.fulfillmentToUpdate.receivedQuantity) {
+    } else if (this.newTotalPledgedQuantity < this.fulfillmentToUpdate.receivedQuantity) {
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Invalid Quantity',
@@ -567,7 +590,7 @@ export class EditMrpTabComponent implements OnInit {
         delay: 3500,
         body: 'Total pledged quantity cannot be less than quantity received',
       });
-    } else if(this.newTotalPledgedQuantity > (this.mrpToFulfill.lackingQuantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
+    } else if (this.newTotalPledgedQuantity > (this.mrpToFulfill.lackingQuantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Invalid Quantity',
@@ -575,7 +598,7 @@ export class EditMrpTabComponent implements OnInit {
         delay: 3500,
         body: 'Total pledged quantity cannot be more than quantity required',
       });
-    } else if(this.newTotalPledgedQuantity > (this.fulfillmentToUpdate.mra.quantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
+    } else if (this.newTotalPledgedQuantity > (this.fulfillmentToUpdate.mra.quantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Invalid Quantity',
@@ -587,7 +610,7 @@ export class EditMrpTabComponent implements OnInit {
       this.fulfillmentToUpdate.totalPledgedQuantity = this.newTotalPledgedQuantity;
       if (this.fulfillmentToUpdate.totalPledgedQuantity == this.fulfillmentToUpdate.receivedQuantity) {
         this.fulfillmentToUpdate.status = FulfillmentStatus.FULFILLED;
-      } else if(this.fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED && this.fulfillmentToUpdate.totalPledgedQuantity > this.fulfillmentToUpdate.receivedQuantity) {
+      } else if (this.fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED && this.fulfillmentToUpdate.totalPledgedQuantity > this.fulfillmentToUpdate.receivedQuantity) {
         this.fulfillmentToUpdate.status = FulfillmentStatus.PARTIALLYFULFILLED;
       }
       this.fulfillmentService.updateQuantity(this.fulfillmentToUpdate).subscribe(

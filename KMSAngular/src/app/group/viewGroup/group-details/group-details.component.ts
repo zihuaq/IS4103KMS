@@ -52,6 +52,9 @@ export class GroupDetailsComponent implements OnInit {
     private postService: PostService) {
       this.groupToView = new Group();
       this.owner = new User();
+      this.router.routeReuseStrategy.shouldReuseRoute = function () {
+        return false;
+      };
     }
 
   ngOnInit(): void {

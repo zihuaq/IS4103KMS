@@ -16,6 +16,7 @@ import entity.FulfillmentEntity;
 import entity.GroupEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.PostEntity;
+import entity.ProfileEntity;
 import entity.ProjectEntity;
 import entity.ReportEntity;
 import entity.ReviewEntity;
@@ -54,14 +55,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
-    
-    
 
     @Override
     public UserEntity createNewUser(UserEntity user) throws DuplicateEmailException {
         Query q = em.createQuery("SELECT u FROM UserEntity u WHERE u.email = :email");
         q.setParameter("email", user.getEmail());
-        
+
         if (!q.getResultList().isEmpty()) {
             throw new DuplicateEmailException("Email already exist!");
         }
@@ -138,8 +137,6 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
     @Override
     public UserEntity getUserById(long userId) throws NoResultException {
-        System.out.println(em);
-        System.out.println("UserId: " + userId);
         UserEntity user = em.find(UserEntity.class, userId);
         if (user != null) {
             user.getFollowers().size();
@@ -216,12 +213,12 @@ public class UserSessionBean implements UserSessionBeanLocal {
             UserEntity user = retrieveUserByEmail(email);
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + user.getSalt()));
             if (user.getPassword().equals(passwordHash)) {
-                if(user.getIsActive() == Boolean.FALSE){
+                if (user.getIsActive() == Boolean.FALSE) {
                     throw new DeactivatedEntityException("User account is deactivated");
                 }
                 return user;
             } else {
-                
+
                 throw new InvalidLoginCredentialException("Email does not exist or invalid password");
             }
         } catch (UserNotFoundException ex) {
@@ -275,7 +272,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         sdgs.add(tag);
         user.setSdgs(sdgs);
     }
-    
+
     @Override
     public List<TagEntity> addSDGsToProfile(long userId, List<TagEntity> tags) throws NoResultException, DuplicateTagInProfileException {
         UserEntity user = em.find(UserEntity.class, userId);
@@ -431,41 +428,39 @@ public class UserSessionBean implements UserSessionBeanLocal {
             em.remove(posts.get(i));
         }
         posts.clear();
-        
-        try{
+
+        try {
             List<ReportEntity> reports = reportSessionBean.getProfileReports();
             List<Long> reportIds = new ArrayList<>();
-            for(ReportEntity report: reports){
-                if(report.getReportedUser().getUserId() == userId){
+            for (ReportEntity report : reports) {
+                if (report.getReportedUser().getUserId() == userId) {
                     reportIds.add(report.getReportId());
                 }
             }
-            for(int i = 0; i < reportIds.size(); i++){
+            for (int i = 0; i < reportIds.size(); i++) {
                 reportSessionBean.deleteReport(reportIds.get(i));
             }
-        }
-        catch(NoResultException ex){
+        } catch (NoResultException ex) {
             System.out.println("no Reports made against user");
         }
-        
-        try{
+
+        try {
             List<ReportEntity> reports = reportSessionBean.getAllReports();
             List<Long> reportIds = new ArrayList<>();
-            for(ReportEntity report: reports){
-                if(report.getReportOwner().getUserId() == userId){
+            for (ReportEntity report : reports) {
+                if (report.getReportOwner().getUserId() == userId) {
                     reportIds.add(report.getReportId());
                 }
             }
-            for(int i = 0; i < reportIds.size(); i++){
+            for (int i = 0; i < reportIds.size(); i++) {
                 reportSessionBean.deleteReport(reportIds.get(i));
             }
-        }
-        catch(NoResultException ex){
+        } catch (NoResultException ex) {
             System.out.println("User made no reports");
         }
-        
+
         List<ProjectEntity> projectAdmins = user.getProjectsManaged();
-        for(int i = 0; i < projectAdmins.size(); i++){
+        for (int i = 0; i < projectAdmins.size(); i++) {
             projectAdmins.get(i).getProjectAdmins().remove(user);
         }
         projectAdmins.clear();
@@ -622,11 +617,13 @@ public class UserSessionBean implements UserSessionBeanLocal {
 
     @Override
     public List<UserEntity> getAllUsers() throws NoResultException {
-        Query q = em.createQuery("SELECT u FROM UserEntity u");
+        Query q = em.createQuery("SELECT u FROM UserEntity U");
         List<UserEntity> users = q.getResultList();
         for (UserEntity userEntity : users) {
             userEntity.getFollowers().size();
             userEntity.getFollowing().size();
+            userEntity.getSkills().size();
+            userEntity.getSdgs().size();
         }
         return users;
     }
@@ -744,7 +741,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.getAffiliationRequestMade().size();
         return user.getAffiliationRequestMade();
     }
-    
+
     @Override
     public void acceptAffiliationRequest(Long toUserId, Long fromUserId) throws NoResultException, UserNotFoundException {
         Query q = em.createQuery("SELECT a FROM AffiliationRequestEntity AS a WHERE a.from.userId = :from AND a.to.userId = :to");
@@ -792,7 +789,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         a.setFrom(null);
         em.remove(a);
     }
-    
+
     @Override
     public UserEntity updateUser(UserEntity updatedUser) throws UserNotFoundException, DuplicateEmailException, NoResultException {
         UserEntity user = em.find(UserEntity.class, updatedUser.getUserId());
@@ -865,7 +862,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.getFollowRequestMade().size();
         return user.getFollowRequestMade();
     }
-    
+
     @Override
     public List<ProjectEntity> getProjectsOwned(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
@@ -873,7 +870,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return user.getProjectsOwned();
     }
 
-    public List<ReviewEntity> getUserWrittenReviews(Long userId) throws UserNotFoundException{
+    public List<ReviewEntity> getUserWrittenReviews(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
             throw new UserNotFoundException("User not found");
@@ -881,17 +878,17 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.getReviewsGiven().size();
         return user.getReviewsGiven();
     }
-    
+
     @Override
     public List<ProjectEntity> getProjectsJoined(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
-        
+
         user.getProjectsJoined().size();
         return user.getProjectsJoined();
     }
-    
+
     @Override
-    public List<ReviewEntity> getUserRecievedReviews(Long userId) throws UserNotFoundException{
+    public List<ReviewEntity> getUserRecievedReviews(Long userId) throws UserNotFoundException {
 
         UserEntity user = em.find(UserEntity.class, userId);
         if (user == null) {
@@ -900,7 +897,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.getReviewsReceived().size();
         return user.getReviewsReceived();
     }
-    
+
     @Override
     public List<ProjectEntity> getProjectsManaged(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
@@ -909,25 +906,24 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         user.getProjectsManaged().size();
         return user.getProjectsManaged();
-        
+
     }
-    
+
     @Override
     public List<GroupEntity> getGroupsOwned(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
         user.getGroupsOwned().size();
         return user.getGroupsOwned();
     }
-    
+
     @Override
     public List<GroupEntity> getGroupsJoined(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
-        
+
         user.getGroupsJoined().size();
         return user.getGroupsJoined();
     }
-    
-    
+
     @Override
     public List<GroupEntity> getGroupsManaged(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
@@ -936,24 +932,28 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         user.getGroupAdmins().size();
         return user.getGroupAdmins();
-        
+
     }
-    
-    public Long editReview(Long reviewId, String title, String message, Integer rating) throws NoResultException{
+
+    public Long editReview(Long reviewId, String title, String message, Integer rating) throws NoResultException {
         ReviewEntity review = em.find(ReviewEntity.class, reviewId);
-        if(review == null){
+        if (review == null) {
             throw new NoResultException("Review does not exist");
         }
         review.setTitle(title);
         review.setReviewField(message);
         review.setRating(rating);
-        
+
         return review.getReviewId();
     }
 
     public void persist(Object object) {
         em.persist(object);
     }
-    
-    
+
+    @Override
+    public ProfileEntity getProfileForUser(Long userId) throws NoResultException {
+        UserEntity userEntity = getUserById(userId);
+        return userEntity.getProfile();
+    }
 }

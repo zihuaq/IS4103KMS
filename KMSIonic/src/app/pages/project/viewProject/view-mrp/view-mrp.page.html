@@ -1,21 +1,27 @@
-<ion-button expand="block" size='small' color="tertiary" *ngIf="isMember" [routerLink]="['/view-my-fulfillments', projectId]" >View My Fulfillments</ion-button>
-<div>
-  <span *ngIf="noMrp">There is no material resource posting at the moment.</span>
+<span *ngIf="!loaded">Loading...</span>
+<span *ngIf="loaded">
+  <ion-button expand="block" size='small' color="tertiary" *ngIf="isMember" [routerLink]="['/view-my-fulfillments', projectId]" >View My Fulfillments</ion-button>
+  <div>
+    <span *ngIf="mrpList.length == 0">There is no material resource posting at the moment.</span>
 
-  <span *ngIf="!noMrp">
-    <ion-list *ngFor="let mrp of mrpList">
-      <ion-item >
-        <span>
-          <ion-label class="ion-text-wrap" tappable [routerLink]="[ '/mrp-details', mrp.materialResourcePostingId ]">
-            <h2 style="font-size: large;"><b>{{mrp.name}}</b></h2>
-            <p style="font-size: 13px;"><b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b></p>
-            <p style="margin-bottom: 5px;">{{mrp.lackingQuantity}} {{mrp.unit}} required</p>
-            <span *ngFor="let tag of mrp.tags" style="margin-right: 5px;">
-              <ion-badge color="primary" style="font-size: 12px;">{{tag.name}}</ion-badge>
-            </span>
-          </ion-label>
-        </span>
-      </ion-item>
-    </ion-list>
-  </span>
-</div>
+    <span *ngIf="mrpList.length > 0">
+      <ion-list *ngFor="let mrp of mrpList">
+        <ion-item >
+          <span>
+            <ion-label class="ion-text-wrap" tappable [routerLink]="[ '/mrp-details', mrp.materialResourcePostingId ]" 
+              style="padding-top: 5px; padding-bottom: 10px;">
+              <h2 style="font-size: large;"><b>{{mrp.name}}</b></h2>
+              <p style="font-size: 13px;">
+                <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b>
+              </p>
+              <p style="margin-bottom: 5px;">{{mrp.lackingQuantity}} {{mrp.unit}} required</p>
+              <span *ngFor="let tag of mrp.tags">
+                <ion-badge color="primary" style="font-size: 12px; margin-right: 5px; margin-bottom: 5px;">{{tag.name}}</ion-badge>
+              </span>
+            </ion-label>
+          </span>
+        </ion-item>
+      </ion-list>
+    </span>
+  </div>
+</span>

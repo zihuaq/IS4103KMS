@@ -12,6 +12,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
 import ejb.session.stateless.ActivitySessionBeanLocal;
+import ejb.session.stateless.DataMappingSessionBeanLocal;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
@@ -33,6 +34,7 @@ import entity.ProjectEntity;
 import entity.TagEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +57,9 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB
+    private DataMappingSessionBeanLocal dataMappingSessionBean;
 
     @EJB(name = "TaskSessionBeanLocal")
     private TaskSessionBeanLocal taskSessionBeanLocal;
@@ -178,19 +183,19 @@ public class DataInitializationSessionBean {
             userSessionBean.addSDGsToProfile(10l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(33l), tagSessionBean.getTagById(38l))));
             userSessionBean.addSDGsToProfile(11l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(34l), tagSessionBean.getTagById(39l))));
             userSessionBean.addSDGsToProfile(12l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(35l), tagSessionBean.getTagById(40l))));
-            
-            userSessionBean.addSkillsToProfile(1l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(1l), tagSessionBean.getTagById(12l))));
-            userSessionBean.addSkillsToProfile(2l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(2l), tagSessionBean.getTagById(13l))));
-            userSessionBean.addSkillsToProfile(3l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(3l), tagSessionBean.getTagById(14l))));
-            userSessionBean.addSkillsToProfile(4l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(4l), tagSessionBean.getTagById(15l))));
-            userSessionBean.addSkillsToProfile(5l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(5l), tagSessionBean.getTagById(16l))));
-            userSessionBean.addSkillsToProfile(6l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(6l), tagSessionBean.getTagById(17l))));
-            userSessionBean.addSkillsToProfile(7l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(7l), tagSessionBean.getTagById(18l))));
-            userSessionBean.addSkillsToProfile(8l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(8l), tagSessionBean.getTagById(19l))));
-            userSessionBean.addSkillsToProfile(9l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(9l), tagSessionBean.getTagById(20l))));
-            userSessionBean.addSkillsToProfile(10l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(10l), tagSessionBean.getTagById(21l))));
-            userSessionBean.addSkillsToProfile(11l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(11l), tagSessionBean.getTagById(22l))));
-            userSessionBean.addSkillsToProfile(12l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(12l), tagSessionBean.getTagById(23l))));
+
+            userSessionBean.addSkillsToProfile(1l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(1l), tagSessionBean.getTagById(7l))));
+            userSessionBean.addSkillsToProfile(2l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(2l), tagSessionBean.getTagById(6l))));
+            userSessionBean.addSkillsToProfile(3l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(3l), tagSessionBean.getTagById(5l))));
+            userSessionBean.addSkillsToProfile(4l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(4l), tagSessionBean.getTagById(3l))));
+            userSessionBean.addSkillsToProfile(5l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(5l), tagSessionBean.getTagById(4l))));
+            userSessionBean.addSkillsToProfile(6l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(6l), tagSessionBean.getTagById(2l))));
+            userSessionBean.addSkillsToProfile(7l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(7l), tagSessionBean.getTagById(1l))));
+            userSessionBean.addSkillsToProfile(8l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(8l), tagSessionBean.getTagById(2l))));
+            userSessionBean.addSkillsToProfile(9l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(9l), tagSessionBean.getTagById(3l))));
+            userSessionBean.addSkillsToProfile(10l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(10l), tagSessionBean.getTagById(4l))));
+            userSessionBean.addSkillsToProfile(11l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(9l), tagSessionBean.getTagById(5l))));
+            userSessionBean.addSkillsToProfile(12l, new ArrayList<>(Arrays.asList(tagSessionBean.getTagById(8l), tagSessionBean.getTagById(6l))));
 
         } catch (DuplicateTagInProfileException ex) {
             System.out.println(ex.getMessage());
@@ -232,12 +237,12 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
 
         try {
-            projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", "", 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Improve Sanitation in Nigeria", "Inadequate sanitation is a leading cause of poverty, largely due to premature mortality. Less than one third of the Nigerian population has access to basic sanitation.", new Date(), "Nigeria", "", 5000.0, "YPYAZ5KNH42QL"), 3l, new ArrayList<>(Arrays.asList(24l, 26l, 29l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Educating Farmers", "Educate market gardeners and farmers on protecting land, soil degradation and more efficient agricultural techniques.", new Date(), "Bolivia", "", 1000.0, "WUTXB4YPU76ZY"), 4l, new ArrayList<>(Arrays.asList(25l, 35l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", "", 1000.0, null), 6l, new ArrayList<>(Arrays.asList(26l, 27l, 29l, 33l, 37l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Green City Solutions", "Create and implement new green inventions such as city trees that are plant-based air filters and smart street pathway that converts kinetic energy of footsteps into electricity.", new Date(), "United Kingdom", "", 10000.0, "SDFU9MD6FJC2Q"), 6l, new ArrayList<>(Arrays.asList(30l, 32l, 34l, 36l)));
-            projectSessionBean.createNewProject(new ProjectEntity("Resilience and Response Systems", "Promoting social cohesion and investing in community-led resilience and response systems. Helping people cope with adversity, through social protection and basic services.", new Date(), "Hong Kong", "", 3000.0, "3MRY2XUU4FMFC"), 8l, new ArrayList<>(Arrays.asList(31l, 39l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Improve Sanitation in Nigeria", "Inadequate sanitation is a leading cause of poverty, largely due to premature mortality. Less than one third of the Nigerian population has access to basic sanitation.", new Date(), "Malaysia", null, 5000.0, "malaysia@business.example.com"), 3l, new ArrayList<>(Arrays.asList(24l, 26l, 29l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Educating Farmers", "Educate market gardeners and farmers on protecting land, soil degradation and more efficient agricultural techniques.", new Date(), "Bolivia", null, 1000.0, "bolivia!@business.example.com"), 4l, new ArrayList<>(Arrays.asList(25l, 35l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Volunteer in Sri Lanka", "An impactful volunteer work that includes child care, English teaching, medical care, turtle conservation and much more.", new Date(), "Sri Lanka", null, 1000.0, "volunteer@business.example.com"), 6l, new ArrayList<>(Arrays.asList(26l, 27l, 29l, 33l, 37l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Green City Solutions", "Create and implement new green inventions such as city trees that are plant-based air filters and smart street pathway that converts kinetic energy of footsteps into electricity.", new Date(), "United Kingdom", null, 10000.0, "greencity@business.example.com"), 6l, new ArrayList<>(Arrays.asList(30l, 32l, 34l, 36l)));
+            projectSessionBean.createNewProject(new ProjectEntity("Resilience and Response Systems", "Promoting social cohesion and investing in community-led resilience and response systems. Helping people cope with adversity, through social protection and basic services.", new Date(), "Hong Kong", null, 3000.0, "hongkong@business.example.com"), 8l, new ArrayList<>(Arrays.asList(31l, 39l)));
             projectSessionBean.joinProject(4l, 1l);
             projectSessionBean.joinProject(4l, 2l);
             projectSessionBean.joinProject(4l, 3l);
@@ -282,37 +287,37 @@ public class DataInitializationSessionBean {
             endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-31");
             List<Long> tagIds = new ArrayList<>();
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
-            
+
             tagIds.add(9l);
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
             humanResourcePostingSessionBean.joinHrp(3l, 2l);
-            
+
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 9:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
-            
+
             activitySessionBeanLocal.createNewActivity(new ActivityEntity("Information Session on Children in Sri Lanka", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.ONGOING), 4l);
             activitySessionBeanLocal.addMemberToActivity(1l, 2l);
             activitySessionBeanLocal.addMemberToActivity(1l, 3l);
-            
+
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 10:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 15:00");
-            
+
             activitySessionBeanLocal.createNewActivity(new ActivityEntity("Lesson on Turtle Conversation", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 4l);
             activitySessionBeanLocal.addMemberToActivity(2l, 1l);
             activitySessionBeanLocal.addMemberToActivity(2l, 3l);
-            
+
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 10:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 12:00");
-            
+
             activitySessionBeanLocal.createNewActivity(new ActivityEntity("Meeting", startDate, endDate, 1.4491, 103.8185, "Meeting to discuss about budget", ActivityStatusEnum.COMPLETED), 4l);
             activitySessionBeanLocal.addMemberToActivity(3l, 1l);
             activitySessionBeanLocal.addMemberToActivity(3l, 2l);
             activitySessionBeanLocal.addMemberToActivity(3l, 3l);
             activitySessionBeanLocal.addMemberToActivity(3l, 8l);
-            
+
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-11 8:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-30 18:00");
-            
+
             activitySessionBeanLocal.createNewActivity(new ActivityEntity("Volunteer", startDate, endDate, 7.8731, 80.7718, "Volunteering in Sri Lanka", ActivityStatusEnum.PLANNED), 4l);
             activitySessionBeanLocal.addMemberToActivity(4l, 1l);
             activitySessionBeanLocal.addMemberToActivity(4l, 4l);
@@ -321,11 +326,11 @@ public class DataInitializationSessionBean {
             activitySessionBeanLocal.allocateHrpToActivity(4l, 1l);
             activitySessionBeanLocal.allocateHrpToActivity(4l, 2l);
             humanResourcePostingSessionBean.joinHrp(7l, 1l);
-            
+
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Canned Food", "item(s)", 50.0, 0.0, 50.0, "Canned food like tuna, luncheon meat but no canned soup", startDate, endDate, 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(11l)));
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 5.0, 0.0, 5.0, "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-11"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-05"), 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", startDate, endDate, 7.8731, 80.7718), 4l, new ArrayList<>(Arrays.asList(23l)));
-            
+
             List<TagEntity> tags = new ArrayList<>();
             tags.add(tagSessionBean.getTagById(12l));
             MaterialResourceAvailableEntity mra = new MaterialResourceAvailableEntity("Laptops", 3, "item(s)", "Asus laptops", null, null, "35.929673", "-78.948237", tags);
@@ -340,21 +345,21 @@ public class DataInitializationSessionBean {
             mra = new MaterialResourceAvailableEntity("Wood", 25, "kg", "", null, null, "36.379450", "-75.830290", tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
-            
+
             mra = new MaterialResourceAvailableEntity("Wood", 50, "kg", "", null, null, "2.543298", "103.807023", tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(4l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
-            
+
             tags.clear();
             tags.add(tagSessionBean.getTagById(11l));
             mra = new MaterialResourceAvailableEntity("Canned Soup", 25, "item(s)", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-04"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-04"), "36.379450", "-75.830290", tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
-            
+
             mra = new MaterialResourceAvailableEntity("Canned Tuna", 18, "item(s)", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-09-18"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-08"), "22.955532", "112.486407", tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(7l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
-            
+
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0), 2l, 3l, 2l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0), 6l, 3l, 3l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 0.0, 30.0), 4l, 3l, 4l);
@@ -362,12 +367,18 @@ public class DataInitializationSessionBean {
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0), 6l, 1l, 5l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0), 7l, 1l, 6l);
             //create tasks
-            taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 30.0, 0l), 4l);
-            taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 100.0, 1l), 4l);
-            taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-16 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 18:00"), 20.0, 1l), 4l);
+            taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 0.3, 0l), 4l);
+            taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);
+            taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-16 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 18:00"), 0.2, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Seek Sponsorship", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-20 12:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 12:00"), 0.0, 0l), 4l);
-        } catch(NoResultException ex) {
-           System.out.println(ex.getMessage()); 
-        } 
+        } catch (NoResultException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try {
+            dataMappingSessionBean.createProfileFromFiles("EMERGEdatabase.xlsx");
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }

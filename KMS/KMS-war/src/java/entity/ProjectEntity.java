@@ -64,7 +64,7 @@ public class ProjectEntity implements Serializable {
     
     private Double monetaryFundingObtained;
     
-    private String paypalMerchantId;
+    private String paypalEmail;
     
     @ManyToOne
     private UserEntity projectOwner;
@@ -117,7 +117,7 @@ public class ProjectEntity implements Serializable {
         this.donations = new ArrayList<>();
     }
 
-    public ProjectEntity(String name, String description, Date dateCreated, String country, String profilePicture, Double monetaryFundingRequired, String paypalMerchantId) {
+    public ProjectEntity(String name, String description, Date dateCreated, String country, String profilePicture, Double monetaryFundingRequired, String paypalEmail) {
         this();
         this.name = name;
         this.description = description;
@@ -125,7 +125,7 @@ public class ProjectEntity implements Serializable {
         this.country = country;
         this.profilePicture = profilePicture;
         this.monetaryFundingRequired = monetaryFundingRequired;
-        this.paypalMerchantId = paypalMerchantId;
+        this.paypalEmail = paypalEmail;
     }
 
     public Long getProjectId() {
@@ -315,12 +315,12 @@ public class ProjectEntity implements Serializable {
         this.donations = donations;
     }
 
-    public String getPaypalMerchantId() {
-        return paypalMerchantId;
+    public String getPaypalEmail() {
+        return paypalEmail;
     }
 
-    public void setPaypalMerchantId(String paypalMerchantId) {
-        this.paypalMerchantId = paypalMerchantId;
+    public void setPaypalEmail(String paypalEmail) {
+        this.paypalEmail = paypalEmail;
     }
 
     public Boolean getIsActive() {

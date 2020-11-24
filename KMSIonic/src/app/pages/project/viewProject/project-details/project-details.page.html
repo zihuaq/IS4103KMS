@@ -39,7 +39,7 @@
     </ion-card-header>
   </ion-card>
   <ion-card>
-    <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment">
+    <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment" mode="md">
       <ion-segment-button value="newsfeed">
         <ion-label>Newsfeed</ion-label>
       </ion-segment-button>
@@ -75,16 +75,20 @@
 
   <ion-card *ngIf="segment === 'details'">
     <ion-card-content>
-      <p><b>Description:</b> {{project.description}}</p>
+      <p *ngIf="project.description"><b>Description:</b> {{project.description}}</p>
       <p><b>Country:</b> {{project.country}}</p>
-      <p><b>Date created:</b> {{dateCreated | date}}</p>
-      <p><b>Monetary Funding Required:</b> ${{project.monetaryFundingRequired}}</p>
-      <p><b>Monetary Funding Obtained:</b> ${{project.monetaryFundingObtained}}</p>
+      <p><b>Date Created:</b> {{dateCreated | date}}</p>
+      <p *ngIf="project.monetaryFundingRequired"><b>Monetary Funding (USD):</b> 
+        ${{project.monetaryFundingObtained | number:'1.0'}} / ${{project.monetaryFundingRequired | number:'1.0'}} required
+      </p>
       <p><b>SDGs: </b>
         <span *ngFor="let tag of project.sdgs" style="margin-right: 5px; vertical-align: middle;">
-          <ion-badge color="primary">{{tag.name}}</ion-badge>
+          <ion-badge color="primary" style="margin-bottom: 5px; ">{{tag.name}}</ion-badge>
         </span>
       </p>
+      <ion-button *ngIf="isMember && project.monetaryFundingObtained < project.monetaryFundingRequired" expand="block" size='small' color="warning" 
+        (click)="presentDonateToProjectModal()">Donate to Project
+      </ion-button>
     </ion-card-content>
   </ion-card>
 

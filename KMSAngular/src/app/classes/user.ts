@@ -9,6 +9,8 @@ import { Post } from './post';
 import { Project } from './project';
 import { Activity } from './activity';
 import { Group } from './group';
+import { Profile } from './profile';
+import { ClaimProfileRequest } from './claim-profile-request';
 
 export class User {
   userId: number;
@@ -42,6 +44,8 @@ export class User {
   projectsJoined: Project[];
   activityJoined: Activity[];
   groupsJoined: Group[];
+  profile: Profile;
+  claimProfileRequestMade: ClaimProfileRequest[];
 
   constructor(
     userId?: number,
@@ -74,7 +78,9 @@ export class User {
     likedPosts?: Post[],
     projectsJoined?: Project[],
     activityJoined?: Activity[],
-    groupsJoined?: Group[]
+    groupsJoined?: Group[],
+    profile?: Profile,
+    claimProfileRequestMade?: ClaimProfileRequest[]
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -107,5 +113,7 @@ export class User {
     this.projectsJoined = projectsJoined;
     this.activityJoined = activityJoined;
     this.groupsJoined = groupsJoined;
+    this.profile = profile;
+    this.claimProfileRequestMade = claimProfileRequestMade;
   }
 }

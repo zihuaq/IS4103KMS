@@ -29,6 +29,7 @@ export class DonateToProjectComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute) {
       this.newDonation = new Donation();
+      this.projectToDonate = new Project();
     }
 
   ngOnInit(): void {
@@ -38,6 +39,11 @@ export class DonateToProjectComponent implements OnInit {
     this.projectService.getProjectById(this.projectId).subscribe(
       response => {
         this.projectToDonate = response;
+        if(!this.addScript) {
+          this.addPaypalScript().then(() => {
+            paypal.Buttons(this.paypalConfig).render('#paypal-checkout-btn');
+          })
+        }
       }, 
       error => {
         $(document).Toasts('create', {
@@ -61,21 +67,13 @@ export class DonateToProjectComponent implements OnInit {
     },
 
     createOrder: (data, actions) => {
-      if (this.donationAmount == undefined) {
-        $(document).Toasts('create', {
-          class: 'bg-warning',
-          title: 'Empty Donation Amount',
-          autohide: true,
-          delay: 4000,
-          body: 'Please enter your donation amount',
-        });
-      } else if (this.donationAmount == 0) {
+      if (this.donationAmount == undefined || this.donationAmount == 0) {
         $(document).Toasts('create', {
           class: 'bg-warning',
           title: 'Invalid Donation Amount',
           autohide: true,
           delay: 4000,
-          body: 'Please enter a donation amount more than $0',
+          body: 'Please enter a valid donation amount',
         });
       } else if (this.donationAmount > (this.projectToDonate.monetaryFundingRequired - this.projectToDonate.monetaryFundingObtained)) {
         $(document).Toasts('create', {
@@ -91,7 +89,8 @@ export class DonateToProjectComponent implements OnInit {
             amount: {
               //currency_code: this.selectedCurrency,
               value: this.donationAmount
-            }
+            },
+            description: 'Donation to ' + this.projectToDonate.name
           }]
         });
       }
@@ -136,30 +135,25 @@ export class DonateToProjectComponent implements OnInit {
     },
 
     onError: (err) => {
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Donation Unsuccessful',
-        autohide: true,
-        delay: 4000,
-        body: 'An error occurred during donation',
-      });
-      console.log(err);
+      if (this.donationAmount != undefined && this.donationAmount != 0 && this.donationAmount <= (this.projectToDonate.monetaryFundingRequired - this.projectToDonate.monetaryFundingObtained)) {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          title: 'Donation Unsuccessful',
+          autohide: true,
+          delay: 4000,
+          body: 'An error occurred during donation',
+        });
+        console.log(err);
+      }
+      
     }
   };
-
-  ngAfterViewChecked(): void {
-    if(!this.addScript) {
-      this.addPaypalScript().then(() => {
-        paypal.Buttons(this.paypalConfig).render('#paypal-checkout-btn');
-      })
-    }
-  }
 
   addPaypalScript() { //adding script to html page once loaded
     this.addScript = true;
     return new Promise((resolve, reject) => {
       let scripttagElement = document.createElement('script'); //<script src=""></script>
-      scripttagElement.src = 'https://www.paypal.com/sdk/js?client-id=AUYlN1aHUFhSZ6teqyLKngzQ9-bpmRoHAa1CQB1Lsp9oZwKEQ20z7yfzuKi95nRrpTG7CsJwC_p2FVTm&merchant-id=' + this.projectToDonate.paypalMerchantId;
+      scripttagElement.src = 'https://www.paypal.com/sdk/js?client-id=AUYlN1aHUFhSZ6teqyLKngzQ9-bpmRoHAa1CQB1Lsp9oZwKEQ20z7yfzuKi95nRrpTG7CsJwC_p2FVTm&merchant-id=' + this.projectToDonate.paypalEmail;
       scripttagElement.onload = resolve;
       document.body.appendChild(scripttagElement); 
     })

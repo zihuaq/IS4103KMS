@@ -63,7 +63,7 @@
                             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                             alt="User Image">
                         <span class="username">
-                            <a routerLink="/profile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
+                            <a routerLink="/userProfile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
                                 {{post.postOwner.lastName}} </a>
                             <i *ngIf="post.project || post.group" class="fas fa-caret-right"></i>
                             <a routerLink="/projectDetails/{{post.project.projectId}}/basic-details" *ngIf="post.project">
@@ -159,7 +159,7 @@
                                 src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                                 alt="User Image">
                             <span class="username">
-                                <a routerLink="/profile/{{post.originalPost.postOwner.userId}}">{{post.originalPost.postOwner.firstName}}
+                                <a routerLink="/userProfile/{{post.originalPost.postOwner.userId}}">{{post.originalPost.postOwner.firstName}}
                                     {{post.originalPost.postOwner.lastName}} </a>
                                 <i *ngIf="post.originalPost.project || post.originalPost.group"
                                     class="fas fa-caret-right"></i>

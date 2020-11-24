@@ -21,6 +21,7 @@ import entity.AffiliationRequestEntity;
 import entity.FollowRequestEntity;
 import entity.GroupEntity;
 import entity.HumanResourcePostingEntity;
+import entity.ProfileEntity;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import entity.TagEntity;
@@ -338,12 +339,10 @@ public class UserResource {
             user.setReviewsGiven(new ArrayList<>());
             user.setReviewsReceived(new ArrayList<>());
             user.setProjectsOwned(new ArrayList<>());
-            user.setProjectsJoined(new ArrayList<>());
             user.setProjectsManaged(new ArrayList<>());
             user.setGroupsManaged(new ArrayList<>());
             user.setPosts(new ArrayList<>());
             user.setGroupsOwned(new ArrayList<>());
-            user.setGroupsJoined(new ArrayList<>());
             user.setGroupAdmins(new ArrayList<>());
             user.setBadges(new ArrayList<>());
             user.setMras(new ArrayList<>());
@@ -361,6 +360,8 @@ public class UserResource {
             user.setActivityJoined(new ArrayList<>());  
             user.setDonations(new ArrayList<>());
             user.setNotifications(new ArrayList<>());
+            user.setClaimProfileRequestMade(new ArrayList<>());
+            user.setProfile(null);
             for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
                 hrp.setActivity(null);
                 hrp.getAppliedUsers().clear();
@@ -487,6 +488,8 @@ public class UserResource {
             user.setActivityJoined(new ArrayList<>());  
             user.setDonations(new ArrayList<>());
             user.setNotifications(new ArrayList<>());
+            user.setClaimProfileRequestMade(new ArrayList<>());
+            user.setProfile(null);
 
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
@@ -730,7 +733,7 @@ public class UserResource {
             temp.setUserType(user.getUserType());
             temp.setFollowRequestReceived(getFollowRequestsResponse(user.getFollowRequestReceived()));
             temp.setFollowRequestMade(getFollowRequestsResponse(user.getFollowRequestMade()));
-            List<ProjectEntity> projects = new ArrayList<ProjectEntity>();
+            List<ProjectEntity> projects = new ArrayList<>();
             for (int i = 0; i < user.getProjectsJoined().size(); i++) {
                 ProjectEntity project = new ProjectEntity();
                 project.setProjectId(user.getProjectsJoined().get(i).getProjectId());
@@ -1146,6 +1149,22 @@ public class UserResource {
             return Response.status(Status.OK).entity(groupsManaged).build();
 
         } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/profile/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProfileForUser(@PathParam("userId") Long userId) {
+        try {
+            ProfileEntity profileEntity = userSessionBeanLocal.getProfileForUser(userId);
+            profileEntity.setClaimProfileRequestMade(new ArrayList<>());
+            profileEntity.setUserEntity(null);
+            return Response.status(Status.OK).entity(profileEntity).build();
+
+        } catch (NoResultException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }

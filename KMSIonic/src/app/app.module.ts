@@ -17,6 +17,8 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { FCM } from '@ionic-native/fcm/ngx';
+import { IonicSelectableModule } from 'ionic-selectable';
+import { PayPal } from '@ionic-native/paypal/ngx';
 
 const conifg = {
     apiKey: "AIzaSyBl7TP2OFBQJ4X2N9oRkUHTh33cK6y299c",
@@ -38,7 +40,8 @@ const conifg = {
     FormsModule,
     HttpClientModule,
     AngularFireModule.initializeApp(conifg), 
-    AngularFirestoreModule,    
+    AngularFirestoreModule, 
+    IonicSelectableModule   
   ],
   providers: [
     StatusBar,
@@ -47,7 +50,8 @@ const conifg = {
     FileChooser,
     FirebaseX,
     AngularFireDatabase,
-    FCM
+    FCM,
+    PayPal
   ],
   bootstrap: [AppComponent]
 })
