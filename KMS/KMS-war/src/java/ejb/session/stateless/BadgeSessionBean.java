@@ -26,6 +26,12 @@ public class BadgeSessionBean implements BadgeSessionBeanLocal {
         List<BadgeEntity> badges = em.createQuery("SELECT b FROM BadgeEntity b").getResultList();
         return badges;
     }
+    
+    public Long createNewBadge(BadgeEntity badge){
+        em.persist(badge);
+        em.flush();
+        return badge.getBadgeId();
+    }
 
    
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { SessionService } from 'src/app/session.service';
 import { AwardService } from 'src/app/award.service';
 import { Project } from 'src/app/classes/project';
@@ -14,11 +14,13 @@ import { User } from 'src/app/classes/user';
 })
 export class AwardsAndBadgesComponent implements OnInit {
 
+  @Input() profile: User;
+  @Input() loggedInUser: User;
+  @Output() profileChanged = new EventEmitter<User>();
   projectId: number;
   projects: string[] = [];
-  awards: Award[];
-  badges: Badge[];
-  user: User;
+  awards: Award[] = [];
+  badges: Badge[] = [];
   toggle = "badges"
 
   constructor(private sessionService: SessionService,
@@ -26,13 +28,13 @@ export class AwardsAndBadgesComponent implements OnInit {
     private userService: UserService) { }
 
   ngOnInit(): void {
-    this.user = this.sessionService.getCurrentUser();
+
     this.userService.getBadges().subscribe(
       response =>{
         this.badges = response;
       }
     )
-    this.userService.getAwardsReceived(this.user.userId).subscribe(
+    this.userService.getAwardsReceived(this.profile.userId).subscribe(
       response => {
         this.awards = response
       }

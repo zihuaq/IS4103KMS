@@ -24,10 +24,12 @@ export class ReviewsRecievedComponent implements OnInit {
       (response)=>{
         this.reviewsRecieved = response;
         let totalReview = 0
-        for(let review of this.reviewsRecieved){
-          totalReview += review.rating
+        if(this.reviewsRecieved.length > 0){
+          for(let review of this.reviewsRecieved){
+            totalReview += review.rating
+          }
+          this.averageReviewRating = totalReview/this.reviewsRecieved.length
         }
-        this.averageReviewRating = totalReview/this.reviewsRecieved.length
       },
       (error) =>{
         this.errorMessage = error

@@ -69,6 +69,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.checkAccessRight();
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+    this.averageReviewRating = 0
 
     this.userService.getUser(loggedInUserId.toString()).subscribe(
       (data) => {
@@ -131,9 +132,11 @@ export class ProjectDetailsComponent implements OnInit {
         response =>{
           this.projectReviews = response
           let totalReview = 0
-          for(let review of this.projectReviews){
-          totalReview += review.rating
-        }
+          if(this.projectReviews.length > 0){
+            for(let review of this.projectReviews){
+              totalReview += review.rating
+            }
+          }
         this.averageReviewRating = totalReview/this.projectReviews.length
         },
         error => {

@@ -67,6 +67,7 @@ public class AwardResource {
                   awardItem.setDescription(award.getDescription());
                   awardItem.setAwardPicture(award.getAwardPicture());
                   awardItem.setUsersReceived(new ArrayList<>());
+
                   for (UserEntity user: award.getUsersReceived()){
                     UserEntity from = new UserEntity();
                     from.setUserId(user.getUserId());
