@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author zeplh
+ * @author zihua
  */
 @Entity
 public class MaterialResourcePostingEntity implements Serializable {
@@ -47,8 +47,6 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Column(nullable=false)
     private Double totalQuantity;
     
-    @NotNull
-    @Column(nullable=false)
     private Double obtainedQuantity;
     
     @NotNull

@@ -211,24 +211,6 @@ public class FulfillmentResource {
         }
     }
     
-    @Path("getListOfMaterialResourceAvailableUnitsByMrp/{mrpId}")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getListOfMaterialResourceAvailableUnitsByMrp(@PathParam("mrpId") Long mrpId) {
-        System.out.println("******** FulfillmentResource: getListOfMaterialResourceAvailableUnitsByMrp()");
-        try {
-            List<String> mraUnitsList = fulfillmentSessionBeanLocal.getListOfMaterialResourceAvailableUnitsByMrp(mrpId);
-
-            return Response.status(Response.Status.OK).entity(mraUnitsList).build();
-        
-        } catch (NoResultException ex ) {
-            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-            
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
-        }
-    }
-    
     @Path("getListOfFulfillmentsByUserAndProject/{userId}/{projectId}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)

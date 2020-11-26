@@ -72,12 +72,6 @@ export class FulfillmentService {
     );
   }
 
-  getListOfMaterialResourceAvailableUnitsByMrp(mrpId: number): Observable<any> {
-    return this.httpClient.get<any>(this.baseUrl + "/getListOfMaterialResourceAvailableUnitsByMrp/" + mrpId).pipe(
-      catchError(this.handleError)
-    );
-  }
-
   getListOfFulfillmentsByUserAndProject(userId: number, projectId: number): Observable<any> {
     return this.httpClient.get<any>(this.baseUrl + "/getListOfFulfillmentsByUserAndProject/" + userId + "/" + projectId).pipe(
       catchError(this.handleError)

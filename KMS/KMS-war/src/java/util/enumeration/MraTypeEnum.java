@@ -9,11 +9,10 @@ package util.enumeration;
  *
  * @author zihua
  */
-public enum FulfillmentStatusEnum {
-    PLEDGED,
-    ACCEPTED,
-    PARTIALLYFULFILLED,
-    FULFILLED,
-    REJECTED,
-    ONGOING //for recurring subscription
+public enum MraTypeEnum {
+    ONETIME,
+    DAILY,
+    WEEKLY,
+    MONTHLY
+    
 }

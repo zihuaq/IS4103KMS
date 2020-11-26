@@ -51,12 +51,10 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
             mra.setTags(materialResourceAvailable.getTags());
             mra.setName(materialResourceAvailable.getName());
             mra.setDescription(materialResourceAvailable.getDescription());
-            mra.setQuantity(materialResourceAvailable.getQuantity());
             mra.setUnits(materialResourceAvailable.getUnits());
             mra.setLatitude(materialResourceAvailable.getLatitude());
             mra.setLongitude(materialResourceAvailable.getLongitude());
-            mra.setStartDate(materialResourceAvailable.getStartDate());
-            mra.setEndDate(materialResourceAvailable.getEndDate());
+            mra.setPrice(materialResourceAvailable.getPrice());
             return materialResourceAvailableOwner.getMras();
         } else {
             throw new NoResultException("User not found");

@@ -33,12 +33,8 @@ public class FulfillmentEntity implements Serializable {
     @Column(nullable=false)
     private Double totalPledgedQuantity;
     
-    @NotNull
-    @Column(nullable=false)
     private Double receivedQuantity;
     
-    @NotNull
-    @Column(nullable=false)
     private Double unreceivedQuantity;
     
     @Enumerated(EnumType.STRING)

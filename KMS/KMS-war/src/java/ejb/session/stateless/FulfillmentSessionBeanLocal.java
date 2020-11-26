@@ -32,9 +32,7 @@ public interface FulfillmentSessionBeanLocal {
     public void acceptFulfillment(Long fulfillmentId) throws NoResultException;
 
     public void deleteFulfillment(Long fulfillmentId) throws NoResultException;
-
-    public List<String> getListOfMaterialResourceAvailableUnitsByMrp(Long mrpId) throws NoResultException;
-
+    
     public List<FulfillmentEntity> getListOfFulfillmentsByUserAndProject(Long userId, Long projectId) throws NoResultException;
 
     public List<FulfillmentEntity> getListOfFulfillmentsByProject(Long projectId) throws NoResultException;

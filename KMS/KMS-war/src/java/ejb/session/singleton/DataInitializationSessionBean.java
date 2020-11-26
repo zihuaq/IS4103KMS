@@ -46,6 +46,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import util.enumeration.ActivityStatusEnum;
+import util.enumeration.MraTypeEnum;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
 
@@ -333,37 +334,37 @@ public class DataInitializationSessionBean {
 
             List<TagEntity> tags = new ArrayList<>();
             tags.add(tagSessionBean.getTagById(12l));
-            MaterialResourceAvailableEntity mra = new MaterialResourceAvailableEntity("Laptops", 3, "item(s)", "Asus laptops", null, null, "35.929673", "-78.948237", tags);
+            MaterialResourceAvailableEntity mra = new MaterialResourceAvailableEntity("Laptops", null, "Asus laptops", "35.929673", "-78.948237", 30.0, MraTypeEnum.WEEKLY, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
             tags.clear();
             tags.add(tagSessionBean.getTagById(23l));
-            mra = new MaterialResourceAvailableEntity("Wood", 10, "kg", "", null, null, "1.384667", "103.770707", tags);
+            mra = new MaterialResourceAvailableEntity("Wood", "kg", "", "1.384667", "103.770707", 0.0, MraTypeEnum.ONETIME, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(2l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Wood", 25, "kg", "", null, null, "36.379450", "-75.830290", tags);
+            mra = new MaterialResourceAvailableEntity("Wood", "kg", "", "36.379450", "-75.830290", 5.0, MraTypeEnum.ONETIME, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Wood", 50, "kg", "", null, null, "2.543298", "103.807023", tags);
+            mra = new MaterialResourceAvailableEntity("Wood", "kg", "", "2.543298", "103.807023", 0.0, MraTypeEnum.ONETIME, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(4l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
             tags.clear();
             tags.add(tagSessionBean.getTagById(11l));
-            mra = new MaterialResourceAvailableEntity("Canned Soup", 25, "item(s)", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-04"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-04"), "36.379450", "-75.830290", tags);
+            mra = new MaterialResourceAvailableEntity("Canned Soup", "item(s)", "", "36.379450", "-75.830290", 0.0, MraTypeEnum.ONETIME, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Canned Tuna", 18, "item(s)", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-09-18"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-08"), "22.955532", "112.486407", tags);
+            mra = new MaterialResourceAvailableEntity("Canned Tuna", "item(s)", "", "22.955532", "112.486407", 0.0, MraTypeEnum.ONETIME, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(7l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0), 2l, 3l, 2l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0), 6l, 3l, 3l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 0.0, 30.0), 4l, 3l, 4l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(2.0, 0.0, 2.0), 6l, 2l, 1l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(null, null, null), 6l, 2l, 1l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0), 6l, 1l, 5l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0), 7l, 1l, 6l);
             //create tasks
