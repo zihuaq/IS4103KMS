@@ -412,7 +412,12 @@ const routes: Routes = [
       import('./pages/group/viewGroup/report-group/report-group.module').then(
         (m) => m.ReportGroupPageModule
       )
+  },
+  {
+    path: 'search-profiles',
+    loadChildren: () => import('./pages/search-profiles/search-profiles.module').then( m => m.SearchProfilesPageModule)
   }
+
 ];
 
 @NgModule({

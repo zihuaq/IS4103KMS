@@ -32,6 +32,11 @@ export class AppComponent implements OnInit {
       icon: 'search'
     },
     {
+      title: 'Search Profiles',
+      url: '/search-profiles',
+      icon: 'search'
+    },
+    {
       title: 'Notifications',
       url: '/notifications',
       icon: 'notifications'
@@ -42,14 +47,14 @@ export class AppComponent implements OnInit {
       icon: 'information-circle'
     },
     {
-      title: "Discover Group",
-      url: "/view-all-group",
-      icon: "people"
+      title: 'Discover Group',
+      url: '/view-all-group',
+      icon: 'people'
     },
     {
-      title: "My Group",
-      url: "/view-own-groups",
-      icon: "person"
+      title: 'My Group',
+      url: '/view-own-groups',
+      icon: 'person'
     },
     {
       title: 'Discover Project',
