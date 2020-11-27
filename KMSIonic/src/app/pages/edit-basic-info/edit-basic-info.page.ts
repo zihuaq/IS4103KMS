@@ -157,7 +157,7 @@ export class EditBasicInfoPage implements OnInit {
             duration: 2000
           });
           toast.present();
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/user-profile']);
         },
         async (err) => {
           const toast = await this.toastController.create({

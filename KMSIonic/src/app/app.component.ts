@@ -22,8 +22,8 @@ export class AppComponent implements OnInit {
       icon: 'home'
     },
     {
-      title: 'Profile',
-      url: '/profile',
+      title: 'User Profile',
+      url: '/user-profile',
       icon: 'person-circle'
     },
     {

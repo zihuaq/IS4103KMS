@@ -415,9 +415,18 @@ const routes: Routes = [
   },
   {
     path: 'search-profiles',
-    loadChildren: () => import('./pages/search-profiles/search-profiles.module').then( m => m.SearchProfilesPageModule)
+    loadChildren: () =>
+      import('./pages/search-profiles/search-profiles.module').then(
+        (m) => m.SearchProfilesPageModule
+      )
+  },
+  {
+    path: 'user-profile',
+    loadChildren: () =>
+      import('./pages/user-profile/user-profile.module').then(
+        (m) => m.UserProfilePageModule
+      )
   }
-
 ];
 
 @NgModule({

@@ -113,7 +113,7 @@ export class DetailedSearchPage implements OnInit {
   }
 
   goToProfile(user: User) {
-    this.router.navigate(["/profile/" + user.userId])
+    this.router.navigate(['/user-profile/' + user.userId]);
   }
 
   private updateLoginUserAndUser(userId: number) {
