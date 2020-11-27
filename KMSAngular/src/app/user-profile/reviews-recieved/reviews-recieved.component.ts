@@ -15,6 +15,7 @@ export class ReviewsRecievedComponent implements OnInit {
   @Output() profileChanged = new EventEmitter<User>();
   reviewsRecieved: review[];
   errorMessage: string;
+  averageReviewRating: number = 0;
 
   constructor(private userService: UserService) { }
 
@@ -22,6 +23,13 @@ export class ReviewsRecievedComponent implements OnInit {
     this.userService.getRecievedReviews(this.profile.userId).subscribe(
       (response)=>{
         this.reviewsRecieved = response;
+        let totalReview = 0
+        if(this.reviewsRecieved.length > 0){
+          for(let review of this.reviewsRecieved){
+            totalReview += review.rating
+          }
+          this.averageReviewRating = totalReview/this.reviewsRecieved.length
+        }
       },
       (error) =>{
         this.errorMessage = error

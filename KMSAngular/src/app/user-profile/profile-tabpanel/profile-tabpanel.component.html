@@ -34,6 +34,11 @@
                     href="#profile-tab-reviews-written" role="tab" aria-controls="profile-tab-reviews-written"
                     aria-selected="false">Reviews Written</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab-awards-and-badges-tabname" data-toggle="pill"
+                  href="#profile-tab-awards-and-badges" role="tab" aria-controls="profile-tab-awards-and-badges"
+                  aria-selected="false">Awards and Badges</a>
+            </li>
             <!-- <li class="nav-item"> -->
             <li class="nav-item" *ngIf="loggedInUser.userType.toString() == 'ADMIN' && !shared">
                 <a class="nav-link" id="profile-tab-settings-tabname" data-toggle="pill" href="#profile-tab-settings"
@@ -90,6 +95,11 @@
                 aria-labelledby="profile-tab-reviews-written-tabname">
                 <app-reviews-written [profile]="profile" [loggedInUser]="loggedInUser"
                     (userChanged)="handleUserChanged($event)"></app-reviews-written>
+            </div>
+            <div class="tab-pane fade" id="profile-tab-awards-and-badges" role="tabpanel"
+                aria-labelledby="profile-tab-awards-and-badges-tabname">
+                <app-awards-and-badges [profile]="profile" [loggedInUser]="loggedInUser"
+                    (userChanged)="handleUserChanged($event)"></app-awards-and-badges>
             </div>
             <div class="tab-pane fade" id="profile-tab-settings" role="tabpanel" aria-labelledby="profile-tab-settings">
                 <app-user-setting [user]="profile"></app-user-setting>

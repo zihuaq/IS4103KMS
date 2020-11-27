@@ -23,10 +23,10 @@ export class ViewOwnProjectsPage implements OnInit {
   projectsJoined: Project[];
   projectsManaged: Project[];
   projectsOwned: Project[];
-  noProjects: boolean = true;
   loggedInUser: User;
   filteredProjects: Project[];
   preliminarySearchProject: Project[];
+  loaded: boolean = false;
 
   constructor(public modalController: ModalController,
     private location: Location,
@@ -57,9 +57,7 @@ export class ViewOwnProjectsPage implements OnInit {
           response => {
             this.projectsJoined = response;
             this.filteredProjects = this.projectsJoined;
-            if (this.projectsJoined.length > 0) {
-              this.noProjects = false;
-            }
+            this.loaded = true;
           }
         );
     
@@ -98,7 +96,7 @@ export class ViewOwnProjectsPage implements OnInit {
   }
 
   viewProjectDetails(event, project) {
-    this.router.navigate(["project-details/" + project.projectId]);
+    this.router.navigate(["project-details/" + project.projectId + "/projectfeed-tab"]);
   }
 
   async createProject() {

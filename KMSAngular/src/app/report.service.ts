@@ -50,6 +50,12 @@ export class ReportService {
       .pipe(catchError(this.handleError));
   }
 
+  reportReview(report: Report): Observable<any> {
+    return this.http
+      .post<any>(this.baseUrl + '/reportReview', report, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   getProfileReports(): Observable<any> {
     return this.http
       .get<any>(this.baseUrl + '/getProfileReports')
@@ -128,6 +134,22 @@ export class ReportService {
     }
 
     return this.http.post<any>(this.baseUrl+'/passCommentReportVerdict', PassCommentReportVerdictReq)
+    .pipe(catchError(this.handleError))
+  }
+
+
+  getReviewReports():Observable<any>{
+    return this.http.get<any>(this.baseUrl+'/getReviewReports')
+    .pipe(catchError(this.handleError))
+  }
+
+  passReviewReportVerdict(report: Report, active: Boolean):Observable<any>{
+    let PassReviewReportVerdictReq ={
+      report: report,
+      active: active
+    }
+
+    return this.http.post<any>(this.baseUrl+'/passReviewReportVerdict', PassReviewReportVerdictReq)
     .pipe(catchError(this.handleError))
   }
 

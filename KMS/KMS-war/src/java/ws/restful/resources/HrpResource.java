@@ -95,6 +95,7 @@ public class HrpResource {
                 hrp.getActivity().getMaterialResourcePostings().clear();
                 hrp.getActivity().getJoinedUsers().clear();
                 hrp.getActivity().setProject(null);
+                hrp.getActivity().getReviews().clear();
             }
             
             if (hrp.getAppliedUsers().size() > 0) {
@@ -125,6 +126,7 @@ public class HrpResource {
                     appliedUser.setActivityJoined(new ArrayList<>());  
                     appliedUser.setDonations(new ArrayList<>());
                     appliedUser.setNotifications(new ArrayList<>());
+                    appliedUser.setReceivedAwards(new ArrayList<>());
                 }
             }
             

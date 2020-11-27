@@ -88,9 +88,15 @@ export class ProjectService {
     return this.httpClient.get<any>(this.baseUrl+"/getProjectStatusList").pipe();
   }
 
+  getProjectReview(projectId: number): Observable<any>{
+    return this.httpClient.get<any>(this.baseUrl + "/getProjectReviews/"+projectId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
-    
+
     if (error.error instanceof ErrorEvent) {
         errorMessage = 'An unknown error has occurred: ' + error.error.message;
     } else {

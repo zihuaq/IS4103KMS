@@ -6,7 +6,7 @@
     <div style="margin-left: 10px;">
         <button class="btn bg-gradient-light" type="button" onclick="gantt.ext.zoom.zoomIn();"><i class="fas fa-search-plus"></i> Zoom In</button>
         <button class="btn bg-gradient-light" type="button" onclick="gantt.ext.zoom.zoomOut();" style="margin-right: 10px"><i class="fas fa-search-minus"></i> Zoom Out</button>
-        <button type="button" class="btn bg-gradient-info" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-download"></i> Export</button>  
+        <button *ngIf="isMember" type="button" class="btn bg-gradient-info" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-download"></i> Export</button>  
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" (click)="export('pdf')">PDF</a>
             <a class="dropdown-item" (click)="export('png')">PNG</a>

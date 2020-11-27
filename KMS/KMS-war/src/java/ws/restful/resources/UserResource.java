@@ -15,9 +15,12 @@ import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import ejb.session.stateless.BadgeSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.ActivityEntity;
 import entity.AffiliationRequestEntity;
+import entity.AwardEntity;
 import entity.FollowRequestEntity;
 import entity.GroupEntity;
 import entity.HumanResourcePostingEntity;
@@ -63,9 +66,13 @@ import ws.restful.model.editReviewRsp;
 @Path("user")
 public class UserResource {
 
+    BadgeSessionBeanLocal badgeSessionBean = lookupBadgeSessionBeanLocal();
+
     UserSessionBeanLocal userSessionBeanLocal = lookupUserSessionBeanLocal();
 
     TagSessionBeanLocal tagSessionBeanLocal = lookupTagSessionBeanLocal();
+    
+    
 
     @Context
     private UriInfo context;
@@ -336,6 +343,33 @@ public class UserResource {
         try {
             UserEntity user = userSessionBeanLocal.getUserById(userId);
 
+
+            user.getReviewsGiven().clear();
+            user.getReviewsReceived().clear();
+            user.getProjectsOwned().clear();
+            user.getProjectsManaged().clear();
+            user.getGroupsManaged().clear();
+            user.getGroupAdmins().clear();
+            user.getPosts().clear();
+            user.getGroupsOwned().clear();
+            user.getBadges().clear();
+            user.getMras().clear();
+            user.getSkills().clear();
+            user.getFollowing().clear();
+            user.getFollowers().clear();
+            user.getSdgs().clear();
+            user.getFollowRequestMade().clear();
+            user.getFollowRequestReceived().clear();
+            user.getAffiliationRequestMade().clear();
+            user.getAffiliationRequestReceived().clear();
+            user.getAffiliatedUsers().clear();
+            user.getHrpApplied().clear();
+            user.getFulfillments().clear();
+            user.setPassword("");
+            user.getActivityJoined().clear();
+            user.getDonations().clear();
+            user.getReceivedAwards().clear();
+
             user.setReviewsGiven(new ArrayList<>());
             user.setReviewsReceived(new ArrayList<>());
             user.setProjectsOwned(new ArrayList<>());
@@ -360,11 +394,13 @@ public class UserResource {
             user.setActivityJoined(new ArrayList<>());
             user.setDonations(new ArrayList<>());
             user.setNotifications(new ArrayList<>());
+
             user.setClaimProfileRequestMade(new ArrayList<>());
             for (ProfileEntity profile : user.getProfiles()) {
                 profile.setClaimProfileRequestMade(new ArrayList<>());
                 profile.setUserEntity(null);
             }
+
             for (HumanResourcePostingEntity hrp : user.getHrpApplied()) {
                 hrp.setActivity(null);
                 hrp.getAppliedUsers().clear();
@@ -915,15 +951,23 @@ public class UserResource {
             from.setFirstName(reviewEntity.getFrom().getFirstName());
             from.setLastName(reviewEntity.getFrom().getLastName());
             from.setProfilePicture(reviewEntity.getFrom().getProfilePicture());
-            ProjectEntity project = new ProjectEntity();
-            project.setProjectId(reviewEntity.getProject().getProjectId());
-            project.setName(reviewEntity.getProject().getName());
+            
+            if(reviewEntity.getProject() != null){
+                ProjectEntity project = new ProjectEntity();
+                project.setProjectId(reviewEntity.getProject().getProjectId());
+                project.setName(reviewEntity.getProject().getName());
+                temp.setProject(project);
+            }
+            
+            ActivityEntity activity = new ActivityEntity();
+            activity.setActivityId(reviewEntity.getMadeFromActivity().getActivityId());
+            activity.setName(reviewEntity.getMadeFromActivity().getName());
             temp.setReviewId(reviewEntity.getReviewId());
             temp.setTitle(reviewEntity.getTitle());
             temp.setReviewField(reviewEntity.getReviewField());
             temp.setRating(reviewEntity.getRating());
             temp.setFrom(from);
-            temp.setProject(project);
+            temp.setMadeFromActivity(activity);
             writtenReviewsResponse.add(temp);
         }
         return writtenReviewsResponse;
@@ -959,17 +1003,20 @@ public class UserResource {
             from.setFirstName(reviewEntity.getFrom().getFirstName());
             from.setLastName(reviewEntity.getFrom().getLastName());
             from.setProfilePicture(reviewEntity.getFrom().getProfilePicture());
+            ActivityEntity activity = new ActivityEntity();
+            activity.setActivityId(reviewEntity.getMadeFromActivity().getActivityId());
+            activity.setName(reviewEntity.getMadeFromActivity().getName());
+            
             ReviewEntity temp = new ReviewEntity();
-            ProjectEntity project = new ProjectEntity();
-            project.setProjectId(reviewEntity.getProject().getProjectId());
-            project.setName(reviewEntity.getProject().getName());
+            
             temp.setReviewId(reviewEntity.getReviewId());
             temp.setTitle(reviewEntity.getTitle());
             temp.setReviewField(reviewEntity.getReviewField());
             temp.setRating(reviewEntity.getRating());
             temp.setTo(to);
             temp.setFrom(from);
-            temp.setProject(project);
+            temp.setMadeFromActivity(activity);
+            
             recievedReviewsResponse.add(temp);
         }
         return recievedReviewsResponse;
@@ -1031,6 +1078,7 @@ public class UserResource {
                 p.getPosts().clear();
                 p.getReviews().clear();
                 p.getDonations().clear();
+                 p.getAwards().clear();
             }
             return Response.status(Status.OK).entity(projectsOwned).build();
 
@@ -1058,6 +1106,7 @@ public class UserResource {
                 p.getPosts().clear();
                 p.getReviews().clear();
                 p.getDonations().clear();
+                p.getAwards().clear();
             }
             return Response.status(Status.OK).entity(projectsJoined).build();
 
@@ -1085,6 +1134,7 @@ public class UserResource {
                 p.getPosts().clear();
                 p.getReviews().clear();
                 p.getDonations().clear();
+                 p.getAwards().clear();
             }
             return Response.status(Status.OK).entity(projectsManaged).build();
 
@@ -1156,6 +1206,43 @@ public class UserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+    
+    @Path("/awardsReceived/{userId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAwardsReceived(@PathParam("userId") Long userId) {
+        System.out.println("******** UserResource: getAwardsReceived()");
+        try {
+            List<AwardEntity> awardsReceived = userSessionBeanLocal.getReceivedAwards(userId);
+            for (AwardEntity a : awardsReceived) {
+                a.getUsersReceived().clear();
+                ProjectEntity p = new ProjectEntity();
+                p.setProjectId(a.getProject().getProjectId());
+                p.setName(a.getProject().getName());
+                a.setProject(p);
+            }
+            return Response.status(Status.OK).entity(awardsReceived).build();
+
+        } catch (UserNotFoundException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("/getBadges")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBadges() {
+        System.out.println("******** UserResource: getBadges()");
+        try {
+            
+            return Response.status(Status.OK).entity(badgeSessionBean.getBadges()).build();
+
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
 
     @Path("/profile/{userId}")
     @GET
@@ -1196,6 +1283,40 @@ public class UserResource {
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
             throw new RuntimeException(e);
+        }
+    }
+
+    public void persist1(Object object) {
+        /* Add this to the deployment descriptor of this module (e.g. web.xml, ejb-jar.xml):
+         * <persistence-context-ref>
+         * <persistence-context-ref-name>persistence/LogicalName</persistence-context-ref-name>
+         * <persistence-unit-name>KMS-warPU</persistence-unit-name>
+         * </persistence-context-ref>
+         * <resource-ref>
+         * <res-ref-name>UserTransaction</res-ref-name>
+         * <res-type>javax.transaction.UserTransaction</res-type>
+         * <res-auth>Container</res-auth>
+         * </resource-ref> */
+        try {
+            javax.naming.Context ctx = new InitialContext();
+            UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
+            utx.begin();
+            EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
+            em.persist(object);
+            utx.commit();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private BadgeSessionBeanLocal lookupBadgeSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (BadgeSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/BadgeSessionBean!ejb.session.stateless.BadgeSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
         }
     }
 

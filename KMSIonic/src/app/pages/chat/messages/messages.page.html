@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/chat"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{getNameFromKey(receiverKey)}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <ion-list lines="none" class="msgbubble" >
+    <ion-item *ngFor="let msg of messages">
+      <span *ngIf="sender.userId == msg.senderId" class="innermsg right">{{ msg.msg }}</span>
+      <span *ngIf="sender.userId != msg.senderId" class="innermsg left">{{ msg.msg }}</span>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-item>
+    <ion-input placeholder="Type here" [(ngModel)]="chatMessage" type="text" (keyup.enter)="postMessage()"></ion-input>
+      <button ion-button clear (click)="postMessage()">
+        <ion-icon name="send"></ion-icon>
+      </button>
+  </ion-item>
+</ion-footer>

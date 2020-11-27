@@ -12,6 +12,22 @@ import { IonicStorageModule } from '@ionic/storage';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import { AngularFireDatabase } from '@angular/fire/database';
+import { FCM } from '@ionic-native/fcm/ngx';
+import { IonicSelectableModule } from 'ionic-selectable';
+import { PayPal } from '@ionic-native/paypal/ngx';
+
+const conifg = {
+    apiKey: "AIzaSyBl7TP2OFBQJ4X2N9oRkUHTh33cK6y299c",
+    authDomain: "is4103kms-4e0e3.firebaseapp.com",
+    databaseURL: "https://is4103kms-4e0e3.firebaseio.com",
+    projectId: "is4103kms-4e0e3",
+    storageBucket: "is4103kms-4e0e3.appspot.com",
+    messagingSenderId: "973751042539",
+  }
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,13 +38,20 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
     AppRoutingModule,
     IonicStorageModule.forRoot(),
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFireModule.initializeApp(conifg), 
+    AngularFirestoreModule, 
+    IonicSelectableModule   
   ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    FileChooser
+    FileChooser,
+    FirebaseX,
+    AngularFireDatabase,
+    FCM,
+    PayPal
   ],
   bootstrap: [AppComponent]
 })

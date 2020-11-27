@@ -60,6 +60,9 @@ public class ReportEntity implements Serializable {
     
     @ManyToOne
     private GroupEntity reportedGroup;
+    
+    @ManyToOne
+    private ReviewEntity reportedReview;
 
     @NotNull
     @JoinColumn(nullable=false)
@@ -199,6 +202,14 @@ public class ReportEntity implements Serializable {
 
     public void setReportedGroup(GroupEntity reportedGroup) {
         this.reportedGroup = reportedGroup;
+    }
+
+    public ReviewEntity getReportedReview() {
+        return reportedReview;
+    }
+
+    public void setReportedReview(ReviewEntity reportedReview) {
+        this.reportedReview = reportedReview;
     }
 
     public Boolean getResolved() {

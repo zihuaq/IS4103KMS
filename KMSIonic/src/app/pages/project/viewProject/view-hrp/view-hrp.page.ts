@@ -26,6 +26,7 @@ export class ViewHrpPage implements OnInit {
   hrpList: HumanResourcePosting[];
   isMember: boolean = false;
   currentUserId: number;
+  loaded: boolean = false;
 
   constructor(public toastController: ToastController,
     public alertController: AlertController,
@@ -51,7 +52,7 @@ export class ViewHrpPage implements OnInit {
     this.authenticationService.getCurrentUser().then(
       (user: User) => {
         this.currentUserId = user.userId;
-        console.log(this.currentUserId);
+        console.log("current user id: ", this.currentUserId);
         
         this.projectService.getProjectById(this.projectId).subscribe(
           response => {
@@ -69,8 +70,6 @@ export class ViewHrpPage implements OnInit {
       }
     );
 
-    
-
     this.tagService.getAllSkillTags().subscribe(
       response => {
         this.tags = response;
@@ -79,10 +78,14 @@ export class ViewHrpPage implements OnInit {
 
     this.hrpService.getHrpByProject(this.projectId).subscribe(
       response => {
+        let hrpListLength = response.length;
         for (let hrp of response) {
           this.hrpService.getHrp(hrp.humanResourcePostingId).subscribe(
             response => {
               this.hrpList.push(response);
+              if (this.hrpList.length == hrpListLength) {
+                this.loaded = true;
+              }
             }
           );
         }

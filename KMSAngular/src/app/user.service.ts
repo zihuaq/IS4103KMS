@@ -431,5 +431,15 @@ export class UserService {
     return this.http.get<any>(this.baseUrl + /writtenreviews/ + userId)
     .pipe(catchError(this.handleError));
   }
+
+  getBadges(): Observable<any>{
+    return this.http.get<any>(this.baseUrl + "/getBadges")
+    .pipe(catchError(this.handleError));
+  }
+
+  getAwardsReceived(userId: number): Observable<any>{
+    return this.http.get<any>(this.baseUrl + "/awardsReceived/" + userId)
+    .pipe(catchError(this.handleError));
+  }
 }
 

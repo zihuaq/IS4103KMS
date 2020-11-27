@@ -115,7 +115,8 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
             amount: {
               //currency_code: this.selectedCurrency,
               value: this.donationAmount
-            }
+            },
+            description: 'Donation to KMS Platform'
           }]
         });
       }

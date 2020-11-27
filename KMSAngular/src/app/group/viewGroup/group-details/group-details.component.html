@@ -61,16 +61,16 @@
                 <div class="card-header p-0 pt-1 border-bottom-0">
                     <ul class="nav nav-tabs" id="details-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" role="tab">Details</a>
+                            <a class="nav-link" id="details-tab-basic-details" data-toggle="pill" href="#basic-details" role="tab" [ngClass]="{ 'active':activeTab==='basic-details'}">Details</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
+                            <a class="nav-link" id="details-tab-members" data-toggle="pill" href="#members-tab" [ngClass]="{ 'active':activeTab==='members-tab'}">Members <span class="badge badge-light">{{noOfMembers}}</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="details-tab-groupfeed" data-toggle="pill" href="#groupfeed-tab">Group Feed <span class="badge badge-light"></span></a>
+                            <a class="nav-link" id="details-tab-groupfeed" data-toggle="pill" href="#groupfeed-tab" [ngClass]="{ 'active':activeTab==='groupfeed-tab'}">Group Feed <span class="badge badge-light"></span></a>
                         </li>
                         <li class="nav-item" *ngIf = "loggedInUser.userType.toString() == 'ADMIN'">
-                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab">Group Settings</a>
+                          <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#setting-tab" [ngClass]="{ 'active':activeTab==='setting-tab'}">Group Settings</a>
                       </li>
                         <!-- <li class="nav-item">
                             <a class="nav-link" id="details-tab-mrp" data-toggle="pill" href="#mrp-tab">Material Resource Postings</a>
@@ -85,7 +85,7 @@
                 </div>
                 <div class="card-body" id="custom-tabs-four-tabContent">
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel">
+                        <div class="tab-pane fade show active" id="basic-details" role="tabpanel" [ngClass]="{ 'active':activeTab==='basic-details'}">
                             <p><b>Description:</b> {{groupToView.description}}</p>
                             <p><b>Country:</b> {{groupToView.country}}</p>
                             <!-- <p><b>Date created:</b> {{groupToView.dateCreated.toString().slice(0,10) | date}}</p>
@@ -98,7 +98,7 @@
                             </p>
                             <!-- <p>Group status: {{groupToView.status}}</p> -->
                         </div>
-                        <div class="tab-pane fade" id="members-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="members-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='members-tab'}">
                             <div class="row">
                                 <div class="col-6" style="padding-right: 40px">
                                     <h5>Admins</h5>
@@ -139,7 +139,7 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="tab-pane fade" id="setting-tab" role="tabpanel">
+                         <div class="tab-pane fade show active" id="setting-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='setting-tab'}">
                           <form class="form-horizontal" (ngSubmit)="onEditGroupSetting(disableForm)" #disableForm="ngForm">
                             <div>
                               <label>Account Status</label>
@@ -163,7 +163,7 @@
                         <div class="tab-pane fade" id="review-tab" role="tabpanel">
                             <p>review-tab works</p>
                         </div> -->
-                        <div class="tab-pane fade" id="setting-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="setting-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='setting-tab'}">
                           <form class="form-horizontal" (ngSubmit)="onEditGroupSetting(disableForm)" #disableForm="ngForm">
                             <div>
                               <label>Groups Status</label>
@@ -181,7 +181,7 @@
                             </div>
                           </form>
                         </div>
-                        <div class="tab-pane fade" id="groupfeed-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="groupfeed-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='groupfeed-tab'}">
                             <app-newsfeed newsfeedType="group" id="{{groupId}}"></app-newsfeed>
                         </div>
                     </div>

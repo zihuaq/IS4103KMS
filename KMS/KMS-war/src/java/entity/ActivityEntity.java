@@ -87,6 +87,9 @@ public class ActivityEntity implements Serializable {
     @ManyToMany(mappedBy = "activityJoined")
     private List<UserEntity> joinedUsers;
     
+    @OneToMany(mappedBy = "madeFromActivity")
+    private List<ReviewEntity> reviews;
+    
     public ActivityEntity() {
         this.allocatedQuantities = new HashMap<>();
         this.humanResourcePostings = new ArrayList<>();
@@ -233,5 +236,15 @@ public class ActivityEntity implements Serializable {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    public List<ReviewEntity> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewEntity> reviews) {
+        this.reviews = reviews;
+    }
+    
+    
     
 }

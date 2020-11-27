@@ -9,6 +9,7 @@ import { Post } from './post';
 import { Project } from './project';
 import { Activity } from './activity';
 import { Group } from './group';
+import { Award } from './award';
 import { Profile } from './profile';
 import { ClaimProfileRequest } from './claim-profile-request';
 
@@ -44,6 +45,15 @@ export class User {
   projectsJoined: Project[];
   activityJoined: Activity[];
   groupsJoined: Group[];
+  recievedAwards: Award[];
+  CountOfGroupsJoined: number;
+  CountOfProjectsJoined: number;
+  CountOfProjectsCreated: number;
+  CountOfGroupsCreated: number;
+  CountOfActivitiesCompleted: number;
+  CountOfPostCreated: number;
+  CountOfCommentsCreated: number;
+  CountOfReviewsCreated: number;
   profiles: Profile[];
   claimProfileRequestMade: ClaimProfileRequest[];
 

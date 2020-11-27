@@ -5,6 +5,7 @@ import { Project } from './project';
 import { Group } from './group';
 import { PostComment } from './post-comment';
 import { Post } from './post';
+import { review } from './review';
 
 export class Report {
   reportId: number;
@@ -17,6 +18,7 @@ export class Report {
   reportedPost: Post;
   reportedComment: PostComment;
   reportedGroup: Group;
+  reportedReview: review;
   resolved: boolean;
   verdictComments: string;
 

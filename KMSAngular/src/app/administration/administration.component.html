@@ -47,8 +47,12 @@
               role="tab">Comment Reports</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="pill" href="#manage-tags"
-              role="tab">Manage Tags</a>
+            <a class="nav-link" id="admin-tab-review-reports-tabname" data-toggle="pill" href="#review-reports"
+              role="tab">Review
+              Reports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#manage-tags" role="tab">Manage Tags</a>
           </li>
         </ul>
       </div>
@@ -76,9 +80,12 @@
           <div class="tab-pane fade" id="manage-tags" role="tabpanel">
             <app-manage-tags></app-manage-tags>
           </div>
+          <div class="tab-pane fade" id="review-reports" role="tabpanel">
+            <app-review-reports></app-review-reports>
+          </div>
         </div>
       </div>
-      <!-- /.card -->
+
     </div>
   </section>
 </div>

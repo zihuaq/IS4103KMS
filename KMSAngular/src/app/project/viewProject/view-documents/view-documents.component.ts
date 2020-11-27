@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as AWS from 'aws-sdk';
 import * as async from 'async';
 import { ActivatedRoute } from '@angular/router';
-
+import { Document } from 'src/app/classes/document';
 
 @Component({
   selector: 'app-view-documents',
@@ -82,19 +82,5 @@ export class ViewDocumentsComponent implements OnInit {
   formatFileKey(file) {
     let index = file.indexOf("/");
     return file.substring(index + 1);
-  }
-}
-
-export class Document {
-  key: string;
-  author: string;
-  description: string;
-  timeStamp: string;
-
-  constructor(key?: string, author?: string, description?: string, timeStamp?: string) {
-    this.key = key;
-    this.author = author;
-    this.description = description;
-    this.timeStamp = timeStamp;
   }
 }

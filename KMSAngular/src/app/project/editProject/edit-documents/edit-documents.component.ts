@@ -7,6 +7,7 @@ import { Notification } from 'src/app/classes/notification';
 import { NotificationService } from 'src/app/notification.service';
 import { Project } from 'src/app/classes/project';
 import { ProjectService } from 'src/app/project.service';
+import { Document } from 'src/app/classes/document';
 
 declare var $: any;
 
@@ -149,7 +150,7 @@ export class EditDocumentsComponent implements OnInit {
         newNotification.msg = "A new document has been uploaded to " + this.project.name;
         newNotification.projectId = this.projectId;
         newNotification.groupId = null;
-        newNotification.projectTab = "document-tab";
+        newNotification.tabName = "document-tab";
         for (let member of this.project.projectMembers) {
           if (member.userId != this.currentUser.userId) {
             this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
@@ -169,14 +170,14 @@ export class EditDocumentsComponent implements OnInit {
     )    
   }
 
-  clickDelete(file) {
-    this.fileToDelete = file;
+  clickDelete(key) {
+    this.fileToDelete = key;
   }
 
   deleteFile() {
     const params = {
       Bucket: this.bucket,
-      Key: this.fileToDelete.Key
+      Key: this.fileToDelete
     }
 
     this.s3.deleteObject(params).promise().then(
@@ -195,16 +196,3 @@ export class EditDocumentsComponent implements OnInit {
 
 }
 
-export class Document {
-  key: string;
-  author: string;
-  description: string;
-  timeStamp: string;
-
-  constructor(key?: string, author?: string, description?: string, timeStamp?: string) {
-    this.key = key;
-    this.author = author;
-    this.description = description;
-    this.timeStamp = timeStamp;
-  }
-}

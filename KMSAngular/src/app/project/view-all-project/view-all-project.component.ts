@@ -6,6 +6,7 @@ import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/tag.service';
 import { User } from 'src/app/classes/user';
 import { UserService } from 'src/app/user.service';
+import { AwardService } from 'src/app/award.service';
 
 import { Project } from '../../classes/project';
 import { ProjectService } from '../../project.service';
@@ -30,11 +31,13 @@ export class ViewAllProjectComponent implements OnInit {
   loggedInUser: User;
   projectToLeaveId: number;
   tags: Tag[];
+  loaded: boolean = false;
 
   constructor(public projectService: ProjectService,
     public tagService: TagService,
     public userService: UserService,
     private sessionService: SessionService,
+    private awardService: AwardService,
     private router: Router) {
       this.projects = [];
       this.projectsJoined = [];
@@ -44,13 +47,14 @@ export class ViewAllProjectComponent implements OnInit {
   ngOnInit(): void {
     this.checkAccessRight();
     this.loggedInUser = this.sessionService.getCurrentUser();
-    
+
     this.projectService.getAllProject().subscribe(
       response => {
         this.projects = response.projects;
         if (this.projects.length > 0) {
           this.noProjects = false;
         }
+        this.loaded = true;
       }
     );
 
@@ -93,7 +97,7 @@ export class ViewAllProjectComponent implements OnInit {
             console.log(this.projectsJoined)
           }
         );
-        
+
       },
       error => {
         $(document).Toasts('create', {
@@ -103,7 +107,7 @@ export class ViewAllProjectComponent implements OnInit {
           delay: 2500,
           body: error,
         })
-      });  
+      });
   }
 
   clickLeaveProject(project: Project) {
@@ -180,7 +184,7 @@ export class ViewAllProjectComponent implements OnInit {
     });
   }
 
-  sdgFilter() {    
+  sdgFilter() {
     this.projectService.getAllProject().subscribe(
       response => {
         this.projects = response.projects;
@@ -198,14 +202,14 @@ export class ViewAllProjectComponent implements OnInit {
             for (let project of allProject) {
               for (let sdg of project.sdgs) {
                 if (sdg.name === tag.name && !this.containProject(project)) {
-                  this.projects.push(project);                  
+                  this.projects.push(project);
                 }
               }
             }
           }
-        }    
+        }
       }
-    );   
+    );
   }
 
   containProject(project: Project) {
@@ -216,6 +220,6 @@ export class ViewAllProjectComponent implements OnInit {
     }
     false;
   }
-  
+
 }
 
