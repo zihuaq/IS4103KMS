@@ -100,7 +100,7 @@
                     <div class="form-group">
                         <label>Date Required From *</label>
                         <input type="date" id="startDate" class="form-control" name="startDate"
-                            [(ngModel)]="newMrp.startDate" [min]="minDate" required />
+                            [(ngModel)]="newMrp.startDate" [min]="minDate" [max]="newMrp.endDate" required />
                     </div>
                     <div class="form-group">
                         <label>Date Required To *</label>
@@ -116,19 +116,19 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Location of Resource</label>
+                        <label>Location Required</label>
                         <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
                             (mapClick)="clickNewLocation($event)"></google-map>
                     </div>
                     <div class="form-group">
                         <label for="latitude">Latitude *</label>
                         <input type="text" id="latitude" class="form-control" name="latitude"
-                            [(ngModel)]="newMrp.latitude" required disabled>
+                            [(ngModel)]="newMrp.latitude" required readonly>
                     </div>
                     <div class="form-group">
                         <label for="longitude">Longitude *</label>
                         <input type="text" id="longitude" class="form-control" name="longitude"
-                            [(ngModel)]="newMrp.longitude" required disabled>
+                            [(ngModel)]="newMrp.longitude" required readonly>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -188,7 +188,7 @@
                     <div class="form-group">
                         <label>Date Required From *</label>
                         <input type="date" id="startDate" class="form-control" name="startDate"
-                            [(ngModel)]="editMrpStartDate" [min]="minDate" required />
+                            [(ngModel)]="editMrpStartDate" [min]="minDate" [max]="editMrpEndDate" required />
                     </div>
                     <div class="form-group">
                         <label>Date Required To *</label>
@@ -211,12 +211,12 @@
                     <div class="form-group">
                         <label for="latitude">Latitude *</label>
                         <input type="text" id="latitude" class="form-control" name="latitude"
-                            [(ngModel)]="mrpToEdit.latitude" required disabled>
+                            [(ngModel)]="mrpToEdit.latitude" required readonly>
                     </div>
                     <div class="form-group">
                         <label for="longitude">Longitude *</label>
                         <input type="text" id="longitude" class="form-control" name="longitude"
-                            [(ngModel)]="mrpToEdit.longitude" required disabled>
+                            [(ngModel)]="mrpToEdit.longitude" required readonly>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

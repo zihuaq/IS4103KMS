@@ -18,67 +18,84 @@
                     <div class="form-group">
                         <label for="mraName">Material Resource Name *</label>
                         <input type="text" id="mraName" class="form-control" [ngModel]="editingMra.name" name="mraName"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity"> Quantity *</label>
-                        <input type="text" id="quantity" class="form-control" [ngModel]="editingMra.quantity"
-                            name="quantity" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="units"> Units *</label>
-                        <select type="text" id="units" class="form-control" [ngModel]="editingMra.units" name="units"
-                            required>
-                            <option disabled value="Select Unit">Select Unit</option>
-                            <option value="item(s)">item(s)</option>
-                            <option value="kg">kg</option>
-                            <option value="m">m</option>
-                        </select>
+                            placeholder="Enter Name" required>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
                         <input type="text" id="description" class="form-control" [ngModel]="editingMra.description"
-                            name="description">
+                            name="description" placeholder="Enter Description">
                     </div>
                     <div class="form-group">
                         <label>Material Resource Tags *</label>
                         <div class="select2-blue">
                             <select class="select2" id="mraselect2" multiple="multiple"
-                                data-placeholder="Select relevant tags" data-dropdown-css-class="select2-blue"
+                                data-placeholder="Select Relevant Tags" data-dropdown-css-class="select2-blue"
                                 style="width: 100%;">
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Location of resource</label>
+                        <label for="resourceType">Resource Type *</label>
+                        <select id="resourceType" class="form-control" [ngModel]="editingMra.type" name="resourceType"
+                            required>
+                            <option disabled selected>Select Resource Type</option>
+                            <optgroup label="One-Time"></optgroup>
+                            <option value="ONETIMEDONATION">One-Time Donation</option>
+                            <option value="ONETIMEPAYMENT">One-Time Payment</option>
+                            <optgroup label="Recurring Subscription">
+                                <option value="DAILY">Daily</option>
+                                <option value="WEEKLY">Weekly</option>
+                                <option value="MONTHLY">Monthly</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-row" *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
+                        <div class="col-7">
+                            <div class="form-group">
+                                <label for="price">Price per Unit *</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">US $</span>
+                                    </div>
+                                    <input name="price" type="number" class="form-control" id="price" [ngModel]="editingMra.price" 
+                                        placeholder="Enter Amount" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="units">Units *</label>
+                                <select id="units" class="form-control" [ngModel]="editingMra.units" name="units"
+                                    required>
+                                    <option disabled selected>Select Units</option>
+                                    <option value="item(s)">item(s)</option>
+                                    <option value="kg">kg</option>
+                                    <option value="m">m</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Location of Resource</label>
                         <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
                             (mapClick)="click($event)">
                         </google-map>
                     </div>
-                    <div class="form-group">
-                        <label for="latitude">Latitude *</label>
-                        <input type="text" id="latitude" class="form-control " [ngModel]="editingMra.latitude"
-                            name="latitude" required disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="longitude">Longitude *</label>
-                        <input type="text" id="longitude" class="form-control" [ngModel]="editingMra.longitude"
-                            name="longitude" required disabled>
-                    </div>
-                    <div class="form-group my-checkbox">
-                        <label> Does your resource expire? </label>
-                        <input type="checkbox" id="my-checkbox" name="my-checkbox" data-bootstrap-switch
-                            [checked]="hasExpiry" (change)="handleHasExpiryChange()">
-                    </div>
-                    <div *ngIf="hasExpiry" class="form-group">
-                        <label>Start Date:</label>
-                        <input type="date" id="startDate" class="form-control" [ngModel]="editingMraStartDate"
-                            name="startDate" [min]="minDate" required />
-                    </div>
-                    <div *ngIf="hasExpiry" class="form-group">
-                        <label>End Date:</label>
-                        <input type="date" id="endDate" class="form-control" [ngModel]="editingMraEndDate"
-                            name="endDate" [min]="minDate" />
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="latitude">Latitude *</label>
+                                <input type="text" id="latitude" class="form-control" [ngModel]="editingMra.latitude"
+                                    name="latitude" required readonly>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="longitude">Longitude *</label>
+                                <input type="text" id="longitude" class="form-control" [ngModel]="editingMra.longitude"
+                                    name="longitude" required readonly>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -116,7 +133,14 @@
             <!-- /.card-header -->
             <div class="card-header">
                 <div class="card-title">
-                    <h5><b>{{mra.name}}</b></h5>
+                    <h5><b>{{mra.name}} </b>
+                        <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: bisque;"
+                            *ngIf="mra.type == 'ONETIMEDONATION' || mra.type == 'ONETIMEPAYMENT'">ONE-TIME
+                        </span>
+                        <span class="badge badge-pill" style="font-size: 12px; vertical-align: 27%; background-color: burlywood;"
+                            *ngIf="mra.type != 'ONETIMEDONATION' && mra.type != 'ONETIMEPAYMENT'">RECURRING
+                        </span>
+                    </h5>
                 </div>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -136,27 +160,23 @@
             <div class="card-body p-0" style="display: block;">
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     <li class="item">
-                        <div class="product-info">
-                            <a *ngIf="mra.startDate != null" class="product-title">Available from
-                                {{mra.startDate.toString().slice(0,15) | date }} to
-                                {{mra.endDate.toString().slice(0,15) | date}}
-                                <span class="badge badge-secondary float-right">
-                                    At location
-                                    {{mra.latitude | number:'1.1-6'}},
-                                    {{mra.longitude | number:'1.1-6'}}
+                        <div class="product-info ml-3">
+                            <a class="product-title">
+                                <span *ngIf="mra.type == 'ONETIMEDONATION'">Free</span>
+                                <span *ngIf="mra.type != 'ONETIMEDONATION'">
+                                    US ${{mra.price}}/<span *ngIf="mra.type == 'DAILY'">day</span>
+                                    <span *ngIf="mra.type == 'WEEKLY'">week</span>
+                                    <span *ngIf="mra.type == 'MONTHLY'">month</span>
+                                    per 
+                                    <span *ngIf="mra.units == 'item(s)'">item</span>
+                                    <span *ngIf="mra.units != 'item(s)'">{{mra.units}}</span>
                                 </span>
-                            </a>
-                            <a *ngIf="mra.startDate == null" class="product-title">
-                                No Expiry Date
-                                <span class="badge badge-secondary float-right">
-                                    At location
-                                    {{mra.latitude | number:'1.1-6'}},
-                                    {{mra.longitude | number:'1.1-6'}}
-                                </span>
+                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
+                                    (click)="changehref(mra.latitude, mra.longitude)" target="_blank"> At location
+                                    {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}
+                                </a>
                             </a>
                             <span class="product-description">
-                                {{mra.quantity}} {{mra.units}} {{mra.name}}
-                                <br />
                                 {{mra.description}}
                                 <span *ngIf="mra.tags.length > 0">
                                     <div *ngFor="let tag of mra.tags">

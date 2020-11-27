@@ -13,6 +13,7 @@ import { Tag } from '../../classes/tag';
 import { NgForm } from '@angular/forms';
 import { MaterialResourceAvailableService } from 'src/app/mra.service';
 import { MaterialResourceAvailable } from 'src/app/classes/material-resource-available';
+import { MraType } from 'src/app/classes/mra-type.enum';
 
 declare var $: any;
 
@@ -30,8 +31,6 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
   selectedTags: Tag[];
   selectedTagNames: string[];
   newMra: MaterialResourceAvailable;
-  minDate = new Date().toISOString().slice(0, 10);
-  minEndDate = new Date().toISOString().slice(0, 10);
   zoom = 12;
   center: google.maps.LatLngLiteral;
   options: google.maps.MapOptions = {
@@ -40,10 +39,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     scrollwheel: true,
     disableDoubleClickZoom: true,
   };
-  hasExpiry = false;
   editingMra: MaterialResourceAvailable;
-  editingMraStartDate: string;
-  editingMraEndDate: string;
 
   constructor(
     private tagService: TagService,
@@ -71,9 +67,6 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-    });
-    $('input[data-bootstrap-switch]').each(function () {
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });
   }
 
@@ -118,30 +111,14 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       this.newMra.mraId = this.editingMra.mraId;
       this.newMra.materialResourceAvailableOwner = this.profile;
       this.newMra.name = mraForm.value.mraName;
-      this.newMra.quantity = mraForm.value.quantity;
-      this.newMra.units = mraForm.value.units;
       this.newMra.description = mraForm.value.description;
+      this.newMra.type = mraForm.value.resourceType as MraType;
+      this.newMra.price = mraForm.value.price ? mraForm.value.price : 0.0;
+      this.newMra.units = mraForm.value.units ? mraForm.value.units : null;
       this.newMra.latitude = this.editingMra.latitude;
       this.newMra.longitude = this.editingMra.longitude;
-      if (this.hasExpiry) {
-        if (
-          new Date(mraForm.value.startDate).toJSON().slice(0, 10) >
-          new Date(mraForm.value.endDate).toJSON().slice(0, 10)
-        ) {
-          $(document).Toasts('create', {
-            class: 'bg-warning',
-            title: 'Unable to submit Material Resource Available',
-            autohide: true,
-            delay: 2500,
-            body: 'End date should not come before the Start Date',
-          });
-          return;
-        } else {
-          this.newMra.startDate = new Date(mraForm.value.startDate);
-          this.newMra.endDate = new Date(mraForm.value.endDate);
-        }
-      }
       this.newMra.tags = this.selectedTags;
+      console.log(this.newMra);
       if (!this.editingMra.mraId) {
         this.mraService
           .createMaterialResourceAvailable(this.newMra)
@@ -160,9 +137,6 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       this.selectedTags = [];
       $('#mraselect2').val(null).trigger('change');
       this.editingMra = new MaterialResourceAvailable();
-      this.editingMraStartDate = null;
-      this.editingMraEndDate = null;
-      this.hasExpiry = false;
     }
   }
 
@@ -174,19 +148,12 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       });
   }
 
-  handleHasExpiryChange() {
-    this.hasExpiry = !this.hasExpiry;
-  }
-
   editMra(mra: MaterialResourceAvailable) {
     this.selectedTags = mra.tags;
     $('#mraselect2')
       .val(mra.tags.map((tag) => tag.name))
       .trigger('change');
     this.editingMra = mra;
-    this.hasExpiry = mra.endDate == null ? false : true;
-    this.editingMraStartDate = this.editingMra.startDate.toJSON().slice(0, 10);
-    this.editingMraEndDate = this.editingMra.endDate.toJSON().slice(0, 10);
   }
 
   clear(mraForm: NgForm) {
@@ -194,8 +161,10 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
     this.selectedTags = [];
     $('#mraselect2').val(null).trigger('change');
     this.editingMra = new MaterialResourceAvailable();
-    this.editingMraStartDate = null;
-    this.editingMraEndDate = null;
-    this.hasExpiry = false;
+  }
+
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    window.open(url, '_blank');
   }
 }

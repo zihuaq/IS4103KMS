@@ -47,18 +47,22 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         MaterialResourcePostingEntity posting = materialResourcePostingSessionBeanLocal.getMrpById(postingId);
         MaterialResourceAvailableEntity mra = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableById(mraId);
         
-        if (mra.getType() == MraTypeEnum.ONETIME) {
+        if (mra.getType() == MraTypeEnum.ONETIMEDONATION) {
             newFulfillment.setReceivedQuantity(0.0);
             newFulfillment.setUnreceivedQuantity(newFulfillment.getTotalPledgedQuantity());
             posting.setLackingQuantity(posting.getLackingQuantity() - newFulfillment.getTotalPledgedQuantity());
+        } else if (mra.getType() == MraTypeEnum.ONETIMEPAYMENT) {
+            newFulfillment.setReceivedQuantity(0.0);
+            newFulfillment.setUnreceivedQuantity(newFulfillment.getTotalPledgedQuantity());
+            posting.setLackingQuantity(posting.getLackingQuantity() - newFulfillment.getTotalPledgedQuantity());
+            //create payment entity
         } else {
             newFulfillment.setReceivedQuantity(null);
             newFulfillment.setUnreceivedQuantity(null);
             posting.setObtainedQuantity(null);
             posting.setLackingQuantity(0.0);
+            //create payment entity
         }
-        
-        //create payment entity
         
         newFulfillment.setFulfillmentOwner(fulfillmentOwner);
         fulfillmentOwner.getFulfillments().add(newFulfillment);
@@ -93,7 +97,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         return fulfillmentList;
     }
     
-    //only for one-time donations
+    //only for one-time donations and payments
     @Override
     public void receiveResource(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
@@ -109,7 +113,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
     public void updateQuantity(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
         
-        if (fulfillment.getMra().getType() == MraTypeEnum.ONETIME) {
+        if (fulfillment.getMra().getType() == MraTypeEnum.ONETIMEDONATION || fulfillment.getMra().getType() == MraTypeEnum.ONETIMEPAYMENT) {
             Double difference = fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity();
             fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + difference);
             fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());

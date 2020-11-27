@@ -10,7 +10,8 @@ package util.enumeration;
  * @author zihua
  */
 public enum MraTypeEnum {
-    ONETIME,
+    ONETIMEDONATION,
+    ONETIMEPAYMENT,
     DAILY,
     WEEKLY,
     MONTHLY

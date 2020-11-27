@@ -15,6 +15,7 @@ import { MaterialResourceAvailableService } from '../../../mra.service';
 import { Fulfillment } from '../../../classes/fulfillment';
 import { FulfillmentService } from '../../../fulfillment.service';
 import { NgForm } from '@angular/forms';
+import { MraType } from 'src/app/classes/mra-type.enum';
 
 declare var $: any;
 
@@ -40,7 +41,6 @@ export class ViewMrpTabComponent implements OnInit {
 
   newMra: MaterialResourceAvailable;
   mraTags: Tag[];
-  hasExpiry = false;
   zoom = 12;
   center: google.maps.LatLngLiteral;
   options: google.maps.MapOptions = {
@@ -54,7 +54,6 @@ export class ViewMrpTabComponent implements OnInit {
   endDate: string;
 
   mraToDonate: MaterialResourceAvailable;
-  maxQuantity: number;
   totalPledgedQuantity: number;
 
   constructor(private sessionService: SessionService,
@@ -104,6 +103,7 @@ export class ViewMrpTabComponent implements OnInit {
     this.mraService.getMaterialResourceAvailable(this.loggedInUser.userId).subscribe(
       response => {
         this.mraList = response;
+        console.log(this.mraList);
         if (this.mraList.length > 0) {
           this.noMra = false;
         }
@@ -137,7 +137,6 @@ export class ViewMrpTabComponent implements OnInit {
 
   clickAddMra(){
     this.newMra = new MaterialResourceAvailable();
-    console.log(this.newMra.quantity)
     this.newMra.name = this.mrpToFulfill.name;
     this.newMra.units = this.mrpToFulfill.unit;
     this.newMra.tags = this.mrpToFulfill.tags;
@@ -150,30 +149,13 @@ export class ViewMrpTabComponent implements OnInit {
     this.newMra.longitude = event.latLng.lng().toString();
   }
 
-  handleHasExpiryChange() {
-    this.hasExpiry = !this.hasExpiry;
-  }
-
   createMaterialResourceRequest(mraForm: NgForm) {
     if (mraForm.valid) {
       this.newMra.materialResourceAvailableOwner = this.loggedInUser;
-      if (this.hasExpiry) {
-        if (new Date(this.startDate) > new Date(this.endDate)) {
-          $(document).Toasts('create', {
-            class: 'bg-warning',
-            title: 'Unable to submit Material Resource Available',
-            autohide: true,
-            delay: 2500,
-            body: 'End date should not come before the Start Date',
-          });
-          return;
-        } else {
-          this.newMra.startDate = new Date(this.startDate);
-          this.newMra.endDate = new Date(this.endDate);
-        }
-      }
-      this.mraService.createMaterialResourceAvailable(this.newMra).subscribe((
-        response) => {
+      this.newMra.units = this.newMra.type != MraType.ONETIMEDONATION ? this.newMra.units : null;
+      console.log(this.newMra)
+      this.mraService.createMaterialResourceAvailable(this.newMra).subscribe(
+        (response) => {
           this.mraService.getMaterialResourceAvailable(this.loggedInUser.userId).subscribe(
             response => {
               this.mraList = response;
@@ -191,22 +173,17 @@ export class ViewMrpTabComponent implements OnInit {
             delay: 2500,
             body: 'Material Resource Available is successfully created',
           })
-        });
-      this.startDate = null;
-      this.endDate = null;
-      this.hasExpiry = false;
+        }
+      );
     }
   }
 
-  clearCreateForm() {
+  closeCreateMraForm() {
     $('#modal-fulfill-posting').show();
-    this.startDate = null;
-    this.endDate = null;
-    this.hasExpiry = false;
   }
 
   clickSelect(mraToDonate: MaterialResourceAvailable) {
-    if (mraToDonate.units != this.mrpToFulfill.unit) {
+    if (mraToDonate.units != this.mrpToFulfill.unit) { //different unit also can as price offered will be based on mrp's unit
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Incompatible Units',
@@ -215,28 +192,8 @@ export class ViewMrpTabComponent implements OnInit {
         body: 'Please change the units of the resource or create a new Material Resource Available',
       });
       return;
-    } else {
-      this.maxQuantity = Math.min(mraToDonate.quantity, this.mrpToFulfill.lackingQuantity);
     }
-    if(mraToDonate.endDate != null && mraToDonate.endDate < this.mrpToFulfill.endDate) {
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Expired Resource',
-        autohide: true,
-        delay: 5000,
-        body: 'The donated resource will expire before the end date of Material Resource Posting',
-      });
-    } else if(mraToDonate.startDate != null && mraToDonate.startDate > this.mrpToFulfill.startDate) {
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Resource Unavailable',
-        autohide: true,
-        delay: 5000,
-        body: 'The donated resource is only available after the start date of Material Resource Posting',
-      });
-    } else {
-      this.mraToDonate = mraToDonate;
-    }
+    this.mraToDonate = mraToDonate;
   }
 
   cancel(){
@@ -270,20 +227,8 @@ export class ViewMrpTabComponent implements OnInit {
         delay: 3200,
         body: 'Donated quantity cannot be more than required quantity',
       });
-    } else if(this.totalPledgedQuantity > this.mraToDonate.quantity) {
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Unable to submit Fulfill Posting',
-        autohide: true,
-        delay: 4000,
-        body: 'Donated quantity cannot be more than your available quantity',
-      });
     } else {
-      this.newFulFillment.mra = new MaterialResourceAvailable();
-      this.newFulFillment.posting = new MaterialResourcePosting();
       this.newFulFillment.totalPledgedQuantity = this.totalPledgedQuantity;
-      this.newFulFillment.mra.quantity = this.mraToDonate.quantity - this.newFulFillment.totalPledgedQuantity;
-      this.newFulFillment.posting.lackingQuantity = this.mrpToFulfill.lackingQuantity - this.newFulFillment.totalPledgedQuantity;
       this.fulfillmentService.createNewFulfillment(this.newFulFillment, this.loggedInUser.userId, this.mrpToFulfill.materialResourcePostingId, this.mraToDonate.mraId).subscribe(
         response => {
           this.mrpService.getMrpByProject(this.projectId).subscribe(
