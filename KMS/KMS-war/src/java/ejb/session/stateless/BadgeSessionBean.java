@@ -33,5 +33,4 @@ public class BadgeSessionBean implements BadgeSessionBeanLocal {
         return badge.getBadgeId();
     }
 
-   
 }

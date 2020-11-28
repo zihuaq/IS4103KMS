@@ -12,6 +12,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
 import ejb.session.stateless.ActivitySessionBeanLocal;
+import ejb.session.stateless.BadgeSessionBeanLocal;
 import ejb.session.stateless.DataMappingSessionBeanLocal;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.GroupSessionBeanLocal;
@@ -25,6 +26,7 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.TaskSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.ActivityEntity;
+import entity.BadgeEntity;
 import entity.FulfillmentEntity;
 import entity.GroupEntity;
 import entity.HumanResourcePostingEntity;
@@ -96,6 +98,9 @@ public class DataInitializationSessionBean {
 
     @EJB
     private TagSessionBeanLocal tagSessionBean;
+    
+    @EJB
+    private BadgeSessionBeanLocal badgeSessionBean;
 
     public DataInitializationSessionBean() {
     }
@@ -264,7 +269,6 @@ public class DataInitializationSessionBean {
         }
 
         try {
-
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l, Arrays.asList(24l, 26l, 29l));
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ", "Malaysia"), 3l, Arrays.asList(25l, 35l));
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l, Arrays.asList(26l, 27l, 29l, 33l, 37l));
@@ -279,7 +283,25 @@ public class DataInitializationSessionBean {
         } catch (CreateGroupException ex) {
             System.out.println(ex.getMessage());
         }
+        
+            //number of groups joined milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Joined a Group Milestone", "The badge is awarded to users who have joined their first group on KMS.", 1, 2, 3, "/images/Award1.jpg", "1", "2", "3"));            
 
+            //Number of projects joined milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Joined a Project Milestone", "The badge is awarded to users who have joined their first project on KMS.", 1, 2, 3, "/images/Award2.jpg", "1", "2", "3"));
+
+            //Number of projects created milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Project Milestone", "The badge is awarded to users who have created their first project on KMS.", 1, 2, 3, "/images/Award3.jpg", "1", "2", "3"));
+            
+            //Number of groups created milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Group Milestone", "The badge is awarded to users who have created their first group on KMS.", 1, 2, 3, "/images/Award4.jpg", "1", "2", "3"));
+            
+            //Number of activities completed milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Completed an Activity Milestone", "The badge is awarded to users who have completed their first activity on KMS.", 1, 2, 3, "/images/Award5.jpg", "1", "2", "3"));
+            
+            //Number of reviews created milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Review Milestone", "The badge is awarded to users who have written their first review on KMS.", 1, 2, 3, "/images/Award6.jpg", "1", "2", "3"));
+            
 //        try {
 //            PostEntity post1 = new PostEntity(new Date(), "this is a post");
 //            post1.setPostOwner(userSessionBean.getUserById(5L));
