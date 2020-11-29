@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>SearchProfiles</ion-title>
+  </ion-toolbar>
+  <ion-searchbar inputmode="text" placeholder="Search Profiles" (ionChange)="setFilteredItems($event)" #searchBar>
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <ion-virtual-scroll [items]="filteredProfiles">
+    <ion-item *virtualItem="let profile" routerLink="/profile/{{profile.id}}">
+      <ion-label>
+        <ion-text class="ion-text-wrap" style="font-size: large;">{{profile.name}}</ion-text>
+        <ion-text class="ion-text-wrap" style="font-size: small;" color="medium"> · {{profile.organization}}</ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-virtual-scroll>
+</ion-content>

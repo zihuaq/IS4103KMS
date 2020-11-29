@@ -18,4 +18,9 @@ public interface BadgeSessionBeanLocal {
 
     public List<BadgeEntity> getBadges();
     
+    //public Long createNewBadge(Long badgeId, String name, String description, Integer tierOneRequirement, Integer tierTwoRequirement, Integer tierThreeRequirement);
+
+    public Long createNewBadge(BadgeEntity badge);
+
+    
 }

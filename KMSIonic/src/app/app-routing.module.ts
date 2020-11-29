@@ -414,34 +414,45 @@ const routes: Routes = [
       )
   },
   {
-    path: 'chat',
-    loadChildren: () => 
-      import('./pages/chat/chat.module').then(
-        m => m.ChatPageModule
+    path: 'search-profiles',
+    loadChildren: () =>
+      import('./pages/search-profiles/search-profiles.module').then(
+        (m) => m.SearchProfilesPageModule
       )
   },
   {
+    path: 'user-profile',
+    loadChildren: () =>
+      import('./pages/user-profile/user-profile.module').then(
+        (m) => m.UserProfilePageModule
+      )
+  },
+  {
+    path: 'chat',
+    loadChildren: () =>
+      import('./pages/chat/chat.module').then((m) => m.ChatPageModule)
+  },
+  {
     path: 'messages/:user',
-    loadChildren: () => 
+    loadChildren: () =>
       import('./pages/chat/messages/messages.module').then(
-        m => m.MessagesPageModule
+        (m) => m.MessagesPageModule
       )
   },
   {
     path: 'donate-to-project-modal',
-    loadChildren: () => 
-      import('./pages/project/viewProject/donate-to-project-modal/donate-to-project-modal.module').then( 
-        m => m.DonateToProjectModalPageModule
-      )
+    loadChildren: () =>
+      import(
+        './pages/project/viewProject/donate-to-project-modal/donate-to-project-modal.module'
+      ).then((m) => m.DonateToProjectModalPageModule)
   },
   {
     path: 'donate-to-platform-modal',
-    loadChildren: () => 
-      import('./pages/donate-to-platform-modal/donate-to-platform-modal.module').then( 
-        m => m.DonateToPlatformModalPageModule
-      )
+    loadChildren: () =>
+      import(
+        './pages/donate-to-platform-modal/donate-to-platform-modal.module'
+      ).then((m) => m.DonateToPlatformModalPageModule)
   }
-
 ];
 
 @NgModule({

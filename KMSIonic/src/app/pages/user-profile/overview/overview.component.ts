@@ -32,7 +32,7 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit() {
     this.profileUrl =
-      'http://localhost:4200/profile/shared/' + this.profile.userId;
+      'http://localhost:4200/userProfile/shared/' + this.profile.userId;
   }
 
   follow() {

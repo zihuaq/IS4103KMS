@@ -17,8 +17,8 @@ export class SearchProfileComponent implements OnInit {
   allProfiles: Profile[];
   sdgTags: Tag[];
   sdgTargetsTags: Tag[];
-  selectedSdgTags: Tag[];
-  selectedSdgTargetsTags: Tag[];
+  selectedSdgTags: Tag[] = [];
+  selectedSdgTargetsTags: Tag[] = [];
   searchString: string = '';
   constructor(
     private tagService: TagService,
@@ -61,7 +61,7 @@ export class SearchProfileComponent implements OnInit {
 
   sdgChanged() {
     let selectedTagNames = $('#searchsdgselect2').val();
-    this.selectedSdgTargetsTags = [];
+    this.selectedSdgTags = [];
     this.sdgTags.forEach((element) => {
       if (selectedTagNames.includes(element.name)) {
         this.selectedSdgTags.push(element);
@@ -83,6 +83,7 @@ export class SearchProfileComponent implements OnInit {
 
   handleSearchStringChanged(event) {
     this.searchString = event;
+    console.log(this.searchString);
     this.updateFilteredProfilesAccordingToRefineOptions();
   }
 

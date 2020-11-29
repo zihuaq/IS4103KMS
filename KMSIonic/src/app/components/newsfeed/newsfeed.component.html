@@ -3,10 +3,10 @@
   <ion-toolbar>
     <ion-avatar slot="start" style="width: 40px; height: 40px;" *ngIf="loggedInUser" class="ion-margin-start">
       <img *ngIf="loggedInUser.profilePicture" class="ion-border" [src]="loggedInUser.profilePicture"
-        alt="User profile picture" routerLink="/profile/{{loggedInUser.userId}}">
+        alt="User profile picture" routerLink="/user-profile/{{loggedInUser.userId}}">
       <img *ngIf="!loggedInUser.profilePicture" class="ion-border"
         src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-        alt="User profile picture" routerLink="/profile/{{loggedInUser.userId}}">
+        alt="User profile picture" routerLink="/user-profile/{{loggedInUser.userId}}">
     </ion-avatar>
     <ion-button *ngIf="newsfeedType=='user' || newsfeedType=='profile'"
       [routerLink]="['/create-post', newsfeedType, 'create']" fill="outline" expand="full" shape="round" color="medium"
@@ -38,15 +38,15 @@
   <ion-toolbar lines="none">
     <ion-avatar slot="start" style="width: 40px; height: 40px; margin-left: 5px;">
       <img *ngIf="post.postOwner.profilePicture" class="ion-border" [src]="post.postOwner.profilePicture"
-        alt="User profile picture" routerLink="/profile/{{post.postOwner.userId}}">
+        alt="User profile picture" routerLink="/user-profile/{{post.postOwner.userId}}">
       <img *ngIf="!post.postOwner.profilePicture" class="ion-border"
         src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-        alt="User profile picture" routerLink="/profile/{{post.postOwner.userId}}">
+        alt="User profile picture" routerLink="/user-profile/{{post.postOwner.userId}}">
     </ion-avatar>
     <ion-grid fixed>
       <ion-row>
         <ion-col class="ion-no-padding" size="12">
-          <ion-label routerLink="/profile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
+          <ion-label routerLink="/user-profile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
             {{post.postOwner.lastName}}
           </ion-label>
           <ion-icon *ngIf="post.group || post.project" name="caret-forward"></ion-icon>
@@ -94,15 +94,15 @@
         <ion-avatar slot="start" style="width: 40px; height: 40px; margin-left: 5px;">
           <img *ngIf="post.originalPost.postOwner.profilePicture" class="ion-border"
             [src]="post.originalPost.postOwner.profilePicture" alt="User profile picture"
-            routerLink="/profile/{{post.originalPost.postOwner.userId}}">
+            routerLink="/user-profile/{{post.originalPost.postOwner.userId}}">
           <img *ngIf="!post.originalPost.postOwner.profilePicture" class="ion-border"
             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-            alt="User profile picture" routerLink="/profile/{{post.originalPost.postOwner.userId}}">
+            alt="User profile picture" routerLink="/user-profile/{{post.originalPost.postOwner.userId}}">
         </ion-avatar>
         <ion-grid fixed>
           <ion-row>
             <ion-col class="ion-no-padding" size="12">
-              <ion-label routerLink="/profile/{{post.originalPost.postOwner.userId}}">
+              <ion-label routerLink="/user-profile/{{post.originalPost.postOwner.userId}}">
                 {{post.originalPost.postOwner.firstName}}
                 {{post.originalPost.postOwner.lastName}}
               </ion-label>
