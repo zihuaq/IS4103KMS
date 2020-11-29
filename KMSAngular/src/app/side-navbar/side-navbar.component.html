@@ -24,73 +24,63 @@
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/searchUsers">
-            <i class="fas fa-search nav-icon"></i>
-            <p>Search Users</p>
-          </a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" routerLink="/userProfile">
             <i class="fas fa-user nav-icon"></i>
             <p>User Profile</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/searchProfiles">
-            <i class="fas fa-user nav-icon"></i>
-            <p>Search Profiles</p>
-          </a>
-        </li>
         <li class="nav-item has-treeview">
           <a class="nav-link">
-            <i class="nav-icon fas fa-hands-helping"></i>
+            <i class="fas fa-search nav-icon"></i>
             <p>
-              Project
+              Discover
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/searchUsers">
+                <i class="fas fa-search nav-icon"></i>
+                <p>Search Users</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/searchProfiles">
+                <i class="fas fa-search nav-icon"></i>
+                <p>Search Profiles</p>
+              </a>
+            </li>
+          </ul>
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a class="nav-link" routerLink="/viewAllProjects">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Discover Projects</p>
+                <i class="fas fa-search nav-icon"></i>
+                <p>Search Projects</p>
               </a>
             </li>
           </ul>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/viewOwnProjects/', loggedInUser.userId]">
-                <i class="far fa-circle nav-icon"></i>
-                <p>My Projects</p>
+              <a class="nav-link" routerLink="/viewAllGroups">
+                <i class="fas fa-search nav-icon"></i>
+                <p>Search Groups</p>
               </a>
             </li>
           </ul>
         </li>
-        <!-- group -->
-        <li class="nav-item has-treeview">
-          <a class="nav-link">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/viewOwnProjects/', loggedInUser.userId]">
             <i class="nav-icon fas fa-hands-helping"></i>
-            <p>
-              Group
-              <i class="fas fa-angle-left right"></i>
-            </p>
+            <p>My Projects</p>
           </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/viewAllGroups">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Discover Groups</p>
-              </a>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/viewOwnGroups/', loggedInUser.userId]">
-                <i class="far fa-circle nav-icon"></i>
-                <p>My Groups</p>
-              </a>
-            </li>
-          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/viewOwnGroups/', loggedInUser.userId]">
+            <i class="nav-icon fas fa-hands-helping"></i>
+            <p>My Groups</p>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/notifications">
