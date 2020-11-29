@@ -328,9 +328,9 @@ public class DataInitializationSessionBean {
             activitySessionBeanLocal.allocateHrpToActivity(4l, 2l);
             humanResourcePostingSessionBean.joinHrp(7l, 1l);
 
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Canned Food", "item(s)", 50.0, 0.0, 50.0, "Canned food like tuna, luncheon meat but no canned soup", startDate, endDate, 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(11l)));
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 5.0, 0.0, 5.0, "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-11"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-05"), 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", startDate, endDate, 7.8731, 80.7718), 4l, new ArrayList<>(Arrays.asList(23l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Canned Food", "item(s)", 50.0, 0.0, 50.0, "Canned food like tuna, luncheon meat but no canned fruits", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-08"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-11"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(11l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 5.0, 0.0, 5.0, "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-11"), null, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-15"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31"), 7.8731, 80.7718), 4l, new ArrayList<>(Arrays.asList(23l)));
 
             List<TagEntity> tags = new ArrayList<>();
             tags.add(tagSessionBean.getTagById(12l));
@@ -353,20 +353,20 @@ public class DataInitializationSessionBean {
 
             tags.clear();
             tags.add(tagSessionBean.getTagById(11l));
-            mra = new MaterialResourceAvailableEntity("Canned Soup", null, null, "36.379450", "-75.830290", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
+            mra = new MaterialResourceAvailableEntity("Canned Pineapple", null, null, "36.379450", "-75.830290", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Canned Tuna", null, "", "22.955532", "112.486407", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
+            mra = new MaterialResourceAvailableEntity("Canned Tuna", null, null, "22.955532", "112.486407", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(7l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0), 2l, 3l, 2l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0), 6l, 3l, 3l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 0.0, 30.0), 4l, 3l, 4l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(2.0, null, null), 6l, 2l, 1l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0), 6l, 1l, 5l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0), 7l, 1l, 6l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0, 0.0), 2l, 3l, 2l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0, 5.0), 6l, 3l, 3l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 0.0, 30.0, 0.0), 4l, 3l, 4l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, null, null, 30.0), 6l, 2l, 1l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0, 0.0), 6l, 1l, 5l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0, 0.0), 7l, 1l, 6l);
             //create tasks
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 0.3, 0l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);

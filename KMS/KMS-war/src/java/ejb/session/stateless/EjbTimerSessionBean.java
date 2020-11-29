@@ -20,6 +20,12 @@ import javax.ejb.Stateless;
 @Stateless
 public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
 
+    @EJB(name = "FulfillmentSessionBeanLocal")
+    private FulfillmentSessionBeanLocal fulfillmentSessionBeanLocal;
+
+    @EJB(name = "MaterialResourcePostingSessionBeanLocal")
+    private MaterialResourcePostingSessionBeanLocal materialResourcePostingSessionBeanLocal;
+
     @EJB(name = "ActivitySessionBeanLocal")
     private ActivitySessionBeanLocal activitySessionBeanLocal;
 
@@ -33,5 +39,12 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
         
         List<ActivityEntity> activities = activitySessionBeanLocal.retrieveActivitiesNotCompleted();
         activitySessionBeanLocal.updateActivitiesStatus(activities);
+    }
+    
+    @Schedule //every day at 12 midnight
+    public void Dailytimer() {
+        materialResourcePostingSessionBeanLocal.updateMrpStatus();
+        fulfillmentSessionBeanLocal.updateFulfillmentStatus();
+        fulfillmentSessionBeanLocal.createRecurringPayments();
     }
 }

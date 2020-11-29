@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.FulfillmentEntity;
+import entity.PaymentEntity;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -31,9 +32,15 @@ public interface FulfillmentSessionBeanLocal {
     
     public void acceptFulfillment(Long fulfillmentId) throws NoResultException;
 
+    public PaymentEntity endSubscription(Long fulfillmentId) throws NoResultException;
+    
     public void deleteFulfillment(Long fulfillmentId) throws NoResultException;
     
     public List<FulfillmentEntity> getListOfFulfillmentsByUserAndProject(Long userId, Long projectId) throws NoResultException;
 
     public List<FulfillmentEntity> getListOfFulfillmentsByProject(Long projectId) throws NoResultException;
+
+    public void updateFulfillmentStatus();
+
+    public void createRecurringPayments();
 }

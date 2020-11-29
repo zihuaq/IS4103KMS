@@ -28,5 +28,7 @@ public interface MaterialResourcePostingSessionBeanLocal {
     public void deleteMaterialResourcePosting(Long mrpId) throws NoResultException;
 
     public List<MaterialResourcePostingEntity> getListOfObtainedMrp(Long projectId, Long activityId) throws NoResultException;
+
+    public void updateMrpStatus();
     
 }

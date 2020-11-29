@@ -10,6 +10,8 @@ import entity.ActivityEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -17,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.MrpStatusEnum;
 
 /**
  *
@@ -94,6 +97,15 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
             TagEntity tag = tagSessionBeanLocal.getTagById(tagToUpdate.getTagId());
             mrp.getTags().add(tag);
         }
+        LocalDate today = LocalDate.now();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(sdf.format(mrp.getStartDate()));
+        
+        if (mrp.getLackingQuantity() == 0.0 || today.isAfter(startDate)) {
+            mrp.setStatus(MrpStatusEnum.CLOSED);
+        } else {
+            mrp.setStatus(MrpStatusEnum.OPEN);
+        }
     }
     
     @Override
@@ -131,5 +143,22 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
             }
         }
         return availableMrpList;
+    }
+    
+    @Override
+    public void updateMrpStatus() {
+        Query query = em.createQuery("SELECT mrp FROM MaterialResourcePostingEntity mrp WHERE mrp.status = :inStatus");
+        query.setParameter("inStatus", MrpStatusEnum.OPEN);
+        
+        List<MaterialResourcePostingEntity> mrpList = query.getResultList();
+        for (MaterialResourcePostingEntity mrp: mrpList) {
+            LocalDate today = LocalDate.now();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            LocalDate startDate = LocalDate.parse(sdf.format(mrp.getStartDate()));
+            
+            if (today.isAfter(startDate)) {
+                mrp.setStatus(MrpStatusEnum.CLOSED);
+            }
+        }
     }
 }

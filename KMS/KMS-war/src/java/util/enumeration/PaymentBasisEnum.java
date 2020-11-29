@@ -9,12 +9,9 @@ package util.enumeration;
  *
  * @author zihua
  */
-public enum FulfillmentStatusEnum {
-    PLEDGED,
-    ACCEPTED,//for one-time 
-    PARTIALLYFULFILLED,
-    FULFILLED,
-    REJECTED,
-    ONGOING, //for recurring subscription
-    ENDED //for recurring subscription with outstanding payments
+public enum PaymentBasisEnum {
+    WEEKLY,
+    MONTHLY,
+    ONCE
+    
 }

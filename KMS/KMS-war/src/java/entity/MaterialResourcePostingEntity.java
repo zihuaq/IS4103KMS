@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import util.enumeration.MrpStatusEnum;
 
 /**
  *
@@ -64,8 +67,6 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date startDate;
     
-    @NotNull
-    @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
     
@@ -76,6 +77,11 @@ public class MaterialResourcePostingEntity implements Serializable {
     @NotNull
     @Column(nullable=false)
     private Double longitude;
+    
+    @NotNull
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private MrpStatusEnum status;
     
     @JoinTable(name = "allocatedMrps")
     @ManyToMany
@@ -95,6 +101,7 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.tags = new ArrayList<>();
         this.activities = new ArrayList<>();
         this.fulfillments = new ArrayList<>();
+        this.status = MrpStatusEnum.OPEN;
     }
 
     public MaterialResourcePostingEntity(String name, String unit, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
@@ -262,6 +269,14 @@ public class MaterialResourcePostingEntity implements Serializable {
 
     public void setFulfillments(List<FulfillmentEntity> fulfillments) {
         this.fulfillments = fulfillments;
+    }
+
+    public MrpStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(MrpStatusEnum status) {
+        this.status = status;
     }
     
 }

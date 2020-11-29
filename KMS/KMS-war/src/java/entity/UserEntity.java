@@ -80,6 +80,8 @@ public class UserEntity implements Serializable {
     private Boolean isVerified;
 
     private Boolean isActive;
+    
+    private String paypalEmail;
 
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
@@ -612,6 +614,14 @@ public class UserEntity implements Serializable {
 
     public void setClaimProfileRequestMade(List<ClaimProfileRequestEntity> claimProfileRequestMade) {
         this.claimProfileRequestMade = claimProfileRequestMade;
+    }
+
+    public String getPaypalEmail() {
+        return paypalEmail;
+    }
+
+    public void setPaypalEmail(String paypalEmail) {
+        this.paypalEmail = paypalEmail;
     }
 
 }
