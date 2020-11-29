@@ -112,6 +112,7 @@ import { ProjectRecommendationsComponent } from './view-recommendations/project-
 import { GroupRecommendationsComponent } from './view-recommendations/group-recommendations/group-recommendations.component';
 import { ManageTagsComponent } from './administration/manage-tags/manage-tags.component';
 import { AwardsAndBadgesComponent } from './user-profile/awards-and-badges/awards-and-badges.component';
+import { HandleTagRequestsComponent } from './administration/handle-tag-requests/handle-tag-requests.component';
 
 export const environment = {
   production: false,
@@ -222,7 +223,8 @@ export const environment = {
     ProjectRecommendationsComponent,
     GroupRecommendationsComponent,
     ManageTagsComponent,
-    AwardsAndBadgesComponent
+    AwardsAndBadgesComponent,
+    HandleTagRequestsComponent
   ],
   imports: [
     BrowserModule,

@@ -53,11 +53,11 @@
     <label for="sdgs" class="col-sm-2 col-form-label">Interested SDGs</label>
     <div class="SDGTags">
       <div *ngFor="let sdg of allSDGTags">
-        <small *ngIf="checkIfTagSelectedByUser(sdg)" class="edit-sdg badge badge-dark" (click)="removeSDG(sdg)">
+        <small *ngIf="checkIfTagSelectedByUser(sdg)" class="edit-sdg badge badge-dark" style="margin: 5px;" (click)="removeSDG(sdg)">
           {{sdg.name}}
           <i class="far fa-times-circle"></i>
         </small>
-        <small *ngIf="!checkIfTagSelectedByUser(sdg)" class="edit-sdg badge badge-light" (click)="addSDG(sdg)">
+        <small *ngIf="!checkIfTagSelectedByUser(sdg)" class="edit-sdg badge badge-light" style="margin: 5px;" (click)="addSDG(sdg)">
           {{sdg.name}}
         </small>
       </div>

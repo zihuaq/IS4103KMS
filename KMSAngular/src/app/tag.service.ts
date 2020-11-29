@@ -6,6 +6,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Tag } from './classes/tag';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -17,7 +18,12 @@ const httpOptions = {
 export class TagService {
   baseUrl: string = '/api/tag';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  createNewTag(tag: Tag) {
+    return this.http
+      .post<any>(this.baseUrl + '/createNewTag', tag, httpOptions).pipe(catchError(this.handleError));
+  }
 
   getAllSkillTags(): Observable<any> {
     return this.http

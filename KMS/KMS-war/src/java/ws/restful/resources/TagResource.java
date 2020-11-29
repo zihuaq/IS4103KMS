@@ -6,7 +6,9 @@
 package ws.restful.resources;
 
 import Exception.NoResultException;
+import Exception.TagNameExistException;
 import ejb.session.stateless.TagSessionBeanLocal;
+import entity.TagEntity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -23,6 +25,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import ws.restful.model.ErrorRsp;
 
 /**
  * REST Web Service
@@ -43,61 +46,76 @@ public class TagResource {
     public TagResource() {
     }
 
+    @PUT
+    @Path("/createNewTag")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewTag(TagEntity tag) {
+        try {
+            tagSessionBeanLocal.createNewTag(tag);
+            return Response.status(Response.Status.OK).build();
+        } catch (TagNameExistException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+
     @GET
     @Path("/skill")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSkillTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllSkillTags()).build();
     }
-    
+
     @GET
     @Path("/materialresource")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllMaterialResourceTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllMaterialResourceTags()).build();
     }
-    
+
     @GET
     @Path("/sdg")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSDGTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllSDGTags()).build();
     }
-    
+
     @GET
     @Path("/report/profile")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProfileReportTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllProfileReportTags()).build();
     }
+
     @GET
     @Path("/report/group")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllGroupReportTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllGroupReportTags()).build();
     }
-    
+
     @GET
     @Path("/report/project")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProjectReportTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllProjectReportTags()).build();
     }
-    
+
     @GET
     @Path("/report/post")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPostReportTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllPostReportTags()).build();
     }
-    
+
     @GET
     @Path("/report/review")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllReviewReportTags() {
         return Response.status(200).entity(tagSessionBeanLocal.getAllReviewReportTags()).build();
     }
-    
+
     @GET
     @Path("/report/comment")
     @Produces(MediaType.APPLICATION_JSON)
