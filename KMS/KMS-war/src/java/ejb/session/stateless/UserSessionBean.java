@@ -9,13 +9,16 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
+import Exception.QuestionnaireAlreadyCompletedException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.AwardEntity;
 import entity.FollowRequestEntity;
 import entity.FulfillmentEntity;
 import entity.GroupEntity;
+import entity.IndividualQuestionnaireEntity;
 import entity.MaterialResourceAvailableEntity;
+import entity.OrganisationQuestionnaireEntity;
 import entity.PostEntity;
 import entity.ProfileEntity;
 import entity.ProjectEntity;
@@ -76,6 +79,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.setCountOfProjectsCreated(0);
         user.setCountOfProjectsJoined(0);
         user.setCountOfReviewsCreated(0);
+        user.setCompletedQuestionnaire(Boolean.FALSE);
         em.persist(user);
         em.flush();
         System.out.println(user);
@@ -995,11 +999,38 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
     
     
-
     @Override
     public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException {
         UserEntity userEntity = getUserById(userId);
         userEntity.getProfiles().size();
         return userEntity.getProfiles();
+    }
+    
+    public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException{
+        UserEntity user = getUserById(userId);
+        if(user.getCompletedQuestionnaire()){
+            throw new QuestionnaireAlreadyCompletedException("Questionnaire has already been submitted");
+        }
+        else{
+            em.persist(questionnaire);
+            user.setIndividualQuestionnaire(questionnaire);
+            em.flush();
+        }
+        
+        return questionnaire.getIndividualQuestionnaireId();
+    }
+    
+    public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException{
+        UserEntity user = getUserById(userId);
+        if(user.getCompletedQuestionnaire()){
+            throw new QuestionnaireAlreadyCompletedException("Questionnaire has already been submitted");
+        }
+        else{
+            em.persist(questionnaire);
+            user.setOrganisationQuestionnaire(questionnaire);
+            em.flush();
+        }
+        
+        return questionnaire.getOrganisationQuestionnaireId();
     }
 }

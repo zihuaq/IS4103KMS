@@ -20,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -78,6 +79,15 @@ public class UserEntity implements Serializable {
     private Boolean isVerified;
 
     private Boolean isActive;
+    
+    private Boolean completedQuestionnaire;
+    
+    @OneToOne
+    private IndividualQuestionnaireEntity individualQuestionnaire;
+    
+    @OneToOne
+    private OrganisationQuestionnaireEntity organisationQuestionnaire;
+    
 
     @OneToMany(mappedBy = "from")
     private List<ReviewEntity> reviewsGiven;
@@ -173,6 +183,7 @@ public class UserEntity implements Serializable {
     private Integer CountOfCommentsCreated;
     
     private Integer CountOfReviewsCreated;
+    
 
     @OneToMany 
     private List<NotificationEntity> notifications;
@@ -729,4 +740,29 @@ public class UserEntity implements Serializable {
         this.claimProfileRequestMade = claimProfileRequestMade;
     }
 
+    public Boolean getCompletedQuestionnaire() {
+        return completedQuestionnaire;
+    }
+
+    public void setCompletedQuestionnaire(Boolean completedQuestionnaire) {
+        this.completedQuestionnaire = completedQuestionnaire;
+    }
+
+    public IndividualQuestionnaireEntity getIndividualQuestionnaire() {
+        return individualQuestionnaire;
+    }
+
+    public void setIndividualQuestionnaire(IndividualQuestionnaireEntity individualQuestionnaire) {
+        this.individualQuestionnaire = individualQuestionnaire;
+    }
+
+    public OrganisationQuestionnaireEntity getOrganisationQuestionnaire() {
+        return organisationQuestionnaire;
+    }
+
+    public void setOrganisationQuestionnaire(OrganisationQuestionnaireEntity organisationQuestionnaire) {
+        this.organisationQuestionnaire = organisationQuestionnaire;
+    }
+    
+    
 }

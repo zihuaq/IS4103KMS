@@ -12,6 +12,8 @@ import { Group } from './group';
 import { Award } from './award';
 import { Profile } from './profile';
 import { ClaimProfileRequest } from './claim-profile-request';
+import { IndividualQuestionnaire } from './individualQuestionnaire';
+import { OrganisationQuestionnaire } from './organisationQuestionnaire';
 
 export class User {
   userId: number;
@@ -56,6 +58,9 @@ export class User {
   CountOfReviewsCreated: number;
   profiles: Profile[];
   claimProfileRequestMade: ClaimProfileRequest[];
+  completedQuestionnaire: boolean
+  individualQuestionnaire: IndividualQuestionnaire
+  organisationQuestionnaire: OrganisationQuestionnaire
 
   constructor(
     userId?: number,
@@ -90,7 +95,10 @@ export class User {
     activityJoined?: Activity[],
     groupsJoined?: Group[],
     profiles?: Profile[],
-    claimProfileRequestMade?: ClaimProfileRequest[]
+    claimProfileRequestMade?: ClaimProfileRequest[],
+    completedQuestionnaire?: boolean,
+    individualQuestionnaire?: IndividualQuestionnaire,
+    organisationQuestionnaire?: OrganisationQuestionnaire
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -125,5 +133,8 @@ export class User {
     this.groupsJoined = groupsJoined;
     this.profiles = profiles;
     this.claimProfileRequestMade = claimProfileRequestMade;
+    this.completedQuestionnaire = completedQuestionnaire
+    this.individualQuestionnaire = this.individualQuestionnaire
+    this.organisationQuestionnaire = this.organisationQuestionnaire
   }
 }

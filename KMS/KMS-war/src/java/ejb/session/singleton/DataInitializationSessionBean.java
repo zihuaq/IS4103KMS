@@ -262,6 +262,8 @@ public class DataInitializationSessionBean {
         } catch (CreateProjectException ex) {
             System.out.println(ex.getMessage());
         }
+        
+        
 
         try {
 

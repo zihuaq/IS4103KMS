@@ -54,6 +54,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.ErrorRsp;
+import ws.restful.model.SubmitIndividualQuestionnaireReq;
+import ws.restful.model.SubmitOrganisationQuestionnaireReq;
 import ws.restful.model.UpdateUserPasswordReq;
 import ws.restful.model.editReviewReq;
 import ws.restful.model.editReviewRsp;
@@ -67,6 +69,8 @@ import ws.restful.model.editReviewRsp;
 public class UserResource {
 
     BadgeSessionBeanLocal badgeSessionBean = lookupBadgeSessionBeanLocal();
+
+   
 
     UserSessionBeanLocal userSessionBeanLocal = lookupUserSessionBeanLocal();
 
@@ -102,6 +106,17 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
+    
+     private BadgeSessionBeanLocal lookupBadgeSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (BadgeSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/BadgeSessionBean!ejb.session.stateless.BadgeSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
 
     @PUT
     @Path("/addskills/{userId}")
@@ -1261,6 +1276,37 @@ public class UserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+    
+    @Path("submitIndividualQuestionnaire")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response submitIndividualQuestionnaire(SubmitIndividualQuestionnaireReq submitIndividualQuestionnaireReq) {
+        try {
+            Long questionnaireId = userSessionBeanLocal.submitIndividualQuestionnaire(submitIndividualQuestionnaireReq.getIndividualQuestionnaire(), submitIndividualQuestionnaireReq.getUserId());
+            List<TagEntity> updatedSDGs = userSessionBeanLocal.addSDGsToProfile(submitIndividualQuestionnaireReq.getUserId(), submitIndividualQuestionnaireReq.getSdgs());
+            return Response.status(200).entity(updatedSDGs).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("submitOrganisationQuestionnaire")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response submitOrganisationQuestionnaire(SubmitOrganisationQuestionnaireReq submitOrganisationQuestionnaireReq) {
+        try {
+            Long questionnaireId = userSessionBeanLocal.submitOrganisationQuestionnaire(submitOrganisationQuestionnaireReq.getOrganisationQuestionnaire(), submitOrganisationQuestionnaireReq.getUserId());
+            List<TagEntity> updatedSDGs = userSessionBeanLocal.addSDGsToProfile(submitOrganisationQuestionnaireReq.getUserId(), submitOrganisationQuestionnaireReq.getSdgs());
+            return Response.status(200).entity(updatedSDGs).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+
 
     public void persist(Object object) {
         /* Add this to the deployment descriptor of this module (e.g. web.xml, ejb-jar.xml):
@@ -1310,14 +1356,7 @@ public class UserResource {
         }
     }
 
-    private BadgeSessionBeanLocal lookupBadgeSessionBeanLocal() {
-        try {
-            javax.naming.Context c = new InitialContext();
-            return (BadgeSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/BadgeSessionBean!ejb.session.stateless.BadgeSessionBeanLocal");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
-        }
-    }
+   
+    
 
 }
