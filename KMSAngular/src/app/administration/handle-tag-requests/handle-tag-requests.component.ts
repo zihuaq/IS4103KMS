@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { TagRequest } from 'src/app/classes/tag-request';
 import { TagType } from 'src/app/classes/tag-type.enum';
 import { TagService } from 'src/app/tag.service';
@@ -14,6 +14,8 @@ export class HandleTagRequestsComponent implements OnInit {
   tagRequests: TagRequest[];
   TagType = TagType;
   reqToHandle: TagRequest;
+  
+  // @Output() tagsChanged = new EventEmitter<void>();
 
   constructor(public tagService: TagService) { }
 
@@ -66,6 +68,7 @@ export class HandleTagRequestsComponent implements OnInit {
           body: 'Tag Request Accepted!',
         });
         this.updateTagRequests();
+        // this.tagsChanged.emit();
       },
       (error) => {
         $(document).Toasts('create', {

@@ -93,6 +93,26 @@ public class TagSessionBean implements TagSessionBeanLocal {
     }
 
     @Override
+    public void updateTag(TagEntity tag) throws TagNameExistException, NoResultException {
+        System.out.println("Tag: " + tag.getName());
+        TagEntity tagFound = em.find(TagEntity.class, tag.getTagId());
+        if (tagFound != null) {
+            Query q = em.createQuery("SELECT t FROM TagEntity t WHERE LOWER(t.name)= :name AND t.tagType = :tagType");
+            q.setParameter("name", tag.getName().toLowerCase());
+            q.setParameter("tagType", tag.getTagType());
+            List<TagEntity> tags = (List<TagEntity>) q.getResultList();
+
+            if (tags.isEmpty()) {
+                tagFound.setName(tag.getName());
+            } else {
+                throw new TagNameExistException("Name of Tag exist");
+            }
+        } else {
+            throw new NoResultException("Tag not found");
+        }
+    }
+
+    @Override
     public List<TagEntity> getAllSkillTags() {
         Query q = em.createQuery("SELECT t FROM TagEntity t WHERE t.tagType = :tagType");
         q.setParameter("tagType", TagTypeEnum.SKILL);

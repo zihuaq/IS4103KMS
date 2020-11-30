@@ -68,6 +68,21 @@ public class TagResource {
     }
 
     @PUT
+    @Path("/updateTag")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTag(TagEntity tag) {
+        try {
+            tagSessionBeanLocal.updateTag(tag);
+            return Response.status(200).build();
+        } catch (NoResultException | TagNameExistException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
     @Path("/createTagRequest")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -104,7 +119,7 @@ public class TagResource {
     }
 
     @DELETE
-    @Path("/{tagRequestId}")
+    @Path("/rejectTagRequest/{tagRequestId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response rejectTagRequest(@PathParam("tagRequestId") Long tagRequestId) {
         try {
@@ -119,7 +134,7 @@ public class TagResource {
     }
 
     @PUT
-    @Path("/{tagRequestId}")
+    @Path("/acceptTagRequest/{tagRequestId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response acceptTagRequest(@PathParam("tagRequestId") Long tagRequestId) {
         try {

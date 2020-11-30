@@ -26,6 +26,11 @@ export class TagService {
       .put<any>(this.baseUrl + '/createNewTag', tag, httpOptions).pipe(catchError(this.handleError));
   }
 
+  updateTag(tag: Tag) {
+    return this.http
+      .put<any>(this.baseUrl + '/updateTag', tag, httpOptions).pipe(catchError(this.handleError));
+  }
+
   createTagRequest(tagRequest: TagRequest) {
     return this.http
       .put<any>(this.baseUrl + '/createTagRequest', tagRequest, httpOptions).pipe(catchError(this.handleError));

@@ -112,8 +112,10 @@
             <p>Logout</p>
           </a>
         </li>
-        <button type="button" class="btn btn-warning" routerLink="/donateToPlatform">Donate</button>
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-make-tag-request">Make Tag
+        <button type="button" class="btn btn-warning" routerLink="/donateToPlatform"
+          style="margin: 2px;">Donate</button>
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-make-tag-request"
+          style="margin: 2px;">Make Tag
           Request</button>
       </ul>
     </nav>
@@ -136,11 +138,12 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="tag-request-name">Tag Name</label>
-            <input type="text" id="tag-request-name" class="form-control"
-              placeholder="Enter Name" name="name" required ngModel>
+            <input type="text" id="tag-request-name" class="form-control" placeholder="Enter Name" name="name" required
+              ngModel>
           </div>
           <label for="requested-tag-type"> Tag Type </label>
-          <select id="requested-tag-type" class="form-control" placeholder="Select Tag Types" name="tagType" required ngModel>
+          <select id="requested-tag-type" class="form-control" placeholder="Select Tag Types" name="tagType" required
+            ngModel>
             <option disabled value="Select Tag Type">Select Tag Type</option>
             <option value="SKILL">Skill</option>
             <option value="SDG">SDG</option>
@@ -153,8 +156,10 @@
           </select>
         </div>
         <div class="modal-footer justify-content-between">
-          <button type="button" id="makeTagReqModalCloseBtn" class="btn btn-secondary" data-dismiss="modal" (click)="clear(tagForm)">Cancel</button>
-          <button type="button" class="btn btn-success" [disabled]="!tagForm.valid" type="submit">Submit Request</button>
+          <button type="button" id="makeTagReqModalCloseBtn" class="btn btn-secondary" data-dismiss="modal"
+            (click)="clear(tagForm)">Cancel</button>
+          <button type="button" class="btn btn-success" [disabled]="!tagForm.valid" type="submit">Submit
+            Request</button>
         </div>
       </form>
     </div>

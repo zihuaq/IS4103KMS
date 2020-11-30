@@ -36,7 +36,7 @@ export class ManageTagsComponent implements OnInit {
   constructor(
     public tagService: TagService,
     private sessionService: SessionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
@@ -47,7 +47,31 @@ export class ManageTagsComponent implements OnInit {
     this.tagToEdit = tag;
   }
 
-  saveEditingTag() {}
+  saveEditingTag() {
+    this.tagService.updateTag(this.tagToEdit).subscribe(
+      (response) => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Tag Updated!',
+        });
+        this.tagToEdit = null;
+        this.filter();
+      },
+      (error) => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+        this.tagToEdit = null;
+      }
+    );
+  }
 
   addTag(tagForm: NgForm) {
     console.log('Add Tag method');

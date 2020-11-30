@@ -1,66 +1,68 @@
 <h4> Tag Requests</h4>
 
 <div *ngIf="tagRequests && tagRequests.length == 0">
-    <b>No Tag Requests</b>
+    No Tag Requests
 </div>
 
 <span *ngIf="tagRequests && tagRequests.length > 0">
-    <div class="list-group-item clearfix" *ngFor="let tagRequest of tagRequests">
-        <span class="pull-left">
-            <img *ngIf="tagRequest.requestOwner.profilePicture" src="tagRequest.requestOwner.profilePicture" alt=""
-                class="img-responsive" style="max-height: 20px;">
-            <img *ngIf="!tagRequest.requestOwner.profilePicture"
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
-                class="img-responsive" style="max-height: 20px;">
-            <a routerLink="/userProfile/{{tagRequest.requestOwner.userId}}">
-                {{tagRequest.requestOwner.firstName}} {{tagRequest.requestOwner.lastName}}
-            </a>
-            requested for Tag to be created.
-        </span>
-        <hr />
-        <div>
-            <p class="list-group-item-text" style="font-size: medium;">
-                Requested Tag Name: {{tagRequest.requestedName}}
+    <div *ngFor="let tagRequest of tagRequests">
+        <div class="list-group-item clearfix">
+            <span class="pull-left">
+                <img *ngIf="tagRequest.requestOwner.profilePicture" src="tagRequest.requestOwner.profilePicture" alt=""
+                    class="img-responsive" style="max-height: 20px;">
+                <img *ngIf="!tagRequest.requestOwner.profilePicture"
+                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
+                    class="img-responsive" style="max-height: 20px;">
+                <a routerLink="/userProfile/{{tagRequest.requestOwner.userId}}">
+                    {{tagRequest.requestOwner.firstName}} {{tagRequest.requestOwner.lastName}}
+                </a>
+                requested for Tag to be created.
+            </span>
+            <hr />
+            <div>
+                <p class="list-group-item-text" style="font-size: medium;">
+                    Requested Tag Name: {{tagRequest.requestedName}}
+                </p>
+            </div>
+            <p>Requested Tag Type:
+                <small *ngIf="tagRequest.requestedTagType == TagType.SKILL" class="badge badge-warning"
+                    style="margin: 5px;">
+                    Skill Tag
+                </small>
+                <small *ngIf="tagRequest.requestedTagType == TagType.MATERIALRESOURCE" class="badge badge-info"
+                    style="margin: 5px;">
+                    Material Resource Tag
+                </small>
+                <small *ngIf="tagRequest.requestedTagType == TagType.SDG" class="badge badge-dark" style="margin: 5px;">
+                    SDG Tag
+                </small>
+                <small *ngIf="tagRequest.requestedTagType==TagType.REPORTPROFILE" class="badge badge-danger"
+                    style="margin: 5px;">
+                    Report Profile Tag
+                </small>
+                <small *ngIf="tagRequest.requestedTagType==TagType.REPORTPROJECT" class="badge badge-danger"
+                    style="margin: 5px;">
+                    Report Project Tag
+                </small>
+                <small *ngIf="tagRequest.requestedTagType==TagType.REPORTGROUP" class="badge badge-danger"
+                    style="margin: 5px;">
+                    Report Group Tag
+                </small>
+                <small *ngIf="tagRequest.requestedTagType==TagType.REPORTPOST" class="badge badge-danger"
+                    style="margin: 5px;">
+                    Report Post Tag
+                </small>
+                <small *ngIf="tagRequest.requestedTagType==TagType.REPORTCOMMENT" class="badge badge-danger"
+                    style="margin: 5px;">
+                    Report Comment Tag
+                </small>
             </p>
+            <hr>
+            <button type="button" style="float: left;" class="btn btn-danger btn-sm" data-toggle="modal"
+                data-target="#modal-reject-tag-req" (click)="setRequestToHandle(tagRequest)">Reject</button>
+            <button type="button" style="float: right;" class="btn bg-olive btn-sm" data-toggle="modal"
+                data-target="#modal-accept-tag-req" (click)="setRequestToHandle(tagRequest)">Accept</button>
         </div>
-        <p>Requested Tag Type:
-            <small *ngIf="tagRequest.requestedTagType == TagType.SKILL" class="badge badge-warning"
-                style="margin: 5px;">
-                Skill Tag
-            </small>
-            <small *ngIf="tagRequest.requestedTagType == TagType.MATERIALRESOURCE" class="badge badge-info"
-                style="margin: 5px;">
-                Material Resource Tag
-            </small>
-            <small *ngIf="tagRequest.requestedTagType == TagType.SDG" class="badge badge-dark" style="margin: 5px;">
-                SDG Tag
-            </small>
-            <small *ngIf="tagRequest.requestedTagType==TagType.REPORTPROFILE" class="badge badge-danger"
-                style="margin: 5px;">
-                Report Profile Tag
-            </small>
-            <small *ngIf="tagRequest.requestedTagType==TagType.REPORTPROJECT" class="badge badge-danger"
-                style="margin: 5px;">
-                Report Project Tag
-            </small>
-            <small *ngIf="tagRequest.requestedTagType==TagType.REPORTGROUP" class="badge badge-danger"
-                style="margin: 5px;">
-                Report Group Tag
-            </small>
-            <small *ngIf="tagRequest.requestedTagType==TagType.REPORTPOST" class="badge badge-danger"
-                style="margin: 5px;">
-                Report Post Tag
-            </small>
-            <small *ngIf="tagRequest.requestedTagType==TagType.REPORTCOMMENT" class="badge badge-danger"
-                style="margin: 5px;">
-                Report Comment Tag
-            </small>
-        </p>
-        <hr>
-        <button type="button" style="float: left;" class="btn btn-danger btn-sm" data-toggle="modal"
-            data-target="#modal-reject-tag-req" (click)="setRequestToHandle(tagRequest)">Reject</button>
-        <button type="button" style="float: right;" class="btn bg-olive btn-sm" data-toggle="modal"
-            data-target="#modal-accept-tag-req" (click)="setRequestToHandle(tagRequest)">Accept</button>
     </div>
 </span>
 

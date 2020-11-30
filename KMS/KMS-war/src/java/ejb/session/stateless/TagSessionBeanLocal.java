@@ -26,10 +26,12 @@ public interface TagSessionBeanLocal {
     public List<TagRequestEntity> getTagRequests();
 
     public void rejectTagRequest(long tagRequestId) throws NoResultException;
-    
-    public void acceptTagRequest(long tagRequestId) throws NoResultException, TagNameExistException ;
+
+    public void acceptTagRequest(long tagRequestId) throws NoResultException, TagNameExistException;
 
     public void createNewTag(TagEntity tag) throws TagNameExistException;
+
+    public void updateTag(TagEntity tag) throws TagNameExistException, NoResultException;
 
     public List<TagEntity> getAllSkillTags();
 
