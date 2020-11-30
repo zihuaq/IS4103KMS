@@ -31,6 +31,28 @@ export class TagService {
       .put<any>(this.baseUrl + '/createTagRequest', tagRequest, httpOptions).pipe(catchError(this.handleError));
   }
 
+  getTagRequests(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/tagRequests')
+      .pipe(catchError(this.handleError));
+  }
+
+  rejectTagRequest(
+    tagRequestId: number
+  ): Observable<any> {
+    return this.http
+      .delete<any>(this.baseUrl + '/rejectTagRequest/' + tagRequestId)
+      .pipe(catchError(this.handleError));
+  }
+
+  acceptTagRequest(
+    tagRequestId: number
+  ): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/acceptTagRequest/' + tagRequestId, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
   getAllSkillTags(): Observable<any> {
     return this.http
       .get<any>(this.baseUrl + '/skill')
