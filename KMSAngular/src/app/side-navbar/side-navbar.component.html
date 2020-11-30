@@ -132,31 +132,33 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="tag-request-name">Tag Name</label>
-          <input type="text" id="tag-request-name" class="form-control" [(ngModel)]="tagRequest.requestedName"
-            placeholder="Enter Name" name="name" required>
+      <form #tagForm="ngForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="tag-request-name">Tag Name</label>
+            <input type="text" id="tag-request-name" class="form-control" [(ngModel)]="tagRequest.requestedName"
+              placeholder="Enter Name" name="name" required>
+          </div>
+          <label for="requested-tag-type"> Tag Type </label>
+          <select id="requested-tag-type" class="form-control" placeholder="Select Tag Types" name="tagType"
+            [(ngModel)]="tagRequest.requestedTagType" required>
+            <option disabled value="Select Tag Type">Select Tag Type</option>
+            <option value="TagType.SKILL">Skill</option>
+            <option value="TagType.SDG">SDG</option>
+            <option value="TagType.MATERIALRESOURCE">Material Resource</option>
+            <option value="TagType.REPORTPROFILE">Report Profile</option>
+            <option value="TagType.REPORTGROUP">Report Group</option>
+            <option value="TagType.REPORTPROJECT">Report Project</option>
+            <option value="TagType.REPORTPOST">Report Post</option>
+            <option value="TagType.REPORTCOMMENT">Report Comment</option>
+          </select>
         </div>
-        <label for="requested-tag-type"> Tag Type </label>
-        <select id="requested-tag-type" class="form-control" placeholder="Select Tag Types" name="tagType"
-          [(ngModel)]="tagRequest.requestedTagType" required>
-          <option disabled value="Select Tag Type">Select Tag Type</option>
-          <option value="TagType.SKILL">Skill</option>
-          <option value="TagType.SDG">SDG</option>
-          <option value="TagType.MATERIALRESOURCE">Material Resource</option>
-          <option value="TagType.REPORTPROFILE">Report Profile</option>
-          <option value="TagType.REPORTGROUP">Report Group</option>
-          <option value="TagType.REPORTPROJECT">Report Project</option>
-          <option value="TagType.REPORTPOST">Report Post</option>
-          <option value="TagType.REPORTCOMMENT">Report Comment</option>
-        </select>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">Cancel</button>
-        <button type="button" class="btn btn-success" data-dismiss="modal" type="submit"
-          (click)="submitTagRequest()">Submit Request</button>
-      </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">Cancel</button>
+          <button type="button" class="btn btn-success" data-dismiss="modal" [disabled]="!tagForm.valid"
+            (click)="submitTagRequest()">Submit Request</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
