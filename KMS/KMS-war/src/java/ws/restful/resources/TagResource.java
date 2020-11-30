@@ -52,6 +52,7 @@ public class TagResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewTag(TagEntity tag) {
         try {
+            System.out.println("create new tag");
             tagSessionBeanLocal.createNewTag(tag);
             return Response.status(Response.Status.OK).build();
         } catch (TagNameExistException ex) {
