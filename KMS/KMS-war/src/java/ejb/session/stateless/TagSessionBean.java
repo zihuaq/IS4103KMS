@@ -3,6 +3,7 @@ package ejb.session.stateless;
 import Exception.NoResultException;
 import entity.TagEntity;
 import Exception.TagNameExistException;
+import entity.TagRequestEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -30,6 +31,20 @@ public class TagSessionBean implements TagSessionBeanLocal {
         }
     }
 
+    @Override
+    public void createTagRequest(TagRequestEntity tagRequest) throws TagNameExistException {
+        Query q = em.createQuery("SELECT t FROM TagEntity t WHERE LOWER(t.name)= :name AND t.tagType = :tagType");
+        q.setParameter("name", tagRequest.getRequestedName().toLowerCase());
+        q.setParameter("tagType", tagRequest.getRequestedTagType());
+        List<TagEntity> tags = (List<TagEntity>) q.getResultList();
+
+        if (tags.isEmpty()) {
+            em.persist(tagRequest);
+        } else {
+            throw new TagNameExistException("Name of Tag exist");
+        }
+    }
+    
     @Override
     public void createNewTag(TagEntity tag) throws TagNameExistException {
         System.out.println("Tag type: " + tag.getTagType());

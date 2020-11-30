@@ -9,6 +9,7 @@ import Exception.NoResultException;
 import Exception.TagNameExistException;
 import ejb.session.stateless.TagSessionBeanLocal;
 import entity.TagEntity;
+import entity.TagRequestEntity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -54,6 +55,20 @@ public class TagResource {
         try {
             System.out.println("create new tag");
             tagSessionBeanLocal.createNewTag(tag);
+            return Response.status(Response.Status.OK).build();
+        } catch (TagNameExistException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+
+    @PUT
+    @Path("/createTagRequest")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createTagRequest(TagRequestEntity tagRequest) {
+        try {
+            tagSessionBeanLocal.createTagRequest(tagRequest);
             return Response.status(Response.Status.OK).build();
         } catch (TagNameExistException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());

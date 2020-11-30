@@ -78,7 +78,6 @@ export class ManageTagsComponent implements OnInit {
         }
       );
       $('#addTagModalCloseBtn').click();
-      tagForm.reset();
     }
   }
 
@@ -87,6 +86,7 @@ export class ManageTagsComponent implements OnInit {
   }
 
   filter() {
+    this.allTags = [];
     forkJoin([
       this.tagService.getAllSkillTags(),
       this.tagService.getAllSDGTags(),

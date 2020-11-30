@@ -7,6 +7,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Tag } from './classes/tag';
+import { TagRequest } from './classes/tag-request';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -23,6 +24,11 @@ export class TagService {
   createNewTag(tag: Tag) {
     return this.http
       .put<any>(this.baseUrl + '/createNewTag', tag, httpOptions).pipe(catchError(this.handleError));
+  }
+
+  createTagRequest(tagRequest: TagRequest) {
+    return this.http
+      .put<any>(this.baseUrl + '/createTagRequest', tagRequest, httpOptions).pipe(catchError(this.handleError));
   }
 
   getAllSkillTags(): Observable<any> {
