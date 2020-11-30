@@ -12,7 +12,7 @@ declare var $: any;
 @Component({
   selector: 'app-manage-tags',
   templateUrl: './manage-tags.component.html',
-  styleUrls: ['./manage-tags.component.css']
+  styleUrls: ['./manage-tags.component.css'],
 })
 export class ManageTagsComponent implements OnInit {
   loggedInUser: User;
@@ -33,7 +33,10 @@ export class ManageTagsComponent implements OnInit {
 
   tagToEdit: Tag;
 
-  constructor(public tagService: TagService, private sessionService: SessionService) { }
+  constructor(
+    public tagService: TagService,
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
@@ -44,14 +47,12 @@ export class ManageTagsComponent implements OnInit {
     this.tagToEdit = tag;
   }
 
-  saveEditingTag() {
-
-  }
+  saveEditingTag() {}
 
   addTag(tagForm: NgForm) {
-    console.log("Add Tag method")
+    console.log('Add Tag method');
     if (tagForm.valid) {
-      console.log("valid")
+      console.log('valid');
       let newTag = new Tag();
       newTag.name = tagForm.value.name;
       newTag.tagType = tagForm.value.tagType;
@@ -75,9 +76,14 @@ export class ManageTagsComponent implements OnInit {
             body: error,
           });
         }
-      )
+      );
+      $('#addTagModalCloseBtn').click();
       tagForm.reset();
     }
+  }
+
+  clear(tagForm: NgForm) {
+    tagForm.reset();
   }
 
   filter() {
@@ -89,16 +95,25 @@ export class ManageTagsComponent implements OnInit {
       this.tagService.getAllGroupReportTags(),
       this.tagService.getAllProjectReportTags(),
       this.tagService.getAllPostReportTags(),
-      this.tagService.getAllCommentReportTags()
+      this.tagService.getAllCommentReportTags(),
     ]).subscribe((result) => {
-      this.allTags = this.allTags.concat(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7])
+      this.allTags = this.allTags.concat(
+        result[0],
+        result[1],
+        result[2],
+        result[3],
+        result[4],
+        result[5],
+        result[6],
+        result[7]
+      );
       this.filteredTags = this.allTags;
-      if (this.searchInput && this.searchInput != "") {
-        this.filteredTags = this.allTags.filter(
-          (tag: Tag) => {
-            return tag.name.toLowerCase().includes(this.searchInput.toLowerCase())
-          }
-        )
+      if (this.searchInput && this.searchInput != '') {
+        this.filteredTags = this.allTags.filter((tag: Tag) => {
+          return tag.name
+            .toLowerCase()
+            .includes(this.searchInput.toLowerCase());
+        });
       }
       var statusSelected = [];
       if (this.skill == true) {
@@ -126,13 +141,12 @@ export class ManageTagsComponent implements OnInit {
         statusSelected.push(TagType.REPORTCOMMENT);
       }
 
-      console.log("Status selected: " + statusSelected);
+      console.log('Status selected: ' + statusSelected);
       if (statusSelected.length != 0) {
-        this.filteredTags = this.filteredTags.filter(
-          (tag: Tag) => {
-            console.log("index: " + statusSelected.indexOf(tag.tagType))
-            return statusSelected.indexOf(tag.tagType) > -1;
-          });
+        this.filteredTags = this.filteredTags.filter((tag: Tag) => {
+          console.log('index: ' + statusSelected.indexOf(tag.tagType));
+          return statusSelected.indexOf(tag.tagType) > -1;
+        });
       }
     });
   }

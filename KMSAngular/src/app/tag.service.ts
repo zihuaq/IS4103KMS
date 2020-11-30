@@ -22,7 +22,7 @@ export class TagService {
 
   createNewTag(tag: Tag) {
     return this.http
-      .post<any>(this.baseUrl + '/createNewTag', tag, httpOptions).pipe(catchError(this.handleError));
+      .put<any>(this.baseUrl + '/createNewTag', tag, httpOptions).pipe(catchError(this.handleError));
   }
 
   getAllSkillTags(): Observable<any> {

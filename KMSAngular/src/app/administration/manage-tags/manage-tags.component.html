@@ -129,10 +129,10 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="name">Tag Name</label>
-                        <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" required>
+                        <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" required ngModel>
                     </div>
                     <label for="tagType"> Tag Type </label>
-                    <select id="tagType" class="form-control" placeholder="Select Tag Types" name="tagType" required>
+                    <select id="tagType" class="form-control" placeholder="Select Tag Types" name="tagType" required ngModel>
                         <option disabled value="Select Tag Type">Select Tag Type</option>
                         <option value="TagType.SKILL">Skill</option>
                         <option value="TagType.SDG">SDG</option>
@@ -145,8 +145,8 @@
                     </select>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal" type="submit"
+                    <button type="button" id="addTagModalCloseBtn" class="btn btn-secondary" data-dismiss="modal" (click)="clear(tagForm)">Cancel</button>
+                    <button type="button" class="btn btn-success" type="submit"
                         [disabled]="!tagForm.valid">Add</button>
                 </div>
             </form>
