@@ -113,6 +113,7 @@ import { GroupRecommendationsComponent } from './view-recommendations/group-reco
 import { ManageTagsComponent } from './administration/manage-tags/manage-tags.component';
 import { AwardsAndBadgesComponent } from './user-profile/awards-and-badges/awards-and-badges.component';
 import { HandleTagRequestsComponent } from './administration/handle-tag-requests/handle-tag-requests.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export const environment = {
   production: false,
@@ -239,8 +240,9 @@ export const environment = {
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule, NgbModule,
+    ReactiveFormsModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

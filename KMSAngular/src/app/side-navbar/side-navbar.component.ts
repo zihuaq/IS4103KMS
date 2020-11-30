@@ -34,14 +34,14 @@ export class SideNavbarComponent implements OnInit {
     this.userService.logout();
   }
 
-  submitTagRequest(tagForm: NgForm) {
+  submitTagRequest() {
     console.log("Submit tag request")
-    tagForm.reset();
+    console.log(this.tagRequest.requestedName)
+    console.log(this.tagRequest.requestedTagType)
     this.tagRequest = new TagRequest();
   }
 
-  clear(tagForm: NgForm) {
-    tagForm.reset();
+  clear() {
     this.tagRequest = new TagRequest();
   }
 }
