@@ -6,7 +6,7 @@
 package session.stateless;
 
 import Exception.NoResultException;
-import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
+import ejb.session.stateless.HumanResourcePostingSessionBeanRemote;
 import entity.HumanResourcePostingEntity;
 import entity.UserEntity;
 import java.text.ParseException;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -31,7 +32,8 @@ import org.junit.Test;
  */
 public class HumanResourcePostingSessionBeanTest {    
 
-    HumanResourcePostingSessionBeanLocal humanResourcePostingSessionBean = lookupHumanResourcePostingSessionBeanLocal();
+    HumanResourcePostingSessionBeanRemote humanResourcePostingSessionBean = lookupHumanResourcePostingSessionBeanRemote();
+
     
     public HumanResourcePostingSessionBeanTest() {
     }
@@ -54,25 +56,6 @@ public class HumanResourcePostingSessionBeanTest {
     
     @Test
     public void testGetHrpById() throws NoResultException {
-//        Date startDate = new Date();
-//        Date endDate = new Date();
-//        try {            
-//            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
-//            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-31");
-//        } catch (ParseException ex) {
-//            System.out.println("Wrong format");
-//        }
-//        HumanResourcePostingEntity expResult = new HumanResourcePostingEntity();
-//        expResult.setName("Volunteer");
-//        expResult.setTotalSlots(10);
-//        expResult.setObtainedSlots(0);
-//        expResult.setLackingSlots(0);
-//        expResult.setDescription("No Skills Needed");
-//        expResult.setStartDate(startDate);
-//        expResult.setEndDate(endDate);
-//        expResult.setLatitude(1.3008);
-//        expResult.setLongitude(103.9122);
-
         Long expResult = 1l;
         
         HumanResourcePostingEntity result = humanResourcePostingSessionBean.getHrpById(1l);
@@ -92,7 +75,7 @@ public class HumanResourcePostingSessionBeanTest {
         List result = humanResourcePostingSessionBean.getListOfHumanResourcePostingByProjectId(4l);
         
         assertFalse(result.isEmpty());
-        assertEquals(2, result.size());
+        assertEquals(3, result.size());
     }
     
     @Test
@@ -112,7 +95,7 @@ public class HumanResourcePostingSessionBeanTest {
         humanResourcePostingSessionBean.joinHrp(expResult, hrpId);
         
         HumanResourcePostingEntity hrp = humanResourcePostingSessionBean.getHrpById(hrpId);
-        
+
         for (UserEntity user: hrp.getAppliedUsers()) {
             if (user.getUserId() == expResult) {
                 assertEquals(expResult, user.getUserId());
@@ -127,19 +110,12 @@ public class HumanResourcePostingSessionBeanTest {
     
     @Test
     public void testAvailableHrp() {
-        Date startDate = new Date();
-        Date endDate = new Date();
-        try {            
-            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
-            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-31");
-        } catch (ParseException ex) {
-            System.out.println("Wrong format");
-        }
+        Date startDate = new Date(2020, 11, 11);
+        Date endDate = new Date(2020, 11, 20);
         
         List result = humanResourcePostingSessionBean.availableHrp(4l, startDate, endDate);
         
-        assertFalse(result.isEmpty());
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
     }
     
     @Test
@@ -152,14 +128,15 @@ public class HumanResourcePostingSessionBeanTest {
         assertEquals(2, result.size());
     }
 
-    private HumanResourcePostingSessionBeanLocal lookupHumanResourcePostingSessionBeanLocal() {
+    private HumanResourcePostingSessionBeanRemote lookupHumanResourcePostingSessionBeanRemote() {
         try {
             Context c = new InitialContext();
-            return (HumanResourcePostingSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/HumanResourcePostingSessionBean!ejb.session.stateless.HumanResourcePostingSessionBeanLocal");
+            return (HumanResourcePostingSessionBeanRemote) c.lookup("java:global/KMS/KMS-war/HumanResourcePostingSessionBean!ejb.session.stateless.HumanResourcePostingSessionBeanRemote");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
         }
     }
+
     
 }

@@ -13,6 +13,8 @@ import entity.UserEntity;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,7 +25,9 @@ import javax.persistence.Query;
  * @author chai
  */
 @Stateless
-public class HumanResourcePostingSessionBean implements HumanResourcePostingSessionBeanLocal {
+@Local(HumanResourcePostingSessionBeanLocal.class)
+@Remote(HumanResourcePostingSessionBeanRemote.class)
+public class HumanResourcePostingSessionBean implements HumanResourcePostingSessionBeanLocal, HumanResourcePostingSessionBeanRemote {
 
     @EJB(name = "UserSessionBeanLocal")
     private UserSessionBeanLocal userSessionBeanLocal;
@@ -61,6 +65,7 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
         HumanResourcePostingEntity hrp = em.find(HumanResourcePostingEntity.class, hrpId);
         if (hrp != null) {
             hrp.getTags().size();
+            hrp.getAppliedUsers().size();
             return hrp;
         } else {
             throw new NoResultException("Huaman Resource Posting does not exists.");
