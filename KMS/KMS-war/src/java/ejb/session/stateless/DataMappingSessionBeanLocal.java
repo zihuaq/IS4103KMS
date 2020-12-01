@@ -19,9 +19,9 @@ import javax.ejb.Local;
 @Local
 public interface DataMappingSessionBeanLocal {
 
-    public void createProfileFromFiles(String filePath) throws IOException;
+    public void uploadProfiles(byte[] fileBytes) throws IOException;
 
-    public List<ProfileEntity> getAllProfiles() throws NoResultException;
+    public List<ProfileEntity> getAllProfiles();
 
     public ProfileEntity getProfile(long id) throws NoResultException;
 

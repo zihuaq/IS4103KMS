@@ -235,15 +235,13 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
-        
+
         tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTREVIEW));
-        
-        
 
         try {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
@@ -383,10 +381,5 @@ public class DataInitializationSessionBean {
             System.out.println(ex.getMessage());
         }
 
-        try {
-            dataMappingSessionBean.createProfileFromFiles("EMERGEdatabase.xlsx");
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 }

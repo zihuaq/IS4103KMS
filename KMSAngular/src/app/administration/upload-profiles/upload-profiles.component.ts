@@ -1,5 +1,7 @@
 import { ProfileService } from './../../profile.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+declare var $: any;
 
 @Component({
   selector: 'app-upload-profiles',
@@ -7,18 +9,51 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./upload-profiles.component.css'],
 })
 export class UploadProfilesComponent implements OnInit {
-  fileToUpload: File;
+  @ViewChild('uploadProfileFile') uploadProfileFileInput: ElementRef;
+  fileToUpload: String | ArrayBuffer;
   constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {}
 
   postMethod(files: FileList) {
-    this.fileToUpload = files.item(0);
-    let formData = new FormData();
-    formData.append('file', this.fileToUpload, this.fileToUpload.name);
-    this.profileService.uploadProfile(formData).subscribe((val) => {
-      console.log(val);
-    });
-    return false;
+    let file = files.item(0);
+    if (file != undefined) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.fileToUpload = e.target.result;
+        console.log(this.uploadProfileFileInput.nativeElement.value);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.fileToUpload = undefined;
+    }
+  }
+
+  upload() {
+    let uploadProfilesReq = { file: this.fileToUpload };
+    this.profileService.uploadProfiles(uploadProfilesReq).subscribe(
+      (val) => {
+        this.fileToUpload = undefined;
+        this.uploadProfileFileInput.nativeElement.value = '';
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Profiles are generated successfully',
+        });
+      },
+      (err) => {
+        this.fileToUpload = undefined;
+        this.uploadProfileFileInput.nativeElement.value = '';
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          title: 'Unable to generate profiles',
+          autohide: true,
+          delay: 2500,
+          body: 'Problem generating profiles',
+        });
+      }
+    );
   }
 }
