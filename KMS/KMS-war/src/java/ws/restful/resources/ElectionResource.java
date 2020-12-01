@@ -165,6 +165,7 @@ public class ElectionResource {
         post.setSharedGroupOrProjectDescription(postToProcess.getSharedGroupOrProjectDescription());
         post.setSharedGroupOrProjectName(postToProcess.getSharedGroupOrProjectName());
         post.setIsPinnedPost(postToProcess.getIsPinnedPost());
+        post.setIsElectionPost(postToProcess.getIsElectionPost());
         UserEntity user = new UserEntity();
         user.setUserId(postToProcess.getPostOwner().getUserId());
         user.setFirstName(postToProcess.getPostOwner().getFirstName());
@@ -208,6 +209,8 @@ public class ElectionResource {
             originalPost.setSharedProjectId(postToProcess.getOriginalPost().getSharedProjectId());
             originalPost.setSharedGroupOrProjectDescription(postToProcess.getOriginalPost().getSharedGroupOrProjectDescription());
             originalPost.setSharedGroupOrProjectName(postToProcess.getOriginalPost().getSharedGroupOrProjectName());
+            originalPost.setIsElectionPost(postToProcess.getOriginalPost().getIsElectionPost());
+            originalPost.setIsPinnedPost(postToProcess.getOriginalPost().getIsPinnedPost());
             if (postToProcess.getOriginalPost().getProject() != null) {
                 ProjectEntity project = new ProjectEntity();
                 project.setProjectId(postToProcess.getOriginalPost().getProject().getProjectId());
@@ -218,6 +221,13 @@ public class ElectionResource {
                 group.setGroupId(postToProcess.getOriginalPost().getGroup().getGroupId());
                 group.setName(postToProcess.getOriginalPost().getGroup().getName());
                 originalPost.setGroup(group);
+            } else if (postToProcess.getOriginalPost().getElection() != null) {
+                ElectionEntity election = new ElectionEntity();
+                election.setName(postToProcess.getOriginalPost().getElection().getName());
+                election.setDescription(postToProcess.getOriginalPost().getElection().getDescription());
+                election.setNumSlots(postToProcess.getOriginalPost().getElection().getNumSlots());
+                election.setMinRepPointsRequired(postToProcess.getOriginalPost().getElection().getMinRepPointsRequired());
+                originalPost.setElection(election);
             }
             post.setOriginalPost(originalPost);
         }
@@ -232,6 +242,13 @@ public class ElectionResource {
             group.setGroupId(postToProcess.getGroup().getGroupId());
             group.setName(postToProcess.getGroup().getName());
             post.setGroup(group);
+        } else if (postToProcess.getElection() != null) {
+            ElectionEntity election = new ElectionEntity();
+            election.setName(postToProcess.getElection().getName());
+            election.setDescription(postToProcess.getElection().getDescription());
+            election.setNumSlots(postToProcess.getElection().getNumSlots());
+            election.setMinRepPointsRequired(postToProcess.getElection().getMinRepPointsRequired());
+            post.setElection(election);
         }
         System.out.println(post);
         System.out.println(postToProcess);

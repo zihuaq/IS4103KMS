@@ -27,7 +27,7 @@
                         style="width: 30%; margin-left: auto;margin-right: auto;" (click)="selectedFile = null"> Remove
                         selected image
                     </button>
-                    <br *ngIf="loggedInUser.userType == UserType.ADMIN"/>
+                    <br *ngIf="loggedInUser.userType == UserType.ADMIN" />
                     <div class="form-group my-checkbox" *ngIf="loggedInUser.userType == UserType.ADMIN">
                         <label class="form-check-label"> Pin Post? </label>
                         &nbsp;
@@ -81,6 +81,9 @@
                             &nbsp;
                             <small class="badge badge-dark" *ngIf="post.isPinnedPost">
                                 Pinned Post
+                            </small>
+                            <small class="badge badge-dark" *ngIf="post.isElectionPost">
+                                Election Post
                             </small>
                         </span>
                         <span class="description">{{post.postDate| date}}</span>
@@ -166,6 +169,28 @@
                         </div>
                     </span>
 
+                    <span *ngIf="post.election" style="display: flex; flex-direction: row; justify-content: center;">
+                        <div style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                            <label> {{post.election.name}} </label>
+                            <br />
+                            {{post.election.description}}
+                            <br />
+                            Looking for {{post.election.numSlots}} new Admins
+                            <br />
+                            Minimum of {{post.election.minRepPointsRequired}} Reputation Points to apply
+                        </div>
+                        <div style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                            <a routerLink="/">
+                                <button type="button" class="btn btn-block btn-info btn"
+                                    style="margin: 2%; justify-self: center;"> View Election Page </button>
+                            </a>
+                            <button type="button" class="btn btn-block bg-olive btn"
+                                style="margin: 2%; justify-self: center;" data-toggle="modal"
+                                data-target="#report-post-modal" (click)="setPostToReport(post.postId)"> Apply Now
+                            </button>
+                        </div>
+                    </span>
+
                     <div *ngIf="post.originalPost && !post.originalPostDeleted" class="shared-post">
                         <div class="user-block">
                             <img *ngIf="post.originalPost.postOwner.profilePicture" class="img-circle"
@@ -185,11 +210,13 @@
                                     *ngIf="post.originalPost.group">
                                     {{post.originalPost.group.name}}</a>
                             </span>
-                            &nbsp;
+                            <span class="description">{{post.originalPost.postDate | date}}</span>
                             <small class="badge badge-dark" *ngIf="post.originalPost.isPinnedPost">
                                 Pinned Post
                             </small>
-                            <span class="description">{{post.originalPost.postDate | date}}</span>
+                            <small class="badge badge-dark" *ngIf="post.originalPost.isElectionPost">
+                                Election Post
+                            </small>
                         </div>
                         <div class="card-body">
                             <br />
@@ -266,6 +293,28 @@
                                         routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}/basic-details">
                                         View Project
                                     </button>
+                                </div>
+                            </span>
+                            <span *ngIf="post.originalPost.election"
+                                style="display: flex; flex-direction: row; justify-content: center;">
+                                <div style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                                    <label> {{post.originalPost.election.name}} </label>
+                                    <br />
+                                    {{post.originalPost.election.description}}
+                                    <br />
+                                    Looking for {{post.originalPost.election.numSlots}} new Admins
+                                    <br />
+                                    Minimum of {{post.originalPost.election.minRepPointsRequired}} Reputation Points to
+                                    apply
+                                </div>
+                                <div>
+                                    <a routerLink="/">
+                                        <button type="button" class="btn btn-block btn-info btn"
+                                            style="margin: 2%; justify-self: center;"> View Election Page </button>
+                                    </a>
+                                    <button type="button" class="btn btn-block bg-olive btn" data-toggle="modal"
+                                        data-target="#report-post-modal" (click)="setPostToReport(post.postId)"
+                                        style="margin: 2%; justify-self: center;"> Apply Now </button>
                                 </div>
                             </span>
                         </div>

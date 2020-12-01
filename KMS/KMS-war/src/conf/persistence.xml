@@ -26,6 +26,9 @@
     <class>entity.ReviewEntity</class>
     <class>entity.TaskEntity</class>
     <class>entity.TagEntity</class>
+    <class>entity.ElectionApplicationEntity</class>
+    <class>entity.ElectionEntity</class>
+    <class>entity.TagRequestEntity</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>

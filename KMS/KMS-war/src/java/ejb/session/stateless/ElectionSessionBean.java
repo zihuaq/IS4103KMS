@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.ElectionEntity;
+import entity.PostEntity;
 import entity.UserEntity;
 import java.util.List;
 import javax.ejb.EJB;
@@ -54,6 +55,14 @@ public class ElectionSessionBean implements ElectionSessionBeanLocal {
         UserEntity user = em.find(UserEntity.class, election.getElectionOwner().getUserId());
         if (user != null && user.getUserType() == UserTypeEnum.ADMIN) {
             em.persist(election);
+            em.flush();
+            PostEntity post = new PostEntity();
+            post.setPostOwner(election.getElectionOwner());
+            post.setIsPinnedPost(Boolean.TRUE);
+            post.setIsElectionPost(true);
+            post.setPostDate(election.getStartDate());
+            post.setElection(election);
+            em.persist(post);
             em.flush();
         } else {
             throw new NoResultException("No Valid Election Owner Found.");
