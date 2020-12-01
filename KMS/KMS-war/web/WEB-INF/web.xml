@@ -10,4 +10,9 @@
         <ejb-ref-type>Session</ejb-ref-type>
         <remote>ejb.session.stateless.HumanResourcePostingSessionBeanRemote</remote>
     </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>ProjectSessionBeanRemote</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>ejb.session.stateless.ProjectSessionBeanRemote</remote>
+    </ejb-ref>
 </web-app>

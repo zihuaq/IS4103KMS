@@ -48,6 +48,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import util.enumeration.ActivityStatusEnum;
+import util.enumeration.ProjectStatusEnum;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
 
@@ -264,6 +265,9 @@ public class DataInitializationSessionBean {
             projectSessionBean.joinProject(4l, 7l);
             projectSessionBean.addAdmin(4l, 1l);
             projectSessionBean.addAdmin(4l, 8l);
+            
+            projectSessionBean.createNewProject(new ProjectEntity("Test Project", "Description", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
+            projectSessionBean.updateStatus(7l, "INACTIVE");
         } catch (CreateProjectException ex) {
             System.out.println(ex.getMessage());
         }
@@ -321,9 +325,11 @@ public class DataInitializationSessionBean {
             
             tagIds.add(9l);
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
-            humanResourcePostingSessionBean.joinHrp(3l, 2l);
+            humanResourcePostingSessionBean.joinHrp(3l, 2l);   
             
+            // For jUnit test
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Test", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("To Delete", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
             
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 9:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
