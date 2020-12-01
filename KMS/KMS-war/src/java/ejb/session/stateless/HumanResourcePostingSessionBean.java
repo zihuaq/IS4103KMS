@@ -57,8 +57,8 @@ public class HumanResourcePostingSessionBean implements HumanResourcePostingSess
     }
     
     @Override
-    public HumanResourcePostingEntity getHrpById(Long mrpId) throws NoResultException {
-        HumanResourcePostingEntity hrp = em.find(HumanResourcePostingEntity.class, mrpId);
+    public HumanResourcePostingEntity getHrpById(Long hrpId) throws NoResultException {
+        HumanResourcePostingEntity hrp = em.find(HumanResourcePostingEntity.class, hrpId);
         if (hrp != null) {
             hrp.getTags().size();
             return hrp;
