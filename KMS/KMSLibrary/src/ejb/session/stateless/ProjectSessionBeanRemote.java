@@ -6,27 +6,19 @@
 package ejb.session.stateless;
 
 import Exception.CreateProjectException;
-import Exception.CreateProjectReviewException;
-import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
-import Exception.ProjectNotFoundException;
-import Exception.UserNotFoundException;
-import entity.AwardEntity;
-//import Exception.ProjectNotFoundException;
 import entity.ProjectEntity;
 import entity.ReviewEntity;
 import java.util.List;
-import javax.ejb.Local;
 import util.enumeration.ProjectStatusEnum;
 
 /**
  *
  * @author chai
  */
-@Local
-public interface ProjectSessionBeanLocal {
-
+public interface ProjectSessionBeanRemote {
+    
     public Long createNewProject(ProjectEntity newProject, Long userId, List<Long> tagIds) throws CreateProjectException;
 
     public List<ProjectEntity> retrieveAllProject();
