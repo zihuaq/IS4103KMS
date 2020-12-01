@@ -1,0 +1,72 @@
+import { Injectable } from '@angular/core';
+import {
+    HttpClient,
+    HttpErrorResponse,
+    HttpHeaders,
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Election } from './classes/election';
+
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+};
+
+@Injectable({
+    providedIn: 'root',
+})
+export class ElectionService {
+    baseUrl: string = '/api/election';
+
+    constructor(private http: HttpClient) { }
+
+    getHasActiveElection(): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/hasActiveElection')
+            .pipe(catchError(this.handleError));
+    }
+
+    getActiveElection(): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/activeElection')
+            .pipe(map(this.parseElectionDate), catchError(this.handleError));
+    }
+
+    createElection(election: Election) {
+        return this.http
+            .post<any>(this.baseUrl + '/createElection', election, httpOptions)
+            .pipe(catchError(this.handleError));
+    }
+
+    private parseElectionDate(election: any) {
+        return {
+            ...election,
+            startDate: new Date(
+                Date.UTC(
+                    election.startDate.substring(0, 4),
+                    election.startDate.substring(5, 7) - 1,
+                    election.startDate.substring(8, 10),
+                    election.startDate.substring(11, 13),
+                    election.startDate.substring(14, 16),
+                    election.startDate.substring(17, 19)
+                )
+            ),
+        };
+    }
+
+    private handleError(error: HttpErrorResponse) {
+        let errorMessage: string = '';
+
+        if (error.error instanceof ErrorEvent) {
+            errorMessage = 'An unknown error has occurred: ' + error.error.message;
+        } else {
+            errorMessage =
+                'A HTTP error has occurred: ' +
+                `HTTP ${error.status}: ${error.error.error}`;
+        }
+
+        console.error(errorMessage);
+
+        return throwError(errorMessage);
+    }
+}
