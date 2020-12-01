@@ -452,7 +452,11 @@ const routes: Routes = [
       import(
         './pages/donate-to-platform-modal/donate-to-platform-modal.module'
       ).then((m) => m.DonateToPlatformModalPageModule)
+  },  {
+    path: 'view-recommendations',
+    loadChildren: () => import('./pages/view-recommendations/view-recommendations.module').then( m => m.ViewRecommendationsPageModule)
   }
+
 ];
 
 @NgModule({
