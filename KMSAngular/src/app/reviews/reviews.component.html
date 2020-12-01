@@ -1,9 +1,36 @@
-<p>reviews works!</p>
-
-<div class ="row">
-  <div class="col-xs-12">
+<div class ="row" >
+  <div class="col-xs-12" style="width: 100%;">
     <app-reviews-item *ngFor = "let review of reviews; let i = index"
-    [review] = review>
+    [review] = review (reviewSelected) = "onReviewSelected($event)">
     </app-reviews-item>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-reportReview" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title" id="modalLabel">Report Review</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <p>Please select your concerns for this review. </p>
+              <div class="select2-red">
+                  <select class="select2" id="reportselect2" multiple="multiple" data-placeholder="Select concerns"
+                      data-dropdown-css-class="select2-red" style="width: 100%;">
+                  </select>
+              </div>
+              <br />
+              <textarea class="form-control" id="content" rows="3" placeholder="Elaboration if necessary"
+                  [(ngModel)]="content"></textarea>
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+              <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+          </div>
+      </div>
+      <!-- /.modal-content -->
   </div>
 </div>

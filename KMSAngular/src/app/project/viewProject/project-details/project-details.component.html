@@ -125,6 +125,9 @@
                             <a class="nav-link" id="details-tab-similar-projects" data-toggle="pill" href="#similar-projects-tab"
                                 [ngClass]="{ 'active':activeTab==='similar-projects-tab'}" role="tab">Similar Projects</a>
                         </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="details-tab-awards" data-toggle="pill" href="#awards-tab" [ngClass]="{ 'active':activeTab==='awards-tab'}" role="tab">Awards</a>
+                      </li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -205,9 +208,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show active" id="review-tab" role="tabpanel"
-                            [ngClass]="{ 'active':activeTab==='review-tab'}">
-                            <p>review-tab works</p>
+                        <div class="tab-pane fade show active" id="review-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='review-tab'}">
+                          <div>
+                            <Label>Project Rating &nbsp; </Label>
+                            <ngb-rating [max]="5" [(rate)]="averageReviewRating" [readonly]="true" name = rating></ngb-rating>
+                            <Label>&nbsp;{{averageReviewRating.toFixed(1)}}/5.0 &nbsp; </Label>
+                          </div>
+                          <app-reviews [reviews] = "projectReviews"></app-reviews>
                         </div>
                         <div class="tab-pane fade show active" id="mrp-tab" role="tabpanel"
                             [ngClass]="{ 'active':activeTab==='mrp-tab'}">
@@ -225,8 +232,10 @@
                             [ngClass]="{ 'active':activeTab==='task-tab'}">
                             <app-task-tab></app-task-tab>
                         </div>
-                        <div class="tab-pane fade show active" id="projectfeed-tab" role="tabpanel"
-                            [ngClass]="{ 'active':activeTab==='projectfeed-tab'}">
+                        <div class="tab-pane fade show active" id="awards-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='awards-tab'}">
+                          <app-project-awards></app-project-awards>
+                      </div>
+                        <div class="tab-pane fade show active" id="projectfeed-tab" role="tabpanel" [ngClass]="{ 'active':activeTab==='projectfeed-tab'}">
                             <app-newsfeed newsfeedType="project" id="{{projectId}}"></app-newsfeed>
                         </div>
                         <div class="tab-pane fade show active" id="setting-tab" role="tabpanel"

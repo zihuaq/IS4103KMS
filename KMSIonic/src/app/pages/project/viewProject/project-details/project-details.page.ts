@@ -55,28 +55,25 @@ export class ProjectDetailsPage implements OnInit {
   ) {
     this.project = new Project();
     this.owner = new User();
-    this.segment = 'newsfeed';
+    this.segment = 'projectfeed-tab';
   }
 
   ngOnInit() {
-    console.log('ngOnInit ');
-    this.refreshProject();
   }
 
   ionViewWillEnter() {
-    console.log('ionViewWillEnter ');
     this.refreshProject();
-  }
-
-  ionViewDidEnter() {
-    this.refreshProject();
-    console.log('ionViewDidEnter ');
   }
 
   refreshProject() {
+    this.segment = this.activatedRoute.snapshot.paramMap.get('tabName')    
     this.projectId = parseInt(
       this.activatedRoute.snapshot.paramMap.get('projectId')
     );
+    if (this.segment == 'activity-tab' || this.segment == 'task-tab') {
+      this.presentAlert();
+      this.segment = 'projectfeed-tab'
+    }
     this.authenticationService.getCurrentUser().then((user: User) => {
       let loggedInUserId = user.userId;
       forkJoin([
@@ -111,6 +108,28 @@ export class ProjectDetailsPage implements OnInit {
         this.app.tick();
       });
     });
+  }
+
+  async presentAlert() {
+    console.log("test")
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Alert',
+      subHeader: this.segment + " not availble in mobile app.",
+      message: 'Please use the web browser to view it.',
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   goBack() {

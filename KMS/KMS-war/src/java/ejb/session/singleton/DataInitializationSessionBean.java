@@ -12,6 +12,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.NoResultException;
 import Exception.TagNameExistException;
 import ejb.session.stateless.ActivitySessionBeanLocal;
+import ejb.session.stateless.BadgeSessionBeanLocal;
 import ejb.session.stateless.DataMappingSessionBeanLocal;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.GroupSessionBeanLocal;
@@ -25,12 +26,14 @@ import ejb.session.stateless.TagSessionBeanLocal;
 import ejb.session.stateless.TaskSessionBeanLocal;
 import ejb.session.stateless.UserSessionBeanLocal;
 import entity.ActivityEntity;
+import entity.BadgeEntity;
 import entity.FulfillmentEntity;
 import entity.GroupEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
@@ -98,6 +101,9 @@ public class DataInitializationSessionBean {
 
     @EJB
     private TagSessionBeanLocal tagSessionBean;
+    
+    @EJB
+    private BadgeSessionBeanLocal badgeSessionBean;
 
     public DataInitializationSessionBean() {
     }
@@ -237,6 +243,15 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
+        
+        tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTREVIEW));
+        tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTREVIEW));
+        
+        
 
         try {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
@@ -252,12 +267,14 @@ public class DataInitializationSessionBean {
             projectSessionBean.joinProject(4l, 7l);
             projectSessionBean.addAdmin(4l, 1l);
             projectSessionBean.addAdmin(4l, 8l);
+            
+            projectSessionBean.createNewProject(new ProjectEntity("Test Project", "Description", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
+            projectSessionBean.updateStatus(7l, "INACTIVE");
         } catch (CreateProjectException ex) {
             System.out.println(ex.getMessage());
         }
 
         try {
-
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 1", "About SDG 1. Greetings From Singapore. Started by a group of students from National Universtiy of Singapore", "Singapore"), 1l, Arrays.asList(24l, 26l, 29l));
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 2", "About SDG 2. Greetings From Malaysia. Started from a group of residents from Kuala Lumpar ", "Malaysia"), 3l, Arrays.asList(25l, 35l));
             groupSessionBean.createNewGroup(new GroupEntity("Support Group of SDG 3", "About SDG 3. Greetings From Indonesia. Started from a group of residents from Jakarta", "Indonesia"), 4l, Arrays.asList(26l, 27l, 29l, 33l, 37l));
@@ -272,7 +289,25 @@ public class DataInitializationSessionBean {
         } catch (CreateGroupException ex) {
             System.out.println(ex.getMessage());
         }
+        
+            //number of groups joined milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Joined a Group Milestone", "The badge is awarded to users who have joined their first group on KMS.", 1, 2, 3, "/images/Award1.jpg", "1", "2", "3"));            
 
+            //Number of projects joined milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Joined a Project Milestone", "The badge is awarded to users who have joined their first project on KMS.", 1, 2, 3, "/images/Award2.jpg", "1", "2", "3"));
+
+            //Number of projects created milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Project Milestone", "The badge is awarded to users who have created their first project on KMS.", 1, 2, 3, "/images/Award3.jpg", "1", "2", "3"));
+            
+            //Number of groups created milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Group Milestone", "The badge is awarded to users who have created their first group on KMS.", 1, 2, 3, "/images/Award4.jpg", "1", "2", "3"));
+            
+            //Number of activities completed milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Completed an Activity Milestone", "The badge is awarded to users who have completed their first activity on KMS.", 1, 2, 3, "/images/Award5.jpg", "1", "2", "3"));
+            
+            //Number of reviews created milestone
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Review Milestone", "The badge is awarded to users who have written their first review on KMS.", 1, 2, 3, "/images/Award6.jpg", "1", "2", "3"));
+            
 //        try {
 //            PostEntity post1 = new PostEntity(new Date(), "this is a post");
 //            post1.setPostOwner(userSessionBean.getUserById(5L));
@@ -286,14 +321,18 @@ public class DataInitializationSessionBean {
             Date startDate = new Date();
             Date endDate = new Date();
             startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
-            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-31");
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31");
             List<Long> tagIds = new ArrayList<>();
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
-
+            
             tagIds.add(9l);
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
-            humanResourcePostingSessionBean.joinHrp(3l, 2l);
-
+            humanResourcePostingSessionBean.joinHrp(3l, 2l);   
+            
+            // For jUnit test
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Test", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("To Delete", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
+            
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 9:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
 
@@ -368,6 +407,7 @@ public class DataInitializationSessionBean {
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 30.0, MraTypeEnum.WEEKLY, PaymentBasisEnum.WEEKLY), 6l, 2l, 1l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0, 0.0), 6l, 1l, 5l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0, 0.0), 7l, 1l, 6l);
+
             //create tasks
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 0.3, 0l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);
@@ -380,6 +420,12 @@ public class DataInitializationSessionBean {
         try {
             dataMappingSessionBean.createProfileFromFiles("EMERGEdatabase.xlsx");
         } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            activitySessionBeanLocal.createNewProjectReview(new ReviewEntity("Test", "Test review", 5), 1l, 4l, 1l);
+        } catch (NoResultException ex) {
             System.out.println(ex.getMessage());
         }
     }

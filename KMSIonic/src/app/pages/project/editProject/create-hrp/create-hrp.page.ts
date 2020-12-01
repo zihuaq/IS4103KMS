@@ -20,6 +20,12 @@ import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
 import { HrpService } from 'src/app/services/hrp.service';
 import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/services/tag.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Project } from 'src/app/classes/project'; 
+import { ProjectService } from 'src/app/services/project.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { User } from 'src/app/classes/user';
 
 @Component({
   selector: 'app-create-hrp',
@@ -28,7 +34,9 @@ import { TagService } from 'src/app/services/tag.service';
 })
 export class CreateHrpPage implements OnInit {
 
+  currentUser: User;
   projectId: number;
+  project: Project;
   newHrp: HumanResourcePosting;
   tags: Tag[];
   filteredTags: Tag[];
@@ -49,6 +57,9 @@ export class CreateHrpPage implements OnInit {
     private location: Location,
     private hrpService: HrpService,
     private tagService: TagService,
+    private notificationService: NotificationService,
+    private projectService: ProjectService,
+    private authenticationService: AuthenticationService,
     private platform: Platform,
     private app: ApplicationRef) 
   { 
@@ -73,7 +84,16 @@ export class CreateHrpPage implements OnInit {
         console.log(this.tags)
       },
     );
+    this.projectService.getProjectById(this.projectId).subscribe(
+      response => {
+        this.project = response;
+      }
+    );
+    this.authenticationService.getCurrentUser().then((user) => {
+      this.currentUser = user;
+    })
   }
+  
 
   // ionViewDidLeave() {
   //   this.mapSubscription.unsubscribe()
@@ -157,6 +177,16 @@ export class CreateHrpPage implements OnInit {
         }
         this.hrpService.createNewHrp(this.newHrp, this.projectId, tagIds).subscribe(
           async response => {
+            let newNotification = new Notification();
+            newNotification.msg = "A new Human Resource Posting has been added to " + this.project.name;
+            newNotification.projectId = this.projectId;
+            newNotification.groupId = null;
+            newNotification.tabName = "hrp-tab";
+            for (let member of this.project.projectMembers) {
+              if (member.userId != this.currentUser.userId) {
+                this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+              }
+            }
             const toast = await this.toastController.create({
               message: "Hrp created successfully.",
               duration: 2000

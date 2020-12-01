@@ -7,6 +7,8 @@ import { User } from 'src/app/classes/user';
 import { UserService } from 'src/app/services/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ChatService } from 'src/app/services/chat.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-messages',
@@ -26,6 +28,7 @@ export class MessagesPage implements OnInit {
 
   constructor(private userService: UserService,
     private authenticationService: AuthenticationService,
+    private notificationService: NotificationService,
     private chatService: ChatService,
     private location: Location,
     private router: Router,
@@ -109,6 +112,26 @@ export class MessagesPage implements OnInit {
   postMessage() {
     this.chatService.sendMessage(this.sender, this.chatMessage, this.receiver);
     this.chatMessage = "";
+
+    this.notificationService.getNotification(this.receiver.userId).subscribe(
+      response => {
+        let hasMsgNotification = false;
+        let notifications = response;
+        for (let n of notifications) {
+          if (n.projectId == null && n.groupId == null) {
+            hasMsgNotification = true;
+            break;
+          }
+        }
+        if (!hasMsgNotification) {
+          let newNotification = new Notification();
+          newNotification.msg = "You have new message(s)";
+          newNotification.projectId = null;
+          newNotification.groupId = null;
+          this.notificationService.createNewNotification(newNotification, this.receiver.userId).subscribe();
+        }
+      }
+    );
 
     this.chatService.getChatHistoryUser(this.receiver.userId, this.receiver.firstName + " " + this.receiver.lastName).snapshotChanges().pipe(
       map(changes =>

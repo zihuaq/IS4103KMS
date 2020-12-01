@@ -1,0 +1,12 @@
+<div class="card-deck" *ngIf = "toggle == 'awards'">
+  <span class="text-muted" *ngIf="awards == null || awards.length == 0">
+    <p style="padding-bottom: 1em;">No Awards found.</p>
+  </span>
+  <div class="card" *ngFor = "let award of awards" style="max-width: 24rem;">
+    <img class="card-img-top" style ="max-width: 383px; max-height: 309px;" [src]="award.awardPicture" alt="https://pcgimg.azureedge.net/Upload/Product/40586-basic-button-badge-magnet-Photo1-385-20201104232616.jpg?maxwidth=560?width=450&height=450">
+    <div class="card-body">
+      <h5 class="card-title">{{award.name}}</h5>
+      <p class="card-text">{{award.description}}</p>
+    </div>
+  </div>
+</div>

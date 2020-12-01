@@ -16,6 +16,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { FCM } from '@ionic-native/fcm/ngx';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { PayPal } from '@ionic-native/paypal/ngx';
 
@@ -49,6 +50,7 @@ const conifg = {
     FileChooser,
     FirebaseX,
     AngularFireDatabase,
+    FCM,
     PayPal
   ],
   bootstrap: [AppComponent]

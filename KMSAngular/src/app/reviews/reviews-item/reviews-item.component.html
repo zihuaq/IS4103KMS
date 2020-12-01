@@ -1,6 +1,6 @@
 <div class="list-group-item clearfix">
   <span class="pull-left">
-    <p>From: </p>
+    <label for="">From: &nbsp;</label>
     <img *ngIf="review.from.profilePicture" src="review.from.profilePicture" alt=""
     class = "img-responsive"
     style ="max-height: 20px;">
@@ -11,8 +11,8 @@
       {{review.from.firstName}} {{review.from.lastName}}
     </a>
   </span>
-  <span class="pull-left" *ngIf="review.to != null">
-    <p>to: </p>
+  <span class="pull-left" *ngIf="review.to != null" >
+    <label for="">To: &nbsp;</label>
     <img *ngIf="review.to.profilePicture" src="review.to.profilePicture" alt=""
     class = "img-responsive"
     style ="max-height: 20px;">
@@ -23,12 +23,20 @@
       {{review.to.firstName}} {{review.to.lastName}}
     </a>
   </span>
+  <span>
+    <button type="button" class="btn btn-default btn-sm" style = "float: right;" (click)="onSelectReport(review)"
+                        *ngIf="loggedInUserId != review.from.userId">
+                        <i class="fas fa-flag"></i> report </button>
+  </span>
   <span class="pull-left" *ngIf="review.to == null">
-    <p>to: </p>
+    <label for="">To: &nbsp;</label>
     <a routerLink="/projectDetails/{{review.project.projectId}}/basic-details">
       {{review.project.name}}
     </a>
   </span>
+  <div>
+    <ngb-rating [max]="5" [(rate)]="review.rating" [readonly]="true" name = rating></ngb-rating>
+  </div>
   <hr>
   <div>
     <h4 class = "list-group-item-heading">
@@ -36,7 +44,7 @@
     </h4>
     <p class="list-group-item-text">
       {{review.reviewField}}
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra tortor vel massa viverra viverra. Mauris ut ornare mauris. Fusce hendrerit mattis nulla, id varius lacus mattis sodales. Donec a velit vel est ullamcorper efficitur sed ut tellus. Aliquam vitae enim egestas, tincidunt enim faucibus, malesuada ante. Vestibulum egestas sed tellus at eleifend. Vestibulum sed eros non odio vehicula euismod id vel felis. Vestibulum neque ligula, malesuada at magna vel, consequat accumsan arcu. Vestibulum at vehicula diam.
+
     </p>
 
   </div>

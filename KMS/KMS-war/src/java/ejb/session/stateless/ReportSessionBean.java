@@ -11,6 +11,7 @@ import entity.PostCommentEntity;
 import entity.PostEntity;
 import entity.ProjectEntity;
 import entity.ReportEntity;
+import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
@@ -148,6 +149,21 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     }
     
     @Override
+    public ReportEntity reportReview(ReportEntity report) throws NoResultException {
+        UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
+        ReviewEntity reportedReview = em.find(ReviewEntity.class, report.getReportedReview().getReviewId());
+        if (reportOwner != null && reportedReview != null) {
+            em.persist(report);
+            em.flush();
+            return report;
+        } else if (reportedReview == null) {
+            throw new NoResultException("Comment not found");
+        } else {
+            throw new NoResultException("User not found");
+        }
+    }
+    
+    @Override
     public void updateReportVerdict(ReportEntity updatedReport) throws NoResultException{
         ReportEntity report = em.find(ReportEntity.class, updatedReport.getReportId());
         if(report == null){
@@ -261,6 +277,25 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         return commentReports;
     }
     
+    
+    @Override
+    public List<ReportEntity> getReviewReports() throws NoResultException{
+        List<ReportEntity> reports = getAllReports();
+        if(reports.size() < 1){
+            throw new NoResultException("No reports");
+        }
+        List<ReportEntity> commentReports = new ArrayList<>();
+        for(ReportEntity report: reports){
+            if(report.getReportType().equals(ReportTypeEnum.REVIEW)){
+                commentReports.add(report);
+            }
+        }
+        if(commentReports.size() < 1){
+            throw new NoResultException("No comment reports");
+        }
+        return commentReports;
+    }
+    
     public void sentReportVerdictEmail(ReportEntity report) throws NoResultException{
         final String username = "4103kms";
         final String password = "4103kmsemail";
@@ -324,6 +359,15 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedComment().getCommentOwner().getEmail()));
                 message.setSubject("A comment you created has been deleted");
                 message.setText("Dear User," +'\n' + "Your comment has been deleted for violating our terms of service" + '\n');
+
+                Transport.send(message);
+            }
+            if(currentReport.getReportType() == ReportTypeEnum.REVIEW){
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress("4103kms@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(currentReport.getReportedReview().getFrom().getEmail()));
+                message.setSubject("A review you created has been deleted");
+                message.setText("Dear User," +'\n' + "Your review has been deleted for violating our terms of service" + '\n');
 
                 Transport.send(message);
             }

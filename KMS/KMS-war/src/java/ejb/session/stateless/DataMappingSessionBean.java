@@ -929,6 +929,7 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
     public ProfileEntity getProfile(long id) throws NoResultException {
         ProfileEntity profileEntity = em.find(ProfileEntity.class, id);
         if (profileEntity != null) {
+            profileEntity.getClaimProfileRequestMade().size();
             profileEntity.getSdgTargets().size();
             profileEntity.getSdgs().size();
             return profileEntity;
@@ -938,15 +939,17 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
     }
 
     @Override
-    public void settleProfileClaim(long claimProfileRequestId) throws NoResultException {
+    public void settleProfileClaim(long claimProfileRequestId, boolean accept) throws NoResultException {
         ClaimProfileRequestEntity claimProfileRequestEntity = em.find(ClaimProfileRequestEntity.class, claimProfileRequestId);
         if (claimProfileRequestEntity == null) {
             throw new NoResultException("Claim profile request not found.");
         } else {
             ProfileEntity profileEntity = getProfile(claimProfileRequestEntity.getProfile().getId());
             UserEntity userEntity = userSessionBean.getUserById(claimProfileRequestEntity.getUser().getUserId());
-            profileEntity.setUserEntity(userEntity);
-            userEntity.setProfile(profileEntity);
+            if (accept) {
+                profileEntity.setUserEntity(userEntity);
+                userEntity.getProfiles().add(profileEntity);
+            }
             profileEntity.getClaimProfileRequestMade().remove(claimProfileRequestEntity);
             userEntity.getClaimProfileRequestMade().remove(claimProfileRequestEntity);
             claimProfileRequestEntity.setProfile(null);
@@ -956,11 +959,25 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
     }
 
     @Override
+    public List<ClaimProfileRequestEntity> getAllProfileClaims() throws NoResultException {
+        Query q = em.createQuery("SELECT c FROM ClaimProfileRequestEntity C");
+        List<ClaimProfileRequestEntity> claimProfileRequestEntitys = q.getResultList();
+        if (claimProfileRequestEntitys == null || claimProfileRequestEntitys.isEmpty()) {
+            throw new NoResultException("No Claim Profile Requests found.");
+        } else {
+            return claimProfileRequestEntitys;
+        }
+    }
+
+    @Override
     public void makeProfileClaim(long userId, long profileId) throws NoResultException {
         ProfileEntity profile = getProfile(profileId);
         UserEntity user = userSessionBean.getUserById(userId);
         ClaimProfileRequestEntity claimProfileRequestEntity = new ClaimProfileRequestEntity(profile, user);
         em.persist(claimProfileRequestEntity);
+        em.flush();
+        user.getClaimProfileRequestMade().add(claimProfileRequestEntity);
+        profile.getClaimProfileRequestMade().add(claimProfileRequestEntity);
     }
 
     private int getColumn(Row row, String header) {

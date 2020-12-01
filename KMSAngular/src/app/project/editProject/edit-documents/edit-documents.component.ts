@@ -150,7 +150,7 @@ export class EditDocumentsComponent implements OnInit {
         newNotification.msg = "A new document has been uploaded to " + this.project.name;
         newNotification.projectId = this.projectId;
         newNotification.groupId = null;
-        newNotification.projectTab = "document-tab";
+        newNotification.tabName = "document-tab";
         for (let member of this.project.projectMembers) {
           if (member.userId != this.currentUser.userId) {
             this.notificationService.createNewNotification(newNotification, member.userId).subscribe();

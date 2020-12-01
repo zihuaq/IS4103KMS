@@ -75,7 +75,7 @@
 
   <div>
     <label>Account Status</label>
-    <div class="radio" *ngFor = "let s of status"  style="display: inline; position:relative; left:30px;">
+    <div class="radio" *ngFor = "let s of status" style = "display: inline; position:relative; left:30px;">
         <label style="padding-right: 10px;">
             <input type="radio"  name="status" [ngModel] = "user.isActive ? 'Active':'Deactive'" [value] = "s"> {{s}}
 

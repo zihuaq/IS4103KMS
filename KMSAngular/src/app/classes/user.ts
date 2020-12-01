@@ -9,6 +9,7 @@ import { Post } from './post';
 import { Project } from './project';
 import { Activity } from './activity';
 import { Group } from './group';
+import { Award } from './award';
 import { Profile } from './profile';
 import { ClaimProfileRequest } from './claim-profile-request';
 
@@ -44,7 +45,16 @@ export class User {
   projectsJoined: Project[];
   activityJoined: Activity[];
   groupsJoined: Group[];
-  profile: Profile;
+  recievedAwards: Award[];
+  CountOfGroupsJoined: number;
+  CountOfProjectsJoined: number;
+  CountOfProjectsCreated: number;
+  CountOfGroupsCreated: number;
+  CountOfActivitiesCompleted: number;
+  CountOfPostCreated: number;
+  CountOfCommentsCreated: number;
+  CountOfReviewsCreated: number;
+  profiles: Profile[];
   claimProfileRequestMade: ClaimProfileRequest[];
 
   constructor(
@@ -79,7 +89,7 @@ export class User {
     projectsJoined?: Project[],
     activityJoined?: Activity[],
     groupsJoined?: Group[],
-    profile?: Profile,
+    profiles?: Profile[],
     claimProfileRequestMade?: ClaimProfileRequest[]
   ) {
     this.userId = userId;
@@ -113,7 +123,7 @@ export class User {
     this.projectsJoined = projectsJoined;
     this.activityJoined = activityJoined;
     this.groupsJoined = groupsJoined;
-    this.profile = profile;
+    this.profiles = profiles;
     this.claimProfileRequestMade = claimProfileRequestMade;
   }
 }

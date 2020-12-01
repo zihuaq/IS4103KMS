@@ -239,7 +239,7 @@ export class EditMrpTabComponent implements OnInit {
           newNotification.msg = "A new Material Resource Posting has been added to " + this.projectToEdit.name;
           newNotification.projectId = this.projectId;
           newNotification.groupId = null;
-          newNotification.projectTab = "mrp-tab";
+          newNotification.tabName = "mrp-tab";
           for (let member of this.projectToEdit.projectMembers) {
             if (member.userId != currentUser.userId) {
               this.notificationService.createNewNotification(newNotification, member.userId).subscribe();

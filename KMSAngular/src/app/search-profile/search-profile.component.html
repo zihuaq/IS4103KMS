@@ -33,17 +33,22 @@
               <div class="card bg-light" style="width: 100%;">
                 <div class="card-header border-bottom-0" style="min-height: 56px;">
                   <h2 class="lead">
-                    <b>{{profile.name}}</b>
+                    <p>
+                      <b *ngIf="profile.name">{{profile.name}}</b>
+                      <span *ngIf="!profile.name" class="text-muted">Profile has no name</span>
+                    </p>
                   </h2>
                 </div>
                 <div class="card-body pt-0">
                   <div class="row">
                     <div class="col-12">
                       <b>Organization: </b>
-                      <b class="text-muted text-sm">{{profile.organization}}</b>
-                      <br>
+                      <p>
+                        <b class="text-muted text-sm" *ngIf="profile.organization">{{profile.organization}}</b>
+                        <span class="text-sm" *ngIf="!profile.organization">Profile has no organization</span>
+                      </p>
                       <b>Interested SDGs: </b>
-                      <span *ngIf="profile.sdgs.length == 0">Profile has no SDG indicated</span>
+                      <p *ngIf="profile.sdgs.length == 0" class="text-sm">Profile has no SDG indicated</p>
                       <span class="d-flex flex-wrap" *ngIf="profile.sdgs.length > 0">
                         <p *ngFor="let sdg of profile.sdgs" class="SDGs">
                           <small class="badge badge-dark">

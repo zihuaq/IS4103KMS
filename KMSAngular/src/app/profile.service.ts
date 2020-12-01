@@ -35,9 +35,21 @@ export class ProfileService {
       .pipe(catchError(this.handleError));
   }
 
-  settleProfileClaim(claimProfileRequestId: String): Observable<any> {
+  getAllProfileClaims(): Observable<any> {
     return this.http
-      .post<any>(this.baseUrl + '/claim/' + claimProfileRequestId, null)
+      .get<any>(this.baseUrl + '/claims')
+      .pipe(catchError(this.handleError));
+  }
+
+  settleProfileClaim(
+    claimProfileRequestId: String,
+    accept: boolean
+  ): Observable<any> {
+    return this.http
+      .post<any>(
+        this.baseUrl + '/settleClaim/' + claimProfileRequestId + '/' + accept,
+        null
+      )
       .pipe(catchError(this.handleError));
   }
 

@@ -24,6 +24,7 @@
     "@ionic-native/core": "^5.29.0",
     "@ionic-native/crop": "^5.29.0",
     "@ionic-native/device": "^5.29.0",
+    "@ionic-native/fcm": "^5.30.0",
     "@ionic-native/file": "^5.29.0",
     "@ionic-native/file-chooser": "^5.29.0",
     "@ionic-native/firebase-x": "^5.29.0",
@@ -40,6 +41,7 @@
     "angularfire2": "^5.4.2",
     "aws-sdk": "^2.781.0",
     "com.paypal.cordova.mobilesdk": "^3.5.0",
+    "cordova-android": "9.0.0",
     "cordova-common": "^4.0.2",
     "cordova-ios": "^5.1.1",
     "firebase": "^7.24.0",
@@ -69,6 +71,7 @@
     "cordova-plugin-camera": "^5.0.0",
     "cordova-plugin-crop": "^0.4.0",
     "cordova-plugin-device": "2.0.2",
+    "cordova-plugin-fcm-with-dependecy-updated": "^7.4.0",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-filechooser": "^1.2.0",
     "cordova-plugin-googlemaps": "^2.7.1",
@@ -115,7 +118,14 @@
       "cordova-plugin-crop": {},
       "cordova-plugin-file": {},
       "cordova-plugin-filechooser": {},
-      "com.paypal.cordova.mobilesdk": {}
+      "com.paypal.cordova.mobilesdk": {},
+      "cordova-plugin-fcm-with-dependecy-updated": {
+        "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher",
+        "ANDROID_FCM_VERSION": "21.0.0",
+        "ANDROID_FIREBASE_BOM_VERSION": "26.0.0",
+        "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.4",
+        "ANDROID_GRADLE_TOOLS_VERSION": "4.1.0"
+      }
     },
     "platforms": [
       "browser",

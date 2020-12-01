@@ -11,7 +11,7 @@
   <ion-item lines="none">
     <ion-label class="ion-text-center">
       <ion-text
-        *ngIf="preliminaryFollowRequests && preliminaryFollowRequests.length == 0 && preliminaryAffiliationRequests && preliminaryAffiliationRequests.length == 0">
+        *ngIf="preliminaryFollowRequests && preliminaryFollowRequests.length == 0 && preliminaryAffiliationRequests && preliminaryAffiliationRequests.length == 0 && notifications.length == 0">
         You have no notifications
       </ion-text>
     </ion-label>
@@ -111,6 +111,20 @@
           <a>See all affiliation requests</a>
         </ion-item>
       </ion-list>
+    </ion-card-content>    
+  </ion-card>
+
+  <ion-card *ngIf="notifications && notifications.length">
+    <ion-card-header>
+      <ion-card-title>New Notifications</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list class="ion-no-padding" *ngFor="let notification of notifications">
+        <ion-item lines="none" (click)="clickNotification(notification)">
+          {{notification.msg}} 
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
+  
 </ion-content>

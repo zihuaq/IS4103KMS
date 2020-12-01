@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>User Profile</ion-title>
+    <ion-button (click)="goToSetting()" slot="end" shape="round">
+      <ion-icon slot="icon-only" name="settings"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="profile && loggedInUser">
+    <app-overview [profile]="profile" [loggedInUser]="loggedInUser" [isFollowing]="isFollowing"
+      [hasSentFollowRequest]="hasSentFollowRequest" [isAffiliated]="isAffiliated"
+      [hasSentAffiliationRequest]="hasSentAffiliationRequest" (init)="getFollowersFollowingAndAffiliatedUsers()">
+    </app-overview>
+    <app-material-resource-available [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+      (userchanged)="loggedInUser=$event"></app-material-resource-available>
+    <app-skills [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+      (userchanged)="loggedInUser=$event"></app-skills>
+    <app-sdgs [profile]="profile" [loggedInUser]="loggedInUser" (profileChanged)="profile=$event"
+      (userchanged)="loggedInUser=$event"></app-sdgs>
+    <ion-grid *ngIf="profile.userId != loggedInUser.userId">
+      <ion-row class="ion-justify-content-center">
+        <ion-chip color="danger" (click)="presentReportProfileModal()">
+          <ion-icon name="alert-outline"></ion-icon>
+          <ion-label>Report Profile</ion-label>
+        </ion-chip>
+      </ion-row>
+    </ion-grid>
+    <ion-card>
+      <app-newsfeed *ngIf="isFollowing || profile.userId == loggedInUser.userId" [loggedInUser]="loggedInUser"
+        [newsfeedPosts]="newsfeedPosts" [profileId]="profile.userId" newsfeedType="profile"
+        [filteredPosts]="newsfeedPosts" (init)="ionViewWillEnter()">
+      </app-newsfeed>
+
+      <ion-item *ngIf="!isFollowing && profile.userId != loggedInUser.userId" lines="none">
+        <ion-label>This account is private</ion-label>
+      </ion-item>
+      <ion-card-content *ngIf="!isFollowing && profile.userId != loggedInUser.userId">
+        Follow this account to see his posts.
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

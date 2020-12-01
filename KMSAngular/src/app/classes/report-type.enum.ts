@@ -3,5 +3,6 @@ export enum ReportType {
     GROUP = <any> "GROUP",
     PROJECT = <any> "PROJECT",
     POST = <any> "POST",
-    COMMENT = <any> "COMMENT"
+    COMMENT = <any> "COMMENT",
+    REVIEW = <any> "REVIEW"
 }

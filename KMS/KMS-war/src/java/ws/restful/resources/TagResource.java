@@ -92,6 +92,13 @@ public class TagResource {
     }
     
     @GET
+    @Path("/report/review")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllReviewReportTags() {
+        return Response.status(200).entity(tagSessionBeanLocal.getAllReviewReportTags()).build();
+    }
+    
+    @GET
     @Path("/report/comment")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCommentReportTags() {

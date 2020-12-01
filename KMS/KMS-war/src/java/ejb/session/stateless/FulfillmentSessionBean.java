@@ -401,7 +401,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
                     notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due in 5 days!");
                     notification.setProjectId(project.getProjectId());
                     notification.setGroupId(null);
-                    notification.setProjectTab("mrp-tab");
+                    notification.setTabName("mrp-tab");
                     for (UserEntity admin: project.getProjectAdmins()) {
                         notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
                     }
@@ -411,7 +411,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
                     notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due in 3 days!");
                     notification.setProjectId(project.getProjectId());
                     notification.setGroupId(null);
-                    notification.setProjectTab("mrp-tab");
+                    notification.setTabName("mrp-tab");
                     for (UserEntity admin: project.getProjectAdmins()) {
                         notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
                     }
@@ -421,7 +421,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
                     notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due today!");
                     notification.setProjectId(project.getProjectId());
                     notification.setGroupId(null);
-                    notification.setProjectTab("mrp-tab");
+                    notification.setTabName("mrp-tab");
                     for (UserEntity admin: project.getProjectAdmins()) {
                         notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
                     }

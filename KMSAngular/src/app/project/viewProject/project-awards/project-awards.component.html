@@ -1,0 +1,203 @@
+<h1>Project awards works!
+  <span style="margin-right: 5px;"></span>
+    <a type="button" class="btn btn-light" *ngIf = "isAdmin"  data-toggle="modal" data-target="#createAwardModal"  style="vertical-align: 20%; background-color: lightgray;"><i class="fas fa-plus"></i> Create new Award</a>
+</h1>
+<hr>
+
+
+<!-- Modal -->
+<div class="modal fade" id="createAwardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Create new Award</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" (ngSubmit)="createNewAward(createAwardForm)" #createAwardForm="ngForm">
+          <div class="form-group">
+              <label for="name">Award Name *:</label>
+              <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="newAward.name" required="true">
+              <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project name cannot be empty!</span>
+          </div>
+          <div class='form-group'>
+              <label for="description">Description:</label>
+              <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="newAward.description"></textarea>
+          </div>
+          <div class="form-group">
+              <label for="profilePictureFile">Profile Picture:</label>
+              <div class="input-group">
+                  <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="selectedProfilePicture" accept="image/*" (change)="getFilesNewAwardPicture($event)">
+                      <label class="custom-file-label" *ngIf="!newAwardPicture" for="selectedProfilePicture">Choose file</label>
+                      <label class="custom-file-label" *ngIf="newAwardPicture" for="selectedProfilePicture">{{newAwardPictureName}}</label>
+                  </div>
+                  <div class="input-group-append" style="cursor: pointer" *ngIf="newAwardPicture">
+                      <span class="input-group-text" (click)="removePicture()">Remove Selected</span>
+                  </div>
+              </div>
+          </div>
+          <button class="btn btn-primary" type="submit" [disabled]="!createAwardForm.valid">Create New Award</button>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-deck" >
+  <span class="text-muted" *ngIf="awards == null || awards.length == 0">
+    <p style="padding-bottom: 1em;">No Awards found.</p>
+  </span>
+  <div class="card" *ngFor = "let award of awards" style="max-width: 24rem;">
+    <img class="card-img-top" style ="max-width: 383px; max-height: 309px;" [src]="award.awardPicture" alt="https://pcgimg.azureedge.net/Upload/Product/40586-basic-button-badge-magnet-Photo1-385-20201104232616.jpg?maxwidth=560?width=450&height=450">
+    <div class="card-body">
+      <h5 class="card-title">{{award.name}}</h5>
+      <p class="card-text">{{award.description}}</p>
+      <a class="btn btn-primary" *ngIf="isAdmin" (click) = "onAwardSelected(award)">Details</a>
+    </div>
+  </div>
+</div>
+
+<div bsModal #awardModal = "bs-modal" class="modal fade" id="awardModal" tabindex="-1" aria-labelledby="awardModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="awardModalLabel">Award details</h5>
+        <button type="button" class="close" (click)="hideChildModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card card-primary card-outline card-tabs">
+          <div class="card-header p-0 pt-1 border-bottom-0">
+              <ul class="nav nav-tabs" id="admin-tab" role="tablist">
+                  <li class="nav-item">
+                      <a class="nav-link active" id="edit-award-tabname" data-toggle="pill"
+                          href="#edit-award" role="tab"
+                          >Edit</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="issue-award-tabname" data-toggle="pill"
+                        href="#issue-award" role="tab"
+                        >Issue Award</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="withdraw-award-tabname" data-toggle="pill"
+                        href="#withdraw-award" role="tab"
+                        >Withdraw Award</a>
+                  </li>
+              </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content" id="custom-tabs-four-tabContent">
+                <div class="tab-pane fade show active" id="edit-award" role="tabpanel">
+                  <form class="form-horizontal" (ngSubmit)="editAward(editAwardForm)" #editAwardForm="ngForm">
+                    <div class="form-group">
+                        <label for="name">Award Name *:</label>
+                        <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="awardToEdit.name" required="true">
+                        <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Award name cannot be empty!</span>
+                    </div>
+                    <div class='form-group'>
+                        <label for="description">Description:</label>
+                        <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="awardToEdit.description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePictureFile">Profile Picture:</label>
+                        <img class="card-img-top" style ="max-width: 362px; max-height: 300px;" [src]="awardToEdit.awardPicture" alt="https://pcgimg.azureedge.net/Upload/Product/40586-basic-button-badge-magnet-Photo1-385-20201104232616.jpg?maxwidth=560?width=450&height=450">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="selectedProfilePicture" accept="image/*" (change)="getFileAwardPicture($event)">
+                                <label class="custom-file-label" *ngIf="!awardPicture" for="selectedProfilePicture">Choose file</label>
+                                <label class="custom-file-label" *ngIf="awardPicture" for="selectedProfilePicture">{{awardPictureName}}</label>
+                            </div>
+                            <div class="input-group-append" style="cursor: pointer" *ngIf="newAwardPicture">
+                                <span class="input-group-text" (click)="removePicture()">Remove Selected</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" type="submit" [disabled]="!editAwardForm.valid">Edit Award</button>
+                </form>
+                </div>
+                <div class="tab-pane fade" id="issue-award" role="tabpanel">
+                  <form  (ngSubmit)="issueAward(issueAwardForm)" #issueAwardForm="ngForm">
+                <div class="modal-body">
+                    <div class="select">
+                      <label for="toUser">User * &nbsp;</label>
+                      <select  class="form-control" name = "selectedUser" placeholder="Review User" ngModel required>
+                        <option *ngFor = "let user of issueAwardArray" [value] = "user.userId" >{{user.firstName}} {{user.lastName}}</option>
+                      </select>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" type="submit" class="btn btn-primary" [disabled] = "!issueAwardForm.valid">Issue Award</button>
+                </div>
+            </form>
+                </div>
+                <div class="tab-pane fade" id="withdraw-award" role="tabpanel">
+                  <form  (ngSubmit)="withdrawAward(withdrawAwardForm)" #withdrawAwardForm="ngForm">
+                    <div class="modal-body">
+                        <div class="select">
+                          <label for="toUser">User * &nbsp;</label>
+                          <select  class="form-control" name = "selectedUser" placeholder="Review User" ngModel required>
+                            <option *ngFor = "let user of withdrawAwardArray" [value] = "user.userId" >{{user.firstName}} {{user.lastName}}</option>
+                          </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" type="submit" class="btn btn-primary" [disabled] = "!issueAwardForm.valid">Withdraw Award</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div bsModal #createAwardModal = "bs-modal" class="modal fade" id="createAwardModal" tabindex="-1" aria-labelledby="createAwardModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createAwardModalLabel">Create new Award</h5>
+        <button type="button" class="close" (click)="hideCreateAwardModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form class="form-horizontal" (ngSubmit)="createNewAward(createAwardForm)" #createAwardForm="ngForm">
+            <div class="form-group">
+                <label for="name">Award Name *:</label>
+                <input type="text" id="name" class="form-control" #name="ngModel" name="name" [(ngModel)]="newAward.name" required="true">
+                <span class="help-block" style="color: red" *ngIf="!name.valid && name.touched">Project name cannot be empty!</span>
+            </div>
+            <div class='form-group'>
+                <label for="description">Description:</label>
+                <textarea id="description" class="form-control" #description="ngModel" name="description" [(ngModel)]="newAward.description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="profilePictureFile">Profile Picture:</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="selectedProfilePicture" accept="image/*" (change)="getFilesNewAwardPicture($event)">
+                        <label class="custom-file-label" *ngIf="!newAwardPicture" for="selectedProfilePicture">Choose file</label>
+                        <label class="custom-file-label" *ngIf="newAwardPicture" for="selectedProfilePicture">{{newAwardPictureName}}</label>
+                    </div>
+                    <div class="input-group-append" style="cursor: pointer" *ngIf="newAwardPicture">
+                        <span class="input-group-text" (click)="removePicture()">Remove Selected</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit" [disabled]="!createAwardForm.valid">Create New Award</button>
+        </form>
+    </div>
+  </div>
+</div> -->
+
+

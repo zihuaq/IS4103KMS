@@ -222,14 +222,14 @@ export class AddMaterialResourceAvailablePage implements OnInit {
             .createMaterialResourceAvailable(this.newMra)
             .subscribe((responsedata) => {
               this.profile.mras = responsedata
-              this.router.navigate(["/profile"])
+              this.router.navigate(['/user-profile']);
             })
         } else {
           this.mraService
             .updateMaterialResourceAvailable(this.newMra)
             .subscribe((responsedata) => {
               this.profile.mras = responsedata
-              this.router.navigate(["/profile"])
+              this.router.navigate(['/user-profile']);
             })
         }
         mraForm.reset()

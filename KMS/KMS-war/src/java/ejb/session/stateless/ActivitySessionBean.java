@@ -10,9 +10,11 @@ import entity.ActivityEntity;
 import entity.HumanResourcePostingEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.UserEntity;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -85,13 +87,11 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         cal.setTime(date);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date fromDate = cal.getTime();
-        System.out.println(fromDate);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         cal.set(Calendar.HOUR, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         Date toDate = cal.getTime();
-        System.out.println(toDate);
         
         Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.project.projectId = :inProjectId AND a.startDate <= :inToDate AND a.endDate >= :inFromDate");
         query.setParameter("inProjectId", projectId);
@@ -119,6 +119,9 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
         if (today.isAfter(endDate)) {
             activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+            for(UserEntity user: activity.getJoinedUsers()){
+                user.setCountOfActivitiesCompleted(user.getCountOfActivitiesCompleted()+1);
+            }
         } else if (today.isBefore(startDate)) {
             activity.setActivityStatus(ActivityStatusEnum.PLANNED);
         } else {
@@ -173,6 +176,13 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
             }
             activityToDelete.getJoinedUsers().clear();
         }
+        
+        if (!activityToDelete.getReviews().isEmpty()){
+            for (ReviewEntity review: activityToDelete.getReviews()){
+                review.setMadeFromActivity(null);
+            }
+        }
+        activityToDelete.getReviews().clear();
         
         em.remove(activityToDelete);
     }
@@ -266,5 +276,133 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         activity.getMaterialResourcePostings().remove(mrp);
         activity.getAllocatedQuantities().remove(mrpId);
     }
+    
+    public List<ReviewEntity> getAllUserWrittenReviewsForCurrentActivity(Long userId, Long activityId){
+        Query query = em.createQuery("SELECT r FROM ReviewEntity r WHERE r.madeFromActivity.activityId = :activityId AND r.from.userId = :userId");
+        query.setParameter("activityId", activityId).setParameter("userId", userId);
         
+        return query.getResultList();
+    }
+        
+    @Override
+    public List<ReviewEntity> getToUserWrittenReviewsForCurrentActivity(Long userId, Long activityId){
+        List<ReviewEntity> allUserReviews = getAllUserWrittenReviewsForCurrentActivity(userId, activityId); 
+        List<ReviewEntity> toUserReviews = new ArrayList<>();
+        if(!allUserReviews.isEmpty()){
+            for (ReviewEntity review : allUserReviews){
+                if(review.getTo() != null){
+                    toUserReviews.add(review);
+                }
+            }
+        }
+        return toUserReviews;
+    }
+    
+    @Override
+    public List<ReviewEntity> getToProjectWrittenReviewsForCurrentActivity(Long userId, Long activityId){
+        List<ReviewEntity> allUserReviews = getAllUserWrittenReviewsForCurrentActivity(userId, activityId); 
+        List<ReviewEntity> toProjectReviews = new ArrayList<>();
+        if(!allUserReviews.isEmpty()){
+            for (ReviewEntity review : allUserReviews){
+                if(review.getProject() != null){
+                    toProjectReviews.add(review);
+                }
+            }
+        }
+        return toProjectReviews;
+    }
+    
+    
+    @Override
+    public ReviewEntity getReviewById(Long reviewId) throws NoResultException{
+        ReviewEntity review = em.find(ReviewEntity.class, reviewId);
+        
+        if (review != null) {
+            return review;
+        } else {
+            throw new NoResultException("Activity with Id " + reviewId + " does not exists!");
+        }
+    }
+    
+    @Override
+    public void deleteReview(Long reviewId) throws NoResultException{
+        ReviewEntity review = getReviewById(reviewId);
+        if (review.getProject() != null){
+            ProjectEntity project = review.getProject();
+            project.getReviews().remove(review);
+            review.setProject(null);
+        }
+        if(review.getTo() != null){
+            UserEntity to = review.getTo();
+            to.getReviewsReceived().remove(review);
+            review.setTo(null);
+        }
+        
+        UserEntity from = review.getFrom();
+        from.getReviewsGiven().remove(review);
+        review.setFrom(null);
+        
+        ActivityEntity activity  = review.getMadeFromActivity();
+        activity.getReviews().remove(review);
+        review.setMadeFromActivity(null);
+        
+        em.remove(review);
+    }
+        
+        
+
+    @Override
+    public Long createNewUserReview(ReviewEntity review, Long fromId, Long toId, Long activityId) throws NoResultException {
+        
+        ReviewEntity newReview = new ReviewEntity(review.getTitle(), review.getReviewField(), review.getRating());
+        
+        
+        UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
+        UserEntity toUser = userSessionBeanLocal.getUserById(toId);
+        ActivityEntity madeFromActivity = getActivityById(activityId);
+        
+        newReview.setFrom(fromUser);
+        fromUser.getReviewsGiven().add(newReview);
+        
+        newReview.setTo(toUser);
+        toUser.getReviewsReceived().add(newReview);
+        
+        newReview.setMadeFromActivity(madeFromActivity);
+        madeFromActivity.getReviews().add(newReview);
+        
+        em.persist(newReview);
+        em.flush();
+        fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+        
+        return newReview.getReviewId();
+    }
+    
+    @Override
+    public Long createNewProjectReview(ReviewEntity review, Long fromId, Long toProjectId, Long activityId) throws NoResultException {
+        
+        ReviewEntity newReview = new ReviewEntity(review.getTitle(), review.getReviewField(), review.getRating());
+        System.out.println(review.getTitle());
+        System.out.println(review.getReviewField());
+        System.out.println(review.getRating());
+        
+        UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
+        ProjectEntity toProject = projectSessionBeanLocal.getProjectById(toProjectId);
+        ActivityEntity madeFromActivity = getActivityById(activityId);
+        
+        newReview.setFrom(fromUser);
+        fromUser.getReviewsGiven().add(newReview);
+        
+        newReview.setProject(toProject);
+        toProject.getReviews().add(newReview);
+        
+        newReview.setMadeFromActivity(madeFromActivity);
+        madeFromActivity.getReviews().add(newReview);
+        
+        em.persist(newReview);
+        em.flush();
+        
+        fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+        
+        return newReview.getReviewId();
+    }
 }

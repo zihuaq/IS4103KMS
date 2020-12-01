@@ -98,12 +98,20 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { ChatComponent } from './chat/chat.component';
 import { UserFilterPipe } from './chat/user-filter.pipe';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectAwardsComponent } from './project/viewProject/project-awards/project-awards.component';
+import { ReviewReportsComponent } from './administration/review-reports/review-reports.component';
+import { ReviewReportItemComponent } from './administration/review-reports/review-report-item/review-report-item.component';
+import { AwardsAndBadgeComponent } from './profile/awards-and-badge/awards-and-badge.component';
 import { SearchProfileComponent } from './search-profile/search-profile.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ProfileClaimsComponent } from './administration/profile-claims/profile-claims.component';
 import { ViewRecommendationsComponent } from './view-recommendations/view-recommendations.component';
 import { FollowRecommendationsComponent } from './view-recommendations/follow-recommendations/follow-recommendations.component';
 import { ProjectRecommendationsComponent } from './view-recommendations/project-recommendations/project-recommendations.component';
 import { GroupRecommendationsComponent } from './view-recommendations/group-recommendations/group-recommendations.component';
+import { ManageTagsComponent } from './administration/manage-tags/manage-tags.component';
+import { AwardsAndBadgesComponent } from './user-profile/awards-and-badges/awards-and-badges.component';
 
 export const environment = {
   production: false,
@@ -202,12 +210,19 @@ export const environment = {
     EditDocumentsComponent,
     ChatComponent,
     UserFilterPipe,
+    ProjectAwardsComponent,
+    ReviewReportsComponent,
+    ReviewReportItemComponent,
+    AwardsAndBadgeComponent,
     SearchProfileComponent,
     UserProfileComponent,
+    ProfileClaimsComponent,
     ViewRecommendationsComponent,
     FollowRecommendationsComponent,
     ProjectRecommendationsComponent,
-    GroupRecommendationsComponent
+    GroupRecommendationsComponent,
+    ManageTagsComponent,
+    AwardsAndBadgesComponent
   ],
   imports: [
     BrowserModule,
@@ -220,8 +235,8 @@ export const environment = {
     MomentModule,
     ModalModule.forRoot(),
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
-    AngularFireModule.initializeApp(environment.firebase), 
-    AngularFireDatabaseModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule, NgbModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

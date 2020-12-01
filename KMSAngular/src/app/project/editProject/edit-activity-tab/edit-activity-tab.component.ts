@@ -221,7 +221,7 @@ export class EditActivityTabComponent implements OnInit {
           newNotification.msg = "A new activity has been added to " + this.project.name;
           newNotification.projectId = this.projectId;
           newNotification.groupId = null;
-          newNotification.projectTab = "activity-tab";
+          newNotification.tabName = "activity-tab";
           for (let member of this.project.projectMembers) {
             if (member.userId != this.loggedInUser.userId) {
               this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
@@ -260,7 +260,7 @@ export class EditActivityTabComponent implements OnInit {
         this.activityToEdit.endDate = new Date(this.formatDate(this.activityToEdit.endDate.toString()));
         this.endDate = this.dateToString(this.activityToEdit.endDate);
 
-        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.startDate)).subscribe(
+        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.endDate)).subscribe(
           response => {
             this.hrpAvailable = response;
           }
@@ -368,7 +368,7 @@ export class EditActivityTabComponent implements OnInit {
           delay: 2500,
           body: 'Hrp allocated to this activity successfully',
         });
-        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.startDate)).subscribe(
+        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.endDate)).subscribe(
           response => {
             this.hrpAvailable = response;
           }
@@ -393,7 +393,7 @@ export class EditActivityTabComponent implements OnInit {
           delay: 2500,
           body: 'Hrp removed from this activity successfully',
         });
-        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.startDate)).subscribe(
+        this.hrpService.availableHrp(this.projectId, this.dateToString(this.activityToEdit.startDate), this.dateToString(this.activityToEdit.endDate)).subscribe(
           response => {
             this.hrpAvailable = response;
           }
