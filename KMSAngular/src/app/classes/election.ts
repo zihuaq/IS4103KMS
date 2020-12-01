@@ -26,7 +26,7 @@ export class Election {
         electionPosts?: Post[],
         electionApplications?: ElectionApplication[],
         numSlots?: number,
-        minRepPoints?: number
+        minRepPoints?: number,
     ) {
         this.id = id;
         this.startDate = startDate;
