@@ -79,6 +79,8 @@ public class PostEntity implements Serializable {
     private String sharedGroupOrProjectDescription;
     
     private String sharedGroupOrProjectName;
+    
+    private Boolean isPinnedPost; 
 
     public PostEntity() {
         this.likers = new ArrayList<>();
@@ -264,5 +266,13 @@ public class PostEntity implements Serializable {
 
     public void setSharedGroupOrProjectName(String sharedGroupOrProjectName) {
         this.sharedGroupOrProjectName = sharedGroupOrProjectName;
+    }
+
+    public Boolean getIsPinnedPost() {
+        return isPinnedPost;
+    }
+
+    public void setIsPinnedPost(Boolean isPinnedPost) {
+        this.isPinnedPost = isPinnedPost;
     }
 }

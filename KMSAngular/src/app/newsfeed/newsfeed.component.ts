@@ -38,6 +38,7 @@ export class NewsfeedComponent implements OnInit {
   selectedFile: string | ArrayBuffer;
   selectedFileName: string | ArrayBuffer;
   postContent: string;
+  pinPost: boolean = false;
   createdPost: Post;
   loggedInUser: User;
   newsfeedPosts: Post[];
@@ -231,6 +232,10 @@ export class NewsfeedComponent implements OnInit {
     }
   }
 
+  handlePinnedPostChange(){
+    this.pinPost = !this.pinPost;
+  }
+
   onCreatePost(createPostForm: NgForm) {
     this.createdPost = new Post();
 
@@ -249,6 +254,7 @@ export class NewsfeedComponent implements OnInit {
         this.createdPost.text = this.postContent;
         this.createdPost.picture = this.selectedFile;
         this.createdPost.postOwner = this.loggedInUser;
+        this.createdPost.isPinnedPost = this.pinPost;
         if (this.newsfeedType == "project") {
           this.createdPost.project = this.project;
         } else if (this.newsfeedType == "group") {
@@ -289,6 +295,7 @@ export class NewsfeedComponent implements OnInit {
             });
             this.postContent = null;
             this.selectedFile = null;
+            this.pinPost = false;
             this.updateNewsfeed();
           },
           (err) => {

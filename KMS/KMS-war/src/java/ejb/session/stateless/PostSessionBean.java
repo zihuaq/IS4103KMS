@@ -25,6 +25,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.ReportTypeEnum;
 import ws.restful.model.SharePostToProjectOrGroupsReq;
 
 /**
@@ -51,8 +52,6 @@ public class PostSessionBean implements PostSessionBeanLocal {
 
     @EJB(name = "UserSessionBeanLocal")
     private UserSessionBeanLocal userSessionBeanLocal;
-    
-    
 
     @Override
     public Long createNewPostInProjectFeed(PostEntity newPost, Long projectId, Long userId) throws NoResultException {
@@ -121,24 +120,31 @@ public class PostSessionBean implements PostSessionBeanLocal {
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         List<PostEntity> postForUserNewsFeed = new ArrayList<>();
         if (user != null) {
-            postForUserNewsFeed.addAll(user.getPosts());
+            Query q = em.createQuery("SELECT p FROM PostEntity p WHERE p.isPinnedPost = true");
+            List<PostEntity> pinnedPosts = (List<PostEntity>) q.getResultList();
+
+            for (int i = 0; i < user.getPosts().size(); i++) {
+                if (!pinnedPosts.contains(user.getPosts().get(i))) {
+                    postForUserNewsFeed.add(user.getPosts().get(i));
+                }
+            }
             for (int i = 0; i < user.getFollowing().size(); i++) {
                 for (int j = 0; j < user.getFollowing().get(i).getPosts().size(); j++) {
-                    if (user.getFollowing().get(i).getPosts().get(j).getProject() == null) {
+                    if (user.getFollowing().get(i).getPosts().get(j).getProject() == null && !postForUserNewsFeed.contains(user.getFollowing().get(i).getPosts().get(j)) && !pinnedPosts.contains(user.getFollowing().get(i).getPosts().get(j))) {
                         postForUserNewsFeed.add(user.getFollowing().get(i).getPosts().get(j));
                     }
                 }
             }
             for (int i = 0; i < user.getProjectsJoined().size(); i++) {
                 for (int j = 0; j < user.getProjectsJoined().get(i).getPosts().size(); j++) {
-                    if (user.getProjectsJoined().get(i).getPosts().get(j).getPostOwner() != user) {
+                    if (user.getProjectsJoined().get(i).getPosts().get(j).getPostOwner() != user && !postForUserNewsFeed.contains(user.getProjectsJoined().get(i).getPosts().get(j)) && !pinnedPosts.contains(user.getProjectsJoined().get(i).getPosts().get(j))) {
                         postForUserNewsFeed.add(user.getProjectsJoined().get(i).getPosts().get(j));
                     }
                 }
             }
             for (int i = 0; i < user.getGroupsJoined().size(); i++) {
                 for (int j = 0; j < user.getGroupsJoined().get(i).getPosts().size(); j++) {
-                    if (user.getGroupsJoined().get(i).getPosts().get(j).getPostOwner() != user) {
+                    if (user.getGroupsJoined().get(i).getPosts().get(j).getPostOwner() != user && !postForUserNewsFeed.contains(user.getGroupsJoined().get(i).getPosts().get(j)) && !pinnedPosts.contains(user.getGroupsJoined().get(i).getPosts().get(j))) {
                         postForUserNewsFeed.add(user.getGroupsJoined().get(i).getPosts().get(j));
                     }
                 }
@@ -146,7 +152,10 @@ public class PostSessionBean implements PostSessionBeanLocal {
 
             Collections.sort(postForUserNewsFeed, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
             Collections.reverse(postForUserNewsFeed);
-            return postForUserNewsFeed;
+            Collections.sort(pinnedPosts, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
+            Collections.reverse(pinnedPosts);
+            pinnedPosts.addAll(postForUserNewsFeed);
+            return pinnedPosts;
         } else {
             throw new UserNotFoundException("User does not exist.");
         }
@@ -631,15 +640,18 @@ public class PostSessionBean implements PostSessionBeanLocal {
             }
 
             post.getPostOwner().getPosts().remove(post);
-            
+
             //get all comment reports
-            List<ReportEntity> commentReports =  reportSessionBean.getCommentReports();
-             
+//            List<ReportEntity> commentReports = reportSessionBean.getCommentReports();
+            Query q4 = em.createQuery("SELECT r FROM ReportEntity r WHERE r.reportType = :reportType");
+            q4.setParameter("reportType", ReportTypeEnum.COMMENT);
+            List<ReportEntity> commentReports = q4.getResultList();
+
             for (int i = 0; i < post.getComments().size(); i++) {
                 Iterator<ReportEntity> itr = commentReports.iterator();
-                while(itr.hasNext()){
+                while (itr.hasNext()) {
                     ReportEntity commentReport = itr.next();
-                    if(commentReport.getReportedComment().getPostCommentId() == post.getComments().get(i).getPostCommentId()){
+                    if (commentReport.getReportedComment().getPostCommentId() == post.getComments().get(i).getPostCommentId()) {
                         em.remove(commentReport);
                     }
                 }
@@ -668,11 +680,10 @@ public class PostSessionBean implements PostSessionBeanLocal {
             postToDelete.getProject().getPosts().remove(postToDelete);
             postToDelete.setProject(null);
         }
-        
+
         em.remove(postToDelete);
     }
-    
-    
+
     public void deletePostInGroupFeed(Long postId) throws NoResultException {
         PostEntity postToDelete = getPostById(postId);
 
