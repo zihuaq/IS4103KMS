@@ -87,13 +87,11 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         cal.setTime(date);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date fromDate = cal.getTime();
-        System.out.println(fromDate);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         cal.set(Calendar.HOUR, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         Date toDate = cal.getTime();
-        System.out.println(toDate);
         
         Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.project.projectId = :inProjectId AND a.startDate <= :inToDate AND a.endDate >= :inFromDate");
         query.setParameter("inProjectId", projectId);

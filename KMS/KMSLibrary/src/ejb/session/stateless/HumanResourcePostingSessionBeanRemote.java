@@ -9,15 +9,12 @@ import Exception.NoResultException;
 import entity.HumanResourcePostingEntity;
 import java.util.Date;
 import java.util.List;
-import javax.ejb.Local;
 
 /**
  *
  * @author chai
  */
-@Local
-public interface HumanResourcePostingSessionBeanLocal {
-
+public interface HumanResourcePostingSessionBeanRemote {
     public Long createHumanResourcePostingEntity(HumanResourcePostingEntity newHrp, Long projectId, List<Long> tagIds) throws NoResultException;
 
     public HumanResourcePostingEntity getHrpById(Long hrpId) throws NoResultException;
@@ -35,5 +32,4 @@ public interface HumanResourcePostingSessionBeanLocal {
     public List<HumanResourcePostingEntity> availableHrp(Long projectId, Date startDate, Date endDate);
 
     public List<HumanResourcePostingEntity> getHrpByActivityId(Long activityId);
-    
 }

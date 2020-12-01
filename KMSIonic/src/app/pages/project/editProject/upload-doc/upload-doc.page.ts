@@ -6,6 +6,10 @@ import { Location } from "@angular/common";
 
 import { User } from 'src/app/classes/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Project } from 'src/app/classes/project'; 
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-upload-doc',
@@ -15,6 +19,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class UploadDocPage implements OnInit {
 
   projectId: number;
+  project: Project;
   fileToUpload: File = null;
   bucket: string = "is4103kms";
   aws = require('aws-sdk');
@@ -28,7 +33,9 @@ export class UploadDocPage implements OnInit {
     private location: Location,
     private modalCtrl: ModalController,
     public toastController: ToastController,
-    private authenticationService: AuthenticationService) {
+    private authenticationService: AuthenticationService,
+    private notificationService: NotificationService,
+    private projectService: ProjectService) {
     
    }
 
@@ -40,6 +47,11 @@ export class UploadDocPage implements OnInit {
     );
 
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
+    this.projectService.getProjectById(this.projectId).subscribe(
+      response => {
+        this.project = response;
+      }
+    );
     this.s3 = new this.aws.S3({
       signatureVersion: 'v4',
       region: 'eu-east-2',
@@ -89,6 +101,16 @@ export class UploadDocPage implements OnInit {
       }
     }).promise().then(
       async () => {
+        let newNotification = new Notification();
+        newNotification.msg = "A new document has been uploaded to " + this.project.name;
+        newNotification.projectId = this.projectId;
+        newNotification.groupId = null;
+        newNotification.tabName = "document-tab";
+        for (let member of this.project.projectMembers) {
+          if (member.userId != this.currentUser.userId) {
+            this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+          }
+        }
         const toast = await this.toastController.create({
           message: 'Document is uploaded successfully.',
           duration: 2500

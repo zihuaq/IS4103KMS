@@ -315,14 +315,16 @@ public class DataInitializationSessionBean {
             Date startDate = new Date();
             Date endDate = new Date();
             startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
-            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-31");
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31");
             List<Long> tagIds = new ArrayList<>();
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
-
+            
             tagIds.add(9l);
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
             humanResourcePostingSessionBean.joinHrp(3l, 2l);
-
+            
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Test", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
+            
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 9:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
 
