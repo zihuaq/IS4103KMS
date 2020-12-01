@@ -73,14 +73,14 @@ public class BadgeEntity implements Serializable {
         this.description = description;
     }
 
-    public BadgeEntity(Long badgeId, String name, String description, Integer tierOneRequirement, Integer tierTwoRequirement, Integer tierThreeRequirement) {
-        this.badgeId = badgeId;
-        this.name = name;
-        this.description = description;
-        this.tierOneRequirement = tierOneRequirement;
-        this.tierTwoRequirement = tierTwoRequirement;
-        this.tierThreeRequirement = tierThreeRequirement;
-    }
+//    public BadgeEntity(Long badgeId, String name, String description, Integer tierOneRequirement, Integer tierTwoRequirement, Integer tierThreeRequirement) {
+//        this.badgeId = badgeId;
+//        this.name = name;
+//        this.description = description;
+//        this.tierOneRequirement = tierOneRequirement;
+//        this.tierTwoRequirement = tierTwoRequirement;
+//        this.tierThreeRequirement = tierThreeRequirement;
+//    }
 
     public BadgeEntity(Long badgeId, String name, String description, Integer tierOneRequirement, Integer tierTwoRequirement, Integer tierThreeRequirement, String tierZeroPicture, String tierOnePicture, String tierTwoPicture, String tierThreePicture) {
         this.badgeId = badgeId;

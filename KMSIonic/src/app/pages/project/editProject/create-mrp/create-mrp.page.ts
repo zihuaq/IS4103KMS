@@ -20,6 +20,12 @@ import { MaterialResourcePosting } from 'src/app/classes/material-resource-posti
 import { MrpService } from 'src/app/services/mrp.service'; 
 import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/services/tag.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Project } from 'src/app/classes/project'; 
+import { ProjectService } from 'src/app/services/project.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { User } from 'src/app/classes/user';
 
 @Component({
   selector: 'app-create-mrp',
@@ -28,7 +34,9 @@ import { TagService } from 'src/app/services/tag.service';
 })
 export class CreateMrpPage implements OnInit {
 
+  currentUser: User;
   projectId: number;
+  project: Project;
   newMrp: MaterialResourcePosting;
   tags: Tag[];
   filteredTags: Tag[];
@@ -49,6 +57,9 @@ export class CreateMrpPage implements OnInit {
     private location: Location,
     private mrpService: MrpService,
     private tagService: TagService,
+    private notificationService: NotificationService,
+    private projectService: ProjectService,
+    private authenticationService: AuthenticationService,
     private platform: Platform,
     private app: ApplicationRef) {
       this.newMrp = new MaterialResourcePosting();
@@ -69,6 +80,14 @@ export class CreateMrpPage implements OnInit {
         console.log(this.tags)
       },
     );
+    this.projectService.getProjectById(this.projectId).subscribe(
+      response => {
+        this.project = response;
+      }
+    );
+    this.authenticationService.getCurrentUser().then((user) => {
+      this.currentUser = user;
+    })
   }
 
   loadMap() {
@@ -165,6 +184,16 @@ export class CreateMrpPage implements OnInit {
 
     this.mrpService.createNewMrp(this.newMrp, this.projectId, tagIds).subscribe(
       async response => {
+        let newNotification = new Notification();
+        newNotification.msg = "A new Material Resource Posting has been added to " + this.project.name;
+        newNotification.projectId = this.projectId;
+        newNotification.groupId = null;
+        newNotification.tabName = "mrp-tab";
+        for (let member of this.project.projectMembers) {
+          if (member.userId != this.currentUser.userId) {
+            this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+          }
+        }
         const toast = await this.toastController.create({
           message: "Mrp created successfully.",
           duration: 2000
