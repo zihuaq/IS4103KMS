@@ -110,11 +110,12 @@ import { ViewRecommendationsComponent } from './view-recommendations/view-recomm
 import { FollowRecommendationsComponent } from './view-recommendations/follow-recommendations/follow-recommendations.component';
 import { ProjectRecommendationsComponent } from './view-recommendations/project-recommendations/project-recommendations.component';
 import { GroupRecommendationsComponent } from './view-recommendations/group-recommendations/group-recommendations.component';
-import { ManageTagsComponent } from './administration/manage-tags/manage-tags.component';
+import { ManageTagsComponent } from './admin-manage-tags/manage-tags/manage-tags.component';
 import { AwardsAndBadgesComponent } from './user-profile/awards-and-badges/awards-and-badges.component';
-import { HandleTagRequestsComponent } from './administration/handle-tag-requests/handle-tag-requests.component';
+import { HandleTagRequestsComponent } from './admin-manage-tags/handle-tag-requests/handle-tag-requests.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UploadProfilesComponent } from './administration/upload-profiles/upload-profiles.component';
+import { AdminManageTagsComponent } from './admin-manage-tags/admin-manage-tags.component';
 
 export const environment = {
   production: false,
@@ -227,7 +228,8 @@ export const environment = {
     ManageTagsComponent,
     AwardsAndBadgesComponent,
     HandleTagRequestsComponent,
-    UploadProfilesComponent
+    UploadProfilesComponent,
+    AdminManageTagsComponent
   ],
   imports: [
     BrowserModule,

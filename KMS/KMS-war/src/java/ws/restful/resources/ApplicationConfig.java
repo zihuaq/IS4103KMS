@@ -34,6 +34,7 @@ public class ApplicationConfig extends Application {
         resources.add(ws.restful.resources.AwardResource.class);
         resources.add(ws.restful.resources.CorsFilter.class);
         resources.add(ws.restful.resources.DonationResource.class);
+        resources.add(ws.restful.resources.ElectionResource.class);
         resources.add(ws.restful.resources.FulfillmentResource.class);
         resources.add(ws.restful.resources.GroupResource.class);
         resources.add(ws.restful.resources.HrpResource.class);

@@ -496,6 +496,7 @@ public class PostResource {
         post.setSharedProjectId(postToProcess.getSharedProjectId());
         post.setSharedGroupOrProjectDescription(postToProcess.getSharedGroupOrProjectDescription());
         post.setSharedGroupOrProjectName(postToProcess.getSharedGroupOrProjectName());
+        post.setIsPinnedPost(postToProcess.getIsPinnedPost());
         UserEntity user = new UserEntity();
         user.setUserId(postToProcess.getPostOwner().getUserId());
         user.setFirstName(postToProcess.getPostOwner().getFirstName());

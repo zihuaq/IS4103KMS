@@ -79,6 +79,15 @@ public class PostEntity implements Serializable {
     private String sharedGroupOrProjectDescription;
     
     private String sharedGroupOrProjectName;
+    
+    private Boolean isPinnedPost; 
+    
+    private Boolean isElectionPost;
+    
+    @NotNull
+    @JoinColumn(nullable=false)
+    @ManyToOne
+    private UserEntity endorser;
 
     public PostEntity() {
         this.likers = new ArrayList<>();
@@ -264,5 +273,29 @@ public class PostEntity implements Serializable {
 
     public void setSharedGroupOrProjectName(String sharedGroupOrProjectName) {
         this.sharedGroupOrProjectName = sharedGroupOrProjectName;
+    }
+
+    public Boolean getIsPinnedPost() {
+        return isPinnedPost;
+    }
+
+    public void setIsPinnedPost(Boolean isPinnedPost) {
+        this.isPinnedPost = isPinnedPost;
+    }
+
+    public Boolean getIsElectionPost() {
+        return isElectionPost;
+    }
+
+    public void setIsElectionPost(Boolean isElectionPost) {
+        this.isElectionPost = isElectionPost;
+    }
+
+    public UserEntity getEndorser() {
+        return endorser;
+    }
+
+    public void setEndorser(UserEntity endorser) {
+        this.endorser = endorser;
     }
 }

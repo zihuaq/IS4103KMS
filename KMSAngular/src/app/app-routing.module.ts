@@ -25,6 +25,7 @@ import { EditProjectComponent } from './project/editProject/edit-project/edit-pr
 import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
 import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.component';
 import { AdministrationComponent } from './administration/administration.component';
+import { AdminManageTagsComponent } from './admin-manage-tags/admin-manage-tags.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
 import { ViewAllGroupComponent } from './group/view-all-group/view-all-group.component';
 import { ViewOwnGroupComponent } from './group/view-own-group/view-own-group.component';
@@ -48,6 +49,11 @@ const routes: Routes = [
     path: 'admin',
     canActivate: [AdminGuard],
     component: AdministrationComponent,
+  },
+  {
+    path: 'admin-manage-tags',
+    canActivate: [AdminGuard],
+    component: AdminManageTagsComponent,
   },
   {
     path: 'notifications',

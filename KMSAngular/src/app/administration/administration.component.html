@@ -6,12 +6,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Admin Panel</h1>
+          <h1 class="m-0 text-dark">Manage Reports</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a routerLink="/index">Home</a></li>
-            <li class="breadcrumb-item active">Admin Panel</li>
+            <li class="breadcrumb-item active">Manage Reports</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -52,9 +52,6 @@
               Reports</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="pill" href="#manage-tags" role="tab">Manage Tags</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" data-toggle="pill" href="#upload-profiles" role="tab">Upload Profiles</a>
           </li>
         </ul>
@@ -83,22 +80,11 @@
           <div class="tab-pane fade" id="review-reports" role="tabpanel">
             <app-review-reports></app-review-reports>
           </div>
-          <div class="tab-pane fade" id="manage-tags" role="tabpanel">
-            <div class="row">
-              <div class="col-6">
-                <app-handle-tag-requests></app-handle-tag-requests>
-              </div>
-              <div class="col-6">
-                <app-manage-tags></app-manage-tags>
-              </div>
-            </div>
-          </div>
           <div class="tab-pane fade" id="upload-profiles" role="tabpanel">
             <app-upload-profiles></app-upload-profiles>
           </div>
         </div>
       </div>
-
     </div>
   </section>
 </div>

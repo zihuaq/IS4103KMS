@@ -22,6 +22,9 @@ export class Post {
   sharedProjectId: string;
   sharedGroupOrProjectDescription: string;
   sharedGroupOrProjectName: string;
+  isPinnedPost: boolean;
+  isElectionPost: boolean;
+  endorser: User;
 
   constructor(
     postId?: number,
@@ -40,7 +43,10 @@ export class Post {
     sharedGroupId?: string,
     sharedProjectId?: string,
     sharedGroupOrProjectDescription?: string,
-    sharedGroupOrProjectName?: string
+    sharedGroupOrProjectName?: string,
+    isPinnedPost?: boolean,
+    isElectionPost?: boolean,
+    endorser?: User
   ) {
     this.postId = postId;
     this.postDate = postDate;
@@ -59,5 +65,8 @@ export class Post {
     this.sharedProjectId = sharedProjectId;
     this.sharedGroupOrProjectDescription = sharedGroupOrProjectDescription;
     this.sharedGroupOrProjectName = sharedGroupOrProjectName;
+    this.isPinnedPost = isPinnedPost;
+    this.isElectionPost = isElectionPost;
+    this.endorser = endorser;
   }
 }
