@@ -124,24 +124,17 @@ public class ProfileResource {
     @Path("/claims")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProfileClaims() {
-        try {
-            List<ClaimProfileRequestEntity> claimProfileRequestEntitys = dataMappingSessionBean.getAllProfileClaims();
-            for (ClaimProfileRequestEntity claimProfileRequestEntity : claimProfileRequestEntitys) {
-                claimProfileRequestEntity.getProfile().setClaimProfileRequestMade(new ArrayList<>());
-                claimProfileRequestEntity.getProfile().setUserEntity(null);
-                UserEntity user = new UserEntity();
-                user.setUserId(claimProfileRequestEntity.getUser().getUserId());
-                user.setFirstName(claimProfileRequestEntity.getUser().getFirstName());
-                user.setLastName(claimProfileRequestEntity.getUser().getLastName());
-                claimProfileRequestEntity.setUser(user);
-            }
-            return Response.status(200).entity(claimProfileRequestEntitys).build();
-        } catch (NoResultException ex) {
-            JsonObject exception = Json.createObjectBuilder()
-                    .add("error", ex.getMessage())
-                    .build();
-            return Response.status(404).entity(exception).build();
+        List<ClaimProfileRequestEntity> claimProfileRequestEntitys = dataMappingSessionBean.getAllProfileClaims();
+        for (ClaimProfileRequestEntity claimProfileRequestEntity : claimProfileRequestEntitys) {
+            claimProfileRequestEntity.getProfile().setClaimProfileRequestMade(new ArrayList<>());
+            claimProfileRequestEntity.getProfile().setUserEntity(null);
+            UserEntity user = new UserEntity();
+            user.setUserId(claimProfileRequestEntity.getUser().getUserId());
+            user.setFirstName(claimProfileRequestEntity.getUser().getFirstName());
+            user.setLastName(claimProfileRequestEntity.getUser().getLastName());
+            claimProfileRequestEntity.setUser(user);
         }
+        return Response.status(200).entity(claimProfileRequestEntitys).build();
     }
 
     @POST

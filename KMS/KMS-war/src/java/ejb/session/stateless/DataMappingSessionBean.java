@@ -959,11 +959,11 @@ public class DataMappingSessionBean implements DataMappingSessionBeanLocal {
     }
 
     @Override
-    public List<ClaimProfileRequestEntity> getAllProfileClaims() throws NoResultException {
+    public List<ClaimProfileRequestEntity> getAllProfileClaims() {
         Query q = em.createQuery("SELECT c FROM ClaimProfileRequestEntity C");
         List<ClaimProfileRequestEntity> claimProfileRequestEntitys = q.getResultList();
         if (claimProfileRequestEntitys == null || claimProfileRequestEntitys.isEmpty()) {
-            throw new NoResultException("No Claim Profile Requests found.");
+            return new ArrayList<>();
         } else {
             return claimProfileRequestEntitys;
         }

@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Group Properties.
+ * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -10,15 +10,14 @@ import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import entity.GroupEntity;
 import java.util.List;
-import javax.ejb.Local;
-import util.enumeration.GroupStatusEnum;
+import javax.ejb.Remote;
 
 /**
  *
- * @author zeplh
+ * @author Jeremy
  */
-@Local
-public interface GroupSessionBeanLocal {
+@Remote
+public interface GroupSessionBeanRemote {
 
     public List<GroupEntity> retrieveAllGroup();
 
