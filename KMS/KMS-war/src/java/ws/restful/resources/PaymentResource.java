@@ -7,7 +7,6 @@ package ws.restful.resources;
 
 import Exception.NoResultException;
 import ejb.session.stateless.PaymentSessionBeanLocal;
-import entity.FulfillmentEntity;
 import entity.PaymentEntity;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,6 +27,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.CreatePaymentReq;
 import ws.restful.model.ErrorRsp;
+import ws.restful.model.MakePaymentReq;
 
 /**
  * REST Web Service
@@ -96,12 +96,54 @@ public class PaymentResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response makePayment(FulfillmentEntity fulfillmentToUpdate, List<Long> paymentIds, String paypalOrderId) {
+    public Response makePayment(MakePaymentReq makePaymentReq) {
         try { 
             System.out.println("******** PaymentResource: makePayment()");
-            paymentSessionBean.makePayment(fulfillmentToUpdate, paymentIds, paypalOrderId);
+            paymentSessionBean.makePayment(makePaymentReq.getFulfillmentToUpdate(), makePaymentReq.getPaymentIds(), makePaymentReq.getPaypalOrderId());
 
             return Response.status(204).build();
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("getListOfOutstandingPaymentsByProject/{projectId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOfOutstandingPaymentsByProject(@PathParam("projectId") Long projectId) {
+        System.out.println("******** PaymentResource: getListOfOutstandingPaymentsByProject()");
+        try {
+            List<PaymentEntity> paymentList = paymentSessionBean.getListOfOutstandingPaymentsByProject(projectId);
+
+            for (PaymentEntity payment : paymentList) {
+                payment.setFulfillment(null);
+            }
+            return Response.status(Response.Status.OK).entity(paymentList).build();
+        
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("getListOfNotCompletedPaymentsByFulfillmentNewestToOldest/{fulfillmentId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOfNotCompletedPaymentsByFulfillmentNewestToOldest(@PathParam("fulfillmentId") Long fulfillmentId) {
+        System.out.println("******** PaymentResource: getListOfNotCompletedPaymentsByFulfillmentNewestToOldest()");
+        try {
+            List<PaymentEntity> paymentList = paymentSessionBean.getListOfNotCompletedPaymentsByFulfillmentNewestToOldest(fulfillmentId);
+
+            for (PaymentEntity payment : paymentList) {
+                payment.setFulfillment(null);
+            }
+            return Response.status(Response.Status.OK).entity(paymentList).build();
+        
         } catch (NoResultException ex ) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             

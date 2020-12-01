@@ -67,12 +67,11 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         if (mra.getType() == MraTypeEnum.ONETIMEDONATION || mra.getType() == MraTypeEnum.ONETIMEPAYMENT) { //if one-time
             newFulfillment.setReceivedQuantity(0.0);
             newFulfillment.setUnreceivedQuantity(newFulfillment.getTotalPledgedQuantity());
-            posting.setLackingQuantity(posting.getLackingQuantity() - newFulfillment.getTotalPledgedQuantity());
         } else { //if recurring
             newFulfillment.setReceivedQuantity(null);
             newFulfillment.setUnreceivedQuantity(null);
-            posting.setLackingQuantity(0.0);
         }
+        posting.setLackingQuantity(posting.getLackingQuantity() - newFulfillment.getTotalPledgedQuantity());
         
         if (posting.getLackingQuantity() == 0.0) {
             posting.setStatus(MrpStatusEnum.CLOSED);
@@ -112,7 +111,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
     
     //only for one-time donations and payments
     @Override
-    public void receiveResource(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
+    public void receiveResource(FulfillmentEntity fulfillmentToUpdate, PaymentEntity payment) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
         
         fulfillment.getPosting().setObtainedQuantity(fulfillment.getPosting().getObtainedQuantity() + fulfillmentToUpdate.getReceivedQuantity());
@@ -120,21 +119,25 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         fulfillment.setReceivedQuantity(fulfillmentToUpdate.getReceivedQuantity());
         fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity());
         fulfillment.setStatus(fulfillmentToUpdate.getStatus());
+        
+        if (payment != null) {
+            payment.setFulfillment(fulfillment);
+            
+            em.persist(payment);
+            em.flush();
+        }
     }
     
+    //only for one-time donations and payments by project owners/admins
     @Override
-    public void updateQuantity(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
+    public void updateQuantity(FulfillmentEntity fulfillmentToUpdate, PaymentEntity payment) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
         
-        if (fulfillment.getMra().getType() == MraTypeEnum.ONETIMEDONATION || fulfillment.getMra().getType() == MraTypeEnum.ONETIMEPAYMENT) {
-            Double difference = fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity();
-            fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + difference);
-            fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
-            fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity() - fulfillmentToUpdate.getReceivedQuantity());
-            fulfillment.setStatus(fulfillmentToUpdate.getStatus());
-        } else {
-            fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
-        }
+        Double difference = fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity();
+        fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + difference);
+        fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
+        fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity() - fulfillmentToUpdate.getReceivedQuantity());
+        fulfillment.setStatus(fulfillmentToUpdate.getStatus());
         
         LocalDate today = LocalDate.now();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -146,6 +149,35 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
             fulfillment.getPosting().setStatus(MrpStatusEnum.OPEN);
         }
         
+        if (payment != null) {
+            payment.setFulfillment(fulfillment);
+            
+            em.persist(payment);
+            em.flush();
+        }
+    }
+    
+    //only for pledged fulfillments by mra owner
+    @Override
+    public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
+        FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
+        
+        Double difference = fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity();
+        fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + difference);
+        fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
+        fulfillment.setBasisOffered(fulfillmentToUpdate.getBasisOffered());
+        fulfillment.setPaymentBasis(fulfillmentToUpdate.getPaymentBasis());
+        fulfillment.setPriceOffered(fulfillmentToUpdate.getPriceOffered());
+        
+        LocalDate today = LocalDate.now();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getStartDate()));
+        
+        if (fulfillment.getPosting().getLackingQuantity() == 0.0 || today.isAfter(startDate)) {
+            fulfillment.getPosting().setStatus(MrpStatusEnum.CLOSED);
+        } else {
+            fulfillment.getPosting().setStatus(MrpStatusEnum.OPEN);
+        }
     }
     
     @Override
@@ -170,6 +202,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         
         fulfillment.setStatus(FulfillmentStatusEnum.ACCEPTED);
         
+        //if recurring
         if (fulfillment.getMra().getType() != MraTypeEnum.ONETIMEDONATION && fulfillment.getMra().getType() != MraTypeEnum.ONETIMEPAYMENT) {
             fulfillment.getPosting().setObtainedQuantity(null);
             
@@ -317,7 +350,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
     }
     
     @Override
-    public void createRecurringPayments() {
+    public void generateRecurringPayments() {
         try {
             LocalDate today = LocalDate.now();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -329,70 +362,68 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
             List<FulfillmentEntity> fulfillmentList = query.getResultList();
             for (FulfillmentEntity fulfillment: fulfillmentList) {
                 List<PaymentEntity> paymentList = paymentSessionBeanLocal.getListOfNonOutstandingPaymentsByFulfillmentNewestToOldest(fulfillment.getFulfillmentId());
-                for (PaymentEntity payment: paymentList) {
-                    LocalDate dueDate = LocalDate.parse(sdf.format(payment.getDueDate()));
-                    if (today.isAfter(dueDate)) { 
-                        if (payment.getStatus() == PaymentStatusEnum.NOTDUE) { //outstanding payment
-                            payment.setStatus(PaymentStatusEnum.OUTSTANDING);
-                        } 
-                        
-                        if (payment.getIsLast() == false) { //create new payment entity for next due date
-                            LocalDate newDueDate = LocalDate.now();
-                            if (fulfillment.getPaymentBasis() == PaymentBasisEnum.WEEKLY) { //add one week
-                                newDueDate = dueDate.plusWeeks(1);
-                            } else {
-                                newDueDate = dueDate.plusMonths(1); //add one month
+                PaymentEntity latestPayment = paymentList.get(0);
+                LocalDate dueDate = LocalDate.parse(sdf.format(latestPayment.getDueDate()));
+                if (today.isAfter(dueDate)) { 
+                    if (latestPayment.getStatus() == PaymentStatusEnum.NOTDUE) { //outstanding payment
+                        latestPayment.setStatus(PaymentStatusEnum.OUTSTANDING);
+                    } 
+                    if (latestPayment.getIsLast() == false) { //create new payment entity for next due date
+                        LocalDate newDueDate = LocalDate.now();
+                        if (fulfillment.getPaymentBasis() == PaymentBasisEnum.WEEKLY) { //add one week
+                            newDueDate = dueDate.plusWeeks(1);
+                        } else {
+                            newDueDate = dueDate.plusMonths(1); //add one month
+                        }
+                        LocalDate endDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getEndDate()));
+                        Double amount = fulfillment.getPriceOffered() * fulfillment.getTotalPledgedQuantity();
+                        if (endDate.isBefore(newDueDate)) { //next payment is the last
+                            long noOfDays = ChronoUnit.DAYS.between(dueDate, endDate);
+                            if (fulfillment.getBasisOffered() == MraTypeEnum.DAILY) {
+                                amount *= noOfDays;
+                            } else if (fulfillment.getBasisOffered() == MraTypeEnum.WEEKLY) {
+                                amount *= (long) Math.ceil(noOfDays / 7);
                             }
-                            LocalDate endDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getEndDate()));
-                            Double amount = fulfillment.getPriceOffered() * fulfillment.getTotalPledgedQuantity();
-                            if (endDate.isBefore(newDueDate)) { //next payment is the last
-                                long noOfDays = ChronoUnit.DAYS.between(dueDate, endDate);
-                                if (fulfillment.getBasisOffered() == MraTypeEnum.DAILY) {
-                                    amount *= noOfDays;
-                                } else if (fulfillment.getBasisOffered() == MraTypeEnum.WEEKLY) {
-                                    amount *= (long) Math.ceil(noOfDays / 7);
-                                }
-                                payment.setIsLast(true);
-                            } else {
-                                if (fulfillment.getBasisOffered() == MraTypeEnum.DAILY) {
-                                    amount *= 7;
-                                }
+                            latestPayment.setIsLast(true);
+                        } else {
+                            if (fulfillment.getBasisOffered() == MraTypeEnum.DAILY) {
+                                amount *= 7;
                             }
-                            PaymentEntity newPayment = new PaymentEntity(amount, Date.valueOf(dueDate), Date.valueOf(newDueDate));
-                            newPayment.setFulfillment(fulfillment);
-                            em.persist(newPayment);
-                            em.flush();
                         }
-                    } else if (today.plusDays(5).isEqual(dueDate) && payment.getStatus() == PaymentStatusEnum.NOTDUE) {
-                        ProjectEntity project = fulfillment.getPosting().getProject();
-                        NotificationEntity notification = new NotificationEntity();
-                        notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due in 5 days!");
-                        notification.setProjectId(project.getProjectId());
-                        notification.setGroupId(null);
-                        notification.setProjectTab("mrp-tab");
-                        for (UserEntity admin: project.getProjectAdmins()) {
-                            notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
-                        }
-                    } else if (today.plusDays(3).isEqual(dueDate) && payment.getStatus() == PaymentStatusEnum.NOTDUE) {
-                        ProjectEntity project = fulfillment.getPosting().getProject();
-                        NotificationEntity notification = new NotificationEntity();
-                        notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due in 3 days!");
-                        notification.setProjectId(project.getProjectId());
-                        notification.setGroupId(null);
-                        notification.setProjectTab("mrp-tab");
-                        for (UserEntity admin: project.getProjectAdmins()) {
-                            notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
-                        }
-                    } else if (today.isEqual(dueDate) && payment.getStatus() == PaymentStatusEnum.NOTDUE) {
-                        ProjectEntity project = fulfillment.getPosting().getProject();
-                        NotificationEntity notification = new NotificationEntity();
-                        notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due today!");
-                        notification.setProjectId(project.getProjectId());
-                        notification.setGroupId(null);
-                        notification.setProjectTab("mrp-tab");
-                        for (UserEntity admin: project.getProjectAdmins()) {
-                            notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
-                        }
+                        PaymentEntity newPayment = new PaymentEntity(amount, Date.valueOf(dueDate), Date.valueOf(newDueDate));
+                        newPayment.setFulfillment(fulfillment);
+                        em.persist(newPayment);
+                        em.flush();
+                    }
+                } else if (today.plusDays(5).isEqual(dueDate) && latestPayment.getStatus() == PaymentStatusEnum.NOTDUE) {
+                    ProjectEntity project = fulfillment.getPosting().getProject();
+                    NotificationEntity notification = new NotificationEntity();
+                    notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due in 5 days!");
+                    notification.setProjectId(project.getProjectId());
+                    notification.setGroupId(null);
+                    notification.setProjectTab("mrp-tab");
+                    for (UserEntity admin: project.getProjectAdmins()) {
+                        notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
+                    }
+                } else if (today.plusDays(3).isEqual(dueDate) && latestPayment.getStatus() == PaymentStatusEnum.NOTDUE) {
+                    ProjectEntity project = fulfillment.getPosting().getProject();
+                    NotificationEntity notification = new NotificationEntity();
+                    notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due in 3 days!");
+                    notification.setProjectId(project.getProjectId());
+                    notification.setGroupId(null);
+                    notification.setProjectTab("mrp-tab");
+                    for (UserEntity admin: project.getProjectAdmins()) {
+                        notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
+                    }
+                } else if (today.isEqual(dueDate) && latestPayment.getStatus() == PaymentStatusEnum.NOTDUE) {
+                    ProjectEntity project = fulfillment.getPosting().getProject();
+                    NotificationEntity notification = new NotificationEntity();
+                    notification.setMsg(fulfillment.getPosting().getName() + " of " + project.getName() + " has a payment due today!");
+                    notification.setProjectId(project.getProjectId());
+                    notification.setGroupId(null);
+                    notification.setProjectTab("mrp-tab");
+                    for (UserEntity admin: project.getProjectAdmins()) {
+                        notificationSessionBeanLocal.createNewNotification(notification, admin.getUserId());
                     }
                 }
             }

@@ -97,7 +97,7 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
         title: 'Unable to submit Material Resource Available',
         autohide: true,
         delay: 2500,
-        body: 'Please select at least one Material Resource tags',
+        body: 'Please select at least one Material Resource tags'
       });
       return;
     }
@@ -107,12 +107,22 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       }
     });
     if (mraForm.valid) {
+      if (mraForm.value.price <= 0) {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          title: 'Unable to submit Material Resource Available',
+          autohide: true,
+          delay: 2500,
+          body: 'Please enter a valid price or select one-time donation'
+        });
+        return;
+      }
       this.newMra = new MaterialResourceAvailable();
       this.newMra.mraId = this.editingMra.mraId;
       this.newMra.materialResourceAvailableOwner = this.profile;
       this.newMra.name = mraForm.value.mraName;
       this.newMra.description = mraForm.value.description;
-      this.newMra.type = mraForm.value.resourceType as MraType;
+      this.newMra.type = mraForm.value.resourceType;
       this.newMra.price = mraForm.value.price ? mraForm.value.price : 0.0;
       this.newMra.units = mraForm.value.units ? mraForm.value.units : null;
       this.newMra.latitude = this.editingMra.latitude;
@@ -124,12 +134,26 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
           .createMaterialResourceAvailable(this.newMra)
           .subscribe((responsedata) => {
             this.profile.mras = responsedata;
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 2500,
+              body: 'Material Resource Available is successfully created',
+            })
           });
       } else {
         this.mraService
           .updateMaterialResourceAvailable(this.newMra)
           .subscribe((responsedata) => {
             this.profile.mras = responsedata;
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 2500,
+              body: 'Material Resource Available is successfully updated',
+            })
           });
       }
       $('#addMraModalCloseBtn').click();

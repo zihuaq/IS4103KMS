@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Fulfillment } from './classes/fulfillment';
+import { Payment } from './classes/payment';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -42,14 +43,30 @@ export class FulfillmentService {
     );
   }
 
-  receiveResource(fulfillmentToUpdate: Fulfillment) {
-    return this.httpClient.post<any>(this.baseUrl + "/receiveResource", fulfillmentToUpdate, httpOptions).pipe(
+  receiveResource(fulfillmentToUpdate: Fulfillment, payment: Payment) {
+    let makeOneTimePaymentReq = {
+      "fulfillmentToUpdate": fulfillmentToUpdate,
+      "payment": payment
+    }
+
+    return this.httpClient.post<any>(this.baseUrl + "/receiveResource", makeOneTimePaymentReq, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
-  updateQuantity(fulfillmentToUpdate: Fulfillment) {
-    return this.httpClient.post<any>(this.baseUrl + "/updateQuantity", fulfillmentToUpdate, httpOptions).pipe(
+  updateQuantity(fulfillmentToUpdate: Fulfillment, payment: Payment) {
+    let makeOneTimePaymentReq = {
+      "fulfillmentToUpdate": fulfillmentToUpdate,
+      "payment": payment
+    }
+
+    return this.httpClient.post<any>(this.baseUrl + "/updateQuantity", makeOneTimePaymentReq, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateFulfillment(fulfillmentToUpdate: Fulfillment) {
+    return this.httpClient.post<any>(this.baseUrl + "/updateFulfillment", fulfillmentToUpdate, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
@@ -62,6 +79,12 @@ export class FulfillmentService {
 
   acceptFulfillment(fulfillmentId: number) {
     return this.httpClient.post<any>(this.baseUrl + "/acceptFulfillment", fulfillmentId, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  endSubscription(fulfillmentId: number) {
+    return this.httpClient.post<any>(this.baseUrl + "/endSubscription", fulfillmentId, httpOptions).pipe(
       catchError(this.handleError)
     );
   }

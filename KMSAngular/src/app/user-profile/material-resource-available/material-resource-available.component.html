@@ -134,10 +134,10 @@
             <div class="card-header">
                 <div class="card-title">
                     <h5><b>{{mra.name}} </b>
-                        <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: bisque;"
+                        <span class="badge badge-pill" style="margin-top: 10px; font-size: 12px; vertical-align: 25%; background-color: bisque;"
                             *ngIf="mra.type == 'ONETIMEDONATION' || mra.type == 'ONETIMEPAYMENT'">ONE-TIME
                         </span>
-                        <span class="badge badge-pill" style="font-size: 12px; vertical-align: 27%; background-color: burlywood;"
+                        <span class="badge badge-pill" style="margin-top: 10px; font-size: 12px; vertical-align: 27%; background-color: burlywood;"
                             *ngIf="mra.type != 'ONETIMEDONATION' && mra.type != 'ONETIMEPAYMENT'">RECURRING
                         </span>
                     </h5>
@@ -164,12 +164,11 @@
                             <a class="product-title">
                                 <span *ngIf="mra.type == 'ONETIMEDONATION'">Free</span>
                                 <span *ngIf="mra.type != 'ONETIMEDONATION'">
-                                    US ${{mra.price}}/<span *ngIf="mra.type == 'DAILY'">day</span>
-                                    <span *ngIf="mra.type == 'WEEKLY'">week</span>
-                                    <span *ngIf="mra.type == 'MONTHLY'">month</span>
-                                    per 
-                                    <span *ngIf="mra.units == 'item(s)'">item</span>
+                                    US ${{mra.price}}/<span *ngIf="mra.units == 'item(s)'">item</span>
                                     <span *ngIf="mra.units != 'item(s)'">{{mra.units}}</span>
+                                    <span *ngIf="mra.type == 'DAILY'"> per day</span>
+                                    <span *ngIf="mra.type == 'WEEKLY'"> per week</span>
+                                    <span *ngIf="mra.type == 'MONTHLY'"> per month</span>
                                 </span>
                                 <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
                                     (click)="changehref(mra.latitude, mra.longitude)" target="_blank"> At location

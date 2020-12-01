@@ -16,6 +16,8 @@ import { Fulfillment } from '../../../classes/fulfillment';
 import { FulfillmentService } from '../../../fulfillment.service';
 import { NgForm } from '@angular/forms';
 import { MraType } from 'src/app/classes/mra-type.enum';
+import * as moment from 'moment';
+import { PaymentBasis } from 'src/app/classes/payment-basis.enum';
 
 declare var $: any;
 
@@ -33,7 +35,7 @@ export class ViewMrpTabComponent implements OnInit {
   mrpList: MaterialResourcePosting[];
   noMrp: boolean = true;
 
-  newFulFillment: Fulfillment;
+  newFulfillment: Fulfillment;
   loggedInUser: User;
   mrpToFulfill: MaterialResourcePosting;
   mraList: MaterialResourceAvailable[];
@@ -64,7 +66,7 @@ export class ViewMrpTabComponent implements OnInit {
     private fulfillmentService: FulfillmentService,
     private router: Router,
     private activatedRouter: ActivatedRoute) {
-      this.newFulFillment = new Fulfillment();
+      this.newFulfillment = new Fulfillment();
       this.mraList = new Array();
       this.newMra = new MaterialResourceAvailable();
     }
@@ -151,7 +153,18 @@ export class ViewMrpTabComponent implements OnInit {
 
   createMaterialResourceRequest(mraForm: NgForm) {
     if (mraForm.valid) {
+      if (mraForm.value.price <= 0) {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          title: 'Unable to submit Material Resource Available',
+          autohide: true,
+          delay: 2500,
+          body: 'Please enter a valid price or select one-time donation'
+        });
+        return;
+      }
       this.newMra.materialResourceAvailableOwner = this.loggedInUser;
+      this.newMra.price = mraForm.value.price ? mraForm.value.price : 0.0;
       this.newMra.units = this.newMra.type != MraType.ONETIMEDONATION ? this.newMra.units : null;
       console.log(this.newMra)
       this.mraService.createMaterialResourceAvailable(this.newMra).subscribe(
@@ -183,35 +196,43 @@ export class ViewMrpTabComponent implements OnInit {
   }
 
   clickSelect(mraToDonate: MaterialResourceAvailable) {
-    if (mraToDonate.units != this.mrpToFulfill.unit) { //different unit also can as price offered will be based on mrp's unit
-      $(document).Toasts('create', {
-        class: 'bg-warning',
-        title: 'Incompatible Units',
-        autohide: true,
-        delay: 5000,
-        body: 'Please change the units of the resource or create a new Material Resource Available',
-      });
-      return;
-    }
+    //different unit also can as price and quantity offered will be based on mrp's unit
+    // if (mraToDonate.units != this.mrpToFulfill.unit) { 
+    //   $(document).Toasts('create', {
+    //     class: 'bg-warning',
+    //     title: 'Incompatible Units',
+    //     autohide: true,
+    //     delay: 5000,
+    //     body: 'Please change the units of the resource or create a new Material Resource Available',
+    //   });
+    //   return;
+    // }
     this.mraToDonate = mraToDonate;
+    this.newFulfillment = new Fulfillment();
+    if (this.mraToDonate.type != MraType.ONETIMEDONATION && this.mraToDonate.type != MraType.ONETIMEPAYMENT) {
+      this.newFulfillment.basisOffered = this.mraToDonate.type;
+    }
+    if (this.mraToDonate.units == this.mrpToFulfill.unit) {
+      this.newFulfillment.priceOffered = this.mraToDonate.price;
+    }
   }
 
   cancel(){
-    this.newFulFillment = new Fulfillment();
     this.mraToDonate = null;
     this.totalPledgedQuantity = null;
   }
 
-  submit() {
-    if(this.totalPledgedQuantity == null){
+  submitFulfillPosting(fulfillPostingForm: NgForm) {
+    if(this.newFulfillment.priceOffered <= 0 && this.newFulfillment.priceOffered){
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
         autohide: true,
         delay: 3200,
-        body: 'Donated quantity is required',
+        body: 'Price offered is invalid',
       });
-    } else if(!(this.totalPledgedQuantity > 0)){
+      return;
+    } else if(this.newFulfillment.totalPledgedQuantity <= 0){
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
@@ -219,7 +240,8 @@ export class ViewMrpTabComponent implements OnInit {
         delay: 3200,
         body: 'Donated quantity is invalid',
       });
-    } else if(this.totalPledgedQuantity > this.mrpToFulfill.lackingQuantity){
+      return;
+    } else if(this.newFulfillment.totalPledgedQuantity > this.mrpToFulfill.lackingQuantity) {
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
@@ -227,9 +249,43 @@ export class ViewMrpTabComponent implements OnInit {
         delay: 3200,
         body: 'Donated quantity cannot be more than required quantity',
       });
-    } else {
-      this.newFulFillment.totalPledgedQuantity = this.totalPledgedQuantity;
-      this.fulfillmentService.createNewFulfillment(this.newFulFillment, this.loggedInUser.userId, this.mrpToFulfill.materialResourcePostingId, this.mraToDonate.mraId).subscribe(
+      return;
+    }
+    if (fulfillPostingForm.valid) {
+      if (this.mraToDonate.type != MraType.ONETIMEDONATION && this.mraToDonate.type != MraType.ONETIMEPAYMENT) { //recurring
+        if (!this.mrpToFulfill.endDate) { //no end date
+          if (this.newFulfillment.basisOffered == MraType.DAILY || this.newFulfillment.basisOffered == MraType.WEEKLY) {
+            this.newFulfillment.paymentBasis = PaymentBasis.WEEKLY;
+          } else if (this.newFulfillment.basisOffered == MraType.MONTHLY) {
+            this.newFulfillment.paymentBasis = PaymentBasis.MONTHLY;
+          }
+        } else { //have end date
+          var startDate = moment(this.mrpToFulfill.startDate.toString().slice(0,15));
+          var endDate = moment(this.mrpToFulfill.endDate.toString().slice(0,15));
+          var diff = endDate.diff(startDate, 'months', true);
+          // console.log(diff);
+          if (diff > 1) { //more than a month, pay in installments
+            if (this.newFulfillment.basisOffered == MraType.DAILY || this.newFulfillment.basisOffered == MraType.WEEKLY) {
+              this.newFulfillment.paymentBasis = PaymentBasis.WEEKLY;
+            } else if (this.newFulfillment.basisOffered == MraType.MONTHLY) {
+              this.newFulfillment.paymentBasis = PaymentBasis.MONTHLY;
+            }
+          } else { //a month or less, pay in full
+            this.newFulfillment.paymentBasis = PaymentBasis.ONCE;
+          }
+        }
+      }
+      if (!this.newFulfillment.priceOffered) {
+        this.newFulfillment.priceOffered = 0.0
+      }
+      if (!this.newFulfillment.basisOffered) {
+        this.newFulfillment.basisOffered = null
+      }
+      if (!this.newFulfillment.paymentBasis) {
+        this.newFulfillment.paymentBasis = null
+      }
+      console.log(this.newFulfillment);
+      this.fulfillmentService.createNewFulfillment(this.newFulfillment, this.loggedInUser.userId, this.mrpToFulfill.materialResourcePostingId, this.mraToDonate.mraId).subscribe(
         response => {
           this.mrpService.getMrpByProject(this.projectId).subscribe(
             response => {
@@ -248,7 +304,7 @@ export class ViewMrpTabComponent implements OnInit {
               }
             }
           );
-          this.newFulFillment = new Fulfillment();
+          this.newFulfillment = new Fulfillment();
           this.mraToDonate = null;
           this.totalPledgedQuantity = null;
           $('#fulfillPostingModalCloseBtn').click();
@@ -268,8 +324,7 @@ export class ViewMrpTabComponent implements OnInit {
             delay: 4000,
             body: 'Unable to create Fulfill Posting',
           });
-        }
-      )
+        });
     }
   }
 

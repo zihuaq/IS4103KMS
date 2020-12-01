@@ -9,6 +9,10 @@ import { FulfillmentService } from '../../../../fulfillment.service';
 import { Fulfillment } from '../../../../classes/fulfillment';
 import { FulfillmentStatus } from 'src/app/classes/fulfillment-status.enum';
 import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
+import { MraType } from 'src/app/classes/mra-type.enum';
+import { NgForm } from '@angular/forms';
+import { MaterialResourceAvailable } from 'src/app/classes/material-resource-available';
+import { PaymentBasis } from 'src/app/classes/payment-basis.enum';
 
 declare var $: any;
 
@@ -34,6 +38,8 @@ export class MyFulfillmentsComponent implements OnInit {
   pledged: boolean = false;
   accepted: boolean = false;
   partiallyfulfilled: boolean = false;
+  ongoing: boolean = false;
+  ended: boolean = false;
   fulfilled: boolean = false;
   rejected: boolean = false;
 
@@ -44,6 +50,7 @@ export class MyFulfillmentsComponent implements OnInit {
     private router: Router) {
       this.fulfillmentToUpdate = new Fulfillment();
       this.fulfillmentToUpdate.posting = new MaterialResourcePosting();
+      this.fulfillmentToUpdate.mra = new MaterialResourceAvailable();
      }
 
   ngOnInit(): void {
@@ -76,7 +83,11 @@ export class MyFulfillmentsComponent implements OnInit {
     if (this.searchInput && this.searchInput != "") {
       this.filteredList = this.filteredList.filter(
         (fulfillment: Fulfillment) => {
-          return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase())
+          if (fulfillment.posting.description) {
+            return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase()) || fulfillment.posting.name.toLowerCase().includes(this.searchInput.toLowerCase()) || fulfillment.posting.description.toLowerCase().includes(this.searchInput.toLowerCase());
+          } else {
+            return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase()) || fulfillment.posting.name.toLowerCase().includes(this.searchInput.toLowerCase());
+          }
         }
       )
     }
@@ -89,6 +100,12 @@ export class MyFulfillmentsComponent implements OnInit {
     }
     if (this.partiallyfulfilled == true) {
       statusSelected.push(FulfillmentStatus.PARTIALLYFULFILLED);
+    }
+    if (this.ongoing == true) {
+      statusSelected.push(FulfillmentStatus.ONGOING);
+    }
+    if (this.ended == true) {
+      statusSelected.push(FulfillmentStatus.ENDED);
     }
     if (this.fulfilled == true) {
       statusSelected.push(FulfillmentStatus.FULFILLED);
@@ -114,56 +131,32 @@ export class MyFulfillmentsComponent implements OnInit {
   }
 
   clickEdit(fulfillment: Fulfillment) {
-    this.fulfillmentToUpdate = fulfillment;
-    if (this.fulfillmentToUpdate.status == FulfillmentStatus.ACCEPTED) {
+    if (fulfillment.status != FulfillmentStatus.PLEDGED) {
       $(document).Toasts('create', {
         class: 'bg-danger',
-        title: 'Error',
+        title: 'Invalid',
         autohide: true,
         delay: 3500,
-        body: 'Accepted fulfillments cannot be updated',
-      });
-    } else if (this.fulfillmentToUpdate.status == FulfillmentStatus.PARTIALLYFULFILLED) {
-      $(document).Toasts('create', {
-        class: 'bg-danger',
-        title: 'Error',
-        autohide: true,
-        delay: 3500,
-        body: 'Ongoing fulfillments cannot be updated',
-      });
-    } else if (this.fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED) {
-      $(document).Toasts('create', {
-        class: 'bg-danger',
-        title: 'Error',
-        autohide: true,
-        delay: 3500,
-        body: 'Completed fulfillments cannot be updated',
-      });
-    } else if (this.fulfillmentToUpdate.status == FulfillmentStatus.REJECTED) {
-      $(document).Toasts('create', {
-        class: 'bg-danger',
-        title: 'Error',
-        autohide: true,
-        delay: 3500,
-        body: 'Rejected fulfillments cannot be updated',
+        body: 'Only pledged fulfillments can be updated',
       });
     } else {
-      this.maxQuantity = Math.max((this.fulfillmentToUpdate.totalPledgedQuantity + this.fulfillmentToUpdate.posting.lackingQuantity), (this.fulfillmentToUpdate.totalPledgedQuantity + this.fulfillmentToUpdate.mra.quantity));
+      this.fulfillmentToUpdate = fulfillment;
+      this.maxQuantity = this.fulfillmentToUpdate.totalPledgedQuantity + this.fulfillmentToUpdate.posting.lackingQuantity;
       this.newTotalPledgedQuantity = this.fulfillmentToUpdate.totalPledgedQuantity;
       $('#modal-update').modal('show');
     }
   }
 
-  updateQuantity() {
-    if(this.newTotalPledgedQuantity == null){
+  updateFulfillment(updateFulfillmentForm: NgForm) {
+    if(this.fulfillmentToUpdate.priceOffered <= 0 && this.fulfillmentToUpdate.priceOffered){
       $(document).Toasts('create', {
         class: 'bg-warning',
-        title: 'Invalid Quantity',
+        title: 'Invalid Price',
         autohide: true,
         delay: 3200,
-        body: 'Total pledged quantity is required',
+        body: 'Price offered is invalid',
       });
-    } else if(!(this.newTotalPledgedQuantity > 0)){
+    } else if(this.newTotalPledgedQuantity <= 0){
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Invalid Quantity',
@@ -179,24 +172,24 @@ export class MyFulfillmentsComponent implements OnInit {
         delay: 3500,
         body: 'Total pledged quantity cannot be more than quantity required',
       });
-    } else if(this.newTotalPledgedQuantity > (this.fulfillmentToUpdate.mra.quantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
-      $(document).Toasts('create', {
-        class: 'bg-danger',
-        title: 'Invalid Quantity',
-        autohide: true,
-        delay: 3500,
-        body: 'Total pledged quantity cannot be more than your available quantity',
-      });
     } else {
       this.fulfillmentToUpdate.totalPledgedQuantity = this.newTotalPledgedQuantity;
-      this.fulfillmentService.updateQuantity(this.fulfillmentToUpdate).subscribe(
+      if (this.fulfillmentToUpdate.paymentBasis != PaymentBasis.ONCE && this.fulfillmentToUpdate.paymentBasis) {
+        if (this.fulfillmentToUpdate.basisOffered == MraType.DAILY || this.fulfillmentToUpdate.basisOffered == MraType.WEEKLY) {
+          this.fulfillmentToUpdate.paymentBasis = PaymentBasis.WEEKLY;
+        } else if (this.fulfillmentToUpdate.basisOffered == MraType.MONTHLY) {
+          this.fulfillmentToUpdate.paymentBasis = PaymentBasis.MONTHLY;
+        }
+      }
+      console.log(this.fulfillmentToUpdate);
+      this.fulfillmentService.updateFulfillment(this.fulfillmentToUpdate).subscribe(
         response => {
           $(document).Toasts('create', {
             class: 'bg-success',
             title: 'Success',
             autohide: true,
             delay: 2500,
-            body: 'Total pledged quantity of fulfillment is updated successfully',
+            body: 'Fulfillment is updated successfully',
           });
           this.refreshFulfillments(this.loggedInUser.userId, this.projectId);
           $('#updateModalCloseBtn').click();
@@ -258,6 +251,10 @@ export class MyFulfillmentsComponent implements OnInit {
         });
       }
     )
+  }
+
+  get mraType(): typeof MraType {
+    return MraType;
   }
 
 }

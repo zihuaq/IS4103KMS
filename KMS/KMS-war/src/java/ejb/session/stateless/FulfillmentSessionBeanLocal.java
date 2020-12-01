@@ -24,9 +24,9 @@ public interface FulfillmentSessionBeanLocal {
     
     public List<FulfillmentEntity> getListOfFulfillmentsByMrp(Long mrpId) throws NoResultException;
 
-    public void receiveResource(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
+    public void receiveResource(FulfillmentEntity fulfillmentToUpdate, PaymentEntity payment) throws NoResultException;
     
-    public void updateQuantity(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
+    public void updateQuantity(FulfillmentEntity fulfillmentToUpdate, PaymentEntity payment) throws NoResultException;
     
     public void rejectFulfillment(Long fulfillmentId) throws NoResultException;
     
@@ -42,5 +42,7 @@ public interface FulfillmentSessionBeanLocal {
 
     public void updateFulfillmentStatus();
 
-    public void createRecurringPayments();
+    public void generateRecurringPayments();
+
+    public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
 }

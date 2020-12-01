@@ -6,7 +6,7 @@
         <button type="button" class="btn bg-gradient-info" [routerLink]="[ '/myFulfillments', projectId ]"><i class="fas fa-user-alt"></i> My Fulfillments</button>
     </div>
     <div id="list" *ngFor="let mrp of mrpList; let i = index">
-        <div class="card" style="width: 100%;">
+        <div *ngIf="mrp.status == 'OPEN'" class="card" style="width: 100%;">
             <div class="card-header" >
                 <div *ngIf="mrp.description && isMember" class="row">
                     <div class="col-11" style="cursor: pointer; " [attr.data-target]="'#openMrpBody'+ i" data-toggle="collapse">
@@ -39,10 +39,16 @@
             <div id="openMrpBody{{i}}" class="collapse show" data-parent="#list">
                 <div class="card-body" style="display: block;">
                     <p style="margin: 0 7px 0 7px;">
-                        <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b> 
-                        <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> View Location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
+                        <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} 
+                            <span *ngIf="mrp.endDate"> to {{mrp.endDate.toString().slice(0,15) | date }}</span>
+                        </b>
+                        <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" 
+                            (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> 
+                            Required Location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}
+                        </a>
                         <br/>
-                        {{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total
+                        {{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required 
+                        <span class="text-muted"> / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total</span>
                         <br/>
                         <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
                             <div *ngFor="let tag of mrp.tags">
@@ -72,7 +78,7 @@
                         <i class="fas fa-plus"></i> Add Material Resource Available
                     </button>
                     <div *ngIf="mraList.length == 0" style="margin-top: 10px;"> No Material Resource Available at the moment</div>
-                    <div *ngIf="mraList.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: scroll;">
+                    <div *ngIf="mraList.length > 0" style="margin-top: 10px; max-height: 500px; overflow-y: auto;">
                         <div id="mralist" *ngFor="let mra of mraList; let i = index">
                             <div class="card" style="width: 100%;">
                                 <div class="card-header">
@@ -98,12 +104,11 @@
                                             <b>
                                                 <span *ngIf="mra.type == 'ONETIMEDONATION'">Free</span>
                                                 <span *ngIf="mra.type != 'ONETIMEDONATION'">
-                                                    US ${{mra.price}}/<span *ngIf="mra.type == 'DAILY'">day</span>
-                                                    <span *ngIf="mra.type == 'WEEKLY'">week</span>
-                                                    <span *ngIf="mra.type == 'MONTHLY'">month</span>
-                                                    per 
-                                                    <span *ngIf="mra.units == 'item(s)'">item</span>
+                                                    US ${{mra.price}}/<span *ngIf="mra.units == 'item(s)'">item</span>
                                                     <span *ngIf="mra.units != 'item(s)'">{{mra.units}}</span>
+                                                    <span *ngIf="mra.type == 'DAILY'"> per day</span>
+                                                    <span *ngIf="mra.type == 'WEEKLY'"> per week</span>
+                                                    <span *ngIf="mra.type == 'MONTHLY'"> per month</span>
                                                 </span>
                                                 <span class="badge badge-secondary float-right" style="color: white;"> 
                                                     At location {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}
@@ -131,62 +136,96 @@
                 </div>
             </div>
             <div id="selectedMra" *ngIf="mraToDonate" class="select-quantity">
-                <div class="modal-body">
-                    <b style="font-size: 18px">Selected Material Resource Available</b>
-                    <div class="card" style="width: 100%; margin-top: 5px;">
-                        <div class="card-header" style="cursor: pointer;" data-target="#selectedBody" data-toggle="collapse">
-                            <h5 class="card-title" style="font-size: 20px; margin-top: 10px; color: black;"><b>{{mraToDonate.name}} </b>
-                                <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: bisque;"
-                                    *ngIf="mraToDonate.type == 'ONETIMEDONATION' || mraToDonate.type == 'ONETIMEPAYMENT'">ONE-TIME
-                                </span>
-                                <span class="badge badge-pill" style="font-size: 12px; vertical-align: 27%; background-color: burlywood;"
-                                    *ngIf="mraToDonate.type != 'ONETIMEDONATION' && mraToDonate.type != 'ONETIMEPAYMENT'">RECURRING
-                                </span>
-                            </h5>
-                        </div>
-                        <div id="selectedBody" class="collapse show" data-parent="#selectedMra">
-                            <div class="card-body" style="display: block;">
-                                <p style="margin: 0 7px 0 7px; color: black;">
-                                    <b>
-                                        <span *ngIf="mraToDonate.type == 'ONETIMEDONATION'">Free</span>
-                                        <span *ngIf="mraToDonate.type != 'ONETIMEDONATION'">
-                                            US ${{mraToDonate.price}}/<span *ngIf="mraToDonate.type == 'DAILY'">day</span>
-                                            <span *ngIf="mraToDonate.type == 'WEEKLY'">week</span>
-                                            <span *ngIf="mraToDonate.type == 'MONTHLY'">month</span>
-                                            per 
-                                            <span *ngIf="mraToDonate.units == 'item(s)'">item</span>
-                                            <span *ngIf="mraToDonate.units != 'item(s)'">{{mraToDonate.units}}</span>
-                                        </span>
-                                        <span class="badge badge-secondary float-right" style="color: white;"> 
-                                            At location {{mraToDonate.latitude | number:'1.1-6'}}, {{mraToDonate.longitude | number:'1.1-6'}}
-                                        </span>
-                                    </b> 
-                                    <br/>
-                                    <span class="text-muted" *ngIf="mraToDonate.description">
-                                        {{mraToDonate.description}}
-                                        <br/>
+                <form (ngSubmit)="submitFulfillPosting(fulfillPostingForm)" #fulfillPostingForm="ngForm">
+                    <div class="modal-body">
+                        <b style="font-size: 18px">Selected Material Resource Available</b>
+                        <div class="card" style="width: 100%; margin-top: 5px;">
+                            <div class="card-header" style="cursor: pointer;" data-target="#selectedBody" data-toggle="collapse">
+                                <h5 class="card-title" style="font-size: 20px; margin-top: 10px; color: black;"><b>{{mraToDonate.name}} </b>
+                                    <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: bisque;"
+                                        *ngIf="mraToDonate.type == 'ONETIMEDONATION' || mraToDonate.type == 'ONETIMEPAYMENT'">ONE-TIME
                                     </span>
-                                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mraToDonate.tags.length > 0">
-                                        <div *ngFor="let tag of mraToDonate.tags">
-                                            <small class="badge badge-dark ml-2">{{tag.name}}</small>
-                                        </div>
+                                    <span class="badge badge-pill" style="font-size: 12px; vertical-align: 27%; background-color: burlywood;"
+                                        *ngIf="mraToDonate.type != 'ONETIMEDONATION' && mraToDonate.type != 'ONETIMEPAYMENT'">RECURRING
                                     </span>
-                                </p>
+                                </h5>
                             </div>
-                        </div>    
+                            <div id="selectedBody" class="collapse show" data-parent="#selectedMra">
+                                <div class="card-body" style="display: block;">
+                                    <p style="margin: 0 7px 0 7px; color: black;">
+                                        <b>
+                                            <span *ngIf="mraToDonate.type == 'ONETIMEDONATION'">Free</span>
+                                            <span *ngIf="mraToDonate.type != 'ONETIMEDONATION'">
+                                                US ${{mraToDonate.price}}/<span *ngIf="mraToDonate.units == 'item(s)'">item</span>
+                                                <span *ngIf="mraToDonate.units != 'item(s)'">{{mraToDonate.units}}</span>
+                                                <span *ngIf="mraToDonate.type == 'DAILY'"> per day</span>
+                                                <span *ngIf="mraToDonate.type == 'WEEKLY'"> per week</span>
+                                                <span *ngIf="mraToDonate.type == 'MONTHLY'"> per month</span>
+                                            </span>
+                                            <span class="badge badge-secondary float-right" style="color: white;"> 
+                                                At location {{mraToDonate.latitude | number:'1.1-6'}}, {{mraToDonate.longitude | number:'1.1-6'}}
+                                            </span>
+                                        </b> 
+                                        <br/>
+                                        <span class="text-muted" *ngIf="mraToDonate.description">
+                                            {{mraToDonate.description}}
+                                            <br/>
+                                        </span>
+                                        <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mraToDonate.tags.length > 0">
+                                            <div *ngFor="let tag of mraToDonate.tags">
+                                                <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                                            </div>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>    
+                        </div>
+                        <div class="form-group">
+                            <label for="pledgedQuantity">Pledged Quantity</label>
+                            <div class="input-group">
+                                <input type="number" id="pledgedQuantity" class="form-control" name="pledgedQuantity" [max]="mrpToFulfill.lackingQuantity" 
+                                    [(ngModel)]="newFulfillment.totalPledgedQuantity" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">{{mrpToFulfill.unit}}</span>
+                                </div>
+                            </div>
+                            <small class="form-text float-right" style="color: white;">{{mrpToFulfill.lackingQuantity | number:'1.0-2'}} {{mrpToFulfill.unit}} required</small>
+                        </div>
+                        <div class="form-group" *ngIf="mraToDonate.type != 'ONETIMEDONATION' && mraToDonate.type != 'ONETIMEPAYMENT'">
+                            <label for="basisOffered">Basis Offered</label>
+                            <select id="basisOffered" class="form-control" [(ngModel)]="newFulfillment.basisOffered" name="basisOffered" required>
+                                <option disabled selected>Select Basis</option>
+                                <option value="DAILY">Daily</option>
+                                <option value="WEEKLY">Weekly</option>
+                                <option value="MONTHLY">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="form-group" *ngIf="mraToDonate.type != 'ONETIMEDONATION'">
+                            <label for="priceOffered">Price Offered</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">US $</span>
+                                </div>
+                                <input type="number" id="priceOffered" class="form-control" name="priceOffered" [(ngModel)]="newFulfillment.priceOffered" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <span *ngIf="mrpToFulfill.unit == 'item(s)'">/item</span>
+                                        <span *ngIf="mrpToFulfill.unit != 'item(s)'">/{{mrpToFulfill.unit}}</span>
+                                        <span *ngIf="mraToDonate.type != 'ONETIMEPAYMENT'" style="margin-left: 5px;">
+                                            <span *ngIf="newFulfillment.basisOffered == 'DAILY'">per day</span>
+                                            <span *ngIf="newFulfillment.basisOffered == 'WEEKLY'">per week</span>
+                                            <span *ngIf="newFulfillment.basisOffered == 'MONTHLY'">per month</span>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <b style="font-size: 18px">Quantity To Donate</b>
-                    <br/>
-                    <input type="number" id="quantity" name="quantity" [max]="mrpToFulfill.lackingQuantity" [(ngModel)]="totalPledgedQuantity" required>
-                    <b> {{mraToDonate.units}}</b>
-                    <span>
-                        <b> / {{mrpToFulfill.lackingQuantity | number:'1.0-2'}} {{mrpToFulfill.unit}} required</b>
-                    </span>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" (click)="cancel()">Back</button>
-                    <button type="button" class="btn btn-outline-light" (click)="submit()">Confirm</button>
-                </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-outline-light" (click)="cancel()">Back</button>
+                        <button type="submit" class="btn btn-outline-light" [disabled]="!fulfillPostingForm.valid">Confirm</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -46,8 +46,10 @@ public class FulfillmentEntity implements Serializable {
     @Column(nullable=false)
     private Double priceOffered;
     
+    @Enumerated(EnumType.STRING)
     private MraTypeEnum basisOffered;
     
+    @Enumerated(EnumType.STRING)
     private PaymentBasisEnum paymentBasis;
     
     @ManyToOne
@@ -69,6 +71,14 @@ public class FulfillmentEntity implements Serializable {
         this.receivedQuantity = receivedQuantity;
         this.unreceivedQuantity = unreceivedQuantity;
         this.priceOffered = priceOffered;
+    }
+
+    public FulfillmentEntity(Double totalPledgedQuantity, Double priceOffered, MraTypeEnum basisOffered, PaymentBasisEnum paymentBasis) {
+        this();
+        this.totalPledgedQuantity = totalPledgedQuantity;
+        this.priceOffered = priceOffered;
+        this.basisOffered = basisOffered;
+        this.paymentBasis = paymentBasis;
     }
 
     public Long getFulfillmentId() {

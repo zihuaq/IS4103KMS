@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.ActivityEntity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,11 +31,11 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
     private ActivitySessionBeanLocal activitySessionBeanLocal;
 
     @Schedule(hour = "*", minute = "*", persistent = false) //every minute
-    public void timer() {
+    public void minuteTimer() {
         LocalDateTime now = LocalDateTime.now();
         if (now.getMinute() == 0) {
-            String timeStamp = now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
-            System.out.println("********** EjbTimerSession.timer(): Timeout at " + timeStamp);  
+            String timeStamp = now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+            System.out.println("********** EjbTimerSession.minuteTimer(): Timeout at " + timeStamp);  
         }
         
         List<ActivityEntity> activities = activitySessionBeanLocal.retrieveActivitiesNotCompleted();
@@ -42,9 +43,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
     }
     
     @Schedule //every day at 12 midnight
-    public void Dailytimer() {
+    public void dailyTimer() {
+        System.out.println("********** EjbTimerSession.dailyTimer(): Timeout on " + LocalDate.now()); 
         materialResourcePostingSessionBeanLocal.updateMrpStatus();
         fulfillmentSessionBeanLocal.updateFulfillmentStatus();
-        fulfillmentSessionBeanLocal.createRecurringPayments();
+        fulfillmentSessionBeanLocal.generateRecurringPayments();
     }
 }

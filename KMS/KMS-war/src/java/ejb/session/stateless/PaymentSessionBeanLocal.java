@@ -27,5 +27,9 @@ public interface PaymentSessionBeanLocal {
     public List<PaymentEntity> getListOfPaymentsByFulfillmentNewestToOldest(Long fulfillmentId) throws NoResultException;
 
     public List<PaymentEntity> getListOfNonOutstandingPaymentsByFulfillmentNewestToOldest(Long fulfillmentId) throws NoResultException;
+
+    public List<PaymentEntity> getListOfOutstandingPaymentsByProject(Long projectId) throws NoResultException;
+
+    public List<PaymentEntity> getListOfNotCompletedPaymentsByFulfillmentNewestToOldest(Long fulfillmentId) throws NoResultException;
     
 }

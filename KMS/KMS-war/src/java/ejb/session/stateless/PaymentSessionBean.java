@@ -82,4 +82,22 @@ public class PaymentSessionBean implements PaymentSessionBeanLocal {
         
         return query.getResultList();
     }
+    
+    @Override
+    public List<PaymentEntity> getListOfOutstandingPaymentsByProject(Long projectId) throws NoResultException {
+        Query query = em.createQuery("SELECT p FROM PaymentEntity p WHERE p.fulfillment.posting.project.projectId = :inProjectId AND p.status = :inStatus");
+        query.setParameter("inProjectId", projectId);
+        query.setParameter("inStatus", PaymentStatusEnum.OUTSTANDING);
+        
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<PaymentEntity> getListOfNotCompletedPaymentsByFulfillmentNewestToOldest(Long fulfillmentId) throws NoResultException {
+        Query query = em.createQuery("SELECT p FROM PaymentEntity p WHERE p.fulfillment.fulfillmentId = :inFulfillmentId AND p.status <> :inStatus ORDER BY p.dueDate DESC");
+        query.setParameter("inFulfillmentId", fulfillmentId);
+        query.setParameter("inStatus", PaymentStatusEnum.COMPLETED);
+        
+        return query.getResultList();
+    }
 }

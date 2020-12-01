@@ -156,10 +156,8 @@ export class FulfillPostingPage implements OnInit {
       toast.present();
     } else {
       this.newFulfillment.mra = new MaterialResourceAvailable();
-      this.newFulfillment.posting = new MaterialResourcePosting();
       this.newFulfillment.totalPledgedQuantity = this.totalPledgedQuantity;
       this.newFulfillment.mra.quantity = this.selectedMra.quantity - this.newFulfillment.totalPledgedQuantity;
-      this.newFulfillment.posting.lackingQuantity = this.mrp.lackingQuantity - this.newFulfillment.totalPledgedQuantity;
       this.fulfillmentService.createNewFulfillment(this.newFulfillment, this.loggedInUser.userId, this.mrp.materialResourcePostingId, this.selectedMra.mraId).subscribe(
         response => {
           this.selectedMra = null;
