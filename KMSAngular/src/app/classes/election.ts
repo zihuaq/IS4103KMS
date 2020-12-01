@@ -1,7 +1,8 @@
 import { Post } from './post';
 import { User } from './user';
+import { ElectionApplication } from './election-application';
 
-export class ElectionApplicationEntity {
+export class Election {
     id: number;
     startDate: Date;
     endDate: Date;
@@ -10,7 +11,9 @@ export class ElectionApplicationEntity {
     electionOwner: User;
     isActive: boolean;
     electionPosts: Post[];
-    electionApplications: ElectionApplicationEntity[];
+    electionApplications: ElectionApplication[];
+    numSlots: number;
+    minRepPointsRequired: number;
 
     constructor(
         id?: number,
@@ -21,7 +24,9 @@ export class ElectionApplicationEntity {
         electionOwner?: User,
         isActive?: boolean,
         electionPosts?: Post[],
-        electionApplications?: ElectionApplicationEntity[]
+        electionApplications?: ElectionApplication[],
+        numSlots?: number,
+        minRepPoints?: number
     ) {
         this.id = id;
         this.startDate = startDate;
@@ -32,5 +37,7 @@ export class ElectionApplicationEntity {
         this.isActive = isActive;
         this.electionPosts = electionPosts;
         this.electionApplications = electionApplications;
+        this.numSlots = numSlots;
+        this.minRepPointsRequired = minRepPoints;
     }
 }

@@ -116,6 +116,7 @@ import { HandleTagRequestsComponent } from './admin-manage-tags/handle-tag-reque
 import { ReactiveFormsModule } from '@angular/forms';
 import { UploadProfilesComponent } from './administration/upload-profiles/upload-profiles.component';
 import { AdminManageTagsComponent } from './admin-manage-tags/admin-manage-tags.component';
+import { AdminManageElectionsComponent } from './admin-manage-elections/admin-manage-elections.component';
 
 export const environment = {
   production: false,
@@ -229,7 +230,8 @@ export const environment = {
     AwardsAndBadgesComponent,
     HandleTagRequestsComponent,
     UploadProfilesComponent,
-    AdminManageTagsComponent
+    AdminManageTagsComponent,
+    AdminManageElectionsComponent
   ],
   imports: [
     BrowserModule,

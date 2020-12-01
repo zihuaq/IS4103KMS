@@ -47,6 +47,12 @@ public class ElectionEntity implements Serializable {
     private boolean isActive;
     
     @NotNull
+    private int numSlots;
+    
+    @NotNull
+    private int minRepPointsRequired;
+    
+    @NotNull
     @JoinColumn(nullable=false)
     @ManyToOne
     private UserEntity electionOwner;
@@ -154,5 +160,21 @@ public class ElectionEntity implements Serializable {
 
     public void setElectionApplications(List<ElectionApplicationEntity> electionApplications) {
         this.electionApplications = electionApplications;
+    }
+
+    public int getNumSlots() {
+        return numSlots;
+    }
+
+    public void setNumSlots(int numSlots) {
+        this.numSlots = numSlots;
+    }
+
+    public int getMinRepPointsRequired() {
+        return minRepPointsRequired;
+    }
+
+    public void setMinRepPointsRequired(int minRepPointsRequired) {
+        this.minRepPointsRequired = minRepPointsRequired;
     }
 }

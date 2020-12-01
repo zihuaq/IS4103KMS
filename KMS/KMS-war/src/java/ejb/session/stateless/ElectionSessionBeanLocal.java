@@ -5,6 +5,8 @@
  */
 package ejb.session.stateless;
 
+import Exception.NoResultException;
+import entity.ElectionEntity;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +15,10 @@ import javax.ejb.Local;
  */
 @Local
 public interface ElectionSessionBeanLocal {
-    
+
+    public boolean hasActiveElection();
+
+    public ElectionEntity getActiveElection() throws NoResultException;
+
+    public void createElection(ElectionEntity election) throws NoResultException;
 }
