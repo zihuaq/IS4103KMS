@@ -33,6 +33,7 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
@@ -48,7 +49,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import util.enumeration.ActivityStatusEnum;
-import util.enumeration.ProjectStatusEnum;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
 
@@ -416,6 +416,12 @@ public class DataInitializationSessionBean {
         try {
             dataMappingSessionBean.createProfileFromFiles("EMERGEdatabase.xlsx");
         } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            activitySessionBeanLocal.createNewProjectReview(new ReviewEntity("Test", "Test review", 5), 1l, 4l, 1l);
+        } catch (NoResultException ex) {
             System.out.println(ex.getMessage());
         }
     }

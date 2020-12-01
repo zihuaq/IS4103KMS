@@ -336,6 +336,20 @@ public class ProjectSessionBeanTest {
         
         ProjectEntity project = projectSessionBean.getProjectById(projectToDeleteId);
     }
+    
+    @Test
+    public void test23GetProjectReview() throws NoResultException {
+        List result = projectSessionBean.getProjectReviews(4l);
+        
+        assertEquals(1, result.size());
+    }
+    
+    @Test(expected=NoResultException.class)
+    public void test24GetProjectReview() throws NoResultException {
+        List result = projectSessionBean.getProjectReviews(20l);
+        
+        assertEquals(1, result.size());
+    }
 
     private ProjectSessionBeanRemote lookupProjectSessionBeanRemote() {
         try {
