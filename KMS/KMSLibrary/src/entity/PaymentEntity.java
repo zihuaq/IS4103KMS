@@ -5,6 +5,7 @@
  */
 package entity;
 
+import entity.FulfillmentEntity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;

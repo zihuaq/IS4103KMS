@@ -90,23 +90,20 @@ export class ActivityTabComponent implements OnInit {
             this.isMember = true;
           }
         }
+        this.loggedInUser = this.sessionService.getCurrentUser();
+        if (this.project.projectOwner.userId == this.loggedInUser.userId) {
+          this.isOwner = true;
+        }
+        this.isAdmin = this.isAdminCheck(this.loggedInUser)
       },
       error => {
         this.router.navigate(["/error"]);
       }
     );
 
-    this.loggedInUser = this.sessionService.getCurrentUser();
-
-    if (this.project.projectOwner.userId == this.loggedInUser.userId) {
-      this.isOwner = true;
-    }
-
     this.projectReviewForActivity = [];
     this.userReviewsForActivity = [];
     this.reviewsUnwrittenForUsers = [];
-
-    this.isAdmin = this.isAdminCheck(this.loggedInUser)
 
     this.refreshActivities();
   }
