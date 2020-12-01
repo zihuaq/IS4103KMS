@@ -9,6 +9,10 @@ import Exception.NoResultException;
 import Exception.TagNameExistException;
 import ejb.session.stateless.TagSessionBeanLocal;
 import entity.TagEntity;
+import entity.TagRequestEntity;
+import entity.UserEntity;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -18,8 +22,10 @@ import javax.naming.NamingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -58,6 +64,87 @@ public class TagResource {
         } catch (TagNameExistException ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+
+    @PUT
+    @Path("/updateTag")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTag(TagEntity tag) {
+        try {
+            tagSessionBeanLocal.updateTag(tag);
+            return Response.status(200).build();
+        } catch (NoResultException | TagNameExistException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/createTagRequest")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createTagRequest(TagRequestEntity tagRequest) {
+        try {
+            tagSessionBeanLocal.createTagRequest(tagRequest);
+            return Response.status(Response.Status.OK).build();
+        } catch (TagNameExistException ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+
+    @GET
+    @Path("/tagRequests")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTagRequests() {
+        List<TagRequestEntity> tagRequests = tagSessionBeanLocal.getTagRequests();
+        List<TagRequestEntity> tagRequestsResponse = new ArrayList<>();
+        for (TagRequestEntity tagRequestEntity : tagRequests) {
+            TagRequestEntity temp = new TagRequestEntity();
+            UserEntity requestOwner = new UserEntity();
+            requestOwner.setUserId(tagRequestEntity.getRequestOwner().getUserId());
+            requestOwner.setFirstName(tagRequestEntity.getRequestOwner().getFirstName());
+            requestOwner.setLastName(tagRequestEntity.getRequestOwner().getLastName());
+            requestOwner.setProfilePicture(tagRequestEntity.getRequestOwner().getProfilePicture());
+            temp.setRequestOwner(requestOwner);
+            temp.setRequestedName(tagRequestEntity.getRequestedName());
+            temp.setRequestedTagType(tagRequestEntity.getRequestedTagType());
+            temp.setTagRequestId(tagRequestEntity.getTagRequestId());
+            tagRequestsResponse.add(temp);
+        }
+        return Response.status(200).entity(tagRequestsResponse).build();
+    }
+
+    @DELETE
+    @Path("/rejectTagRequest/{tagRequestId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response rejectTagRequest(@PathParam("tagRequestId") Long tagRequestId) {
+        try {
+            tagSessionBeanLocal.rejectTagRequest(tagRequestId);
+            return Response.status(200).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/acceptTagRequest/{tagRequestId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response acceptTagRequest(@PathParam("tagRequestId") Long tagRequestId) {
+        try {
+            tagSessionBeanLocal.acceptTagRequest(tagRequestId);
+            return Response.status(200).build();
+        } catch (NoResultException | TagNameExistException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
         }
     }
 

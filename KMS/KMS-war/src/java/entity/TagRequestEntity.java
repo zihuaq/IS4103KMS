@@ -6,6 +6,7 @@
 package entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ import util.enumeration.TagTypeEnum;
  *
  * @author Cassie
  */
+@Entity
 public class TagRequestEntity {
 
     private static final long serialVersionUID = 1L;

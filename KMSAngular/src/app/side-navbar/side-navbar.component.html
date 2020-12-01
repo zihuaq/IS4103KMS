@@ -112,8 +112,10 @@
             <p>Logout</p>
           </a>
         </li>
-        <button type="button" class="btn btn-warning" routerLink="/donateToPlatform">Donate</button>
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-make-tag-request">Make Tag
+        <button type="button" class="btn btn-warning" routerLink="/donateToPlatform"
+          style="margin: 2px;">Donate</button>
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-make-tag-request"
+          style="margin: 2px;">Make Tag
           Request</button>
       </ul>
     </nav>
@@ -132,31 +134,32 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form #tagForm="ngForm">
+      <form (ngSubmit)="submitTagRequest(tagForm)" #tagForm="ngForm">
         <div class="modal-body">
           <div class="form-group">
             <label for="tag-request-name">Tag Name</label>
-            <input type="text" id="tag-request-name" class="form-control" [(ngModel)]="tagRequest.requestedName"
-              placeholder="Enter Name" name="name" required>
+            <input type="text" id="tag-request-name" class="form-control" placeholder="Enter Name" name="name" required
+              ngModel>
           </div>
           <label for="requested-tag-type"> Tag Type </label>
-          <select id="requested-tag-type" class="form-control" placeholder="Select Tag Types" name="tagType"
-            [(ngModel)]="tagRequest.requestedTagType" required>
+          <select id="requested-tag-type" class="form-control" placeholder="Select Tag Types" name="tagType" required
+            ngModel>
             <option disabled value="Select Tag Type">Select Tag Type</option>
-            <option value="TagType.SKILL">Skill</option>
-            <option value="TagType.SDG">SDG</option>
-            <option value="TagType.MATERIALRESOURCE">Material Resource</option>
-            <option value="TagType.REPORTPROFILE">Report Profile</option>
-            <option value="TagType.REPORTGROUP">Report Group</option>
-            <option value="TagType.REPORTPROJECT">Report Project</option>
-            <option value="TagType.REPORTPOST">Report Post</option>
-            <option value="TagType.REPORTCOMMENT">Report Comment</option>
+            <option value="SKILL">Skill</option>
+            <option value="SDG">SDG</option>
+            <option value="MATERIALRESOURCE">Material Resource</option>
+            <option value="REPORTPROFILE">Report Profile</option>
+            <option value="REPORTGROUP">Report Group</option>
+            <option value="REPORTPROJECT">Report Project</option>
+            <option value="REPORTPOST">Report Post</option>
+            <option value="REPORTCOMMENT">Report Comment</option>
           </select>
         </div>
         <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">Cancel</button>
-          <button type="button" class="btn btn-success" data-dismiss="modal" [disabled]="!tagForm.valid"
-            (click)="submitTagRequest()">Submit Request</button>
+          <button type="button" id="makeTagReqModalCloseBtn" class="btn btn-secondary" data-dismiss="modal"
+            (click)="clear(tagForm)">Cancel</button>
+          <button type="button" class="btn btn-success" [disabled]="!tagForm.valid" type="submit">Submit
+            Request</button>
         </div>
       </form>
     </div>
