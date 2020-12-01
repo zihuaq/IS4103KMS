@@ -27,7 +27,7 @@
                         style="width: 30%; margin-left: auto;margin-right: auto;" (click)="selectedFile = null"> Remove
                         selected image
                     </button>
-                    <br />
+                    <br *ngIf="loggedInUser.userType == UserType.ADMIN"/>
                     <div class="form-group my-checkbox" *ngIf="loggedInUser.userType == UserType.ADMIN">
                         <label class="form-check-label"> Pin Post? </label>
                         &nbsp;
