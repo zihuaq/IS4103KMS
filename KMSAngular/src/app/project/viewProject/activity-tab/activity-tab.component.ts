@@ -102,6 +102,10 @@ export class ActivityTabComponent implements OnInit {
       this.isOwner = true;
     }
 
+    this.projectReviewForActivity = [];
+    this.userReviewsForActivity = [];
+    this.reviewsUnwrittenForUsers = [];
+
     this.isAdmin = this.isAdminCheck(this.loggedInUser)
 
     this.refreshActivities();
@@ -281,54 +285,62 @@ export class ActivityTabComponent implements OnInit {
     .subscribe(
       response => {
         this.projectReviewForActivity = response;
+        console.log(this.projectReviewForActivity)
     })
     this.activityService.getUserReviewsForActivity(activityId, this.sessionService.getCurrentUser().userId)
     .subscribe(
       response => {
         this.userReviewsForActivity = response;
+        console.log(this.userReviewsForActivity)
+        if(this.hasJoined(activityId)){
+          //is an admin or owner
+          if(this.isAdminCheck(this.loggedInUser) || this.isOwner){
+            for(let user of this.activitySelected.joinedUsers){
+              let hasWritten = false;
+              if (user.userId != this.loggedInUser.userId && !this.isAdminCheck(user)){
+                console.log("current User is an admin")
+                for(let reviewed of this.userReviewsForActivity){
+                  if(user.userId == reviewed.to.userId){
+                    console.log(user.userId + " : " + reviewed.to.userId)
+                    hasWritten = true;
+                    break
+                  }
+                }
+                if(hasWritten == false && user.userId != this.loggedInUser.userId){
+                  this.reviewsUnwrittenForUsers.push(user)
+              }
+
+              }
+            }
+          }
+
+          //is not an admin or owner
+          else{
+            for(let user of this.activitySelected.joinedUsers){
+              let hasWritten = false;
+              if (user.userId != this.loggedInUser.userId && this.isAdminCheck(user)){
+                console.log("current User is not admin")
+                for(let reviewed of this.userReviewsForActivity){
+                  if(user.userId == reviewed.to.userId){
+                    console.log(user.userId + " : " + reviewed.to.userId)
+                    hasWritten = true;
+                    break
+                  }
+                }
+                if(hasWritten == false && user.userId != this.loggedInUser.userId){
+                  this.reviewsUnwrittenForUsers.push(user)
+                }
+
+              }
+            }
+          }
+
+
+        }
+        // here
     })
 
-    if(this.hasJoined(activityId)){
-      //is an admin or owner
-      if(this.isAdmin || this.isOwner){
-        for(let user of this.activitySelected.joinedUsers){
-          let hasWritten = false;
-          if (user.userId != this.loggedInUser.userId && !this.isAdminCheck(user)){
-            for(let reviewed of this.userReviewsForActivity){
-              if(user.userId == reviewed.to.userId){
-                hasWritten = true;
-                break
-              }
-            }
-            if(hasWritten == false && user.userId != this.loggedInUser.userId){
-              this.reviewsUnwrittenForUsers.push(user)
-          }
 
-          }
-        }
-      }
-
-      //is not an admin or owner
-      else{
-        for(let user of this.activitySelected.joinedUsers){
-          let hasWritten = false;
-          if (user.userId != this.loggedInUser.userId && this.isAdminCheck(user)){
-            for(let reviewed of this.userReviewsForActivity){
-              if(user.userId == reviewed.to.userId){
-                hasWritten = true;
-                break
-              }
-            }
-            if(hasWritten == false && user.userId != this.loggedInUser.userId){
-              this.reviewsUnwrittenForUsers.push(user)
-          }
-
-          }
-        }
-      }
-
-
-    }
     this.reviewModal.show();
   }
 

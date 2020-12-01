@@ -82,6 +82,7 @@ public class ProjectResource {
             p.getPosts().clear();
             p.getReviews().clear();
             p.getDonations().clear();
+            p.getAwards().clear();
         }
         return Response.status(Status.OK).entity(new RetrieveAllProjectRsp(projects)).build();
     }
@@ -144,6 +145,7 @@ public class ProjectResource {
             project.getProjectOwner().setActivityJoined(new ArrayList<>());  
             project.getProjectOwner().setDonations(new ArrayList<>());
             project.getProjectOwner().setNotifications(new ArrayList<>());
+            project.getProjectOwner().setReceivedAwards(new ArrayList<>());
             for (UserEntity member : project.getProjectMembers()) {
                 member.setReviewsGiven(new ArrayList<>());
                 member.setReviewsReceived(new ArrayList<>());
@@ -228,6 +230,7 @@ public class ProjectResource {
                 review.setProject(null);
                 review.setFrom(null);
                 review.setTo(null);
+                review.setMadeFromActivity(null);
             }
             for (DonationEntity donation: project.getDonations()) {
                 donation.setProject(null);

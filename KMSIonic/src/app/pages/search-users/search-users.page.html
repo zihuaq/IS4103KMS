@@ -5,7 +5,7 @@
 </ion-header>
 <ion-content>
   <ion-virtual-scroll [items]="preliminarySearchUser">
-    <ion-item *virtualItem="let user" routerLink="/profile/{{user.userId}}">
+    <ion-item *virtualItem="let user" routerLink="/user-profile/{{user.userId}}">
       <ion-avatar slot="start">
         <img *ngIf="!user.profilePicture"
           src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">

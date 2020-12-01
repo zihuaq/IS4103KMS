@@ -438,7 +438,7 @@ export class UserService {
   }
 
   getAwardsReceived(userId: number): Observable<any>{
-    return this.http.get<any>(this.baseUrl + "/awardsRecieved/" + userId)
+    return this.http.get<any>(this.baseUrl + "/awardsReceived/" + userId)
     .pipe(catchError(this.handleError));
   }
 }

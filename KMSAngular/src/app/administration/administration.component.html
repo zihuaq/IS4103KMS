@@ -22,36 +22,38 @@
     <div class="card card-primary card-outline card-tabs">
       <div class="card-header p-0 pt-1 border-bottom-0">
         <ul class="nav nav-tabs" id="admin-tab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="admin-tab-profile-reports-tabname" data-toggle="pill"
-                    href="#profile-reports" role="tab"
-                    >User Profile Reports</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill"
-                  href="#project-reports" role="tab"
-                  >Project Reports</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill"
-                  href="#group-reports" role="tab"
-                  >Group Reports</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill"
-                  href="#post-reports" role="tab"
-                  >Post Reports</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill"
-                  href="#comment-reports" role="tab"
-                  >Comment Reports</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="admin-tab-review-reports-tabname" data-toggle="pill"
-                  href="#review-reports" role="tab"
-                  >Review Reports</a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link active" id="admin-tab-profile-claims-tabname" data-toggle="pill" href="#profile-claims"
+              role="tab">Profile Claims</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="admin-tab-profile-reports-tabname" data-toggle="pill" href="#profile-reports"
+              role="tab">User Profile Reports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill" href="#project-reports"
+              role="tab">Project Reports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill" href="#group-reports"
+              role="tab">Group Reports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill" href="#post-reports"
+              role="tab">Post Reports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="admin-tab-project-reports-tabname" data-toggle="pill" href="#comment-reports"
+              role="tab">Comment Reports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="admin-tab-review-reports-tabname" data-toggle="pill" href="#review-reports"
+              role="tab">Review
+              Reports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#manage-tags" role="tab">Manage Tags</a>
+          </li>
         </ul>
       </div>
 
@@ -74,6 +76,9 @@
           </div>
           <div class="tab-pane fade" id="comment-reports" role="tabpanel">
             <app-comment-reports></app-comment-reports>
+          </div>
+          <div class="tab-pane fade" id="manage-tags" role="tabpanel">
+            <app-manage-tags></app-manage-tags>
           </div>
           <div class="tab-pane fade" id="review-reports" role="tabpanel">
             <app-review-reports></app-review-reports>

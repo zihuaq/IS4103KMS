@@ -46,7 +46,7 @@ export class AllRequestsPage implements OnInit {
   }
 
   goToProfile(user: User) {
-    this.router.navigate(["/profile/" + user.userId])
+    this.router.navigate(['/user-profile/' + user.userId]);
   }
 
   acceptFollow(toUserid: number, fromUserid: number, event) {

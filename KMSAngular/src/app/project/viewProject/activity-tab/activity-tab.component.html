@@ -273,7 +273,7 @@
                     </div>
                     <div class="select">
                       <label for="toUser">Review User * &nbsp;</label>
-                      <select  class="form-control" name = "selectedToUser" placeholder="Review User" ngModel required>
+                      <select *ngIf="reviewsUnwrittenForUsers" class="form-control" name = "selectedToUser" placeholder="Review User" ngModel required>
                         <option *ngFor = "let user of reviewsUnwrittenForUsers" [value] = "user.userId" >{{user.firstName}} {{user.lastName}}</option>
                       </select>
                     </div>

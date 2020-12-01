@@ -1078,6 +1078,7 @@ public class UserResource {
                 p.getPosts().clear();
                 p.getReviews().clear();
                 p.getDonations().clear();
+                 p.getAwards().clear();
             }
             return Response.status(Status.OK).entity(projectsOwned).build();
 
@@ -1105,6 +1106,7 @@ public class UserResource {
                 p.getPosts().clear();
                 p.getReviews().clear();
                 p.getDonations().clear();
+                p.getAwards().clear();
             }
             return Response.status(Status.OK).entity(projectsJoined).build();
 
@@ -1132,6 +1134,7 @@ public class UserResource {
                 p.getPosts().clear();
                 p.getReviews().clear();
                 p.getDonations().clear();
+                 p.getAwards().clear();
             }
             return Response.status(Status.OK).entity(projectsManaged).build();
 
