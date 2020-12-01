@@ -114,6 +114,7 @@ import { ManageTagsComponent } from './administration/manage-tags/manage-tags.co
 import { AwardsAndBadgesComponent } from './user-profile/awards-and-badges/awards-and-badges.component';
 import { HandleTagRequestsComponent } from './administration/handle-tag-requests/handle-tag-requests.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UploadProfilesComponent } from './administration/upload-profiles/upload-profiles.component';
 
 export const environment = {
   production: false,
@@ -225,7 +226,8 @@ export const environment = {
     GroupRecommendationsComponent,
     ManageTagsComponent,
     AwardsAndBadgesComponent,
-    HandleTagRequestsComponent
+    HandleTagRequestsComponent,
+    UploadProfilesComponent
   ],
   imports: [
     BrowserModule,
