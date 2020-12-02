@@ -95,9 +95,24 @@ public class ElectionResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/updateElection")
-    public Response updatePost(ElectionEntity election) {
+    public Response updateElection(ElectionEntity election) {
         try {
             electionSessionBean.updateElection(election);
+            return Response.status(200).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/endElection")
+    public Response endPost(ElectionEntity election) {
+        try {
+            electionSessionBean.endElection(election);
             return Response.status(200).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()

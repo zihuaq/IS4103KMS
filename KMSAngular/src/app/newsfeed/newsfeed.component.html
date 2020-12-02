@@ -647,7 +647,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmDialogLabel">Apply for Election</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clear(electionForm)">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -674,7 +674,7 @@
                     <button type="button" id="applyElectionModalCloseBtn" class="btn btn-secondary" data-dismiss="modal"
                         (click)="clear(electionForm)">Cancel</button>
                     <button type="button" class="btn bg-olive" type="submit"
-                        [disabled]="!electionForm.valid">Start</button>
+                        [disabled]="!electionForm.valid">Apply</button>
                 </div>
             </form>
         </div>

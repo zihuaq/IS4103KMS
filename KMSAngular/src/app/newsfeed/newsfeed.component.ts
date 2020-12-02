@@ -778,6 +778,9 @@ export class NewsfeedComponent implements OnInit {
               delay: 2500,
               body: 'Application Submitted!',
             });
+
+            electionForm.reset();
+            $('#applyElectionModalCloseBtn').click();
           },
           (error) => {
             $(document).Toasts('create', {
@@ -787,9 +790,11 @@ export class NewsfeedComponent implements OnInit {
               delay: 2500,
               body: error,
             });
+
+            electionForm.reset();
+            $('#applyElectionModalCloseBtn').click();
           }
         );
-        $('#applyElectionModalCloseBtn').click();
       } else if (this.loggedInUser.userType == UserType.ADMIN) {
         $(document).Toasts('create', {
           class: 'bg-danger',
@@ -798,6 +803,7 @@ export class NewsfeedComponent implements OnInit {
           delay: 2500,
           body: "Admin cannot participation in an election for new admins",
         });
+        electionForm.reset();
         $('#applyElectionModalCloseBtn').click();
       } else {
         $(document).Toasts('create', {
@@ -807,6 +813,7 @@ export class NewsfeedComponent implements OnInit {
           delay: 2500,
           body: "Insufficient Reputation Points",
         });
+        electionForm.reset();
         $('#applyElectionModalCloseBtn').click();
       }
     }

@@ -50,8 +50,28 @@ export class EditElectionComponent implements OnInit {
     }
   }
 
-  endElection(){
-
+  endElection() {
+    this.electionService.endElection(this.activeElection).subscribe(
+      (response) => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Election Ended!',
+        });
+        this.updateElection();
+      },
+      (error) => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+      }
+    );
   }
 
   private updateElection() {

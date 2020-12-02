@@ -86,6 +86,17 @@ public class ElectionSessionBean implements ElectionSessionBeanLocal {
     }
 
     @Override
+    public void endElection(ElectionEntity election) throws NoResultException {
+        ElectionEntity electionToEnd = em.find(ElectionEntity.class, election.getId());
+        if (electionToEnd != null && electionToEnd.isIsActive()) {
+            electionToEnd.setIsActive(false);
+            em.flush();
+        } else {
+            throw new NoResultException("No Active Election Found");
+        }
+    }
+
+    @Override
     public void createElectionApplication(ElectionApplicationEntity application) throws NoResultException, DuplicateApplicationException {
         UserEntity user = em.find(UserEntity.class, application.getApplicationOwner().getUserId());
         ElectionEntity election = em.find(ElectionEntity.class, application.getElection().getId());
@@ -99,6 +110,7 @@ public class ElectionSessionBean implements ElectionSessionBeanLocal {
             }
             em.persist(application);
             em.flush();
+            election.getElectionApplications().add(application);
         } else {
             throw new NoResultException("User  Or Election Not Found.");
         }

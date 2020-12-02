@@ -45,6 +45,12 @@ export class ElectionService {
             .pipe(catchError(this.handleError));
     }
 
+    endElection(election: Election) {
+        return this.http
+            .put<any>(this.baseUrl + '/endElection', election, httpOptions)
+            .pipe(catchError(this.handleError));
+    }
+
     createElectionApplication(electionApplication: ElectionApplication) {
         return this.http
             .post<any>(this.baseUrl + '/createElectionApplication', electionApplication, httpOptions)
@@ -71,11 +77,9 @@ export class ElectionService {
         let errorMessage: string = '';
 
         if (error.error instanceof ErrorEvent) {
-            errorMessage = 'An unknown error has occurred: ' + error.error.message;
+            errorMessage = error.error.message;
         } else {
-            errorMessage =
-                'A HTTP error has occurred: ' +
-                `HTTP ${error.status}: ${error.error.error}`;
+            errorMessage = `${error.error.error}`;
         }
 
         console.error(errorMessage);

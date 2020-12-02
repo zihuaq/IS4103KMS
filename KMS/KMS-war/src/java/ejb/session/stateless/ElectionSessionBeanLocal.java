@@ -26,6 +26,8 @@ public interface ElectionSessionBeanLocal {
     
     public void updateElection(ElectionEntity electionToUpdate) throws NoResultException;
     
+    public void endElection(ElectionEntity election) throws NoResultException;
+    
     public void createElectionApplication(ElectionApplicationEntity application) throws NoResultException, DuplicateApplicationException;
     
 }
