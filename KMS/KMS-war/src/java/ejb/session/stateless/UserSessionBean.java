@@ -9,6 +9,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
+import Exception.ResignFromAdminException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.AwardEntity;
@@ -42,6 +43,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccountPrivacySettingEnum;
+import util.enumeration.UserTypeEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -985,21 +987,47 @@ public class UserSessionBean implements UserSessionBeanLocal {
     public void persist(Object object) {
         em.persist(object);
     }
-    
-    
+
     public List<AwardEntity> getReceivedAwards(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
-        
+
         user.getReceivedAwards().size();
         return user.getReceivedAwards();
     }
-    
-    
 
     @Override
     public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException {
         UserEntity userEntity = getUserById(userId);
         userEntity.getProfiles().size();
         return userEntity.getProfiles();
+    }
+
+    @Override
+    public void promoteUserToAdmin(Long userToPromoteId) throws NoResultException {
+        UserEntity user = em.find(UserEntity.class, userToPromoteId);
+
+        if (user != null && user.getUserType() != UserTypeEnum.ADMIN) {
+            user.setUserType(UserTypeEnum.ADMIN);
+        } else {
+            throw new NoResultException("No User Found.");
+        }
+    }
+
+    @Override
+    public void resignFromAdmin(Long userId) throws NoResultException,ResignFromAdminException {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (user != null && user.getUserType() == UserTypeEnum.ADMIN) {
+            Query q = em.createQuery("SELECT u FROM UserEntity u WHERE u.userType = :userType");
+            q.setParameter("userType", UserTypeEnum.ADMIN);
+            List<UserEntity> admins = (List<UserEntity>) q.getResultList();
+            if(admins.size() > 1) {
+            user.setUserType(UserTypeEnum.ADMIN);
+            } else {
+                throw new ResignFromAdminException("There must be at least one Admin on the platform.");
+            }
+        } else {
+            throw new NoResultException("No Admin Found.");
+        }
     }
 }

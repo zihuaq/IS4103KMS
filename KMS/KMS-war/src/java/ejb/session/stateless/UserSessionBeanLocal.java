@@ -14,6 +14,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
+import Exception.ResignFromAdminException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.AwardEntity;
@@ -121,8 +122,10 @@ public interface UserSessionBeanLocal {
     public List<GroupEntity> getGroupsOwned(Long userId) throws UserNotFoundException;
 
     public List<AwardEntity> getReceivedAwards(Long userId) throws UserNotFoundException;
-    
+
     public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException;
 
+    public void promoteUserToAdmin(Long userToPromoteId) throws NoResultException;
 
+    public void resignFromAdmin(Long userId) throws NoResultException, ResignFromAdminException;
 }
