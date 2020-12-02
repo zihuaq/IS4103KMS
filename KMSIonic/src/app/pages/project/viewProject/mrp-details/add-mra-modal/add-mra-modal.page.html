@@ -7,20 +7,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
+<ion-content>
   <form (ngSubmit)="createMra(mraForm)" #mraForm="ngForm">
     <ion-item-group>
       <ion-item>
         <ion-label position="stacked">Material Resource Name</ion-label>
         <ion-input type="text" id="mraName" [ngModel]="newMra.name" name="mraName" disabled></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked"> Quantity *</ion-label>
-        <ion-input type="number" id="quantity" [(ngModel)]="newMra.quantity" name="quantity" required></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked"> Units</ion-label>
-        <ion-input type="text" [ngModel]="newMra.units" name="units" disabled></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Description</ion-label>
@@ -35,6 +27,36 @@
             </ion-chip>
           </ion-item>
         </ion-list>
+      </ion-item><ion-item>
+        <ion-label position="stacked"> Resource Type *</ion-label>
+        <ion-select [(ngModel)]="newMra.type" name="resourceType" required>
+          <ion-select-option disabled> One-Time </ion-select-option>
+          <ion-select-option value="ONETIMEDONATION"> One-Time Donation </ion-select-option>
+          <ion-select-option value="ONETIMEPAYMENT"> One-Time Payment </ion-select-option>
+          <ion-select-option disabled> Recurring Subscription </ion-select-option>
+          <ion-select-option value="DAILY"> Daily </ion-select-option>
+          <ion-select-option value="WEEKLY"> Weekly </ion-select-option>
+          <ion-select-option value="MONTHLY"> Monthly </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
+        <ion-label position="stacked">Price *</ion-label>
+        <ion-row>
+          <ion-input type="number" id="price" [(ngModel)]="newMra.price" name="price" required><span style="margin-right: 5px; color: gray;">US $</span></ion-input>
+          <span style="margin-left: 5px; margin-top: 7px; color: gray;">
+            <span *ngIf="!mraForm.value.units">/unit</span>
+            <span *ngIf="mraForm.value.units && mraForm.value.units == 'item(s)'">/item</span>
+            <span *ngIf="mraForm.value.units && mraForm.value.units != 'item(s)'">/{{mraForm.value.units}}</span>
+          </span>
+        </ion-row>
+      </ion-item>
+      <ion-item *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
+        <ion-label position="stacked"> Units *</ion-label>
+        <ion-select [(ngModel)]="newMra.units" name="units" required>
+          <ion-select-option value="item(s)"> item(s) </ion-select-option>
+          <ion-select-option value="kg"> kg </ion-select-option>
+          <ion-select-option value="m"> m </ion-select-option>
+        </ion-select>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Location of Resource</ion-label>
@@ -51,21 +73,7 @@
         <ion-input type="text" id="longitude" [(ngModel)]="newMra.longitude" name="longitude" required>
         </ion-input>
       </ion-item>
-      <ion-item>
-        <ion-label position="stacked">Does your resource expire?</ion-label>
-        <ion-toggle [(ngModel)]="hasExpiry" name="hasExpiry" (change)="handleHasExpiryChange()"></ion-toggle>
-      </ion-item>
-      <ion-item *ngIf="hasExpiry">
-        <ion-label position="stacked">Start Date (DD/MM/YYYY):</ion-label>
-        <ion-datetime name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY" [(ngModel)]="startDate" required>
-        </ion-datetime>
-      </ion-item>
-      <ion-item *ngIf="hasExpiry">
-        <ion-label position="stacked">End Date (DD/MM/YYYY):</ion-label>
-        <ion-datetime name="endDate" placeholder="DD/MM/YYYY" [min]="startDate" display-format="DD/MM/YYYY" [(ngModel)]="endDate" required>
-        </ion-datetime>
-      </ion-item>
     </ion-item-group>
-    <ion-button type="submit" expand="block">Submit</ion-button>
+    <ion-button type="submit" [disabled]="!mraForm.valid" expand="block">Submit</ion-button>
   </form>
 </ion-content>

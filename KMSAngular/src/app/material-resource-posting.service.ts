@@ -2,8 +2,6 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Project } from './classes/project';
-import { SessionService } from './session.service';
 import { MaterialResourcePosting } from './classes/material-resource-posting';
 
 const httpOptions = {
@@ -17,7 +15,7 @@ export class MaterialResourcePostingService {
 
   baseUrl: string = '/api/mrp';
 
-  constructor(private sessionService: SessionService, private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
   getMrpByProject(projectId: number): Observable<any> {
     return this.httpClient.get<any>(this.baseUrl + "/getMrpByProject/" + projectId).pipe(

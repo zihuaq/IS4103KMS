@@ -99,25 +99,9 @@ export class FulfillPostingPage implements OnInit {
       toast.present();
       return;
     } else {
-      this.maxQuantity = Math.min(mra.quantity, this.mrp.lackingQuantity);
+      this.maxQuantity = this.mrp.lackingQuantity;
     }
-    if (mra.endDate != null && mra.endDate < new Date(this.mrp.endDate.toString().slice(0, 20))) {
-      const toast = await this.toastController.create({
-        message: "Donated resource will expire before the end date of the posting",
-        color: "danger",
-        duration: 3500
-      })
-      toast.present();
-    } else if (mra.startDate != null && mra.startDate > new Date(this.mrp.startDate.toString().slice(0, 20))) {
-      const toast = await this.toastController.create({
-        message: "Donated resource is only available after the start date of the posting",
-        color: "danger",
-        duration: 3500
-      })
-      toast.present();
-    } else {
-      this.selectedMra = mra;
-    }
+    this.selectedMra = mra;
   }
 
   clickReselect() {
@@ -147,17 +131,9 @@ export class FulfillPostingPage implements OnInit {
         duration: 3500
       });
       toast.present();
-    } else if(this.totalPledgedQuantity > this.selectedMra.quantity) {
-      const toast = await this.toastController.create({
-        message: "Donated quantity cannot be more than your available quantity",
-        color: "danger",
-        duration: 3500
-      });
-      toast.present();
     } else {
       this.newFulfillment.mra = new MaterialResourceAvailable();
       this.newFulfillment.totalPledgedQuantity = this.totalPledgedQuantity;
-      this.newFulfillment.mra.quantity = this.selectedMra.quantity - this.newFulfillment.totalPledgedQuantity;
       this.fulfillmentService.createNewFulfillment(this.newFulfillment, this.loggedInUser.userId, this.mrp.materialResourcePostingId, this.selectedMra.mraId).subscribe(
         response => {
           this.selectedMra = null;
@@ -187,6 +163,11 @@ export class FulfillPostingPage implements OnInit {
       });
       toast.present();
     }
+  }
+  
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    return url;
   }
 
 }

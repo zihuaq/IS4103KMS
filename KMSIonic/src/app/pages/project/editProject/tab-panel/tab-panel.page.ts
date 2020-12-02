@@ -18,6 +18,7 @@ import { MrpService } from 'src/app/services/mrp.service';
 import { ManageFulfillmentsModalPage } from '../manage-fulfillments-modal/manage-fulfillments-modal.page';
 import { FulfillmentService } from '../../../../services/fulfillment.service';
 import { Document } from 'src/app/classes/document';
+import { FulfillmentStatus } from 'src/app/enum/fulfillment-status.enum';
 
 @Component({
   selector: 'app-tab-panel',
@@ -359,7 +360,36 @@ export class TabPanelPage implements OnInit {
         text: 'Edit Posting',
         icon: 'create',
         handler: () => {
-          this.router.navigate(["edit-mrp-details/" + mrpId]);
+          this.mrpService.getMrp(mrpId).subscribe(
+            response => {
+              var mrp: MaterialResourcePosting = response;
+      
+              this.fulfillmentService.getFulfillmentsByMrp(mrp.materialResourcePostingId).subscribe(
+                async response => {
+                  mrp.fulfillments = response;
+                  console.log(mrp.fulfillments.length);
+      
+                  var invalid: boolean = false;
+                  mrp.fulfillments.map((fulfillment) => {
+                    if (fulfillment.status != FulfillmentStatus.REJECTED && fulfillment.status != FulfillmentStatus.FULFILLED) {
+                      invalid = true;
+                      return;
+                    }
+                  })
+                  if (invalid) {
+                    const toast = await this.toastController.create({
+                      message: "Material Resource Posting cannot be edited as there are pending and/or ongoing fulfillments",
+                      color: "warning",
+                      duration: 4500
+                    });
+                    toast.present();
+                  } else {
+                    this.router.navigate(["edit-mrp-details/" + mrpId]);
+                  }
+                }
+              );
+            }
+          );
         }
       }, {
         text: 'Delete Posting',
@@ -417,7 +447,7 @@ export class TabPanelPage implements OnInit {
 
   changehref(lat: number, long: number) {
     var url = "http://maps.google.com/?q=" + lat + "," + long;
-    window.open(url, '_blank');
+    return url;
   }
 
   viewFile(key) {

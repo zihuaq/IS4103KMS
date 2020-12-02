@@ -153,7 +153,7 @@ export class ViewMrpTabComponent implements OnInit {
 
   createMaterialResourceRequest(mraForm: NgForm) {
     if (mraForm.valid) {
-      if (mraForm.value.price <= 0) {
+      if (mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.price <= 0) {
         $(document).Toasts('create', {
           class: 'bg-warning',
           title: 'Unable to submit Material Resource Available',

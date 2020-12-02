@@ -262,9 +262,10 @@
                         <label for="resourceType">Resource Type *</label>
                         <select id="resourceType" class="form-control" [(ngModel)]="newMra.type" name="resourceType" required>
                             <option disabled selected>Select Resource Type</option>
-                            <optgroup label="One-Time"></optgroup>
-                            <option value="ONETIMEDONATION">One-Time Donation</option>
-                            <option value="ONETIMEPAYMENT">One-Time Payment</option>
+                            <optgroup label="One-Time">
+                                <option value="ONETIMEDONATION">One-Time Donation</option>
+                                <option value="ONETIMEPAYMENT">One-Time Payment</option>
+                            </optgroup>
                             <optgroup label="Recurring Subscription">
                                 <option value="DAILY">Daily</option>
                                 <option value="WEEKLY">Weekly</option>

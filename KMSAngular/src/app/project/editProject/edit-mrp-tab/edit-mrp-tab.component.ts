@@ -267,10 +267,6 @@ export class EditMrpTabComponent implements OnInit {
       response => {
         this.mrpToEdit = response;
 
-        $('#editmrpselect2').val(this.mrpToEdit.tags.map((tag) => tag.name)).trigger('change');
-        this.editMrpStartDate = this.mrpToEdit.startDate.toString().substring(0, 10);
-        this.editMrpEndDate = this.mrpToEdit.endDate ? this.mrpToEdit.endDate.toString().substring(0, 10) : undefined;
-
         this.fulfillmentService.getFulfillmentsByMrp(this.mrpToEdit.materialResourcePostingId).subscribe(
           response => {
             this.mrpToEdit.fulfillments = response;
@@ -288,10 +284,13 @@ export class EditMrpTabComponent implements OnInit {
                 class: 'bg-warning',
                 title: 'Warning',
                 autohide: true,
-                delay: 2500,
+                delay: 3500,
                 body: 'Material Resource Posting cannot be edited as there are pending and/or ongoing fulfillments',
               });
             } else {
+              $('#editmrpselect2').val(this.mrpToEdit.tags.map((tag) => tag.name)).trigger('change');
+              this.editMrpStartDate = this.mrpToEdit.startDate.toString().substring(0, 10);
+              this.editMrpEndDate = this.mrpToEdit.endDate ? this.mrpToEdit.endDate.toString().substring(0, 10) : undefined;
               $('#modal-edit-mrp').modal('show');
             }
           }
@@ -343,6 +342,16 @@ export class EditMrpTabComponent implements OnInit {
           totalPledgedQuantity += fulfillment.totalPledgedQuantity;
         }
       });
+      if (this.mrpToEdit.totalQuantity < totalPledgedQuantity) {
+        $(document).Toasts('create', {
+          class: 'bg-warning',
+          title: 'Unable to edit Material Resource Posting',
+          autohide: true,
+          delay: 2500,
+          body: 'Quantity required cannot be less than total pledged quantity',
+        });
+        return;
+      }
       this.mrpToEdit.lackingQuantity = this.mrpToEdit.totalQuantity - totalPledgedQuantity;
       this.mrpToEdit.tags = selectedTags;
       console.log(this.mrpToEdit);

@@ -15,7 +15,7 @@ export class UpdateQuantityModalPage implements OnInit {
 
   @Input() mrpId: number;
   @Input() fulfillmentToUpdate: Fulfillment;
-  @Input() byUser: boolean;
+  @Input() byUser: boolean; //dont need this!!!!
 
   mrpToFulfill: MaterialResourcePosting;
   newTotalPledgedQuantity: number;
@@ -27,12 +27,11 @@ export class UpdateQuantityModalPage implements OnInit {
     private mrpService: MrpService) { }
 
   ngOnInit() {
-    console.log(this.byUser);
     this.newTotalPledgedQuantity = this.fulfillmentToUpdate.totalPledgedQuantity;
     this.mrpService.getMrp(this.mrpId).subscribe(
       response => {
         this.mrpToFulfill = response;
-        this.maxQuantity = Math.max((this.fulfillmentToUpdate.totalPledgedQuantity + this.mrpToFulfill.lackingQuantity), (this.fulfillmentToUpdate.totalPledgedQuantity + this.fulfillmentToUpdate.mra.quantity));
+        this.maxQuantity = this.fulfillmentToUpdate.totalPledgedQuantity + this.mrpToFulfill.lackingQuantity;
       }
     )
   }
@@ -50,12 +49,6 @@ export class UpdateQuantityModalPage implements OnInit {
     } else if(this.newTotalPledgedQuantity > (this.mrpToFulfill.lackingQuantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
       this.toast(false, "New pledged quantity cannot be more than quantity required");
 
-    } else if(this.newTotalPledgedQuantity > (this.fulfillmentToUpdate.mra.quantity + this.fulfillmentToUpdate.totalPledgedQuantity)) {
-      if (this.byUser == false) {
-        this.toast(false, "New pledged quantity cannot be more than available quantity of user");
-      } else {
-        this.toast(false, "New pledged quantity cannot be more than your available quantity");
-      }
     } else {
       this.fulfillmentToUpdate.totalPledgedQuantity = this.newTotalPledgedQuantity;
       if (this.fulfillmentToUpdate.totalPledgedQuantity == this.fulfillmentToUpdate.receivedQuantity) {
@@ -63,7 +56,7 @@ export class UpdateQuantityModalPage implements OnInit {
       } else if(this.fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED && this.fulfillmentToUpdate.totalPledgedQuantity > this.fulfillmentToUpdate.receivedQuantity) {
         this.fulfillmentToUpdate.status = FulfillmentStatus.PARTIALLYFULFILLED;
       }
-      this.fulfillmentService.updateQuantity(this.fulfillmentToUpdate).subscribe(
+      this.fulfillmentService.updateQuantity(this.fulfillmentToUpdate, null).subscribe(
         response => {
           this.toast(true, "New pledged quantity is updated successfully");
           this.dismiss();

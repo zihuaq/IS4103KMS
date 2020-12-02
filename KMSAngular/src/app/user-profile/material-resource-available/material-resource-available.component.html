@@ -39,9 +39,10 @@
                         <select id="resourceType" class="form-control" [ngModel]="editingMra.type" name="resourceType"
                             required>
                             <option disabled selected>Select Resource Type</option>
-                            <optgroup label="One-Time"></optgroup>
-                            <option value="ONETIMEDONATION">One-Time Donation</option>
-                            <option value="ONETIMEPAYMENT">One-Time Payment</option>
+                            <optgroup label="One-Time">
+                                <option value="ONETIMEDONATION">One-Time Donation</option>
+                                <option value="ONETIMEPAYMENT">One-Time Payment</option>
+                            </optgroup>
                             <optgroup label="Recurring Subscription">
                                 <option value="DAILY">Daily</option>
                                 <option value="WEEKLY">Weekly</option>
@@ -52,13 +53,18 @@
                     <div class="form-row" *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
                         <div class="col-7">
                             <div class="form-group">
-                                <label for="price">Price per Unit *</label>
+                                <label for="price">Price *</label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">US $</span>
                                     </div>
                                     <input name="price" type="number" class="form-control" id="price" [ngModel]="editingMra.price" 
                                         placeholder="Enter Amount" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" *ngIf="!mraForm.value.units">/unit</span>
+                                        <span class="input-group-text" *ngIf="mraForm.value.units && mraForm.value.units == 'item(s)'">/item</span>
+                                        <span class="input-group-text" *ngIf="mraForm.value.units && mraForm.value.units != 'item(s)'">/{{mraForm.value.units}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -177,13 +183,13 @@
                             </a>
                             <span class="product-description">
                                 {{mra.description}}
-                                <span *ngIf="mra.tags.length > 0">
-                                    <div *ngFor="let tag of mra.tags">
+                                <div class="d-flex flex-wrap align-items-stretch" *ngIf="mra.tags.length > 0">
+                                    <span *ngFor="let tag of mra.tags">
                                         <small class="badge badge-info">
                                             {{tag.name}}
-                                        </small>
-                                    </div>
-                                </span>
+                                        </small>&nbsp;
+                                    </span>
+                                </div>
                             </span>
                         </div>
                     </li>

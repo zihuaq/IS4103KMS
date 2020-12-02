@@ -7,6 +7,7 @@ import { User } from 'src/app/classes/user';
 import { MaterialResourceAvailableService } from 'src/app/services/material-resource-available.service';
 import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
 import { NgForm } from '@angular/forms';
+import { MraType } from 'src/app/enum/mra-type.enum';
 
 @Component({
   selector: 'app-add-mra-modal',
@@ -19,10 +20,6 @@ export class AddMraModalPage implements OnInit {
   @Input() selectedMrp: MaterialResourcePosting;
 
   newMra: MaterialResourceAvailable;
-  hasExpiry: boolean = false;
-  minDate = new Date().toISOString().slice(0, 10);
-  startDate: string;
-  endDate: string;
 
   mapSubscription: Subscription;
   map: GoogleMap;
@@ -42,11 +39,11 @@ export class AddMraModalPage implements OnInit {
 
   ionViewWillEnter() {
     this.newMra.name = this.selectedMrp.name;
-    this.newMra.units = this.selectedMrp.unit;
     this.newMra.tags = this.selectedMrp.tags;
   }
 
   loadMap() {
+    console.log("load map")
     this.map = GoogleMaps.create("map_canvas")
 
     if (!this.newMra.latitude) {
@@ -105,47 +102,22 @@ export class AddMraModalPage implements OnInit {
     this.mapSubscription.unsubscribe()
   }
 
-  handleHasExpiryChange() {
-    this.hasExpiry = !this.hasExpiry;
-  }
-
   async createMra(mraForm: NgForm) {
-    if (!mraForm.valid) {
-      console.log(this.newMra);
+    if (mraForm.value.resourceType != 'ONETIMEDONATION' && !(mraForm.value.price > 0)) {
       const toast = await this.toastController.create({
-        message: "Please fill in required fields marked with *",
-        color: "danger",
+        message: "Please enter a valid price or select one-time donation",
+        color: "warning",
         duration: 3000
       })
       toast.present();
       return;
-    } else if (mraForm.valid) {
-      if (this.newMra.quantity == 0) {
-        const toast = await this.toastController.create({
-          message: "Please fill in a valid quantity",
-          color: "danger",
-          duration: 2000
-        })
-        toast.present();
-        return;
-      }
-      if (this.hasExpiry) {
-        if (new Date(this.startDate) > new Date(this.endDate)) {
-          const toast = await this.toastController.create({
-            message: "End date should not come before the Start Date",
-            color: "danger",
-            duration: 3000
-          })
-          toast.present();
-          return;
-        } else {
-          this.newMra.startDate = new Date(this.startDate);
-          this.newMra.endDate = new Date(this.endDate);
-        }
-      }
+    } 
+    if (mraForm.valid) {
       this.newMra.materialResourceAvailableOwner = this.loggedInUser;
-      this.mraService.createMaterialResourceAvailable(this.newMra).subscribe((
-        response) => {
+      this.newMra.price = mraForm.value.price ? mraForm.value.price : 0.0;
+      this.newMra.units = this.newMra.type != MraType.ONETIMEDONATION ? this.newMra.units : null;
+      this.mraService.createMaterialResourceAvailable(this.newMra).subscribe(
+        (response) => {
           console.log(this.newMra);
           this.dismiss();
       });

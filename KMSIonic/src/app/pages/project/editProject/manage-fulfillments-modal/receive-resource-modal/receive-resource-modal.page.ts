@@ -55,7 +55,7 @@ export class ReceiveResourceModalPage implements OnInit {
         this.fulfillmentToUpdate.unreceivedQuantity -= this.quantityReceived;
         this.fulfillmentToUpdate.status = FulfillmentStatus.PARTIALLYFULFILLED;
       }
-      this.fulfillmentService.receiveResource(this.fulfillmentToUpdate).subscribe(
+      this.fulfillmentService.receiveResource(this.fulfillmentToUpdate, null).subscribe(
         async response => {
           const toast = await this.toastController.create({
             message: "Quantity received is updated sucessfully",

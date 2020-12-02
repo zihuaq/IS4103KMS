@@ -107,12 +107,12 @@ export class MaterialResourceAvailableComponent implements OnInit, OnChanges {
       }
     });
     if (mraForm.valid) {
-      if (mraForm.value.price <= 0) {
+      if (mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.price <= 0) {
         $(document).Toasts('create', {
           class: 'bg-warning',
           title: 'Unable to submit Material Resource Available',
           autohide: true,
-          delay: 2500,
+          delay: 3500,
           body: 'Please enter a valid price or select one-time donation'
         });
         return;

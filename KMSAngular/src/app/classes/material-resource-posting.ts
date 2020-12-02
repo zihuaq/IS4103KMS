@@ -10,7 +10,6 @@ export class MaterialResourcePosting {
     totalQuantity: number;
     obtainedQuantity: number;
     lackingQuantity: number;
-    allocatedQuantity: number;
     description: string;
     startDate: Date;
     endDate: Date;
@@ -27,7 +26,6 @@ export class MaterialResourcePosting {
         totalQuantity?: number, 
         obtainedQuantity?: number, 
         lackingQuantity?: number, 
-        allocatedQuantity?: number, 
         description?: string, 
         startDate?: Date, 
         endDate?: Date, 
@@ -44,7 +42,6 @@ export class MaterialResourcePosting {
         this.totalQuantity = totalQuantity;
         this.obtainedQuantity = obtainedQuantity;
         this.lackingQuantity = lackingQuantity;
-        this.allocatedQuantity = allocatedQuantity;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
