@@ -78,6 +78,12 @@
             <p>My Groups</p>
           </a>
         </li>
+        <li class="nav-item" *ngIf="hasActiveElection">
+          <a class="nav-link" [routerLink]="['/view-election-posts']">
+            <i class="nav-icon fas fa-poll"></i>
+            <p>Election</p>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/notifications">
             <i class="fas fa-bell nav-icon"></i>

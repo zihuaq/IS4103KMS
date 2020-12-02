@@ -333,7 +333,7 @@ public class ElectionResource {
                 application.setAdditionalComments(postToProcess.getOriginalPost().getElectionApplication().getAdditionalComments());
                 originalPost.setElectionApplication(application);
             }
-            if (post.getOriginalPost().getEndorser() != null) {
+            if (postToProcess.getOriginalPost().getEndorser() != null) {
                 UserEntity endorser = new UserEntity();
                 endorser.setUserId(postToProcess.getOriginalPost().getEndorser().getUserId());
                 endorser.setFirstName(postToProcess.getOriginalPost().getEndorser().getFirstName());
@@ -370,7 +370,7 @@ public class ElectionResource {
             post.setElectionApplication(application);
         }
 
-        if (post.getEndorser() != null) {
+        if (postToProcess.getEndorser() != null) {
             UserEntity endorser = new UserEntity();
             endorser.setUserId(postToProcess.getEndorser().getUserId());
             endorser.setFirstName(postToProcess.getEndorser().getFirstName());

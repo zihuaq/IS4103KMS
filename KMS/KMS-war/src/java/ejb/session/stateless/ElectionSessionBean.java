@@ -159,6 +159,7 @@ public class ElectionSessionBean implements ElectionSessionBeanLocal {
             post.setIsElectionPost(true);
             post.setPostDate(new Date());
             post.setElectionApplication(electionApplication);
+            post.setEndorser(endorser);
             em.persist(post);
             em.flush();
             electionApplication.getElection().getElectionPosts().add(post);

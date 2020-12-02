@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { Election } from '../classes/election';
 import { Post } from '../classes/post';
@@ -48,7 +48,7 @@ export class ViewElectionPostsComponent implements OnInit {
   sharePostText: string = "";
   UserType = UserType;
   activeElections: Election;
-
+  searchString: string = "";
 
   constructor(private sessionService: SessionService,
     private userService: UserService,
@@ -74,6 +74,7 @@ export class ViewElectionPostsComponent implements OnInit {
           this.postReportTags = result[2];
           this.commentReportTags = result[3];
           this.initElements();
+          console.log(this.electionPosts)
         });
       });
   }
@@ -141,12 +142,37 @@ export class ViewElectionPostsComponent implements OnInit {
 
   updateNewsfeed() {
     this.postService
-      .getPostForUserNewsfeed(this.loggedInUser.userId)
+      .getPostForElection(this.activeElections.id)
       .subscribe((result) => {
-        this.filteredPosts = result;
+        this.electionPosts = result;
+        this.updateNewsFeedAccordingToRefineOptions();
       });
   }
 
+  handleSearchStringChanged(event) {
+    this.searchString = event;
+    this.updateNewsFeedAccordingToRefineOptions();
+  }
+
+  updateNewsFeedAccordingToRefineOptions() {
+    this.filteredPosts = [];
+    this.electionPosts.forEach(post => {
+      if (this.postMatchSearchString(post)) {
+        this.filteredPosts.push(post);
+      }
+    });
+  }
+
+  postMatchSearchString(post: Post) {
+    if (this.searchString == null || this.searchString == "") {
+      return true;
+    }
+    if (post.electionApplication.reasons.toLowerCase().includes(this.searchString.toLowerCase())
+      || post.electionApplication.contributions.toLowerCase().includes(this.searchString.toLowerCase())
+      || post.electionApplication.additionalComments && post.electionApplication.additionalComments.toLowerCase().includes(this.searchString.toLowerCase())) {
+      return true;
+    }
+  }
 
   removeLikeForPost(postId: number) {
     this.postService
@@ -528,8 +554,4 @@ export class ViewElectionPostsComponent implements OnInit {
       }
     }
   }
-
-
-
-
 }

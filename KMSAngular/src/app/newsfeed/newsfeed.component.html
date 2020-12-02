@@ -62,7 +62,7 @@
         <div *ngFor="let post of filteredNewsfeedPosts">
             <!-- Box Comment -->
             <div class="card card-widget">
-                <div class="card-header">
+                <div class="card-header" *ngIf="!post.electionApplication">
                     <div class="user-block">
                         <img *ngIf="post.postOwner.profilePicture" class="img-circle"
                             [src]="post.postOwner.profilePicture" alt="User Image">
@@ -103,8 +103,46 @@
                     <!-- /.card-tools -->
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body">
+                <div class="card-header" *ngIf="post.electionApplication">
+                    <div class="user-block">
+                        <img *ngIf="post.postOwner.profilePicture" class="img-circle"
+                            [src]="post.postOwner.profilePicture" alt="User Image">
+                        <img *ngIf="!post.postOwner.profilePicture" class="img-circle"
+                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                            alt="User Image">
+                        <span class="username">
+                            <a routerLink="/userProfile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
+                                {{post.postOwner.lastName}} </a>
+                            &nbsp;
+                            <small class="badge badge-dark" *ngIf="post.isElectionPost">
+                                Election Post
+                            </small>
+                        </span>
+                        <span class="description">Endorsed by {{post.endorser.firstName}}
+                            {{post.endorser.lastName}}</span>
+                    </div>
+                    <!-- /.user-block -->
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" *ngIf="loggedInUser.userType == UserType.ADMIN"
+                            data-toggle="modal" data-target="#modal-danger-post"
+                            (click)="postToDeleteId = post.postId"><i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <!-- /.card-tools -->
 
+                </div>
+                <div class="card-body">
+                    <div *ngIf="post.electionApplication">
+                        <label> Reasons For Applying: </label>
+                        <br />
+                        <p>{{post.electionApplication.reasons}}</p>
+                        <label> Contributions to KMS: </label>
+                        <br />
+                        <p>{{post.electionApplication.contributions}}</p>
+                        <label> Additional Comments: </label>
+                        <br />
+                    </div>
+                    
                     <p>{{post.text}}</p>
 
                     <span *ngIf="post.picture && !post.sharedGroupId && !post.sharedProjectId">
@@ -647,7 +685,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmDialogLabel">Apply for Election</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clear(electionForm)">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="clear(electionForm)">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
