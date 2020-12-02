@@ -6,7 +6,6 @@
 package ejb.session.stateless;
 
 import Exception.CreateGroupException;
-//import Exception.CreateGroupReviewException;
 import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
@@ -19,6 +18,8 @@ import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +30,8 @@ import javax.persistence.Query;
  * @author chai
  */
 @Stateless
+@Local(GroupSessionBeanLocal.class)
+@Remote(GroupSessionBeanRemote.class)
 public class GroupSessionBean implements GroupSessionBeanLocal, GroupSessionBeanRemote {
 
     @EJB

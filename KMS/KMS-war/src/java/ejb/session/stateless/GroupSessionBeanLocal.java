@@ -11,7 +11,6 @@ import Exception.NoResultException;
 import entity.GroupEntity;
 import java.util.List;
 import javax.ejb.Local;
-import util.enumeration.GroupStatusEnum;
 
 /**
  *

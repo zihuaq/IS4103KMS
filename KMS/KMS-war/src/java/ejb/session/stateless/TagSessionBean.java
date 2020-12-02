@@ -5,8 +5,8 @@ import entity.TagEntity;
 import Exception.TagNameExistException;
 import entity.TagRequestEntity;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,7 +18,9 @@ import util.enumeration.TagTypeEnum;
  * @author Jeremy
  */
 @Stateless
-public class TagSessionBean implements TagSessionBeanLocal {
+@Local(TagSessionBeanLocal.class)
+@Remote(TagSessionBeanRemote.class)
+public class TagSessionBean implements TagSessionBeanLocal, TagSessionBeanRemote {
 
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;

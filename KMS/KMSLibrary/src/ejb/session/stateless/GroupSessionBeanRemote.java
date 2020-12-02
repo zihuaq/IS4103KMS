@@ -10,13 +10,11 @@ import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import entity.GroupEntity;
 import java.util.List;
-import javax.ejb.Remote;
 
 /**
  *
  * @author Jeremy
  */
-@Remote
 public interface GroupSessionBeanRemote {
 
     public List<GroupEntity> retrieveAllGroup();
