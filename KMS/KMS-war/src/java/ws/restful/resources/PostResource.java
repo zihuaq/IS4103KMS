@@ -46,9 +46,9 @@ import ws.restful.model.SharePostToProjectOrGroupsReq;
  */
 @Path("post")
 public class PostResource {
-
+    
     PostSessionBeanLocal postSessionBean = lookupPostSessionBeanLocal();
-
+    
     @Context
     private UriInfo context;
 
@@ -57,7 +57,7 @@ public class PostResource {
      */
     public PostResource() {
     }
-
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -76,7 +76,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -92,7 +92,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -108,7 +108,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/userNewsFeed/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -124,7 +124,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/profileNewsFeed/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -140,7 +140,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/projectNewsFeed/{projectId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -156,7 +156,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/groupNewsFeed/{groupId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -172,7 +172,23 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
+    @GET
+    @Path("/election/{electionId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPostForElection(@PathParam("electionId") Long electionId) {
+        try {
+            List<PostEntity> posts = postSessionBean.getPostForElection(electionId);
+            posts = getPostsResponse(posts);
+            return Response.status(200).entity(posts).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+    
     @PUT
     @Path("/likePost/{userId}/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -187,7 +203,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/removeLikeForPost/{userId}/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -202,7 +218,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/addComment/{postId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -223,7 +239,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/likeComment/{userId}/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -238,7 +254,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/removeLikeForComment/{userId}/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -253,7 +269,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @DELETE
     @Path("/comment/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -268,7 +284,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/updateComment")
     @Produces(MediaType.APPLICATION_JSON)
@@ -283,7 +299,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/postComments/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -303,7 +319,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/sharePost/{postToShareId}/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -319,7 +335,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/sharePostToProjects/{postToShareId}/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -335,7 +351,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/sharePostToGroups/{postToShareId}/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -351,7 +367,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/shareGroupToProjects/{userId}/{groupId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -367,7 +383,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/shareGroupToGroups/{userId}/{groupId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -383,7 +399,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/shareGroupToFollowers/{userId}/{groupId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -399,7 +415,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/shareProjectToProjects/{userId}/{projectId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -415,7 +431,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/shareProjectToGroups/{userId}/{projectId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -431,7 +447,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @PUT
     @Path("/shareProjectToFollowers/{userId}/{projectId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -447,7 +463,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @DELETE
     @Path("/post/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -462,7 +478,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     @GET
     @Path("/comment/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -478,7 +494,7 @@ public class PostResource {
             return Response.status(404).entity(exception).build();
         }
     }
-
+    
     private List<PostEntity> getPostsResponse(List<PostEntity> posts) {
         List<PostEntity> result = new ArrayList<>();
         for (int i = 0; i < posts.size(); i++) {
@@ -487,7 +503,7 @@ public class PostResource {
         }
         return result;
     }
-
+    
     private PostEntity processPost(PostEntity postToProcess) {
         PostEntity post = new PostEntity();
         post.setPostId(postToProcess.getPostId());
@@ -619,7 +635,7 @@ public class PostResource {
         System.out.println(postToProcess);
         return post;
     }
-
+    
     private PostCommentEntity processComment(PostCommentEntity commentToProcess) {
         PostCommentEntity postComment = new PostCommentEntity();
         postComment.setPostCommentId(commentToProcess.getPostCommentId());
@@ -640,7 +656,7 @@ public class PostResource {
         postComment.setLikers(commentLikers);
         return postComment;
     }
-
+    
     private PostSessionBeanLocal lookupPostSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();

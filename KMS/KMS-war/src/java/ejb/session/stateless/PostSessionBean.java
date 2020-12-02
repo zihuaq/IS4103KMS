@@ -9,6 +9,7 @@ import Exception.DuplicateLikeException;
 import Exception.LikeNotFoundException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
+import entity.ElectionEntity;
 import entity.GroupEntity;
 import entity.PostCommentEntity;
 import entity.PostEntity;
@@ -202,6 +203,21 @@ public class PostSessionBean implements PostSessionBeanLocal {
             return postForGroupNewsFeed;
         } else {
             throw new NoResultException("Project does not exist.");
+        }
+    }
+
+    @Override
+    public List<PostEntity> getPostForElection(Long electionId) throws NoResultException {
+        ElectionEntity election = em.find(ElectionEntity.class, electionId);
+
+        if (election != null) {
+            List<PostEntity> postForElection = election.getElectionPosts();
+
+            Collections.sort(postForElection, (PostEntity p1, PostEntity p2) -> p1.getPostDate().compareTo(p2.getPostDate()));
+            Collections.reverse(postForElection);
+            return postForElection;
+        } else {
+            throw new NoResultException("Election does not exist.");
         }
     }
 

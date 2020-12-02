@@ -140,6 +140,7 @@ public class ElectionSessionBean implements ElectionSessionBeanLocal {
         ElectionApplicationEntity electionApplication = em.find(ElectionApplicationEntity.class, applicationId);
         
         if (electionApplication != null) {
+            electionApplication.getElection().getElectionApplications().remove(electionApplication);
             em.remove(electionApplication);
         } else {
             throw new NoResultException("User  Or Election Not Found.");
@@ -160,6 +161,7 @@ public class ElectionSessionBean implements ElectionSessionBeanLocal {
             post.setElectionApplication(electionApplication);
             em.persist(post);
             em.flush();
+            electionApplication.getElection().getElectionPosts().add(post);
         } else {
             throw new NoResultException("No Valid Endorser Or Application Found.");
         }
