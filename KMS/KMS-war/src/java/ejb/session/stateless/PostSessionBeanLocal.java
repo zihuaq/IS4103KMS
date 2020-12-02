@@ -35,6 +35,8 @@ public interface PostSessionBeanLocal {
     public List<PostEntity> getPostForProjectNewsfeed(Long projectId) throws NoResultException;
 
     public List<PostEntity> getPostForGroupNewsfeed(Long groupId) throws NoResultException;
+    
+    public List<PostEntity> getPostForElection(Long electionId) throws NoResultException;
 
     public PostEntity updatePost(PostEntity postToUpdate) throws NoResultException;
 
