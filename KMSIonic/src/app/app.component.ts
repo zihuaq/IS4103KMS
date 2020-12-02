@@ -83,7 +83,7 @@ export class AppComponent implements OnInit {
     {
       title: 'Make Tag Request',
       url: '/make-tag-request',
-      icon: 'chatbubble'
+      icon: 'pricetag'
     },
     {
       title: 'Log Out',
