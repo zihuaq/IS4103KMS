@@ -61,8 +61,7 @@ public class ElectionEntity implements Serializable {
     @OneToMany
     private List<PostEntity> electionPosts;
     
-    @JoinTable(name = "electionApplications")
-    @OneToMany
+    @OneToMany(mappedBy = "election")
     private List<ElectionApplicationEntity> electionApplications;
 
     public Long getId() {

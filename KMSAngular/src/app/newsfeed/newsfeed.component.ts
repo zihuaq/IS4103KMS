@@ -21,6 +21,9 @@ import { Group } from '../classes/group';
 import { UserType } from '../classes/user-type.enum';
 import { Notification } from 'src/app/classes/notification';
 import { NotificationService } from 'src/app/notification.service';
+import { Election } from '../classes/election';
+import { ElectionService } from '../election.service';
+import { ElectionApplication } from '../classes/election-application';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -74,6 +77,8 @@ export class NewsfeedComponent implements OnInit {
   postImageToEnlarge: Post
   UserType = UserType;
 
+  electionToApply: Election;
+
   constructor(
     private sessionService: SessionService,
     private userService: UserService,
@@ -83,6 +88,7 @@ export class NewsfeedComponent implements OnInit {
     private reportService: ReportService,
     private groupService: GroupService,
     private notificationService: NotificationService,
+    private electionService: ElectionService,
   ) { }
 
   ngOnInit(): void {
@@ -232,7 +238,7 @@ export class NewsfeedComponent implements OnInit {
     }
   }
 
-  handlePinnedPostChange(){
+  handlePinnedPostChange() {
     this.pinPost = !this.pinPost;
   }
 
@@ -742,6 +748,69 @@ export class NewsfeedComponent implements OnInit {
     this.postToEdit.originalPostDeleted = post.originalPostDeleted;
     this.postToEdit.sharedGroupId = post.sharedGroupId;
     this.postToEdit.sharedProjectId = post.sharedProjectId;
+  }
+
+  setElectionToApply(election: Election) {
+    this.electionToApply = election;
+  }
+
+  clear(electionForm: NgForm) {
+    electionForm.reset();
+  }
+
+  applyForElection(electionForm: NgForm) {
+    if (electionForm.valid) {
+      if (this.electionToApply.minRepPointsRequired <= this.loggedInUser.reputationPoints && this.loggedInUser.userType != UserType.ADMIN) {
+        let electionApplciation = new ElectionApplication();
+        electionApplciation.reasons = electionForm.value.reason;
+        electionApplciation.contributions = electionForm.value.contributions;
+        electionApplciation.additionalComments = electionForm.value.notes;
+        electionApplciation.applicationDate = new Date();
+        electionApplciation.applicationOwner = this.loggedInUser;
+        electionApplciation.election = this.electionToApply;
+
+        this.electionService.createElectionApplication(electionApplciation).subscribe(
+          (response) => {
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 2500,
+              body: 'Application Submitted!',
+            });
+          },
+          (error) => {
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: 'Error',
+              autohide: true,
+              delay: 2500,
+              body: error,
+            });
+          }
+        );
+        $('#applyElectionModalCloseBtn').click();
+      } else if (this.loggedInUser.userType == UserType.ADMIN) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Admin cannot participation in an election for new admins",
+        });
+        $('#applyElectionModalCloseBtn').click();
+      } else {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Insufficient Reputation Points",
+        });
+        $('#applyElectionModalCloseBtn').click();
+      }
+    }
+
   }
 
   editPost() {

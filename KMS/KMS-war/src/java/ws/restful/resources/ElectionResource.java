@@ -5,6 +5,7 @@
  */
 package ws.restful.resources;
 
+import Exception.DuplicateApplicationException;
 import Exception.NoResultException;
 import ejb.session.stateless.ElectionSessionBeanLocal;
 import entity.ElectionApplicationEntity;
@@ -84,6 +85,37 @@ public class ElectionResource {
             electionSessionBean.createElection(election);
             return Response.status(200).build();
         } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/updateElection")
+    public Response updatePost(ElectionEntity election) {
+        try {
+            electionSessionBean.updateElection(election);
+            return Response.status(200).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/createElectionApplication")
+    public Response createElectionApplication(ElectionApplicationEntity electionApplication) {
+        try {
+            electionSessionBean.createElectionApplication(electionApplication);
+            return Response.status(200).build();
+        } catch (NoResultException | DuplicateApplicationException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -227,6 +259,7 @@ public class ElectionResource {
                 election.setDescription(postToProcess.getOriginalPost().getElection().getDescription());
                 election.setNumSlots(postToProcess.getOriginalPost().getElection().getNumSlots());
                 election.setMinRepPointsRequired(postToProcess.getOriginalPost().getElection().getMinRepPointsRequired());
+                election.setId(postToProcess.getOriginalPost().getElection().getId());
                 originalPost.setElection(election);
             }
             post.setOriginalPost(originalPost);
@@ -248,6 +281,7 @@ public class ElectionResource {
             election.setDescription(postToProcess.getElection().getDescription());
             election.setNumSlots(postToProcess.getElection().getNumSlots());
             election.setMinRepPointsRequired(postToProcess.getElection().getMinRepPointsRequired());
+            election.setId(postToProcess.getElection().getId());
             post.setElection(election);
         }
         System.out.println(post);

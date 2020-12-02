@@ -27,6 +27,7 @@ import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.compon
 import { AdministrationComponent } from './administration/administration.component';
 import { AdminManageTagsComponent } from './admin-manage-tags/admin-manage-tags.component';
 import { AdminManageElectionsComponent } from './admin-manage-elections/admin-manage-elections.component';
+import { ViewElectionPostsComponent } from './view-election-posts/view-election-posts.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
 import { ViewAllGroupComponent } from './group/view-all-group/view-all-group.component';
 import { ViewOwnGroupComponent } from './group/view-own-group/view-own-group.component';
@@ -60,6 +61,11 @@ const routes: Routes = [
     path: 'admin-manage-elections',
     canActivate: [AdminGuard],
     component: AdminManageElectionsComponent,
+  },
+  {
+    path: 'view-election-posts',
+    canActivate: [AdminGuard],
+    component: ViewElectionPostsComponent,
   },
   {
     path: 'notifications',

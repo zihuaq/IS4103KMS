@@ -5,7 +5,9 @@
  */
 package ejb.session.stateless;
 
+import Exception.DuplicateApplicationException;
 import Exception.NoResultException;
+import entity.ElectionApplicationEntity;
 import entity.ElectionEntity;
 import javax.ejb.Local;
 
@@ -21,4 +23,9 @@ public interface ElectionSessionBeanLocal {
     public ElectionEntity getActiveElection() throws NoResultException;
 
     public void createElection(ElectionEntity election) throws NoResultException;
+    
+    public void updateElection(ElectionEntity electionToUpdate) throws NoResultException;
+    
+    public void createElectionApplication(ElectionApplicationEntity application) throws NoResultException, DuplicateApplicationException;
+    
 }

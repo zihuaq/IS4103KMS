@@ -47,13 +47,13 @@
                 <div *ngIf="hasActiveElection" class="card-body">
                     <div class="tab-content" id="custom-tabs-four-tabContent">
                         <div class="tab-pane fade show active" id="manage-applications" role="tabpanel">
-                            <app-profile-claims></app-profile-claims>
+                            <app-manage-applications></app-manage-applications>
                         </div>
                         <div class="tab-pane fade" id="view-election-posts" role="tabpanel">
-                            <app-profile-reports></app-profile-reports>
+                            <app-view-election-posts></app-view-election-posts>
                         </div>
                         <div class="tab-pane fade" id="edit-election-details" role="tabpanel">
-                            <app-project-reports></app-project-reports>
+                            <app-edit-election></app-edit-election>
                         </div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                 <div class="modal-footer justify-content-between">
                     <button type="button" id="startElectionModalCloseBtn" class="btn btn-secondary" data-dismiss="modal"
                         (click)="clear(electionForm)">Cancel</button>
-                    <button type="button" class="btn btn-success" type="submit"
+                    <button type="button" class="btn bg-olive" type="submit"
                         [disabled]="!electionForm.valid">Start</button>
                 </div>
             </form>
