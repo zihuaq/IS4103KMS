@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { Election } from '../classes/election';
 import { Post } from '../classes/post';
@@ -49,7 +49,6 @@ export class ViewElectionPostsComponent implements OnInit {
   UserType = UserType;
   activeElections: Election;
   searchString: string = "";
-
 
   constructor(private sessionService: SessionService,
     private userService: UserService,

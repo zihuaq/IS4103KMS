@@ -1,147 +1,188 @@
-<div class="container-fluid">
-    <div class=searchBar>
-        <app-searchbar [searchString]="searchString" query="posts"
-            (searchStringChanged)="handleSearchStringChanged($event)">
-        </app-searchbar>
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Election
+                    </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a routerLink="/index">Home</a></li>
+                        <li class="breadcrumb-item active">Election</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
-    <br />
-    <span *ngIf="filteredPosts && filteredPosts.length > 0">
-        <div *ngFor="let post of filteredPosts">
-            <!-- Box Comment -->
-            <div class="card card-widget">
-                <div class="card-header">
-                    <div class="user-block">
-                        <img *ngIf="post.postOwner.profilePicture" class="img-circle"
-                            [src]="post.postOwner.profilePicture" alt="User Image">
-                        <img *ngIf="!post.postOwner.profilePicture" class="img-circle"
-                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                            alt="User Image">
-                        <span class="username">
-                            <a routerLink="/userProfile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
-                                {{post.postOwner.lastName}} </a>
-                            &nbsp;
-                            <small class="badge badge-dark" *ngIf="post.isElectionPost">
-                                Election Post
-                            </small>
-                        </span>
-                        <span class="description">Endorsed by {{post.endorser.firstName}}
-                            {{post.endorser.lastName}}</span>
-                    </div>
-                    <!-- /.user-block -->
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" *ngIf="loggedInUser.userType == UserType.ADMIN"
-                            data-toggle="modal" data-target="#modal-danger-post"
-                            (click)="postToDeleteId = post.postId"><i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <!-- /.card-tools -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <label> Reasons For Applying: </label>
-                    <br />
-                    <p>{{post.electionApplication.reasons}}</p>
-                    <label> Contributions to KMS: </label>
-                    <br />
-                    <p>{{post.electionApplication.contributions}}</p>
-                    <label> Additional Comments: </label>
-                    <br />
-                    <p>{{post.electionApplication.additionalComments}}</p>
-                    <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveLikedPost(post.postId)"
-                        (click)="likePost(post.postId)"><i class="far fa-thumbs-up"></i> like </button>
-                    <button type="button" class="btn btn-default btn-sm" *ngIf="userHaveLikedPost(post.postId)"
-                        (click)="removeLikeForPost(post.postId)"><i class="fas fa-thumbs-up"></i> liked </button>
-                    <button type="button" *ngIf="!userHaveSharedPost(post.postId)" class="btn btn-default btn-sm"
-                        data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
-                        <i class="fas fa-share"></i> share
-                    </button>
-                    <button type="button" *ngIf="userHaveSharedPost(post.postId)" class="btn btn-default btn-sm"
-                        data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
-                        <i class="fas fa-share"></i> shared </button>
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal"
-                        data-target="#report-post-modal" (click)="setPostToReport(post.postId)"
-                        *ngIf="loggedInUser.userId != post.postOwner.userId">
-                        <i class="fas fa-flag"></i> report </button>
-                    <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}
-                        comments - {{post.sharedPosts.length}} shares</span>
-                </div>
-                <div *ngIf="post.comments && post.comments.length >0" class="card-footer card-comments">
-                    <div class="card-comment" *ngFor="let comment of post.comments">
-                        <!-- User image -->
-                        <img class="img-circle img-sm" *ngIf="!comment.commentOwner.profilePicture"
-                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                            alt="User Image">
-                        <img class="img-circle img-sm" *ngIf="comment.commentOwner.profilePicture"
-                            [src]="comment.commentOwner.profilePicture" alt="User Image">
-                        <div class="comment-text">
-                            <span class="username">
-                                {{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}
-                                <button type="button" class="btn btn-tool float-right"
-                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId || loggedInUser.userType == UserType.ADMIN"
-                                    data-toggle="modal" data-target="#modal-danger"
-                                    (click)="commentToDeleteId = comment.postCommentId">
-                                    <i class="fas fa-times fa-sm"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool float-right"
-                                    (click)="setEditingComment(post.postId, comment.postCommentId)"
-                                    *ngIf="loggedInUser.userId == comment.commentOwner.userId">
-                                    <i class="fas fa-edit fa-sm"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool float-right"
-                                    (click)="setCommentToReport(post.postId, comment.postCommentId)" data-toggle="modal"
-                                    data-target="#report-comment-modal"
-                                    *ngIf="loggedInUser.userId != comment.commentOwner.userId">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                </button>
-                                <span class="text-muted float-right"> {{comment.dateTime | date}} </span>
-                            </span><!-- /.username -->
-                            <span class="text-muted float-right"
-                                *ngIf="!userHaveLikedComment(post.postId, comment.postCommentId)">
-                                <button type="button" (click)="likeComment(comment.postCommentId)">
-                                    <i class="far fa-thumbs-up fa-lg"></i> like
-                                </button>
-                                - {{comment.likers.length}} likes
-                            </span>
-                            <span class="text-muted float-right"
-                                *ngIf="userHaveLikedComment(post.postId, comment.postCommentId)">
-                                <button type="button" (click)="removeLikeForComment(comment.postCommentId)">
-                                    <i class="fas fa-thumbs-up fa-lg"></i> liked
-                                </button>
-                                - {{comment.likers.length}} likes
-                            </span>
-                            <div *ngIf="!editingComment || editingComment.postCommentId != comment.postCommentId">
-                                {{comment.comment}} </div>
-                            <input *ngIf="editingComment && editingComment.postCommentId == comment.postCommentId"
-                                [(ngModel)]="editingComment.comment" (keyup.enter)="updateComment()">
-                            <small *ngIf="editingComment && editingComment.postCommentId == comment.postCommentId">
-                                Press enter to save </small>
-                        </div>
-                        <!-- /.comment-text -->
-                    </div>
-                    <!-- /.card-comment -->
-                </div>
-                <div class="card-footer">
-                    <img class="img-fluid img-circle img-sm" *ngIf="loggedInUser.profilePicture"
-                        [src]="loggedInUser.profilePicture" alt="Alt Text">
-                    <img class="img-fluid img-circle img-sm" *ngIf="!loggedInUser.profilePicture"
-                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                        alt="Alt Text">
-                    <!-- .img-push is used to add margin to elements next to floating images -->
-                    <div class="img-push">
-                        <input type="text" class="form-control form-control-sm" #box
-                            placeholder="Press enter to post comment"
-                            (keyup.enter)="addComment(box.value, post.postId)">
-                    </div>
-                </div>
+    <div class="container-fluid">
+        <div class="info-box bg-light">
+            <div class="info-box-content">
+                <span style="display: flex; flex-direction: row;">
+                    <label style="align-self: center;">{{activeElections.name}} </label>
+                    <button type="button" class="btn btn-block bg-olive btn-sm" data-toggle="modal"
+                    data-target="#apply-for-election-modal" style="margin:1%; width: 20%;">
+                    Apply Now
+                </button>
+                </span>
+                <span class="info-box-text text-muted">{{activeElections.description}}</span>
+                <span class="info-box-text text-muted">Looking for {{activeElections.numSlots}} new admins</span>
+                <span class="info-box-text text-muted">{{activeElections.minRepPointsRequired}} reputation points
+                    required to apply</span>
+                <br />
+                <span class="info-box-number text-muted mb-0">Vote for your favourite candidates by liking their
+                    post!</span>
             </div>
-            <!-- /.card -->
         </div>
-        <!-- /.col -->
-    </span>
-    <span *ngIf="filteredPosts && filteredPosts.length == 0">
-        No posts yet.
-    </span>
+        <div class=searchBar>
+            <app-searchbar [searchString]="searchString" query="posts"
+                (searchStringChanged)="handleSearchStringChanged($event)">
+            </app-searchbar>
+        </div>
+        <br />
+        <span *ngIf="filteredPosts && filteredPosts.length > 0">
+            <div *ngFor="let post of filteredPosts">
+                <!-- Box Comment -->
+                <div class="card card-widget">
+                    <div class="card-header">
+                        <div class="user-block">
+                            <img *ngIf="post.postOwner.profilePicture" class="img-circle"
+                                [src]="post.postOwner.profilePicture" alt="User Image">
+                            <img *ngIf="!post.postOwner.profilePicture" class="img-circle"
+                                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                alt="User Image">
+                            <span class="username">
+                                <a routerLink="/userProfile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
+                                    {{post.postOwner.lastName}} </a>
+                                &nbsp;
+                                <small class="badge badge-dark" *ngIf="post.isElectionPost">
+                                    Election Post
+                                </small>
+                            </span>
+                            <span class="description">Endorsed by {{post.endorser.firstName}}
+                                {{post.endorser.lastName}}</span>
+                        </div>
+                        <!-- /.user-block -->
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" *ngIf="loggedInUser.userType == UserType.ADMIN"
+                                data-toggle="modal" data-target="#modal-danger-post"
+                                (click)="postToDeleteId = post.postId"><i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <!-- /.card-tools -->
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <label> Reasons For Applying: </label>
+                        <br />
+                        <p>{{post.electionApplication.reasons}}</p>
+                        <label> Contributions to KMS: </label>
+                        <br />
+                        <p>{{post.electionApplication.contributions}}</p>
+                        <label> Additional Comments: </label>
+                        <br />
+                        <p>{{post.electionApplication.additionalComments}}</p>
+                        <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveLikedPost(post.postId)"
+                            (click)="likePost(post.postId)"><i class="far fa-thumbs-up"></i> like </button>
+                        <button type="button" class="btn btn-default btn-sm" *ngIf="userHaveLikedPost(post.postId)"
+                            (click)="removeLikeForPost(post.postId)"><i class="fas fa-thumbs-up"></i> liked </button>
+                        <button type="button" *ngIf="!userHaveSharedPost(post.postId)" class="btn btn-default btn-sm"
+                            data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
+                            <i class="fas fa-share"></i> share
+                        </button>
+                        <button type="button" *ngIf="userHaveSharedPost(post.postId)" class="btn btn-default btn-sm"
+                            data-toggle="modal" data-target="#modal-secondary" (click)="setPostToShare(post.postId)">
+                            <i class="fas fa-share"></i> shared </button>
+                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal"
+                            data-target="#report-post-modal" (click)="setPostToReport(post.postId)"
+                            *ngIf="loggedInUser.userId != post.postOwner.userId">
+                            <i class="fas fa-flag"></i> report </button>
+                        <span class="float-right text-muted">{{post.likers.length}} likes - {{post.comments.length}}
+                            comments - {{post.sharedPosts.length}} shares</span>
+                    </div>
+                    <div *ngIf="post.comments && post.comments.length >0" class="card-footer card-comments">
+                        <div class="card-comment" *ngFor="let comment of post.comments">
+                            <!-- User image -->
+                            <img class="img-circle img-sm" *ngIf="!comment.commentOwner.profilePicture"
+                                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                alt="User Image">
+                            <img class="img-circle img-sm" *ngIf="comment.commentOwner.profilePicture"
+                                [src]="comment.commentOwner.profilePicture" alt="User Image">
+                            <div class="comment-text">
+                                <span class="username">
+                                    {{comment.commentOwner.firstName}} {{comment.commentOwner.lastName}}
+                                    <button type="button" class="btn btn-tool float-right"
+                                        *ngIf="loggedInUser.userId == comment.commentOwner.userId || loggedInUser.userType == UserType.ADMIN"
+                                        data-toggle="modal" data-target="#modal-danger"
+                                        (click)="commentToDeleteId = comment.postCommentId">
+                                        <i class="fas fa-times fa-sm"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool float-right"
+                                        (click)="setEditingComment(post.postId, comment.postCommentId)"
+                                        *ngIf="loggedInUser.userId == comment.commentOwner.userId">
+                                        <i class="fas fa-edit fa-sm"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool float-right"
+                                        (click)="setCommentToReport(post.postId, comment.postCommentId)"
+                                        data-toggle="modal" data-target="#report-comment-modal"
+                                        *ngIf="loggedInUser.userId != comment.commentOwner.userId">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </button>
+                                    <span class="text-muted float-right"> {{comment.dateTime | date}} </span>
+                                </span><!-- /.username -->
+                                <span class="text-muted float-right"
+                                    *ngIf="!userHaveLikedComment(post.postId, comment.postCommentId)">
+                                    <button type="button" (click)="likeComment(comment.postCommentId)">
+                                        <i class="far fa-thumbs-up fa-lg"></i> like
+                                    </button>
+                                    - {{comment.likers.length}} likes
+                                </span>
+                                <span class="text-muted float-right"
+                                    *ngIf="userHaveLikedComment(post.postId, comment.postCommentId)">
+                                    <button type="button" (click)="removeLikeForComment(comment.postCommentId)">
+                                        <i class="fas fa-thumbs-up fa-lg"></i> liked
+                                    </button>
+                                    - {{comment.likers.length}} likes
+                                </span>
+                                <div *ngIf="!editingComment || editingComment.postCommentId != comment.postCommentId">
+                                    {{comment.comment}} </div>
+                                <input *ngIf="editingComment && editingComment.postCommentId == comment.postCommentId"
+                                    [(ngModel)]="editingComment.comment" (keyup.enter)="updateComment()">
+                                <small *ngIf="editingComment && editingComment.postCommentId == comment.postCommentId">
+                                    Press enter to save </small>
+                            </div>
+                            <!-- /.comment-text -->
+                        </div>
+                        <!-- /.card-comment -->
+                    </div>
+                    <div class="card-footer">
+                        <img class="img-fluid img-circle img-sm" *ngIf="loggedInUser.profilePicture"
+                            [src]="loggedInUser.profilePicture" alt="Alt Text">
+                        <img class="img-fluid img-circle img-sm" *ngIf="!loggedInUser.profilePicture"
+                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                            alt="Alt Text">
+                        <!-- .img-push is used to add margin to elements next to floating images -->
+                        <div class="img-push">
+                            <input type="text" class="form-control form-control-sm" #box
+                                placeholder="Press enter to post comment"
+                                (keyup.enter)="addComment(box.value, post.postId)">
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </span>
+        <span *ngIf="filteredPosts && filteredPosts.length == 0">
+            No posts yet.
+        </span>
+    </div>
 </div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer>
 
 <div class="modal fade" id="modal-danger">
     <div class="modal-dialog">

@@ -7,6 +7,7 @@ import { NgForm } from '@angular/forms';
 import { TagType } from '../classes/tag-type.enum';
 import { TagService } from '../tag.service';
 import { TagRequest } from '../classes/tag-request';
+import { ElectionService } from '../election.service';
 
 declare var $: any;
 
@@ -18,16 +19,22 @@ declare var $: any;
 export class SideNavbarComponent implements OnInit {
   loggedInUser: User;
   TagType = TagType;
+  hasActiveElection: boolean;
 
   constructor(
     private userService: UserService,
     private sessionService: SessionService,
-    public tagService: TagService
+    public tagService: TagService,
+    private electionService: ElectionService
   ) {
   }
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
+    this.electionService.getHasActiveElection().subscribe(
+      (result) => {
+        this.hasActiveElection = result;
+      });
   }
 
   logout() {
