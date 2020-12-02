@@ -7,6 +7,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Election } from './classes/election';
+import { ElectionApplication } from './classes/election-application';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -35,6 +36,12 @@ export class ElectionService {
     createElection(election: Election) {
         return this.http
             .post<any>(this.baseUrl + '/createElection', election, httpOptions)
+            .pipe(catchError(this.handleError));
+    }
+
+    createElectionApplication(electionApplication: ElectionApplication) {
+        return this.http
+            .post<any>(this.baseUrl + '/createElectionApplication', electionApplication, httpOptions)
             .pipe(catchError(this.handleError));
     }
 

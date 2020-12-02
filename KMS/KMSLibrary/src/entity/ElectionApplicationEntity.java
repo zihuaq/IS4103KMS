@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,6 +34,8 @@ public class ElectionApplicationEntity implements Serializable {
     private String reasons;
 
     private String contributions;
+    
+    private String additionalComments;
 
     @Temporal(TemporalType.DATE)
     private Date applicationDate;
@@ -40,6 +44,11 @@ public class ElectionApplicationEntity implements Serializable {
     @JoinColumn(nullable = false)
     @OneToOne
     private UserEntity applicationOwner;
+    
+    @NotNull
+    @JoinTable(name = "applications")
+    @ManyToOne
+    private ElectionEntity election;
 
     public Long getId() {
         return id;
@@ -104,5 +113,21 @@ public class ElectionApplicationEntity implements Serializable {
 
     public void setApplicationOwner(UserEntity applicationOwner) {
         this.applicationOwner = applicationOwner;
+    }
+
+    public String getAdditionalComments() {
+        return additionalComments;
+    }
+
+    public void setAdditionalComments(String additionalComments) {
+        this.additionalComments = additionalComments;
+    }
+
+    public ElectionEntity getElection() {
+        return election;
+    }
+
+    public void setElection(ElectionEntity election) {
+        this.election = election;
     }
 }

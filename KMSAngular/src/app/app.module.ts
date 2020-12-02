@@ -117,6 +117,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { UploadProfilesComponent } from './administration/upload-profiles/upload-profiles.component';
 import { AdminManageTagsComponent } from './admin-manage-tags/admin-manage-tags.component';
 import { AdminManageElectionsComponent } from './admin-manage-elections/admin-manage-elections.component';
+import { EditElectionComponent } from './admin-manage-elections/edit-election/edit-election.component';
+import { ManageApplicationsComponent } from './admin-manage-elections/manage-applications/manage-applications.component';
+import { ViewElectionPostsComponent } from './view-election-posts/view-election-posts.component';
 
 export const environment = {
   production: false,
@@ -231,7 +234,10 @@ export const environment = {
     HandleTagRequestsComponent,
     UploadProfilesComponent,
     AdminManageTagsComponent,
-    AdminManageElectionsComponent
+    AdminManageElectionsComponent,
+    EditElectionComponent,
+    ManageApplicationsComponent,
+    ViewElectionPostsComponent
   ],
   imports: [
     BrowserModule,

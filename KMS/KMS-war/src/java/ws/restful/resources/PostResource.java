@@ -560,6 +560,7 @@ public class PostResource {
                 election.setDescription(postToProcess.getOriginalPost().getElection().getDescription());
                 election.setNumSlots(postToProcess.getOriginalPost().getElection().getNumSlots());
                 election.setMinRepPointsRequired(postToProcess.getOriginalPost().getElection().getMinRepPointsRequired());
+                election.setId(postToProcess.getOriginalPost().getElection().getId());
                 originalPost.setElection(election);
             }
             post.setOriginalPost(originalPost);
@@ -581,6 +582,7 @@ public class PostResource {
             election.setDescription(postToProcess.getElection().getDescription());
             election.setNumSlots(postToProcess.getElection().getNumSlots());
             election.setMinRepPointsRequired(postToProcess.getElection().getMinRepPointsRequired());
+            election.setId(postToProcess.getElection().getId());
             post.setElection(election);
         }
         System.out.println(post);
