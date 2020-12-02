@@ -38,13 +38,11 @@ public interface ActivitySessionBeanLocal {
 
     public void removeHrpFromActivity(Long activityId, Long hrpId) throws NoResultException;
 
-    public List<MaterialResourcePostingEntity> getAllocatedResources(Long activityId) throws NoResultException;
+    public List<MaterialResourcePostingEntity> getAllocatedMrps(Long activityId) throws NoResultException;
 
-    public void allocateResource(Long activityId, Long mrpId, Double quantity) throws NoResultException;
+    public void allocateMrpToActivity(Long activityId, Long mrpId) throws NoResultException;
 
-    public void updateAllocateQuantity(Long activityId, Long mrpId, Double newQuantity) throws NoResultException;
-
-    public void removeAllocation(Long activityId, Long mrpId) throws NoResultException;
+    public void removeMrpFromActivity(Long activityId, Long mrpId) throws NoResultException;
 
     public List<ReviewEntity> getToUserWrittenReviewsForCurrentActivity(Long userId, Long activityId);
 

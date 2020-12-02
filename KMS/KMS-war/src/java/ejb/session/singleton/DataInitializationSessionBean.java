@@ -337,30 +337,30 @@ public class DataInitializationSessionBean {
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 9:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
 
-            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Information Session on Children in Sri Lanka", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.ONGOING), 4l);
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Information Session on Children in Sri Lanka", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.COMPLETED), 4l);
             activitySessionBeanLocal.addMemberToActivity(1l, 2l);
             activitySessionBeanLocal.addMemberToActivity(1l, 3l);
 
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 10:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 15:00");
 
-            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Lesson on Turtle Conversation", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 4l);
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Lesson on Turtle Conversation", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.COMPLETED), 4l);
             activitySessionBeanLocal.addMemberToActivity(2l, 1l);
             activitySessionBeanLocal.addMemberToActivity(2l, 3l);
 
-            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 10:00");
-            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 12:00");
+            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-15 10:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-15 18:00");
 
-            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Meeting", startDate, endDate, 1.4491, 103.8185, "Meeting to discuss about budget", ActivityStatusEnum.COMPLETED), 4l);
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Meeting", startDate, endDate, 1.4491, 103.8185, "Meeting to discuss about budget", ActivityStatusEnum.PLANNED), 4l);
             activitySessionBeanLocal.addMemberToActivity(3l, 1l);
             activitySessionBeanLocal.addMemberToActivity(3l, 2l);
             activitySessionBeanLocal.addMemberToActivity(3l, 3l);
             activitySessionBeanLocal.addMemberToActivity(3l, 8l);
 
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-11 8:00");
-            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-30 18:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-11 18:00");
 
-            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Volunteer", startDate, endDate, 7.8731, 80.7718, "Volunteering in Sri Lanka", ActivityStatusEnum.PLANNED), 4l);
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Volunteer", startDate, endDate, 7.8731, 80.7718, "Volunteering in Sri Lanka", ActivityStatusEnum.ONGOING), 4l);
             activitySessionBeanLocal.addMemberToActivity(4l, 1l);
             activitySessionBeanLocal.addMemberToActivity(4l, 4l);
             activitySessionBeanLocal.addMemberToActivity(4l, 7l);
