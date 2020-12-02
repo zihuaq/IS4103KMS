@@ -1,1 +1,87 @@
-<p>manage-applications works!</p>
+<h4> Election Applications </h4>
+
+<div *ngIf="electionApplications && electionApplications.length == 0">
+    No Applications
+</div>
+
+<span *ngIf="electionApplications && electionApplications.length > 0">
+    <div *ngFor="let application of electionApplications">
+        <div class="list-group-item clearfix">
+            <span class="pull-left">
+                <img *ngIf="application.applicationOwner.profilePicture"
+                    src="application.applicationOwner.profilePicture" alt="" class="img-responsive"
+                    style="max-height: 20px;">
+                <img *ngIf="!application.applicationOwner.profilePicture"
+                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt=""
+                    class="img-responsive" style="max-height: 20px;">
+                <a routerLink="/userProfile/{{application.applicationOwner.userId}}">
+                    {{application.applicationOwner.firstName}} {{application.applicationOwner.lastName}}
+                </a>
+                's Application
+            </span>
+            <hr />
+            <div>
+                <p class="list-group-item-text" style="font-size: medium;">
+                    Reasons For Applying: {{application.reasons}}
+                </p>
+            </div>
+            <div>
+                <p class="list-group-item-text" style="font-size: medium;">
+                    Contributions to KMS Community: {{application.contributions}}
+                </p>
+            </div>
+            <div>
+                <p class="list-group-item-text" style="font-size: medium;">
+                    Additional Comments: {{application.additionalComments}}
+                </p>
+            </div>
+            <hr>
+            <button type="button" style="float: left;" class="btn btn-danger btn-sm" data-toggle="modal"
+                data-target="#modal-reject-application" (click)="setApplicationToHandle(application)">Reject</button>
+            <button type="button" style="float: right;" class="btn bg-olive btn-sm" data-toggle="modal"
+                data-target="#modal-accept-application" (click)="setApplicationToHandle(application)">Endorse</button>
+        </div>
+    </div>
+</span>
+
+<div class="modal fade" id="modal-reject-application">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Do you want to reject this application?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" (click)="onRejectApplication()"
+                    data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="modal-accept-application">
+    <div class="modal-dialog">
+        <div class="modal-content bg-olive">
+            <div class="modal-header">
+                <h4 class="modal-title">Do you want to endorse this application?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" (click)="onEndorseApplication()"
+                    data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

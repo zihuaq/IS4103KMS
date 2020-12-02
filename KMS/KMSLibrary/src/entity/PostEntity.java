@@ -89,6 +89,9 @@ public class PostEntity implements Serializable {
 
     @OneToOne
     private ElectionEntity election;
+    
+    @OneToOne
+    private ElectionApplicationEntity electionApplication;
 
     @ManyToOne
     private UserEntity endorser;
@@ -304,5 +307,13 @@ public class PostEntity implements Serializable {
 
     public void setElection(ElectionEntity election) {
         this.election = election;
+    }
+
+    public ElectionApplicationEntity getElectionApplication() {
+        return electionApplication;
+    }
+
+    public void setElectionApplication(ElectionApplicationEntity electionApplication) {
+        this.electionApplication = electionApplication;
     }
 }

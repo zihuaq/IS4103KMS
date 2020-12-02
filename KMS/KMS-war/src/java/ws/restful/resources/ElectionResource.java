@@ -26,11 +26,13 @@ import javax.naming.NamingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -95,10 +97,40 @@ public class ElectionResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/updateElection")
-    public Response updatePost(ElectionEntity election) {
+    public Response updateElection(ElectionEntity election) {
         try {
             electionSessionBean.updateElection(election);
             return Response.status(200).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/endElection")
+    public Response endPost(ElectionEntity election) {
+        try {
+            electionSessionBean.endElection(election);
+            return Response.status(200).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getElectionApplication/{electionId}")
+    public Response getElectionApplicationsForElection(@PathParam("electionId") Long electionId) {
+        try {
+            List<ElectionApplicationEntity> applications = processElectionApplicationEntities(electionSessionBean.getElectionApplicationsForElection(electionId));
+            return Response.status(200).entity(applications).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -116,6 +148,37 @@ public class ElectionResource {
             electionSessionBean.createElectionApplication(electionApplication);
             return Response.status(200).build();
         } catch (NoResultException | DuplicateApplicationException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/rejectElectionApplication/{electionApplicationId}")
+    public Response rejectElectionApplication(@PathParam("electionApplicationId") Long electionApplicationId) {
+        try {
+            electionSessionBean.rejectElectionApplication(electionApplicationId);
+            return Response.status(200).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/endorseElectionApplication/{applicationId}/{endorserId}")
+    public Response endorseElectionApplication(@PathParam("applicationId") Long applicationId, @PathParam("endorserId") Long endorserId) {
+        try {
+            electionSessionBean.endorseElectionApplication(applicationId, endorserId);
+            return Response.status(200).build();
+        } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();
@@ -203,6 +266,7 @@ public class ElectionResource {
         user.setFirstName(postToProcess.getPostOwner().getFirstName());
         user.setLastName(postToProcess.getPostOwner().getLastName());
         user.setProfilePicture(postToProcess.getPostOwner().getProfilePicture());
+        user.setReputationPoints(postToProcess.getPostOwner().getReputationPoints());
         post.setPostOwner(user);
         List<UserEntity> likers = new ArrayList<UserEntity>();
         for (int j = 0; j < postToProcess.getLikers().size(); j++) {
@@ -261,6 +325,20 @@ public class ElectionResource {
                 election.setMinRepPointsRequired(postToProcess.getOriginalPost().getElection().getMinRepPointsRequired());
                 election.setId(postToProcess.getOriginalPost().getElection().getId());
                 originalPost.setElection(election);
+            } else if (postToProcess.getOriginalPost().getElectionApplication() != null) {
+                ElectionApplicationEntity application = new ElectionApplicationEntity();
+                application.setId(postToProcess.getOriginalPost().getElectionApplication().getId());
+                application.setReasons(postToProcess.getOriginalPost().getElectionApplication().getReasons());
+                application.setContributions(postToProcess.getOriginalPost().getElectionApplication().getContributions());
+                application.setAdditionalComments(postToProcess.getOriginalPost().getElectionApplication().getAdditionalComments());
+                originalPost.setElectionApplication(application);
+            }
+            if (post.getOriginalPost().getEndorser() != null) {
+                UserEntity endorser = new UserEntity();
+                endorser.setUserId(postToProcess.getOriginalPost().getEndorser().getUserId());
+                endorser.setFirstName(postToProcess.getOriginalPost().getEndorser().getFirstName());
+                endorser.setLastName(postToProcess.getOriginalPost().getEndorser().getLastName());
+                originalPost.setEndorser(endorser);
             }
             post.setOriginalPost(originalPost);
         }
@@ -283,6 +361,21 @@ public class ElectionResource {
             election.setMinRepPointsRequired(postToProcess.getElection().getMinRepPointsRequired());
             election.setId(postToProcess.getElection().getId());
             post.setElection(election);
+        } else if (postToProcess.getElectionApplication() != null) {
+            ElectionApplicationEntity application = new ElectionApplicationEntity();
+            application.setId(postToProcess.getElectionApplication().getId());
+            application.setReasons(postToProcess.getElectionApplication().getReasons());
+            application.setContributions(postToProcess.getElectionApplication().getContributions());
+            application.setAdditionalComments(postToProcess.getElectionApplication().getAdditionalComments());
+            post.setElectionApplication(application);
+        }
+
+        if (post.getEndorser() != null) {
+            UserEntity endorser = new UserEntity();
+            endorser.setUserId(postToProcess.getEndorser().getUserId());
+            endorser.setFirstName(postToProcess.getEndorser().getFirstName());
+            endorser.setLastName(postToProcess.getEndorser().getLastName());
+            post.setEndorser(endorser);
         }
         System.out.println(post);
         System.out.println(postToProcess);

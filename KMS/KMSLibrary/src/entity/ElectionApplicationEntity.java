@@ -50,6 +50,8 @@ public class ElectionApplicationEntity implements Serializable {
     @ManyToOne
     private ElectionEntity election;
 
+    private boolean isEndorsed;
+            
     public Long getId() {
         return id;
     }
@@ -129,5 +131,13 @@ public class ElectionApplicationEntity implements Serializable {
 
     public void setElection(ElectionEntity election) {
         this.election = election;
+    }
+
+    public boolean isIsEndorsed() {
+        return isEndorsed;
+    }
+
+    public void setIsEndorsed(boolean isEndorsed) {
+        this.isEndorsed = isEndorsed;
     }
 }
