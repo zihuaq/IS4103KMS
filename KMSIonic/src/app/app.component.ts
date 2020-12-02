@@ -41,6 +41,11 @@ export class AppComponent implements OnInit {
       icon: 'search'
     },
     {
+      title: 'Recommendations',
+      url: '/view-recommendations',
+      icon: 'star'
+    },
+    {
       title: 'Notifications',
       url: '/notifications',
       icon: 'notifications'
