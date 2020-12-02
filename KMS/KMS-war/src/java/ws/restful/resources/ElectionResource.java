@@ -31,6 +31,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -114,6 +115,21 @@ public class ElectionResource {
         try {
             electionSessionBean.endElection(election);
             return Response.status(200).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getElectionApplication/{electionId}")
+    public Response getElectionApplicationsForElection(@PathParam("electionId") Long electionId) {
+        try {
+            List<ElectionApplicationEntity> applications = processElectionApplicationEntities(electionSessionBean.getElectionApplicationsForElection(electionId));
+            return Response.status(200).entity(applications).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())

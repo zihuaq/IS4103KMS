@@ -97,6 +97,17 @@ public class ElectionSessionBean implements ElectionSessionBeanLocal {
     }
 
     @Override
+    public List<ElectionApplicationEntity> getElectionApplicationsForElection(Long electionId) throws NoResultException {
+        ElectionEntity election = em.find(ElectionEntity.class, electionId);
+
+        if (election != null) {
+            return election.getElectionApplications();
+        } else {
+            throw new NoResultException("Election Not Found.");
+        }
+    }
+
+    @Override
     public void createElectionApplication(ElectionApplicationEntity application) throws NoResultException, DuplicateApplicationException {
         UserEntity user = em.find(UserEntity.class, application.getApplicationOwner().getUserId());
         ElectionEntity election = em.find(ElectionEntity.class, application.getElection().getId());

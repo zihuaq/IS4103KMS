@@ -51,6 +51,12 @@ export class ElectionService {
             .pipe(catchError(this.handleError));
     }
 
+    getElectionApplicationsForElection(electionId: number) {
+        return this.http
+            .get<any>(this.baseUrl + '/getElectionApplication/' + electionId)
+            .pipe(catchError(this.handleError));
+    }
+
     createElectionApplication(electionApplication: ElectionApplication) {
         return this.http
             .post<any>(this.baseUrl + '/createElectionApplication', electionApplication, httpOptions)

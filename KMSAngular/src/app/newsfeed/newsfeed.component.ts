@@ -760,7 +760,7 @@ export class NewsfeedComponent implements OnInit {
 
   applyForElection(electionForm: NgForm) {
     if (electionForm.valid) {
-      if (this.electionToApply.minRepPointsRequired <= this.loggedInUser.reputationPoints && this.loggedInUser.userType != UserType.ADMIN) {
+      if (this.electionToApply.minRepPointsRequired <= this.loggedInUser.reputationPoints && this.loggedInUser.userType == UserType.INDIVIDUAL) {
         let electionApplciation = new ElectionApplication();
         electionApplciation.reasons = electionForm.value.reason;
         electionApplciation.contributions = electionForm.value.contributions;
@@ -802,6 +802,16 @@ export class NewsfeedComponent implements OnInit {
           autohide: true,
           delay: 2500,
           body: "Admin cannot participation in an election for new admins",
+        });
+        electionForm.reset();
+        $('#applyElectionModalCloseBtn').click();
+      } else if (this.loggedInUser.userType == UserType.INSTITUTE) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Institute Accounts cannot participation in an election for new admins",
         });
         electionForm.reset();
         $('#applyElectionModalCloseBtn').click();
