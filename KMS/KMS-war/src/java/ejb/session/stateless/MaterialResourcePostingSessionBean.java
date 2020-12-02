@@ -12,7 +12,6 @@ import entity.ProjectEntity;
 import entity.TagEntity;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -51,7 +50,6 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
         
         newMrp.setLackingQuantity(newMrp.getTotalQuantity());
         newMrp.setObtainedQuantity(0.0);
-        newMrp.setAllocatedQuantity(0.0);
         
         em.persist(newMrp);
         em.flush();
@@ -106,7 +104,7 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(sdf.format(mrp.getStartDate()));
         
-        if (mrp.getLackingQuantity() == 0.0 || today.isAfter(startDate)) {
+        if (mrp.getLackingQuantity() == 0.0 || !today.isBefore(startDate)) {
             mrp.setStatus(MrpStatusEnum.CLOSED);
         } else {
             mrp.setStatus(MrpStatusEnum.OPEN);
@@ -116,12 +114,9 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
     @Override
     public void deleteMaterialResourcePosting(Long mrpId) throws NoResultException {
         MaterialResourcePostingEntity mrp = getMrpById(mrpId);
-        if (!mrp.getActivities().isEmpty()) {
-            for (ActivityEntity activity: mrp.getActivities()) {
-                activity.getMaterialResourcePostings().remove(mrp);
-                activity.getAllocatedQuantities().remove(mrpId);
-            }
-            mrp.getActivities().clear();
+        if (mrp.getActivity() != null) {
+            mrp.getActivity().getMaterialResourcePostings().remove(mrp);
+            mrp.setActivity(null);
         }
         if (mrp.getProject() != null) {
             mrp.getProject().getMaterialResourcePostings().remove(mrp);
@@ -131,39 +126,15 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
     }
     
     @Override
-    public List<MaterialResourcePostingEntity> getListOfObtainedMrp(Long projectId, Long activityId) throws NoResultException {
+    public List<MaterialResourcePostingEntity> getListOfAvailableMrp(Long projectId, Long activityId) throws NoResultException {
         
         ActivityEntity activity = activitySessionBeanLocal.getActivityById(activityId);
 
-        Query query = em.createQuery("SELECT mrp FROM MaterialResourcePostingEntity mrp WHERE mrp.project.projectId = :inProjectId AND mrp.obtainedQuantity > 0.0 AND mrp.startDate <= :inStartDate AND mrp.endDate >= :inEndDate");
+        Query query = em.createQuery("SELECT mrp FROM MaterialResourcePostingEntity mrp WHERE mrp.project.projectId = :inProjectId AND mrp.startDate <= :inStartDate AND (mrp.endDate >= :inEndDate OR mrp.endDate IS NULL) AND mrp.activity IS NULL");
         query.setParameter("inProjectId", projectId);
         query.setParameter("inStartDate", activity.getStartDate());
         query.setParameter("inEndDate", activity.getEndDate());
-
-        List<MaterialResourcePostingEntity> mrpList = query.getResultList();
-        List<MaterialResourcePostingEntity> availableMrpList = new ArrayList<>();
-        for (MaterialResourcePostingEntity mrp: mrpList) {
-            if (!mrp.getActivities().contains(activity)) {
-                availableMrpList.add(mrp);
-            }
-        }
-        return availableMrpList;
-    }
-    
-    @Override
-    public void updateMrpStatus() {
-        Query query = em.createQuery("SELECT mrp FROM MaterialResourcePostingEntity mrp WHERE mrp.status = :inStatus");
-        query.setParameter("inStatus", MrpStatusEnum.OPEN);
         
-        List<MaterialResourcePostingEntity> mrpList = query.getResultList();
-        for (MaterialResourcePostingEntity mrp: mrpList) {
-            LocalDate today = LocalDate.now();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            LocalDate startDate = LocalDate.parse(sdf.format(mrp.getStartDate()));
-            
-            if (today.isAfter(startDate)) {
-                mrp.setStatus(MrpStatusEnum.CLOSED);
-            }
-        }
+        return query.getResultList();
     }
 }

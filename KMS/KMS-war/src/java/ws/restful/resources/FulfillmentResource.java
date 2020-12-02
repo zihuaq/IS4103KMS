@@ -10,7 +10,6 @@ import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import entity.FulfillmentEntity;
 import entity.PaymentEntity;
 import entity.UserEntity;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -262,7 +261,7 @@ public class FulfillmentResource {
             for (FulfillmentEntity fulfillment : fulfillmentList) {
                 fulfillment.setFulfillmentOwner(null);
                 fulfillment.getPosting().setProject(null);
-                fulfillment.getPosting().setActivities(new ArrayList<>());
+                fulfillment.getPosting().setActivity(null);
                 fulfillment.getPosting().getFulfillments().clear();
                 fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }
@@ -287,7 +286,7 @@ public class FulfillmentResource {
             for (FulfillmentEntity fulfillment : fulfillmentList) {
                 fulfillment.setFulfillmentOwner(null);
                 fulfillment.getPosting().setProject(null);
-                fulfillment.getPosting().setActivities(new ArrayList<>());
+                fulfillment.getPosting().setActivity(null);
                 fulfillment.getPosting().getFulfillments().clear();
                 fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }

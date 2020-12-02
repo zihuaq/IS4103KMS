@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -50,15 +49,11 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Column(nullable=false)
     private Double totalQuantity;
     
-    private Double obtainedQuantity;
+    private Double obtainedQuantity; //for one-time
     
     @NotNull
     @Column(nullable=false)
     private Double lackingQuantity;
-    
-    @NotNull
-    @Column(nullable=false)
-    private Double allocatedQuantity;
     
     private String description;
     
@@ -83,9 +78,8 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private MrpStatusEnum status;
     
-    @JoinTable(name = "allocatedMrps")
-    @ManyToMany
-    private List<ActivityEntity> activities;
+    @ManyToOne
+    private ActivityEntity activity;
     
     @ManyToOne
     @JoinColumn
@@ -99,7 +93,6 @@ public class MaterialResourcePostingEntity implements Serializable {
 
     public MaterialResourcePostingEntity() {
         this.tags = new ArrayList<>();
-        this.activities = new ArrayList<>();
         this.fulfillments = new ArrayList<>();
         this.status = MrpStatusEnum.OPEN;
     }
@@ -183,14 +176,6 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.lackingQuantity = lackingQuantity;
     }
 
-    public Double getAllocatedQuantity() {
-        return allocatedQuantity;
-    }
-
-    public void setAllocatedQuantity(Double allocatedQuantity) {
-        this.allocatedQuantity = allocatedQuantity;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -231,12 +216,12 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.longitude = longitude;
     }
 
-    public List<ActivityEntity> getActivities() {
-        return activities;
+    public ActivityEntity getActivity() {
+        return activity;
     }
 
-    public void setActivities(List<ActivityEntity> activities) {
-        this.activities = activities;
+    public void setActivity(ActivityEntity activity) {
+        this.activity = activity;
     }
 
     public ProjectEntity getProject() {

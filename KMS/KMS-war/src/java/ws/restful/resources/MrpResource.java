@@ -58,7 +58,7 @@ public class MrpResource {
         
         for (MaterialResourcePostingEntity mrp : mrpList) {
             mrp.setProject(null);
-            mrp.getActivities().clear();
+            mrp.setActivity(null);
             mrp.getFulfillments().clear();
         }
         
@@ -85,7 +85,7 @@ public class MrpResource {
             mrp.getProject().getReviews().clear();
             mrp.getProject().getDonations().clear();
             mrp.getFulfillments().clear();
-            mrp.getActivities().clear();
+            mrp.setActivity(null);
             
             
             return Response.status(Status.OK).entity(mrp).build();
@@ -154,20 +154,20 @@ public class MrpResource {
         }
     }
     
-    @Path("getListOfObtainedMrp/{projectId}/{activityId}")
+    @Path("getListOfAvailableMrp/{projectId}/{activityId}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getListOfObtainedMrp(@PathParam("projectId") Long projectId, @PathParam("activityId") Long activityId) {
-        System.out.println("******** MrpResource: getListOfObtainedMrp()");
+    public Response getListOfAvailableMrp(@PathParam("projectId") Long projectId, @PathParam("activityId") Long activityId) {
+        System.out.println("******** MrpResource: getListOfAvailableMrp()");
         
         try {
-            List<MaterialResourcePostingEntity> mrpList = materialResourcePostingSessionBean.getListOfObtainedMrp(projectId, activityId);
+            List<MaterialResourcePostingEntity> mrpList = materialResourcePostingSessionBean.getListOfAvailableMrp(projectId, activityId);
 
             if (!mrpList.isEmpty()) {
                 for (MaterialResourcePostingEntity mrp : mrpList) {
                     mrp.setProject(null);
-                    mrp.getActivities().clear();
+                    mrp.setActivity(null);
                     mrp.getFulfillments().clear();
                 } 
             }

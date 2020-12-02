@@ -40,9 +40,5 @@ public interface FulfillmentSessionBeanLocal {
 
     public List<FulfillmentEntity> getListOfFulfillmentsByProject(Long projectId) throws NoResultException;
 
-    public void updateFulfillmentStatus();
-
-    public void generateRecurringPayments();
-
     public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
 }

@@ -455,12 +455,19 @@
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
                                     <div class="card-title">
-                                        <h5 style="color: black;"><b>{{mra.materialResourceAvailableOwner.firstName}}
-                                                {{mra.materialResourceAvailableOwner.lastName}}'s {{mra.name}}</b>
+                                        <h5 style="color: black;">
+                                            <b>{{mra.materialResourceAvailableOwner.firstName}}
+                                                {{mra.materialResourceAvailableOwner.lastName}}'s {{mra.name}}</b>&nbsp;
+                                            <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: bisque;"
+                                                *ngIf="mra.type == 'ONETIMEDONATION' || mra.type == 'ONETIMEPAYMENT'">ONE-TIME
+                                            </span>
+                                            <span class="badge badge-pill" style="margin-top: 10px; font-size: 12px; vertical-align: 27%; background-color: burlywood;"
+                                                *ngIf="mra.type != 'ONETIMEDONATION' && mra.type != 'ONETIMEPAYMENT'">RECURRING
+                                            </span>
                                         </h5>
                                     </div>
                                     <a routerLink="/userProfile/{{mra.materialResourceAvailableOwner.userId}}"
-                                        class="btn btn-sm btn-primary" data-dismiss="modal">
+                                        class="btn btn-sm btn-primary float-right" data-dismiss="modal">
                                         <i class="fas fa-user"></i> View Profile
                                     </a>
                                 </div>
@@ -469,28 +476,22 @@
                             <div class="card-body p-0" style="display: block;">
                                 <ul class="products-list product-list-in-card pl-2 pr-2">
                                     <li class="item">
-                                        <div class="product-info">
-                                            <a *ngIf="mra.startDate != null" class="product-title">Available from
-                                                {{mra.startDate.toString().slice(0,15) | date }} to
-                                                {{mra.endDate.toString().slice(0,15) | date}}
-                                                <span class="badge badge-secondary float-right">
-                                                    At location
-                                                    {{mra.latitude | number:'1.1-6'}},
-                                                    {{mra.longitude | number:'1.1-6'}}
+                                        <div class="product-info ml-3 mr-3" style="color: black;">
+                                            <a class="product-title">
+                                                <span *ngIf="mra.type == 'ONETIMEDONATION'">Free</span>
+                                                <span *ngIf="mra.type != 'ONETIMEDONATION'">
+                                                    US ${{mra.price}}/<span *ngIf="mra.units == 'item(s)'">item</span>
+                                                    <span *ngIf="mra.units != 'item(s)'">{{mra.units}}</span>
+                                                    <span *ngIf="mra.type == 'DAILY'"> per day</span>
+                                                    <span *ngIf="mra.type == 'WEEKLY'"> per week</span>
+                                                    <span *ngIf="mra.type == 'MONTHLY'"> per month</span>
                                                 </span>
-                                            </a>
-                                            <a *ngIf="mra.startDate == null" class="product-title"
-                                                style="color: black;">
-                                                No Expiry Date
-                                                <span class="badge badge-secondary float-right">
-                                                    At location
-                                                    {{mra.latitude | number:'1.1-6'}},
-                                                    {{mra.longitude | number:'1.1-6'}}
-                                                </span>
+                                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
+                                                    (click)="changehref(mra.latitude, mra.longitude)" target="_blank"> 
+                                                    At location {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}
+                                                </a>
                                             </a>
                                             <span class="product-description">
-                                                {{mra.quantity}} {{mra.units}} {{mra.name}}
-                                                <br />
                                                 {{mra.description}}
                                                 <span *ngIf="mra.tags.length > 0">
                                                     <div *ngFor="let tag of mra.tags">
