@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package session.stateless;
+package ejb.session.stateless;
 
 import Exception.CreateProjectException;
 import Exception.InvalidRoleException;

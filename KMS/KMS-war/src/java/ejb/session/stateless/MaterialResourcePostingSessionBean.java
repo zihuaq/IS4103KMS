@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,7 +28,9 @@ import util.enumeration.MrpStatusEnum;
  * @author chai
  */
 @Stateless
-public class MaterialResourcePostingSessionBean implements MaterialResourcePostingSessionBeanLocal {
+@Local(MaterialResourcePostingSessionBeanLocal.class)
+@Remote(MaterialResourcePostingSessionBeanRemote.class)
+public class MaterialResourcePostingSessionBean implements MaterialResourcePostingSessionBeanLocal, MaterialResourcePostingSessionBeanRemote {
 
     @EJB(name = "ActivitySessionBeanLocal")
     private ActivitySessionBeanLocal activitySessionBeanLocal;
@@ -66,6 +70,7 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
     public MaterialResourcePostingEntity getMrpById(Long mrpId) throws NoResultException {
         MaterialResourcePostingEntity mrp = em.find(MaterialResourcePostingEntity.class, mrpId);
         if (mrp != null) {
+            mrp.getTags().size();
             return mrp;
         } else {
             throw new NoResultException("Material Resource Posting does not exists.");

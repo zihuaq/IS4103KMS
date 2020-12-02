@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package session.stateless;
+package ejb.session.stateless;
 
 import Exception.NoResultException;
-import ejb.session.stateless.HumanResourcePostingSessionBeanRemote;
 import entity.HumanResourcePostingEntity;
 import entity.UserEntity;
 import java.text.ParseException;
@@ -23,7 +22,6 @@ import javax.naming.NamingException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
