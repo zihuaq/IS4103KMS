@@ -63,6 +63,18 @@ export class ElectionService {
             .pipe(catchError(this.handleError));
     }
 
+    rejectElectionApplication(electionApplicationId: number) {
+        return this.http
+            .delete<any>(this.baseUrl + '/rejectElectionApplication/' + electionApplicationId, httpOptions)
+            .pipe(catchError(this.handleError));
+    }
+
+    endorseElectionApplication(electionApplicationId: number, endorserId: number) {
+        return this.http
+            .post<any>(this.baseUrl + '/endorseElectionApplication/' + electionApplicationId + '/' + endorserId, httpOptions)
+            .pipe(catchError(this.handleError));
+    }
+
     private parseElectionDate(election: any) {
         return {
             ...election,

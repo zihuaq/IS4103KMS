@@ -5,6 +5,8 @@ import { User } from 'src/app/classes/user';
 import { ElectionService } from 'src/app/election.service';
 import { SessionService } from 'src/app/session.service';
 
+declare var $: any;
+
 @Component({
   selector: 'app-manage-applications',
   templateUrl: './manage-applications.component.html',
@@ -29,12 +31,50 @@ export class ManageApplicationsComponent implements OnInit {
     )
   }
 
-  onRejectApplication(){
-
+  onRejectApplication() {
+    this.electionService.rejectElectionApplication(this.applicationToHandle.id).subscribe(
+      (result) => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Application Rejected!',
+        });
+        this.updateApplications();
+      },
+      (error) => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+      });
   }
 
-  onEndorseApplication(){
-    
+  onEndorseApplication() {
+    this.electionService.endorseElectionApplication(this.applicationToHandle.id, this.loggedInUser.userId).subscribe(
+      (result) => {
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'Success',
+          autohide: true,
+          delay: 2500,
+          body: 'Application Endorsed!',
+        });
+        this.updateApplications();
+      },
+      (error) => {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: error,
+        });
+      });
   }
 
   setApplicationToHandle(application: ElectionApplication) {

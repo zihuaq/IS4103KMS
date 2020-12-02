@@ -32,5 +32,9 @@ public interface ElectionSessionBeanLocal {
     public List<ElectionApplicationEntity> getElectionApplicationsForElection(Long electionId) throws NoResultException;
 
     public void createElectionApplication(ElectionApplicationEntity application) throws NoResultException, DuplicateApplicationException;
+    
+    public void rejectElectionApplication(Long applicationId) throws NoResultException;
+    
+    public void endorseElectionApplication(Long electionApplicationId, Long endorserId) throws NoResultException; 
 
 }

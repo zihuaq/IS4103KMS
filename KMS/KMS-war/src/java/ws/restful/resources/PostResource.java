@@ -10,6 +10,7 @@ import Exception.LikeNotFoundException;
 import Exception.NoResultException;
 import Exception.UserNotFoundException;
 import ejb.session.stateless.PostSessionBeanLocal;
+import entity.ElectionApplicationEntity;
 import entity.ElectionEntity;
 import entity.GroupEntity;
 import entity.PostCommentEntity;
@@ -504,6 +505,7 @@ public class PostResource {
         user.setFirstName(postToProcess.getPostOwner().getFirstName());
         user.setLastName(postToProcess.getPostOwner().getLastName());
         user.setProfilePicture(postToProcess.getPostOwner().getProfilePicture());
+        user.setReputationPoints(postToProcess.getPostOwner().getReputationPoints());
         post.setPostOwner(user);
         List<UserEntity> likers = new ArrayList<UserEntity>();
         for (int j = 0; j < postToProcess.getLikers().size(); j++) {
@@ -562,6 +564,20 @@ public class PostResource {
                 election.setMinRepPointsRequired(postToProcess.getOriginalPost().getElection().getMinRepPointsRequired());
                 election.setId(postToProcess.getOriginalPost().getElection().getId());
                 originalPost.setElection(election);
+            } else if (postToProcess.getOriginalPost().getElectionApplication() != null) {
+                ElectionApplicationEntity application = new ElectionApplicationEntity();
+                application.setId(postToProcess.getOriginalPost().getElectionApplication().getId());
+                application.setReasons(postToProcess.getOriginalPost().getElectionApplication().getReasons());
+                application.setContributions(postToProcess.getOriginalPost().getElectionApplication().getContributions());
+                application.setAdditionalComments(postToProcess.getOriginalPost().getElectionApplication().getAdditionalComments());
+                originalPost.setElectionApplication(application);
+            }
+            if (post.getOriginalPost().getEndorser() != null) {
+                UserEntity endorser = new UserEntity();
+                endorser.setUserId(postToProcess.getOriginalPost().getEndorser().getUserId());
+                endorser.setFirstName(postToProcess.getOriginalPost().getEndorser().getFirstName());
+                endorser.setLastName(postToProcess.getOriginalPost().getEndorser().getLastName());
+                originalPost.setEndorser(endorser);
             }
             post.setOriginalPost(originalPost);
         }
@@ -584,6 +600,20 @@ public class PostResource {
             election.setMinRepPointsRequired(postToProcess.getElection().getMinRepPointsRequired());
             election.setId(postToProcess.getElection().getId());
             post.setElection(election);
+        } else if (postToProcess.getElectionApplication() != null) {
+            ElectionApplicationEntity application = new ElectionApplicationEntity();
+            application.setId(postToProcess.getElectionApplication().getId());
+            application.setReasons(postToProcess.getElectionApplication().getReasons());
+            application.setContributions(postToProcess.getElectionApplication().getContributions());
+            application.setAdditionalComments(postToProcess.getElectionApplication().getAdditionalComments());
+            post.setElectionApplication(application);
+        }
+        if (post.getEndorser() != null) {
+            UserEntity endorser = new UserEntity();
+            endorser.setUserId(postToProcess.getEndorser().getUserId());
+            endorser.setFirstName(postToProcess.getEndorser().getFirstName());
+            endorser.setLastName(postToProcess.getEndorser().getLastName());
+            post.setEndorser(endorser);
         }
         System.out.println(post);
         System.out.println(postToProcess);
