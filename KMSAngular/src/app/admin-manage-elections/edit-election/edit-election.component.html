@@ -1,1 +1,35 @@
-<p>edit-election works!</p>
+<form (ngSubmit)="editElection(electionForm)" #electionForm="ngForm">
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" required [(ngModel)]="activeElection.name">
+        </div>
+        <div class="form-group">
+            <label for="name">Description:</label>
+            <input type="text" id="description" class="form-control" placeholder="Enter Description" name="description"
+            [(ngModel)]="activeElection.description">
+        </div>
+        <br />
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Looking for </span>
+            </div>
+            <input type="number" class="form-control" [(ngModel)]="activeElection.numSlots" id="numSlots" name="numSlots" min="1" value="1">
+            <div class="input-group-append">
+                <span class="input-group-text">Admins</span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="name">Minimum Reputation Points Required:</label>
+            <input type="number" id="minRepPoints" class="form-control"
+                placeholder="Enter minimum reputation points required" name="minRepPoints" [(ngModel)]="activeElection.minRepPointsRequired" min="0" value="0"
+                required>
+        </div>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal"
+            (click)="endElection()">End Election</button>
+        <button type="button" class="btn bg-olive" type="submit" [disabled]="!electionForm.valid">Save</button>
+    </div>
+</form>

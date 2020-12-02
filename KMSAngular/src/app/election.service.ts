@@ -39,6 +39,12 @@ export class ElectionService {
             .pipe(catchError(this.handleError));
     }
 
+    updateElection(election: Election) {
+        return this.http
+            .put<any>(this.baseUrl + '/updateElection', election, httpOptions)
+            .pipe(catchError(this.handleError));
+    }
+
     createElectionApplication(electionApplication: ElectionApplication) {
         return this.http
             .post<any>(this.baseUrl + '/createElectionApplication', electionApplication, httpOptions)
