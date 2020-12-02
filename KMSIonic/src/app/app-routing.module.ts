@@ -452,11 +452,27 @@ const routes: Routes = [
       import(
         './pages/donate-to-platform-modal/donate-to-platform-modal.module'
       ).then((m) => m.DonateToPlatformModalPageModule)
-  },  {
+  },
+  {
     path: 'view-recommendations',
-    loadChildren: () => import('./pages/view-recommendations/view-recommendations.module').then( m => m.ViewRecommendationsPageModule)
+    loadChildren: () =>
+      import('./pages/view-recommendations/view-recommendations.module').then(
+        (m) => m.ViewRecommendationsPageModule
+      )
+  },
+  {
+    path: 'mrp-recommendations-modal',
+    loadChildren: () =>
+      import('./pages/project/editProject/mrp-recommendations-modal/mrp-recommendations-modal.module'
+      ).then((m) => m.MrpRecommendationsModalPageModule)
+  },
+  {
+    path: 'hrp-recommendations-modal',
+    loadChildren: () =>
+      import(
+        './pages/project/editProject/hrp-recommendations-modal/hrp-recommendations-modal.module'
+      ).then((m) => m.HrpRecommendationsModalPageModule)
   }
-
 ];
 
 @NgModule({
