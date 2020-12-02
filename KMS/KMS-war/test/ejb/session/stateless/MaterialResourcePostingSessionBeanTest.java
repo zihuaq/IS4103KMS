@@ -139,19 +139,19 @@ public class MaterialResourcePostingSessionBeanTest {
     }
     
     @Test
-    public void test09GetListOfObtainedMrp() throws NoResultException {
+    public void test09GetListOfAvailableMrp() throws NoResultException {
+        List result = materialResourcePostingSessionBean.getListOfAvailableMrp(4l, 3l);
         
+        assertEquals(3, result.size());
     }
     
     @Test(expected=NoResultException.class)
-    public void test10GetListOfObtainedMrp() throws NoResultException {
-        throw new NoResultException();
+    public void test10GetListOfAvailableMrp() throws NoResultException {
+        List result = materialResourcePostingSessionBean.getListOfAvailableMrp(4l, 10l);
+        
+        assertEquals(1, result.size());
     }
     
-    @Test
-    public void test11UpdateMrpStatus() {
-        
-    }
 
     private MaterialResourcePostingSessionBeanRemote lookupMaterialResourcePostingSessionBeanRemote() {
         try {
