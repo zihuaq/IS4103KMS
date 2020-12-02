@@ -207,37 +207,6 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
     }
     
     @Override
-    public List<ActivityEntity> retrieveActivitiesNotCompleted() {
-        
-        Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityStatus <> :inStatus");
-        query.setParameter("inStatus", ActivityStatusEnum.COMPLETED);
-        
-        return query.getResultList();
-    }
-    
-    @Override
-    public void updateActivitiesStatus(List<ActivityEntity> activities) {
-        LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-
-        if (!activities.isEmpty()) {
-            for (ActivityEntity activity: activities) {
-                LocalDateTime startDate = LocalDateTime.parse(sdf.format(activity.getStartDate()));
-                LocalDateTime endDate = LocalDateTime.parse(sdf.format(activity.getEndDate()));
-
-                if (today.isAfter(endDate)) {
-                    activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
-                } else if (!today.isBefore(startDate)) {
-                    activity.setActivityStatus(ActivityStatusEnum.ONGOING);
-                }
-
-                em.merge(activity);
-                em.flush();
-            }
-        }
-    }
-    
-    @Override
     public List<MaterialResourcePostingEntity> getAllocatedResources(Long activityId) throws NoResultException {
         ActivityEntity activity = this.getActivityById(activityId);
         activity.getMaterialResourcePostings().size();

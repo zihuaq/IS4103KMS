@@ -38,10 +38,6 @@ public interface ActivitySessionBeanLocal {
 
     public void removeHrpFromActivity(Long activityId, Long hrpId) throws NoResultException;
 
-    public List<ActivityEntity> retrieveActivitiesNotCompleted();
-
-    public void updateActivitiesStatus(List<ActivityEntity> activities);
-
     public List<MaterialResourcePostingEntity> getAllocatedResources(Long activityId) throws NoResultException;
 
     public void allocateResource(Long activityId, Long mrpId, Double quantity) throws NoResultException;

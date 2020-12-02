@@ -101,7 +101,7 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(sdf.format(mrp.getStartDate()));
         
-        if (mrp.getLackingQuantity() == 0.0 || today.isAfter(startDate)) {
+        if (mrp.getLackingQuantity() == 0.0 || !today.isBefore(startDate)) {
             mrp.setStatus(MrpStatusEnum.CLOSED);
         } else {
             mrp.setStatus(MrpStatusEnum.OPEN);
@@ -143,22 +143,5 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
             }
         }
         return availableMrpList;
-    }
-    
-    @Override
-    public void updateMrpStatus() {
-        Query query = em.createQuery("SELECT mrp FROM MaterialResourcePostingEntity mrp WHERE mrp.status = :inStatus");
-        query.setParameter("inStatus", MrpStatusEnum.OPEN);
-        
-        List<MaterialResourcePostingEntity> mrpList = query.getResultList();
-        for (MaterialResourcePostingEntity mrp: mrpList) {
-            LocalDate today = LocalDate.now();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            LocalDate startDate = LocalDate.parse(sdf.format(mrp.getStartDate()));
-            
-            if (today.isAfter(startDate)) {
-                mrp.setStatus(MrpStatusEnum.CLOSED);
-            }
-        }
     }
 }
