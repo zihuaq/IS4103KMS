@@ -6,6 +6,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { TagRequest } from '../classes/tag-request';
 import { UtilityService } from './utility.service';
 
 const httpOptions = {
@@ -23,6 +24,12 @@ export class TagService {
     private utilityService: UtilityService
   ) {
     this.baseUrl = this.utilityService.getRootPath() + 'tag';
+  }
+
+  createTagRequest(tagRequest: TagRequest) {
+    return this.http
+      .put<any>(this.baseUrl + '/createTagRequest', tagRequest, httpOptions)
+      .pipe(catchError(this.handleError));
   }
 
   getAllSkillTags(): Observable<any> {

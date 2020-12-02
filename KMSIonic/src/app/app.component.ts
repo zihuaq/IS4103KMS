@@ -81,6 +81,11 @@ export class AppComponent implements OnInit {
       icon: 'chatbubble'
     },
     {
+      title: 'Make Tag Request',
+      url: '/make-tag-request',
+      icon: 'chatbubble'
+    },
+    {
       title: 'Log Out',
       url: '/logout',
       icon: 'log-out'
@@ -120,7 +125,7 @@ export class AppComponent implements OnInit {
       //   } else {
       //     console.log('Received in foreground');
       //   }
-      // });      
+      // });
 
       // // refresh the FCM token
       // FCM.onTokenRefresh().subscribe(token => {
@@ -129,7 +134,6 @@ export class AppComponent implements OnInit {
 
       // // unsubscribe from a topic
       // // this.fcm.unsubscribeFromTopic('offers');
-      
     });
   }
 
