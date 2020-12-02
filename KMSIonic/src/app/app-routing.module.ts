@@ -472,7 +472,11 @@ const routes: Routes = [
       import(
         './pages/project/editProject/hrp-recommendations-modal/hrp-recommendations-modal.module'
       ).then((m) => m.HrpRecommendationsModalPageModule)
+  },  {
+    path: 'make-tag-request',
+    loadChildren: () => import('./pages/make-tag-request/make-tag-request.module').then( m => m.MakeTagRequestPageModule)
   }
+
 ];
 
 @NgModule({
