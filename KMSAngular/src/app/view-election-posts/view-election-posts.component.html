@@ -1,4 +1,10 @@
 <div class="container-fluid">
+    <div class=searchBar>
+        <app-searchbar [searchString]="searchString" query="posts"
+            (searchStringChanged)="handleSearchStringChanged($event)">
+        </app-searchbar>
+    </div>
+    <br />
     <span *ngIf="filteredPosts && filteredPosts.length > 0">
         <div *ngFor="let post of filteredPosts">
             <!-- Box Comment -->
@@ -18,7 +24,8 @@
                                 Election Post
                             </small>
                         </span>
-                        <span class="description">{{post.postDate| date}}</span>
+                        <span class="description">Endorsed by {{post.endorser.firstName}}
+                            {{post.endorser.lastName}}</span>
                     </div>
                     <!-- /.user-block -->
                     <div class="card-tools">
@@ -31,9 +38,15 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-
-                    <p>{{post.text}}</p>
-
+                    <label> Reasons For Applying: </label>
+                    <br />
+                    <p>{{post.electionApplication.reasons}}</p>
+                    <label> Contributions to KMS: </label>
+                    <br />
+                    <p>{{post.electionApplication.contributions}}</p>
+                    <label> Additional Comments: </label>
+                    <br />
+                    <p>{{post.electionApplication.additionalComments}}</p>
                     <button type="button" class="btn btn-default btn-sm" *ngIf="!userHaveLikedPost(post.postId)"
                         (click)="likePost(post.postId)"><i class="far fa-thumbs-up"></i> like </button>
                     <button type="button" class="btn btn-default btn-sm" *ngIf="userHaveLikedPost(post.postId)"
