@@ -20,11 +20,11 @@
   <span *ngFor="let group of filteredGroups">
     <ion-card tappable (click)="viewGroupDetails($event, group)">
       <ion-card-header>
-        <b>{{group.name}}</b>&nbsp;
+        <p style="font-size: 17px; margin-top: 8px; margin-bottom: -8px;"><b>{{group.name}}</b></p>
       </ion-card-header>
       <ion-card-content>
-        {{group.description}}
-        <br />
+        <p *ngIf="group.description" style="margin-bottom: 8px;">{{group.description}}</p>
+        <p *ngIf="!group.description" style="margin-bottom: 8px; font-style: italic;">Group has no description</p>
         <span *ngFor="let sdg of sortSDG(group.sdgs)">
           <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
         </span>
