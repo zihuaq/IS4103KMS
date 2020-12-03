@@ -1,0 +1,36 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Leaderboard
+                    </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a routerLink="/index">Home</a></li>
+                        <li class="breadcrumb-item active">Leaderboard</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="row">
+            <div class="col-4">
+                <app-reputation-points-leaderboard></app-reputation-points-leaderboard>
+            </div>
+            <div class="col-4">
+                <app-weekly-project-leaderboard></app-weekly-project-leaderboard>
+            </div>
+            <div class="col-4">
+                <app-weekly-donation-leaderboard></app-weekly-donation-leaderboard>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer>
