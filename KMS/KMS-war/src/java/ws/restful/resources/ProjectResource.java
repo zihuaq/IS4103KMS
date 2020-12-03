@@ -219,7 +219,7 @@ public class ProjectResource {
             for (MaterialResourcePostingEntity mrp : project.getMaterialResourcePostings()) {
                 mrp.setActivity(null);
                 mrp.setProject(null);
-                mrp.getFulfillments().clear();
+                mrp.setFulfillments(new ArrayList<>());
             }
             for (TaskEntity task : project.getTasks()) {
                 task.setProject(null);

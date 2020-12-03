@@ -19,6 +19,7 @@ import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.MaterialResourcePostingSessionBeanLocal;
+import ejb.session.stateless.PaymentSessionBeanLocal;
 import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.ReportSessionBeanLocal;
@@ -63,6 +64,9 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB(name = "PaymentSessionBeanLocal")
+    private PaymentSessionBeanLocal paymentSessionBeanLocal;
 
     @EJB
     private DataMappingSessionBeanLocal dataMappingSessionBean;
@@ -403,16 +407,20 @@ public class DataInitializationSessionBean {
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0, 0.0), 2l, 3l, 2l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0, 5.0), 6l, 3l, 3l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 0.0, 30.0, 0.0), 4l, 3l, 4l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 20.0, MraTypeEnum.WEEKLY, PaymentBasisEnum.WEEKLY), 6l, 2l, 1l); //Recurring subscription with no end date
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0, 0.0), 6l, 1l, 5l);
-            Long fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0, 0.0), 7l, 1l, 6l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0, 0.0), 7l, 1l, 6l);
+            Long fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0, 5.0), 6l, 3l, 3l); //One-Time Payment
             FulfillmentEntity fulfillmentToUpdate = fulfillmentSessionBean.getFulfillmentById(fulfillmentId);
-            fulfillmentToUpdate.setReceivedQuantity(4.0);
-            fulfillmentToUpdate.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity() - 4.0);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId);
+            fulfillmentToUpdate.setReceivedQuantity(5.0);
+            fulfillmentToUpdate.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity() - 5.0);
             fulfillmentToUpdate.setStatus(FulfillmentStatusEnum.PARTIALLYFULFILLED);
             fulfillmentSessionBean.receiveResource(fulfillmentToUpdate, null);
+            
+            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 20.0, MraTypeEnum.WEEKLY, PaymentBasisEnum.WEEKLY), 6l, 2l, 1l); //Recurring subscription with no end date
+            fulfillmentSessionBean.getFulfillmentById(fulfillmentId);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId); //create payment
 
             //create tasks
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 0.3, 0l), 4l);

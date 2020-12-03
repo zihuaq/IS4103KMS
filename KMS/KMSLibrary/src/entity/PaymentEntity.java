@@ -117,6 +117,14 @@ public class PaymentEntity implements Serializable {
         this.paypalOrderId = paypalOrderId;
     }
 
+    public Date getPreviousDueDate() {
+        return previousDueDate;
+    }
+
+    public void setPreviousDueDate(Date previousDueDate) {
+        this.previousDueDate = previousDueDate;
+    }
+
     public Date getDueDate() {
         return dueDate;
     }
@@ -133,14 +141,6 @@ public class PaymentEntity implements Serializable {
         this.status = status;
     }
 
-    public FulfillmentEntity getFulfillment() {
-        return fulfillment;
-    }
-
-    public void setFulfillment(FulfillmentEntity fulfillment) {
-        this.fulfillment = fulfillment;
-    }
-
     public boolean getIsLast() {
         return isLast;
     }
@@ -149,12 +149,12 @@ public class PaymentEntity implements Serializable {
         this.isLast = isLast;
     }
 
-    public Date getPreviousDueDate() {
-        return previousDueDate;
+    public FulfillmentEntity getFulfillment() {
+        return fulfillment;
     }
 
-    public void setPreviousDueDate(Date previousDueDate) {
-        this.previousDueDate = previousDueDate;
+    public void setFulfillment(FulfillmentEntity fulfillment) {
+        this.fulfillment = fulfillment;
     }
     
 }
