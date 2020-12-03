@@ -8,38 +8,37 @@
 </ion-header>
 
 <ion-content>
-  <ion-row *ngIf="currentAmount > 0.0">
-    <ion-col size="6" style="text-align: left;">
-      <b>Current</b>
+  <ion-item lines="none" *ngIf="currentAmount > 0.0">
+    <ion-col size="6" style="text-align: left; margin-left: 5px;">
+      Current
     </ion-col>
-    <ion-col>
+    <ion-col style="margin-left: 5px;">
       US$ {{ roundToTwoDecimal(currentAmount).toFixed(2) }}
     </ion-col>
-  </ion-row>
-  <ion-row *ngIf="outstandingAmount > 0.0">
-    <ion-col size="6" style="text-align: left;">
-      <b>Outstanding</b>
+  </ion-item>
+  <ion-item lines="none" *ngIf="outstandingAmount > 0.0">
+    <ion-col size="6" style="text-align: left; margin-left: 5px;">
+      Outstanding
     </ion-col>
-    <ion-col>
+    <ion-col style="margin-left: 5px;">
       US$ {{ roundToTwoDecimal(outstandingAmount).toFixed(2) }}
     </ion-col>
-  </ion-row>
-  <ion-row *ngIf="outstandingAmount > 0.0">
-    <ion-col size="6" style="text-align: left;">
-      <b>Penalty</b>
+  </ion-item>
+  <ion-item lines="full" *ngIf="outstandingAmount > 0.0">
+    <ion-col size="6" style="text-align: left; margin-left: 5px;">
+      Penalty
     </ion-col>
-    <ion-col>
+    <ion-col style="margin-left: 5px;">
       US$ {{ roundToTwoDecimal(outstandingAmount * 0.05).toFixed(2) }}
     </ion-col>
-  </ion-row>
-  <hr>
-  <ion-row>
-    <ion-col size="6" style="text-align: left;">
+  </ion-item>
+  <ion-item lines="none">
+    <ion-col size="6" style="text-align: left; margin-left: 5px;">
       <b>Total</b>
     </ion-col>
-    <ion-col>
+    <ion-col style="margin-left: 5px;">
       US$ {{ roundToTwoDecimal(outstandingAmount * 1.05 + currentAmount).toFixed(2) }}
     </ion-col>
-  </ion-row>
+  </ion-item>
   <ion-button expand="full" color="warning" (click)="payWithPaypal()">Pay with PayPal</ion-button>
 </ion-content>

@@ -118,6 +118,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
         }
     }
     
+    @Override
     public void updateFulfillmentStatus() {
         LocalDate today = LocalDate.now();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -151,6 +152,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
         }
     }
     
+    @Override
     public void generateRecurringPayments() {
         try {
             LocalDate today = LocalDate.now();
@@ -176,9 +178,12 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
                         } else {
                             newDueDate = dueDate.plusMonths(1); //add one month
                         }
-                        LocalDate endDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getEndDate()));
+                        LocalDate endDate = null;
+                        if (fulfillment.getPosting().getEndDate() != null) {
+                           endDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getEndDate())); 
+                        }
                         Double amount = fulfillment.getPriceOffered() * fulfillment.getTotalPledgedQuantity();
-                        if (!endDate.isAfter(newDueDate)) { //next payment is the last if end date is not after due date
+                        if (endDate != null && !endDate.isAfter(newDueDate)) { //next payment is the last if posting has end date and end date is not after due date
                             long noOfDays = ChronoUnit.DAYS.between(dueDate, endDate);
                             if (fulfillment.getBasisOffered() == MraTypeEnum.DAILY) {
                                 amount *= noOfDays;

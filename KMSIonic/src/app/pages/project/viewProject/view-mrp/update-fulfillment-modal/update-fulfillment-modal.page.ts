@@ -21,11 +21,10 @@ export class UpdateFulfillmentModalPage implements OnInit {
   constructor(public modalController: ModalController,
     private toastController: ToastController,
     private fulfillmentService: FulfillmentService,
-    private mrpService: MrpService) {
-      this.newTotalPledgedQuantity = this.fulfillmentToUpdate.totalPledgedQuantity;
-    }
+    private mrpService: MrpService) { }
 
   ngOnInit() {
+    this.newTotalPledgedQuantity = this.fulfillmentToUpdate.totalPledgedQuantity;
   }
 
   async updateFulfillment(updateFulfillmentForm: NgForm) {

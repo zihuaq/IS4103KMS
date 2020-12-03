@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AddMraModalPageRoutingModule } from './add-mra-modal-routing.module';
+import { AddMraPageRoutingModule } from './add-mra-routing.module';
 
-import { AddMraModalPage } from './add-mra-modal.page';
+import { AddMraPage } from './add-mra.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AddMraModalPageRoutingModule
+    AddMraPageRoutingModule
   ],
-  declarations: [AddMraModalPage]
+  declarations: [AddMraPage]
 })
-export class AddMraModalPageModule {}
+export class AddMraPageModule {}

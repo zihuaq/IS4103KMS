@@ -14,6 +14,7 @@ import Exception.TagNameExistException;
 import ejb.session.stateless.ActivitySessionBeanLocal;
 import ejb.session.stateless.BadgeSessionBeanLocal;
 import ejb.session.stateless.DataMappingSessionBeanLocal;
+import ejb.session.stateless.EjbTimerSessionBeanLocal;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
@@ -64,6 +65,9 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB(name = "EjbTimerSessionBeanLocal")
+    private EjbTimerSessionBeanLocal ejbTimerSessionBeanLocal;
 
     @EJB(name = "PaymentSessionBeanLocal")
     private PaymentSessionBeanLocal paymentSessionBeanLocal;
@@ -374,12 +378,12 @@ public class DataInitializationSessionBean {
             humanResourcePostingSessionBean.joinHrp(7l, 1l);
 
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Canned Food", "item(s)", 50.0, 0.0, 50.0, "Canned food like tuna, luncheon meat but no canned fruits", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-08"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-11"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(11l)));
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 5.0, 0.0, 5.0, "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-11"), null, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 5.0, 0.0, 5.0, "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-20"), null, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-15"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31"), 7.8731, 80.7718), 4l, new ArrayList<>(Arrays.asList(23l)));
 
             List<TagEntity> tags = new ArrayList<>();
             tags.add(tagSessionBean.getTagById(12l));
-            MaterialResourceAvailableEntity mra = new MaterialResourceAvailableEntity("Asus laptops", "item(s)", "Different models of Asus laptops available", "35.929673", "-78.948237", 20.0, MraTypeEnum.WEEKLY, tags);
+            MaterialResourceAvailableEntity mra = new MaterialResourceAvailableEntity("Asus Laptops", "item(s)", "Different models of Asus laptops available", "35.929673", "-78.948237", 20.0, MraTypeEnum.WEEKLY, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
             tags.clear();
@@ -418,9 +422,13 @@ public class DataInitializationSessionBean {
             fulfillmentToUpdate.setStatus(FulfillmentStatusEnum.PARTIALLYFULFILLED);
             fulfillmentSessionBean.receiveResource(fulfillmentToUpdate, null);
             
-            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 20.0, MraTypeEnum.WEEKLY, PaymentBasisEnum.WEEKLY), 6l, 2l, 1l); //Recurring subscription with no end date
+            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 10.0, MraTypeEnum.WEEKLY, PaymentBasisEnum.WEEKLY), 6l, 2l, 1l); //Recurring subscription with no end date
             fulfillmentSessionBean.getFulfillmentById(fulfillmentId);
             fulfillmentSessionBean.acceptFulfillment(fulfillmentId); //create payment
+            //for demo
+            ejbTimerSessionBeanLocal.updateFulfillmentStatus(); //update fulfillment to ongoing
+            ejbTimerSessionBeanLocal.generateRecurringPayments(); //outstanding payment (due 2020-11-27)
+            ejbTimerSessionBeanLocal.generateRecurringPayments(); //current payment (due 2020-12-04)
 
             //create tasks
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 0.3, 0l), 4l);

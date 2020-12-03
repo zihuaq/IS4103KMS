@@ -10,7 +10,7 @@
 <ion-content *ngIf="!selectedMra">
     <ion-item>
       <ion-label style="font-weight: bold;">Select Your Resource</ion-label>
-      <ion-button color="primary" fill="outline" slot="end" style="font-size: 12px;" (click)="presentAddMraModal()">Add Resource</ion-button>
+      <ion-button color="primary" fill="outline" slot="end" style="font-size: 12px;" routerLink="/add-mra/{{mrpId}}">Add Resource</ion-button>
     </ion-item>
     <ion-card-content *ngIf="mraList.length == 0">
       No material resource available at the moment
@@ -76,7 +76,7 @@
         <span *ngIf="selectedMra.type == 'ONETIMEDONATION'">Free</span>
         <span *ngIf="selectedMra.type != 'ONETIMEDONATION'">
             US ${{selectedMra.price}}/<span *ngIf="selectedMra.units == 'item(s)'">item</span>
-            <span *ngIf="selectedMra.units != 'item(s)'">{{mra.units}}</span>
+            <span *ngIf="selectedMra.units != 'item(s)'">{{selectedMra.units}}</span>
             <span *ngIf="selectedMra.type == 'DAILY'"> per day</span>
             <span *ngIf="selectedMra.type == 'WEEKLY'"> per week</span>
             <span *ngIf="selectedMra.type == 'MONTHLY'"> per month</span>

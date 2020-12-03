@@ -7,7 +7,6 @@ import { User } from 'src/app/classes/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MaterialResourceAvailableService } from 'src/app/services/material-resource-available.service';
 import { MrpService } from 'src/app/services/mrp.service';
-import { AddMraModalPage } from '../add-mra-modal/add-mra-modal.page';
 import { Fulfillment } from '../../../../../classes/fulfillment';
 import { FulfillmentService } from '../../../../../services/fulfillment.service';
 import { Location } from "@angular/common";
@@ -71,23 +70,6 @@ export class FulfillPostingPage implements OnInit {
         this.mrp = response;
       }
     );
-  }
-
-  async presentAddMraModal() {
-    const modal = await this.modalController.create({
-      component: AddMraModalPage,
-      swipeToClose: true,
-      showBackdrop: true,
-      cssClass: 'add-mra-modal',
-      componentProps: {
-        loggedInUser: this.loggedInUser,
-        selectedMrp: this.mrp
-      }
-    });
-    modal.present();
-    modal.onDidDismiss().then(() => {
-      this.refreshMraList();
-    });
   }
 
   clickSelectMra(mra: MaterialResourceAvailable) {

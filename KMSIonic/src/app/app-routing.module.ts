@@ -365,13 +365,6 @@ const routes: Routes = [
       ).then((m) => m.FulfillPostingPageModule)
   },
   {
-    path: 'add-mra-modal',
-    loadChildren: () =>
-      import(
-        './pages/project/viewProject/mrp-details/add-mra-modal/add-mra-modal.module'
-      ).then((m) => m.AddMraModalPageModule)
-  },
-  {
     path: 'view-my-fulfillments/:projectId',
     loadChildren: () =>
       import(
@@ -466,6 +459,13 @@ const routes: Routes = [
       import(
         './pages/project/viewProject/view-mrp/update-fulfillment-modal/update-fulfillment-modal.module'
       ).then( m => m.UpdateFulfillmentModalPageModule)
+  },
+  {
+    path: 'add-mra/:mrpId',
+    loadChildren: () => 
+      import(
+        './pages/project/viewProject/mrp-details/add-mra/add-mra.module'
+      ).then( m => m.AddMraPageModule)
   }
 ];
 

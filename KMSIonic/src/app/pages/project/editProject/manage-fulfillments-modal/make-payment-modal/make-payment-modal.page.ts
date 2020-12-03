@@ -24,8 +24,8 @@ export class MakePaymentModalPage implements OnInit {
 
   newPayment: Payment;
   hasIsLast: boolean = false;
-  outstandingAmount: number;
-  currentAmount: number;
+  outstandingAmount: number = 0.0;
+  currentAmount: number = 0.0;
   earliestDate: Date;
   latestDate: Date;
   paymentIds: number[];
@@ -36,6 +36,7 @@ export class MakePaymentModalPage implements OnInit {
     private fulfillmentService: FulfillmentService,
     private paymentService: PaymentService) {
       this.newPayment = new Payment();
+      this.paymentIds = [];
     }
 
   ngOnInit() {

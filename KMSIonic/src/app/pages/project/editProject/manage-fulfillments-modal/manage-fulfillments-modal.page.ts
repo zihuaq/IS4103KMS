@@ -113,7 +113,7 @@ export class ManageFulfillmentsModalPage implements OnInit {
         {
           text: 'Accept',
           handler: async () => {
-            if ((!moment(new Date()).isBefore(this.mrp.startDate.toString().slice(0,15)))) { //if not before start date
+            if (!(moment(new Date()).isBefore(this.mrp.startDate.toString().slice(0,19)))) { //if not before start date
               const toast = await this.toastController.create({
                 message: 'Fulfillment cannot be accepted as posting has started',
                 color: 'warning',
