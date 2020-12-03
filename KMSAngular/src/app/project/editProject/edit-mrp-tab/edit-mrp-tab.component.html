@@ -408,9 +408,9 @@
                                     <span *ngIf="fulfillment.mra.type != mraType.ONETIMEDONATION">
                                         US ${{fulfillment.priceOffered | number:'1.2-2'}}/<span *ngIf="mrpToFulfill.unit == 'item(s)'">item</span>
                                         <span *ngIf="mrpToFulfill.unit != 'item(s)'">{{mrpToFulfill.unit}}</span>
-                                        <span *ngIf="fulfillment.basisOffered == 'DAILY'"> per day</span>
-                                        <span *ngIf="fulfillment.basisOffered == 'WEEKLY'"> per week</span>
-                                        <span *ngIf="fulfillment.basisOffered == 'MONTHLY'"> per month</span>
+                                        <span *ngIf="fulfillment.basisOffered == mraType.DAILY"> per day</span>
+                                        <span *ngIf="fulfillment.basisOffered == mraType.WEEKLY"> per week</span>
+                                        <span *ngIf="fulfillment.basisOffered == mraType.MONTHLY"> per month</span>
                                     </span>
                                 </b>
                                 <br />
