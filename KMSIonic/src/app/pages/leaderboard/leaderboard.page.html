@@ -9,27 +9,119 @@
 
 <ion-content>
   <ion-card>
-    <ion-card-header>
+    <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" [(ngModel)]="segment" mode="md">
+      <ion-segment-button value="reputation-points">
+        <ion-label>Reputation Points</ion-label>
+      </ion-segment-button>
 
+      <ion-segment-button value="project-activities-completed">
+        <ion-label>Project Activities Completed</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button value="donations-made">
+        <ion-label>Donations Made</ion-label>
+      </ion-segment-button>
+
+    </ion-segment>
+  </ion-card>
+  <ion-card *ngIf="segment === 'reputation-points'">
+    <ion-card-header>
+      <ion-segment scrollable="true" (ionChange)="reputationPointsSegmentChanged($event)"
+        [(ngModel)]="reputationPointsSegment" mode="md">
+        <ion-segment-button value="global">
+          <ion-label>Global</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="following">
+          <ion-label>Following</ion-label>
+        </ion-segment-button>
+      </ion-segment>
     </ion-card-header>
-    <ion-card-content>
-      Awesome content
+    <ion-card-content *ngIf="reputationPointsSegment === 'global'">
+      <ion-item *ngFor="let user of reputationPointsleaderboardUsers; let i = index"
+        routerLink="/user-profile/{{user.userId}}">
+        <ion-label
+          [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
+          <ion-icon *ngIf="i <= 2" name="trophy"></ion-icon>
+          <ion-text *ngIf="i > 2"><b>{{i+1}}</b></ion-text> {{user.firstName}} {{user.lastName}}
+        </ion-label>
+      </ion-item>
+    </ion-card-content>
+    <ion-card-content *ngIf="reputationPointsSegment === 'following'">
+      <ion-item *ngFor="let user of followingReputationPointsleaderboardUsers; let i = index"
+        routerLink="/user-profile/{{user.userId}}">
+        <ion-label
+          [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
+          <ion-icon *ngIf="i <= 2" name="trophy"></ion-icon>
+          <ion-text *ngIf="i > 2"><b>{{i+1}}</b></ion-text> {{user.firstName}} {{user.lastName}}
+        </ion-label>
+      </ion-item>
     </ion-card-content>
   </ion-card>
-  <ion-card>
+  <ion-card *ngIf="segment === 'project-activities-completed'">
     <ion-card-header>
-    
+      <ion-segment scrollable="true" (ionChange)="projectSegmentChanged($event)" [(ngModel)]="projectSegment" mode="md">
+        <ion-segment-button value="global">
+          <ion-label>Global</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="following">
+          <ion-label>Following</ion-label>
+        </ion-segment-button>
+      </ion-segment>
     </ion-card-header>
-    <ion-card-content>
-      Awesome content
+    <ion-card-content *ngIf="projectSegment === 'global'">
+      <ion-item *ngFor="let user of projectleaderboardUsers; let i = index" routerLink="/user-profile/{{user.userId}}">
+        <ion-label
+          [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
+          <ion-icon *ngIf="i <= 2" name="trophy"></ion-icon>
+          <ion-text *ngIf="i > 2"><b>{{i+1}}</b></ion-text> {{user.firstName}} {{user.lastName}}
+        </ion-label>
+      </ion-item>
+    </ion-card-content>
+    <ion-card-content *ngIf="projectSegment === 'following'">
+      <ion-item *ngFor="let user of followingProjectleaderboardUsers; let i = index"
+        routerLink="/user-profile/{{user.userId}}">
+        <ion-label
+          [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
+          <ion-icon *ngIf="i <= 2" name="trophy"></ion-icon>
+          <ion-text *ngIf="i > 2"><b>{{i+1}}</b></ion-text> {{user.firstName}} {{user.lastName}}
+        </ion-label>
+      </ion-item>
     </ion-card-content>
   </ion-card>
-  <ion-card>
+  <ion-card *ngIf="segment === 'donations-made'">
     <ion-card-header>
-    
+      <ion-segment scrollable="true" (ionChange)="donationSegmentChanged($event)" [(ngModel)]="donationSegment"
+        mode="md">
+        <ion-segment-button value="global">
+          <ion-label>Global</ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="following">
+          <ion-label>Following</ion-label>
+        </ion-segment-button>
+      </ion-segment>
     </ion-card-header>
-    <ion-card-content>
-      Awesome content
+    <ion-card-content *ngIf="donationSegment === 'global'">
+      <ion-item *ngFor="let user of weeklyDonationAmountleaderboardUsers; let i = index"
+        routerLink="/user-profile/{{user.userId}}">
+        <ion-label
+          [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
+          <ion-icon *ngIf="i <= 2" name="trophy"></ion-icon>
+          <ion-text *ngIf="i > 2"><b>{{i+1}}</b></ion-text> {{user.firstName}} {{user.lastName}}
+        </ion-label>
+      </ion-item>
+    </ion-card-content>
+    <ion-card-content *ngIf="donationSegment === 'following'">
+      <ion-item *ngFor="let user of followingWeeklyDonationAmountleaderboardUsers; let i = index"
+        routerLink="/user-profile/{{user.userId}}">
+        <ion-label
+          [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
+          <ion-icon *ngIf="i <= 2" name="trophy"></ion-icon>
+          <ion-text *ngIf="i > 2"><b>{{i+1}}</b></ion-text> {{user.firstName}} {{user.lastName}}
+        </ion-label>
+      </ion-item>
     </ion-card-content>
   </ion-card>
 </ion-content>

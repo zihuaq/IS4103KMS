@@ -11,6 +11,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LeaderboardPage implements OnInit {
   loggedInUserId: number;
+  segment: string;
+  reputationPointsSegment: string;
+  projectSegment: string;
+  donationSegment: string;
   isGlobalReputationPointsLeaderBoard: boolean = true;
   reputationPointsleaderboardUsers: User[];
   followingReputationPointsleaderboardUsers: User[];
@@ -23,7 +27,12 @@ export class LeaderboardPage implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private leaderboardService: LeaderboardService
-  ) {}
+  ) {
+    this.segment = 'reputation-points';
+    this.reputationPointsSegment = 'global';
+    this.projectSegment = 'global';
+    this.donationSegment = 'global';
+  }
 
   ngOnInit() {}
 
@@ -45,12 +54,30 @@ export class LeaderboardPage implements OnInit {
         )
       ]).subscribe((result) => {
         this.reputationPointsleaderboardUsers = result[0];
+        this.reputationPointsleaderboardUsers.splice(10);
         this.followingReputationPointsleaderboardUsers = result[1];
+        this.followingReputationPointsleaderboardUsers.splice(10);
         this.projectleaderboardUsers = result[2];
+        this.projectleaderboardUsers.splice(10);
         this.followingProjectleaderboardUsers = result[3];
+        this.followingProjectleaderboardUsers.splice(10);
         this.weeklyDonationAmountleaderboardUsers = result[4];
+        this.weeklyDonationAmountleaderboardUsers.splice(10);
         this.followingWeeklyDonationAmountleaderboardUsers = result[5];
+        this.followingWeeklyDonationAmountleaderboardUsers.splice(10);
       });
     });
+  }
+  async segmentChanged() {
+    this.segment;
+  }
+  async reputationPointsSegmentChanged() {
+    this.reputationPointsSegment;
+  }
+  async projectSegmentChanged() {
+    this.projectSegment;
+  }
+  async donationSegmentChanged() {
+    this.donationSegment;
   }
 }
