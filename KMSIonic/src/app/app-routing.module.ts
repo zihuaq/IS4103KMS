@@ -459,14 +459,14 @@ const routes: Routes = [
       import(
         './pages/project/editProject/manage-fulfillments-modal/make-payment-modal/make-payment-modal.module'
       ).then( m => m.MakePaymentModalPageModule)
-  // },
-  // {
-  //   path: 'update-fulfillment-modal',
-  //   loadChildren: () => 
-  //     import(
-  //       './pages/project/viewProject/view-mrp/update-fulfillment-modal/update-fulfillment-modal.module'
-  //     ).then( m => m.UpdateFulfillmentModalPageModule)
-  // }
+  },
+  {
+    path: 'update-fulfillment-modal',
+    loadChildren: () => 
+      import(
+        './pages/project/viewProject/view-mrp/update-fulfillment-modal/update-fulfillment-modal.module'
+      ).then( m => m.UpdateFulfillmentModalPageModule)
+  }
 ];
 
 @NgModule({

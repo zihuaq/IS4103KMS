@@ -148,7 +148,7 @@ export class MyFulfillmentsComponent implements OnInit {
   }
 
   updateFulfillment(updateFulfillmentForm: NgForm) {
-    if(this.fulfillmentToUpdate.priceOffered <= 0 && this.fulfillmentToUpdate.priceOffered){
+    if(this.fulfillmentToUpdate.priceOffered <= 0 && this.fulfillmentToUpdate.mra.type != MraType.ONETIMEDONATION){
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Invalid Price',
