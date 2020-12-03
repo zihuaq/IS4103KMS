@@ -11,30 +11,32 @@
   <form (ngSubmit)="submitTagRequest(tagForm)" #tagForm="ngForm">
     <ion-card>
       <ion-card-content>
-      <ion-item>
-        <ion-label position="floating">Tag Name <ion-text color="danger">*</ion-text></ion-label>
-        <ion-input required type="text" name="name" id="tag-request-name" placeholder="Enter Name" ngModel></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>Tag Type</ion-label>
-        <ion-select id="requested-tag-type" placeholder="Select Tag Type" name="tagType" required ngModel >
-          <ion-select-option value="SKILL">Skill</ion-select-option>
-          <ion-select-option value="SDG">SDG</ion-select-option>
-          <ion-select-option value="MATERIALRESOURCE">Material Resource</ion-select-option>
-          <ion-select-option value="REPORTPROFILE">Report Profile</ion-select-option>
-          <ion-select-option value="REPORTGROUP">Report Group</ion-select-option>
-          <ion-select-option value="REPORTPROJECT">Report Project</ion-select-option>
-          <ion-select-option value="REPORTPOST">Report Post</ion-select-option>
-          <ion-select-option value="REPORTCOMMENT">Report Comment</ion-select-option>
-          <ion-select-option value="REPORTREVIEW">Report Review</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-button (click)="clear(tagForm)" expand="block">
-        Clear
-      </ion-button>
-      <ion-button [disabled]="!tagForm.valid" expand="block" type="submit">
-        Submit
-      </ion-button>
+        <ion-item>
+          <ion-label position="floating">Tag Name <ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-input required type="text" name="name" id="tag-request-name" placeholder="Enter Name" ngModel>
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Tag Type</ion-label>
+          <ion-select id="requested-tag-type" placeholder="Select Tag Type" name="tagType" required ngModel>
+            <ion-select-option value="SKILL">Skill</ion-select-option>
+            <ion-select-option value="SDG">SDG</ion-select-option>
+            <ion-select-option value="MATERIALRESOURCE">Material Resource</ion-select-option>
+            <ion-select-option value="REPORTPROFILE">Report Profile</ion-select-option>
+            <ion-select-option value="REPORTGROUP">Report Group</ion-select-option>
+            <ion-select-option value="REPORTPROJECT">Report Project</ion-select-option>
+            <ion-select-option value="REPORTPOST">Report Post</ion-select-option>
+            <ion-select-option value="REPORTCOMMENT">Report Comment</ion-select-option>
+            <ion-select-option value="REPORTREVIEW">Report Review</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-button (click)="clear(tagForm)" expand="block">
+          Clear
+        </ion-button>
+        <ion-button [disabled]="!tagForm.valid" expand="block" type="submit">
+          Submit
+        </ion-button>
       </ion-card-content>
     </ion-card>
   </form>

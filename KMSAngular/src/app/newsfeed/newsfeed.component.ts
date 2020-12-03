@@ -801,7 +801,7 @@ export class NewsfeedComponent implements OnInit {
           title: 'Error',
           autohide: true,
           delay: 2500,
-          body: "Admin cannot participation in an election for new admins",
+          body: "Admins cannot participate in an election for new admins",
         });
         electionForm.reset();
         $('#applyElectionModalCloseBtn').click();
@@ -811,7 +811,7 @@ export class NewsfeedComponent implements OnInit {
           title: 'Error',
           autohide: true,
           delay: 2500,
-          body: "Institute Accounts cannot participation in an election for new admins",
+          body: "Institute Accounts cannot participate in an election for new admins",
         });
         electionForm.reset();
         $('#applyElectionModalCloseBtn').click();
