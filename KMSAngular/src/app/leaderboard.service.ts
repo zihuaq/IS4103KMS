@@ -29,15 +29,33 @@ export class AdminService {
             .pipe(catchError(this.handleError));
     }
 
+    getReputationPointLeaderboardForFollowing(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getReputationPointLeaderboardForFollowing/' + userId)
+            .pipe(catchError(this.handleError));
+    }
+
     getWeeklyDonationAmountLeaderboard(): Observable<any> {
         return this.http
             .get<any>(this.baseUrl + '/weeklyDonationAmountLeaderboard')
             .pipe(catchError(this.handleError));
     }
 
+    getWeeklyDonationAmountLeaderboardForFollowing(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getWeeklyDonationAmountLeaderboardForFollowing/' + userId)
+            .pipe(catchError(this.handleError));
+    }
+
     getProjectLeaderboard(): Observable<any> {
         return this.http
             .get<any>(this.baseUrl + '/projectLeaderboard')
+            .pipe(catchError(this.handleError));
+    }
+
+    getProjectLeaderboardForFollowing(userId: number): Observable<any> {
+        return this.http
+            .get<any>(this.baseUrl + '/getProjectLeaderboardForFollowing/' + userId)
             .pipe(catchError(this.handleError));
     }
 

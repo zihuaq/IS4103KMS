@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Election } from 'src/app/classes/election';
 import { User } from 'src/app/classes/user';
 import { ElectionService } from 'src/app/election.service';
@@ -17,7 +18,11 @@ export class EditElectionComponent implements OnInit {
   activeElection: Election;
   loggedInUser: User;
 
-  constructor(public electionService: ElectionService, private sessionService: SessionService) { }
+  constructor(public electionService: ElectionService, private sessionService: SessionService, private router: Router) {
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+  }
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
@@ -60,7 +65,7 @@ export class EditElectionComponent implements OnInit {
           delay: 2500,
           body: 'Election Ended!',
         });
-        this.updateElection();
+        this.router.navigate(["/admin-manage-elections"]);
       },
       (error) => {
         $(document).Toasts('create', {
