@@ -22,6 +22,7 @@ export class FollowRecommendationsComponent implements OnInit {
   hasRecommendations: Boolean;
   loggedInUserFollowing: User[];
   loggedInUserFollowRequestMade: FollowRequest[];
+  fullView: boolean = false;
 
   constructor(private sessionService: SessionService, private matchingService: MatchingService, private userService: UserService) { }
 
@@ -76,5 +77,9 @@ export class FollowRecommendationsComponent implements OnInit {
     return this.loggedInUserFollowRequestMade
       .map((f) => f.to.userId)
       .includes(userId);
+  }
+
+  toggleFullView(){
+    this.fullView = !this.fullView;
   }
 }

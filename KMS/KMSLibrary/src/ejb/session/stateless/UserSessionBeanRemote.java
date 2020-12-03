@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  *
- * @author Jeremy
+ * @author Cassie
  */
 public interface UserSessionBeanRemote {
 

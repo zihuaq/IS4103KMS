@@ -8,8 +8,8 @@
         </div>
         <div *ngIf="followersToFollow && followingOfFollowing"
             style="max-height: 500px; overflow-y: scroll; color: black;">
-            <div *ngFor="let user of followersToFollow" style="max-width:95%">
-                <div class="user-block" style="margin: 10px; width: 100%;">
+            <div *ngFor="let user of followersToFollow; let i = index" style="max-width:95%">
+                <div *ngIf="fullView || (!fullView && i<2)" class="user-block" style="margin: 10px; width: 100%;">
                     <img *ngIf="user.profilePicture" class="img-circle" [src]="user.profilePicture" alt="User Image">
                     <img *ngIf="!user.profilePicture" class="img-circle"
                         src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
@@ -19,7 +19,7 @@
                     </span>
                     <span class="description">follows you</span>
                 </div>
-                <div class="card-body">
+                <div *ngIf="fullView || (!fullView && i<2)" class="card-body">
                     <a routerLink="/userProfile/{{user.userId}}" class="btn btn-sm btn-primary" style="margin: 5px;">
                         <i class="fas fa-user"></i> View Profile
                     </a>
@@ -36,8 +36,8 @@
                     </button>
                 </div>
             </div>
-            <div *ngFor="let followingOfFollowingRsp of followingOfFollowing" style="max-width:95%">
-                <div class="user-block" style="margin: 10px; width: 100%;">
+            <div *ngFor="let followingOfFollowingRsp of followingOfFollowing; let i = index" style="max-width:95%">
+                <div *ngIf="fullView || (!fullView && i<2)" class="user-block" style="margin: 10px; width: 100%;">
                     <img *ngIf="followingOfFollowingRsp.userToRecommend.profilePicture" class="img-circle"
                         [src]="followingOfFollowingRsp.userToRecommend.profilePicture" alt="User Image">
                     <img *ngIf="!followingOfFollowingRsp.userToRecommend.profilePicture" class="img-circle"
@@ -67,7 +67,7 @@
                 </div>
                 <!-- /.user-block -->
                 <!-- /.card-header -->
-                <div class="card-body">
+                <div *ngIf="fullView || (!fullView && i<2)" class="card-body">
                     <a routerLink="/userProfile/{{followingOfFollowingRsp.userToRecommend.userId}}"
                         class="btn btn-sm btn-primary">
                         <i class="fas fa-user"></i> View Profile
@@ -86,4 +86,12 @@
                 </div>
             </div>
         </div>
+        <button type="button" class="btn btn-block btn-default btn-sm" (click)="toggleFullView()">
+            <p *ngIf="fullView" style="text-align: center;">
+                View Less
+            </p>
+            <p *ngIf="!fullView" style="text-align: center;">
+                View More
+            </p>
+        </button>
     </div>

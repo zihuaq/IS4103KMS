@@ -25,6 +25,7 @@ export class ProjectRecommendationsComponent implements OnInit {
   hasRecommendations: Boolean;
   loggedInUserProjects: Project[];
   ProjectType = ProjectType;
+  fullView: boolean = false;
 
   constructor(private sessionService: SessionService, private matchingService: MatchingService,
     private projectService: ProjectService, private userService: UserService) { }
@@ -77,5 +78,9 @@ export class ProjectRecommendationsComponent implements OnInit {
 
   sortSDG(sdgList: Tag[]): Tag[] {
     return sdgList.sort((a, b) => (a.tagId - b.tagId));
+  }
+
+  toggleFullView() {
+    this.fullView = !this.fullView;
   }
 }

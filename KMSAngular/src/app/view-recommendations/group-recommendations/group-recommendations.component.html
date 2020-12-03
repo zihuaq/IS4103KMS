@@ -7,9 +7,9 @@
             <p style="margin: 5px; text-align: center; width: 100%;"> No recommendations at the moment</p>
         </div>
         <div *ngIf="groupRecoBySDG && groupRecoByFollowing"
-            style="max-height: 500px; overflow-y: scroll; color: black;">
-            <div *ngFor="let group of groupRecoBySDG" style="max-width:95%">
-                <div class="user-block" style="margin: 10px; width: 100%;">
+            style="max-height: 600px; overflow-y: scroll; color: black;">
+            <div *ngFor="let group of groupRecoBySDG; let i = index" style="max-width:95%">
+                <div *ngIf="fullView || (!fullView && i<1)" class="user-block" style="margin: 10px; width: 100%;">
                     <img *ngIf="group.profilePicture" class="img-circle" [src]="group.profilePicture" alt="Group Image">
                     <img *ngIf="!group.profilePicture" class="img-circle"
                         src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
@@ -23,7 +23,7 @@
                     </span>
                     <span class="description">has relevant SDGs</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body" *ngIf="fullView || (!fullView && i<1)">
                     {{group.description}}
                     <p class="text-muted text-sm" style="margin-left: -5px;">
                         <span class="d-flex flex-wrap">
@@ -43,8 +43,8 @@
                             class="far fa-handshake"></i> Join</button>
                 </div>
             </div>
-            <div *ngFor="let groupReco of groupRecoByFollowing" style="max-width:95%">
-                <div class="user-block" style="margin: 10px; width:100%">
+            <div *ngFor="let groupReco of groupRecoByFollowing; let i = index" style="max-width:95%">
+                <div class="user-block" style="margin: 10px; width:100%" *ngIf="fullView || (!fullView && i<1)">
                     <img *ngIf="groupReco.groupToRecommend.profilePicture" class="img-circle"
                         [src]="groupReco.groupToRecommend.profilePicture" alt="User Image">
                     <img *ngIf="!groupReco.groupToRecommend.profilePicture" class="img-circle"
@@ -75,7 +75,7 @@
                         {{groupReco.followingInGroup.length-2}} others
                     </span>
                 </div>
-                <div class="card-body">
+                <div class="card-body" *ngIf="fullView || (!fullView && i<1)">
                     {{groupReco.groupToRecommend.description}}
                     <p class="text-muted text-sm" style="margin-left: -5px;">
                         <span class="d-flex flex-wrap">
@@ -98,4 +98,12 @@
             </div>
         </div>
     </div>
+    <button type="button" class="btn btn-block btn-default btn-sm" (click)="toggleFullView()">
+        <p *ngIf="fullView" style="text-align: center;">
+            View Less
+        </p>
+        <p *ngIf="!fullView" style="text-align: center;">
+            View More
+        </p>
+    </button>
 </div>
