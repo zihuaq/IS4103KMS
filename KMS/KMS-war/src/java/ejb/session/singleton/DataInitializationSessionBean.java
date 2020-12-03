@@ -35,6 +35,7 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.TagRequestEntity;
 import entity.TaskEntity;
@@ -432,6 +433,12 @@ public class DataInitializationSessionBean {
             taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-16 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 18:00"), 0.2, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Seek Sponsorship", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-20 12:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 12:00"), 0.0, 0l), 4l);
+        } catch (NoResultException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            activitySessionBeanLocal.createNewProjectReview(new ReviewEntity("Test", "Test review", 5), 1l, 4l, 1l);
         } catch (NoResultException ex) {
             System.out.println(ex.getMessage());
         }
