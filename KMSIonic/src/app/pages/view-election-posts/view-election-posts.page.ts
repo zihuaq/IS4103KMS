@@ -19,6 +19,7 @@ export class ViewElectionPostsPage implements OnInit {
   newsfeedPosts: Post[];
   filteredPosts: Post[];
   activeElections: Election;
+  hasActiveElection: boolean;
   constructor(
     private electionService: ElectionService,
     private authenticationService: AuthenticationService,
@@ -30,16 +31,21 @@ export class ViewElectionPostsPage implements OnInit {
 
   ionViewWillEnter() {
     this.authenticationService.getCurrentUser().then((user) => {
-      this.electionService.getActiveElection().subscribe((result) => {
-        this.activeElections = result;
-        forkJoin([
-          this.userService.getUser(user.userId.toString()),
-          this.postService.getPostForElection(this.activeElections.id)
-        ]).subscribe((result) => {
-          this.loggedInUser = result[0];
-          this.newsfeedPosts = result[1];
-          this.filteredPosts = this.newsfeedPosts;
-        });
+      this.electionService.getHasActiveElection().subscribe((result) => {
+        this.hasActiveElection = result;
+        if (this.hasActiveElection) {
+          this.electionService.getActiveElection().subscribe((result) => {
+            this.activeElections = result;
+            forkJoin([
+              this.userService.getUser(user.userId.toString()),
+              this.postService.getPostForElection(this.activeElections.id)
+            ]).subscribe((result) => {
+              this.loggedInUser = result[0];
+              this.newsfeedPosts = result[1];
+              this.filteredPosts = this.newsfeedPosts;
+            });
+          });
+        }
       });
     });
   }

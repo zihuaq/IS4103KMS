@@ -51,6 +51,11 @@ export class AppComponent implements OnInit {
       icon: 'notifications'
     },
     {
+      title: 'Leaderboard',
+      url: '/leaderboard',
+      icon: 'trophy'
+    },
+    {
       title: 'SDG Info',
       url: '/sdg-info',
       icon: 'information-circle'
@@ -58,7 +63,7 @@ export class AppComponent implements OnInit {
     {
       title: 'Discover Group',
       url: '/view-all-group',
-      icon: 'people'
+      icon: 'search'
     },
     {
       title: 'My Group',
@@ -74,6 +79,11 @@ export class AppComponent implements OnInit {
       title: 'My Project',
       url: '/view-own-projects',
       icon: 'person'
+    },
+    {
+      title: 'Election',
+      url: '/view-election-posts',
+      icon: 'bar-chart'
     },
     {
       title: 'Chat',
