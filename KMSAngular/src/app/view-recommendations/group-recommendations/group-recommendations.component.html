@@ -98,7 +98,7 @@
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-block btn-default btn-sm" (click)="toggleFullView()">
+    <button *ngIf="!hasRecommendations" type="button" class="btn btn-block btn-default btn-sm" (click)="toggleFullView()">
         <p *ngIf="fullView" style="text-align: center;">
             View Less
         </p>

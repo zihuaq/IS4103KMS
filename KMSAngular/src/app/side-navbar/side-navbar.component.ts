@@ -63,6 +63,7 @@ export class SideNavbarComponent implements OnInit {
         }
       );
       $('#makeTagReqModalCloseBtn').click();
+      tagForm.reset();
     }
   }
 
