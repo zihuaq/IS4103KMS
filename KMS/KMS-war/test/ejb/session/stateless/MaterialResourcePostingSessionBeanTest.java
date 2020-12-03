@@ -152,6 +152,13 @@ public class MaterialResourcePostingSessionBeanTest {
         assertEquals(1, result.size());
     }
     
+    @Test
+    public void test11GetAllMaterialResourcePosting() {
+        List result = materialResourcePostingSessionBean.getAllMaterialResourcePosting();
+        
+        assertEquals(3, result.size());
+    }
+    
 
     private MaterialResourcePostingSessionBeanRemote lookupMaterialResourcePostingSessionBeanRemote() {
         try {
