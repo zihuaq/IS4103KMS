@@ -52,7 +52,7 @@ export class ActivityTabComponent implements OnInit {
   project: Project;
   activitySelected: Activity;
   contributors: User[];
-  allocatedResources: MaterialResourcePosting[];
+  allocatedMrps: MaterialResourcePosting[];
   projectReviewForActivity: review[] = [];
   userReviewsForActivity: review[] = [];
   reviewsUnwrittenForUsers: User[] = [];
@@ -75,7 +75,7 @@ export class ActivityTabComponent implements OnInit {
     this.activitySelected = new Activity();
     this.activitySelected.joinedUsers = [];
     this.contributors = [];
-    this.allocatedResources = [];
+    this.allocatedMrps = [];
     this.showingReviewForm = 'User'
    }
 
@@ -90,23 +90,20 @@ export class ActivityTabComponent implements OnInit {
             this.isMember = true;
           }
         }
+        this.loggedInUser = this.sessionService.getCurrentUser();
+        if (this.project.projectOwner.userId == this.loggedInUser.userId) {
+          this.isOwner = true;
+        }
+        this.isAdmin = this.isAdminCheck(this.loggedInUser)
       },
       error => {
         this.router.navigate(["/error"]);
       }
     );
 
-    this.loggedInUser = this.sessionService.getCurrentUser();
-
-    if (this.project.projectOwner.userId == this.loggedInUser.userId) {
-      this.isOwner = true;
-    }
-
     this.projectReviewForActivity = [];
     this.userReviewsForActivity = [];
     this.reviewsUnwrittenForUsers = [];
-
-    this.isAdmin = this.isAdminCheck(this.loggedInUser)
 
     this.refreshActivities();
   }
@@ -253,9 +250,9 @@ export class ActivityTabComponent implements OnInit {
         this.activitySelected = response;
       }
     );
-    this.activityService.getAllocatedResources(activity.activityId).subscribe(
+    this.activityService.getAllocatedMrps(activity.activityId).subscribe(
       response => {
-        this.allocatedResources = response;
+        this.allocatedMrps = response;
       }
     );
   }

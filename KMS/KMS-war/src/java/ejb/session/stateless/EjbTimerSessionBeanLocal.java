@@ -13,5 +13,9 @@ import javax.ejb.Local;
  */
 @Local
 public interface EjbTimerSessionBeanLocal {
+
+    public void generateRecurringPayments();
+
+    public void updateFulfillmentStatus();
     
 }

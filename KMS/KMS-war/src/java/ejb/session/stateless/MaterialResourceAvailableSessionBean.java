@@ -51,12 +51,11 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
             mra.setTags(materialResourceAvailable.getTags());
             mra.setName(materialResourceAvailable.getName());
             mra.setDescription(materialResourceAvailable.getDescription());
-            mra.setQuantity(materialResourceAvailable.getQuantity());
             mra.setUnits(materialResourceAvailable.getUnits());
             mra.setLatitude(materialResourceAvailable.getLatitude());
             mra.setLongitude(materialResourceAvailable.getLongitude());
-            mra.setStartDate(materialResourceAvailable.getStartDate());
-            mra.setEndDate(materialResourceAvailable.getEndDate());
+            mra.setPrice(materialResourceAvailable.getPrice());
+            mra.setType(materialResourceAvailable.getType());
             return materialResourceAvailableOwner.getMras();
         } else {
             throw new NoResultException("User not found");
@@ -105,7 +104,7 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
     
     @Override
     public List<MaterialResourceAvailableEntity> getAllMaterialResourceAvailable(){
-        Query query = em.createQuery("SELECT mra FROM MaterialResourceAvailableEntity MRA");
+        Query query = em.createQuery("SELECT mra FROM MaterialResourceAvailableEntity mra");
         return query.getResultList();
     }
 }

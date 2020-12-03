@@ -14,7 +14,6 @@ export class Activity {
     longitude: number;
     description: string;
     activityStatus: ActivityStatus;
-    allocatedQuantities: Map<number, number>;
     project: Project;
     humanResourcePostings: HumanResourcePosting[];
     materialResourcePostings: MaterialResourcePosting[];
@@ -30,7 +29,6 @@ export class Activity {
         longitude?: number,
         description?: string,
         activityStatus?: ActivityStatus,
-        allocatedQuantities?: Map<number, number>,
         project?: Project,
         humanResourcePostings?: HumanResourcePosting[],
         materialResourcePostings?: MaterialResourcePosting[],
@@ -45,7 +43,6 @@ export class Activity {
         this.longitude = longitude;
         this.description = description;
         this.activityStatus = activityStatus;
-        this.allocatedQuantities = allocatedQuantities;
         this.project = project;
         this.humanResourcePostings = humanResourcePostings;
         this.materialResourcePostings = materialResourcePostings;

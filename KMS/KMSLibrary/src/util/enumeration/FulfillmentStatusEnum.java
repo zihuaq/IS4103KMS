@@ -12,8 +12,9 @@ package util.enumeration;
 public enum FulfillmentStatusEnum {
     PLEDGED,
     ACCEPTED,
-    PARTIALLYFULFILLED,
+    PARTIALLYFULFILLED, //for one-time 
     FULFILLED,
-    REJECTED
-    
+    REJECTED,
+    ONGOING, //for recurring subscription
+    ENDED //for recurring subscription 
 }

@@ -29,25 +29,14 @@ export class MrpService {
     return this.httpClient.get<any>(this.baseUrl + "/getMrpByProject/" + projectId).pipe(
       map((data) => {
         return data.map((mrp: MaterialResourcePosting) => {
-          return {
-            ...mrp,
-            startDate: new Date(
-              parseInt(mrp.startDate.toString().substring(0, 4)),
-              parseInt(mrp.startDate.toString().substring(5, 7)) - 1,
-              parseInt(mrp.startDate.toString().substring(8, 10)),
-              parseInt(mrp.startDate.toString().substring(11, 13)),
-              parseInt(mrp.startDate.toString().substring(14, 16)),
-              parseInt(mrp.startDate.toString().substring(17, 19))
-            ),
-            endDate: new Date(
-              parseInt(mrp.endDate.toString().substring(0, 4)),
-              parseInt(mrp.endDate.toString().substring(5, 7)) - 1,
-              parseInt(mrp.endDate.toString().substring(8, 10)),
-              parseInt(mrp.endDate.toString().substring(11, 13)),
-              parseInt(mrp.endDate.toString().substring(14, 16)),
-              parseInt(mrp.endDate.toString().substring(17, 19))
-            ),
+          var startDate: string = mrp.startDate.toString();
+          mrp.startDate = new Date(startDate.slice(0, startDate.indexOf("[")));
+          
+          if (mrp.endDate) {
+            var endDate: string = mrp.endDate.toString();
+            mrp.endDate = new Date(endDate.slice(0, endDate.indexOf("[")));
           }
+          return mrp;
         });
       }),
       catchError(this.handleError)

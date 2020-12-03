@@ -1,0 +1,89 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-8">
+                    <h1 class="m-0 text-dark">Discover Material Resource Postings</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-4">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+                        <li class="breadcrumb-item active">Material Resource Postings</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <section class="content">
+        <div class="card card-solid">
+            <div class="row">
+                <div class="col-8">
+                    <div class="input-group" style="margin: 15px 20px; width: auto">
+                        <input class="form-control" placeholder="Search postings by name, description and project name" [(ngModel)]="searchInput" (ngModelChange)="filter()">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group select2-dark" style="margin: 15px 20px; width: auto">
+                        <select class="select2" id="mrpTagSelect2" multiple="multiple" style="width: 100%;"
+                            data-placeholder="Filter by resource tags" data-dropdown-css-class="select2-dark">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pb-0">
+                <span class="text-muted" *ngIf="mrpList.length == 0"> 
+                    <p style="padding-bottom: 1em;">No material resource postings at the moment.</p>
+                </span>
+                <span *ngIf="mrpList.length > 0">
+                    <div *ngFor="let mrp of filteredMrpList">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between" style="margin-top: 8px;">
+                                    <div class="card-title">
+                                        <h5 style="color: black;">
+                                            <b>{{mrp.name}}</b>&nbsp;<i class="fas fa-caret-right"></i>&nbsp;<b>{{mrp.project.name}}</b>
+                                        </h5>
+                                    </div>
+                                    <button routerLink="/projectDetails/{{mrp.project.projectId}}/mrp-tab"
+                                        class="btn btn-sm btn-primary float-right">
+                                        <i class="fas fa-hands-helping"></i> View Project
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-body" style="display: block;">
+                                <p style="margin: 0 7px 0 7px;">
+                                    <b>Required from {{mrp.startDate.toString().slice(0,19) | date }} 
+                                        <span *ngIf="mrp.endDate"> to {{mrp.endDate.toString().slice(0,19) | date }}</span>
+                                    </b>
+                                    <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" 
+                                        (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> 
+                                        Required Location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}
+                                    </a>
+                                    <br/>
+                                    {{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required 
+                                    <span class="text-muted"> / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total</span>
+                                    <br/>
+                                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="mrp.tags.length > 0">
+                                        <div *ngFor="let tag of mrp.tags">
+                                            <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                                        </div>
+                                    </span>
+                                </p>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<app-footer></app-footer>

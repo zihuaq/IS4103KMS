@@ -112,6 +112,8 @@ import { ProjectRecommendationsComponent } from './view-recommendations/project-
 import { GroupRecommendationsComponent } from './view-recommendations/group-recommendations/group-recommendations.component';
 import { ManageTagsComponent } from './admin-manage-tags/manage-tags/manage-tags.component';
 import { AwardsAndBadgesComponent } from './user-profile/awards-and-badges/awards-and-badges.component';
+import { ViewAllMrasComponent } from './view-all-mras/view-all-mras.component';
+import { ViewAllMrpsComponent } from './view-all-mrps/view-all-mrps.component';
 import { HandleTagRequestsComponent } from './admin-manage-tags/handle-tag-requests/handle-tag-requests.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UploadProfilesComponent } from './administration/upload-profiles/upload-profiles.component';
@@ -235,6 +237,8 @@ export const environment = {
     GroupRecommendationsComponent,
     ManageTagsComponent,
     AwardsAndBadgesComponent,
+    ViewAllMrasComponent,
+    ViewAllMrpsComponent,
     HandleTagRequestsComponent,
     UploadProfilesComponent,
     AdminManageTagsComponent,

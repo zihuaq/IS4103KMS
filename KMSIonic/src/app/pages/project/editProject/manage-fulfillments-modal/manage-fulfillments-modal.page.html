@@ -12,6 +12,8 @@
       <ion-select-option value="PLEDGED">Pledged</ion-select-option>
       <ion-select-option value="ACCEPTED">Accepted</ion-select-option>
       <ion-select-option value="PARTIALLYFULFILLED">Partially Fulfilled</ion-select-option>
+      <ion-select-option value="ONGOING">Ongoing</ion-select-option>
+      <ion-select-option value="ENDED">Ended</ion-select-option>
       <ion-select-option value="FULFILLED">Fulfilled</ion-select-option>
     </ion-select>
   </ion-item>
@@ -28,26 +30,43 @@
         <ion-badge *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; background-color: rgb(40, 80, 80);">{{fulfillment.status}}</ion-badge>
         <ion-badge color="tertiary" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px;">PARTIALLY FULFILLED</ion-badge>
         <ion-badge color="success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; color: white; background-color: rgb(7, 129, 7);">{{fulfillment.status}}</ion-badge>
+        <ion-badge *ngIf="fulfillment.status == fulfillmentStatus.ONGOING" style="font-size: 12px; color: white; background-color: rgb(89, 13, 175);">{{fulfillment.status}}</ion-badge>
+        <ion-badge *ngIf="fulfillment.status == fulfillmentStatus.ENDED" style="font-size: 12px; color: white; background-color: rgb(202, 89, 13);">{{fulfillment.status}}</ion-badge>
       </ion-item>
       <ion-item>
-        <ion-card-title style="padding: 10px 5px 10px 5px">
-          <b>{{fulfillment.fulfillmentOwner.firstName}} {{fulfillment.fulfillmentOwner.lastName}}</b>
+        <ion-card-title style="padding: 5px 5px 5px 5px">
+          <b style="font-size: 23px;">{{fulfillment.fulfillmentOwner.firstName}} {{fulfillment.fulfillmentOwner.lastName}}</b>
         </ion-card-title>
         <ion-buttons *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" color="medium" slot="end">
           <ion-icon class="iconButton" name="ellipsis-horizontal-outline" (click)="handleFulfillmentActionSheet(fulfillment)"></ion-icon>
         </ion-buttons>
       </ion-item>
-      <ion-card-content style="padding-left: 20px; padding-right: 20px;">
-        <b style="font-size: 16px;">{{fulfillment.mra.name}}</b> 
+      <ion-card-content style="padding: 10px 20px 15px 23px;">
+        <b style="font-size: 20px;">{{fulfillment.mra.name}}</b> 
         <br/>
-        <span *ngIf="fulfillment.mra.description"> 
+        <b>
+          <span *ngIf="fulfillment.mra.type == mraType.ONETIMEDONATION">Free</span>
+          <span *ngIf="fulfillment.mra.type != mraType.ONETIMEDONATION">
+              US ${{fulfillment.priceOffered | number:'1.2-2'}}/<span *ngIf="mrp.unit == 'item(s)'">item</span>
+              <span *ngIf="mrp.unit != 'item(s)'">{{mrp.unit}}</span>
+              <span *ngIf="fulfillment.basisOffered == 'DAILY'"> per day</span>
+              <span *ngIf="fulfillment.basisOffered == 'WEEKLY'"> per week</span>
+              <span *ngIf="fulfillment.basisOffered == 'MONTHLY'"> per month</span>
+          </span>
+        </b>
+        <br/>
+        <span *ngIf="fulfillment.status != fulfillmentStatus.PLEDGED && (fulfillment.mra.type == mraType.ONETIMEDONATION || fulfillment.mra.type == mraType.ONETIMEPAYMENT)">
+          {{fulfillment.receivedQuantity | number:'1.0-2'}} {{mrp.unit}} received /
+        </span> {{fulfillment.totalPledgedQuantity | number:'1.0-2'}} {{mrp.unit}} pledged
+        <br/>
+        <span *ngIf="fulfillment.mra.description" style="font-size: 13px; margin-top: 5px; margin-bottom: 5px;"> 
           {{fulfillment.mra.description}} 
           <br/>
         </span>
-        {{fulfillment.receivedQuantity}} {{fulfillment.mra.units}} received / {{fulfillment.totalPledgedQuantity}} {{fulfillment.mra.units}} pledged
-        <br/>
-        <ion-badge color="warning" style="margin-top: 5px; font-size: 12px;" (click)="changehref(fulfillment.mra.latitude, fulfillment.mra.longitude)">
-          View location at {{fulfillment.mra.latitude | number:'1.1-6'}}, {{fulfillment.mra.longitude | number:'1.1-6'}}
+        <ion-badge color="warning" style="margin-top: 5px; margin-bottom: 5px;">
+          <a [href]="changehref(fulfillment.mra.latitude, fulfillment.mra.longitude)" style="color: black; text-decoration: none; font-size: 12px;"> 
+            View Location at {{fulfillment.mra.latitude | number:'1.1-6'}}, {{fulfillment.mra.longitude | number:'1.1-6'}}
+          </a>
         </ion-badge>
         <br/>
         <span *ngIf="fulfillment.mra.tags.length > 0">

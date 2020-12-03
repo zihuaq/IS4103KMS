@@ -16,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import util.enumeration.FulfillmentStatusEnum;
+import util.enumeration.MraTypeEnum;
+import util.enumeration.PaymentBasisEnum;
 
 /**
  *
@@ -33,16 +35,22 @@ public class FulfillmentEntity implements Serializable {
     @Column(nullable=false)
     private Double totalPledgedQuantity;
     
-    @NotNull
-    @Column(nullable=false)
     private Double receivedQuantity;
     
-    @NotNull
-    @Column(nullable=false)
     private Double unreceivedQuantity;
     
     @Enumerated(EnumType.STRING)
     private FulfillmentStatusEnum status;
+    
+    @NotNull
+    @Column(nullable=false)
+    private Double priceOffered;
+    
+    @Enumerated(EnumType.STRING)
+    private MraTypeEnum basisOffered;
+    
+    @Enumerated(EnumType.STRING)
+    private PaymentBasisEnum paymentBasis;
     
     @ManyToOne
     private UserEntity fulfillmentOwner;
@@ -57,11 +65,20 @@ public class FulfillmentEntity implements Serializable {
         this.status = FulfillmentStatusEnum.PLEDGED;
     }
 
-    public FulfillmentEntity(Double totalPledgedQuantity, Double receivedQuantity, Double unreceivedQuantity) {
+    public FulfillmentEntity(Double totalPledgedQuantity, Double receivedQuantity, Double unreceivedQuantity, Double priceOffered) {
         this();
         this.totalPledgedQuantity = totalPledgedQuantity;
         this.receivedQuantity = receivedQuantity;
         this.unreceivedQuantity = unreceivedQuantity;
+        this.priceOffered = priceOffered;
+    }
+
+    public FulfillmentEntity(Double totalPledgedQuantity, Double priceOffered, MraTypeEnum basisOffered, PaymentBasisEnum paymentBasis) {
+        this();
+        this.totalPledgedQuantity = totalPledgedQuantity;
+        this.priceOffered = priceOffered;
+        this.basisOffered = basisOffered;
+        this.paymentBasis = paymentBasis;
     }
 
     public Long getFulfillmentId() {
@@ -151,6 +168,30 @@ public class FulfillmentEntity implements Serializable {
 
     public void setMra(MaterialResourceAvailableEntity mra) {
         this.mra = mra;
+    }
+
+    public Double getPriceOffered() {
+        return priceOffered;
+    }
+
+    public void setPriceOffered(Double priceOffered) {
+        this.priceOffered = priceOffered;
+    }
+
+    public MraTypeEnum getBasisOffered() {
+        return basisOffered;
+    }
+
+    public void setBasisOffered(MraTypeEnum basisOffered) {
+        this.basisOffered = basisOffered;
+    }
+
+    public PaymentBasisEnum getPaymentBasis() {
+        return paymentBasis;
+    }
+
+    public void setPaymentBasis(PaymentBasisEnum paymentBasis) {
+        this.paymentBasis = paymentBasis;
     }
     
 }

@@ -3,12 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package session.stateless;
+package util.enumeration;
 
 /**
  *
- * @author chai
+ * @author zihua
  */
-public class DummyTest {
+public enum MraTypeEnum {
+    ONETIMEDONATION,
+    ONETIMEPAYMENT,
+    DAILY,
+    WEEKLY,
+    MONTHLY
     
 }

@@ -1,9 +1,15 @@
-import { Component, OnInit, ApplicationRef, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ApplicationRef,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { ModalController, Platform, ToastController } from '@ionic/angular';
-import { Location } from "@angular/common";
-import { ActivatedRoute, Router } from "@angular/router";
-import { NgForm } from "@angular/forms";
-import { Subscription } from "rxjs";
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import {
   CameraPosition,
   GoogleMap,
@@ -14,12 +20,13 @@ import {
   ILatLng,
   LatLng,
   Marker
-} from "@ionic-native/google-maps"
+} from '@ionic-native/google-maps';
 
 import { MaterialResourcePosting } from 'src/app/classes/material-resource-posting';
-import { MrpService } from 'src/app/services/mrp.service'; 
+import { MrpService } from 'src/app/services/mrp.service';
 import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/services/tag.service';
+import { FulfillmentStatus } from 'src/app/enum/fulfillment-status.enum';
 
 @Component({
   selector: 'app-edit-mrp-details',
@@ -37,7 +44,6 @@ export class EditMrpDetailsPage implements OnInit {
   searchValue: string;
   hasSelected: boolean;
   minDate = new Date().toISOString().slice(0, 10);
-  maxDate: string;
   mapSubscription: Subscription;
   map: GoogleMap;
   @ViewChild('map', { read: ElementRef, static: false }) mapRef: ElementRef;
@@ -64,9 +70,6 @@ export class EditMrpDetailsPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    let date = new Date();
-    date.setFullYear(date.getFullYear() + 1);
-    this.maxDate = date.toISOString().slice(0, 10);
     this.mrpId = parseInt(this.activatedRoute.snapshot.paramMap.get('mrpId'));
     this.tagService.getAllMaterialResourceTags().subscribe((response) => {
       this.tags = response;
@@ -75,7 +78,9 @@ export class EditMrpDetailsPage implements OnInit {
     this.mrpService.getMrp(this.mrpId).subscribe((response) => {
       this.mrpToEdit = response;
       this.startDate = this.formatDate(this.mrpToEdit.startDate.toString());
-      this.endDate = this.formatDate(this.mrpToEdit.endDate.toString());
+      if (this.mrpToEdit.endDate) {
+        this.endDate = this.formatDate(this.mrpToEdit.endDate.toString());
+      }
       this.chosenTags = this.mrpToEdit.tags;
     });
   }
@@ -143,43 +148,38 @@ export class EditMrpDetailsPage implements OnInit {
   }
 
   async editMrp(mrpForm: NgForm) {
-    if (
-      new Date(this.startDate).toJSON().slice(0, 10) >
-      new Date(this.endDate).toJSON().slice(0, 10)
-    ) {
-      const toast = await this.toastController.create({
-        message: 'End Date should not come before the Start Date.',
-        duration: 2000
-      });
-      toast.present();
-      return;
-    }
-
     this.mrpToEdit.tags = this.chosenTags;
     this.mrpToEdit.startDate = new Date(this.startDate);
-    this.mrpToEdit.endDate = new Date(this.endDate);
+    this.mrpToEdit.endDate = this.endDate ? new Date(this.endDate) : null;
 
     var totalPledgedQuantity: number = 0;
-    this.mrpToEdit.fulfillments.forEach((element) => {
-      totalPledgedQuantity += element.totalPledgedQuantity;
+    this.mrpToEdit.fulfillments.forEach((fulfillment) => {
+      if (fulfillment.status != FulfillmentStatus.REJECTED) {
+        totalPledgedQuantity += fulfillment.totalPledgedQuantity;
+      }
     });
     if (this.mrpToEdit.totalQuantity < totalPledgedQuantity) {
       const toast = await this.toastController.create({
         message:
           'Quantity required cannot be less than total pledged quantity.',
-        duration: 2000
+        color: 'warning',
+        duration: 3000
       });
       toast.present();
       return;
     }
-
+    this.mrpToEdit.lackingQuantity =
+      this.mrpToEdit.totalQuantity - totalPledgedQuantity;
+    console.log(this.mrpToEdit);
     this.mrpService.updateMrp(this.mrpToEdit).subscribe(async (response) => {
+      this.router.navigate(['tab-panel/' + this.mrpToEdit.project.projectId]);
+
       const toast = await this.toastController.create({
-        message: 'Mrp updated successfully.',
-        duration: 2000
+        message: 'Material Resource Posting is updated successfully.',
+        color: 'success',
+        duration: 3000
       });
       toast.present();
-      this.router.navigate(['tab-panel/' + this.mrpToEdit.project.projectId]);
     });
   }
 
@@ -221,5 +221,14 @@ export class EditMrpDetailsPage implements OnInit {
   clearSearch() {
     this.searchValue = '';
     this.filteredTags = [];
+  }
+
+  clearStartDate() {
+    this.startDate = undefined;
+  }
+
+  clearEndDate() {
+    console.log('clearEndDate');
+    this.endDate = undefined;
   }
 }

@@ -9,6 +9,8 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FulfillmentStatus } from 'src/app/enum/fulfillment-status.enum';
 import { AlertController, ToastController, ModalController } from '@ionic/angular';
 import { UpdateQuantityModalPage } from '../../../editProject/manage-fulfillments-modal/update-quantity-modal/update-quantity-modal.page';
+import { MraType } from 'src/app/enum/mra-type.enum';
+import { UpdateFulfillmentModalPage } from '../update-fulfillment-modal/update-fulfillment-modal.page';
 
 @Component({
   selector: 'app-view-my-fulfillments',
@@ -63,7 +65,11 @@ export class ViewMyFulfillmentsPage implements OnInit {
     if (this.searchInput && this.searchInput != "") {
       this.filteredList = this.fulfillmentList.filter(
         (fulfillment: Fulfillment) => {
-          return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase())
+          if (fulfillment.posting.description) {
+            return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase()) || fulfillment.posting.name.toLowerCase().includes(this.searchInput.toLowerCase()) || fulfillment.posting.description.toLowerCase().includes(this.searchInput.toLowerCase());
+          } else {
+            return fulfillment.mra.name.toLowerCase().includes(this.searchInput.toLowerCase()) || fulfillment.posting.name.toLowerCase().includes(this.searchInput.toLowerCase());
+          }
         }
       )
     }
@@ -74,7 +80,7 @@ export class ViewMyFulfillmentsPage implements OnInit {
         statusSelectedEnums.push(FulfillmentStatus[status]);
       }
     )
-    if (statusSelectedEnums.length != 0 && statusSelectedEnums.length != 5) {
+    if (statusSelectedEnums.length != 0 && statusSelectedEnums.length != 7) {
       this.filteredList = this.filteredList.filter(
         (fulfillment: Fulfillment) => {
         return statusSelectedEnums.indexOf(fulfillment.status) > -1;
@@ -84,7 +90,11 @@ export class ViewMyFulfillmentsPage implements OnInit {
 
   changehref(lat: number, long: number) {
     var url = "http://maps.google.com/?q=" + lat + "," + long;
-    window.open(url, '_blank');
+    return url;
+  }
+
+  get mraType(): typeof MraType {
+    return MraType;
   }
 
   get fulfillmentStatus(): typeof FulfillmentStatus{
@@ -92,24 +102,16 @@ export class ViewMyFulfillmentsPage implements OnInit {
   }
 
   async clickUpdate(fulfillmentToUpdate: Fulfillment) {
-    if (fulfillmentToUpdate.status == FulfillmentStatus.ACCEPTED) {
-      this.toast(false, "Accepted fulfillments cannot be updated");
-    } else if (fulfillmentToUpdate.status == FulfillmentStatus.PARTIALLYFULFILLED) {
-      this.toast(false, "Ongoing fulfillments cannot be updated");
-    } else if (fulfillmentToUpdate.status == FulfillmentStatus.FULFILLED) {
-      this.toast(false, "Completed fulfillments cannot be updated");
-    } else if (fulfillmentToUpdate.status == FulfillmentStatus.REJECTED) {
-      this.toast(false, "Rejected fulfillments cannot be updated");
+    if (fulfillmentToUpdate.status != FulfillmentStatus.PLEDGED) {
+      this.toast(false, "Only pledged fulfillments can be updated");
     } else {
       const modal = await this.modalController.create({
-        component: UpdateQuantityModalPage,
+        component: UpdateFulfillmentModalPage,
         cssClass: 'manage-fulfillment-modal',
         showBackdrop: true,
         swipeToClose: true,
         componentProps: {
-          mrpId: fulfillmentToUpdate.posting.materialResourcePostingId,
-          fulfillmentToUpdate: fulfillmentToUpdate,
-          byUser: true
+          fulfillmentToUpdate: fulfillmentToUpdate
         }
       });
       modal.present();
@@ -162,13 +164,14 @@ export class ViewMyFulfillmentsPage implements OnInit {
     if (success) {
       const toast = await this.toastController.create({
         message: body,
+        color: 'success',
         duration: 3500
       });
       toast.present();
     } else {
       const toast = await this.toastController.create({
         message: body,
-        color: 'danger',
+        color: 'warning',
         duration: 3500
       });
       toast.present();

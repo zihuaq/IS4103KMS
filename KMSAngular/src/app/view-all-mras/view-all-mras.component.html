@@ -1,0 +1,109 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-8">
+                    <h1 class="m-0 text-dark">Discover Material Resource Available</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-4">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+                        <li class="breadcrumb-item active">Material Resource Available</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <section class="content">
+        <div class="card card-solid">
+            <div class="row">
+                <div class="col-8">
+                    <div class="input-group" style="margin: 15px 20px; width: auto">
+                        <input class="form-control" placeholder="Search material resources by name, description and owner's name" [(ngModel)]="searchInput" (ngModelChange)="filter()">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group select2-dark" style="margin: 15px 20px; width: auto">
+                        <select class="select2" id="mraTagSelect2" multiple="multiple" style="width: 100%;"
+                            data-placeholder="Filter by material resource tags" data-dropdown-css-class="select2-dark">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pb-0">
+                <span class="text-muted" *ngIf="mraList.length == 0"> 
+                    <p style="padding-bottom: 1em;">No material resource available at the moment.</p>
+                </span>
+                <span *ngIf="mraList.length > 0">
+                    <div *ngFor="let mra of filteredMraList">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between" style="margin-top: 8px;">
+                                    <div class="card-title">
+                                        <h5 style="color: black;">
+                                            <b>{{mra.materialResourceAvailableOwner.firstName}}
+                                                {{mra.materialResourceAvailableOwner.lastName}}'s {{mra.name}}</b>&nbsp;
+                                            <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: bisque;"
+                                                *ngIf="mra.type == 'ONETIMEDONATION' || mra.type == 'ONETIMEPAYMENT'">ONE-TIME
+                                            </span>
+                                            <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: burlywood;"
+                                                *ngIf="mra.type != 'ONETIMEDONATION' && mra.type != 'ONETIMEPAYMENT'">RECURRING
+                                            </span>
+                                        </h5>
+                                    </div>
+                                    <button routerLink="/userProfile/{{mra.materialResourceAvailableOwner.userId}}"
+                                        class="btn btn-sm btn-primary float-right">
+                                        <i class="fas fa-user"></i> View Profile
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-body p-0" style="display: block;">
+                                <ul class="products-list product-list-in-card pl-2 pr-2">
+                                    <li class="item">
+                                        <div class="product-info ml-3 mr-3" style="color: black;">
+                                            <a class="product-title">
+                                                <span *ngIf="mra.type == 'ONETIMEDONATION'">Free</span>
+                                                <span *ngIf="mra.type != 'ONETIMEDONATION'">
+                                                    US ${{mra.price}}/<span *ngIf="mra.units == 'item(s)'">item</span>
+                                                    <span *ngIf="mra.units != 'item(s)'">{{mra.units}}</span>
+                                                    <span *ngIf="mra.type == 'DAILY'"> per day</span>
+                                                    <span *ngIf="mra.type == 'WEEKLY'"> per week</span>
+                                                    <span *ngIf="mra.type == 'MONTHLY'"> per month</span>
+                                                </span>
+                                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
+                                                    (click)="changehref(mra.latitude, mra.longitude)" target="_blank"> 
+                                                    At location {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}
+                                                </a>
+                                            </a>
+                                            <span class="product-description">
+                                                {{mra.description}}
+                                                <span *ngIf="mra.tags.length > 0">
+                                                    <div *ngFor="let tag of mra.tags">
+                                                        <small class="badge badge-info">
+                                                            {{tag.name}}
+                                                        </small>
+                                                    </div>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                    <!-- /.item -->
+                                </ul>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<app-footer></app-footer>

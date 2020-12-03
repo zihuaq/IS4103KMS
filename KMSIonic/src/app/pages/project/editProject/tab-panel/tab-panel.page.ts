@@ -23,6 +23,7 @@ import { ManageFulfillmentsModalPage } from '../manage-fulfillments-modal/manage
 import { MrpRecommendationsModalPage } from '../mrp-recommendations-modal/mrp-recommendations-modal.page';
 import { FulfillmentService } from '../../../../services/fulfillment.service';
 import { Document } from 'src/app/classes/document';
+import { FulfillmentStatus } from 'src/app/enum/fulfillment-status.enum';
 import { HrpRecommendationsModalPage } from '../hrp-recommendations-modal/hrp-recommendations-modal.page';
 
 @Component({
@@ -398,7 +399,7 @@ export class TabPanelPage implements OnInit {
           text: 'Manage Fulfillments',
           icon: 'cube',
           handler: () => {
-            this.manageFulfillmentsModal(mrpId);
+            this.manageFulfillmentsModal(mrpId); 
           }
         },
         {
@@ -407,12 +408,41 @@ export class TabPanelPage implements OnInit {
           handler: () => {
             this.mrpRecommendationsModal(mrpId);
           }
-        },
+        }, 
         {
           text: 'Edit Posting',
           icon: 'create',
           handler: () => {
-            this.router.navigate(['edit-mrp-details/' + mrpId]);
+            this.mrpService.getMrp(mrpId).subscribe(
+              response => {
+                var mrp: MaterialResourcePosting = response;
+        
+                this.fulfillmentService.getFulfillmentsByMrp(mrp.materialResourcePostingId).subscribe(
+                  async response => {
+                    mrp.fulfillments = response;
+                    console.log(mrp.fulfillments.length);
+        
+                    var invalid: boolean = false;
+                    mrp.fulfillments.map((fulfillment) => {
+                      if (fulfillment.status != FulfillmentStatus.REJECTED && fulfillment.status != FulfillmentStatus.FULFILLED) {
+                        invalid = true;
+                        return;
+                      }
+                    })
+                    if (invalid) {
+                      const toast = await this.toastController.create({
+                        message: "Material Resource Posting cannot be edited as there are pending and/or ongoing fulfillments",
+                        color: "warning",
+                        duration: 4500
+                      });
+                      toast.present();
+                    } else {
+                      this.router.navigate(["edit-mrp-details/" + mrpId]);
+                    }
+                  }
+                );
+              }
+            );
           }
         },
         {
@@ -435,6 +465,7 @@ export class TabPanelPage implements OnInit {
           text: 'Cancel',
           icon: 'close',
           role: 'cancel'
+          
         }
       ]
     });
@@ -501,8 +532,8 @@ export class TabPanelPage implements OnInit {
   }
 
   changehref(lat: number, long: number) {
-    var url = 'http://maps.google.com/?q=' + lat + ',' + long;
-    window.open(url, '_blank');
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    return url;
   }
 
   viewFile(key) {

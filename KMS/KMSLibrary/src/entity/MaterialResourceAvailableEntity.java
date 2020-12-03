@@ -7,19 +7,19 @@ package entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import util.enumeration.MraTypeEnum;
 
 /**
  *
@@ -36,13 +36,7 @@ public class MaterialResourceAvailableEntity implements Serializable {
     @NotNull
     @Column(nullable = false)
     private String name;
-
-    @NotNull
-    @Column(nullable = false)
-    private Integer quantity;
     
-    @NotNull
-    @Column(nullable = false)
     private String units;
 
     private String description;
@@ -54,15 +48,15 @@ public class MaterialResourceAvailableEntity implements Serializable {
     @NotNull
     @Column(nullable = false)
     private String longitude;
-
-    @Column
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
-
     
-    @Column
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    @NotNull
+    @Column(nullable = false)
+    private Double price;
+    
+    @NotNull
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MraTypeEnum type;
 
     @NotNull
     @JoinTable(name = "mras")
@@ -76,16 +70,15 @@ public class MaterialResourceAvailableEntity implements Serializable {
         this.tags = new ArrayList<>();
     }
 
-    public MaterialResourceAvailableEntity(String name, Integer quantity, String units, String description, Date startDate, Date endDate, String latitude, String longitude, List<TagEntity> tags) {
+    public MaterialResourceAvailableEntity(String name, String units, String description, String latitude, String longitude, Double price, MraTypeEnum type, List<TagEntity> tags) {
         this();
         this.name = name;
-        this.quantity = quantity;
         this.units = units;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.price = price;
+        this.type = type;
         this.tags = tags;
     }
 
@@ -130,36 +123,12 @@ public class MaterialResourceAvailableEntity implements Serializable {
         this.name = name;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public UserEntity getMaterialResourceAvailableOwner() {
@@ -200,6 +169,22 @@ public class MaterialResourceAvailableEntity implements Serializable {
 
     public void setUnits(String units) {
         this.units = units;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public MraTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(MraTypeEnum type) {
+        this.type = type;
     }
   
 }
