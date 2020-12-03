@@ -23,6 +23,7 @@ export class GroupRecommendationsComponent implements OnInit {
   groupRecoByFollowing: GroupRecommendationBasedOnFollowingRsp[];
   hasRecommendations: Boolean;
   loggedInUserGroups: Group[];
+  fullView: boolean = false;
 
   constructor(private sessionService: SessionService, private matchingService: MatchingService,
     private groupService: GroupService, private userService: UserService) { }
@@ -74,5 +75,9 @@ export class GroupRecommendationsComponent implements OnInit {
 
   sortSDG(sdgList: Tag[]): Tag[] {
     return sdgList.sort((a, b) => (a.tagId - b.tagId));
+  }
+
+  toggleFullView(){
+    this.fullView = !this.fullView;
   }
 }

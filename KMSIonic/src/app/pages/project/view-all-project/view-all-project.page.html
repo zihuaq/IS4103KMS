@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Discover Projects      
+      Discover Projects
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="createProject()">
@@ -12,8 +12,7 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm"
-    (ionChange)="setFilteredItems(searchTerm)" #searchBar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchTerm" (ionChange)="setFilteredItems(searchTerm)" #searchBar>
   </ion-searchbar>
 </ion-header>
 
@@ -22,6 +21,9 @@
     <ion-card-content>
       Loading...
     </ion-card-content>
+  </span>
+  <span *ngIf="loaded && filteredProjects.length == 0">
+    No projects found.
   </span>
   <span *ngIf="loaded">
     <span *ngFor="let project of filteredProjects">
@@ -35,7 +37,7 @@
           <p *ngIf="!project.description" style="margin-bottom: 8px; font-style: italic;">Project has no description</p>
           <span *ngFor="let sdg of sortSDG(project.sdgs)">
             <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
-          </span> 
+          </span>
         </ion-card-content>
       </ion-card>
     </span>

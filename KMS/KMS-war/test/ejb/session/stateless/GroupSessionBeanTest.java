@@ -24,6 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import ejb.session.stateless.TagSessionBeanRemote;
+import ejb.session.stateless.UserSessionBeanRemote;
 import entity.UserEntity;
 
 /**
@@ -32,9 +33,15 @@ import entity.UserEntity;
  */
 public class GroupSessionBeanTest {
 
+    UserSessionBeanRemote userSessionBean = lookupUserSessionBeanRemote();
+
     TagSessionBeanRemote tagSessionBean = lookupTagSessionBeanRemote();
 
     GroupSessionBeanRemote groupSessionBean = lookupGroupSessionBeanRemote();
+    
+    UserEntity user;
+    
+    GroupEntity group;
 
     public GroupSessionBeanTest() {
     }
@@ -50,6 +57,7 @@ public class GroupSessionBeanTest {
     @Before
     public void setUp() {
         System.out.println("@Before setUp");
+        
     }
 
     @After
@@ -113,9 +121,20 @@ public class GroupSessionBeanTest {
         assertTrue(hasUser);
     }
 
+    @Test(expected = NoResultException.class)
+    public void testJoinGroupInvalidGroupId() throws NoResultException {
+        groupSessionBean.joinGroup(-1l, 1l);
+    }
+
+    @Test(expected = NoResultException.class)
+    public void testJoinGroupInvalidUserId() throws NoResultException {
+        groupSessionBean.joinGroup(1l, -1l);
+    }
+
     @Test
     public void testRemoveMember() throws Exception {
-
+        groupSessionBean.joinGroup(1l, 1l);
+        groupSessionBean.removeMember(1l, 1l);
     }
 
     @Test
@@ -153,6 +172,16 @@ public class GroupSessionBeanTest {
         try {
             Context c = new InitialContext();
             return (TagSessionBeanRemote) c.lookup("java:global/KMS/KMS-war/TagSessionBean!ejb.session.stateless.TagSessionBeanRemote");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private UserSessionBeanRemote lookupUserSessionBeanRemote() {
+        try {
+            Context c = new InitialContext();
+            return (UserSessionBeanRemote) c.lookup("java:global/KMS/KMS-war/UserSessionBean!ejb.session.stateless.UserSessionBeanRemote");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

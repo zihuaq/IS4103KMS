@@ -30,10 +30,9 @@ import { User } from 'src/app/classes/user';
 @Component({
   selector: 'app-create-mrp',
   templateUrl: './create-mrp.page.html',
-  styleUrls: ['./create-mrp.page.scss'],
+  styleUrls: ['./create-mrp.page.scss']
 })
 export class CreateMrpPage implements OnInit {
-
   currentUser: User;
   projectId: number;
   project: Project;
@@ -46,11 +45,13 @@ export class CreateMrpPage implements OnInit {
   searchValue: string;
   hasSelected: boolean;
   minDate = new Date().toISOString().slice(0, 10);
+  maxDate: string;
   mapSubscription: Subscription;
   map: GoogleMap;
-  @ViewChild("map", { read: ElementRef, static: false }) mapRef: ElementRef;
+  @ViewChild('map', { read: ElementRef, static: false }) mapRef: ElementRef;
 
-  constructor(public modalCtrl: ModalController,
+  constructor(
+    public modalCtrl: ModalController,
     private toastController: ToastController,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -61,89 +62,88 @@ export class CreateMrpPage implements OnInit {
     private projectService: ProjectService,
     private authenticationService: AuthenticationService,
     private platform: Platform,
-    private app: ApplicationRef) {
-      this.newMrp = new MaterialResourcePosting();
-      this.tags = [];
-      this.filteredTags = [];
-      this.chosenTags = [];
-    }
+    private app: ApplicationRef
+  ) {
+    this.newMrp = new MaterialResourcePosting();
+    this.tags = [];
+    this.filteredTags = [];
+    this.chosenTags = [];
+  }
 
   ngOnInit() {
-    this.platform.ready().then(() => this.loadMap())
+    this.platform.ready().then(() => this.loadMap());
   }
 
   ionViewWillEnter() {
-    this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
-    this.tagService.getAllMaterialResourceTags().subscribe(
-      (response) => {
-        this.tags = response; 
-        console.log(this.tags)
-      },
+    let date = new Date();
+    date.setFullYear(date.getFullYear() + 1);
+    this.maxDate = date.toISOString().slice(0, 10);
+    this.projectId = parseInt(
+      this.activatedRoute.snapshot.paramMap.get('projectId')
     );
-    this.projectService.getProjectById(this.projectId).subscribe(
-      response => {
-        this.project = response;
-      }
-    );
+    this.tagService.getAllMaterialResourceTags().subscribe((response) => {
+      this.tags = response;
+      console.log(this.tags);
+    });
+    this.projectService.getProjectById(this.projectId).subscribe((response) => {
+      this.project = response;
+    });
     this.authenticationService.getCurrentUser().then((user) => {
       this.currentUser = user;
-    })
+    });
   }
 
   loadMap() {
-    console.log("load map")
-    this.map = GoogleMaps.create("map_canvas")
+    console.log('load map');
+    this.map = GoogleMaps.create('map_canvas');
 
     if (!this.newMrp.latitude) {
       this.map.getMyLocation().then((location) => {
         let marker: Marker = this.map.addMarkerSync({
           position: location.latLng
-        })
+        });
 
         let position: CameraPosition<ILatLng> = {
           target: marker.getPosition(),
           zoom: 16
-        }
+        };
 
         this.map.setOptions({
           mapType: GoogleMapsMapTypeId.HYBRID,
           camera: position
-        })
-        this.newMrp.latitude = location.latLng.lat
-        this.newMrp.longitude = location.latLng.lng
-        this.app.tick()
-      })
+        });
+        this.newMrp.latitude = location.latLng.lat;
+        this.newMrp.longitude = location.latLng.lng;
+        this.app.tick();
+      });
     } else {
       let marker: Marker = this.map.addMarkerSync({
-        position: new LatLng(
-          this.newMrp.latitude,
-          this.newMrp.longitude
-        )
-      })
+        position: new LatLng(this.newMrp.latitude, this.newMrp.longitude)
+      });
 
       let position: CameraPosition<ILatLng> = {
         target: marker.getPosition(),
         zoom: 16
-      }
+      };
 
       this.map.setOptions({
         mapType: GoogleMapsMapTypeId.HYBRID,
         camera: position
-      })
+      });
     }
     this.mapSubscription = this.map
       .on(GoogleMapsEvent.MAP_CLICK)
       .subscribe((params: any[]) => {
-        let latLng: LatLng = params[0]
-        this.map.clear()
+        let latLng: LatLng = params[0];
+        this.map.clear();
         this.map.addMarkerSync({
           position: latLng,
           animation: GoogleMapsAnimation.DROP
-        })
-        this.newMrp.latitude = latLng.lat
-        this.newMrp.longitude = latLng.lng
-        this.app.tick()
-      })
+        });
+        this.newMrp.latitude = latLng.lat;
+        this.newMrp.longitude = latLng.lng;
+        this.app.tick();
+      });
   }
 
   dismiss() {
@@ -157,7 +157,7 @@ export class CreateMrpPage implements OnInit {
         message: "Please select at least one Material Resource tags",
         color: "warning",
         duration: 2000
-      })
+      });
       toast.present();
       return;
     }
@@ -171,13 +171,17 @@ export class CreateMrpPage implements OnInit {
     this.mrpService.createNewMrp(this.newMrp, this.projectId, tagIds).subscribe(
       async response => {
         let newNotification = new Notification();
-        newNotification.msg = "A new Material Resource Posting has been added to " + this.project.name;
+        newNotification.msg =
+          'A new Material Resource Posting has been added to ' +
+          this.project.name;
         newNotification.projectId = this.projectId;
         newNotification.groupId = null;
-        newNotification.tabName = "mrp-tab";
+        newNotification.tabName = 'mrp-tab';
         for (let member of this.project.projectMembers) {
           if (member.userId != this.currentUser.userId) {
-            this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+            this.notificationService
+              .createNewNotification(newNotification, member.userId)
+              .subscribe();
           }
         }
         this.router.navigate(["tab-panel/" + this.projectId]);
@@ -193,43 +197,43 @@ export class CreateMrpPage implements OnInit {
   }
 
   filterList(evt) {
-    this.searchValue = evt.srcElement.value
+    this.searchValue = evt.srcElement.value;
 
     if (!this.searchValue) {
-      this.filteredTags = this.tags
+      this.filteredTags = this.tags;
     }
 
     this.filteredTags = this.tags.filter((tag) => {
       if (tag.name && this.searchValue) {
-        return tag.name.toLowerCase().includes(this.searchValue.toLowerCase())
+        return tag.name.toLowerCase().includes(this.searchValue.toLowerCase());
       }
-    })
+    });
   }
 
   selectTag(tag: Tag) {
-    this.hasSelected = false
+    this.hasSelected = false;
     this.chosenTags.forEach((element) => {
       if (element.name == tag.name) {
-        this.hasSelected = true
+        this.hasSelected = true;
       }
-    })
+    });
     if (!this.hasSelected) {
-      this.chosenTags.push(tag)
-      this.clearSearch()
+      this.chosenTags.push(tag);
+      this.clearSearch();
     }
   }
 
   removeTag(tag: Tag) {
     this.chosenTags.forEach((element, index) => {
       if (element.name == tag.name) {
-        this.chosenTags.splice(index, 1)
+        this.chosenTags.splice(index, 1);
       }
-    })
+    });
   }
 
   clearSearch() {
-    this.searchValue = ""
-    this.filteredTags = []
+    this.searchValue = '';
+    this.filteredTags = [];
   }
 
   clearStartDate() {

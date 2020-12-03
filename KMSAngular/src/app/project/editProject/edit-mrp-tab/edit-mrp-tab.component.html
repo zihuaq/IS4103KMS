@@ -447,27 +447,40 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div *ngIf="mraRecommendations.length == 0"> <b>No recommendations at the moment</b></div>
-                <div *ngIf="mraRecommendations.length > 0" style="max-height: 500px; overflow-y: scroll;">
-                    <div *ngFor="let mra of mraRecommendations" style="max-width:95%">
+                <div *ngIf="mrpMatches.length == 0"> <b>No recommendations at the moment</b></div>
+                <div *ngIf="mrpMatches.length > 0" style="max-height: 500px; overflow-y: scroll;">
+                    <div *ngFor="let match of mrpMatches" style="max-width:95%">
                         <div class="card">
                             <!-- /.card-header -->
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
                                     <div class="card-title">
                                         <h5 style="color: black;">
-                                            <b>{{mra.materialResourceAvailableOwner.firstName}}
-                                                {{mra.materialResourceAvailableOwner.lastName}}'s {{mra.name}}</b>&nbsp;
+                                            <b>{{match.mraToRecommend.materialResourceAvailableOwner.firstName}}
+                                                {{match.mraToRecommend.materialResourceAvailableOwner.lastName}}'s
+                                                {{match.mraToRecommend.name}}</b>
+                                            &nbsp;
+                                            <span class="badge badge-success" *ngIf="match.percentageMatch >= 75"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
+                                            <span class="badge badge-warning"
+                                                *ngIf="match.percentageMatch >= 50 && match.percentageMatch < 75"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
+                                            <span class="badge badge-danger"
+                                                *ngIf="match.percentageMatch >= 25 && match.percentageMatch < 50"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
                                             <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: bisque;"
-                                                *ngIf="mra.type == 'ONETIMEDONATION' || mra.type == 'ONETIMEPAYMENT'">ONE-TIME
+                                                *ngIf="match.mraToRecommend.type == 'ONETIMEDONATION' || match.mraToRecommend.type == 'ONETIMEPAYMENT'">ONE-TIME
                                             </span>
                                             <span class="badge badge-pill" style="margin-top: 10px; font-size: 12px; vertical-align: 27%; background-color: burlywood;"
-                                                *ngIf="mra.type != 'ONETIMEDONATION' && mra.type != 'ONETIMEPAYMENT'">RECURRING
+                                                *ngIf="match.mraToRecommend.type != 'ONETIMEDONATION' && match.mraToRecommend.type != 'ONETIMEPAYMENT'">RECURRING
                                             </span>
                                         </h5>
                                     </div>
-                                    <a routerLink="/userProfile/{{mra.materialResourceAvailableOwner.userId}}"
-                                        class="btn btn-sm btn-primary float-right" data-dismiss="modal">
+                                    <a routerLink="/userProfile/{{match.mraToRecommend.materialResourceAvailableOwner.userId}}"
+                                        class="btn btn-sm btn-primary" data-dismiss="modal">
                                         <i class="fas fa-user"></i> View Profile
                                     </a>
                                 </div>
@@ -478,23 +491,23 @@
                                     <li class="item">
                                         <div class="product-info ml-3 mr-3" style="color: black;">
                                             <a class="product-title">
-                                                <span *ngIf="mra.type == 'ONETIMEDONATION'">Free</span>
-                                                <span *ngIf="mra.type != 'ONETIMEDONATION'">
-                                                    US ${{mra.price}}/<span *ngIf="mra.units == 'item(s)'">item</span>
-                                                    <span *ngIf="mra.units != 'item(s)'">{{mra.units}}</span>
-                                                    <span *ngIf="mra.type == 'DAILY'"> per day</span>
-                                                    <span *ngIf="mra.type == 'WEEKLY'"> per week</span>
-                                                    <span *ngIf="mra.type == 'MONTHLY'"> per month</span>
+                                                <span *ngIf="match.mraToRecommend.type == 'ONETIMEDONATION'">Free</span>
+                                                <span *ngIf="match.mraToRecommend.type != 'ONETIMEDONATION'">
+                                                    US ${{match.mraToRecommend.price}}/<span *ngIf="match.mraToRecommend.units == 'item(s)'">item</span>
+                                                    <span *ngIf="match.mraToRecommend.units != 'item(s)'">{{match.mraToRecommend.units}}</span>
+                                                    <span *ngIf="match.mraToRecommend.type == 'DAILY'"> per day</span>
+                                                    <span *ngIf="match.mraToRecommend.type == 'WEEKLY'"> per week</span>
+                                                    <span *ngIf="match.mraToRecommend.type == 'MONTHLY'"> per month</span>
                                                 </span>
                                                 <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
-                                                    (click)="changehref(mra.latitude, mra.longitude)" target="_blank"> 
-                                                    At location {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}
+                                                    (click)="changehref(match.mraToRecommend.latitude, match.mraToRecommend.longitude)" target="_blank"> 
+                                                    At location {{match.mraToRecommend.latitude | number:'1.1-6'}}, {{match.mraToRecommend.longitude | number:'1.1-6'}}
                                                 </a>
                                             </a>
                                             <span class="product-description">
-                                                {{mra.description}}
-                                                <span *ngIf="mra.tags.length > 0">
-                                                    <div *ngFor="let tag of mra.tags">
+                                                {{match.mraToRecommend.description}}
+                                                <span *ngIf="match.mraToRecommend.tags.length > 0">
+                                                    <div *ngFor="let tag of match.mraToRecommend.tags">
                                                         <small class="badge badge-info">
                                                             {{tag.name}}
                                                         </small>

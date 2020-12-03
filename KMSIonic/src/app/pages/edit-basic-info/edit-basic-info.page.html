@@ -35,7 +35,7 @@
           <ion-item *ngIf="loggedInUser.userType != UserType.INSTITUTE">
             <ion-label position="stacked">Date of Birth</ion-label>
             <ion-datetime required [ngModel]="loggedInUser.dob | date" name="dob" placeholder="Select Date"
-              max="2020-09"></ion-datetime>
+              [max]="maxDate"></ion-datetime>
           </ion-item>
           <ion-item *ngIf="loggedInUser.userType != UserType.INSTITUTE">
             <ion-label position="stacked" for="gender">Gender</ion-label>

@@ -17,6 +17,7 @@ import { User } from 'src/app/classes/user';
 import { SessionService } from 'src/app/session.service';
 import { Notification } from 'src/app/classes/notification';
 import { NotificationService } from 'src/app/notification.service';
+import { MrpMatchesRsp } from 'src/app/models/MrpMatchesRsp';
 import { MrpStatus } from 'src/app/classes/mrp-status.enum';
 import { MraType } from 'src/app/classes/mra-type.enum';
 import { Payment } from '../../../classes/payment';
@@ -78,7 +79,7 @@ export class EditMrpTabComponent implements OnInit {
   ended: boolean = false;
 
   mrpToRecommend: MaterialResourcePosting;
-  mraRecommendations: MaterialResourceAvailable[];
+  mrpMatches: MrpMatchesRsp[];
 
   addScript: boolean = false;
   paymentAmount: number;
@@ -111,7 +112,7 @@ export class EditMrpTabComponent implements OnInit {
     this.fulfillmentToUpdate = new Fulfillment;
     this.fulfillmentToUpdate.mra = new MaterialResourceAvailable;
     this.mrpToRecommend = new MaterialResourcePosting;
-    this.mraRecommendations = [];
+    this.mrpMatches = [];
     this.newPayment = new Payment;
   }
 
@@ -469,9 +470,9 @@ export class EditMrpTabComponent implements OnInit {
   refreshRecommendations(mrpId: number) {
     this.matchingService.getMatchesForMrp(mrpId).subscribe(
       response => {
-        this.mraRecommendations = response;
-        this.mraRecommendations.splice(10);
-        console.log("Recommendations" + this.mraRecommendations);
+        this.mrpMatches = response;
+        this.mrpMatches.splice(10);
+        console.log("Recommendations" + this.mrpMatches);
       }
     )
   }

@@ -4,7 +4,7 @@
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">Cancel</ion-button>
     </ion-buttons>
-  </ion-toolbar>  
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -56,7 +56,7 @@
           <ion-item>
             <ion-label position="stacked">Material Resource Tags *</ion-label>
             <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
-            [ngModelOptions]="{standalone: true}" placeholder="Search tags"></ion-searchbar>
+              [ngModelOptions]="{standalone: true}" placeholder="Search tags"></ion-searchbar>
             <ion-list lines="none" *ngIf="filteredTags.length > 0">
               <ion-item *ngFor="let tag of filteredTags">
                 <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">

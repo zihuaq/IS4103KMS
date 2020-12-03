@@ -18,15 +18,23 @@
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid" *ngIf="!hasActiveElection">
+        <div class="info-box bg-light">
+            <div class="info-box-content">
+                <label style="align-self: center;"> No ongoing election </label>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" *ngIf="hasActiveElection">
         <div class="info-box bg-light">
             <div class="info-box-content">
                 <span style="display: flex; flex-direction: row;">
                     <label style="align-self: center;">{{activeElections.name}} </label>
                     <button type="button" class="btn btn-block bg-olive btn-sm" data-toggle="modal"
-                    data-target="#apply-for-election-modal" style="margin:1%; width: 20%;" *ngIf="loggedInUser.userType == UserType.INDIVIDUAL">
-                    Apply Now
-                </button>
+                        data-target="#apply-for-election-modal" style="margin:1%; width: 20%;"
+                        *ngIf="loggedInUser.userType == UserType.INDIVIDUAL">
+                        Apply Now
+                    </button>
                 </span>
                 <span class="info-box-text text-muted">{{activeElections.description}}</span>
                 <span class="info-box-text text-muted">Looking for {{activeElections.numSlots}} new admins</span>

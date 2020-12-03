@@ -1,3 +1,6 @@
+import { Tag } from './../../../../classes/tag';
+import { MatchingService } from './../../../../services/matching.service';
+import { ProjectMatchesRsp } from './../../../../models/ProjectMatchesRsp';
 import { SharePostModalPage } from './../../../share-post-modal/share-post-modal.page';
 import { PostService } from './../../../../services/post.service';
 import { Post } from './../../../../classes/post';
@@ -38,6 +41,8 @@ export class ProjectDetailsPage implements OnInit {
   loggedInUser: User;
   newsfeedPosts: Post[];
   hasLoaded: boolean = false;
+  projectRecommendations: ProjectMatchesRsp[];
+  filteredProjectReco: ProjectMatchesRsp[];
 
   constructor(
     public modalController: ModalController,
@@ -51,39 +56,43 @@ export class ProjectDetailsPage implements OnInit {
     private userService: UserService,
     private app: ApplicationRef,
     private postService: PostService,
-    private actionSheetController: ActionSheetController
+    private actionSheetController: ActionSheetController,
+    private matchingService: MatchingService
   ) {
     this.project = new Project();
     this.owner = new User();
     this.segment = 'projectfeed-tab';
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ionViewWillEnter() {
     this.refreshProject();
   }
 
   refreshProject() {
-    this.segment = this.activatedRoute.snapshot.paramMap.get('tabName')    
+    this.segment = this.activatedRoute.snapshot.paramMap.get('tabName');
     this.projectId = parseInt(
       this.activatedRoute.snapshot.paramMap.get('projectId')
     );
     if (this.segment == 'activity-tab' || this.segment == 'task-tab') {
       this.presentAlert();
-      this.segment = 'projectfeed-tab'
+      this.segment = 'projectfeed-tab';
     }
     this.authenticationService.getCurrentUser().then((user: User) => {
       let loggedInUserId = user.userId;
       forkJoin([
         this.userService.getUser(loggedInUserId.toString()),
         this.postService.getPostForProjectNewsfeed(this.projectId),
-        this.projectService.getProjectById(this.projectId)
+        this.projectService.getProjectById(this.projectId),
+        this.matchingService.getMatchesForProjects(this.projectId)
       ]).subscribe((result) => {
         this.loggedInUser = result[0];
         this.newsfeedPosts = result[1];
         this.project = result[2];
+        this.projectRecommendations = result[3];
+        this.projectRecommendations.splice(10);
+        this.filteredProjectReco = this.projectRecommendations;
         this.hasLoaded = true;
         this.noOfMembers = this.project.projectMembers.length;
 
@@ -105,17 +114,18 @@ export class ProjectDetailsPage implements OnInit {
             }
           }
         }
+
         this.app.tick();
       });
     });
   }
 
   async presentAlert() {
-    console.log("test")
+    console.log('test');
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Alert',
-      subHeader: this.segment + " not availble in mobile app.",
+      subHeader: this.segment + ' not availble in mobile app.',
       message: 'Please use the web browser to view it.',
       buttons: [
         {
@@ -296,5 +306,15 @@ export class ProjectDetailsPage implements OnInit {
     modal.onDidDismiss().then(() => {
       this.refreshProject();
     });
+  }
+
+  sortSDG(sdgList: Tag[]): Tag[] {
+    return sdgList.sort((a, b) => a.tagId - b.tagId);
+  }
+
+  viewProjectDetails(event, project) {
+    this.router.navigate([
+      'project-details/' + project.projectId + '/projectfeed-tab'
+    ]);
   }
 }
