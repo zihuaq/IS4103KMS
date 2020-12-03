@@ -10,6 +10,8 @@ import entity.ProjectEntity;
 import entity.TaskEntity;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,7 +21,9 @@ import javax.persistence.PersistenceContext;
  * @author zihua
  */
 @Stateless
-public class TaskSessionBean implements TaskSessionBeanLocal {
+@Local(TaskSessionBeanLocal.class)
+@Remote(TaskSessionBeanRemote.class)
+public class TaskSessionBean implements TaskSessionBeanLocal, TaskSessionBeanRemote {
 
     @EJB(name = "ProjectSessionBeanLocal")
     private ProjectSessionBeanLocal projectSessionBeanLocal;
