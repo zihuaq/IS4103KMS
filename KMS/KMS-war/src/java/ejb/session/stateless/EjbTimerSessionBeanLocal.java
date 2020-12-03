@@ -17,5 +17,7 @@ public interface EjbTimerSessionBeanLocal {
     public void generateRecurringPayments();
 
     public void updateFulfillmentStatus();
+
+    public void updateMrpStatus();
     
 }

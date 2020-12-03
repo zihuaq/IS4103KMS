@@ -150,8 +150,23 @@ public class HumanResourcePostingSessionBeanTest {
         }
     }
     
+    @Test(expected=NoResultException.class)
+    public void test10JoinHrp() throws NoResultException {
+        Long expResult = 1l;
+        Long hrpId = 10l;
+        humanResourcePostingSessionBean.joinHrp(expResult, hrpId);
+        
+        HumanResourcePostingEntity hrp = humanResourcePostingSessionBean.getHrpById(hrpId);
+
+        for (UserEntity user: hrp.getAppliedUsers()) {
+            if (user.getUserId() == expResult) {
+                assertEquals(expResult, user.getUserId());
+            }
+        }
+    }
+    
     @Test
-    public void test10LeaveHrp() throws NoResultException {
+    public void test11LeaveHrp() throws NoResultException {
         Boolean hasHrp = false;
         Long expResult = 1l;
         Long hrpId = 2l;
@@ -168,8 +183,26 @@ public class HumanResourcePostingSessionBeanTest {
         assertFalse(hasHrp);
     }
     
+    @Test(expected=NoResultException.class)
+    public void test12LeaveHrp() throws NoResultException {
+        Boolean hasHrp = false;
+        Long expResult = 1l;
+        Long hrpId = 10l;
+        humanResourcePostingSessionBean.leaveHrp(expResult, hrpId);
+        
+        HumanResourcePostingEntity hrp = humanResourcePostingSessionBean.getHrpById(hrpId);
+        
+        for (UserEntity user: hrp.getAppliedUsers()) {
+            if (user.getUserId() == expResult) {
+                hasHrp = true;
+            }
+        }
+        
+        assertFalse(hasHrp);
+    }
+    
     @Test
-    public void test11AvailableHrp() {
+    public void test13AvailableHrp() {
         Date startDate = new Date();
         Date endDate = new Date();
         try {
@@ -184,7 +217,7 @@ public class HumanResourcePostingSessionBeanTest {
     }
     
     @Test
-    public void test12GetHrpByActivityId() {
+    public void test14GetHrpByActivityId() {
         Long activityId = 4l;
         
         List result = humanResourcePostingSessionBean.getHrpByActivityId(activityId);

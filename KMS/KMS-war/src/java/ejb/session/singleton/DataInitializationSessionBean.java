@@ -35,7 +35,9 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.TagEntity;
+import entity.TagRequestEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
 import java.text.SimpleDateFormat;
@@ -375,7 +377,7 @@ public class DataInitializationSessionBean {
 
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Canned Food", "item(s)", 50.0, 0.0, 50.0, "Canned food like tuna, luncheon meat but no canned fruits", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-08"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-11"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(11l)));
             materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 5.0, 0.0, 5.0, "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-20"), null, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-15"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31"), 7.8731, 80.7718), 4l, new ArrayList<>(Arrays.asList(23l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-11"), null, 7.8731, 80.7718), 4l, new ArrayList<>(Arrays.asList(23l)));
 
             List<TagEntity> tags = new ArrayList<>();
             tags.add(tagSessionBean.getTagById(12l));
@@ -384,53 +386,81 @@ public class DataInitializationSessionBean {
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
             tags.clear();
             tags.add(tagSessionBean.getTagById(23l));
-            mra = new MaterialResourceAvailableEntity("Wood", null, "Cedar, pine, oak and ash", "1.384667", "103.770707", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
+            mra = new MaterialResourceAvailableEntity("Wood", "kg", "Cedar, pine, oak and ash", "1.384667", "103.770707", 17.5, MraTypeEnum.ONETIMEPAYMENT, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(2l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Rosewood", "kg", null, "36.379450", "-75.830290", 5.0, MraTypeEnum.ONETIMEPAYMENT, tags);
+            mra = new MaterialResourceAvailableEntity("Rosewood", null, null, "36.379450", "-75.830290", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Softwoods", null, null, "2.543298", "103.807023", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
+            mra = new MaterialResourceAvailableEntity("Softwoods", "kg", null, "2.543298", "103.807023", 10.0, MraTypeEnum.MONTHLY, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(4l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
             tags.clear();
             tags.add(tagSessionBean.getTagById(11l));
-            mra = new MaterialResourceAvailableEntity("Canned Pineapple", null, null, "36.379450", "-75.830290", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
+            mra = new MaterialResourceAvailableEntity("Canned Soup", null, null, "36.379450", "-75.830290", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Canned Tuna", null, null, "22.955532", "112.486407", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
+            mra = new MaterialResourceAvailableEntity("Canned Tuna", "item(s)", null, "22.955532", "112.486407", 2.5, MraTypeEnum.ONETIMEPAYMENT, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(7l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0, 0.0), 2l, 3l, 2l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 0.0, 30.0, 0.0), 4l, 3l, 4l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0, 0.0), 6l, 1l, 5l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0, 0.0), 7l, 1l, 6l);
-            Long fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0, 5.0), 6l, 3l, 3l); //One-Time Payment
+            
+            //One-Time Payments
+            Long fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(25.0, 0.0, 25.0, 2.5), 7l, 1l, 6l); 
             FulfillmentEntity fulfillmentToUpdate = fulfillmentSessionBean.getFulfillmentById(fulfillmentId);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId);
+            fulfillmentToUpdate.setReceivedQuantity(20.0);
+            fulfillmentToUpdate.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity() - 20.0);
+            fulfillmentToUpdate.setStatus(FulfillmentStatusEnum.PARTIALLYFULFILLED);
+            fulfillmentSessionBean.receiveResource(fulfillmentToUpdate, null);
+            
+            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0, 5.0), 6l, 3l, 3l); 
+            fulfillmentToUpdate = fulfillmentSessionBean.getFulfillmentById(fulfillmentId);
             fulfillmentSessionBean.acceptFulfillment(fulfillmentId);
             fulfillmentToUpdate.setReceivedQuantity(5.0);
             fulfillmentToUpdate.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity() - 5.0);
             fulfillmentToUpdate.setStatus(FulfillmentStatusEnum.PARTIALLYFULFILLED);
             fulfillmentSessionBean.receiveResource(fulfillmentToUpdate, null);
             
-            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 10.0, MraTypeEnum.WEEKLY, PaymentBasisEnum.WEEKLY), 6l, 2l, 1l); //Recurring subscription with no end date
-            fulfillmentSessionBean.getFulfillmentById(fulfillmentId);
-            fulfillmentSessionBean.acceptFulfillment(fulfillmentId); //create payment
-            //for demo
+            //Recurring subscriptions
+            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 10.0, MraTypeEnum.MONTHLY, PaymentBasisEnum.MONTHLY), 4l, 3l, 4l);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId); //create first payment
+            
+            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 10.0, MraTypeEnum.WEEKLY, PaymentBasisEnum.WEEKLY), 6l, 2l, 1l);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId); //create first payment
+            //for demo, manually implementing
             ejbTimerSessionBeanLocal.updateFulfillmentStatus(); //update fulfillment to ongoing
-            ejbTimerSessionBeanLocal.generateRecurringPayments(); //outstanding payment (due 2020-11-27)
-            ejbTimerSessionBeanLocal.generateRecurringPayments(); //current payment (due 2020-12-04)
+            ejbTimerSessionBeanLocal.generateRecurringPayments(); 
+            ejbTimerSessionBeanLocal.generateRecurringPayments(); 
+            ejbTimerSessionBeanLocal.updateMrpStatus(); //update mrps
 
             //create tasks
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 0.3, 0l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-16 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 18:00"), 0.2, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Seek Sponsorship", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-20 12:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 12:00"), 0.0, 0l), 4l);
+        } catch (NoResultException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            activitySessionBeanLocal.createNewProjectReview(new ReviewEntity("Test", "Test review", 5), 1l, 4l, 1l);
+        } catch (NoResultException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            UserEntity user = userSessionBean.getUserById(2l);
+            TagRequestEntity tagRequest = new TagRequestEntity("Test", TagTypeEnum.SKILL, user);
+            tagSessionBean.createTagRequest(tagRequest);
+        } catch (TagNameExistException ex) {
+            System.out.println(ex.getMessage());
         } catch (NoResultException ex) {
             System.out.println(ex.getMessage());
         }

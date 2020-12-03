@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MaterialResourcePosting } from '../classes/material-resource-posting';
+import { MrpStatus } from '../classes/mrp-status.enum';
 import { Tag } from '../classes/tag';
 import { MaterialResourcePostingService } from '../material-resource-posting.service';
 import { TagService } from '../tag.service';
@@ -29,8 +30,13 @@ export class ViewAllMrpsComponent implements OnInit {
   ngOnInit(): void {
     this.mrpService.getAllMaterialResourcePosting().subscribe(
       response => {
-        this.mrpList = response;
-        console.log(this.mrpList);
+        this.mrpList = response.filter((mrp: MaterialResourcePosting) => {
+          if (mrp.status == MrpStatus.OPEN) {
+            return true;
+          } else {
+            return false;
+          }
+        });
         this.filteredMrpList = this.mrpList;
       }
     )

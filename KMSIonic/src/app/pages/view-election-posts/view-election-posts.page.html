@@ -8,31 +8,32 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>{{activeElections.name}}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content *ngIf="activeElections.description && activeElections.description != ''">
-      {{activeElections.description}}
-    </ion-card-content>
-    <ion-card-content *ngIf="!activeElections.description || activeElections.description == ''">
-      No Description Available
-    </ion-card-content>
-    <ion-card-content>
-      Looking for {{activeElections.numSlots}} new Admins
-    </ion-card-content>
-    <ion-card-content>
-      Minimum of {{activeElections.minRepPointsRequired}} Reputation Points to apply
-    </ion-card-content>
-    <ion-card-content>
-      Vote for your favourite candidates by liking their post!
-    </ion-card-content>
-    <ion-item button [routerLink]="['/election-application']" [state]="activeElections">
-      <ion-label>Apply Now</ion-label>
-    </ion-item>
+  <div *ngIf="hasActiveElection">
+    <ion-card *ngIf="activeElections">
+      <ion-card-header>
+        <ion-card-title>{{activeElections.name}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p *ngIf="activeElections.description && activeElections.description != ''">{{activeElections.description}}</p>
+        <p *ngIf="!activeElections.description || activeElections.description == ''">No Description Available</p>
+        <p>Looking for {{activeElections.numSlots}} new Admins</p>
+        <p>Minimum of {{activeElections.minRepPointsRequired}} Reputation Points to apply</p>
+        <p><b>Vote for your favourite candidates by liking their post!</b></p>
+        <ion-button size="small" [routerLink]="['/election-application']" [state]="activeElections">
+          <ion-label>Apply Now</ion-label>
+        </ion-button>
+      </ion-card-content>
 
-  </ion-card>
-  <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" newsfeedType="election"
-    [filteredPosts]="newsfeedPosts" (init)="ionViewWillEnter()">
-  </app-newsfeed>
+    </ion-card>
+    <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" newsfeedType="election"
+      [filteredPosts]="newsfeedPosts" (init)="ionViewWillEnter()">
+    </app-newsfeed>
+  </div>
+  <div *ngIf="!hasActiveElection">
+    <ion-card>
+      <ion-card-content>
+        There is currently no active election.
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

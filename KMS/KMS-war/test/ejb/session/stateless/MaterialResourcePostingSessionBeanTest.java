@@ -90,7 +90,7 @@ public class MaterialResourcePostingSessionBeanTest {
     }
     
     @Test
-    public void test05GetListOfMaterialResourcePostingByProjectIf() {
+    public void test05GetListOfMaterialResourcePostingByProjectId() {
         List result = materialResourcePostingSessionBean.getListOfMaterialResourcePostingByProjectId(4l);
         
         assertFalse(result.isEmpty());
@@ -150,6 +150,13 @@ public class MaterialResourcePostingSessionBeanTest {
         List result = materialResourcePostingSessionBean.getListOfAvailableMrp(4l, 10l);
         
         assertEquals(1, result.size());
+    }
+    
+    @Test
+    public void test11GetAllMaterialResourcePosting() {
+        List result = materialResourcePostingSessionBean.getAllMaterialResourcePosting();
+        
+        assertEquals(3, result.size());
     }
     
 

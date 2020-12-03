@@ -56,6 +56,11 @@ export class AppComponent implements OnInit {
       icon: 'chatbubble'
     },
     {
+      title: 'Leaderboard',
+      url: '/leaderboard',
+      icon: 'trophy'
+    },
+    {
       title: 'SDG Info',
       url: '/sdg-info',
       icon: 'information-circle'
@@ -89,6 +94,11 @@ export class AppComponent implements OnInit {
       title: 'Search Material Postings',
       url: '/view-all-mrps',
       icon: 'briefcase'
+    },
+    {
+      title: 'Election',
+      url: '/view-election-posts',
+      icon: 'bar-chart'
     },
     {
       title: 'Make Tag Request',

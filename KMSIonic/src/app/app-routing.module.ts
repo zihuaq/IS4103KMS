@@ -506,6 +506,10 @@ const routes: Routes = [
   {
     path: 'view-all-mrps',
     loadChildren: () => import('./pages/view-all-mrps/view-all-mrps.module').then( m => m.ViewAllMrpsPageModule)
+  },
+  {
+    path: 'leaderboard',
+    loadChildren: () => import('./pages/leaderboard/leaderboard.module').then( m => m.LeaderboardPageModule)
   }
 
 ];
