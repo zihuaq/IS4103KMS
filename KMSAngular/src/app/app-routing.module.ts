@@ -35,6 +35,8 @@ import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.comp
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 import { ChatComponent } from './chat/chat.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ViewAllMrasComponent } from './view-all-mras/view-all-mras.component';
+import { ViewAllMrpsComponent } from './view-all-mrps/view-all-mrps.component';
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -186,6 +188,16 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: ProfileComponent,
   },
+  {
+    path: 'viewAllMras',
+    canActivate: [RouteGuard],
+    component: ViewAllMrasComponent
+  },
+  {
+    path: 'viewAllMrps',
+    canActivate: [RouteGuard],
+    component: ViewAllMrpsComponent
+  }
 ];
 
 @NgModule({

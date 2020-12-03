@@ -184,6 +184,43 @@ export class MaterialResourceAvailableService {
     );
   }
 
+  getAllMaterialResourceAvailable(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + '/getAllMaterialResourceAvailable').pipe(
+      map((data) => {
+        return data.map((mra) => {
+          if (mra.startDate && mra.endDate) {
+            return {
+              ...mra,
+              startDate: new Date(
+                Date.UTC(
+                  mra.startDate.substring(0, 4),
+                  mra.startDate.substring(5, 7) - 1,
+                  mra.startDate.substring(8, 10),
+                  mra.startDate.substring(11, 13),
+                  mra.startDate.substring(14, 16),
+                  mra.startDate.substring(17, 19)
+                )
+              ),
+              endDate: new Date(
+                Date.UTC(
+                  mra.endDate.substring(0, 4),
+                  mra.endDate.substring(5, 7) - 1,
+                  mra.endDate.substring(8, 10),
+                  mra.endDate.substring(11, 13),
+                  mra.endDate.substring(14, 16),
+                  mra.endDate.substring(17, 19)
+                )
+              ),
+            };
+          } else {
+            return mra;
+          }
+        });
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
 

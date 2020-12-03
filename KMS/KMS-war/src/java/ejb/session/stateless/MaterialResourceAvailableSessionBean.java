@@ -104,7 +104,7 @@ public class MaterialResourceAvailableSessionBean implements MaterialResourceAva
     
     @Override
     public List<MaterialResourceAvailableEntity> getAllMaterialResourceAvailable(){
-        Query query = em.createQuery("SELECT mra FROM MaterialResourceAvailableEntity MRA");
+        Query query = em.createQuery("SELECT mra FROM MaterialResourceAvailableEntity mra");
         return query.getResultList();
     }
 }

@@ -181,6 +181,44 @@ public class MrpResource {
         }
         
     }
+    
+    @Path("getAllMaterialResourcePosting")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllMaterialResourcePosting() {
+        System.out.println("******** MrpResource: getAllMaterialResourcePosting()");
+        
+        try {
+            List<MaterialResourcePostingEntity> mrpList = materialResourcePostingSessionBean.getAllMaterialResourcePosting();
+
+            if (!mrpList.isEmpty()) {
+                for (MaterialResourcePostingEntity mrp : mrpList) {
+                    mrp.getProject().setProjectOwner(null);
+                    mrp.getProject().getProjectMembers().clear();
+                    mrp.getProject().getProjectAdmins().clear();
+                    mrp.getProject().getActivities().clear();
+                    mrp.getProject().getHumanResourcePostings().clear();
+                    mrp.getProject().getMaterialResourcePostings().clear();
+                    mrp.getProject().getTasks().clear();
+                    mrp.getProject().getPosts().clear();
+                    mrp.getProject().getSdgs().clear();
+                    mrp.getProject().getReviews().clear();
+                    mrp.getProject().getDonations().clear();
+                    mrp.setActivity(null);
+                    mrp.getFulfillments().clear();
+                } 
+            }
+            
+            return Response.status(Status.OK).entity(mrpList).build();  
+            
+        } catch (Exception ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+        
+    }
 
     private MaterialResourcePostingSessionBeanLocal lookupMaterialResourcePostingSessionBeanLocal() {
         try {

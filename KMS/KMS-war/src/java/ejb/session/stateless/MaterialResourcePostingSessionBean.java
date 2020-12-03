@@ -137,4 +137,10 @@ public class MaterialResourcePostingSessionBean implements MaterialResourcePosti
         
         return query.getResultList();
     }
+    
+    @Override
+    public List<MaterialResourcePostingEntity> getAllMaterialResourcePosting(){
+        Query query = em.createQuery("SELECT mrp FROM MaterialResourcePostingEntity mrp");
+        return query.getResultList();
+    }
 }
