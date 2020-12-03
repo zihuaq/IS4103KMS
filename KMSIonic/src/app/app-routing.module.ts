@@ -365,13 +365,6 @@ const routes: Routes = [
       ).then((m) => m.FulfillPostingPageModule)
   },
   {
-    path: 'add-mra-modal',
-    loadChildren: () =>
-      import(
-        './pages/project/viewProject/mrp-details/add-mra-modal/add-mra-modal.module'
-      ).then((m) => m.AddMraModalPageModule)
-  },
-  {
     path: 'view-my-fulfillments/:projectId',
     loadChildren: () =>
       import(
@@ -454,6 +447,27 @@ const routes: Routes = [
       ).then((m) => m.DonateToPlatformModalPageModule)
   },
   {
+    path: 'make-payment-modal',
+    loadChildren: () => 
+      import(
+        './pages/project/editProject/manage-fulfillments-modal/make-payment-modal/make-payment-modal.module'
+      ).then( m => m.MakePaymentModalPageModule)
+  },
+  {
+    path: 'update-fulfillment-modal',
+    loadChildren: () => 
+      import(
+        './pages/project/viewProject/view-mrp/update-fulfillment-modal/update-fulfillment-modal.module'
+      ).then( m => m.UpdateFulfillmentModalPageModule)
+  },
+  {
+    path: 'add-mra/:mrpId',
+    loadChildren: () => 
+      import(
+        './pages/project/viewProject/mrp-details/add-mra/add-mra.module'
+      ).then( m => m.AddMraPageModule)
+  },
+  {
     path: 'view-recommendations',
     loadChildren: () =>
       import('./pages/view-recommendations/view-recommendations.module').then(
@@ -472,7 +486,8 @@ const routes: Routes = [
       import(
         './pages/project/editProject/hrp-recommendations-modal/hrp-recommendations-modal.module'
       ).then((m) => m.HrpRecommendationsModalPageModule)
-  },  {
+  },
+  {
     path: 'make-tag-request',
     loadChildren: () => import('./pages/make-tag-request/make-tag-request.module').then( m => m.MakeTagRequestPageModule)
   },

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package session.stateless;
+package ejb.session.stateless;
 
 import Exception.DuplicateAwardException;
 import Exception.DuplicateEmailException;
@@ -26,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
+import util.enumeration.UserTypeEnum;
 import util.enumeration.UserTypeEnum;
 
 /**

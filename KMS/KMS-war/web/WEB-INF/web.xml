@@ -11,6 +11,21 @@
         <remote>ejb.session.stateless.HumanResourcePostingSessionBeanRemote</remote>
     </ejb-ref>
     <ejb-ref>
+        <ejb-ref-name>ProjectSessionBeanRemote</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>ejb.session.stateless.ProjectSessionBeanRemote</remote>
+    </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>MaterialResourcePostingSessionBeanRemote</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>ejb.session.stateless.MaterialResourcePostingSessionBeanRemote</remote>
+    </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>TaskSessionBeanRemote</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>ejb.session.stateless.TaskSessionBeanRemote</remote>
+    </ejb-ref>
+    <ejb-ref>
         <ejb-ref-name>GroupSessionBean</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
         <remote>ejb.session.stateless.GroupSessionBeanRemote</remote>

@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Update Fulfillment</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="updateFulfillment(updateFulfillmentForm)" #updateFulfillmentForm="ngForm">
+    <ion-item-group>
+      <ion-item>
+        <ion-label position="stacked" style="font-weight: bold; font-size: 15px;">New Pledged Quantity *</ion-label>
+        <ion-row>
+          <ion-input type="number" id="pledgedQuantity" [(ngModel)]="newTotalPledgedQuantity" name="pledgedQuantity"
+            [max]="fulfillmentToUpdate.totalPledgedQuantity + fulfillmentToUpdate.posting.lackingQuantity" required></ion-input>
+          <span style="font-size: small; margin-left: 5px; margin-top: 10px; color: gray;">{{fulfillmentToUpdate.posting.unit}} / {{fulfillmentToUpdate.posting.lackingQuantity | number:'1.0-2'}} {{fulfillmentToUpdate.posting.unit}} required</span>
+        </ion-row>
+      </ion-item>
+      <ion-item *ngIf="fulfillmentToUpdate.mra.type != mraType.ONETIMEDONATION && fulfillmentToUpdate.mra.type != mraType.ONETIMEPAYMENT">
+        <ion-label position="stacked" style="font-weight: bold; font-size: 15px;">Basis Offered *</ion-label>
+        <ion-select id="editBasisOffered" [(ngModel)]="fulfillmentToUpdate.basisOffered" name="editBasisOffered" required>
+          <ion-select-option value="DAILY">Daily</ion-select-option>
+          <ion-select-option value="WEEKLY">Weekly</ion-select-option>
+          <ion-select-option value="MONTHLY">Monthly</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="fulfillmentToUpdate.mra.type != mraType.ONETIMEDONATION">
+        <ion-label position="stacked" style="font-weight: bold; font-size: 15px;">Price Offered *</ion-label>
+        <ion-row>
+          <ion-input type="number" id="editPriceOffered" [(ngModel)]="fulfillmentToUpdate.priceOffered" name="editPriceOffered" required>
+            <span style="margin-right: 5px; color: gray;">US $</span>
+          </ion-input>
+          <span style="margin-left: 5px; margin-top: 10px; color: gray; font-size: small;">
+            <span *ngIf="fulfillmentToUpdate.posting.unit == 'item(s)'">/item</span>
+            <span *ngIf="fulfillmentToUpdate.posting.unit != 'item(s)'">/{{fulfillmentToUpdate.posting.unit}}</span>
+            <span *ngIf="fulfillmentToUpdate.mra.type != 'ONETIMEPAYMENT'" style="margin-left: 5px;">
+              <span *ngIf="fulfillmentToUpdate.basisOffered == 'DAILY'">per day</span>
+              <span *ngIf="fulfillmentToUpdate.basisOffered == 'WEEKLY'">per week</span>
+              <span *ngIf="fulfillmentToUpdate.basisOffered == 'MONTHLY'">per month</span>
+            </span>
+          </span>
+        </ion-row>
+      </ion-item>
+    </ion-item-group>
+    <br/>
+    <ion-button expand="block" type="submit" [disabled]="!updateFulfillmentForm.valid">Submit</ion-button>
+  </form>
+</ion-content>

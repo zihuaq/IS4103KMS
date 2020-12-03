@@ -8,8 +8,8 @@ package ws.restful.resources;
 import Exception.NoResultException;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import entity.FulfillmentEntity;
+import entity.PaymentEntity;
 import entity.UserEntity;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +29,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.CreateFulfillmentReq;
 import ws.restful.model.ErrorRsp;
+import ws.restful.model.MakeOneTimePaymentReq;
 
 /**
  * REST Web Service
@@ -95,14 +96,41 @@ public class FulfillmentResource {
         }
     }
     
+    @Path("getFulfillmentsByMrp/{mrpId}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFulfillmentsByMrp(@PathParam("mrpId") Long mrpId) {
+        System.out.println("******** FulfillmentResource: getFulfillmentsByMrp()");
+        try {
+            List<FulfillmentEntity> fulfillmentList = fulfillmentSessionBeanLocal.getListOfFulfillmentsByMrp(mrpId);
+
+            for (FulfillmentEntity fulfillment : fulfillmentList) {
+                UserEntity owner = new UserEntity();
+                owner.setUserId(fulfillment.getFulfillmentOwner().getUserId());
+                owner.setFirstName(fulfillment.getFulfillmentOwner().getFirstName());
+                owner.setLastName(fulfillment.getFulfillmentOwner().getLastName());
+                fulfillment.setFulfillmentOwner(owner);
+                fulfillment.setPosting(null);
+                fulfillment.getMra().setMaterialResourceAvailableOwner(null);
+            }
+            return Response.status(Response.Status.OK).entity(fulfillmentList).build();
+        
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
     @Path("receiveResource")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response receiveResource(FulfillmentEntity fulfillmentToUpdate) {
+    public Response receiveResource(MakeOneTimePaymentReq makeOneTimePaymentReq) {
         try { 
             System.out.println("******** FulfillmentResource: receiveResource()");
-            fulfillmentSessionBeanLocal.receiveResource(fulfillmentToUpdate);
+            fulfillmentSessionBeanLocal.receiveResource(makeOneTimePaymentReq.getFulfillmentToUpdate(), makeOneTimePaymentReq.getPayment());
 
             return Response.status(204).build();
             
@@ -117,10 +145,28 @@ public class FulfillmentResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateQuantity(FulfillmentEntity fulfillmentToUpdate) {
+    public Response updateQuantity(MakeOneTimePaymentReq makeOneTimePaymentReq) {
         try { 
             System.out.println("******** FulfillmentResource: updateQuantity()");
-            fulfillmentSessionBeanLocal.updateQuantity(fulfillmentToUpdate);
+            fulfillmentSessionBeanLocal.updateQuantity(makeOneTimePaymentReq.getFulfillmentToUpdate(), makeOneTimePaymentReq.getPayment());
+
+            return Response.status(204).build();
+            
+        } catch (NoResultException ex ) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("updateFulfillment")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateFulfillment(FulfillmentEntity fulfillmentToUpdate) {
+        try { 
+            System.out.println("******** FulfillmentResource: updateFulfillment()");
+            fulfillmentSessionBeanLocal.updateFulfillment(fulfillmentToUpdate);
 
             return Response.status(204).build();
             
@@ -167,26 +213,18 @@ public class FulfillmentResource {
         }
     }
     
-    @Path("getFulfillmentsByMrp/{mrpId}")
-    @GET
+    @Path("endSubscription")
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFulfillmentsByMrp(@PathParam("mrpId") Long mrpId) {
-        System.out.println("******** FulfillmentResource: getFulfillmentsByMrp()");
-        try {
-            List<FulfillmentEntity> fulfillmentList = fulfillmentSessionBeanLocal.getListOfFulfillmentsByMrp(mrpId);
+    public Response endSubscription(Long fulfillmentId) {
+        try { 
+            System.out.println("******** FulfillmentResource: endSubscription()");
+            PaymentEntity payment = fulfillmentSessionBeanLocal.endSubscription(fulfillmentId);
+            payment.setFulfillment(null);
 
-            for (FulfillmentEntity fulfillment : fulfillmentList) {
-                UserEntity owner = new UserEntity();
-                owner.setUserId(fulfillment.getFulfillmentOwner().getUserId());
-                owner.setFirstName(fulfillment.getFulfillmentOwner().getFirstName());
-                owner.setLastName(fulfillment.getFulfillmentOwner().getLastName());
-                fulfillment.setFulfillmentOwner(owner);
-                fulfillment.setPosting(null);
-                fulfillment.getMra().setMaterialResourceAvailableOwner(null);
-            }
-            return Response.status(Response.Status.OK).entity(fulfillmentList).build();
-        
+            return Response.status(Response.Status.OK).entity(payment).build();
+            
         } catch (NoResultException ex ) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             
@@ -211,24 +249,6 @@ public class FulfillmentResource {
         }
     }
     
-    @Path("getListOfMaterialResourceAvailableUnitsByMrp/{mrpId}")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getListOfMaterialResourceAvailableUnitsByMrp(@PathParam("mrpId") Long mrpId) {
-        System.out.println("******** FulfillmentResource: getListOfMaterialResourceAvailableUnitsByMrp()");
-        try {
-            List<String> mraUnitsList = fulfillmentSessionBeanLocal.getListOfMaterialResourceAvailableUnitsByMrp(mrpId);
-
-            return Response.status(Response.Status.OK).entity(mraUnitsList).build();
-        
-        } catch (NoResultException ex ) {
-            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-            
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
-        }
-    }
-    
     @Path("getListOfFulfillmentsByUserAndProject/{userId}/{projectId}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -241,7 +261,7 @@ public class FulfillmentResource {
             for (FulfillmentEntity fulfillment : fulfillmentList) {
                 fulfillment.setFulfillmentOwner(null);
                 fulfillment.getPosting().setProject(null);
-                fulfillment.getPosting().setActivities(new ArrayList<>());
+                fulfillment.getPosting().setActivity(null);
                 fulfillment.getPosting().getFulfillments().clear();
                 fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }
@@ -266,7 +286,7 @@ public class FulfillmentResource {
             for (FulfillmentEntity fulfillment : fulfillmentList) {
                 fulfillment.setFulfillmentOwner(null);
                 fulfillment.getPosting().setProject(null);
-                fulfillment.getPosting().setActivities(new ArrayList<>());
+                fulfillment.getPosting().setActivity(null);
                 fulfillment.getPosting().getFulfillments().clear();
                 fulfillment.getMra().setMaterialResourceAvailableOwner(null);
             }

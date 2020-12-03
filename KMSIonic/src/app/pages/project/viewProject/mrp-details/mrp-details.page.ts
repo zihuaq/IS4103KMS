@@ -55,7 +55,9 @@ export class MrpDetailsPage implements OnInit {
       response => {
         this.mrp = response;
         this.startDate = this.mrp.startDate.toString().slice(0, 19);
-        this.endDate = this.mrp.endDate.toString().slice(0, 19);
+        if (this.mrp.endDate) {
+          this.endDate = this.mrp.endDate.toString().slice(0, 19);
+        }
         this.locationLink = "http://maps.google.com/?q=" + this.mrp.latitude + "," + this.mrp.longitude;
         
         this.projectService.getProjectById(this.mrp.project.projectId).subscribe(

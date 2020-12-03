@@ -66,6 +66,32 @@
             </li>
           </ul>
         </li>
+        <!-- Material Resources Available and Postings -->
+        <li class="nav-item has-treeview">
+          <a class="nav-link">
+            <i class="nav-icon fas fa-box-open"></i>
+            <p>
+              Material Resources
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/viewAllMras">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Search Resources</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/viewAllMrps">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Search Postings</p>
+              </a>
+            </li>
+          </ul>
+        </li>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/viewOwnProjects/', loggedInUser.userId]">
             <i class="nav-icon fas fa-hands-helping"></i>

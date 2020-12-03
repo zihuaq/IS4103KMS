@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { AddMraModalPage } from './add-mra-modal.page';
+import { UpdateFulfillmentModalPage } from './update-fulfillment-modal.page';
 
-describe('AddMraModalPage', () => {
-  let component: AddMraModalPage;
-  let fixture: ComponentFixture<AddMraModalPage>;
+describe('UpdateFulfillmentModalPage', () => {
+  let component: UpdateFulfillmentModalPage;
+  let fixture: ComponentFixture<UpdateFulfillmentModalPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddMraModalPage ],
+      declarations: [ UpdateFulfillmentModalPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AddMraModalPage);
+    fixture = TestBed.createComponent(UpdateFulfillmentModalPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

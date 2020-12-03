@@ -67,7 +67,7 @@ export class DonateToProjectComponent implements OnInit {
     },
 
     createOrder: (data, actions) => {
-      if (this.donationAmount == undefined || this.donationAmount == 0) {
+      if (this.donationAmount == undefined || this.donationAmount <= 0) {
         $(document).Toasts('create', {
           class: 'bg-warning',
           title: 'Invalid Donation Amount',
@@ -90,6 +90,14 @@ export class DonateToProjectComponent implements OnInit {
               //currency_code: this.selectedCurrency,
               value: this.donationAmount
             },
+            // payment_instruction: {
+            //   platform_fees: [{
+            //     amount: {
+            //       value: 0.05 * this.donationAmount
+            //     }
+            //   }],
+            //   disbursement_mode: "INSTANT"
+            // },
             description: 'Donation to ' + this.projectToDonate.name
           }]
         });

@@ -44,6 +44,7 @@ public class ApplicationConfig extends Application {
         resources.add(ws.restful.resources.MraResource.class);
         resources.add(ws.restful.resources.MrpResource.class);
         resources.add(ws.restful.resources.NotificationResource.class);
+        resources.add(ws.restful.resources.PaymentResource.class);
         resources.add(ws.restful.resources.PostResource.class);
         resources.add(ws.restful.resources.ProfileResource.class);
         resources.add(ws.restful.resources.ProjectResource.class);

@@ -3,5 +3,7 @@ export enum FulfillmentStatus {
     ACCEPTED = <any> "ACCEPTED",
     PARTIALLYFULFILLED = <any> "PARTIALLYFULFILLED",
     FULFILLED = <any> "FULFILLED",
-    REJECTED = <any> "REJECTED"
+    REJECTED = <any> "REJECTED",
+    ONGOING = <any> "ONGOING",
+    ENDED = <any> "ENDED"
 }

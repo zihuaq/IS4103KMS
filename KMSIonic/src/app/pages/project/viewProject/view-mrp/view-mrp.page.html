@@ -6,13 +6,15 @@
 
     <span *ngIf="mrpList.length > 0">
       <ion-list *ngFor="let mrp of mrpList">
-        <ion-item >
+        <ion-item *ngIf="mrp.status == 'OPEN'">
           <span>
             <ion-label class="ion-text-wrap" tappable [routerLink]="[ '/mrp-details', mrp.materialResourcePostingId ]" 
-              style="padding-top: 5px; padding-bottom: 10px;">
-              <h2 style="font-size: large;"><b>{{mrp.name}}</b></h2>
-              <p style="font-size: 13px;">
-                <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b>
+              style="padding-top: 10px; padding-bottom: 10px;">
+              <h2 style="font-size: 18px; margin-bottom: 5px;"><b>{{mrp.name}}</b></h2>
+              <p style="font-size: 15px;">
+                <b>From {{mrp.startDate.toString().slice(0,15) | date }} 
+                  <span *ngIf="mrp.endDate"> to {{mrp.endDate.toString().slice(0,15) | date }}</span>
+                </b>
               </p>
               <p style="margin-bottom: 5px;">{{mrp.lackingQuantity}} {{mrp.unit}} required</p>
               <span *ngFor="let tag of mrp.tags">

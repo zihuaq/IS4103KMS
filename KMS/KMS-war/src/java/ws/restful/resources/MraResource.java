@@ -17,18 +17,19 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import ws.restful.model.ErrorRsp;
 
 /**
  * REST Web Service
@@ -153,6 +154,27 @@ public class MraResource {
                     .add("error", ex.getMessage())
                     .build();
             return Response.status(404).entity(exception).build();
+        }
+    }
+    
+    @GET
+    @Path("getAllMaterialResourceAvailable")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllMaterialResourceAvailable() {
+        try {
+            List<MaterialResourceAvailableEntity> mras = materialResourceAvailableSessionBeanLocal.getAllMaterialResourceAvailable();
+            for (int i = 0; i < mras.size(); i++) {
+                UserEntity owner = new UserEntity();
+                owner.setFirstName(mras.get(i).getMaterialResourceAvailableOwner().getFirstName());
+                owner.setLastName(mras.get(i).getMaterialResourceAvailableOwner().getLastName());
+                mras.get(i).setMaterialResourceAvailableOwner(owner);
+            }
+            return Response.status(200).entity(mras).build();
+            
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
 }

@@ -11,21 +11,23 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import util.enumeration.MrpStatusEnum;
 
 /**
  *
- * @author zeplh
+ * @author zihua
  */
 @Entity
 public class MaterialResourcePostingEntity implements Serializable {
@@ -47,17 +49,11 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Column(nullable=false)
     private Double totalQuantity;
     
-    @NotNull
-    @Column(nullable=false)
-    private Double obtainedQuantity;
+    private Double obtainedQuantity; //for one-time
     
     @NotNull
     @Column(nullable=false)
     private Double lackingQuantity;
-    
-    @NotNull
-    @Column(nullable=false)
-    private Double allocatedQuantity;
     
     private String description;
     
@@ -66,8 +62,6 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date startDate;
     
-    @NotNull
-    @Column(nullable=false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
     
@@ -79,9 +73,13 @@ public class MaterialResourcePostingEntity implements Serializable {
     @Column(nullable=false)
     private Double longitude;
     
-    @JoinTable(name = "allocatedMrps")
-    @ManyToMany
-    private List<ActivityEntity> activities;
+    @NotNull
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    private MrpStatusEnum status;
+    
+    @ManyToOne
+    private ActivityEntity activity;
     
     @ManyToOne
     @JoinColumn
@@ -95,8 +93,8 @@ public class MaterialResourcePostingEntity implements Serializable {
 
     public MaterialResourcePostingEntity() {
         this.tags = new ArrayList<>();
-        this.activities = new ArrayList<>();
         this.fulfillments = new ArrayList<>();
+        this.status = MrpStatusEnum.OPEN;
     }
 
     public MaterialResourcePostingEntity(String name, String unit, Double totalQuantity, Double obtainedQuantity, Double lackingQuantity, String description, Date startDate, Date endDate, Double latitude, Double lontitude) {
@@ -178,14 +176,6 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.lackingQuantity = lackingQuantity;
     }
 
-    public Double getAllocatedQuantity() {
-        return allocatedQuantity;
-    }
-
-    public void setAllocatedQuantity(Double allocatedQuantity) {
-        this.allocatedQuantity = allocatedQuantity;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -226,12 +216,12 @@ public class MaterialResourcePostingEntity implements Serializable {
         this.longitude = longitude;
     }
 
-    public List<ActivityEntity> getActivities() {
-        return activities;
+    public ActivityEntity getActivity() {
+        return activity;
     }
 
-    public void setActivities(List<ActivityEntity> activities) {
-        this.activities = activities;
+    public void setActivity(ActivityEntity activity) {
+        this.activity = activity;
     }
 
     public ProjectEntity getProject() {
@@ -264,6 +254,14 @@ public class MaterialResourcePostingEntity implements Serializable {
 
     public void setFulfillments(List<FulfillmentEntity> fulfillments) {
         this.fulfillments = fulfillments;
+    }
+
+    public MrpStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(MrpStatusEnum status) {
+        this.status = status;
     }
     
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Fulfillment } from '../classes/fulfillment';
+import { Payment } from '../classes/payment';
 import { UtilityService } from './utility.service';
 
 const httpOptions = {
@@ -48,14 +49,30 @@ export class FulfillmentService {
     );
   }
 
-  receiveResource(fulfillmentToUpdate: Fulfillment) {
-    return this.httpClient.post<any>(this.baseUrl + "/receiveResource", fulfillmentToUpdate, httpOptions).pipe(
+  receiveResource(fulfillmentToUpdate: Fulfillment, payment: Payment) {
+    let makeOneTimePaymentReq = {
+      "fulfillmentToUpdate": fulfillmentToUpdate,
+      "payment": payment
+    }
+
+    return this.httpClient.post<any>(this.baseUrl + "/receiveResource", makeOneTimePaymentReq, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
-  updateQuantity(fulfillmentToUpdate: Fulfillment) {
-    return this.httpClient.post<any>(this.baseUrl + "/updateQuantity", fulfillmentToUpdate, httpOptions).pipe(
+  updateQuantity(fulfillmentToUpdate: Fulfillment, payment: Payment) {
+    let makeOneTimePaymentReq = {
+      "fulfillmentToUpdate": fulfillmentToUpdate,
+      "payment": payment
+    }
+
+    return this.httpClient.post<any>(this.baseUrl + "/updateQuantity", makeOneTimePaymentReq, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateFulfillment(fulfillmentToUpdate: Fulfillment) {
+    return this.httpClient.post<any>(this.baseUrl + "/updateFulfillment", fulfillmentToUpdate, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
@@ -72,14 +89,14 @@ export class FulfillmentService {
     );
   }
 
-  deleteFulfillment(fulfillmentId: number): Observable<any> {
-    return this.httpClient.delete<any>(this.baseUrl + "/deleteFulfillment/" + fulfillmentId).pipe(
+  endSubscription(fulfillmentId: number) {
+    return this.httpClient.post<any>(this.baseUrl + "/endSubscription", fulfillmentId, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
 
-  getListOfMaterialResourceAvailableUnitsByMrp(mrpId: number): Observable<any> {
-    return this.httpClient.get<any>(this.baseUrl + "/getListOfMaterialResourceAvailableUnitsByMrp/" + mrpId).pipe(
+  deleteFulfillment(fulfillmentId: number): Observable<any> {
+    return this.httpClient.delete<any>(this.baseUrl + "/deleteFulfillment/" + fulfillmentId).pipe(
       catchError(this.handleError)
     );
   }

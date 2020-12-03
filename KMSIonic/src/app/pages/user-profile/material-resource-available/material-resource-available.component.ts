@@ -59,4 +59,9 @@ export class MaterialResourceAvailableComponent implements OnInit {
     });
     await alert.present();
   }
+
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    return url;
+  }
 }

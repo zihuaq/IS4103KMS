@@ -152,25 +152,10 @@ export class CreateMrpPage implements OnInit {
 
   async createMrp(mrpForm: NgForm) {
     let tagIds: number[] = [];
-    if (!mrpForm.valid) {
+    if (this.chosenTags.length == 0) {
       const toast = await this.toastController.create({
-        message: "Please fill in required fields marked with *",
-        duration: 2000
-      })
-      toast.present();
-      return;
-    }
-    // if (this.chosenTags.length == 0) {
-    //   const toast = await this.toastController.create({
-    //     message: "Please select at least one Material Resource tags",
-    //     duration: 2000
-    //   })
-    //   toast.present();
-    //   return;
-    // }
-    if (new Date(this.startDate).toJSON().slice(0,10) > new Date(this.endDate).toJSON().slice(0,10)) {
-      const toast = await this.toastController.create({
-        message: "End Date should not come before the Start Date.",
+        message: "Please select at least one Material Resource tags",
+        color: "warning",
         duration: 2000
       })
       toast.present();
@@ -180,8 +165,9 @@ export class CreateMrpPage implements OnInit {
       tagIds.push(tag.tagId);
     }
     this.newMrp.startDate = new Date(this.startDate);
-    this.newMrp.endDate = new Date(this.endDate);
+    this.newMrp.endDate = this.endDate ? new Date(this.endDate) : null;
 
+    console.log(this.newMrp);
     this.mrpService.createNewMrp(this.newMrp, this.projectId, tagIds).subscribe(
       async response => {
         let newNotification = new Notification();
@@ -194,12 +180,14 @@ export class CreateMrpPage implements OnInit {
             this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
           }
         }
+        this.router.navigate(["tab-panel/" + this.projectId]);
+        this.newMrp = new MaterialResourcePosting();
         const toast = await this.toastController.create({
-          message: "Mrp created successfully.",
-          duration: 2000
+          message: "Material Resource Posting is created successfully.",
+          color: "success",
+          duration: 3000
         })
         toast.present();
-        this.router.navigate(["tab-panel/" + this.projectId]);
       }
     );
   }
@@ -242,6 +230,15 @@ export class CreateMrpPage implements OnInit {
   clearSearch() {
     this.searchValue = ""
     this.filteredTags = []
+  }
+
+  clearStartDate() {
+    this.startDate = undefined;
+  }
+
+  clearEndDate() {
+    // console.log("clearEndDate");
+    this.endDate = undefined;
   }
 
 }
