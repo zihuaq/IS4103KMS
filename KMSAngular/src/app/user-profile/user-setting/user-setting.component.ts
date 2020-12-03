@@ -4,6 +4,7 @@ import { AdminService } from 'src/app/admin.service';
 import { NgForm } from '@angular/forms';
 import { SessionService } from 'src/app/session.service';
 import { UserType } from 'src/app/classes/user-type.enum';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -20,7 +21,12 @@ export class UserSettingComponent implements OnInit {
   UserType = UserType;
   loggedInUser: User;
 
-  constructor(private adminService: AdminService, private sessionService: SessionService) { }
+  constructor(private adminService: AdminService, private sessionService: SessionService,
+    private router: Router) {
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+  }
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
@@ -30,6 +36,10 @@ export class UserSettingComponent implements OnInit {
     this.adminService.promoteUserToAdmin(this.user.userId)
       .subscribe(
         (responsedata) => {
+          this.user = {
+            ...this.user,
+            userType: responsedata.userType
+          };
           $(document).Toasts('create', {
             class: 'bg-success',
             title: 'Success',
@@ -54,6 +64,10 @@ export class UserSettingComponent implements OnInit {
     this.adminService.resignFromAdmin(this.loggedInUser.userId)
       .subscribe(
         (responsedata) => {
+          this.user = {
+            ...this.user,
+            userType: responsedata.userType
+          };
           $(document).Toasts('create', {
             class: 'bg-success',
             title: 'Success',
@@ -62,6 +76,7 @@ export class UserSettingComponent implements OnInit {
             body: 'Resigned from Admin successfully',
           })
           this.userChanged.emit(this.user);
+          this.router.navigate(["/userProfile/" + this.user.userId]);
         },
         (error) => {
           $(document).Toasts('create', {
