@@ -5,6 +5,7 @@ import { MatchingService } from './../../../../services/matching.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { MrpMatchesRsp } from 'src/app/models/MrpMatchesRsp';
 
 @Component({
   selector: 'app-mrp-recommendations-modal',
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
 export class MrpRecommendationsModalPage implements OnInit {
   @Input() mrpId: number;
   mrpToRecommend: MaterialResourcePosting;
-  mraRecommendations: MaterialResourceAvailable[];
+  mrpMatches: MrpMatchesRsp[];
   constructor(
     private matchingService: MatchingService,
     private modalController: ModalController,
@@ -28,9 +29,9 @@ export class MrpRecommendationsModalPage implements OnInit {
 
   refreshRecommendations() {
     this.matchingService.getMatchesForMrp(this.mrpId).subscribe((response) => {
-      this.mraRecommendations = response;
-      this.mraRecommendations.splice(10);
-      console.log('Recommendations' + this.mraRecommendations);
+      this.mrpMatches = response;
+      this.mrpMatches.splice(10);
+      console.log('Recommendations' + this.mrpMatches);
     });
   }
 
