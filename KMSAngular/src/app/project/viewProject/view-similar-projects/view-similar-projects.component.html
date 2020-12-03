@@ -27,9 +27,15 @@
                                 <span class="badge badge-success"
                                     *ngIf="projectReco.matchingProject.status == ProjectType.COMPLETED"
                                     style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{projectReco.matchingProject.status}}</span>
-                                <span class="badge badge-olive"
-                                    *ngIf="projectReco.percentageMatch"
-                                    style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ projectReco.percentageMatch}}</span>
+                                <span class="badge badge-success" *ngIf="projectReco.percentageMatch >= 75"
+                                    style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ projectReco.percentageMatch }}%
+                                    Match</span>
+                                <span class="badge badge-warning" *ngIf="projectReco.percentageMatch >= 50 && projectReco.percentageMatch < 75"
+                                    style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ projectReco.percentageMatch }}%
+                                    Match</span>
+                                <span class="badge badge-danger"  *ngIf="projectReco.percentageMatch >= 25 && projectReco.percentageMatch < 50"
+                                    style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ projectReco.percentageMatch }}%
+                                    Match</span>
                                 <span class="badge badge-warning"
                                     *ngIf="projectReco.matchingProject.status == ProjectType.INACTIVE"
                                     style="font-size: 12px; vertical-align: 30%;">{{projectReco.matchingProject.status}}</span>
