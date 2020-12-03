@@ -24,7 +24,7 @@
                 <span style="display: flex; flex-direction: row;">
                     <label style="align-self: center;">{{activeElections.name}} </label>
                     <button type="button" class="btn btn-block bg-olive btn-sm" data-toggle="modal"
-                    data-target="#apply-for-election-modal" style="margin:1%; width: 20%;">
+                    data-target="#apply-for-election-modal" style="margin:1%; width: 20%;" *ngIf="loggedInUser.userType == UserType.INDIVIDUAL">
                     Apply Now
                 </button>
                 </span>

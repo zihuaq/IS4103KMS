@@ -18,7 +18,7 @@ const httpOptions = {
 @Injectable({
     providedIn: 'root',
 })
-export class AdminService {
+export class LeaderboardService {
     baseUrl: string = '/api/leaderboard';
 
     constructor(private http: HttpClient) { }
