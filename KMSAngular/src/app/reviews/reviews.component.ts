@@ -47,7 +47,7 @@ export class ReviewsComponent implements OnInit {
   }
 
   onReviewSelected(reviewData: review){
-    this.selectedReview = reviewData
+    this.selectedReview = reviewData;
     $('#modal-reportReview').modal('show');
   }
 

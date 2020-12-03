@@ -80,6 +80,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             em.persist(newProject);
             em.flush();
             user.setCountOfProjectsCreated(user.getCountOfProjectsCreated() + 1);
+            user.setReputationPoints(user.getReputationPoints() + 5);
             newProject.setIsActive(Boolean.TRUE);
             user.getProjectsOwned().add(newProject);
             newProject.setProjectOwner(user);
@@ -170,6 +171,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         ProjectEntity project = getProjectById(projectId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         user.setCountOfProjectsJoined(user.getCountOfProjectsJoined() + 1);
+        user.setReputationPoints(user.getReputationPoints() + 1);
         user.getProjectsJoined().add(project);
         project.getProjectMembers().add(user); 
 
@@ -188,6 +190,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
             if (project.getProjectAdmins().contains(user)) {
                 project.getProjectAdmins().remove(user);
                 user.setCountOfProjectsJoined(user.getCountOfProjectsJoined() - 1);
+                user.setReputationPoints(user.getReputationPoints() - 1);
                 user.getProjectsManaged().remove(project);
             }
             user.getProjectsJoined().remove(project);
@@ -252,9 +255,11 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         ProjectEntity project = getProjectById(projectId);
         UserEntity user = userSessionBeanLocal.getUserById(newOwnerId);
         user.setCountOfGroupsCreated(user.getCountOfGroupsCreated() + 1);
+        user.setReputationPoints(user.getReputationPoints() + 5);
         
         project.getProjectOwner().getProjectsOwned().remove(project);
         project.getProjectOwner().setCountOfGroupsCreated(project.getProjectOwner().getCountOfGroupsCreated() - 1);
+        project.getProjectOwner().setReputationPoints(project.getProjectOwner().getReputationPoints() - 5);
         
         project.setProjectOwner(user);
         user.getProjectsOwned().add(project);
@@ -267,6 +272,7 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         projectToDelete.getProjectOwner().getProjectsOwned().remove(projectToDelete);
         Long projectOwnerId = projectToDelete.getProjectOwner().getUserId();
         projectToDelete.getProjectOwner().setCountOfGroupsCreated(projectToDelete.getProjectOwner().getCountOfGroupsCreated() - 1);
+         projectToDelete.getProjectOwner().setReputationPoints( projectToDelete.getProjectOwner().getReputationPoints() + 5);
         projectToDelete.setProjectOwner(null);
         
         for (UserEntity user : projectToDelete.getProjectAdmins()) {

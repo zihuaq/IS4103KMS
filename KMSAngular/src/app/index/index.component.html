@@ -1,5 +1,6 @@
 <app-top-navbar></app-top-navbar>
 <app-side-navbar></app-side-navbar>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -31,3 +32,678 @@
 </div>
 <!-- /.content-wrapper -->
 <app-footer></app-footer>
+
+<div class="modal" id="modal-survey">
+  <div class="modal-dialog modal-lg" *ngIf = "currentUser.userType.toString() == 'INDIVIDUAL' || currentUser.userType.toString() == 'ADMIN'">
+      <div class="modal-content bg-info">
+          <div class="modal-header">
+              <h4 class="modal-title">Welcome to KMS! Your first step to saving the world!</h4>
+          </div>
+
+          <div class="modal-body">
+            <!-- question 0 page 0-->
+            <div *ngIf = "questionNumber == 0">
+              <p>Welcome to KMS! We would like to ask you a few questions to get to know you better</p>
+              <button type="button" class="btn btn-success" (click) = "startSurvey()">Let's get started</button>
+            </div>
+            <!-- question 1 page 1-->
+            <div *ngIf = "questionNumber == 1">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 1.</span>
+                </div>
+                <p style = "color: black; "> Are you aware of SDGs?</p>
+                <div class="list-group">
+                  <button type ="button" *ngFor = "let option of individualAwareOfSGDAnswers; let i = index" class="list-group-item list-group-item-action" (click) = answerIndividualAwareOfSDG(i)>
+                        {{option}}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- video 1 page 1.5-->
+            <div *ngIf = "questionNumber == 1.5">
+              <p>Here is a short video explaining what SDGs are!</p>
+              <youtube-player
+              videoId = "PZbgIVgQyks"
+              suggestedQuality = "highres"
+              [height] = "480"
+              [width] = "770"
+              ></youtube-player>
+              <hr>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "goToQuestion2()">next</button>
+            </div>
+            <!-- question 2 page 2-->
+            <div *ngIf = "questionNumber == 2">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 2.</span>
+                </div>
+                <p style = "color: black;"> 2.	What are you passionate to contribute towards? ( Tick all that apply) </p>
+                <div *ngFor="let sdg of SDGAnswers" style = "color: black; padding:10px;">
+                  <input  type ="checkbox" name="{{sdg}}" [value] = "sdg" (change) = "onQuestion2CheckboxChange($event, sdg)">{{sdg}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 3 Page 3 -->
+            <div *ngIf = "questionNumber == 3">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 1, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal1Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 4">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 2, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal2Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 5">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 3, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal3Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 6">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 4, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal4Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 7">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 5, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal5Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 8">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 6, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal6Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 9">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 7, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal7Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 10">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 8, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal8Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 11">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 9, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal9Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 12">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 10, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal10Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 13">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 11, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal11Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 14">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 12, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal12Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 15">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 13, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal13Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 16">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 14, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal14Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 17">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 15, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal15Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 18">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 16, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal16Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- question 4 Page 4 -->
+            <div *ngIf = "questionNumber == 19">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 3.</span>
+                </div>
+                <p style = "color: black;"> For SDG 17, which SDG targets are you interested in? </p>
+                <div *ngFor="let target of Goal17Targets" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onTargetCheckboxChange($event, target)">{{target}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onNextPassionateSDG()">next</button>
+              </div>
+            </div>
+            <!-- First time question -->
+            <div *ngIf = "questionNumber == 20">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 4.</span>
+                </div>
+                <p style = "color: black;"> Is this the first time you are working on an impact project? </p>
+                <div *ngFor="let check of individualFirstTimeOnSDG" style = "color: black; padding:5px;">
+                  <input  type ="radio" name="item" [value] = "check" (change) = "onItemChange($event)">{{check}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "next()">next</button>
+              </div>
+            </div>
+            <!-- part of other impact network -->
+            <div *ngIf = "questionNumber == 21">
+              <div class = "card blue-grey darken-1">
+                <div class="card-content white-text">
+                  <span class="card-title" style = "color: black; ">Question 5.</span>
+                </div>
+                <p style = "color: black;">Are you part of any social impact/networks?   </p>
+                <div *ngFor="let network of partOfSocialImpanctNetwork" style = "color: black; padding:5px;">
+                  <input  type ="checkbox" name="{{network}}" [value] = "network" (change) = "onNetworkCheckboxChange($event, network)">{{network}}
+                </div>
+                <br>
+                <button type="button" class="btn btn-success" style="float: right;" (click) = "onIndividualFinish()">Finish</button>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close" (click) = "closeModal()">Maybe next time</button>
+            <button type="button" class="btn btn-primary">Don't ask me again</button>
+          </div>
+      </div>
+  </div>
+
+<!-- ###############################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################-->
+
+
+
+
+  <!-- this questionnaire is for organisations -->
+  <div class="modal-dialog modal-lg" *ngIf = "currentUser.userType.toString() == 'INSTITUTE'">
+    <div class="modal-content bg-info">
+        <div class="modal-header">
+            <h4 class="modal-title">Welcome to KMS! Your first step to saving the world!</h4>
+        </div>
+
+        <div class="modal-body">
+          <!-- question 0 page 0-->
+          <div *ngIf = "questionNumber == 0">
+            <p>Welcome to KMS! We would like to ask you a few questions to get to know your organisation better</p>
+            <button type="button" class="btn btn-success" (click) = "startSurvey()">Let's get started</button>
+          </div>
+          <!-- question 1 page 1-->
+          <div *ngIf = "questionNumber == 1">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 1.</span>
+              </div>
+              <p style = "color: black; "> Is your organisation aware of SDGs?</p>
+              <div class="list-group">
+                <button type ="button" *ngFor = "let option of organisationAwareOfSGDAnswers; let i = index" class="list-group-item list-group-item-action" (click) = answerOrganisationAwareOfSDG(i)>
+                      {{option}}
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- video 1 page 1.5-->
+          <div *ngIf = "questionNumber == 1.5">
+            <p>Here is a short video explaining what SDGs are!</p>
+            <youtube-player
+            videoId = "PZbgIVgQyks"
+            suggestedQuality = "highres"
+            [height] = "480"
+            [width] = "770"
+            ></youtube-player>
+            <hr>
+            <button type="button" class="btn btn-success" style="float: right;" (click) = "organisationGoToQuestion2()">next</button>
+          </div>
+          <!-- question 2 page 2-->
+          <div *ngIf = "questionNumber == 2">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 2.</span>
+              </div>
+              <p style = "color: black;"> 2.	What is your organisation working towards? ( Tick all that apply) </p>
+              <div *ngFor="let sdg of SDGAnswers" style = "color: black; padding:10px;">
+                <input  type ="checkbox" name="{{sdg}}" [value] = "sdg" (change) = "onOrganisationQuestion2CheckboxChange($event, sdg)">{{sdg}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 3 Page 3 -->
+          <div *ngIf = "questionNumber == 3">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 1, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal1Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 4">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 2, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal2Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 5">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 3, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal3Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 6">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 4, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal4Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 7">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 5, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal5Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 8">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 6, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal6Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 9">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 7, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal7Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 10">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 8, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal8Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 11">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 9, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal9Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 12">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 10, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal10Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 13">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 11, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal11Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 14">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 12, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal12Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 15">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 13, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal13Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 16">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 14, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal14Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 17">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 15, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal15Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 18">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 16, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal16Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- question 4 Page 4 -->
+          <div *ngIf = "questionNumber == 19">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 3.</span>
+              </div>
+              <p style = "color: black;"> For SDG 17, which SDG targets are you interested in? </p>
+              <div *ngFor="let target of Goal17Targets" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{target}}" [value] = "target" (change) = "onOrganisationTargetCheckboxChange($event, target)">{{target}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationNextPassionateSDG()">next</button>
+            </div>
+          </div>
+          <!-- First time question -->
+          <!-- <div *ngIf = "questionNumber == 20">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 4.</span>
+              </div>
+              <p style = "color: black;"> Is this the first time you are working on an impact project? </p>
+              <div *ngFor="let check of individualFirstTimeOnSDG" style = "color: black; padding:5px;">
+                <input  type ="radio" name="item" [value] = "check" (change) = "onItemChange($event)">{{check}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "next()">next</button>
+            </div>
+          </div> -->
+          <!-- part of other impact network -->
+          <div *ngIf = "questionNumber == 20">
+            <div class = "card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title" style = "color: black; ">Question 5.</span>
+              </div>
+              <p style = "color: black;">Are you part of any social impact/networks?   </p>
+              <div *ngFor="let network of partOfSocialImpanctNetwork" style = "color: black; padding:5px;">
+                <input  type ="checkbox" name="{{network}}" [value] = "network" (change) = "onOrganisationNetworkCheckboxChange($event, network)">{{network}}
+              </div>
+              <br>
+              <button type="button" class="btn btn-success" style="float: right;" (click) = "onOrganisationFinish()">Finish</button>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close" (click) = "closeModal()">Maybe next time</button>
+          <button type="button" class="btn btn-primary">Don't ask me again</button>
+        </div>
+    </div>
+</div>
+</div>

@@ -63,6 +63,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             newGroup.setIsActive(Boolean.TRUE);
             user.getGroupsOwned().add(newGroup);
             user.setCountOfGroupsCreated(user.getCountOfGroupsCreated() + 1);
+            user.setReputationPoints(user.getReputationPoints() + 5);
             newGroup.setGroupOwner(user);
             newGroup.getGroupAdmins().add(user);
             user.getGroupsManaged().add(newGroup);
@@ -86,6 +87,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             UserEntity toUser = userSessionBeanLocal.getUserById(toUserId);
             GroupEntity group = getGroupById(groupId);
             fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+            fromUser.setReputationPoints(fromUser.getReputationPoints() + 2);
             em.persist(newReview);
             em.flush();
             
@@ -127,6 +129,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(userId);
         user.setCountOfGroupsJoined(user.getCountOfGroupsJoined() + 1);
+        user.setReputationPoints(user.getReputationPoints() + 1);
         user.getGroupsJoined().add(group);
         group.getGroupMembers().add(user); 
 
@@ -149,6 +152,8 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             user.getGroupsJoined().remove(group);
             group.getGroupMembers().remove(user);
             user.setCountOfGroupsJoined(user.getCountOfGroupsJoined() - 1);
+            user.setReputationPoints(user.getReputationPoints() - 1);
+            
         }
         
     }
@@ -211,8 +216,10 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         GroupEntity group = getGroupById(groupId);
         UserEntity user = userSessionBeanLocal.getUserById(newOwnerId);
         user.setCountOfGroupsCreated(user.getCountOfGroupsCreated()+1);
+        user.setReputationPoints(user.getReputationPoints() + 5);
         
         group.getGroupOwner().setCountOfGroupsCreated(group.getGroupOwner().getCountOfGroupsCreated()-1);
+        group.getGroupOwner().setReputationPoints(group.getGroupOwner().getReputationPoints() - 5);
         group.getGroupOwner().getGroupsOwned().remove(group);
         group.setGroupOwner(user);
         
@@ -224,6 +231,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
         GroupEntity groupToDelete = getGroupById(groupId);
         
         groupToDelete.getGroupOwner().setCountOfGroupsCreated(groupToDelete.getGroupOwner().getCountOfGroupsCreated() - 1);
+        groupToDelete.getGroupOwner().setReputationPoints(groupToDelete.getGroupOwner().getReputationPoints() - 5);
         Long groupOwnerId = groupToDelete.getGroupOwner().getUserId();
         groupToDelete.getGroupOwner().getGroupsOwned().remove(groupToDelete);
         groupToDelete.setGroupOwner(null);
@@ -237,6 +245,7 @@ public class GroupSessionBean implements GroupSessionBeanLocal {
             user.getGroupsJoined().remove(groupToDelete);
             if(user.getUserId() != groupOwnerId){
                 user.setCountOfGroupsJoined(user.getCountOfGroupsJoined() - 1);
+                user.setReputationPoints(user.getReputationPoints() - 1);
             }
         }
         groupToDelete.getGroupMembers().clear();

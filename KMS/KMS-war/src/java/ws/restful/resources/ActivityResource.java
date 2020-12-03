@@ -508,7 +508,7 @@ public class ActivityResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewProjectReview(CreateProjectReviewReq createprojectReviewReq) {
-        System.out.println("******** ActivityResource: createNewUserReview");
+        System.out.println("******** ActivityResource: createNewProjectReview");
         if (createprojectReviewReq != null) {
             try {
                 Long reviewId = activitySessionBean.createNewProjectReview(createprojectReviewReq.getReview(), createprojectReviewReq.getFrom(), createprojectReviewReq.getProject(), createprojectReviewReq.getMadeFromActivityId());

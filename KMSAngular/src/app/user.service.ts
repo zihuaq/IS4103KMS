@@ -361,12 +361,12 @@ export class UserService {
       let submitIndividualQuestionnaireReq = {
         userId: userId,
         individualQuestionnaire: individualQuestionnaire,
-        sdgTags: sdgTags
+        sdgs: sdgTags
       };
 
       return this.http
       .post<any>(
-        this.baseUrl + '/updateUserPassword',
+        this.baseUrl + '/submitIndividualQuestionnaire',
         submitIndividualQuestionnaireReq,
         httpOptions
       )
@@ -381,12 +381,12 @@ export class UserService {
       let submitOrganisationQuestionnaireReq = {
         userId: userId,
         organisationQuestionnaire: organisationQuestionnaire,
-        sdgTags: sdgTags
+        sdgs: sdgTags
       };
 
       return this.http
       .post<any>(
-        this.baseUrl + '/updateUserPassword',
+        this.baseUrl + '/submitOrganisationQuestionnaire',
         submitOrganisationQuestionnaireReq,
         httpOptions
       )
@@ -480,7 +480,7 @@ export class UserService {
   }
 
   getAwardsReceived(userId: number): Observable<any>{
-    return this.http.get<any>(this.baseUrl + "/awardsReceived/" + userId)
+    return this.http.get<any>(this.baseUrl + /awardsReceived/ + userId)
     .pipe(catchError(this.handleError));
   }
 }

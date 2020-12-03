@@ -126,14 +126,14 @@ export class ActivityService {
   }
 
   createNewProjectReview(review: review, from: number, project: number, madeFromActivityId: number): Observable<any> {
-    let CreateProjectReviewReq = {
+    let createprojectReviewReq = {
       "review" : review,
       "from" : from,
       "project" : project,
       "madeFromActivityId" : madeFromActivityId,
     }
 
-    return this.httpClient.put<any>(this.baseUrl+"/createNewProjectReview", CreateProjectReviewReq, httpOptions).pipe(
+    return this.httpClient.put<any>(this.baseUrl+"/createNewProjectReview", createprojectReviewReq, httpOptions).pipe(
       catchError(this.handleError)
     );
   }

@@ -123,6 +123,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
             activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
             for(UserEntity user: activity.getJoinedUsers()){
                 user.setCountOfActivitiesCompleted(user.getCountOfActivitiesCompleted()+1);
+                user.setReputationPoints(user.getReputationPoints() + 3);  
             }
         } else if (today.isBefore(startDate)) {
             activity.setActivityStatus(ActivityStatusEnum.PLANNED);
@@ -229,6 +230,10 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
 
                 if (today.isAfter(endDate)) {
                     activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+                    for(UserEntity user: activity.getJoinedUsers()){
+                        user.setReputationPoints(user.getReputationPoints() + 3);
+                    }
+                    
                 } else if (!today.isBefore(startDate)) {
                     activity.setActivityStatus(ActivityStatusEnum.ONGOING);
                 }
@@ -358,6 +363,8 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         
         ReviewEntity newReview = new ReviewEntity(review.getTitle(), review.getReviewField(), review.getRating());
         
+        em.persist(newReview);
+        em.flush();
         
         UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
         UserEntity toUser = userSessionBeanLocal.getUserById(toId);
@@ -372,9 +379,9 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         newReview.setMadeFromActivity(madeFromActivity);
         madeFromActivity.getReviews().add(newReview);
         
-        em.persist(newReview);
-        em.flush();
+        
         fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+        fromUser.setReputationPoints(fromUser.getReputationPoints() + 2);
         
         return newReview.getReviewId();
     }
@@ -386,6 +393,9 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         System.out.println(review.getTitle());
         System.out.println(review.getReviewField());
         System.out.println(review.getRating());
+        
+        em.persist(newReview);
+        em.flush();
         
         UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
         ProjectEntity toProject = projectSessionBeanLocal.getProjectById(toProjectId);
@@ -400,10 +410,10 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         newReview.setMadeFromActivity(madeFromActivity);
         madeFromActivity.getReviews().add(newReview);
         
-        em.persist(newReview);
-        em.flush();
+        
         
         fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+        fromUser.setReputationPoints(fromUser.getReputationPoints() + 2);
         
         return newReview.getReviewId();
     }

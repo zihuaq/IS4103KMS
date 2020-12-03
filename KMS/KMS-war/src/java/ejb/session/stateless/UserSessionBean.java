@@ -79,6 +79,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
         user.setCountOfProjectsCreated(0);
         user.setCountOfProjectsJoined(0);
         user.setCountOfReviewsCreated(0);
+        user.setReputationPoints(0);
         user.setCompletedQuestionnaire(Boolean.FALSE);
         em.persist(user);
         em.flush();
@@ -1006,12 +1007,35 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return userEntity.getProfiles();
     }
     
-    public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException{
+    public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException{
         UserEntity user = getUserById(userId);
         if(user.getCompletedQuestionnaire()){
             throw new QuestionnaireAlreadyCompletedException("Questionnaire has already been submitted");
         }
         else{
+            List<TagEntity> currentSDGs = user.getSdgs();
+            List<TagEntity> updatedSDGs = new ArrayList<>();
+            for(TagEntity incomingSdg : sdg){
+                boolean incomingSDGinCurrent = false;
+                for(TagEntity currentSdg: currentSDGs){
+                    if(incomingSdg.getTagId().equals(currentSdg.getTagId())){
+                        incomingSDGinCurrent = true;
+                    }
+                }
+                if(incomingSDGinCurrent == false){
+                    try{
+                        addSDGToProfile(userId, incomingSdg.getTagId());
+                    }
+                    catch (DuplicateTagInProfileException ex){
+                        continue;
+                    }
+                }
+            }
+           
+            
+            
+            
+            user.setCompletedQuestionnaire(Boolean.TRUE);
             em.persist(questionnaire);
             user.setIndividualQuestionnaire(questionnaire);
             em.flush();
@@ -1020,15 +1044,35 @@ public class UserSessionBean implements UserSessionBeanLocal {
         return questionnaire.getIndividualQuestionnaireId();
     }
     
-    public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException{
+    public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException{
         UserEntity user = getUserById(userId);
         if(user.getCompletedQuestionnaire()){
             throw new QuestionnaireAlreadyCompletedException("Questionnaire has already been submitted");
         }
         else{
+             List<TagEntity> currentSDGs = user.getSdgs();
+            List<TagEntity> updatedSDGs = new ArrayList<>();
+            for(TagEntity incomingSdg : sdg){
+                boolean incomingSDGinCurrent = false;
+                for(TagEntity currentSdg: currentSDGs){
+                    if(incomingSdg.getTagId().equals(currentSdg.getTagId())){
+                        incomingSDGinCurrent = true;
+                    }
+                }
+                if(incomingSDGinCurrent == false){
+                    try{
+                        addSDGToProfile(userId, incomingSdg.getTagId());
+                    }
+                    catch (DuplicateTagInProfileException ex){
+                        continue;
+                    }
+                }
+            }
+            
             em.persist(questionnaire);
             user.setOrganisationQuestionnaire(questionnaire);
             em.flush();
+            user.setCompletedQuestionnaire(Boolean.TRUE);
         }
         
         return questionnaire.getOrganisationQuestionnaireId();

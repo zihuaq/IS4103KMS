@@ -287,22 +287,22 @@ public class DataInitializationSessionBean {
         }
         
             //number of groups joined milestone
-            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Joined a Group Milestone", "The badge is awarded to users who have joined their first group on KMS.", 1, 2, 3, "/images/Award1.jpg", "1", "2", "3"));            
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Joined a Group Milestone", "The badge is awarded to users who have joined their first group on KMS.", 1, 2, 3, "./resources/images/Award1.jpg", "1", "2", "3"));            
 
             //Number of projects joined milestone
-            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Joined a Project Milestone", "The badge is awarded to users who have joined their first project on KMS.", 1, 2, 3, "/images/Award2.jpg", "1", "2", "3"));
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Joined a Project Milestone", "The badge is awarded to users who have joined their first project on KMS.", 1, 2, 3, "./resources/images/Award2.jpg", "1", "2", "3"));
 
             //Number of projects created milestone
-            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Project Milestone", "The badge is awarded to users who have created their first project on KMS.", 1, 2, 3, "/images/Award3.jpg", "1", "2", "3"));
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Project Milestone", "The badge is awarded to users who have created their first project on KMS.", 1, 2, 3, "./resources/images/Award3.jpg", "1", "2", "3"));
             
             //Number of groups created milestone
-            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Group Milestone", "The badge is awarded to users who have created their first group on KMS.", 1, 2, 3, "/images/Award4.jpg", "1", "2", "3"));
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Group Milestone", "The badge is awarded to users who have created their first group on KMS.", 1, 2, 3, "./resources/images/Award4.jpg", "1", "2", "3"));
             
             //Number of activities completed milestone
-            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Completed an Activity Milestone", "The badge is awarded to users who have completed their first activity on KMS.", 1, 2, 3, "/images/Award5.jpg", "1", "2", "3"));
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Completed an Activity Milestone", "The badge is awarded to users who have completed their first activity on KMS.", 1, 2, 3, "./resources/images/Award5.jpg", "1", "2", "3"));
             
             //Number of reviews created milestone
-            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Review Milestone", "The badge is awarded to users who have written their first review on KMS.", 1, 2, 3, "/images/Award6.jpg", "1", "2", "3"));
+            badgeSessionBean.createNewBadge(new BadgeEntity(1l,"Created a Review Milestone", "The badge is awarded to users who have written their first review on KMS.", 1, 2, 3, "./resources/images/Award6.jpg", "1", "2", "3"));
             
 //        try {
 //            PostEntity post1 = new PostEntity(new Date(), "this is a post");

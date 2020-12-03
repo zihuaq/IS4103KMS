@@ -127,9 +127,13 @@ public interface UserSessionBeanLocal {
     
     public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException;
 
-    public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException;
+   // public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException;
 
-    public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException;
+   // public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException;
+
+    public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException;
+
+    public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException;
 
 
 }

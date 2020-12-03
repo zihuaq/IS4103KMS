@@ -1,6 +1,381 @@
+<div >
+  <div class="btn-group btn-group-toggle" data-toggle="buttons" >
+    <label class="btn btn-secondary active">
+      <input type="radio" name="options" id="option1" (click) = "onToggleBadge()" checked> My Badges
+    </label>
+    <label class="btn btn-secondary">
+      <input type="radio" name="options" id="option2" (click) = "onToggleAward()"> My Awards
+    </label>
+  </div>
+</div>
+
+<br>
+
+<div class="card-deck" *ngIf = "toggle == 'badges'">
+  <!-- join group badge -->
+  <div class="card" id = "joinGroup" style="max-width: 24rem;">
+    <img class="card-img-top" *ngIf = "joinGroupBadgeTier == 3" style ="max-width: 383px; max-height: 309px;" [src]="joinGroupBadge.tierThreePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "joinGroupBadgeTier == 2" style ="max-width: 383px; max-height: 309px;" [src]="joinGroupBadge.tierTwoPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "joinGroupBadgeTier == 1" style ="max-width: 383px; max-height: 309px;" [src]="joinGroupBadge.tierOnePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "joinGroupBadgeTier == 0" style ="max-width: 383px; max-height: 309px;" [src]="joinGroupBadge.tierZeroPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <div class="card-body">
+
+    <h5 class="card-title">{{joinGroupBadge.name}} </h5>
+
+      <br>
+
+      <div *ngIf = "joinGroupBadgeTier == 0">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfGroupsJoined*100)/joinGroupBadge.tierOneRequirement"  aria-valuenow="this.profile.countOfGroupsJoined" aria-valuemin="0" aria-valuemax="joinGroupBadge.tierOneRequirement">{{this.profile.countOfGroupsJoined}}/{{joinGroupBadge.tierOneRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{joinGroupBadgeTier}}</p>
+        </div>
+      </div>
+
+      <div  *ngIf = "joinGroupBadgeTier == 1">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfGroupsJoined*100)/joinGroupBadge.tierTwoRequirement" aria-valuenow = "this.profile.countOfGroupsJoined" aria-valuemin="0" aria-valuemax="joinGroupBadge.tierTwoRequirement">{{this.profile.countOfGroupsJoined}}/{{joinGroupBadge.tierTwoRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{joinGroupBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "joinGroupBadgeTier == 2">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfGroupsJoined*100)/joinGroupBadge.tierThreeRequirement" aria-valuenow = "this.profile.countOfGroupsJoined" aria-valuemin="0" aria-valuemax="joinGroupBadge.tierThreeRequirement">{{this.profile.countOfGroupsJoined}}/{{joinGroupBadge.tierThreeRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{joinGroupBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "joinGroupBadgeTier == 3">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow = "100" aria-valuemin="0" aria-valuemax="100">{{this.profile.countOfGroupsJoined}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{joinGroupBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <p class="card-text">{{joinGroupBadge.description}}</p>
+    </div>
+  </div>
+
+  <!-- join project badge -->
+  <div class="card" id = "joinProject" style="max-width: 24rem;">
+    <img class="card-img-top" *ngIf = "joinProjectBadgeTier == 3" style ="max-width: 383px; max-height: 309px;" [src]="joinProjectBadge.tierThreePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "joinProjectBadgeTier == 2" style ="max-width: 383px; max-height: 309px;" [src]="joinProjectBadge.tierTwoPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "joinProjectBadgeTier == 1" style ="max-width: 383px; max-height: 309px;" [src]="joinProjectBadge.tierOnePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "joinProjectBadgeTier == 0" style ="max-width: 383px; max-height: 309px;" [src]="joinProjectBadge.tierZeroPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <div class="card-body">
+
+    <h5 class="card-title">{{joinProjectBadge.name}} </h5>
+
+      <br>
+
+      <div *ngIf = "joinProjectBadgeTier == 0">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfProjectsJoined*100)/joinProjectBadge.tierOneRequirement"  aria-valuenow="this.profile.countOfProjectsJoined" aria-valuemin="0" aria-valuemax="joinProjectBadge.tierOneRequirement">{{this.profile.countOfProjectsJoined}}/{{joinProjectBadge.tierOneRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{joinProjectBadgeTier}}</p>
+        </div>
+      </div>
+
+      <div  *ngIf = "joinProjectBadgeTier == 1">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfProjectsJoined*100)/joinProjectBadge.tierTwoRequirement" aria-valuenow = "this.profile.countOfProjectsJoined" aria-valuemin="0" aria-valuemax="joinProjectBadge.tierTwoRequirement">{{this.profile.countOfProjectsJoined}}/{{joinProjectBadge.tierTwoRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{joinProjectBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "joinProjectBadgeTier == 2">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfProjectsJoined*100)/joinProjectBadge.tierThreeRequirement" aria-valuenow = "this.profile.countOfProjectsJoined" aria-valuemin="0" aria-valuemax="joinProjectBadge.tierThreeRequirement">{{this.profile.countOfProjectsJoined}}/{{joinProjectBadge.tierThreeRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{joinProjectBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "joinProjectBadgeTier == 3">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow = "100" aria-valuemin="0" aria-valuemax="100">{{this.profile.countOfProjectsJoined}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{joinProjectBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <p class="card-text">{{joinProjectBadge.description}}</p>
+    </div>
+  </div>
+
+  <!-- create group badge -->
+  <div class="card" id = "createGroup" style="max-width: 24rem;">
+    <img class="card-img-top" *ngIf = "createGroupBadgeTier == 3" style ="max-width: 383px; max-height: 309px;" [src]="createGroupBadge.tierThreePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createGroupBadgeTier == 2" style ="max-width: 383px; max-height: 309px;" [src]="createGroupBadge.tierTwoPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createGroupBadgeTier == 1" style ="max-width: 383px; max-height: 309px;" [src]="createGroupBadge.tierOnePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createGroupBadgeTier == 0" style ="max-width: 383px; max-height: 309px;" [src]="createGroupBadge.tierZeroPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <div class="card-body">
+
+    <h5 class="card-title">{{createGroupBadge.name}} </h5>
+
+      <br>
+
+      <div *ngIf = "createGroupBadgeTier == 0">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfGroupsCreated*100)/createGroupBadge.tierOneRequirement"  aria-valuenow="this.profile.countOfGroupsCreated" aria-valuemin="0" aria-valuemax="createGroupBadge.tierOneRequirement">{{this.profile.countOfGroupsCreated}}/{{createGroupBadge.tierOneRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createGroupBadgeTier}}</p>
+        </div>
+      </div>
+
+      <div  *ngIf = "createGroupBadgeTier == 1">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfGroupsCreated*100)/createGroupBadge.tierTwoRequirement" aria-valuenow = "this.profile.countOfGroupsCreated" aria-valuemin="0" aria-valuemax="createGroupBadge.tierTwoRequirement">{{this.profile.countOfGroupsCreated}}/{{createGroupBadge.tierTwoRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createGroupBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "createGroupBadgeTier == 2">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfGroupsCreated*100)/createGroupBadge.tierThreeRequirement" aria-valuenow = "this.profile.countOfGroupsCreated" aria-valuemin="0" aria-valuemax="createGroupBadge.tierThreeRequirement">{{this.profile.countOfGroupsCreated}}/{{createGroupBadge.tierThreeRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createGroupBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "createGroupBadgeTier == 3">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow = "100" aria-valuemin="0" aria-valuemax="100">{{this.profile.countOfGroupsCreated}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createGroupBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <p class="card-text">{{createGroupBadge.description}}</p>
+    </div>
+  </div>
+
+</div>
+<hr>
+<div class="card-deck" *ngIf = "toggle == 'badges'">
+  <!-- create project badge -->
+  <div class="card" id = "createProject" style="max-width: 24rem;">
+    <img class="card-img-top" *ngIf = "createProjectBadgeTier == 3" style ="max-width: 383px; max-height: 309px;" [src]="createProjectBadge.tierThreePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createProjectBadgeTier == 2" style ="max-width: 383px; max-height: 309px;" [src]="createProjectBadge.tierTwoPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createProjectBadgeTier == 1" style ="max-width: 383px; max-height: 309px;" [src]="createProjectBadge.tierOnePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createProjectBadgeTier == 0" style ="max-width: 383px; max-height: 309px;" [src]="createProjectBadge.tierZeroPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <div class="card-body">
+
+    <h5 class="card-title">{{createProjectBadge.name}} </h5>
+
+      <br>
+
+      <div *ngIf = "createProjectBadgeTier == 0">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfProjectsCreated*100)/createProjectBadge.tierOneRequirement"  aria-valuenow="this.profile.countOfProjectsCreated" aria-valuemin="0" aria-valuemax="createProjectBadge.tierOneRequirement">{{this.profile.countOfProjectsCreated}}/{{createProjectBadge.tierOneRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createProjectBadgeTier}}</p>
+        </div>
+      </div>
+
+      <div  *ngIf = "createProjectBadgeTier == 1">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfProjectsCreated*100)/createProjectBadge.tierTwoRequirement" aria-valuenow = "this.profile.countOfProjectsCreated" aria-valuemin="0" aria-valuemax="createProjectBadge.tierTwoRequirement">{{this.profile.countOfProjectsCreated}}/{{createProjectBadge.tierTwoRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createProjectBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "createProjectBadgeTier == 2">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfProjectsCreated*100)/createProjectBadge.tierThreeRequirement" aria-valuenow = "this.profile.countOfProjectsCreated" aria-valuemin="0" aria-valuemax="createProjectBadge.tierThreeRequirement">{{this.profile.countOfProjectsCreated}}/{{createProjectBadge.tierThreeRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createProjectBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "createProjectBadgeTier == 3">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow = "100" aria-valuemin="0" aria-valuemax="100">{{this.profile.countOfProjectsCreated}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createProjectBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <p class="card-text">{{createProjectBadge.description}}</p>
+    </div>
+  </div>
+
+  <!-- complete activity badge -->
+  <div class="card" id = "completeActivity" style="max-width: 24rem;">
+    <img class="card-img-top" *ngIf = "completeActivityBadgeTier == 3" style ="max-width: 383px; max-height: 309px;" [src]="completeActivityBadge.tierThreePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "completeActivityBadgeTier == 2" style ="max-width: 383px; max-height: 309px;" [src]="completeActivityBadge.tierTwoPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "completeActivityBadgeTier == 1" style ="max-width: 383px; max-height: 309px;" [src]="completeActivityBadge.tierOnePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "completeActivityBadgeTier == 0" style ="max-width: 383px; max-height: 309px;" [src]="completeActivityBadge.tierZeroPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <div class="card-body">
+
+    <h5 class="card-title">{{completeActivityBadge.name}} </h5>
+
+      <br>
+
+      <div *ngIf = "completeActivityBadgeTier == 0">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfActivitiesCompleted*100)/completeActivityBadge.tierOneRequirement"  aria-valuenow="this.profile.countOfActivitiesCompleted" aria-valuemin="0" aria-valuemax="completeActivityBadge.tierOneRequirement">{{this.profile.countOfActivitiesCompleted}}/{{completeActivityBadge.tierOneRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{completeActivityBadgeTier}}</p>
+        </div>
+      </div>
+
+      <div  *ngIf = "completeActivityBadgeTier == 1">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfActivitiesCompleted*100)/completeActivityBadge.tierTwoRequirement" aria-valuenow = "this.profile.countOfActivitiesCompleted" aria-valuemin="0" aria-valuemax="completeActivityBadge.tierTwoRequirement">{{this.profile.countOfActivitiesCompleted}}/{{completeActivityBadge.tierTwoRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{completeActivityBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "completeActivityBadgeTier == 2">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfActivitiesCompleted*100)/completeActivityBadge.tierThreeRequirement" aria-valuenow = "this.profile.countOfActivitiesCompleted" aria-valuemin="0" aria-valuemax="completeActivityBadge.tierThreeRequirement">{{this.profile.countOfActivitiesCompleted}}/{{completeActivityBadge.tierThreeRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{completeActivityBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "completeActivityBadgeTier == 3">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow = "100" aria-valuemin="0" aria-valuemax="100">{{this.profile.countOfActivitiesCompleted}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{completeActivityBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <p class="card-text">{{completeActivityBadge.description}}</p>
+    </div>
+  </div>
+
+  <!-- reviews written badge -->
+  <div class="card" id = "createReview" style="max-width: 24rem;">
+    <img class="card-img-top" *ngIf = "createReviewBadgeTier == 3" style ="max-width: 383px; max-height: 309px;" [src]="createReviewBadge.tierThreePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createReviewBadgeTier == 2" style ="max-width: 383px; max-height: 309px;" [src]="createReviewBadge.tierTwoPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createReviewBadgeTier == 1" style ="max-width: 383px; max-height: 309px;" [src]="createReviewBadge.tierOnePicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <img class="card-img-top" *ngIf = "createReviewBadgeTier == 0" style ="max-width: 383px; max-height: 309px;" [src]="createReviewBadge.tierZeroPicture" alt="http://clipart-library.com/images/6Tr5eKnkc.png">
+    <div class="card-body">
+
+    <h5 class="card-title">{{createReviewBadge.name}} </h5>
+
+      <br>
+
+      <div *ngIf = "createReviewBadgeTier == 0">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfReviewsCreated*100)/createReviewBadge.tierOneRequirement"  aria-valuenow="this.profile.countOfReviewsCreated" aria-valuemin="0" aria-valuemax="createReviewBadge.tierOneRequirement">{{this.profile.countOfReviewsCreated}}/{{createReviewBadge.tierOneRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createReviewBadgeTier}}</p>
+        </div>
+      </div>
+
+      <div  *ngIf = "createReviewBadgeTier == 1">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfReviewsCreated*100)/createReviewBadge.tierTwoRequirement" aria-valuenow = "this.profile.countOfReviewsCreated" aria-valuemin="0" aria-valuemax="createReviewBadge.tierTwoRequirement">{{this.profile.countOfReviewsCreated}}/{{createReviewBadge.tierTwoRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createReviewBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "createReviewBadgeTier == 2">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" [style.width.%] = "(this.profile.countOfReviewsCreated*100)/createReviewBadge.tierThreeRequirement" aria-valuenow = "this.profile.countOfReviewsCreated" aria-valuemin="0" aria-valuemax="createReviewBadge.tierThreeRequirement">{{this.profile.countOfReviewsCreated}}/{{createReviewBadge.tierThreeRequirement}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createReviewBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <div *ngIf = "createReviewBadgeTier == 3">
+        <div class="progress" >
+          <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow = "100" aria-valuemin="0" aria-valuemax="100">{{this.profile.countOfReviewsCreated}}</div>
+        </div>
+        <div>
+
+          <p>Tier {{createReviewBadgeTier}}</p>
+        </div>
+
+      </div>
+
+      <p class="card-text">{{createReviewBadge.description}}</p>
+    </div>
+  </div>
+
+
+</div>
+
+
 <div class="card-deck" *ngIf = "toggle == 'awards'">
   <span class="text-muted" *ngIf="awards == null || awards.length == 0">
-    <p style="padding-bottom: 1em;">No Awards found.</p>
+    <p style="padding-bottom: 1em;">No Awards.</p>
   </span>
   <div class="card" *ngFor = "let award of awards" style="max-width: 24rem;">
     <img class="card-img-top" style ="max-width: 383px; max-height: 309px;" [src]="award.awardPicture" alt="https://pcgimg.azureedge.net/Upload/Product/40586-basic-button-badge-magnet-Photo1-385-20201104232616.jpg?maxwidth=560?width=450&height=450">

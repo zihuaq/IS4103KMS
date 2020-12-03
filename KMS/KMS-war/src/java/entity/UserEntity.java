@@ -72,7 +72,8 @@ public class UserEntity implements Serializable {
     @Lob
     @Column
     private String profilePicture;
-    private int reputationPoints;
+    
+    private Integer reputationPoints;
 
     private String verificationCode;
 
@@ -168,21 +169,21 @@ public class UserEntity implements Serializable {
     private List<AwardEntity> receivedAwards;
     
     //counters for badges
-    private Integer CountOfGroupsJoined;
+    private Integer countOfGroupsJoined;
     
-    private Integer CountOfProjectsJoined;
+    private Integer countOfProjectsJoined;
     
-    private Integer CountOfProjectsCreated;
+    private Integer countOfProjectsCreated;
     
-    private Integer CountOfGroupsCreated;
+    private Integer countOfGroupsCreated;
     
-    private Integer CountOfActivitiesCompleted;
+    private Integer countOfActivitiesCompleted;
     
-    private Integer CountOfPostCreated;
+    private Integer countOfPostCreated;
     
-    private Integer CountOfCommentsCreated;
+    private Integer countOfCommentsCreated;
     
-    private Integer CountOfReviewsCreated;
+    private Integer countOfReviewsCreated;
     
 
     @OneToMany 
@@ -226,14 +227,14 @@ public class UserEntity implements Serializable {
         this.activityJoined = new ArrayList<>();
         this.donations = new ArrayList<>();
         this.receivedAwards = new ArrayList<>();
-        this.CountOfGroupsJoined = 0;
-        this.CountOfProjectsJoined = 0;
-        this.CountOfProjectsCreated = 0;
-        this.CountOfGroupsCreated = 0;
-        this.CountOfActivitiesCompleted = 0;
-        this.CountOfPostCreated = 0;
-        this.CountOfCommentsCreated = 0;
-        this.CountOfReviewsCreated = 0;
+        this.countOfGroupsJoined = 0;
+        this.countOfProjectsJoined = 0;
+        this.countOfProjectsCreated = 0;
+        this.countOfGroupsCreated = 0;
+        this.countOfActivitiesCompleted = 0;
+        this.countOfPostCreated = 0;
+        this.countOfCommentsCreated = 0;
+        this.countOfReviewsCreated = 0;
         this.notifications = new ArrayList<>();
         this.profiles = new ArrayList<>();
         this.claimProfileRequestMade = new ArrayList<>();
@@ -252,14 +253,15 @@ public class UserEntity implements Serializable {
         this.joinedDate = new Date();
         this.userType = usertype;
 
-        this.CountOfGroupsJoined = 0;
-        this.CountOfProjectsJoined = 0;
-        this.CountOfProjectsCreated = 0;
-        this.CountOfGroupsCreated = 0;
-        this.CountOfActivitiesCompleted = 0;
-        this.CountOfPostCreated = 0;
-        this.CountOfCommentsCreated = 0;
-        this.CountOfReviewsCreated = 0;
+        this.countOfGroupsJoined = 0;
+        this.countOfProjectsJoined = 0;
+        this.countOfProjectsCreated = 0;
+        this.countOfGroupsCreated = 0;
+        this.countOfActivitiesCompleted = 0;
+        this.countOfPostCreated = 0;
+        this.countOfCommentsCreated = 0;
+        this.countOfReviewsCreated = 0;
+        this.reputationPoints = 0;
         this.reputationPoints = 0;
 
     }
@@ -526,11 +528,11 @@ public class UserEntity implements Serializable {
         this.followers = followers;
     }
 
-    public int getReputationPoints() {
+    public Integer getReputationPoints() {
         return reputationPoints;
     }
 
-    public void setReputationPoints(int reputationPoints) {
+    public void setReputationPoints(Integer reputationPoints) {
         this.reputationPoints = reputationPoints;
     }
 
@@ -642,54 +644,6 @@ public class UserEntity implements Serializable {
         this.groupsManaged = groupsManaged;
     }
 
-  
-    public Integer getCountOfGroupsJoined() {
-        return CountOfGroupsJoined;
-    }
-
-    public void setCountOfGroupsJoined(Integer CountOfGroupsJoined) {
-        this.CountOfGroupsJoined = CountOfGroupsJoined;
-    }
-
-    public Integer getCountOfProjectsJoined() {
-        return CountOfProjectsJoined;
-    }
-
-    public void setCountOfProjectsJoined(Integer CountOfProjectsJoined) {
-        this.CountOfProjectsJoined = CountOfProjectsJoined;
-    }
-
-    public Integer getCountOfActivitiesCompleted() {
-        return CountOfActivitiesCompleted;
-    }
-
-    public void setCountOfActivitiesCompleted(Integer CountOfActivitiesCompleted) {
-        this.CountOfActivitiesCompleted = CountOfActivitiesCompleted;
-    }
-
-    public Integer getCountOfPostCreated() {
-        return CountOfPostCreated;
-    }
-
-    public void setCountOfPostCreated(Integer CountOfPostCreated) {
-        this.CountOfPostCreated = CountOfPostCreated;
-    }
-
-    public Integer getCountOfCommentsCreated() {
-        return CountOfCommentsCreated;
-    }
-
-    public void setCountOfCommentsCreated(Integer CountOfCommentsCreated) {
-        this.CountOfCommentsCreated = CountOfCommentsCreated;
-    }
-
-    public Integer getCountOfReviewsCreated() {
-        return CountOfReviewsCreated;
-    }
-
-    public void setCountOfReviewsCreated(Integer CountOfReviewsCreated) {
-        this.CountOfReviewsCreated = CountOfReviewsCreated;
-    }
 
     public List<AwardEntity> getReceivedAwards() {
         return receivedAwards;
@@ -699,22 +653,71 @@ public class UserEntity implements Serializable {
         this.receivedAwards = receivedAwards;
     }
 
-    public Integer getCountOfProjectsCreated() {
-        return CountOfProjectsCreated;
+    public Integer getCountOfGroupsJoined() {
+        return countOfGroupsJoined;
     }
 
-    public void setCountOfProjectsCreated(Integer CountOfProjectsCreated) {
-        this.CountOfProjectsCreated = CountOfProjectsCreated;
+    public void setCountOfGroupsJoined(Integer countOfGroupsJoined) {
+        this.countOfGroupsJoined = countOfGroupsJoined;
+    }
+
+    public Integer getCountOfProjectsJoined() {
+        return countOfProjectsJoined;
+    }
+
+    public void setCountOfProjectsJoined(Integer countOfProjectsJoined) {
+        this.countOfProjectsJoined = countOfProjectsJoined;
+    }
+
+    public Integer getCountOfProjectsCreated() {
+        return countOfProjectsCreated;
+    }
+
+    public void setCountOfProjectsCreated(Integer countOfProjectsCreated) {
+        this.countOfProjectsCreated = countOfProjectsCreated;
     }
 
     public Integer getCountOfGroupsCreated() {
-        return CountOfGroupsCreated;
+        return countOfGroupsCreated;
     }
 
-    public void setCountOfGroupsCreated(Integer CountOfGroupsCreated) {
-        this.CountOfGroupsCreated = CountOfGroupsCreated;
+    public void setCountOfGroupsCreated(Integer countOfGroupsCreated) {
+        this.countOfGroupsCreated = countOfGroupsCreated;
     }
 
+    public Integer getCountOfActivitiesCompleted() {
+        return countOfActivitiesCompleted;
+    }
+
+    public void setCountOfActivitiesCompleted(Integer countOfActivitiesCompleted) {
+        this.countOfActivitiesCompleted = countOfActivitiesCompleted;
+    }
+
+    public Integer getCountOfPostCreated() {
+        return countOfPostCreated;
+    }
+
+    public void setCountOfPostCreated(Integer countOfPostCreated) {
+        this.countOfPostCreated = countOfPostCreated;
+    }
+
+    public Integer getCountOfCommentsCreated() {
+        return countOfCommentsCreated;
+    }
+
+    public void setCountOfCommentsCreated(Integer countOfCommentsCreated) {
+        this.countOfCommentsCreated = countOfCommentsCreated;
+    }
+
+    public Integer getCountOfReviewsCreated() {
+        return countOfReviewsCreated;
+    }
+
+    public void setCountOfReviewsCreated(Integer countOfReviewsCreated) {
+        this.countOfReviewsCreated = countOfReviewsCreated;
+    }
+
+    
     
     public List<NotificationEntity> getNotifications() {
         return notifications;

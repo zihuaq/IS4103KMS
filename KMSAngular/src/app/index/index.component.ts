@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IndividualQuestionnaire } from '../classes/individualQuestionnaire';
 import { OrganisationQuestionnaire } from '../classes/organisationQuestionnaire';
 import { User } from '../classes/user';
@@ -7,7 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../user.service';
 import { SessionService } from '../session.service';
 import { TagService } from 'src/app/tag.service';
-
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { Router } from '@angular/router';
+declare var $: any;
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
@@ -15,17 +17,35 @@ import { TagService } from 'src/app/tag.service';
 })
 export class IndexComponent implements OnInit {
 
-  individualQuestinnaire: IndividualQuestionnaire
-  organisationQuestionnaire: OrganisationQuestionnaire
+
+  individualQuestinnaire: IndividualQuestionnaire = new IndividualQuestionnaire()
+  organisationQuestionnaire: OrganisationQuestionnaire = new OrganisationQuestionnaire()
   currentUser: User
   allSDGTags: Tag[];
   selectedTags: Tag[] = [];
+  questionNumber: number = 0;
+
+  individualAwareOfSDG: string;
+  individualPassionateSDGs = [];
+  individualPassionateSDGsNumber: number[] = [];
+  individualPassionateSDGsDoneNumber: number[] = [];
+  individualPassionateSDGTargets = []
+  individualFirstTimeAnswer: boolean
+  individualPartOfSocialNetwork = []
+
+  organisationAwareOfSDG: string;
+  organisationPassionateSDGs = [];
+  organisationPassionateSDGsNumber: number[] = [];
+  organisationPassionateSDGsDoneNumber: number[] = [];
+  organisationPassionateSDGTargets = []
+  organisationFirstTimeAnswer: boolean
+  organisationPartOfSocialNetwork = []
 
   individualAwareOfSGDAnswers: string[] = [
-    'Yes, but we are not sure exactly what it is',
-    'Yes, we are actively  working towards contributing towards it',
-    'Yes, but we do not  know how to contribute  towards it',
-    'No, this is the first time we are hearing about it'
+    'Yes, I have but not sure exactly what it is',
+    'Yes, I have and am actively working towards contributing towards it',
+    'Yes, but I do not know how to contribute  towards it',
+    'No,  this is the first time I am hearing about it'
   ]
   SDGAnswers: string[] = [
     'Goal 1: No Poverty',
@@ -46,6 +66,8 @@ export class IndexComponent implements OnInit {
     'Goal 16: Peace, Justice and Strong Institutions',
     'Goal 17: Partnerships for the Goals'
   ]
+
+  goal1Selected: boolean = false
   Goal1Targets: string[] = [
     'TARGET 1.1.   By 2030, eradicate extreme poverty for all people everywhere, currently measured as people living on less than $1.25 a day',
     'TARGET 1.2.   By 2030, reduce at least by half the proportion of men, women and children of all ages living in poverty in all its dimensions according to national definitions',
@@ -55,6 +77,7 @@ export class IndexComponent implements OnInit {
     'TARGET 1.a.   Ensure significant mobilization of resources from a variety of sources, including through enhanced development cooperation, in order to provide adequate and predictable means for developing countries, in particular least developed countries, to implement programmes and policies to end poverty in all its dimensions',
     'TARGET 1.b.   Create sound policy frameworks at the national, regional and international levels, based on pro-poor and gender-sensitive development strategies, to support accelerated investment in poverty eradication actions'
   ];
+  goal2Selected: boolean = false
   Goal2Targets: string[] = [
     'TARGET 2.1.   By 2030, end hunger and ensure access by all people, in particular the poor and people in vulnerable situations, including infants, to safe, nutritious and sufficient food all year round',
     'TARGET 2.2.   By 2030, end all forms of malnutrition, including achieving, by 2025, the internationally agreed targets on stunting and wasting in children under 5 years of age, and address the nutritional needs of adolescent girls, pregnant and lactating women and older persons',
@@ -65,6 +88,7 @@ export class IndexComponent implements OnInit {
     'TARGET 2.b.   Correct and prevent trade restrictions and distortions in world agricultural markets, including through the parallel elimination of all forms of agricultural export subsidies and all export measures with equivalent effect, in accordance with the mandate of the Doha Development Round',
     'TARGET 2.c.   Adopt measures to ensure the proper functioning of food commodity markets and their derivatives and facilitate timely access to market information, including on food reserves, in order to help limit extreme food price volatility'
   ]
+  goal3Selected: boolean = false
   Goal3Targets: string[] = [
     'TARGET 3.1.   By 2030, reduce the global maternal mortality ratio to less than 70 per 100,000 live births',
     'TARGET 3.2.   By 2030, end preventable deaths of newborns and children under 5 years of age, with all countries aiming to reduce neonatal mortality to at least as low as 12 per 1,000 live births and under-5 mortality to at least as low as 25 per 1,000 live births',
@@ -80,6 +104,7 @@ export class IndexComponent implements OnInit {
     'TARGET 3.c.   Substantially increase health financing and the recruitment, development, training and retention of the health workforce in developing countries, especially in least developed countries and small island developing States',
     'TARGET 3.d.   Strengthen the capacity of all countries, in particular developing countries, for early warning, risk reduction and management of national and global health risks'
   ]
+  goal4Selected: boolean = false
   Goal4Targets: string[] = [
     'TARGET 4.1.   By 2030, ensure that all girls and boys complete free, equitable and quality primary and secondary education leading to relevant and effective learning outcomes',
     'TARGET 4.2.   By 2030, ensure that all girls and boys have access to quality early childhood development, care and pre-primary education so that they are ready for primary education',
@@ -92,6 +117,7 @@ export class IndexComponent implements OnInit {
     "TARGET 4.b.   By 2020, substantially expand globally the number of scholarships available to developing countries, in particular least developed countries, small island developing States and African countries, for enrolment in higher education, including vocational training and information and communications technology, technical, engineering and scientific programmes, in developed countries and other developing countries",
     "TARGET 4.c.   By 2030, substantially increase the supply of qualified teachers, including through international cooperation for teacher training in developing countries, especially least developed countries and small island developing States"
   ]
+  goal5Selected: boolean = false
   Goal5Targets: string[] = [
     'TARGET 5.1.   End all forms of discrimination against all women and girls everywhere',
     'TARGET 5.2.   Eliminate all forms of violence against all women and girls in the public and private spheres, including trafficking and sexual and other types of exploitation',
@@ -102,6 +128,7 @@ export class IndexComponent implements OnInit {
     "TARGET 5.b.   Enhance the use of enabling technology, in particular information and communications technology, to promote the empowerment of women",
     "TARGET 5.c.   Adopt and strengthen sound policies and enforceable legislation for the promotion of gender equality and the empowerment of all women and girls at all levels"
   ]
+  goal6Selected: boolean = false
   Goal6Targets: string[] = [
     "TARGET 6.1.   By 2030, achieve universal and equitable access to safe and affordable drinking water for all",
     "TARGET 6.2.   By 2030, achieve access to adequate and equitable sanitation and hygiene for all and end open defecation, paying special attention to the needs of women and girls and those in vulnerable situations",
@@ -112,6 +139,7 @@ export class IndexComponent implements OnInit {
     "TARGET 6.a.   By 2030, expand international cooperation and capacity-building support to developing countries in water- and sanitation-related activities and programmes, including water harvesting, desalination, water efficiency, wastewater treatment, recycling and reuse technologies",
     "TARGET 6.b.   Support and strengthen the participation of local communities in improving water and sanitation management"
   ]
+  goal7Selected: boolean = false
   Goal7Targets: string[] = [
     "TARGET 7.1.   By 2030, ensure universal access to affordable, reliable and modern energy services",
     "TARGET 7.2.   By 2030, increase substantially the share of renewable energy in the global energy mix",
@@ -119,6 +147,7 @@ export class IndexComponent implements OnInit {
     "TARGET 7.a.   By 2030, enhance international cooperation to facilitate access to clean energy research and technology, including renewable energy, energy efficiency and advanced and cleaner fossil-fuel technology, and promote investment in energy infrastructure and clean energy technology",
     "TARGET 7.b.   By 2030, expand infrastructure and upgrade technology for supplying modern and sustainable energy services for all in developing countries, in particular least developed countries, small island developing States and landlocked developing countries, in accordance with their respective programmes of support"
   ]
+  goal8Selected: boolean = false
   Goal8Targets: string[] = [
     "TARGET 8.1.   Sustain per capita economic growth in accordance with national circumstances and, in particular, at least 7 percent gross domestic product growth per annum in the least developed countries",
     "TARGET 8.2.   Achieve higher levels of economic productivity through diversification, technological upgrading and innovation, including through a focus on high-value added and labour-intensive sectors",
@@ -133,6 +162,7 @@ export class IndexComponent implements OnInit {
     "TARGET 8.a.   Increase Aid for Trade support for developing countries, in particular least developed countries, including through the Enhanced Integrated Framework for Trade-related Technical Assistance to least developed countries",
     "TARGET 8.b.   By 2020, develop and operationalize a global strategy for youth employment and implement the Global Jobs Pact of the International Labour Organization"
   ]
+  goal9Selected: boolean = false
   Goal9Targets: string[] = [
     "TARGET 9.1.   Develop quality, reliable, sustainable and resilient infrastructure, including regional and transborder infrastructure, to support economic development and human well-being, with a focus on affordable and equitable access for all",
     "TARGET 9.2.   Promote inclusive and sustainable industrialization and, by 2030, significantly raise industry's share of employment and gross domestic product, in line with national circumstances, and double its share in least developed countries",
@@ -143,6 +173,7 @@ export class IndexComponent implements OnInit {
     "TARGET 9.b.   Support domestic technology development, research and innovation in developing countries, including by ensuring a conducive policy environment for, inter alia, industrial diversification and value addition to commodities",
     "TARGET 9.c.   Significantly increase access to information and communications technology and strive to provide universal and affordable access to the Internet in least developed countries by 2020"
   ]
+  goal10Selected: boolean = false
   Goal10Targets: string[] = [
     "TARGET 10.1.  By 2030, progressively achieve and sustain income growth of the bottom 40 percent of the population at a rate higher than the national average",
     "TARGET 10.2.  By 2030, empower and promote the social, economic and political inclusion of all, irrespective of age, sex, disability, race, ethnicity, origin, religion or economic or other status",
@@ -155,6 +186,7 @@ export class IndexComponent implements OnInit {
     "TARGET 10.b.  Encourage official development assistance and financial flows, including foreign direct investment, to States where the need is greatest, in particular least developed countries, African countries, small island developing States and landlocked developing countries, in accordance with their national plans and programmes",
     "TARGET 10.c.  By 2030, reduce to less than 3 percent the transaction costs of migrant remittances and eliminate remittance corridors with costs higher than 5 percent"
   ]
+  goal11Selected: boolean = false
   Goal11Targets: string[] = [
     "TARGET 11.1.  By 2030, ensure access for all to adequate, safe and affordable housing and basic services and upgrade slums",
     "TARGET 11.2.  By 2030, provide access to safe, affordable, accessible and sustainable transport systems for all, improving road safety, notably by expanding public transport, with special attention to the needs of those in vulnerable situations, women, children, persons with disabilities and older persons",
@@ -167,6 +199,7 @@ export class IndexComponent implements OnInit {
     "TARGET 11.b.  By 2020, substantially increase the number of cities and human settlements adopting and implementing integrated policies and plans towards inclusion, resource efficiency, mitigation and adaptation to climate change, resilience to disasters, and develop and implement, in line with the Sendai Framework for Disaster Risk Reduction 2015-2030, holistic disaster risk management at all levels",
     "TARGET 11.c.  Support least developed countries, including through financial and technical assistance, in building sustainable and resilient buildings utilizing local materials"
   ]
+  goal12Selected: boolean = false
   Goal12Targets: string[] = [
     "TARGET 12.1.  Implement the 10-Year Framework of Programmes on Sustainable Consumption and Production Patterns, all countries taking action, with developed countries taking the lead, taking into account the development and capabilities of developing countries",
     "TARGET 12.2.  By 2030, achieve the sustainable management and efficient use of natural resources",
@@ -180,6 +213,7 @@ export class IndexComponent implements OnInit {
     "TARGET 12.b.  Develop and implement tools to monitor sustainable development impacts for sustainable tourism that creates jobs and promotes local culture and products",
     "TARGET 12.c.  Rationalize inefficient fossil-fuel subsidies that encourage wasteful consumption by removing market distortions, in accordance with national circumstances, including by restructuring taxation and phasing out those harmful subsidies, where they exist, to reflect their environmental impacts, taking fully into account the specific needs and conditions of developing countries and minimizing the possible adverse impacts on their development in a manner that protects the poor and the affected communities",
   ]
+  goal13Selected: boolean = false
   Goal13Targets: string[] = [
     "TARGET 13.1.  Strengthen resilience and adaptive capacity to climate-related hazards and natural disasters in all countries",
     "TARGET 13.2.  Integrate climate change measures into national policies, strategies and planning",
@@ -187,6 +221,7 @@ export class IndexComponent implements OnInit {
     "TARGET 13.a.  Implement the commitment undertaken by developed-country parties to the United Nations Framework Convention on Climate Change to a goal of mobilizing jointly $100 billion annually by 2020 from all sources to address the needs of developing countries in the context of meaningful mitigation actions and transparency on implementation and fully operationalize the Green Climate Fund through its capitalization as soon as possible",
     "TARGET 13.b.  Promote mechanisms for raising capacity for effective climate change-related planning and management in least developed countries and small island developing States, including focusing on women, youth and local and marginalized communities"
   ]
+  goal14Selected: boolean = false
   Goal14Targets: string[] = [
     "TARGET 14.1.  By 2025, prevent and significantly reduce marine pollution of all kinds, in particular from land-based activities, including marine debris and nutrient pollution",
     "TARGET 14.2.  By 2020, sustainably manage and protect marine and coastal ecosystems to avoid significant adverse impacts, including by strengthening their resilience, and take action for their restoration in order to achieve healthy and productive oceans",
@@ -199,6 +234,7 @@ export class IndexComponent implements OnInit {
     "TARGET 14.b.  Provide access for small-scale artisanal fishers to marine resources and markets",
     "TARGET 14.c.  Enhance the conservation and sustainable use of oceans and their resources by implementing international law as reflected in the United Nations Convention on the Law of the Sea, which provides the legal framework for the conservation and sustainable use of oceans and their resources, as recalled in paragraph 158 of 'The future we want'"
   ]
+  goal15Selected: boolean = false
   Goal15Targets: string[] = [
     "TARGET 15.1.  By 2020, ensure the conservation, restoration and sustainable use of terrestrial and inland freshwater ecosystems and their services, in particular forests, wetlands, mountains and drylands, in line with obligations under international agreements",
     "TARGET 15.2.  By 2020, promote the implementation of sustainable management of all types of forests, halt deforestation, restore degraded forests and substantially increase afforestation and reforestation globally",
@@ -213,6 +249,7 @@ export class IndexComponent implements OnInit {
     "TARGET 15.b.  Mobilize significant resources from all sources and at all levels to finance sustainable forest management and provide adequate incentives to developing countries to advance such management, including for conservation and reforestation",
     "TARGET 15.c.  Enhance global support for efforts to combat poaching and trafficking of protected species, including by increasing the capacity of local communities to pursue sustainable livelihood opportunities"
   ]
+  goal16Selected: boolean = false
   Goal16Targets: string[] = [
     "TARGET 16.1.  Significantly reduce all forms of violence and related death rates everywhere",
     "TARGET 16.2.  End abuse, exploitation, trafficking and all forms of violence against and torture of children",
@@ -227,6 +264,7 @@ export class IndexComponent implements OnInit {
     "TARGET 16.a.  Strengthen relevant national institutions, including through international cooperation, for building capacity at all levels, in particular in developing countries, to prevent violence and combat terrorism and crime",
     "TARGET 16.b.  Promote and enforce non-discriminatory laws and policies for sustainable development"
   ]
+  goal17Selected: boolean = false
   Goal17Targets: string[] = [
     "TARGET 17.1.  Strengthen domestic resource mobilization, including through international support to developing countries, to improve domestic capacity for tax and other revenue collection",
     "TARGET 17.2.  Developed countries to implement fully their official development assistance commitments, including the commitment by many developed countries to achieve the target of 0.7 per cent of gross national income for official development assistance (ODA/GNI) to developing countries and 0.15 to 0.20 per cent of ODA/GNI to least developed countries; ODA providers are encouraged to consider setting a target to provide at least 0.20 per cent of ODA/GNI to least developed countries",
@@ -252,30 +290,713 @@ export class IndexComponent implements OnInit {
   individualFirstTimeOnSDG: string[] = ["Yes","No"];
 
   partOfSocialImpanctNetwork: string[] = [
-    "a.Ashoka",
-    "b.	Schwab Foundation",
-    "c.	Skoll Foundation",
-    "d.	Echoing Green",
-    "e.	Acumen",
-    "f.	Catalyst2030",
-    "g.	RaiSE Singapore"
+    "Ashoka",
+    "Schwab Foundation",
+    "Skoll Foundation",
+    "Echoing Green",
+    "Acumen",
+    "Catalyst2030",
+    "RaiSE Singapore"
   ]
 
   organisationAwareOfSGDAnswers: string[] = [
-    "a.	Yes, but we are not sure exactly what it is",
-    "b.	Yes,  we are actively  working towards contributing towards it",
-    "c.	Yes, but we do not  know how to contribute  towards it",
-    "d.	No, this is the first time we are hearing about it"
+    "Yes, but we are not sure exactly what it is",
+    "Yes, we are actively  working towards contributing towards it",
+    "Yes, but we do not  know how to contribute  towards it",
+    "No, this is the first time we are hearing about it"
 
   ]
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private userService: UserService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private tagService: TagService
   ) { }
 
   ngOnInit(): void {
+    this.currentUser = this.sessionService.getCurrentUser()
+    if(this.currentUser.completedQuestionnaire == false){
+      $('#modal-survey').modal('show');
+    }
+    this.tagService.getAllSDGTags().subscribe(
+      response => {
+        this.allSDGTags = response
+      }
+    )
+
+  }
+
+  closeModal(){
+    $("#modal-survey .close").click();
+  }
+
+  startSurvey(){
+    this.questionNumber = 1
+  }
+
+  next(){
+    this.questionNumber += 1
+  }
+
+  //inidividual first question
+  answerIndividualAwareOfSDG(i){
+    this.individualAwareOfSDG = this.individualAwareOfSGDAnswers[i];
+    if(this.individualAwareOfSGDAnswers[i] == "Yes, I have but not sure exactly what it is" || this.individualAwareOfSGDAnswers[i] == "No,  this is the first time I am hearing about it"){
+      this.questionNumber = 1.5
+    }
+    else{
+      this.questionNumber = 2
+    }
+  }
+
+  //organisation first question
+  answerOrganisationAwareOfSDG(i){
+    this.organisationAwareOfSDG = this.organisationAwareOfSGDAnswers[i];
+    if(this.organisationAwareOfSGDAnswers[i] == "Yes, but we are not sure exactly what it is" || this.organisationAwareOfSGDAnswers[i] == "No, this is the first time we are hearing about it"){
+      this.questionNumber = 1.5
+    }
+    else{
+      this.questionNumber = 2
+    }
+  }
+
+  goToQuestion2(){
+    this.questionNumber = 2
+  }
+
+  organisationGoToQuestion2(){
+    if(this.organisationAwareOfSDG == "No, this is the first time we are hearing about it"){
+      $("#modal-survey").modal("hide")
+      this.router.navigate(['sdgInfo'])
+    }
+    else{
+      this.questionNumber = 2
+    }
+  }
+
+  // individual question 2
+  onQuestion2CheckboxChange(event, sdg){
+    if(event.target.checked){
+      this.individualPassionateSDGs.push(event.target.value);
+      console.log(sdg + ' Checked');
+      if(sdg == this.SDGAnswers[0]){
+        this.goal1Selected = true;
+        this.individualPassionateSDGsNumber.push(1);
+        console.log('goal1selected: true')
+      }
+      else if(sdg == this.SDGAnswers[1]){
+        this.goal2Selected = true
+        this.individualPassionateSDGsNumber.push(2);
+        console.log('goal2selected: true')
+      }
+      else if(sdg == this.SDGAnswers[2]){
+        this.goal3Selected = true
+        this.individualPassionateSDGsNumber.push(3);
+        console.log('goal3selected: true')
+      }
+      else if(sdg == this.SDGAnswers[3]){
+        this.goal4Selected = true
+        this.individualPassionateSDGsNumber.push(4);
+        console.log('goal4selected: true')
+      }
+      else if(sdg == this.SDGAnswers[4]){
+        this.goal5Selected = true
+        this.individualPassionateSDGsNumber.push(5);
+        console.log('goal5selected: true')
+      }
+      else if(sdg == this.SDGAnswers[5]){
+        this.goal6Selected = true
+        this.individualPassionateSDGsNumber.push(6);
+        console.log('goal6selected: true')
+      }
+      else if(sdg == this.SDGAnswers[6]){
+        this.goal7Selected = true
+        this.individualPassionateSDGsNumber.push(7);
+        console.log('goal7selected: true')
+      }
+      else if(sdg == this.SDGAnswers[7]){
+        this.goal8Selected = true
+        this.individualPassionateSDGsNumber.push(8);
+        console.log('goal8selected: true')
+      }
+      else if(sdg == this.SDGAnswers[8]){
+        this.goal9Selected = true
+        this.individualPassionateSDGsNumber.push(9);
+        console.log('goal9selected: true')
+      }
+      else if(sdg == this.SDGAnswers[9]){
+        this.goal10Selected = true
+        this.individualPassionateSDGsNumber.push(10);
+        console.log('goal10selected: true')
+      }
+      else if(sdg == this.SDGAnswers[10]){
+        this.goal11Selected = true
+        this.individualPassionateSDGsNumber.push(11);
+        console.log('goal11selected: true')
+      }
+      else if(sdg == this.SDGAnswers[11]){
+        this.goal12Selected = true
+        this.individualPassionateSDGsNumber.push(12);
+        console.log('goal12selected: true')
+      }
+      else if(sdg == this.SDGAnswers[12]){
+        this.goal13Selected = true
+        this.individualPassionateSDGsNumber.push(13);
+        console.log('goal13selected: true')
+      }
+      else if(sdg == this.SDGAnswers[13]){
+        this.goal14Selected = true
+        this.individualPassionateSDGsNumber.push(14);
+        console.log('goal14selected: true')
+      }
+      else if(sdg == this.SDGAnswers[14]){
+        this.goal15Selected = true
+        this.individualPassionateSDGsNumber.push(15);
+        console.log('goal15selected: true')
+      }
+      else if(sdg == this.SDGAnswers[15]){
+        this.goal16Selected = true
+        this.individualPassionateSDGsNumber.push(16);
+        console.log('goal16selected: true')
+      }
+      else if(sdg == this.SDGAnswers[16]){
+        this.goal17Selected = true
+        this.individualPassionateSDGsNumber.push(17);
+        console.log('goal17selected: true')
+      }
+    }
+    else{
+      console.log(sdg + ' Unchecked');
+      this.individualPassionateSDGs =  this.individualPassionateSDGs.filter(m=>m!=sdg)
+      if(sdg == this.SDGAnswers[0]){
+        this.goal1Selected = false;
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=1)
+        console.log('goal1selected: false')
+      }
+      else if(sdg == this.SDGAnswers[1]){
+        this.goal2Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=2)
+        console.log('goal2selected: false')
+      }
+      else if(sdg == this.SDGAnswers[2]){
+        this.goal3Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=3)
+        console.log('goal3selected: false')
+      }
+      else if(sdg == this.SDGAnswers[3]){
+        this.goal4Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=4)
+        console.log('goal4selected: false')
+      }
+      else if(sdg == this.SDGAnswers[4]){
+        this.goal5Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=5)
+        console.log('goal5selected: false')
+      }
+      else if(sdg == this.SDGAnswers[5]){
+        this.goal6Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=6)
+        console.log('goal6selected: false')
+      }
+      else if(sdg == this.SDGAnswers[6]){
+        this.goal7Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=7)
+        console.log('goal7selected: false')
+      }
+      else if(sdg == this.SDGAnswers[7]){
+        this.goal8Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=8)
+        console.log('goal8selected: false')
+      }
+      else if(sdg == this.SDGAnswers[8]){
+        this.goal9Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=9)
+        console.log('goal9selected: false')
+      }
+      else if(sdg == this.SDGAnswers[9]){
+        this.goal10Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=10)
+        console.log('goal10selected: false')
+      }
+      else if(sdg == this.SDGAnswers[10]){
+        this.goal11Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=11)
+        console.log('goal11selected: false')
+      }
+      else if(sdg == this.SDGAnswers[11]){
+        this.goal12Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=12)
+        console.log('goal12selected: false')
+      }
+      else if(sdg == this.SDGAnswers[12]){
+        this.goal13Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=13)
+        console.log('goal13selected: false')
+      }
+      else if(sdg == this.SDGAnswers[13]){
+        this.goal14Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=14)
+        console.log('goal14selected: false')
+      }
+      else if(sdg == this.SDGAnswers[14]){
+        this.goal15Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=15)
+        console.log('goal15selected: false')
+      }
+      else if(sdg == this.SDGAnswers[15]){
+        this.goal16Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=16)
+        console.log('goal16selected: false')
+      }
+      else if(sdg == this.SDGAnswers[16]){
+        this.goal17Selected = false
+        this.individualPassionateSDGsNumber =  this.individualPassionateSDGsNumber.filter(m=>m!=17)
+        console.log('goal17selected: false')
+      }
+    }
+    this.individualPassionateSDGsNumber.sort((a,b) => a-b)
+    console.log( this.individualPassionateSDGsNumber)
+    console.log( this.individualPassionateSDGs)
+  }
+
+  //organisation question 2
+  onOrganisationQuestion2CheckboxChange(event, sdg){
+    if(event.target.checked){
+      this.organisationPassionateSDGs.push(event.target.value);
+      console.log(sdg + ' Checked');
+      if(sdg == this.SDGAnswers[0]){
+        this.goal1Selected = true;
+        this.organisationPassionateSDGsNumber.push(1);
+        console.log('goal1selected: true')
+      }
+      else if(sdg == this.SDGAnswers[1]){
+        this.goal2Selected = true
+        this.organisationPassionateSDGsNumber.push(2);
+        console.log('goal2selected: true')
+      }
+      else if(sdg == this.SDGAnswers[2]){
+        this.goal3Selected = true
+        this.organisationPassionateSDGsNumber.push(3);
+        console.log('goal3selected: true')
+      }
+      else if(sdg == this.SDGAnswers[3]){
+        this.goal4Selected = true
+        this.organisationPassionateSDGsNumber.push(4);
+        console.log('goal4selected: true')
+      }
+      else if(sdg == this.SDGAnswers[4]){
+        this.goal5Selected = true
+        this.organisationPassionateSDGsNumber.push(5);
+        console.log('goal5selected: true')
+      }
+      else if(sdg == this.SDGAnswers[5]){
+        this.goal6Selected = true
+        this.organisationPassionateSDGsNumber.push(6);
+        console.log('goal6selected: true')
+      }
+      else if(sdg == this.SDGAnswers[6]){
+        this.goal7Selected = true
+        this.organisationPassionateSDGsNumber.push(7);
+        console.log('goal7selected: true')
+      }
+      else if(sdg == this.SDGAnswers[7]){
+        this.goal8Selected = true
+        this.organisationPassionateSDGsNumber.push(8);
+        console.log('goal8selected: true')
+      }
+      else if(sdg == this.SDGAnswers[8]){
+        this.goal9Selected = true
+        this.organisationPassionateSDGsNumber.push(9);
+        console.log('goal9selected: true')
+      }
+      else if(sdg == this.SDGAnswers[9]){
+        this.goal10Selected = true
+        this.organisationPassionateSDGsNumber.push(10);
+        console.log('goal10selected: true')
+      }
+      else if(sdg == this.SDGAnswers[10]){
+        this.goal11Selected = true
+        this.organisationPassionateSDGsNumber.push(11);
+        console.log('goal11selected: true')
+      }
+      else if(sdg == this.SDGAnswers[11]){
+        this.goal12Selected = true
+        this.organisationPassionateSDGsNumber.push(12);
+        console.log('goal12selected: true')
+      }
+      else if(sdg == this.SDGAnswers[12]){
+        this.goal13Selected = true
+        this.organisationPassionateSDGsNumber.push(13);
+        console.log('goal13selected: true')
+      }
+      else if(sdg == this.SDGAnswers[13]){
+        this.goal14Selected = true
+        this.organisationPassionateSDGsNumber.push(14);
+        console.log('goal14selected: true')
+      }
+      else if(sdg == this.SDGAnswers[14]){
+        this.goal15Selected = true
+        this.organisationPassionateSDGsNumber.push(15);
+        console.log('goal15selected: true')
+      }
+      else if(sdg == this.SDGAnswers[15]){
+        this.goal16Selected = true
+        this.organisationPassionateSDGsNumber.push(16);
+        console.log('goal16selected: true')
+      }
+      else if(sdg == this.SDGAnswers[16]){
+        this.goal17Selected = true
+        this.organisationPassionateSDGsNumber.push(17);
+        console.log('goal17selected: true')
+      }
+    }
+    else{
+      console.log(sdg + ' Unchecked');
+      this.organisationPassionateSDGs =  this.organisationPassionateSDGs.filter(m=>m!=sdg)
+      if(sdg == this.SDGAnswers[0]){
+        this.goal1Selected = false;
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=1)
+        console.log('goal1selected: false')
+      }
+      else if(sdg == this.SDGAnswers[1]){
+        this.goal2Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=2)
+        console.log('goal2selected: false')
+      }
+      else if(sdg == this.SDGAnswers[2]){
+        this.goal3Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=3)
+        console.log('goal3selected: false')
+      }
+      else if(sdg == this.SDGAnswers[3]){
+        this.goal4Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=4)
+        console.log('goal4selected: false')
+      }
+      else if(sdg == this.SDGAnswers[4]){
+        this.goal5Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=5)
+        console.log('goal5selected: false')
+      }
+      else if(sdg == this.SDGAnswers[5]){
+        this.goal6Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=6)
+        console.log('goal6selected: false')
+      }
+      else if(sdg == this.SDGAnswers[6]){
+        this.goal7Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=7)
+        console.log('goal7selected: false')
+      }
+      else if(sdg == this.SDGAnswers[7]){
+        this.goal8Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=8)
+        console.log('goal8selected: false')
+      }
+      else if(sdg == this.SDGAnswers[8]){
+        this.goal9Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=9)
+        console.log('goal9selected: false')
+      }
+      else if(sdg == this.SDGAnswers[9]){
+        this.goal10Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=10)
+        console.log('goal10selected: false')
+      }
+      else if(sdg == this.SDGAnswers[10]){
+        this.goal11Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=11)
+        console.log('goal11selected: false')
+      }
+      else if(sdg == this.SDGAnswers[11]){
+        this.goal12Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=12)
+        console.log('goal12selected: false')
+      }
+      else if(sdg == this.SDGAnswers[12]){
+        this.goal13Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=13)
+        console.log('goal13selected: false')
+      }
+      else if(sdg == this.SDGAnswers[13]){
+        this.goal14Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=14)
+        console.log('goal14selected: false')
+      }
+      else if(sdg == this.SDGAnswers[14]){
+        this.goal15Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=15)
+        console.log('goal15selected: false')
+      }
+      else if(sdg == this.SDGAnswers[15]){
+        this.goal16Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=16)
+        console.log('goal16selected: false')
+      }
+      else if(sdg == this.SDGAnswers[16]){
+        this.goal17Selected = false
+        this.organisationPassionateSDGsNumber =  this.organisationPassionateSDGsNumber.filter(m=>m!=17)
+        console.log('goal17selected: false')
+      }
+    }
+    this.organisationPassionateSDGsNumber.sort((a,b) => a-b)
+    console.log( this.organisationPassionateSDGsNumber)
+    console.log( this.organisationPassionateSDGs)
+  }
+
+  //next button for individual targets
+  onNextPassionateSDG(){
+    if(this.individualPassionateSDGsNumber.length == 0){
+      this.questionNumber = 20
+    }
+    else{
+      let nextPage = this.individualPassionateSDGsNumber.splice(0,1)
+      this.individualPassionateSDGsDoneNumber.push(nextPage[0]);
+      this.questionNumber = nextPage[0]+2
+    }
+    console.log(this.individualPassionateSDGTargets);
+  }
+
+  //next button for organisation targets
+  onOrganisationNextPassionateSDG(){
+    if(this.organisationPassionateSDGsNumber.length == 0){
+      this.questionNumber = 20
+    }
+    else{
+      let nextPage = this.organisationPassionateSDGsNumber.splice(0,1)
+      this.organisationPassionateSDGsDoneNumber.push(nextPage[0]);
+      this.questionNumber = nextPage[0]+2
+    }
+    console.log(this.organisationPassionateSDGTargets);
+  }
+
+  // when individual clicks a sdg target
+  onTargetCheckboxChange(event, target){
+    if(event.target.checked){
+      this.individualPassionateSDGTargets.push(event.target.value)
+    }
+    else{
+      this.individualPassionateSDGTargets =  this.individualPassionateSDGTargets.filter(m=>m!=target)
+    }
+  }
+
+  // when organisation clicks a sdg target
+  onOrganisationTargetCheckboxChange(event, target){
+    if(event.target.checked){
+      this.organisationPassionateSDGTargets.push(event.target.value)
+    }
+    else{
+      this.organisationPassionateSDGTargets =  this.organisationPassionateSDGTargets.filter(m=>m!=target)
+    }
+  }
+
+  //individual first time question
+  onItemChange(event){
+    if(event.target.value == "Yes"){
+      this.individualFirstTimeAnswer = false
+    }
+    else{
+      this.individualFirstTimeAnswer = true
+    }
+
+    console.log(this.individualFirstTimeAnswer)
+  }
+
+  //organisation first time question
+  onOrganisationItemChange(event){
+    if(event.target.value == "Yes"){
+      this.organisationFirstTimeAnswer = false
+    }
+    else{
+      this.organisationFirstTimeAnswer = true
+    }
+
+    console.log(this.organisationFirstTimeAnswer)
+  }
+
+  // individual selecting impact network
+  onNetworkCheckboxChange(event, network){
+    if(event.target.checked){
+      this.individualPartOfSocialNetwork.push(event.target.value)
+    }
+    else{
+      this.individualPartOfSocialNetwork =  this.individualPartOfSocialNetwork.filter(m=>m!=network)
+    }
+  }
+
+  // organisation selecting impact network
+  onOrganisationNetworkCheckboxChange(event, network){
+    if(event.target.checked){
+      this.organisationPartOfSocialNetwork.push(event.target.value)
+    }
+    else{
+      this.organisationPartOfSocialNetwork =  this.organisationPartOfSocialNetwork.filter(m=>m!=network)
+    }
+  }
+
+  onIndividualFinish(){
+    this.individualQuestinnaire.awareOfSDG = this.individualAwareOfSDG
+    this.individualQuestinnaire.passionateSDG = this.individualPassionateSDGs
+    this.individualQuestinnaire.passionateTargets = this.individualPassionateSDGTargets
+    this.individualQuestinnaire.firstTimeOnSDG = this.individualFirstTimeAnswer
+    this.individualQuestinnaire.partOfSocialImpactNetwork = this.individualPartOfSocialNetwork
+    for(let goal of this.individualPassionateSDGs){
+      if(goal == this.SDGAnswers[0]){
+        console.log(goal == this.SDGAnswers[0])
+        this.selectedTags.push(this.allSDGTags.find(e => e.name =='SDG 1' ))
+        console.log(this.selectedTags);
+      }
+      else if(goal == this.SDGAnswers[1]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 2' ))
+      }
+      else if(goal == this.SDGAnswers[2]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 3' ))
+      }
+      else if(goal == this.SDGAnswers[3]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 4' ))
+      }
+      else if(goal == this.SDGAnswers[4]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 5' ))
+      }
+      else if(goal == this.SDGAnswers[5]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 6' ))
+      }
+      else if(goal == this.SDGAnswers[6]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 7' ))
+      }
+      else if(goal == this.SDGAnswers[7]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 8' ))
+      }
+      else if(goal == this.SDGAnswers[8]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 9' ))
+      }
+      else if(goal == this.SDGAnswers[9]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 10' ))
+      }
+      else if(goal == this.SDGAnswers[10]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 11' ))
+      }
+      else if(goal == this.SDGAnswers[11]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 12' ))
+      }
+      else if(goal == this.SDGAnswers[12]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 13' ))
+      }
+      else if(goal == this.SDGAnswers[13]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 14' ))
+      }
+      else if(goal == this.SDGAnswers[14]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 15' ))
+      }
+      else if(goal == this.SDGAnswers[15]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 16' ))
+      }
+      else if(goal == this.SDGAnswers[16]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 17' ))
+      }
+
+    }
+
+    this.userService.submitIndividualQuestionnaire(this.currentUser.userId, this.individualQuestinnaire, this.selectedTags).subscribe(
+      response=>{
+        // let user: User = response
+        // this.sessionService.setCurrentUser(user);
+        $("#modal-survey").modal("hide")
+      }, error =>{
+        $("#modal-survey").modal("hide")
+      }
+    )
+
+    // individualAwareOfSDG: string;
+    // individualPassionateSDGs = [];
+    // individualPassionateSDGsNumber: number[] = [];
+    // individualPassionateSDGsDoneNumber: number[] = [];
+    // individualPassionateSDGTargets = []
+    // individualFirstTimeAnswer: boolean
+    // individualPartOfSocialNetwork = []
+  }
+
+  onOrganisationFinish(){
+    this.organisationQuestionnaire.awareOfSDG = this.organisationAwareOfSDG
+    this.organisationQuestionnaire.workingOnSDG = this.organisationPassionateSDGs
+    this.organisationQuestionnaire.workingOnTargets = this.organisationPassionateSDGTargets
+    this.organisationQuestionnaire.partOfSocialImpactNetwork = this.organisationPartOfSocialNetwork
+    for(let goal of this.organisationPassionateSDGs){
+      if(goal == this.SDGAnswers[0]){
+        console.log(goal == this.SDGAnswers[0])
+        this.selectedTags.push(this.allSDGTags.find(e => e.name =='SDG 1' ))
+        console.log(this.selectedTags);
+      }
+      else if(goal == this.SDGAnswers[1]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 2' ))
+      }
+      else if(goal == this.SDGAnswers[2]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 3' ))
+      }
+      else if(goal == this.SDGAnswers[3]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 4' ))
+      }
+      else if(goal == this.SDGAnswers[4]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 5' ))
+      }
+      else if(goal == this.SDGAnswers[5]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 6' ))
+      }
+      else if(goal == this.SDGAnswers[6]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 7' ))
+      }
+      else if(goal == this.SDGAnswers[7]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 8' ))
+      }
+      else if(goal == this.SDGAnswers[8]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 9' ))
+      }
+      else if(goal == this.SDGAnswers[9]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 10' ))
+      }
+      else if(goal == this.SDGAnswers[10]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 11' ))
+      }
+      else if(goal == this.SDGAnswers[11]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 12' ))
+      }
+      else if(goal == this.SDGAnswers[12]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 13' ))
+      }
+      else if(goal == this.SDGAnswers[13]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 14' ))
+      }
+      else if(goal == this.SDGAnswers[14]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 15' ))
+      }
+      else if(goal == this.SDGAnswers[15]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 16' ))
+      }
+      else if(goal == this.SDGAnswers[16]){
+        this.selectedTags.push(this.allSDGTags.find(e => e.name ==='SDG 17' ))
+      }
+
+    }
+
+    this.userService.submitOrganisationQuestionnaire(this.currentUser.userId, this.organisationQuestionnaire, this.selectedTags).subscribe(
+      response=>{
+        // let user: User = response
+        // this.sessionService.setCurrentUser(user);
+        $("#modal-survey").modal("hide")
+      }, error =>{
+        $("#modal-survey").modal("hide")
+      }
+    )
+
+    // individualAwareOfSDG: string;
+    // individualPassionateSDGs = [];
+    // individualPassionateSDGsNumber: number[] = [];
+    // individualPassionateSDGsDoneNumber: number[] = [];
+    // individualPassionateSDGTargets = []
+    // individualFirstTimeAnswer: boolean
+    // individualPartOfSocialNetwork = []
   }
 
 }
