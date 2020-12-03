@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/index"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Material Resources</ion-title>
+  </ion-toolbar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchInput" (ionChange)="filter()" #searchBar></ion-searchbar>
+  <ion-item>
+    <ion-label>Filter by Tags</ion-label>
+    <ion-select multiple="true" [(ngModel)]="tagsSelected" (ionChange)="filter()">
+      <ion-select-option *ngFor="let tag of tags">{{tag.name}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-header>
+
+<ion-content>
+  <ion-card-content *ngIf="mraList.length == 0">
+    No material resource available at the moment
+  </ion-card-content>
+  <span *ngIf="mraList.length > 0">
+    <ion-card *ngFor="let mra of filteredMraList" tappable [routerLink]="['/user-profile', mra.materialResourceAvailableOwner.userId]">
+      <ion-card-content class="ion-text-wrap ion-no-padding" style="padding: 15px;">
+        <ion-grid>
+          <ion-row style="margin-left: 3px;">
+            <ion-badge style="font-size: 12px; background-color: bisque; color: black;"
+                *ngIf="mra.type == 'ONETIMEDONATION' || mra.type == 'ONETIMEPAYMENT'">ONE-TIME
+            </ion-badge>
+            <ion-badge style="font-size: 12px; background-color: burlywood; color: black;"
+                *ngIf="mra.type != 'ONETIMEDONATION' && mra.type != 'ONETIMEPAYMENT'">RECURRING
+            </ion-badge>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label style="font-size: large; font-weight: bold;">
+                {{mra.materialResourceAvailableOwner.firstName}} {{mra.materialResourceAvailableOwner.lastName}}'s
+                {{mra.name}}
+              </ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label>
+                <b>
+                  <span *ngIf="mra.type == 'ONETIMEDONATION'">Free</span>
+                  <span *ngIf="mra.type != 'ONETIMEDONATION'">
+                      US ${{mra.price}}/<span *ngIf="mra.units == 'item(s)'">item</span>
+                      <span *ngIf="mra.units != 'item(s)'">{{mra.units}}</span>
+                      <span *ngIf="mra.type == 'DAILY'"> per day</span>
+                      <span *ngIf="mra.type == 'WEEKLY'"> per week</span>
+                      <span *ngIf="mra.type == 'MONTHLY'"> per month</span>
+                  </span>
+                </b>
+                <span *ngIf="mra.description">
+                  <br/>
+                  <ion-label style="font-size: 15px;">{{mra.description}}</ion-label>
+                </span>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-badge color="warning">
+                At location {{mra.latitude | number:'1.1-6'}}, {{mra.longitude | number:'1.1-6'}}
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label *ngFor="let tag of mra.tags">
+                <ion-badge color="primary">{{tag.name}}</ion-badge>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </span>
+</ion-content>

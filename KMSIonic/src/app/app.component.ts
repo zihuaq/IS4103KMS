@@ -51,6 +51,11 @@ export class AppComponent implements OnInit {
       icon: 'notifications'
     },
     {
+      title: 'Chat',
+      url: '/chat',
+      icon: 'chatbubble'
+    },
+    {
       title: 'SDG Info',
       url: '/sdg-info',
       icon: 'information-circle'
@@ -58,12 +63,12 @@ export class AppComponent implements OnInit {
     {
       title: 'Discover Group',
       url: '/view-all-group',
-      icon: 'people'
+      icon: 'search'
     },
     {
       title: 'My Group',
       url: '/view-own-groups',
-      icon: 'person'
+      icon: 'people'
     },
     {
       title: 'Discover Project',
@@ -73,12 +78,17 @@ export class AppComponent implements OnInit {
     {
       title: 'My Project',
       url: '/view-own-projects',
-      icon: 'person'
+      icon: 'bulb'
     },
     {
-      title: 'Chat',
-      url: '/chat',
-      icon: 'chatbubble'
+      title: 'Search Material Resources',
+      url: '/view-all-mras',
+      icon: 'cube'
+    },
+    {
+      title: 'Search Material Postings',
+      url: '/view-all-mrps',
+      icon: 'briefcase'
     },
     {
       title: 'Make Tag Request',

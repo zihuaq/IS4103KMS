@@ -73,6 +73,12 @@ export class MrpService {
     );
   }
 
+  getAllMaterialResourcePosting(): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getAllMaterialResourcePosting").pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
     

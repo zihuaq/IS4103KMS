@@ -498,6 +498,14 @@ const routes: Routes = [
   {
     path: 'view-election-posts',
     loadChildren: () => import('./pages/view-election-posts/view-election-posts.module').then( m => m.ViewElectionPostsPageModule)
+  },
+  {
+    path: 'view-all-mras',
+    loadChildren: () => import('./pages/view-all-mras/view-all-mras.module').then( m => m.ViewAllMrasPageModule)
+  },
+  {
+    path: 'view-all-mrps',
+    loadChildren: () => import('./pages/view-all-mrps/view-all-mrps.module').then( m => m.ViewAllMrpsPageModule)
   }
 
 ];

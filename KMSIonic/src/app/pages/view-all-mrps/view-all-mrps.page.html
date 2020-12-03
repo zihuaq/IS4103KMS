@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/index"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Material Postings</ion-title>
+  </ion-toolbar>
+  <ion-searchbar inputmode="text" [(ngModel)]="searchInput" (ionChange)="filter()" #searchBar></ion-searchbar>
+  <ion-item>
+    <ion-label>Filter by Tags</ion-label>
+    <ion-select multiple="true" [(ngModel)]="tagsSelected" (ionChange)="filter()">
+      <ion-select-option *ngFor="let tag of tags">{{tag.name}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-header>
+
+<ion-content>
+  <ion-card-content *ngIf="mrpList.length == 0">
+    No material resource postings at the moment
+  </ion-card-content>
+  <span *ngIf="mrpList.length > 0">
+    <ion-card *ngFor="let mrp of filteredMrpList" tappable [routerLink]="['/project-details', mrp.project.projectId, '/mrp-tab']">
+      <ion-card-content class="ion-text-wrap ion-no-padding" style="padding: 15px;">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-label style="font-size: large; font-weight: bold;">
+                <span style="color: black;">{{mrp.name}}</span>
+                <br/>
+                <ion-icon name="caret-forward" style="margin-bottom: -4px;"></ion-icon>
+                <span style="font-size: 15px;">{{mrp.project.name}}</span>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label>
+                <b>From {{mrp.startDate.toString().slice(0,19) | date }} 
+                  <span *ngIf="mrp.endDate"> to {{mrp.endDate.toString().slice(0,19) | date }}</span>
+                </b>
+              </ion-label>
+              <br/>
+              <span style="font-size: 15px; font-weight: 500;">{{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} lacking / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total</span>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="mrp.description" style="margin-top: -5px;"> 
+            <ion-col size="12">
+              <span style="font-size: 13px;">{{mrp.description}}</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-badge color="warning">
+                At location {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label *ngFor="let tag of mrp.tags">
+                <ion-badge color="primary">{{tag.name}}</ion-badge>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </span>
+</ion-content>

@@ -167,6 +167,7 @@ public class MraResource {
                 UserEntity owner = new UserEntity();
                 owner.setFirstName(mras.get(i).getMaterialResourceAvailableOwner().getFirstName());
                 owner.setLastName(mras.get(i).getMaterialResourceAvailableOwner().getLastName());
+                owner.setUserId(mras.get(i).getMaterialResourceAvailableOwner().getUserId());
                 mras.get(i).setMaterialResourceAvailableOwner(owner);
             }
             return Response.status(200).entity(mras).build();
