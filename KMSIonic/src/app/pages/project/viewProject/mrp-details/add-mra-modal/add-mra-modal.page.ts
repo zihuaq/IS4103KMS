@@ -39,6 +39,7 @@ export class AddMraModalPage implements OnInit {
 
   ionViewWillEnter() {
     this.newMra.name = this.selectedMrp.name;
+    this.newMra.units = this.selectedMrp.unit;
     this.newMra.tags = this.selectedMrp.tags;
   }
 

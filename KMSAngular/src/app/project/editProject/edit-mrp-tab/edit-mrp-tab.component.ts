@@ -814,7 +814,7 @@ export class EditMrpTabComponent implements OnInit {
   }
 
   clickAccept(fulfillment: Fulfillment) {
-    if (moment(new Date()).isAfter(this.mrpToFulfill.startDate.toString().slice(0,15))) {
+    if ((!moment(new Date()).isBefore(this.mrpToFulfill.startDate.toString().slice(0,15)))) { //if not before start date
       $(document).Toasts('create', {
         class: 'bg-danger',
         title: 'Invalid',
@@ -974,7 +974,7 @@ export class EditMrpTabComponent implements OnInit {
       return actions.order.create({
         purchase_units: [{
           amount: {
-            value: this.roundToTwoDecimal(this.outstandingAmount * 1.05) + this.currentAmount
+            value: this.roundToTwoDecimal(this.outstandingAmount * 1.05 + this.currentAmount) 
           },
           description: description
         }]

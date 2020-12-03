@@ -304,7 +304,7 @@
             </div>
             <div class="modal-body">
                 <div *ngIf="fulfillmentList.length > 0" class="input-group" style="width: auto">
-                    <input class="form-control" placeholder="Search fulfillments by user or resource name"
+                    <input class="form-control" placeholder="Search fulfillments by resource owner, resource name or description"
                         [(ngModel)]="searchInput" (ngModelChange)="filter()">
                 </div>
                 <div *ngIf="fulfillmentList.length > 0" class="form-row" style="width: auto; margin: 10px 5px 5px 5px">

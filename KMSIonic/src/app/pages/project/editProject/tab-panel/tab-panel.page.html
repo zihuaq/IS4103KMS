@@ -56,7 +56,7 @@
           <ion-card *ngFor="let hrp of hrpList" style="margin: 10px 0 0 0; padding: 5px;">
             <ion-item lines="full">
               <ion-card-title style="padding: 10px 0 10px 0">
-                <b>{{hrp.name}}</b>
+                <b style="font-size: 23px;">{{hrp.name}}</b>
               </ion-card-title>
               <ion-buttons slot="end">
                 <ion-icon class="iconButton" name="create-outline" (click)="editHrp(hrp.humanResourcePostingId)" style="margin-right: 5px;"></ion-icon>
@@ -89,7 +89,7 @@
 
   <span *ngIf="segment == 'mrp'">
     <ion-card-content class="ion-no-margin">
-      <ion-button expand="full" (click)="createMrp()" style="font-size: 12px;">
+      <ion-button expand="full" (click)="createMrp()" style="font-size: 13px;">
         <ion-icon name="add-outline"></ion-icon>
         New Material Resource Posting
       </ion-button>
@@ -107,7 +107,7 @@
                   CLOSED
                 </ion-badge>
                 <br/>
-                <b style="font-size: 25px;">{{mrp.name}}</b>
+                <b style="font-size: 23px;">{{mrp.name}}</b>
                 <ion-card-subtitle *ngIf="mrp.description" style="margin-top: 5px;">{{mrp.description}}</ion-card-subtitle>
               </ion-card-title>
               <ion-buttons slot="end">
@@ -119,7 +119,7 @@
                 <span *ngIf="mrp.endDate"> to {{mrp.endDate.toString().slice(0,15) | date }}</span>
               </b> 
               <br/>
-              {{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total
+              <span style="font-size: 15px;">{{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total</span>
               <ion-badge color="warning" style="margin-top: 5px; margin-bottom: 5px;">
                 <a [href]="changehref(mrp.latitude, mrp.longitude)" style="color: black; text-decoration: none; font-size: 12px;"> 
                   View location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}

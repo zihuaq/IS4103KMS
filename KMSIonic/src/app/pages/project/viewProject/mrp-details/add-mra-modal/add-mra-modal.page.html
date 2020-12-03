@@ -44,15 +44,14 @@
         <ion-row>
           <ion-input type="number" id="price" [(ngModel)]="newMra.price" name="price" required><span style="margin-right: 5px; color: gray;">US $</span></ion-input>
           <span style="margin-left: 5px; margin-top: 7px; color: gray;">
-            <span *ngIf="!mraForm.value.units">/unit</span>
-            <span *ngIf="mraForm.value.units && mraForm.value.units == 'item(s)'">/item</span>
-            <span *ngIf="mraForm.value.units && mraForm.value.units != 'item(s)'">/{{mraForm.value.units}}</span>
+            <span *ngIf="newMra.units == 'item(s)'">/item</span>
+            <span *ngIf="newMra.units != 'item(s)'">/{{newMra.units}}</span>
           </span>
         </ion-row>
       </ion-item>
       <ion-item *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
-        <ion-label position="stacked"> Units *</ion-label>
-        <ion-select [(ngModel)]="newMra.units" name="units" required>
+        <ion-label position="stacked"> Units </ion-label>
+        <ion-select [ngModel]="newMra.units" name="units" disabled>
           <ion-select-option value="item(s)"> item(s) </ion-select-option>
           <ion-select-option value="kg"> kg </ion-select-option>
           <ion-select-option value="m"> m </ion-select-option>

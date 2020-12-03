@@ -113,7 +113,7 @@ export class MyFulfillmentsComponent implements OnInit {
     if (this.rejected == true) {
       statusSelected.push(FulfillmentStatus.REJECTED);
     }
-    if (statusSelected.length != 0 && statusSelected.length != 5) {
+    if (statusSelected.length != 0 && statusSelected.length != 7) {
       this.filteredList = this.filteredList.filter(
         (fulfillment: Fulfillment) => {
         return statusSelected.indexOf(fulfillment.status) > -1;

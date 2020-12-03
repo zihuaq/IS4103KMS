@@ -15,8 +15,8 @@
                     <input class="form-control" placeholder="Search fulfillments by resource name, posting name and description" [(ngModel)]="searchInput" (ngModelChange)="filter()">
                 </div>
                 <div class="form-row" style="margin: 15px 25px -10px 20px">
-                    <label class="col-sm-2">Filter by Status: </label>
-                    <div class="col-sm-10">
+                    <label style="margin-right: 10px;">Filter by Status: </label>
+                    <div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="pledged" [(ngModel)]="pledged" (ngModelChange)="filter()">
                             <label class="form-check-label" for="pledged">Pledged</label>
@@ -133,7 +133,7 @@
             <form (ngSubmit)="updateFulfillment(updateFulfillmentForm)" #updateFulfillmentForm="ngForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="pledgedQuantity">Pledged Quantity</label>
+                        <label for="pledgedQuantity">New Pledged Quantity</label>
                         <div class="input-group">
                             <input type="number" id="quantityPledged" class="form-control" name="quantityPledged" [max]="maxQuantity" 
                                 [(ngModel)]="newTotalPledgedQuantity" required>

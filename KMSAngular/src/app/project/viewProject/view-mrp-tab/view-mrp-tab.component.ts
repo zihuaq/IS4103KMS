@@ -56,7 +56,6 @@ export class ViewMrpTabComponent implements OnInit {
   endDate: string;
 
   mraToDonate: MaterialResourceAvailable;
-  totalPledgedQuantity: number;
 
   constructor(private sessionService: SessionService,
     private mrpService: MaterialResourcePostingService,
@@ -219,11 +218,10 @@ export class ViewMrpTabComponent implements OnInit {
 
   cancel(){
     this.mraToDonate = null;
-    this.totalPledgedQuantity = null;
   }
 
   submitFulfillPosting(fulfillPostingForm: NgForm) {
-    if(this.newFulfillment.priceOffered <= 0 && this.newFulfillment.priceOffered){
+    if(this.newFulfillment.priceOffered <= 0 && this.mraToDonate.type != MraType.ONETIMEDONATION){
       $(document).Toasts('create', {
         class: 'bg-warning',
         title: 'Unable to submit Fulfill Posting',
@@ -238,7 +236,7 @@ export class ViewMrpTabComponent implements OnInit {
         title: 'Unable to submit Fulfill Posting',
         autohide: true,
         delay: 3200,
-        body: 'Donated quantity is invalid',
+        body: 'Pledged quantity is invalid',
       });
       return;
     } else if(this.newFulfillment.totalPledgedQuantity > this.mrpToFulfill.lackingQuantity) {
@@ -306,7 +304,6 @@ export class ViewMrpTabComponent implements OnInit {
           );
           this.newFulfillment = new Fulfillment();
           this.mraToDonate = null;
-          this.totalPledgedQuantity = null;
           $('#fulfillPostingModalCloseBtn').click();
           $(document).Toasts('create', {
             class: 'bg-success',
