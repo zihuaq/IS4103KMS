@@ -475,6 +475,14 @@ const routes: Routes = [
   },  {
     path: 'make-tag-request',
     loadChildren: () => import('./pages/make-tag-request/make-tag-request.module').then( m => m.MakeTagRequestPageModule)
+  },
+  {
+    path: 'election-application',
+    loadChildren: () => import('./pages/election-application/election-application.module').then( m => m.ElectionApplicationPageModule)
+  },
+  {
+    path: 'view-election-posts',
+    loadChildren: () => import('./pages/view-election-posts/view-election-posts.module').then( m => m.ViewElectionPostsPageModule)
   }
 
 ];

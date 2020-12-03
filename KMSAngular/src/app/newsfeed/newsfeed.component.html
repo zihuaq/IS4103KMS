@@ -141,8 +141,9 @@
                         <p>{{post.electionApplication.contributions}}</p>
                         <label> Additional Comments: </label>
                         <br />
+                        <p>{{post.electionApplication.additionalComments}}</p>
                     </div>
-                    
+
                     <p>{{post.text}}</p>
 
                     <span *ngIf="post.picture && !post.sharedGroupId && !post.sharedProjectId">
@@ -261,6 +262,17 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <div *ngIf="post.originalPost.electionApplication">
+                                <label> Reasons For Applying: </label>
+                                <br />
+                                <p>{{post.originalPost.electionApplication.reasons}}</p>
+                                <label> Contributions to KMS: </label>
+                                <br />
+                                <p>{{post.originalPost.electionApplication.contributions}}</p>
+                                <label> Additional Comments: </label>
+                                <br />
+                                <p>{{post.electionApplication.additionalComments}}</p>
+                            </div>
                             <p>{{post.originalPost.text}}</p>
                             <span
                                 *ngIf="post.originalPost.picture && !post.originalPost.sharedGroupId && !post.originalPost.sharedProjectId">

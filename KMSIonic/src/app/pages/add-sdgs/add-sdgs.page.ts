@@ -10,21 +10,25 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-add-sdgs',
   templateUrl: './add-sdgs.page.html',
-  styleUrls: ['./add-sdgs.page.scss'],
+  styleUrls: ['./add-sdgs.page.scss']
 })
 export class AddSdgsPage implements OnInit {
-  sdgTags: Tag[]
+  sdgTags: Tag[];
   filteredTags: Tag[];
   chosenTags: Tag[] = [];
   searchValue: string;
   hasSelected: boolean;
   loggedInUser: User;
 
-  constructor(private tagService: TagService, private authenticationService: AuthenticationService, 
-    private userService: UserService, public toastController: ToastController, private location: Location) { }
+  constructor(
+    private tagService: TagService,
+    private authenticationService: AuthenticationService,
+    private userService: UserService,
+    private toastController: ToastController,
+    private location: Location
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ionViewWillEnter() {
     this.tagService.getAllSDGTags().subscribe((response) => {
@@ -35,9 +39,11 @@ export class AddSdgsPage implements OnInit {
           .getSDGsForProfile(this.loggedInUser.userId)
           .subscribe((sdgs) => {
             this.loggedInUser = { ...this.loggedInUser, sdgs };
-            this.sdgTags = this.sdgTags.filter(tag => !this.loggedInUser.sdgs.includes(tag));
+            this.sdgTags = this.sdgTags.filter(
+              (tag) => !this.loggedInUser.sdgs.includes(tag)
+            );
           });
-       });
+      });
     });
   }
 
@@ -48,9 +54,9 @@ export class AddSdgsPage implements OnInit {
       this.filteredTags = this.sdgTags;
     }
 
-    this.filteredTags = this.sdgTags.filter(tag => {
+    this.filteredTags = this.sdgTags.filter((tag) => {
       if (tag.name && this.searchValue) {
-        return (tag.name.toLowerCase().includes(this.searchValue.toLowerCase()));
+        return tag.name.toLowerCase().includes(this.searchValue.toLowerCase());
       }
     });
   }
@@ -71,30 +77,32 @@ export class AddSdgsPage implements OnInit {
   removeTag(tag: Tag) {
     this.chosenTags.forEach((element, index) => {
       if (element.name == tag.name) {
-        this.chosenTags.splice(index, 1)
+        this.chosenTags.splice(index, 1);
       }
     });
   }
 
   clearSearch() {
-    this.searchValue = "";
+    this.searchValue = '';
     this.filteredTags = [];
   }
 
   save() {
     this.userService
       .addSDGsToProfile(this.loggedInUser.userId, this.chosenTags)
-      .subscribe((responsedata) => {
-        this.loggedInUser.sdgs = responsedata;
-        this.location.back();
-      },
-      async (err: any) => {
-        const toast = await this.toastController.create({
-          message: err,
-          duration: 2000
-        });
-        toast.present();
-        this.chosenTags = []
-      });
+      .subscribe(
+        (responsedata) => {
+          this.loggedInUser.sdgs = responsedata;
+          this.location.back();
+        },
+        async (err: any) => {
+          const toast = await this.toastController.create({
+            message: err,
+            duration: 2000
+          });
+          toast.present();
+          this.chosenTags = [];
+        }
+      );
   }
 }

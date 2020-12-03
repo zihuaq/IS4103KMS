@@ -23,10 +23,9 @@ declare var $: any;
 @Component({
   selector: 'app-view-election-posts',
   templateUrl: './view-election-posts.component.html',
-  styleUrls: ['./view-election-posts.component.css']
+  styleUrls: ['./view-election-posts.component.css'],
 })
 export class ViewElectionPostsComponent implements OnInit {
-
   loggedInUser: User;
   electionPosts: Post[];
   filteredPosts: Post[];
@@ -40,48 +39,48 @@ export class ViewElectionPostsComponent implements OnInit {
   postToReport: Post;
   commentToReport: PostComment;
   shareOption: any = [
-    { id: "follower", value: "Followers" },
-    { id: "project", value: "Project(s)" },
-    { id: "group", value: "Group(s)" }
+    { id: 'follower', value: 'Followers' },
+    { id: 'project', value: 'Project(s)' },
+    { id: 'group', value: 'Group(s)' },
   ];
   selectedShareOption: string;
-  sharePostText: string = "";
+  sharePostText: string = '';
   UserType = UserType;
   activeElections: Election;
-  searchString: string = "";
+  searchString: string = '';
 
-  constructor(private sessionService: SessionService,
+  constructor(
+    private sessionService: SessionService,
     private userService: UserService,
     private postService: PostService,
     private tagService: TagService,
     private reportService: ReportService,
-    private electionService: ElectionService,) { }
+    private electionService: ElectionService
+  ) {}
 
   ngOnInit(): void {
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
-    this.electionService.getActiveElection().subscribe(
-      (result) => {
-        this.activeElections = result;
-        forkJoin([
-          this.userService.getUser(loggedInUserId.toString()),
-          this.postService.getPostForElection(this.activeElections.id),
-          this.tagService.getAllPostReportTags(),
-          this.tagService.getAllCommentReportTags()
-        ]).subscribe((result) => {
-          this.loggedInUser = result[0];
-          this.electionPosts = result[1];
-          this.filteredPosts = this.electionPosts;
-          this.postReportTags = result[2];
-          this.commentReportTags = result[3];
-          this.initElements();
-          console.log(this.electionPosts)
-        });
+    this.electionService.getActiveElection().subscribe((result) => {
+      this.activeElections = result;
+      forkJoin([
+        this.userService.getUser(loggedInUserId.toString()),
+        this.postService.getPostForElection(this.activeElections.id),
+        this.tagService.getAllPostReportTags(),
+        this.tagService.getAllCommentReportTags(),
+      ]).subscribe((result) => {
+        this.loggedInUser = result[0];
+        this.electionPosts = result[1];
+        this.filteredPosts = this.electionPosts;
+        this.postReportTags = result[2];
+        this.commentReportTags = result[3];
+        this.initElements();
+        console.log(this.electionPosts);
       });
+    });
   }
 
-
   initElements() {
-    console.log("init elements called!")
+    console.log('init elements called!');
     $('#reportPostselect2').select2({
       data: this.postReportTags.map((item) => {
         return item.name;
@@ -156,7 +155,7 @@ export class ViewElectionPostsComponent implements OnInit {
 
   updateNewsFeedAccordingToRefineOptions() {
     this.filteredPosts = [];
-    this.electionPosts.forEach(post => {
+    this.electionPosts.forEach((post) => {
       if (this.postMatchSearchString(post)) {
         this.filteredPosts.push(post);
       }
@@ -164,12 +163,21 @@ export class ViewElectionPostsComponent implements OnInit {
   }
 
   postMatchSearchString(post: Post) {
-    if (this.searchString == null || this.searchString == "") {
+    if (this.searchString == null || this.searchString == '') {
       return true;
     }
-    if (post.electionApplication.reasons.toLowerCase().includes(this.searchString.toLowerCase())
-      || post.electionApplication.contributions.toLowerCase().includes(this.searchString.toLowerCase())
-      || post.electionApplication.additionalComments && post.electionApplication.additionalComments.toLowerCase().includes(this.searchString.toLowerCase())) {
+    if (
+      post.electionApplication.reasons
+        .toLowerCase()
+        .includes(this.searchString.toLowerCase()) ||
+      post.electionApplication.contributions
+        .toLowerCase()
+        .includes(this.searchString.toLowerCase()) ||
+      (post.electionApplication.additionalComments &&
+        post.electionApplication.additionalComments
+          .toLowerCase()
+          .includes(this.searchString.toLowerCase()))
+    ) {
       return true;
     }
   }
@@ -242,7 +250,7 @@ export class ViewElectionPostsComponent implements OnInit {
   }
 
   sharePost() {
-    if (this.selectedShareOption == "project") {
+    if (this.selectedShareOption == 'project') {
       let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
       sharePostToProjectOrGroupsReq.text = this.sharePostText;
       sharePostToProjectOrGroupsReq.postDate = new Date();
@@ -260,11 +268,15 @@ export class ViewElectionPostsComponent implements OnInit {
           title: 'Error',
           autohide: true,
           delay: 2500,
-          body: "Please select an audience for your shared post.",
+          body: 'Please select an audience for your shared post.',
         });
       } else {
         this.postService
-          .sharePostToProjects(this.postToShare.postId, this.loggedInUser.userId, sharePostToProjectOrGroupsReq)
+          .sharePostToProjects(
+            this.postToShare.postId,
+            this.loggedInUser.userId,
+            sharePostToProjectOrGroupsReq
+          )
           .subscribe(() => {
             this.postToShare = null;
             $(document).Toasts('create', {
@@ -276,12 +288,12 @@ export class ViewElectionPostsComponent implements OnInit {
             });
             this.updateNewsfeed();
             $('#shareToProjectselect2').val(null).trigger('change');
-            this.sharePostText = "";
-            this.selectedShareOption = "";
+            this.sharePostText = '';
+            this.selectedShareOption = '';
             $('#project').prop('checked', false);
           });
       }
-    } else if (this.selectedShareOption == "group") {
+    } else if (this.selectedShareOption == 'group') {
       let sharePostToProjectOrGroupsReq = new SharePostToProjectOrGroupsReq();
       sharePostToProjectOrGroupsReq.text = this.sharePostText;
       sharePostToProjectOrGroupsReq.postDate = new Date();
@@ -299,11 +311,15 @@ export class ViewElectionPostsComponent implements OnInit {
           title: 'Error',
           autohide: true,
           delay: 2500,
-          body: "Please select an audience for your shared post.",
+          body: 'Please select an audience for your shared post.',
         });
       } else {
         this.postService
-          .sharePostToGroups(this.postToShare.postId, this.loggedInUser.userId, sharePostToProjectOrGroupsReq)
+          .sharePostToGroups(
+            this.postToShare.postId,
+            this.loggedInUser.userId,
+            sharePostToProjectOrGroupsReq
+          )
           .subscribe(() => {
             this.postToShare = null;
             $(document).Toasts('create', {
@@ -315,12 +331,12 @@ export class ViewElectionPostsComponent implements OnInit {
             });
             this.updateNewsfeed();
             $('#shareToGroupselect2').val(null).trigger('change');
-            this.sharePostText = "";
-            this.selectedShareOption = "";
+            this.sharePostText = '';
+            this.selectedShareOption = '';
             $('#group').prop('checked', false);
           });
       }
-    } else if (this.selectedShareOption == "follower") {
+    } else if (this.selectedShareOption == 'follower') {
       let post = new Post();
       post.text = this.sharePostText;
       post.postDate = new Date();
@@ -336,8 +352,8 @@ export class ViewElectionPostsComponent implements OnInit {
             body: 'Post Shared!',
           });
           this.updateNewsfeed();
-          this.sharePostText = "";
-          this.selectedShareOption = "";
+          this.sharePostText = '';
+          this.selectedShareOption = '';
           $('#follower').prop('checked', false);
         });
     } else {
@@ -346,7 +362,7 @@ export class ViewElectionPostsComponent implements OnInit {
         title: 'Error',
         autohide: true,
         delay: 2500,
-        body: "Please select an audience for your shared post"
+        body: 'Please select an audience for your shared post',
       });
     }
   }
@@ -486,7 +502,11 @@ export class ViewElectionPostsComponent implements OnInit {
 
   applyForElection(electionForm: NgForm) {
     if (electionForm.valid) {
-      if (this.activeElections.minRepPointsRequired <= this.loggedInUser.reputationPoints && this.loggedInUser.userType == UserType.INDIVIDUAL) {
+      if (
+        this.activeElections.minRepPointsRequired <=
+          this.loggedInUser.reputationPoints &&
+        this.loggedInUser.userType == UserType.INDIVIDUAL
+      ) {
         let electionApplciation = new ElectionApplication();
         electionApplciation.reasons = electionForm.value.reason;
         electionApplciation.contributions = electionForm.value.contributions;
@@ -495,39 +515,41 @@ export class ViewElectionPostsComponent implements OnInit {
         electionApplciation.applicationOwner = this.loggedInUser;
         electionApplciation.election = this.activeElections;
 
-        this.electionService.createElectionApplication(electionApplciation).subscribe(
-          (response) => {
-            $(document).Toasts('create', {
-              class: 'bg-success',
-              title: 'Success',
-              autohide: true,
-              delay: 2500,
-              body: 'Application Submitted!',
-            });
+        this.electionService
+          .createElectionApplication(electionApplciation)
+          .subscribe(
+            (response) => {
+              $(document).Toasts('create', {
+                class: 'bg-success',
+                title: 'Success',
+                autohide: true,
+                delay: 2500,
+                body: 'Application Submitted!',
+              });
 
-            electionForm.reset();
-            $('#applyElectionModalCloseBtn').click();
-          },
-          (error) => {
-            $(document).Toasts('create', {
-              class: 'bg-danger',
-              title: 'Error',
-              autohide: true,
-              delay: 2500,
-              body: error,
-            });
+              electionForm.reset();
+              $('#applyElectionModalCloseBtn').click();
+            },
+            (error) => {
+              $(document).Toasts('create', {
+                class: 'bg-danger',
+                title: 'Error',
+                autohide: true,
+                delay: 2500,
+                body: error,
+              });
 
-            electionForm.reset();
-            $('#applyElectionModalCloseBtn').click();
-          }
-        );
+              electionForm.reset();
+              $('#applyElectionModalCloseBtn').click();
+            }
+          );
       } else if (this.loggedInUser.userType == UserType.ADMIN) {
         $(document).Toasts('create', {
           class: 'bg-danger',
           title: 'Error',
           autohide: true,
           delay: 2500,
-          body: "Admin cannot participation in an election for new admins",
+          body: 'Admin cannot participation in an election for new admins',
         });
         electionForm.reset();
         $('#applyElectionModalCloseBtn').click();
@@ -537,7 +559,8 @@ export class ViewElectionPostsComponent implements OnInit {
           title: 'Error',
           autohide: true,
           delay: 2500,
-          body: "Institute Accounts cannot participation in an election for new admins",
+          body:
+            'Institute Accounts cannot participation in an election for new admins',
         });
         electionForm.reset();
         $('#applyElectionModalCloseBtn').click();
@@ -547,7 +570,7 @@ export class ViewElectionPostsComponent implements OnInit {
           title: 'Error',
           autohide: true,
           delay: 2500,
-          body: "Insufficient Reputation Points",
+          body: 'Insufficient Reputation Points',
         });
         electionForm.reset();
         $('#applyElectionModalCloseBtn').click();
