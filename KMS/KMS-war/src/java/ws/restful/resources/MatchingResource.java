@@ -238,6 +238,7 @@ public class MatchingResource {
     }
 
     private List<ProjectMatchesRsp> getProjectsMatchesResponse(List<ProjectMatchesRsp> matches) {
+        System.out.println(matches);
         for (ProjectMatchesRsp match : matches) {
             match.getMatchingProject().getActivities().clear();
             match.getMatchingProject().getDonations().clear();
@@ -250,6 +251,7 @@ public class MatchingResource {
             match.getMatchingProject().getReviews().clear();
             match.getMatchingProject().setProjectOwner(null);
         }
+        System.out.println(matches);
         return matches;
     }
 

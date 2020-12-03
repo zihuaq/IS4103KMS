@@ -1,1 +1,39 @@
-<p>weekly-project-leaderboard works!</p>
+<div class="list-group-item clearfix">
+    <h5 style="text-align: center;">Project Activities Completed</h5>
+    <div style="display: flex; justify-content: space-around;">
+        <input type="checkbox" name="my-checkbox-project" id="project-bootstrap-switch" checked data-bootstrap-switch>
+    </div>
+    <hr />
+    <span *ngIf="leaderboardUsers">
+        <div *ngFor="let user of leaderboardUsers; let i = index">
+            <div class="user-panel d-flex" style="padding:2%" [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-1">
+                            <div *ngIf="i <= 2"> <i class="fas fa-trophy fa-lg"></i> </div>
+                            <div *ngIf="i > 2">{{i+1}}</div>
+                        </div>
+                        <div class="col-2">
+                            <div class="image" *ngIf="user.profilePicture">
+                                <img [src]="user.profilePicture" class="img-circle" alt="User Image">
+                            </div>
+                            <div class="image" *ngIf="!user.profilePicture">
+                                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                    class="img-circle elevation-2" alt="User Image">
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <a class="d-block" routerLink="/userProfile/{{user.userId}}">{{user.firstName}}
+                                {{user.lastName}}</a>
+                        </div>
+                        <div class="col-4">
+                            <div>
+                                {{user.reputationPoints}} activities
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </span>
+</div>
