@@ -24,6 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import ejb.session.stateless.TagSessionBeanRemote;
+import entity.UserEntity;
 
 /**
  *
@@ -82,22 +83,34 @@ public class GroupSessionBeanTest {
         groupSessionBean.createNewGroup(newGroup, userId, tagIds);
     }
 
-
     @Test
-    public void testRetrieveAllGroup() throws Exception {
-        
+    public void testRetrieveAllGroup() {
         List<GroupEntity> groups = groupSessionBean.retrieveAllGroup();
-        assertEquals(0, groups.size());
+        assertFalse(groups.isEmpty());
     }
 
     @Test
-    public void testGetGroupById() throws Exception {
+    public void testGetGroupById() throws NoResultException {
+        GroupEntity groupEntity = groupSessionBean.getGroupById(1l);
+        assertTrue(groupEntity.getGroupId() == 1l);
+    }
 
+    @Test(expected = NoResultException.class)
+    public void testGetGroupByIdInvalidId() throws NoResultException {
+        groupSessionBean.getGroupById(-1l);
     }
 
     @Test
-    public void testJoinGroup() throws Exception {
-
+    public void testJoinGroup() throws NoResultException {
+        groupSessionBean.joinGroup(1l, 1l);
+        boolean hasUser = false;
+        List<UserEntity> members = groupSessionBean.getGroupById(1l).getGroupMembers();
+        for (int i = 0; i < members.size(); i++) {
+            if (members.get(i).getUserId() == 1l) {
+                hasUser = true;
+            }
+        }
+        assertTrue(hasUser);
     }
 
     @Test

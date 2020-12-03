@@ -84,7 +84,7 @@
             {{post.postOwner.lastName}}
           </ion-label>
           &nbsp;
-          <ion-badge color="black" *ngIf="post.isElectionPost">Election Post</ion-badge>
+          <ion-badge color="dark" *ngIf="post.isElectionPost">Election Post</ion-badge>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -183,8 +183,8 @@
                 style="font-size: smaller;">
                 {{post.originalPost.group.name}}</a>
               &nbsp;
-              <ion-badge color="black" *ngIf="post.isPinnedPost">Pinned Post</ion-badge>
-              <ion-badge color="black" *ngIf="post.isElectionPost">Election Post</ion-badge>
+              <ion-badge color="dark" *ngIf="post.isPinnedPost">Pinned Post</ion-badge>
+              <ion-badge color="dark" *ngIf="post.isElectionPost">Election Post</ion-badge>
             </ion-col>
           </ion-row>
           <ion-row>

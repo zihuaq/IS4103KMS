@@ -276,7 +276,18 @@ export class NewsfeedComponent implements OnInit {
     let searchTerm = event.srcElement.value;
     if (searchTerm && searchTerm != '') {
       this.filteredPosts = this.newsfeedPosts.filter((post) => {
-        return post.text.toLowerCase().includes(searchTerm.toLowerCase());
+        return (
+          post?.text?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post?.postOwner?.firstName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          post?.postOwner?.lastName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          post?.originalPost?.text
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        );
       });
     } else {
       this.filteredPosts = this.newsfeedPosts;
