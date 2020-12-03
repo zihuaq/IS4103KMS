@@ -90,7 +90,7 @@ public class LeaderboardResource {
     @Path("getReputationPointLeaderboardForFollowing/{userId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getReputationPointLeaderboard(@PathParam("userId") Long userId) {
+    public Response getReputationPointLeaderboardForFollowing(@PathParam("userId") Long userId) {
         try {
             List<UserEntity> leaderboard = leaderboardSessionBean.getReputationPointLeaderboardForFollowing(userId);
             for (UserEntity user : leaderboard) {
