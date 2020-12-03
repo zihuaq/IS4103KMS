@@ -35,6 +35,10 @@ public class GroupSessionBeanTest {
     TagSessionBeanRemote tagSessionBean = lookupTagSessionBeanRemote();
 
     GroupSessionBeanRemote groupSessionBean = lookupGroupSessionBeanRemote();
+    
+    UserEntity user;
+    
+    GroupEntity group;
 
     public GroupSessionBeanTest() {
     }
@@ -50,6 +54,7 @@ public class GroupSessionBeanTest {
     @Before
     public void setUp() {
         System.out.println("@Before setUp");
+        
     }
 
     @After
@@ -113,9 +118,20 @@ public class GroupSessionBeanTest {
         assertTrue(hasUser);
     }
 
+    @Test(expected = NoResultException.class)
+    public void testJoinGroupInvalidGroupId() throws NoResultException {
+        groupSessionBean.joinGroup(-1l, 1l);
+    }
+
+    @Test(expected = NoResultException.class)
+    public void testJoinGroupInvalidUserId() throws NoResultException {
+        groupSessionBean.joinGroup(1l, -1l);
+    }
+
     @Test
     public void testRemoveMember() throws Exception {
-
+        groupSessionBean.joinGroup(1l, 1l);
+        groupSessionBean.removeMember(1l, 1l);
     }
 
     @Test
