@@ -6,14 +6,12 @@
 package ejb.session.stateless;
 
 import Exception.CreateGroupException;
-import Exception.CreateUserReviewException;
 import Exception.InvalidRoleException;
 import Exception.NoResultException;
 import entity.PostEntity;
 import entity.GroupEntity;
 import entity.ReportEntity;
 import entity.TagEntity;
-import entity.ReviewEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,28 +68,6 @@ public class GroupSessionBean implements GroupSessionBeanLocal, GroupSessionBean
             return newGroup.getGroupId();
         } catch (NoResultException ex) {
             throw new CreateGroupException("User not found");
-        }
-    }
-
-    public Long createNewUserReview(ReviewEntity newReview, Long groupId, Long fromUserId, Long toUserId) throws CreateUserReviewException {
-        try {
-            UserEntity fromUser = userSessionBeanLocal.getUserById(fromUserId);
-            UserEntity toUser = userSessionBeanLocal.getUserById(toUserId);
-            GroupEntity group = getGroupById(groupId);
-            fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
-            em.persist(newReview);
-            em.flush();
-
-            fromUser.getReviewsGiven().add(newReview);
-            toUser.getReviewsGiven().add(newReview);
-//            group.getReviews().add(newReview);
-//            newReview.setFrom(fromUser);
-//            newReview.setTo(toUser);
-//            newReview.setGroup(group);
-
-            return newReview.getReviewId();
-        } catch (NoResultException ex) {
-            throw new CreateUserReviewException("User not found");
         }
     }
 

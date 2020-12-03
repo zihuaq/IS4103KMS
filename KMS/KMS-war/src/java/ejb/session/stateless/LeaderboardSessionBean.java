@@ -47,7 +47,9 @@ public class LeaderboardSessionBean implements LeaderboardSessionBeanLocal {
 
     @Override
     public List<UserEntity> getReputationPointLeaderboardForFollowing(Long userId) throws UserNotFoundException {
-        List<UserEntity> leaderboardUsers = userSessionBean.getFollowing(userId);
+        List<UserEntity> following = userSessionBean.getFollowing(userId);
+        List<UserEntity> leaderboardUsers = new ArrayList<>();
+        leaderboardUsers.addAll(following);
         UserEntity user = em.find(UserEntity.class, userId);
 
         if (user != null) {
@@ -117,8 +119,10 @@ public class LeaderboardSessionBean implements LeaderboardSessionBeanLocal {
 
     @Override
     public List<UserEntity> getWeeklyDonationAmountLeaderboardForFollowing(long userId) throws UserNotFoundException {
-        List<UserEntity> leaderboardUsers = userSessionBean.getFollowing(userId);
+        List<UserEntity> following = userSessionBean.getFollowing(userId);
+        List<UserEntity> leaderboardUsers = new ArrayList<>();
         UserEntity user = em.find(UserEntity.class, userId);
+        leaderboardUsers.addAll(following);
 
         if (user != null) {
             leaderboardUsers.add(user);
@@ -175,9 +179,11 @@ public class LeaderboardSessionBean implements LeaderboardSessionBeanLocal {
 
     @Override
     public List<UserEntity> getProjectLeaderboardForFollowing(long userId) throws UserNotFoundException {
-        List<UserEntity> leaderboardUsers = userSessionBean.getFollowing(userId);
+        List<UserEntity> following = userSessionBean.getFollowing(userId);
+        List<UserEntity> leaderboardUsers = new ArrayList<>();
         UserEntity user = em.find(UserEntity.class, userId);
 
+        leaderboardUsers.addAll(following);
         if (user != null) {
             leaderboardUsers.add(user);
             Collections.sort(leaderboardUsers, (UserEntity o1, UserEntity o2) -> {
