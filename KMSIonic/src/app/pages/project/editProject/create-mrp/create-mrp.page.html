@@ -4,7 +4,7 @@
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">Cancel</ion-button>
     </ion-buttons>
-  </ion-toolbar>  
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -17,11 +17,11 @@
         <ion-item-group>
           <ion-item>
             <ion-label position="stacked">Material Resource Posting Name *</ion-label>
-            <ion-input required type="text" id="mrpName" [(ngModel)]="newMrp.name" name="mrpName"></ion-input>
+            <ion-input required type="text" id="mrpName" [(ngModel)]="newMrp.name" name="mrpName" clearInput></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Quantity Required *</ion-label>
-            <ion-input required type="number" id="quantity" [(ngModel)]="newMrp.totalQuantity" name="quantity"></ion-input>
+            <ion-input required type="number" id="quantity" [(ngModel)]="newMrp.totalQuantity" name="quantity" clearInput></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Unit *</ion-label>
@@ -33,24 +33,30 @@
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Description</ion-label>
-            <ion-input type="text" id="description" [(ngModel)]="newMrp.description" name="description"></ion-input>
+            <ion-input type="text" id="description" [(ngModel)]="newMrp.description" name="description" clearInput></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="stacked">Date Required From *</ion-label>
-            <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
-              [(ngModel)]="startDate">
-            </ion-datetime>
+            <ion-label position="stacked">Required From *</ion-label>
+            <ion-row style="margin-left: -19px;">
+              <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
+                [max]="endDate" [(ngModel)]="startDate">
+              </ion-datetime>
+              <ion-icon *ngIf="startDate" style="zoom: 1.5; margin-top: 5px; z-index: 2;" name="close-circle-outline" (click)="clearStartDate()"></ion-icon>
+            </ion-row>
           </ion-item>
           <ion-item>
-            <ion-label position="stacked">Date Required To *</ion-label>
-            <ion-datetime required name="endDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
-              [(ngModel)]="endDate">
-            </ion-datetime>
+            <ion-label position="stacked">Required To </ion-label>
+            <ion-row style="margin-left: -19px;">
+              <ion-datetime name="endDate" placeholder="DD/MM/YYYY" [min]="startDate" display-format="DD/MM/YYYY"
+                [(ngModel)]="endDate">
+              </ion-datetime>
+              <ion-icon *ngIf="endDate" style="zoom: 1.5; margin-top: 5px; z-index: 2;" name="close-circle-outline" (click)="clearEndDate()"></ion-icon>
+            </ion-row>
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Material Resource Tags *</ion-label>
             <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
-            [ngModelOptions]="{standalone: true}" placeholder="Search tags"></ion-searchbar>
+              [ngModelOptions]="{standalone: true}" placeholder="Search tags"></ion-searchbar>
             <ion-list lines="none" *ngIf="filteredTags.length > 0">
               <ion-item *ngFor="let tag of filteredTags">
                 <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">
@@ -70,7 +76,7 @@
             </ion-list>
           </ion-item>
           <ion-item>
-            <ion-label position="stacked">Location of resource</ion-label>
+            <ion-label position="stacked">Location of Resource</ion-label>
           </ion-item>
           <div id="map_canvas">
           </div>

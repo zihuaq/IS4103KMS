@@ -41,9 +41,24 @@ export class AppComponent implements OnInit {
       icon: 'search'
     },
     {
+      title: 'Recommendations',
+      url: '/view-recommendations',
+      icon: 'star'
+    },
+    {
       title: 'Notifications',
       url: '/notifications',
       icon: 'notifications'
+    },
+    {
+      title: 'Chat',
+      url: '/chat',
+      icon: 'chatbubble'
+    },
+    {
+      title: 'Leaderboard',
+      url: '/leaderboard',
+      icon: 'trophy'
     },
     {
       title: 'SDG Info',
@@ -53,12 +68,12 @@ export class AppComponent implements OnInit {
     {
       title: 'Discover Group',
       url: '/view-all-group',
-      icon: 'people'
+      icon: 'search'
     },
     {
       title: 'My Group',
       url: '/view-own-groups',
-      icon: 'person'
+      icon: 'people'
     },
     {
       title: 'Discover Project',
@@ -68,12 +83,27 @@ export class AppComponent implements OnInit {
     {
       title: 'My Project',
       url: '/view-own-projects',
-      icon: 'person'
+      icon: 'bulb'
     },
     {
-      title: 'Chat',
-      url: '/chat',
-      icon: 'chatbubble'
+      title: 'Search Material Resources',
+      url: '/view-all-mras',
+      icon: 'cube'
+    },
+    {
+      title: 'Search Material Postings',
+      url: '/view-all-mrps',
+      icon: 'briefcase'
+    },
+    {
+      title: 'Election',
+      url: '/view-election-posts',
+      icon: 'bar-chart'
+    },
+    {
+      title: 'Make Tag Request',
+      url: '/make-tag-request',
+      icon: 'pricetag'
     },
     {
       title: 'Log Out',
@@ -115,7 +145,7 @@ export class AppComponent implements OnInit {
       //   } else {
       //     console.log('Received in foreground');
       //   }
-      // });      
+      // });
 
       // // refresh the FCM token
       // FCM.onTokenRefresh().subscribe(token => {
@@ -124,7 +154,6 @@ export class AppComponent implements OnInit {
 
       // // unsubscribe from a topic
       // // this.fcm.unsubscribeFromTopic('offers');
-      
     });
   }
 

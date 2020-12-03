@@ -25,6 +25,8 @@ import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,7 +38,9 @@ import util.enumeration.ProjectStatusEnum;
  * @author chai
  */
 @Stateless
-public class ProjectSessionBean implements ProjectSessionBeanLocal {
+@Local(ProjectSessionBeanLocal.class)
+@Remote(ProjectSessionBeanRemote.class)
+public class ProjectSessionBean implements ProjectSessionBeanLocal, ProjectSessionBeanRemote {
 
 
     @EJB
@@ -159,6 +163,9 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
     public ProjectEntity getProjectById(Long projectId) throws NoResultException {
         ProjectEntity project = em.find(ProjectEntity.class, projectId);
         if (project != null) {
+            project.getProjectMembers().size();
+            project.getProjectAdmins().size();
+            project.getSdgs().size();
             return project;
         } else {
             throw new NoResultException("Project does not exists");
@@ -288,14 +295,6 @@ public class ProjectSessionBean implements ProjectSessionBeanLocal {
         }
         projectToDelete.getProjectMembers().clear();
         
-//        List<Long> activityIds = new ArrayList<>();
-//        for (ActivityEntity activity: projectToDelete.getActivities()) {
-//            activityIds.add(activity.getActivityId());
-//        }
-//        
-//        for (Long activityId: activityIds) {
-//            activitySessionBeanLocal.deleteActivity(activityId);
-//        }
         for (ActivityEntity activity: projectToDelete.getActivities()) {
             activity.setProject(null);
             activitySessionBeanLocal.deleteActivity(activity.getActivityId());

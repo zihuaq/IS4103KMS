@@ -52,21 +52,5 @@ public interface ProjectSessionBeanLocal {
     public void deleteProject(Long projectId) throws NoResultException;
 
     public List<ReviewEntity> getProjectReviews(Long projectId) throws NoResultException;
-
-//    public Long createNewProjectReview(ReviewEntity newReview, Long projectId, Long fromUserId) throws CreateProjectReviewException;
-//
-//    public Long createNewUserReview(ReviewEntity newReview, Long projectId, Long fromUserId, Long toUserId) throws CreateUserReviewException;
-
-//    public List<AwardEntity> getProjectAwards(Long projectId) throws NoResultException;
-//
-//    public Long createNewProjectAward(AwardEntity newAward, Long projectId) throws NoResultException;
-//
-//    public void deleteProjectAward(Long awardId) throws NoResultException;
-//
-//    public void issueAwardToUser(Long awardId, Long userId) throws NoResultException;
-//
-//    public void withdrawAwardfromUser(Long awardId, Long userId) throws NoResultException;
-//
-//    public void editAward(AwardEntity awardUpdates) throws NoResultException;
     
 }

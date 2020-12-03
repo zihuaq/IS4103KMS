@@ -20,11 +20,11 @@ public interface HumanResourcePostingSessionBeanLocal {
 
     public Long createHumanResourcePostingEntity(HumanResourcePostingEntity newHrp, Long projectId, List<Long> tagIds) throws NoResultException;
 
-    public HumanResourcePostingEntity getHrpById(Long mrpId) throws NoResultException;
+    public HumanResourcePostingEntity getHrpById(Long hrpId) throws NoResultException;
 
     public List<HumanResourcePostingEntity> getListOfHumanResourcePostingByProjectId(Long projectId);
 
-    public void updateHumanResourcePosting(HumanResourcePostingEntity mrpToUpdate) throws NoResultException;
+    public void updateHumanResourcePosting(HumanResourcePostingEntity hrpToUpdate) throws NoResultException;
 
     public void deleteHumanResourcePosting(Long hrpId) throws NoResultException;
 

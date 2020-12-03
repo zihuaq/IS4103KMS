@@ -15,8 +15,8 @@
         <p style="margin-top: 15px;"><b>Description:</b></p>
         <p>{{mrp.description}}</p>
       </span>
-      <p style="margin-top: 15px;"><b>Required Date:</b></p>
-      <p>{{startDate | date}} - {{endDate | date}}</p>
+      <p style="margin-top: 15px;"><b>Required Date<span *ngIf="!endDate"> From</span>:</b></p>
+      <p>{{startDate | date}} <span *ngIf="endDate">- {{endDate | date}}</span></p>
       <p style="margin-top: 15px;"><b>Quantity:</b></p>
       <p>{{mrp.lackingQuantity}} {{mrp.unit}} required / {{mrp.totalQuantity}} {{mrp.unit}} total</p>
       <p style="margin-top: 15px;"><b>Location:</b></p>

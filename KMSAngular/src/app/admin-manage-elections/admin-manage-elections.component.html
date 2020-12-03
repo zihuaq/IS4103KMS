@@ -1,0 +1,110 @@
+<app-top-navbar></app-top-navbar>
+<app-side-navbar></app-side-navbar>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Manage Election</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a routerLink="/index">Home</a></li>
+                        <li class="breadcrumb-item active">Manage Election</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <section class="content">
+        <div class="card card-primary card-outline card-tabs">
+            <div class="card-header p-0 pt-1 border-bottom-0">
+                <h6 *ngIf="!hasActiveElection" style="text-align: center;"> No Active Election
+                    <br />
+                    <br />
+                    <button type="button" class="btn bg-olive"
+                        style="width: 30%; margin-left: auto; margin-right: auto;" data-backdrop="static"
+                        data-toggle="modal" data-target="#modal-create-election">
+                        Start Election
+                    </button>
+                </h6>
+                <ul *ngIf="hasActiveElection" class="nav nav-tabs" id="manage-election-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="manage-election-tab-manage-applications-tabname"
+                            data-toggle="pill" href="#manage-applications" role="tab">Manage Applications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="manage-election-tab-edit-election-details-tabname" data-toggle="pill"
+                            href="#edit-election-details" role="tab">Edit Election Details</a>
+                    </li>
+                </ul>
+                <div *ngIf="hasActiveElection" class="card-body">
+                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                        <div class="tab-pane fade show active" id="manage-applications" role="tabpanel">
+                            <app-manage-applications></app-manage-applications>
+                        </div>
+                        <div class="tab-pane fade" id="edit-election-details" role="tabpanel">
+                            <app-edit-election></app-edit-election>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer>
+
+
+<div class="modal fade" id="modal-create-election">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Start Election For New Admin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (ngSubmit)="startElection(electionForm)" #electionForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name" required
+                            ngModel>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Description:</label>
+                        <input type="text" id="description" class="form-control" placeholder="Enter Description"
+                            name="description" ngModel>
+                    </div>
+                    <br />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Looking for </span>
+                        </div>
+                        <input type="number" class="form-control" ngModel id="numSlots" name="numSlots" min="1"
+                            value="1">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Admins</span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label for="name">Minimum Reputation Points Required:</label>
+                        <input type="number" id="minRepPoints" class="form-control"
+                            placeholder="Enter minimum reputation points required" name="minRepPoints" ngModel min="0"
+                            value="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" id="startElectionModalCloseBtn" class="btn btn-secondary" data-dismiss="modal"
+                        (click)="clear(electionForm)">Cancel</button>
+                    <button type="button" class="btn bg-olive" type="submit"
+                        [disabled]="!electionForm.valid">Start</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

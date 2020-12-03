@@ -2,6 +2,8 @@ import { User } from './user';
 import { PostComment } from './post-comment';
 import { Project } from './project';
 import { Group } from './group';
+import { Election } from './election';
+import { ElectionApplication } from './election-application';
 
 export class Post {
   postId: number;
@@ -22,6 +24,11 @@ export class Post {
   sharedProjectId: string;
   sharedGroupOrProjectDescription: string;
   sharedGroupOrProjectName: string;
+  isPinnedPost: boolean;
+  isElectionPost: boolean;
+  endorser: User;
+  election: Election;
+  electionApplication: ElectionApplication;
 
   constructor(
     postId?: number,
@@ -40,7 +47,12 @@ export class Post {
     sharedGroupId?: string,
     sharedProjectId?: string,
     sharedGroupOrProjectDescription?: string,
-    sharedGroupOrProjectName?: string
+    sharedGroupOrProjectName?: string,
+    isPinnedPost?: boolean,
+    isElectionPost?: boolean,
+    endorser?: User,
+    election?: Election,
+    electionApplication?: ElectionApplication
   ) {
     this.postId = postId;
     this.postDate = postDate;
@@ -59,5 +71,10 @@ export class Post {
     this.sharedProjectId = sharedProjectId;
     this.sharedGroupOrProjectDescription = sharedGroupOrProjectDescription;
     this.sharedGroupOrProjectName = sharedGroupOrProjectName;
+    this.isPinnedPost = isPinnedPost;
+    this.isElectionPost = isElectionPost;
+    this.endorser = endorser;
+    this.election = election;
+    this.electionApplication = electionApplication;
   }
 }

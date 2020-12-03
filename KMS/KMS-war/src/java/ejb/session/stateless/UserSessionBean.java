@@ -10,6 +10,7 @@ import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
 import Exception.QuestionnaireAlreadyCompletedException;
+import Exception.ResignFromAdminException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.AwardEntity;
@@ -32,6 +33,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -45,6 +48,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.AccountPrivacySettingEnum;
+import util.enumeration.UserTypeEnum;
 import util.security.CryptographicHelper;
 
 /**
@@ -52,7 +56,9 @@ import util.security.CryptographicHelper;
  * @author Jeremy
  */
 @Stateless
-public class UserSessionBean implements UserSessionBeanLocal {
+@Local(UserSessionBeanLocal.class)
+@Remote(UserSessionBeanRemote.class)
+public class UserSessionBean implements UserSessionBeanLocal, UserSessionBeanRemote {
 
     @EJB
     private ReportSessionBeanLocal reportSessionBean;
@@ -181,6 +187,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getReviewsReceived().size();
             user.getSdgs().size();
             user.getSkills().size();
+            user.getReceivedAwards().size();
             return user;
         } else {
             throw new NoResultException("User not found");
@@ -990,22 +997,21 @@ public class UserSessionBean implements UserSessionBeanLocal {
     public void persist(Object object) {
         em.persist(object);
     }
-    
-    
+
     public List<AwardEntity> getReceivedAwards(Long userId) throws UserNotFoundException {
         UserEntity user = em.find(UserEntity.class, userId);
-        
+
         user.getReceivedAwards().size();
         return user.getReceivedAwards();
     }
-    
-    
+
     @Override
     public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException {
         UserEntity userEntity = getUserById(userId);
         userEntity.getProfiles().size();
         return userEntity.getProfiles();
     }
+
     
     public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException{
         UserEntity user = getUserById(userId);
@@ -1076,5 +1082,37 @@ public class UserSessionBean implements UserSessionBeanLocal {
         }
         
         return questionnaire.getOrganisationQuestionnaireId();
+    }
+
+    @Override
+    public UserEntity promoteUserToAdmin(Long userToPromoteId) throws NoResultException {
+        UserEntity user = em.find(UserEntity.class, userToPromoteId);
+
+        if (user != null && user.getUserType() != UserTypeEnum.ADMIN) {
+            user.setUserType(UserTypeEnum.ADMIN);
+            return user;
+        } else {
+            throw new NoResultException("No User Found.");
+        }
+    }
+
+    @Override
+    public UserEntity resignFromAdmin(Long userId) throws NoResultException,ResignFromAdminException {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        if (user != null && user.getUserType() == UserTypeEnum.ADMIN) {
+            Query q = em.createQuery("SELECT u FROM UserEntity u WHERE u.userType = :userType");
+            q.setParameter("userType", UserTypeEnum.ADMIN);
+            List<UserEntity> admins = (List<UserEntity>) q.getResultList();
+            if(admins.size() > 1) {
+            user.setUserType(UserTypeEnum.INDIVIDUAL);
+            return user;
+            } else {
+                throw new ResignFromAdminException("There must be at least one Admin on the platform.");
+            }
+        } else {
+            throw new NoResultException("No Admin Found.");
+        }
+
     }
 }

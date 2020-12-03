@@ -12,11 +12,11 @@
                     </h5>
                 </div>               
                 <div class="input-group" style="margin: 15px 20px 0 20px; width: auto">
-                    <input class="form-control" placeholder="Search fulfillments by resource name" [(ngModel)]="searchInput" (ngModelChange)="filter()">
+                    <input class="form-control" placeholder="Search fulfillments by resource name, posting name and description" [(ngModel)]="searchInput" (ngModelChange)="filter()">
                 </div>
                 <div class="form-row" style="margin: 15px 25px -10px 20px">
-                    <label class="col-sm-2">Filter by Status: </label>
-                    <div class="col-sm-10">
+                    <label style="margin-right: 10px;">Filter by Status: </label>
+                    <div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="pledged" [(ngModel)]="pledged" (ngModelChange)="filter()">
                             <label class="form-check-label" for="pledged">Pledged</label>
@@ -28,6 +28,14 @@
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="partiallyfulfilled" [(ngModel)]="partiallyfulfilled" (ngModelChange)="filter()">
                             <label class="form-check-label" for="partiallyfulfilled">Partially Fulfilled</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="ongoing" [(ngModel)]="ongoing" (ngModelChange)="filter()">
+                            <label class="form-check-label" for="ongoing">Ongoing</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="ended" [(ngModel)]="ended" (ngModelChange)="filter()">
+                            <label class="form-check-label" for="ended">Ended</label>
                         </div>  
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="fulfilled" [(ngModel)]="fulfilled" (ngModelChange)="filter()">
@@ -46,14 +54,19 @@
                         <div *ngFor="let fulfillment of filteredList">
                             <div class="card" style="width: 100%;" >
                                 <div class="card-header">
-                                    <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{fulfillment.mra.name}}</b>&nbsp;
+                                    <h5 class="card-title" style="font-size: 20px; margin-top: 7px;">
+                                        <b>My {{fulfillment.mra.name}}</b>&nbsp;<i class="fas fa-caret-right"></i>&nbsp;<b>{{fulfillment.posting.name}}</b>&nbsp;
                                         <span class="badge badge-secondary" *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" style="font-size: 12px; vertical-align: 27%;">{{fulfillment.status}}</span>
-                                    <span class="badge badge-primary" *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; vertical-align: 27%;">{{fulfillment.status}}</span>
-                                    <span class="badge badge-info" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px; vertical-align: 27%;">PARTIALLY FULFILLED</span>
-                                    <span class="badge badge-success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 27%;">{{fulfillment.status}}</span>
-                                    <span class="badge badge-danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px; vertical-align: 27%;">{{fulfillment.status}}</span>
-                                    <br/>
-                                    <span class="text-muted" style="font-size: 15px;">{{fulfillment.mra.description}}</span>
+                                        <span class="badge badge-primary" *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED" style="font-size: 12px; vertical-align: 27%;">{{fulfillment.status}}</span>
+                                        <span class="badge badge-info" *ngIf="fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" style="font-size: 12px; vertical-align: 27%;">PARTIALLY FULFILLED</span>
+                                        <span class="badge" *ngIf="fulfillment.status == fulfillmentStatus.ONGOING" style="font-size: 12px; background-color: rgb(89, 13, 175); color: white; vertical-align: 27%;">{{fulfillment.status}}</span>
+                                        <span class="badge" *ngIf="fulfillment.status == fulfillmentStatus.ENDED" style="font-size: 12px; background-color: rgb(202, 89, 13); color: white; vertical-align: 27%;">{{fulfillment.status}}</span>
+                                        <span class="badge badge-success" *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED" style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 27%;">{{fulfillment.status}}</span>
+                                        <span class="badge badge-danger" *ngIf="fulfillment.status == fulfillmentStatus.REJECTED" style="font-size: 12px; vertical-align: 27%;">{{fulfillment.status}}</span>
+                                        <span *ngIf="fulfillment.posting.description">
+                                            <br/>
+                                            <span class="text-muted" style="font-size: 15px;">{{fulfillment.posting.description}}</span>
+                                        </span>
                                     </h5> 
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -69,10 +82,28 @@
                                 </div>
                                 <div class="card-body" style="display: block; color: rgb(44, 44, 44);">
                                     <p style="margin: 0 7px 0 7px;">
-                                        <b>Required from {{fulfillment.posting.startDate.toString().slice(0,10) | date }} to {{fulfillment.posting.endDate.toString().slice(0,10) | date }}</b> 
-                                        <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" (click)="changehref(fulfillment.posting.latitude, fulfillment.posting.longitude)" target="_blank"> At location {{fulfillment.posting.latitude | number:'1.1-6'}}, {{fulfillment.posting.longitude | number:'1.1-6'}}</a>
+                                        <b style="font-size: 17px;">Required from {{fulfillment.posting.startDate.toString().slice(0,10) | date }} 
+                                            <span *ngIf="fulfillment.posting.endDate">to {{fulfillment.posting.endDate.toString().slice(0,10) | date }}</span>
+                                        </b> 
+                                        <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;" 
+                                            (click)="changehref(fulfillment.posting.latitude, fulfillment.posting.longitude)" target="_blank"> 
+                                            Required Location at {{fulfillment.posting.latitude | number:'1.1-6'}}, {{fulfillment.posting.longitude | number:'1.1-6'}}
+                                        </a>
                                         <br/>
-                                        {{fulfillment.receivedQuantity}} {{fulfillment.posting.unit}} received<span class="text-muted"> / {{fulfillment.totalPledgedQuantity}} {{fulfillment.posting.unit}} pledged</span>
+                                        <b>
+                                            <span *ngIf="fulfillment.mra.type == mraType.ONETIMEDONATION">Free</span>
+                                            <span *ngIf="fulfillment.mra.type != mraType.ONETIMEDONATION">
+                                                US ${{fulfillment.priceOffered | number:'1.2-2'}}/<span *ngIf="fulfillment.posting.unit == 'item(s)'">item</span>
+                                                <span *ngIf="fulfillment.posting.unit != 'item(s)'">{{fulfillment.posting.unit}}</span>
+                                                <span *ngIf="fulfillment.basisOffered == 'DAILY'"> per day</span>
+                                                <span *ngIf="fulfillment.basisOffered == 'WEEKLY'"> per week</span>
+                                                <span *ngIf="fulfillment.basisOffered == 'MONTHLY'"> per month</span>
+                                            </span>
+                                        </b>
+                                        <br/>
+                                        <span *ngIf="fulfillment.status != fulfillmentStatus.PLEDGED && (fulfillment.mra.type == mraType.ONETIMEDONATION || fulfillment.mra.type == mraType.ONETIMEPAYMENT)">
+                                            {{fulfillment.receivedQuantity | number:'1.0-2'}} {{fulfillment.posting.unit}} completed /
+                                        </span> {{fulfillment.totalPledgedQuantity | number:'1.0-2'}} {{fulfillment.posting.unit}} pledged
                                         <br/>
                                         <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;" *ngIf="fulfillment.posting.tags.length > 0">
                                             <div *ngFor="let tag of fulfillment.posting.tags">
@@ -94,21 +125,59 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmDialogLabel">Update Quantity</h5>
+                <h5 class="modal-title" id="confirmDialogLabel">Update Fulfillment</h5>
                 <button type="button" class="close" id="updateModalCloseBtn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <b style="font-size: 18px">Total Pledged Quantity</b>
-                <br/>
-                <input type="number" id="quantityPledged" name="quantityPledged" [max]="maxQuantity" [(ngModel)]="newTotalPledgedQuantity" required>
-                <b> {{fulfillmentToUpdate.posting.unit}}</b>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button id="update-fulfillment" type="button" class="btn btn-primary" (click)="updateQuantity()">Confirm</button>
-            </div>
+            <form (ngSubmit)="updateFulfillment(updateFulfillmentForm)" #updateFulfillmentForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="pledgedQuantity">New Pledged Quantity</label>
+                        <div class="input-group">
+                            <input type="number" id="quantityPledged" class="form-control" name="quantityPledged" [max]="maxQuantity" 
+                                [(ngModel)]="newTotalPledgedQuantity" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{fulfillmentToUpdate.posting.unit}}</span>
+                            </div>
+                        </div>
+                        <small class="form-text float-right" style="color: white;">{{fulfillmentToUpdate.posting.lackingQuantity | number:'1.0-2'}} {{fulfillmentToUpdate.posting.unit}} required</small>
+                    </div>
+                    <div class="form-group" *ngIf="fulfillmentToUpdate.mra.type != mraType.ONETIMEDONATION && fulfillmentToUpdate.mra.type != mraType.ONETIMEPAYMENT">
+                        <label for="editBasisOffered">Basis Offered</label>
+                        <select id="editBasisOffered" class="form-control" [(ngModel)]="fulfillmentToUpdate.basisOffered" name="editBasisOffered" required>
+                            <option disabled selected>Select Basis</option>
+                            <option value="DAILY">Daily</option>
+                            <option value="WEEKLY">Weekly</option>
+                            <option value="MONTHLY">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="form-group" *ngIf="fulfillmentToUpdate.mra.type != mraType.ONETIMEDONATION ">
+                        <label for="editPriceOffered">Price Offered</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">US $</span>
+                            </div>
+                            <input type="number" id="editPriceOffered" class="form-control" name="editPriceOffered" [(ngModel)]="fulfillmentToUpdate.priceOffered" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <span *ngIf="fulfillmentToUpdate.posting.unit == 'item(s)'">/item</span>
+                                    <span *ngIf="fulfillmentToUpdate.posting.unit != 'item(s)'">/{{fulfillmentToUpdate.posting.unit}}</span>
+                                    <span *ngIf="fulfillmentToUpdate.mra.type != mraType.ONETIMEPAYMENT" style="margin-left: 5px;">
+                                        <span *ngIf="fulfillmentToUpdate.basisOffered == 'DAILY'">per day</span>
+                                        <span *ngIf="fulfillmentToUpdate.basisOffered == 'WEEKLY'">per week</span>
+                                        <span *ngIf="fulfillmentToUpdate.basisOffered == 'MONTHLY'">per month</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="update-fulfillment" type="submit" class="btn btn-primary" [disabled]="!updateFulfillmentForm.valid">Confirm</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

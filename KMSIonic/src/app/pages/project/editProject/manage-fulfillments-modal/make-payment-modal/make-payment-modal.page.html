@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Make Payment</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item lines="none" *ngIf="currentAmount > 0.0">
+    <ion-col size="6" style="text-align: left; margin-left: 5px;">
+      Current
+    </ion-col>
+    <ion-col style="margin-left: 5px;">
+      US$ {{ roundToTwoDecimal(currentAmount).toFixed(2) }}
+    </ion-col>
+  </ion-item>
+  <ion-item lines="none" *ngIf="outstandingAmount > 0.0">
+    <ion-col size="6" style="text-align: left; margin-left: 5px;">
+      Outstanding
+    </ion-col>
+    <ion-col style="margin-left: 5px;">
+      US$ {{ roundToTwoDecimal(outstandingAmount).toFixed(2) }}
+    </ion-col>
+  </ion-item>
+  <ion-item lines="full" *ngIf="outstandingAmount > 0.0">
+    <ion-col size="6" style="text-align: left; margin-left: 5px;">
+      Penalty
+    </ion-col>
+    <ion-col style="margin-left: 5px;">
+      US$ {{ roundToTwoDecimal(outstandingAmount * 0.05).toFixed(2) }}
+    </ion-col>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-col size="6" style="text-align: left; margin-left: 5px;">
+      <b>Total</b>
+    </ion-col>
+    <ion-col style="margin-left: 5px;">
+      US$ {{ roundToTwoDecimal(outstandingAmount * 1.05 + currentAmount).toFixed(2) }}
+    </ion-col>
+  </ion-item>
+  <ion-button expand="full" color="warning" (click)="payWithPaypal()">Pay with PayPal</ion-button>
+</ion-content>

@@ -1,3 +1,4 @@
+import { UserType } from './../../enum/user-type.enum';
 import { SharePostModalPage } from './../../pages/share-post-modal/share-post-modal.page';
 import { PostCommentModalPage } from './../../pages/post-comment-modal/post-comment-modal.page';
 import { Post } from './../../classes/post';
@@ -42,25 +43,117 @@ export class NewsfeedComponent implements OnInit {
 
   async postActionSheet(post: Post) {
     let actionSheet;
-    if (this.loggedInUser.userId == post.postOwner.userId) {
+    if (!post.electionApplication) {
+      if (this.loggedInUser.userId == post.postOwner.userId) {
+        actionSheet = await this.actionSheetController.create({
+          buttons: [
+            {
+              text: 'Delete',
+              icon: 'trash',
+              handler: () => {
+                this.deletePost(post.postId);
+              }
+            },
+            {
+              text: 'Edit',
+              icon: 'create',
+              handler: () => {
+                this.router.navigate([
+                  '/create-post/' + this.newsfeedType + '/edit/' + post.postId
+                ]);
+              }
+            }
+          ]
+        });
+      } else if (this.loggedInUser.userType == UserType.ADMIN) {
+        actionSheet = await this.actionSheetController.create({
+          buttons: [
+            {
+              text: 'Delete',
+              icon: 'trash',
+              handler: () => {
+                this.deletePost(post.postId);
+              }
+            },
+            {
+              text: 'Report',
+              icon: 'alert-circle',
+              handler: async () => {
+                console.log('Report chosen');
+                const modal = await this.modalController.create({
+                  component: ReportPostModalPage,
+                  swipeToClose: true,
+                  showBackdrop: true,
+                  cssClass: 'report-post-modal',
+                  componentProps: {
+                    post,
+                    loggedInUser: this.loggedInUser
+                  }
+                });
+                modal.present();
+                modal.onDidDismiss().then(() => {
+                  this.init.emit();
+                });
+              }
+            }
+          ]
+        });
+      } else {
+        actionSheet = await this.actionSheetController.create({
+          buttons: [
+            {
+              text: 'Report',
+              icon: 'alert-circle',
+              handler: async () => {
+                console.log('Report chosen');
+                const modal = await this.modalController.create({
+                  component: ReportPostModalPage,
+                  swipeToClose: true,
+                  showBackdrop: true,
+                  cssClass: 'report-post-modal',
+                  componentProps: {
+                    post,
+                    loggedInUser: this.loggedInUser
+                  }
+                });
+                modal.present();
+                modal.onDidDismiss().then(() => {
+                  this.init.emit();
+                });
+              }
+            }
+          ]
+        });
+      }
+    } else if (this.loggedInUser.userType == UserType.ADMIN) {
       actionSheet = await this.actionSheetController.create({
         buttons: [
           {
             text: 'Delete',
             icon: 'trash',
             handler: () => {
-              console.log('Delete chosen');
               this.deletePost(post.postId);
             }
           },
           {
-            text: 'Edit',
-            icon: 'create',
-            handler: () => {
-              console.log('Edit chosen');
-              this.router.navigate([
-                '/create-post/' + this.newsfeedType + '/edit/' + post.postId
-              ]);
+            text: 'Report',
+            icon: 'alert-circle',
+            handler: async () => {
+              console.log('Report chosen');
+              const modal = await this.modalController.create({
+                component: ReportPostModalPage,
+                swipeToClose: true,
+                showBackdrop: true,
+                cssClass: 'report-post-modal',
+                componentProps: {
+                  post,
+                  loggedInUser: this.loggedInUser
+                }
+              });
+              modal.present();
+              modal.onDidDismiss().then(() => {
+                this.init.emit();
+              });
             }
           }
         ]
@@ -183,7 +276,18 @@ export class NewsfeedComponent implements OnInit {
     let searchTerm = event.srcElement.value;
     if (searchTerm && searchTerm != '') {
       this.filteredPosts = this.newsfeedPosts.filter((post) => {
-        return post.text.toLowerCase().includes(searchTerm.toLowerCase());
+        return (
+          post?.text?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post?.postOwner?.firstName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          post?.postOwner?.lastName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          post?.originalPost?.text
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        );
       });
     } else {
       this.filteredPosts = this.newsfeedPosts;

@@ -365,13 +365,6 @@ const routes: Routes = [
       ).then((m) => m.FulfillPostingPageModule)
   },
   {
-    path: 'add-mra-modal',
-    loadChildren: () =>
-      import(
-        './pages/project/viewProject/mrp-details/add-mra-modal/add-mra-modal.module'
-      ).then((m) => m.AddMraModalPageModule)
-  },
-  {
     path: 'view-my-fulfillments/:projectId',
     loadChildren: () =>
       import(
@@ -452,7 +445,73 @@ const routes: Routes = [
       import(
         './pages/donate-to-platform-modal/donate-to-platform-modal.module'
       ).then((m) => m.DonateToPlatformModalPageModule)
+  },
+  {
+    path: 'make-payment-modal',
+    loadChildren: () => 
+      import(
+        './pages/project/editProject/manage-fulfillments-modal/make-payment-modal/make-payment-modal.module'
+      ).then( m => m.MakePaymentModalPageModule)
+  },
+  {
+    path: 'update-fulfillment-modal',
+    loadChildren: () => 
+      import(
+        './pages/project/viewProject/view-mrp/update-fulfillment-modal/update-fulfillment-modal.module'
+      ).then( m => m.UpdateFulfillmentModalPageModule)
+  },
+  {
+    path: 'add-mra/:mrpId',
+    loadChildren: () => 
+      import(
+        './pages/project/viewProject/mrp-details/add-mra/add-mra.module'
+      ).then( m => m.AddMraPageModule)
+  },
+  {
+    path: 'view-recommendations',
+    loadChildren: () =>
+      import('./pages/view-recommendations/view-recommendations.module').then(
+        (m) => m.ViewRecommendationsPageModule
+      )
+  },
+  {
+    path: 'mrp-recommendations-modal',
+    loadChildren: () =>
+      import('./pages/project/editProject/mrp-recommendations-modal/mrp-recommendations-modal.module'
+      ).then((m) => m.MrpRecommendationsModalPageModule)
+  },
+  {
+    path: 'hrp-recommendations-modal',
+    loadChildren: () =>
+      import(
+        './pages/project/editProject/hrp-recommendations-modal/hrp-recommendations-modal.module'
+      ).then((m) => m.HrpRecommendationsModalPageModule)
+  },
+  {
+    path: 'make-tag-request',
+    loadChildren: () => import('./pages/make-tag-request/make-tag-request.module').then( m => m.MakeTagRequestPageModule)
+  },
+  {
+    path: 'election-application',
+    loadChildren: () => import('./pages/election-application/election-application.module').then( m => m.ElectionApplicationPageModule)
+  },
+  {
+    path: 'view-election-posts',
+    loadChildren: () => import('./pages/view-election-posts/view-election-posts.module').then( m => m.ViewElectionPostsPageModule)
+  },
+  {
+    path: 'view-all-mras',
+    loadChildren: () => import('./pages/view-all-mras/view-all-mras.module').then( m => m.ViewAllMrasPageModule)
+  },
+  {
+    path: 'view-all-mrps',
+    loadChildren: () => import('./pages/view-all-mrps/view-all-mrps.module').then( m => m.ViewAllMrpsPageModule)
+  },
+  {
+    path: 'leaderboard',
+    loadChildren: () => import('./pages/leaderboard/leaderboard.module').then( m => m.LeaderboardPageModule)
   }
+
 ];
 
 @NgModule({

@@ -20,15 +20,22 @@ import { HumanResourcePosting } from 'src/app/classes/human-resource-posting';
 import { HrpService } from 'src/app/services/hrp.service';
 import { Tag } from 'src/app/classes/tag';
 import { TagService } from 'src/app/services/tag.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Project } from 'src/app/classes/project'; 
+import { ProjectService } from 'src/app/services/project.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { User } from 'src/app/classes/user';
 
 @Component({
   selector: 'app-create-hrp',
   templateUrl: './create-hrp.page.html',
-  styleUrls: ['./create-hrp.page.scss'],
+  styleUrls: ['./create-hrp.page.scss']
 })
 export class CreateHrpPage implements OnInit {
-
+  currentUser: User;
   projectId: number;
+  project: Project;
   newHrp: HumanResourcePosting;
   tags: Tag[];
   filteredTags: Tag[];
@@ -38,41 +45,54 @@ export class CreateHrpPage implements OnInit {
   searchValue: string;
   hasSelected: boolean;
   minDate = new Date().toISOString().slice(0, 10);
+  maxDate: string;
   mapSubscription: Subscription;
   map: GoogleMap;
-  @ViewChild("map", { read: ElementRef, static: false }) mapRef: ElementRef;
-  
-  constructor(public modalCtrl: ModalController,
+  @ViewChild('map', { read: ElementRef, static: false }) mapRef: ElementRef;
+
+  constructor(
+    public modalCtrl: ModalController,
     private toastController: ToastController,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private hrpService: HrpService,
     private tagService: TagService,
+    private notificationService: NotificationService,
+    private projectService: ProjectService,
+    private authenticationService: AuthenticationService,
     private platform: Platform,
-    private app: ApplicationRef) 
-  { 
+    private app: ApplicationRef
+  ) {
     this.newHrp = new HumanResourcePosting();
     this.tags = [];
     this.filteredTags = [];
     this.chosenTags = [];
-    
   }
 
   ngOnInit() {
-    console.log("ngOnInit: create hrp")
-    this.platform.ready().then(() => this.loadMap())
+    console.log('ngOnInit: create hrp');
+    this.platform.ready().then(() => this.loadMap());
   }
 
   ionViewWillEnter() {
-    console.log("ionViewWillEnter: create hrp")
-    this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get("projectId"));
-    this.tagService.getAllSkillTags().subscribe(
-      (response) => {
-        this.tags = response; 
-        console.log(this.tags)
-      },
+    let date = new Date();
+    date.setFullYear(date.getFullYear() + 1);
+    this.maxDate = date.toISOString().slice(0,10);
+    console.log('ionViewWillEnter: create hrp');
+    this.projectId = parseInt(
+      this.activatedRoute.snapshot.paramMap.get('projectId')
     );
+    this.tagService.getAllSkillTags().subscribe((response) => {
+      this.tags = response;
+      console.log(this.tags);
+    });
+    this.projectService.getProjectById(this.projectId).subscribe((response) => {
+      this.project = response;
+    });
+    this.authenticationService.getCurrentUser().then((user) => {
+      this.currentUser = user;
+    });
   }
 
   // ionViewDidLeave() {
@@ -80,59 +100,56 @@ export class CreateHrpPage implements OnInit {
   // }
 
   loadMap() {
-    console.log("load map")
-    this.map = GoogleMaps.create("map_canvas")
+    console.log('load map');
+    this.map = GoogleMaps.create('map_canvas');
 
     if (!this.newHrp.latitude) {
       this.map.getMyLocation().then((location) => {
         let marker: Marker = this.map.addMarkerSync({
           position: location.latLng
-        })
+        });
 
         let position: CameraPosition<ILatLng> = {
           target: marker.getPosition(),
           zoom: 16
-        }
+        };
 
         this.map.setOptions({
           mapType: GoogleMapsMapTypeId.HYBRID,
           camera: position
-        })
-        this.newHrp.latitude = location.latLng.lat
-        this.newHrp.longitude = location.latLng.lng
-        this.app.tick()
-      })
+        });
+        this.newHrp.latitude = location.latLng.lat;
+        this.newHrp.longitude = location.latLng.lng;
+        this.app.tick();
+      });
     } else {
       let marker: Marker = this.map.addMarkerSync({
-        position: new LatLng(
-          this.newHrp.latitude,
-          this.newHrp.longitude
-        )
-      })
+        position: new LatLng(this.newHrp.latitude, this.newHrp.longitude)
+      });
 
       let position: CameraPosition<ILatLng> = {
         target: marker.getPosition(),
         zoom: 16
-      }
+      };
 
       this.map.setOptions({
         mapType: GoogleMapsMapTypeId.HYBRID,
         camera: position
-      })
+      });
     }
     this.mapSubscription = this.map
       .on(GoogleMapsEvent.MAP_CLICK)
       .subscribe((params: any[]) => {
-        let latLng: LatLng = params[0]
-        this.map.clear()
+        let latLng: LatLng = params[0];
+        this.map.clear();
         this.map.addMarkerSync({
           position: latLng,
           animation: GoogleMapsAnimation.DROP
-        })
-        this.newHrp.latitude = latLng.lat
-        this.newHrp.longitude = latLng.lng
-        this.app.tick()
-      })
+        });
+        this.newHrp.latitude = latLng.lat;
+        this.newHrp.longitude = latLng.lng;
+        this.app.tick();
+      });
   }
 
   dismiss() {
@@ -142,11 +159,14 @@ export class CreateHrpPage implements OnInit {
   async createHrp(hrpForm: NgForm) {
     let tagIds: number[] = [];
     if (hrpForm.valid) {
-      if (new Date(this.startDate).toJSON().slice(0,10) > new Date(this.endDate).toJSON().slice(0,10)) {
+      if (
+        new Date(this.startDate).toJSON().slice(0, 10) >
+        new Date(this.endDate).toJSON().slice(0, 10)
+      ) {
         const toast = await this.toastController.create({
-          message: "End Date should not come before the Start Date.",
+          message: 'End Date should not come before the Start Date.',
           duration: 2000
-        })
+        });
         toast.present();
         return;
       } else {
@@ -155,59 +175,71 @@ export class CreateHrpPage implements OnInit {
         for (let tag of this.chosenTags) {
           tagIds.push(tag.tagId);
         }
-        this.hrpService.createNewHrp(this.newHrp, this.projectId, tagIds).subscribe(
-          async response => {
+        this.hrpService
+          .createNewHrp(this.newHrp, this.projectId, tagIds)
+          .subscribe(async (response) => {
+            let newNotification = new Notification();
+            newNotification.msg =
+              'A new Human Resource Posting has been added to ' +
+              this.project.name;
+            newNotification.projectId = this.projectId;
+            newNotification.groupId = null;
+            newNotification.tabName = 'hrp-tab';
+            for (let member of this.project.projectMembers) {
+              if (member.userId != this.currentUser.userId) {
+                this.notificationService
+                  .createNewNotification(newNotification, member.userId)
+                  .subscribe();
+              }
+            }
             const toast = await this.toastController.create({
-              message: "Hrp created successfully.",
+              message: 'Hrp created successfully.',
               duration: 2000
-            })
+            });
             toast.present();
-            this.router.navigate(["tab-panel/" + this.projectId]);
-          }
-        )
+            this.router.navigate(['tab-panel/' + this.projectId]);
+          });
       }
-
     }
   }
 
   filterList(evt) {
-    this.searchValue = evt.srcElement.value
+    this.searchValue = evt.srcElement.value;
 
     if (!this.searchValue) {
-      this.filteredTags = this.tags
+      this.filteredTags = this.tags;
     }
 
     this.filteredTags = this.tags.filter((tag) => {
       if (tag.name && this.searchValue) {
-        return tag.name.toLowerCase().includes(this.searchValue.toLowerCase())
+        return tag.name.toLowerCase().includes(this.searchValue.toLowerCase());
       }
-    })
+    });
   }
 
   selectTag(tag: Tag) {
-    this.hasSelected = false
+    this.hasSelected = false;
     this.chosenTags.forEach((element) => {
       if (element.name == tag.name) {
-        this.hasSelected = true
+        this.hasSelected = true;
       }
-    })
+    });
     if (!this.hasSelected) {
-      this.chosenTags.push(tag)
-      this.clearSearch()
+      this.chosenTags.push(tag);
+      this.clearSearch();
     }
   }
 
   removeTag(tag: Tag) {
     this.chosenTags.forEach((element, index) => {
       if (element.name == tag.name) {
-        this.chosenTags.splice(index, 1)
+        this.chosenTags.splice(index, 1);
       }
-    })
+    });
   }
 
   clearSearch() {
-    this.searchValue = ""
-    this.filteredTags = []
+    this.searchValue = '';
+    this.filteredTags = [];
   }
-
 }

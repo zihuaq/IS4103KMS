@@ -1,21 +1,15 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title"> Recommended Projects To Join </h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-            </button>
-        </div>
     </div>
     <div class="card-body p-0">
         <div *ngIf="!hasRecommendations">
             <p style="margin: 5px; text-align: center; width: 100%;"> No recommendations at the moment</p>
         </div>
         <div *ngIf="projectRecoBySDG && projectRecoByFollowing"
-            style="max-height: 500px; overflow-y: scroll; color: black;">
-            <div *ngFor="let project of projectRecoBySDG" style="max-width:95%">
-                <div class="user-block" style="margin: 10px; width: 100%;">
+            style="max-height: 600px; overflow-y: scroll; color: black;">
+            <div *ngFor="let project of projectRecoBySDG; let i = index" style="max-width:95%">
+                <div *ngIf="fullView || (!fullView && i<1)" class="user-block" style="margin: 10px; width: 100%;">
                     <img *ngIf="project.profilePicture" class="img-circle" [src]="project.profilePicture"
                         alt="User Image">
                     <img *ngIf="!project.profilePicture" class="img-circle"
@@ -32,7 +26,7 @@
                     </span>
                     <span class="description">has relevant SDGs</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body" *ngIf="fullView || (!fullView && i<1)">
                     {{project.description}}
                     <p class="text-muted text-sm" style="margin-left: -5px;">
                         <span class="d-flex flex-wrap">
@@ -44,16 +38,16 @@
                         </span>
                     </p>
                     <a routerLink="/projectDetails/{{project.projectId}}/basic-details">
-                        <button type="button" class="btn btn-info btn-block mt-auto"
-                            style="font-weight: bold;"> View Project </button>
+                        <button type="button" class="btn btn-info btn-block mt-auto" style="font-weight: bold;"> View
+                            Project </button>
                     </a>
                     <button type="button" class="btn btn-light btn-block mt-auto" (click)="joinProject(project)"
                         style="font-weight: bold; background-color: rgba(214, 214, 214, 0.87);"><i
                             class="far fa-handshake"></i> Join</button>
                 </div>
             </div>
-            <div *ngFor="let projectReco of projectRecoByFollowing" style="max-width:95%">
-                <div class="user-block" style="margin: 10px; width:100%">
+            <div *ngFor="let projectReco of projectRecoByFollowing; let i = index" style="max-width:95%">
+                <div *ngIf="fullView || (!fullView && i<1)" class="user-block" style="margin: 10px; width:100%">
                     <img *ngIf="projectReco.projectToRecommend.profilePicture" class="img-circle"
                         [src]="projectReco.projectToRecommend.profilePicture" alt="User Image">
                     <img *ngIf="!projectReco.projectToRecommend.profilePicture" class="img-circle"
@@ -89,7 +83,7 @@
                         {{projectReco.followingInProject.length-2}} others
                     </span>
                 </div>
-                <div class="card-body">
+                <div class="card-body" *ngIf="fullView || (!fullView && i<1)">
                     {{projectReco.projectToRecommend.description}}
                     <p class="text-muted text-sm" style="margin-left: -5px;">
                         <span class="d-flex flex-wrap">
@@ -101,8 +95,8 @@
                         </span>
                     </p>
                     <a routerLink="/projectDetails/{{projectReco.projectToRecommend.projectId}}/basic-details">
-                        <button type="button" class="btn btn-info btn-block mt-auto"
-                            style="font-weight: bold;"> View Project </button>
+                        <button type="button" class="btn btn-info btn-block mt-auto" style="font-weight: bold;"> View
+                            Project </button>
                     </a>
                     <button type="button" class="btn btn-light btn-block mt-auto"
                         (click)="joinProject(projectReco.projectToRecommend)"
@@ -112,4 +106,12 @@
             </div>
         </div>
     </div>
+    <button *ngIf="!hasRecommendations" type="button" class="btn btn-block btn-default btn-sm" (click)="toggleFullView()">
+        <p *ngIf="fullView" style="text-align: center;">
+            View Less
+        </p>
+        <p *ngIf="!fullView" style="text-align: center;">
+            View More
+        </p>
+    </button>
 </div>

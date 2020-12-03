@@ -47,13 +47,13 @@
           </ion-item>
           <ion-item>
             <ion-label position="stacked">Start Date *</ion-label>
-            <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
+            <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" [max]="maxDate" display-format="DD/MM/YYYY"
               [(ngModel)]="startDate">
             </ion-datetime>
           </ion-item>
           <ion-item>
             <ion-label position="stacked">End Date *</ion-label>
-            <ion-datetime required name="endDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
+            <ion-datetime required name="endDate" placeholder="DD/MM/YYYY" [min]="minDate" [max]="maxDate" display-format="DD/MM/YYYY"
               [(ngModel)]="endDate">
             </ion-datetime>
           </ion-item>

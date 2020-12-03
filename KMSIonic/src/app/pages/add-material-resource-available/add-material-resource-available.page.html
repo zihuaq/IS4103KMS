@@ -21,24 +21,14 @@
             <ion-input type="text" id="mraName" [ngModel]="editingMra.name" name="mraName" required></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="stacked"> Quantity *</ion-label>
-            <ion-input type="text" id="quantity" [ngModel]="editingMra.quantity" name="quantity" required></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="stacked"> Units *</ion-label>
-            <ion-select [ngModel]="editingMra.units" name="units" required>
-              <ion-select-option value="item(s)"> item(s) </ion-select-option>
-              <ion-select-option value="kg"> kg </ion-select-option>
-              <ion-select-option value="m"> m </ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-item>
             <ion-label position="stacked">Description</ion-label>
             <ion-input type="text" id="description" [ngModel]="editingMra.description" name="description"></ion-input>
           </ion-item>
-          <ion-label position="stacked">Material Resource Tags *</ion-label>
-          <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
-            [ngModelOptions]="{standalone: true}" placeholder="Search tags"></ion-searchbar>
+          <ion-item lines="none">
+            <ion-label position="stacked">Material Resource Tags *</ion-label>
+            <ion-searchbar [(ngModel)]="searchValue" showcancelbutton="" (ionInput)="filterList($event)"
+              [ngModelOptions]="{standalone: true}" placeholder="Search tags"></ion-searchbar>
+          </ion-item>
           <ion-list lines="none" *ngIf="filteredTags.length > 0">
             <ion-item *ngFor="let tag of filteredTags">
               <ion-label button (click)="selectTag(tag)" class="ion-text-wrap">
@@ -57,7 +47,38 @@
             </ion-item>
           </ion-list>
           <ion-item>
-            <ion-label position="stacked">Location of resource</ion-label>
+            <ion-label position="stacked"> Resource Type *</ion-label>
+            <ion-select [ngModel]="editingMra.type" name="resourceType" required>
+              <ion-select-option disabled> One-Time </ion-select-option>
+              <ion-select-option value="ONETIMEDONATION"> One-Time Donation </ion-select-option>
+              <ion-select-option value="ONETIMEPAYMENT"> One-Time Payment </ion-select-option>
+              <ion-select-option disabled> Recurring Subscription </ion-select-option>
+              <ion-select-option value="DAILY"> Daily </ion-select-option>
+              <ion-select-option value="WEEKLY"> Weekly </ion-select-option>
+              <ion-select-option value="MONTHLY"> Monthly </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
+            <ion-label position="stacked">Price *</ion-label>
+            <ion-row>
+              <ion-input type="number" id="price" [ngModel]="editingMra.price" name="price" required><span style="margin-right: 5px; color: gray;">US $</span></ion-input>
+              <span style="margin-left: 5px; margin-top: 7px; color: gray;">
+                <span *ngIf="!mraForm.value.units">/unit</span>
+                <span *ngIf="mraForm.value.units && mraForm.value.units == 'item(s)'">/item</span>
+                <span *ngIf="mraForm.value.units && mraForm.value.units != 'item(s)'">/{{mraForm.value.units}}</span>
+              </span>
+            </ion-row>
+          </ion-item>
+          <ion-item *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
+            <ion-label position="stacked"> Units *</ion-label>
+            <ion-select [ngModel]="editingMra.units" name="units" required>
+              <ion-select-option value="item(s)"> item(s) </ion-select-option>
+              <ion-select-option value="kg"> kg </ion-select-option>
+              <ion-select-option value="m"> m </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Location of Resource</ion-label>
           </ion-item>
           <div id="map_canvas">
           </div>
@@ -70,22 +91,6 @@
             <ion-label position="stacked">Longitude *</ion-label>
             <ion-input type="text" id="longitude" [ngModel]="editingMra.longitude" name="longitude" required disabled>
             </ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="stacked">Does your resource expire?</ion-label>
-            <ion-toggle [(ngModel)]="hasExpiry" name="hasExpiry" (change)="handleHasExpiryChange()"></ion-toggle>
-          </ion-item>
-          <ion-item *ngIf="hasExpiry">
-            <ion-label position="stacked">Start Date (DD/MM/YYYY):</ion-label>
-            <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
-              [(ngModel)]="editingMraStartDate">
-            </ion-datetime>
-          </ion-item>
-          <ion-item *ngIf="hasExpiry">
-            <ion-label position="stacked">End Date (DD/MM/YYYY):</ion-label>
-            <ion-datetime required name="endDate" placeholder="DD/MM/YYYY" display-format="DD/MM/YYYY"
-              [min]="editingMraStartDate" [(ngModel)]="editingMraEndDate">
-            </ion-datetime>
           </ion-item>
         </ion-item-group>
         <div class="modal-footer justify-content-between">

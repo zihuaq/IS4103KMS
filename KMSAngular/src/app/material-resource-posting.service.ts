@@ -2,8 +2,6 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Project } from './classes/project';
-import { SessionService } from './session.service';
 import { MaterialResourcePosting } from './classes/material-resource-posting';
 
 const httpOptions = {
@@ -17,31 +15,20 @@ export class MaterialResourcePostingService {
 
   baseUrl: string = '/api/mrp';
 
-  constructor(private sessionService: SessionService, private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
   getMrpByProject(projectId: number): Observable<any> {
     return this.httpClient.get<any>(this.baseUrl + "/getMrpByProject/" + projectId).pipe(
       map((data) => {
         return data.map((mrp: MaterialResourcePosting) => {
-          return {
-            ...mrp,
-            startDate: new Date(
-              parseInt(mrp.startDate.toString().substring(0, 4)),
-              parseInt(mrp.startDate.toString().substring(5, 7)) - 1,
-              parseInt(mrp.startDate.toString().substring(8, 10)),
-              parseInt(mrp.startDate.toString().substring(11, 13)),
-              parseInt(mrp.startDate.toString().substring(14, 16)),
-              parseInt(mrp.startDate.toString().substring(17, 19))
-            ),
-            endDate: new Date(
-              parseInt(mrp.endDate.toString().substring(0, 4)),
-              parseInt(mrp.endDate.toString().substring(5, 7)) - 1,
-              parseInt(mrp.endDate.toString().substring(8, 10)),
-              parseInt(mrp.endDate.toString().substring(11, 13)),
-              parseInt(mrp.endDate.toString().substring(14, 16)),
-              parseInt(mrp.endDate.toString().substring(17, 19))
-            ),
+          var startDate: string = mrp.startDate.toString();
+          mrp.startDate = new Date(startDate.slice(0, startDate.indexOf("[")));
+          
+          if (mrp.endDate) {
+            var endDate: string = mrp.endDate.toString();
+            mrp.endDate = new Date(endDate.slice(0, endDate.indexOf("[")));
           }
+          return mrp;
         });
       }),
       catchError(this.handleError)
@@ -78,24 +65,21 @@ export class MaterialResourcePostingService {
     );
   }
 
-  getListOfObtainedMrp(projectId: number, activityId: number): Observable<any> {
-    return this.httpClient.get<any>(this.baseUrl + "/getListOfObtainedMrp/" + projectId + "/" + activityId).pipe(
-      // map((data) => {
-      //   return data.map((mrp: MaterialResourcePosting) => {
-      //     return {
-      //       ...mrp,
-      //       startDate: new Date(mrp.startDate.toString().substring(0, 20)),
-      //       endDate: new Date(mrp.endDate.toString().substring(0, 20)) 
-      //     }
-      //   });
-      // }),
+  getListOfAvailableMrp(projectId: number, activityId: number): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getListOfAvailableMrp/" + projectId + "/" + activityId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getAllMaterialResourcePosting(): Observable<any> {
+    return this.httpClient.get<any>(this.baseUrl + "/getAllMaterialResourcePosting").pipe(
       catchError(this.handleError)
     );
   }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
-    
+    console.log(error);
     if (error.error instanceof ErrorEvent) {
         errorMessage = 'An unknown error has occurred: ' + error.error.message;
     } else {

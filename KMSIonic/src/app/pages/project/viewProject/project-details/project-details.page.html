@@ -60,6 +60,10 @@
         <ion-label>Material Resource Posting</ion-label>
       </ion-segment-button>
 
+      <ion-segment-button value="similar-projects">
+        <ion-label>Similar Projects</ion-label>
+      </ion-segment-button>
+
       <ion-segment-button value="document-tab">
         <ion-label>Documents</ion-label>
       </ion-segment-button>
@@ -78,16 +82,17 @@
       <p *ngIf="project.description"><b>Description:</b> {{project.description}}</p>
       <p><b>Country:</b> {{project.country}}</p>
       <p><b>Date Created:</b> {{dateCreated | date}}</p>
-      <p *ngIf="project.monetaryFundingRequired"><b>Monetary Funding (USD):</b> 
-        ${{project.monetaryFundingObtained | number:'1.0'}} / ${{project.monetaryFundingRequired | number:'1.0'}} required
+      <p *ngIf="project.monetaryFundingRequired"><b>Monetary Funding (USD):</b>
+        ${{project.monetaryFundingObtained | number:'1.0'}} / ${{project.monetaryFundingRequired | number:'1.0'}}
+        required
       </p>
       <p><b>SDGs: </b>
         <span *ngFor="let tag of project.sdgs" style="margin-right: 5px; vertical-align: middle;">
           <ion-badge color="primary" style="margin-bottom: 5px; ">{{tag.name}}</ion-badge>
         </span>
       </p>
-      <ion-button *ngIf="isMember && project.monetaryFundingObtained < project.monetaryFundingRequired" expand="block" size='small' color="warning" 
-        (click)="presentDonateToProjectModal()">Donate to Project
+      <ion-button *ngIf="isMember && project.monetaryFundingObtained < project.monetaryFundingRequired" expand="block"
+        size='small' color="warning" (click)="presentDonateToProjectModal()">Donate to Project
       </ion-button>
     </ion-card-content>
   </ion-card>
@@ -127,6 +132,38 @@
     <ion-card-content>
       <app-view-mrp></app-view-mrp>
     </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="segment === 'similar-projects'">
+    <span *ngIf="filteredProjectReco.length == 0">
+      No projects found.
+    </span>
+    <span *ngFor="let projectReco of filteredProjectReco">
+      <ion-card tappable (click)="viewProjectDetails($event, projectReco.matchingProject)">
+        <ion-card-header>
+          <ion-badge color="primary">{{projectReco.matchingProject.status}}</ion-badge>
+          <ion-badge color="success" style="margin-left: 5px;" *ngIf="projectReco.percentageMatch >= 75">
+            {{projectReco.percentageMatch}}%</ion-badge>
+          <ion-badge color="warning" style="margin-left: 5px;"
+            *ngIf="projectReco.percentageMatch >= 50 && projectReco.percentageMatch < 75">
+            {{projectReco.percentageMatch}}%</ion-badge>
+          <ion-badge color="danger" style="margin-left: 5px;"
+            *ngIf="projectReco.percentageMatch >= 25 && projectReco.percentageMatch < 50">
+            {{projectReco.percentageMatch}}%</ion-badge>
+          <p style="font-size: 17px; margin-top: 8px; margin-bottom: -8px;"><b>{{projectReco.matchingProject.name}}</b>
+          </p>
+        </ion-card-header>
+        <ion-card-content>
+          <p *ngIf="projectReco.matchingProject.description" style="margin-bottom: 8px;">
+            {{projectReco.matchingProject.description}}</p>
+          <p *ngIf="!projectReco.matchingProject.description" style="margin-bottom: 8px; font-style: italic;">Project
+            has no description</p>
+          <span *ngFor="let sdg of sortSDG(projectReco.matchingProject.sdgs)">
+            <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
+          </span>
+        </ion-card-content>
+      </ion-card>
+    </span>
   </ion-card>
 
   <ion-card *ngIf="segment === 'document-tab'">

@@ -10,6 +10,8 @@ import { User } from '../../classes/user';
 import { UserService } from '../../services/user.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { ChatService } from '../../services/chat.service';
+import { Notification } from 'src/app/classes/notification';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-chat',
@@ -26,6 +28,7 @@ export class ChatPage implements OnInit {
   constructor(private authenticationService: AuthenticationService,
     private userService: UserService,
     private chatService: ChatService,
+    private notificationService: NotificationService,
     private location: Location,
     private router: Router,
     public modalController: ModalController) {
@@ -38,6 +41,17 @@ export class ChatPage implements OnInit {
     this.authenticationService.getCurrentUser().then(
       (user: User) => {
         this.sender = user;
+
+        this.notificationService.getNotification(this.sender.userId).subscribe(
+          response => {
+            let notifications = response;
+            for (let notification of notifications) {
+              if (notification.groupId == null && notification.projectId == null) {
+                this.notificationService.deleteNotification(notification.notificationId).subscribe();
+              }
+            } 
+          }
+        )
 
         this.chatService.getChatHistoryUser(this.sender.userId, this.sender.firstName + " " + this.sender.lastName).valueChanges().subscribe(
           (data) => {   

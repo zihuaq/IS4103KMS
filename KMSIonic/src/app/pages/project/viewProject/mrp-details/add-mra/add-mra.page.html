@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title style="font-size: medium;">Add Material Resource</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="createMra(mraForm)" #mraForm="ngForm">
+    <ion-item-group>
+      <ion-item>
+        <ion-label position="stacked">Material Resource Name</ion-label>
+        <ion-input type="text" id="mraName" [ngModel]="newMra.name" name="mraName" disabled></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Description</ion-label>
+        <ion-input type="text" id="description" [(ngModel)]="newMra.description" name="description"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked" style="margin-bottom: 5px;">Material Resource Tags</ion-label>
+        <ion-list>
+          <ion-item *ngFor="let tag of newMra.tags" lines="none">
+            <ion-chip>
+              <ion-label style="font-size: small;">{{tag.name}} </ion-label>
+            </ion-chip>
+          </ion-item>
+        </ion-list>
+      </ion-item><ion-item>
+        <ion-label position="stacked"> Resource Type *</ion-label>
+        <ion-select [(ngModel)]="newMra.type" name="resourceType" required>
+          <ion-select-option disabled> One-Time </ion-select-option>
+          <ion-select-option value="ONETIMEDONATION"> One-Time Donation </ion-select-option>
+          <ion-select-option value="ONETIMEPAYMENT"> One-Time Payment </ion-select-option>
+          <ion-select-option disabled> Recurring Subscription </ion-select-option>
+          <ion-select-option value="DAILY"> Daily </ion-select-option>
+          <ion-select-option value="WEEKLY"> Weekly </ion-select-option>
+          <ion-select-option value="MONTHLY"> Monthly </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
+        <ion-label position="stacked">Price *</ion-label>
+        <ion-row>
+          <ion-input type="number" id="price" [(ngModel)]="newMra.price" name="price" required><span style="margin-right: 5px; color: gray;">US $</span></ion-input>
+          <span style="margin-left: 5px; margin-top: 7px; color: gray;">
+            <span *ngIf="newMra.units == 'item(s)'">/item</span>
+            <span *ngIf="newMra.units != 'item(s)'">/{{newMra.units}}</span>
+          </span>
+        </ion-row>
+      </ion-item>
+      <ion-item *ngIf="mraForm.value.resourceType != 'ONETIMEDONATION' && mraForm.value.resourceType">
+        <ion-label position="stacked"> Units </ion-label>
+        <ion-select [ngModel]="newMra.units" name="units" disabled>
+          <ion-select-option value="item(s)"> item(s) </ion-select-option>
+          <ion-select-option value="kg"> kg </ion-select-option>
+          <ion-select-option value="m"> m </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Location of Resource</ion-label>
+      </ion-item>
+      <div id="map_canvas">
+      </div>
+      <ion-item>
+        <ion-label position="stacked">Latitude *</ion-label>
+        <ion-input type="text" id="latitude" [(ngModel)]="newMra.latitude" name="latitude" required>
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Longitude *</ion-label>
+        <ion-input type="text" id="longitude" [(ngModel)]="newMra.longitude" name="longitude" required>
+        </ion-input>
+      </ion-item>
+    </ion-item-group>
+    <ion-button type="submit" [disabled]="!mraForm.valid" expand="block">Submit</ion-button>
+  </form>
+</ion-content>

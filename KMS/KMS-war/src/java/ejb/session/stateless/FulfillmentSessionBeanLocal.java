@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import Exception.NoResultException;
 import entity.FulfillmentEntity;
+import entity.PaymentEntity;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -23,19 +24,21 @@ public interface FulfillmentSessionBeanLocal {
     
     public List<FulfillmentEntity> getListOfFulfillmentsByMrp(Long mrpId) throws NoResultException;
 
-    public void receiveResource(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
+    public void receiveResource(FulfillmentEntity fulfillmentToUpdate, PaymentEntity payment) throws NoResultException;
     
-    public void updateQuantity(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
+    public void updateQuantity(FulfillmentEntity fulfillmentToUpdate, PaymentEntity payment) throws NoResultException;
     
     public void rejectFulfillment(Long fulfillmentId) throws NoResultException;
     
     public void acceptFulfillment(Long fulfillmentId) throws NoResultException;
 
+    public PaymentEntity endSubscription(Long fulfillmentId) throws NoResultException;
+    
     public void deleteFulfillment(Long fulfillmentId) throws NoResultException;
-
-    public List<String> getListOfMaterialResourceAvailableUnitsByMrp(Long mrpId) throws NoResultException;
-
+    
     public List<FulfillmentEntity> getListOfFulfillmentsByUserAndProject(Long userId, Long projectId) throws NoResultException;
 
     public List<FulfillmentEntity> getListOfFulfillmentsByProject(Long projectId) throws NoResultException;
+
+    public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException;
 }

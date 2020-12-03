@@ -14,7 +14,11 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
+
 import Exception.QuestionnaireAlreadyCompletedException;
+
+import Exception.ResignFromAdminException;
+
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
 import entity.AwardEntity;
@@ -124,16 +128,14 @@ public interface UserSessionBeanLocal {
     public List<GroupEntity> getGroupsOwned(Long userId) throws UserNotFoundException;
 
     public List<AwardEntity> getReceivedAwards(Long userId) throws UserNotFoundException;
-    
+
     public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException;
-
-   // public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException;
-
-   // public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId) throws NoResultException, QuestionnaireAlreadyCompletedException;
 
     public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException;
 
     public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException;
 
+    public UserEntity promoteUserToAdmin(Long userToPromoteId) throws NoResultException;
 
+    public UserEntity resignFromAdmin(Long userId) throws NoResultException, ResignFromAdminException;
 }

@@ -21,6 +21,9 @@ import { Group } from '../classes/group';
 import { UserType } from '../classes/user-type.enum';
 import { Notification } from 'src/app/classes/notification';
 import { NotificationService } from 'src/app/notification.service';
+import { Election } from '../classes/election';
+import { ElectionService } from '../election.service';
+import { ElectionApplication } from '../classes/election-application';
 
 declare var $: any;
 declare var bsCustomFileInput: any;
@@ -38,6 +41,7 @@ export class NewsfeedComponent implements OnInit {
   selectedFile: string | ArrayBuffer;
   selectedFileName: string | ArrayBuffer;
   postContent: string;
+  pinPost: boolean = false;
   createdPost: Post;
   loggedInUser: User;
   newsfeedPosts: Post[];
@@ -73,6 +77,8 @@ export class NewsfeedComponent implements OnInit {
   postImageToEnlarge: Post
   UserType = UserType;
 
+  electionToApply: Election;
+
   constructor(
     private sessionService: SessionService,
     private userService: UserService,
@@ -82,6 +88,7 @@ export class NewsfeedComponent implements OnInit {
     private reportService: ReportService,
     private groupService: GroupService,
     private notificationService: NotificationService,
+    private electionService: ElectionService,
   ) { }
 
   ngOnInit(): void {
@@ -231,6 +238,10 @@ export class NewsfeedComponent implements OnInit {
     }
   }
 
+  handlePinnedPostChange() {
+    this.pinPost = !this.pinPost;
+  }
+
   onCreatePost(createPostForm: NgForm) {
     this.createdPost = new Post();
 
@@ -249,6 +260,7 @@ export class NewsfeedComponent implements OnInit {
         this.createdPost.text = this.postContent;
         this.createdPost.picture = this.selectedFile;
         this.createdPost.postOwner = this.loggedInUser;
+        this.createdPost.isPinnedPost = this.pinPost;
         if (this.newsfeedType == "project") {
           this.createdPost.project = this.project;
         } else if (this.newsfeedType == "group") {
@@ -289,6 +301,7 @@ export class NewsfeedComponent implements OnInit {
             });
             this.postContent = null;
             this.selectedFile = null;
+            this.pinPost = false;
             this.updateNewsfeed();
           },
           (err) => {
@@ -735,6 +748,86 @@ export class NewsfeedComponent implements OnInit {
     this.postToEdit.originalPostDeleted = post.originalPostDeleted;
     this.postToEdit.sharedGroupId = post.sharedGroupId;
     this.postToEdit.sharedProjectId = post.sharedProjectId;
+  }
+
+  setElectionToApply(election: Election) {
+    this.electionToApply = election;
+  }
+
+  clear(electionForm: NgForm) {
+    electionForm.reset();
+  }
+
+  applyForElection(electionForm: NgForm) {
+    if (electionForm.valid) {
+      if (this.electionToApply.minRepPointsRequired <= this.loggedInUser.reputationPoints && this.loggedInUser.userType == UserType.INDIVIDUAL) {
+        let electionApplciation = new ElectionApplication();
+        electionApplciation.reasons = electionForm.value.reason;
+        electionApplciation.contributions = electionForm.value.contributions;
+        electionApplciation.additionalComments = electionForm.value.notes;
+        electionApplciation.applicationDate = new Date();
+        electionApplciation.applicationOwner = this.loggedInUser;
+        electionApplciation.election = this.electionToApply;
+
+        this.electionService.createElectionApplication(electionApplciation).subscribe(
+          (response) => {
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Success',
+              autohide: true,
+              delay: 2500,
+              body: 'Application Submitted!',
+            });
+
+            electionForm.reset();
+            $('#applyElectionModalCloseBtn').click();
+          },
+          (error) => {
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: 'Error',
+              autohide: true,
+              delay: 2500,
+              body: error,
+            });
+
+            electionForm.reset();
+            $('#applyElectionModalCloseBtn').click();
+          }
+        );
+      } else if (this.loggedInUser.userType == UserType.ADMIN) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Admins cannot participate in an election for new admins",
+        });
+        electionForm.reset();
+        $('#applyElectionModalCloseBtn').click();
+      } else if (this.loggedInUser.userType == UserType.INSTITUTE) {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Institute Accounts cannot participate in an election for new admins",
+        });
+        electionForm.reset();
+        $('#applyElectionModalCloseBtn').click();
+      } else {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'Error',
+          autohide: true,
+          delay: 2500,
+          body: "Insufficient Reputation Points",
+        });
+        electionForm.reset();
+        $('#applyElectionModalCloseBtn').click();
+      }
+    }
+
   }
 
   editPost() {

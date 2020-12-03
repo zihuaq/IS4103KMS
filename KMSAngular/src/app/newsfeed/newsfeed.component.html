@@ -27,6 +27,13 @@
                         style="width: 30%; margin-left: auto;margin-right: auto;" (click)="selectedFile = null"> Remove
                         selected image
                     </button>
+                    <br *ngIf="loggedInUser.userType == UserType.ADMIN" />
+                    <div class="form-group my-checkbox" *ngIf="loggedInUser.userType == UserType.ADMIN">
+                        <label class="form-check-label"> Pin Post? </label>
+                        &nbsp;
+                        <input type="checkbox" id="my-checkbox" name="my-checkbox" data-bootstrap-switch
+                            [checked]="pinPost" (change)="handlePinnedPostChange()">
+                    </div>
                 </div>
             </div>
             <div class="card-footer">
@@ -55,7 +62,7 @@
         <div *ngFor="let post of filteredNewsfeedPosts">
             <!-- Box Comment -->
             <div class="card card-widget">
-                <div class="card-header">
+                <div class="card-header" *ngIf="!post.electionApplication">
                     <div class="user-block">
                         <img *ngIf="post.postOwner.profilePicture" class="img-circle"
                             [src]="post.postOwner.profilePicture" alt="User Image">
@@ -66,10 +73,18 @@
                             <a routerLink="/userProfile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
                                 {{post.postOwner.lastName}} </a>
                             <i *ngIf="post.project || post.group" class="fas fa-caret-right"></i>
-                            <a routerLink="/projectDetails/{{post.project.projectId}}/basic-details" *ngIf="post.project">
+                            <a routerLink="/projectDetails/{{post.project.projectId}}/basic-details"
+                                *ngIf="post.project">
                                 {{post.project.name}}</a>
                             <a routerLink="/groupDetails/{{post.group.groupId}}/basic-details" *ngIf="post.group">
                                 {{post.group.name}}</a>
+                            &nbsp;
+                            <small class="badge badge-dark" *ngIf="post.isPinnedPost">
+                                Pinned Post
+                            </small>
+                            <small class="badge badge-dark" *ngIf="post.isElectionPost">
+                                Election Post
+                            </small>
                         </span>
                         <span class="description">{{post.postDate| date}}</span>
                     </div>
@@ -88,7 +103,46 @@
                     <!-- /.card-tools -->
                 </div>
                 <!-- /.card-header -->
+                <div class="card-header" *ngIf="post.electionApplication">
+                    <div class="user-block">
+                        <img *ngIf="post.postOwner.profilePicture" class="img-circle"
+                            [src]="post.postOwner.profilePicture" alt="User Image">
+                        <img *ngIf="!post.postOwner.profilePicture" class="img-circle"
+                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                            alt="User Image">
+                        <span class="username">
+                            <a routerLink="/userProfile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
+                                {{post.postOwner.lastName}} </a>
+                            &nbsp;
+                            <small class="badge badge-dark" *ngIf="post.isElectionPost">
+                                Election Post
+                            </small>
+                        </span>
+                        <span class="description">Endorsed by {{post.endorser.firstName}}
+                            {{post.endorser.lastName}}</span>
+                    </div>
+                    <!-- /.user-block -->
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" *ngIf="loggedInUser.userType == UserType.ADMIN"
+                            data-toggle="modal" data-target="#modal-danger-post"
+                            (click)="postToDeleteId = post.postId"><i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <!-- /.card-tools -->
+
+                </div>
                 <div class="card-body">
+                    <div *ngIf="post.electionApplication">
+                        <label> Reasons For Applying: </label>
+                        <br />
+                        <p>{{post.electionApplication.reasons}}</p>
+                        <label> Contributions to KMS: </label>
+                        <br />
+                        <p>{{post.electionApplication.contributions}}</p>
+                        <label> Additional Comments: </label>
+                        <br />
+                        <p>{{post.electionApplication.additionalComments}}</p>
+                    </div>
 
                     <p>{{post.text}}</p>
 
@@ -128,11 +182,13 @@
                             {{post.sharedGroupOrProjectDescription}}
                             <br />
                             <br />
-                            <a *ngIf="post.sharedGroupId" routerLink="/groupDetails/{{post.sharedGroupId}}/basic-details">
+                            <a *ngIf="post.sharedGroupId"
+                                routerLink="/groupDetails/{{post.sharedGroupId}}/basic-details">
                                 <button type="button" class="btn btn-block btn-info btn-sm"
                                     style="width: 50%; justify-self: center;"> View Group </button>
                             </a>
-                            <a *ngIf="post.sharedProjectId" routerLink="/projectDetails/{{post.sharedProjectId}}/basic-details">
+                            <a *ngIf="post.sharedProjectId"
+                                routerLink="/projectDetails/{{post.sharedProjectId}}/basic-details">
                                 <button type="button" class="btn btn-block btn-info btn-sm"
                                     style="width: 50%; justify-self: center;"> View Project </button>
                             </a>
@@ -147,35 +203,77 @@
                             <button type="button" class="btn btn-block btn-info btn-sm" *ngIf="post.sharedGroupId"
                                 routerLink="/groupDetails/{{post.sharedGroupId}}/basic-details"> View Group </button>
                             <button type="button" class="btn btn-block btn-info btn-sm" *ngIf="post.sharedProjectId"
-                                routerLink="/projectDetails/{{post.sharedProjectId}}/basic-details"> View Project </button>
+                                routerLink="/projectDetails/{{post.sharedProjectId}}/basic-details"> View Project
+                            </button>
+                        </div>
+                    </span>
+
+                    <span *ngIf="post.election" style="display: flex; flex-direction: row; justify-content: center;">
+                        <div style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                            <label> {{post.election.name}} </label>
+                            <br />
+                            {{post.election.description}}
+                            <br />
+                            Looking for {{post.election.numSlots}} new Admins
+                            <br />
+                            Minimum of {{post.election.minRepPointsRequired}} Reputation Points to apply
+                        </div>
+                        <div style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                            <a routerLink="/view-election-posts">
+                                <button type="button" class="btn btn-block btn-info btn"
+                                    style="margin: 2%; justify-self: center;"> View Election Page </button>
+                            </a>
+                            <button type="button" class="btn btn-block bg-olive btn"
+                                style="margin: 2%; justify-self: center;" data-toggle="modal"
+                                data-target="#apply-for-election-modal" (click)="setElectionToApply(post.election)">
+                                Apply Now
+                            </button>
                         </div>
                     </span>
 
                     <div *ngIf="post.originalPost && !post.originalPostDeleted" class="shared-post">
-                        <div class="user-block">
-                            <img *ngIf="post.originalPost.postOwner.profilePicture" class="img-circle"
-                                [src]="post.originalPost.postOwner.profilePicture" alt="User Image">
-                            <img *ngIf="!post.originalPost.postOwner.profilePicture" class="img-circle"
-                                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                                alt="User Image">
-                            <span class="username">
-                                <a routerLink="/userProfile/{{post.originalPost.postOwner.userId}}">{{post.originalPost.postOwner.firstName}}
-                                    {{post.originalPost.postOwner.lastName}} </a>
-                                <i *ngIf="post.originalPost.project || post.originalPost.group"
-                                    class="fas fa-caret-right"></i>
-                                <a routerLink="/projectDetails/{{post.originalPost.project.projectId}}/basic-details"
-                                    *ngIf="post.originalPost.project">
-                                    {{post.originalPost.project.name}}</a>
-                                <a routerLink="/groupDetails/{{post.originalPost.group.groupId}}/basic-details"
-                                    *ngIf="post.originalPost.group">
-                                    {{post.originalPost.group.name}}</a>
-                            </span>
-                            <span class="description">{{post.originalPost.postDate | date}}</span>
+                        <div class="card-header card-widget">
+                            <div class="user-block">
+                                <img *ngIf="post.originalPost.postOwner.profilePicture" class="img-circle"
+                                    [src]="post.originalPost.postOwner.profilePicture" alt="User Image">
+                                <img *ngIf="!post.originalPost.postOwner.profilePicture" class="img-circle"
+                                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                    alt="User Image">
+                                <span class="username">
+                                    <a routerLink="/userProfile/{{post.originalPost.postOwner.userId}}">{{post.originalPost.postOwner.firstName}}
+                                        {{post.originalPost.postOwner.lastName}} </a>
+                                    <i *ngIf="post.originalPost.project || post.originalPost.group"
+                                        class="fas fa-caret-right"></i>
+                                    <a routerLink="/projectDetails/{{post.originalPost.project.projectId}}/basic-details"
+                                        *ngIf="post.originalPost.project">
+                                        {{post.originalPost.project.name}}</a>
+                                    <a routerLink="/groupDetails/{{post.originalPost.group.groupId}}/basic-details"
+                                        *ngIf="post.originalPost.group">
+                                        {{post.originalPost.group.name}}</a>
+                                    &nbsp;
+                                    <small class="badge badge-dark" *ngIf="post.originalPost.isPinnedPost">
+                                        Pinned Post
+                                    </small>
+                                    <small class="badge badge-dark" *ngIf="post.originalPost.isElectionPost">
+                                        Election Post
+                                    </small>
+                                </span>
+                                <span class="description">{{post.originalPost.postDate | date}}</span>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <br />
+                            <div *ngIf="post.originalPost.electionApplication">
+                                <label> Reasons For Applying: </label>
+                                <br />
+                                <p>{{post.originalPost.electionApplication.reasons}}</p>
+                                <label> Contributions to KMS: </label>
+                                <br />
+                                <p>{{post.originalPost.electionApplication.contributions}}</p>
+                                <label> Additional Comments: </label>
+                                <br />
+                                <p>{{post.originalPost.electionApplication.additionalComments}}</p>
+                            </div>
                             <p>{{post.originalPost.text}}</p>
-                            <br />
                             <span
                                 *ngIf="post.originalPost.picture && !post.originalPost.sharedGroupId && !post.originalPost.sharedProjectId">
                                 <div class="image-layer" data-toggle="modal" data-target="#modal-postPicture"
@@ -244,8 +342,32 @@
                                         View Group </button>
                                     <button type="button" class="btn btn-block btn-info btn-sm"
                                         *ngIf="post.originalPost.sharedProjectId"
-                                        routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}/basic-details"> View Project
+                                        routerLink="/projectDetails/{{post.originalPost.sharedProjectId}}/basic-details">
+                                        View Project
                                     </button>
+                                </div>
+                            </span>
+                            <span *ngIf="post.originalPost.election"
+                                style="display: flex; flex-direction: row; justify-content: center;">
+                                <div style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                                    <label> {{post.originalPost.election.name}} </label>
+                                    <br />
+                                    {{post.originalPost.election.description}}
+                                    <br />
+                                    Looking for {{post.originalPost.election.numSlots}} new Admins
+                                    <br />
+                                    Minimum of {{post.originalPost.election.minRepPointsRequired}} Reputation Points to
+                                    apply
+                                </div>
+                                <div style="margin:2%;width: 250; height: 250; flex-wrap: wrap;">
+                                    <a routerLink="/view-election-posts">
+                                        <button type="button" class="btn btn-block btn-info btn"
+                                            style="margin: 2%; justify-self: center;"> View Election Page </button>
+                                    </a>
+                                    <button type="button" class="btn btn-block bg-olive btn" data-toggle="modal"
+                                        data-target="#apply-for-election-modal"
+                                        (click)="setElectionToApply(post.election)"
+                                        style="margin: 2%; justify-self: center;"> Apply Now </button>
                                 </div>
                             </span>
                         </div>
@@ -431,8 +553,7 @@
                 </button>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light"
-                    data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-outline-light" (click)="editPost()"
                     data-dismiss="modal">Save</button>
             </div>
@@ -569,3 +690,44 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+
+<div class="modal fade" id="apply-for-election-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">Apply for Election</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="clear(electionForm)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (ngSubmit)="applyForElection(electionForm)" #electionForm="ngForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reason">Reasons for Applying:</label>
+                        <textarea id="reason" class="form-control" placeholder="Enter reasons for applying"
+                            name="reason" required ngModel> </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Contributions to KMS Community:</label>
+                        <textarea id="contributions" class="form-control"
+                            placeholder="Enter contributions to KMS community" required name="contributions"
+                            ngModel></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Additional comments:</label>
+                        <input type="text" id="notes" class="form-control" placeholder="Enter additional comments"
+                            name="notes" ngModel>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" id="applyElectionModalCloseBtn" class="btn btn-secondary" data-dismiss="modal"
+                        (click)="clear(electionForm)">Cancel</button>
+                    <button type="button" class="btn bg-olive" type="submit"
+                        [disabled]="!electionForm.valid">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

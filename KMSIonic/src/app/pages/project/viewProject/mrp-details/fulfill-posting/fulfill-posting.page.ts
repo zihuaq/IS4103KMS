@@ -7,10 +7,13 @@ import { User } from 'src/app/classes/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MaterialResourceAvailableService } from 'src/app/services/material-resource-available.service';
 import { MrpService } from 'src/app/services/mrp.service';
-import { AddMraModalPage } from '../add-mra-modal/add-mra-modal.page';
 import { Fulfillment } from '../../../../../classes/fulfillment';
 import { FulfillmentService } from '../../../../../services/fulfillment.service';
 import { Location } from "@angular/common";
+import { MraType } from 'src/app/enum/mra-type.enum';
+import { NgForm } from '@angular/forms';
+import { PaymentBasis } from 'src/app/enum/payment-basis.enum';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-fulfill-posting',
@@ -26,8 +29,6 @@ export class FulfillPostingPage implements OnInit {
   mraList: MaterialResourceAvailable[];
   selectedMra: MaterialResourceAvailable;
   newFulfillment: Fulfillment;
-  maxQuantity: number;
-  totalPledgedQuantity: number;
 
   constructor(private modalController: ModalController,
     private toastController: ToastController,
@@ -71,99 +72,81 @@ export class FulfillPostingPage implements OnInit {
     );
   }
 
-  async presentAddMraModal() {
-    const modal = await this.modalController.create({
-      component: AddMraModalPage,
-      swipeToClose: true,
-      showBackdrop: true,
-      cssClass: 'add-mra-modal',
-      componentProps: {
-        loggedInUser: this.loggedInUser,
-        selectedMrp: this.mrp
-      }
-    });
-    modal.present();
-    modal.onDidDismiss().then(() => {
-      this.refreshMraList();
-    });
-  }
-
-  async clickSelectMra(mra: MaterialResourceAvailable) {
+  clickSelectMra(mra: MaterialResourceAvailable) {
     console.log(mra);
-    if (mra.units != this.mrp.unit) {
-      const toast = await this.toastController.create({
-        message: "Please change the units of the resource or create a new resource",
-        color: "danger",
-        duration: 3000
-      })
-      toast.present();
-      return;
-    } else {
-      this.maxQuantity = Math.min(mra.quantity, this.mrp.lackingQuantity);
+    this.selectedMra = mra;
+    this.newFulfillment = new Fulfillment();
+    if (this.selectedMra.type != MraType.ONETIMEDONATION && this.selectedMra.type != MraType.ONETIMEPAYMENT) {
+      this.newFulfillment.basisOffered = this.selectedMra.type;
     }
-    if (mra.endDate != null && mra.endDate < new Date(this.mrp.endDate.toString().slice(0, 20))) {
-      const toast = await this.toastController.create({
-        message: "Donated resource will expire before the end date of the posting",
-        color: "danger",
-        duration: 3500
-      })
-      toast.present();
-    } else if (mra.startDate != null && mra.startDate > new Date(this.mrp.startDate.toString().slice(0, 20))) {
-      const toast = await this.toastController.create({
-        message: "Donated resource is only available after the start date of the posting",
-        color: "danger",
-        duration: 3500
-      })
-      toast.present();
-    } else {
-      this.selectedMra = mra;
+    if (this.selectedMra.units == this.mrp.unit) {
+      this.newFulfillment.priceOffered = this.selectedMra.price;
     }
   }
 
   clickReselect() {
     this.selectedMra = null;
-    this.totalPledgedQuantity = null;
   }
 
-  async fulfillPosting() { 
-    if(this.totalPledgedQuantity == null){
+  async submitFulfillPosting(fulfillPostingForm: NgForm) { 
+    if(this.newFulfillment.priceOffered <= 0 && this.selectedMra.type != MraType.ONETIMEDONATION){
       const toast = await this.toastController.create({
-        message: "Please enter donated quantity",
-        color: "danger",
+        message: "Price offered is invalid",
+        color: "warning",
         duration: 3500
       });
       toast.present();
-    } else if(!(this.totalPledgedQuantity > 0)){
+    } else if(!(this.newFulfillment.totalPledgedQuantity > 0)){
       const toast = await this.toastController.create({
-        message: "Donated quantity is invalid",
-        color: "danger",
+        message: "Pledged quantity is invalid",
+        color: "warning",
         duration: 3500
       });
       toast.present();
-    } else if(this.totalPledgedQuantity > this.mrp.lackingQuantity){
+    } else if(this.newFulfillment.totalPledgedQuantity > this.mrp.lackingQuantity){
       const toast = await this.toastController.create({
         message: "Donated quantity cannot be more than required quantity",
-        color: "danger",
-        duration: 3500
-      });
-      toast.present();
-    } else if(this.totalPledgedQuantity > this.selectedMra.quantity) {
-      const toast = await this.toastController.create({
-        message: "Donated quantity cannot be more than your available quantity",
-        color: "danger",
+        color: "warning",
         duration: 3500
       });
       toast.present();
     } else {
-      this.newFulfillment.mra = new MaterialResourceAvailable();
-      this.newFulfillment.posting = new MaterialResourcePosting();
-      this.newFulfillment.totalPledgedQuantity = this.totalPledgedQuantity;
-      this.newFulfillment.mra.quantity = this.selectedMra.quantity - this.newFulfillment.totalPledgedQuantity;
-      this.newFulfillment.posting.lackingQuantity = this.mrp.lackingQuantity - this.newFulfillment.totalPledgedQuantity;
+      if (this.selectedMra.type != MraType.ONETIMEDONATION && this.selectedMra.type != MraType.ONETIMEPAYMENT) { //recurring
+        if (!this.mrp.endDate) { //no end date
+          if (this.newFulfillment.basisOffered == MraType.DAILY || this.newFulfillment.basisOffered == MraType.WEEKLY) {
+            this.newFulfillment.paymentBasis = PaymentBasis.WEEKLY;
+          } else if (this.newFulfillment.basisOffered == MraType.MONTHLY) {
+            this.newFulfillment.paymentBasis = PaymentBasis.MONTHLY;
+          }
+        } else { //have end date
+          var startDate = moment(this.mrp.startDate.toString().slice(0,15));
+          var endDate = moment(this.mrp.endDate.toString().slice(0,15));
+          var diff = endDate.diff(startDate, 'months', true);
+          if (diff > 1) { //more than a month, pay in installments
+            if (this.newFulfillment.basisOffered == MraType.DAILY || this.newFulfillment.basisOffered == MraType.WEEKLY) {
+              this.newFulfillment.paymentBasis = PaymentBasis.WEEKLY;
+            } else if (this.newFulfillment.basisOffered == MraType.MONTHLY) {
+              this.newFulfillment.paymentBasis = PaymentBasis.MONTHLY;
+            }
+          } else { //a month or less, pay in full
+            this.newFulfillment.paymentBasis = PaymentBasis.ONCE;
+          }
+        }
+      }
+      if (!this.newFulfillment.priceOffered) {
+        this.newFulfillment.priceOffered = 0.0
+      }
+      if (!this.newFulfillment.basisOffered) {
+        this.newFulfillment.basisOffered = null
+      }
+      if (!this.newFulfillment.paymentBasis) {
+        this.newFulfillment.paymentBasis = null
+      }
+      console.log(this.newFulfillment);
       this.fulfillmentService.createNewFulfillment(this.newFulfillment, this.loggedInUser.userId, this.mrp.materialResourcePostingId, this.selectedMra.mraId).subscribe(
         response => {
           this.selectedMra = null;
-          this.totalPledgedQuantity = null;
+          this.newFulfillment = new Fulfillment();
           this.location.back();
           this.toast(true);
         },
@@ -178,17 +161,23 @@ export class FulfillPostingPage implements OnInit {
     if (success) {
       const toast = await this.toastController.create({
         message: "Fulfillment is successfully created",
+        color: "success",
         duration: 2500
       });
       toast.present();
     } else {
       const toast = await this.toastController.create({
         message: "Unable to create Fulfill Posting",
-        color: "danger",
+        color: "warning",
         duration: 3500
       });
       toast.present();
     }
+  }
+  
+  changehref(lat: number, long: number) {
+    var url = "http://maps.google.com/?q=" + lat + "," + long;
+    return url;
   }
 
 }

@@ -46,21 +46,21 @@
   <span *ngIf="segment == 'hrp'">
     <ion-card-content class="ion-no-margin">
       <ion-button expand="full" (click)="createHrp()" style="font-size: 13px;">
-        <ion-icon name="add-outline" ></ion-icon>
+        <ion-icon name="add-outline"></ion-icon>
         New Human Resource Posting
       </ion-button>
-      
+
       <span *ngIf="hrpList.length == 0">There is no human resource posting at the moment.</span>
-      
+
       <span *ngIf="hrpList.length > 0">
           <ion-card *ngFor="let hrp of hrpList" style="margin: 10px 0 0 0; padding: 5px;">
             <ion-item lines="full">
               <ion-card-title style="padding: 10px 0 10px 0">
-                <b>{{hrp.name}}</b>
+                <b style="font-size: 23px;">{{hrp.name}}</b>
               </ion-card-title>
               <ion-buttons slot="end">
-                <ion-icon class="iconButton" name="create-outline" (click)="editHrp(hrp.humanResourcePostingId)" style="margin-right: 5px;"></ion-icon>
-                <ion-icon class="iconButton" name="close-circle-outline" (click)="deleteHrpAlert(hrp.humanResourcePostingId)"></ion-icon>
+                <ion-icon class="iconButton" name="ellipsis-horizontal-outline"
+                (click)="handleHrpActionSheet(hrp.humanResourcePostingId)"></ion-icon>
               </ion-buttons>
             </ion-item>
             <ion-grid style="padding: 15px">
@@ -82,37 +82,47 @@
               </ion-row>
             </ion-grid>
           </ion-card>
-
       </span>
     </ion-card-content>
   </span>
 
   <span *ngIf="segment == 'mrp'">
     <ion-card-content class="ion-no-margin">
-      <ion-button expand="full" (click)="createMrp()" style="font-size: 12px;">
+      <ion-button expand="full" (click)="createMrp()" style="font-size: 13px;">
         <ion-icon name="add-outline"></ion-icon>
         New Material Resource Posting
       </ion-button>
-      
+
       <span *ngIf="noMrp">There is no material resource posting at the moment.</span>
-      
+
       <span *ngIf="!noMrp">
           <ion-card *ngFor="let mrp of mrpList" style="margin: 10px 0 0 0; padding: 5px;">
             <ion-item lines="full">
               <ion-card-title style="padding: 10px 0 10px 0">
-                <b>{{mrp.name}}</b>
+                <ion-badge *ngIf="mrp.status == 'OPEN'" style="background-color: darkgreen; color: white;">
+                  OPEN
+                </ion-badge>
+                <ion-badge *ngIf="mrp.status == 'CLOSED'" style="background-color: darkred; color: white;">
+                  CLOSED
+                </ion-badge>
+                <br/>
+                <b style="font-size: 23px;">{{mrp.name}}</b>
                 <ion-card-subtitle *ngIf="mrp.description" style="margin-top: 5px;">{{mrp.description}}</ion-card-subtitle>
               </ion-card-title>
               <ion-buttons slot="end">
                 <ion-icon class="iconButton" name="ellipsis-horizontal-outline" (click)="handleMrpActionSheet(mrp.materialResourcePostingId)"></ion-icon>
               </ion-buttons>
             </ion-item>
-            <ion-card-content style="padding: 15px">
-              <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to {{mrp.endDate.toString().slice(0,15) | date }}</b> 
+            <ion-card-content style="padding: 17px">
+              <b>From {{mrp.startDate.toString().slice(0,15) | date }} 
+                <span *ngIf="mrp.endDate"> to {{mrp.endDate.toString().slice(0,15) | date }}</span>
+              </b> 
               <br/>
-              {{mrp.lackingQuantity}} {{mrp.unit}} required / {{mrp.totalQuantity}} {{mrp.unit}} total
-              <ion-badge color="warning" (click)="changehref(mrp.latitude, mrp.longitude)" style="font-size: 12px; margin-top: 3px;">
-                View location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}
+              <span style="font-size: 15px;">{{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total</span>
+              <ion-badge color="warning" style="margin-top: 5px; margin-bottom: 5px;">
+                <a [href]="changehref(mrp.latitude, mrp.longitude)" style="color: black; text-decoration: none; font-size: 12px;"> 
+                  View location at {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}
+                </a>
               </ion-badge>
               <br/>
               <span *ngFor="let tag of mrp.tags" style="margin-right: 5px;">
@@ -127,18 +137,18 @@
   <ion-card *ngIf="segment == 'docs'">
     <ion-card-content class="ion-no-margin">
       <ion-button expand="full" style="font-size: 12px;" (click)="uploadModal()">
-        <ion-icon name="cloud-upload-outline"></ion-icon> 
+        <ion-icon name="cloud-upload-outline"></ion-icon>
         Upload Documents
       </ion-button>
       <span *ngIf="!hasLoad">
         Loading...
       </span>
-      
+
       <span *ngIf="hasLoad">
         <span *ngIf="files.length == 0">
           There is no documents.
         </span>
-      
+
         <span *ngIf="files.length > 0">
           <ion-card *ngFor="let doc of docs" style="margin: 10px 0 0 0; padding: 5px;">
             <ion-item lines="full">
@@ -147,13 +157,14 @@
                 <ion-card-subtitle style="margin-top: 5px; overflow: hidden;">{{doc.timeStamp}}</ion-card-subtitle>
               </ion-card-title>
               <ion-buttons slot="end">
-                <ion-icon class="iconButton" name="document-outline" style="margin-right: 5px;" (click)="viewFile(doc.key)" ></ion-icon>
+                <ion-icon class="iconButton" name="document-outline" style="margin-right: 5px;"
+                  (click)="viewFile(doc.key)"></ion-icon>
                 <ion-icon class="iconButton" name="close-circle-outline" (click)="deleteDocs(doc.key)"></ion-icon>
               </ion-buttons>
             </ion-item>
             <ion-card-content style="padding: 15px">
               Uploaded By: {{doc.author}}
-              <br/>
+              <br />
               Description: {{doc.description}}
             </ion-card-content>
           </ion-card>

@@ -25,16 +25,22 @@ import { EditProjectComponent } from './project/editProject/edit-project/edit-pr
 import { ErrorPageComponent } from './project/viewProject/error-page/error-page.component';
 import { ReviewsItemComponent } from './reviews/reviews-item/reviews-item.component';
 import { AdministrationComponent } from './administration/administration.component';
+import { AdminManageTagsComponent } from './admin-manage-tags/admin-manage-tags.component';
+import { AdminManageElectionsComponent } from './admin-manage-elections/admin-manage-elections.component';
+import { ViewElectionPostsComponent } from './view-election-posts/view-election-posts.component';
 import { MyFulfillmentsComponent } from './project/viewProject/view-mrp-tab/my-fulfillments/my-fulfillments.component';
 import { ViewAllGroupComponent } from './group/view-all-group/view-all-group.component';
 import { ViewOwnGroupComponent } from './group/view-own-group/view-own-group.component';
 import { CreateNewGroupComponent } from './group/create-new-group/create-new-group.component';
 import { GroupDetailsComponent } from './group/viewGroup/group-details/group-details.component';
 import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.component';
+import { ViewLeaderboardComponent } from './view-leaderboard/view-leaderboard.component';
 
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 import { ChatComponent } from './chat/chat.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ViewAllMrasComponent } from './view-all-mras/view-all-mras.component';
+import { ViewAllMrpsComponent } from './view-all-mrps/view-all-mrps.component';
 
 const routes: Routes = [
   { path: 'index', canActivate: [RouteGuard], component: IndexComponent },
@@ -48,6 +54,21 @@ const routes: Routes = [
     path: 'admin',
     canActivate: [AdminGuard],
     component: AdministrationComponent,
+  },
+  {
+    path: 'admin-manage-tags',
+    canActivate: [AdminGuard],
+    component: AdminManageTagsComponent,
+  },
+  {
+    path: 'admin-manage-elections',
+    canActivate: [AdminGuard],
+    component: AdminManageElectionsComponent,
+  },
+  {
+    path: 'view-election-posts',
+    canActivate: [AdminGuard],
+    component: ViewElectionPostsComponent,
   },
   {
     path: 'notifications',
@@ -150,7 +171,11 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: EditGroupComponent,
   },
-
+  {
+    path: 'view-leaderboard',
+    canActivate: [RouteGuard],
+    component: ViewLeaderboardComponent,
+  },
   { path: '', canActivate: [RouteGuard], component: IndexComponent },
   {
     path: 'projectDetails/:projectId/:tabName',
@@ -186,6 +211,16 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: ProfileComponent,
   },
+  {
+    path: 'viewAllMras',
+    canActivate: [RouteGuard],
+    component: ViewAllMrasComponent
+  },
+  {
+    path: 'viewAllMrps',
+    canActivate: [RouteGuard],
+    component: ViewAllMrpsComponent
+  }
 ];
 
 @NgModule({

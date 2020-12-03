@@ -14,11 +14,13 @@ import Exception.TagNameExistException;
 import ejb.session.stateless.ActivitySessionBeanLocal;
 import ejb.session.stateless.BadgeSessionBeanLocal;
 import ejb.session.stateless.DataMappingSessionBeanLocal;
+import ejb.session.stateless.EjbTimerSessionBeanLocal;
 import ejb.session.stateless.FulfillmentSessionBeanLocal;
 import ejb.session.stateless.GroupSessionBeanLocal;
 import ejb.session.stateless.HumanResourcePostingSessionBeanLocal;
 import ejb.session.stateless.MaterialResourceAvailableSessionBeanLocal;
 import ejb.session.stateless.MaterialResourcePostingSessionBeanLocal;
+import ejb.session.stateless.PaymentSessionBeanLocal;
 import ejb.session.stateless.PostSessionBeanLocal;
 import ejb.session.stateless.ProjectSessionBeanLocal;
 import ejb.session.stateless.ReportSessionBeanLocal;
@@ -33,10 +35,11 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
+import entity.ReviewEntity;
 import entity.TagEntity;
+import entity.TagRequestEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +51,9 @@ import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import util.enumeration.ActivityStatusEnum;
+import util.enumeration.FulfillmentStatusEnum;
+import util.enumeration.MraTypeEnum;
+import util.enumeration.PaymentBasisEnum;
 import util.enumeration.TagTypeEnum;
 import util.enumeration.UserTypeEnum;
 
@@ -59,6 +65,12 @@ import util.enumeration.UserTypeEnum;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB(name = "EjbTimerSessionBeanLocal")
+    private EjbTimerSessionBeanLocal ejbTimerSessionBeanLocal;
+
+    @EJB(name = "PaymentSessionBeanLocal")
+    private PaymentSessionBeanLocal paymentSessionBeanLocal;
 
     @EJB
     private DataMappingSessionBeanLocal dataMappingSessionBean;
@@ -240,15 +252,13 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
-        
+
         tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTREVIEW));
-        
-        
 
         try {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
@@ -264,6 +274,9 @@ public class DataInitializationSessionBean {
             projectSessionBean.joinProject(4l, 7l);
             projectSessionBean.addAdmin(4l, 1l);
             projectSessionBean.addAdmin(4l, 8l);
+            
+            projectSessionBean.createNewProject(new ProjectEntity("Test Project", "Description", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
+            projectSessionBean.updateStatus(7l, "INACTIVE");
         } catch (CreateProjectException ex) {
             System.out.println(ex.getMessage());
         }
@@ -317,41 +330,45 @@ public class DataInitializationSessionBean {
             Date startDate = new Date();
             Date endDate = new Date();
             startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-31");
-            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-31");
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31");
             List<Long> tagIds = new ArrayList<>();
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Volunteer", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
-
+            
             tagIds.add(9l);
             humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Photographer", 1, 0, 1, "Take Pictures", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
-            humanResourcePostingSessionBean.joinHrp(3l, 2l);
-
+            humanResourcePostingSessionBean.joinHrp(3l, 2l);   
+            
+            // For jUnit test
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("Test", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
+            humanResourcePostingSessionBean.createHumanResourcePostingEntity(new HumanResourcePostingEntity("To Delete", 10, 0, 10, "No Skills Needed", startDate, endDate, 1.3008, 103.9122), 4l, tagIds);
+            
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 9:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 15:00");
 
-            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Information Session on Children in Sri Lanka", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.ONGOING), 4l);
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Information Session on Children in Sri Lanka", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.COMPLETED), 4l);
             activitySessionBeanLocal.addMemberToActivity(1l, 2l);
             activitySessionBeanLocal.addMemberToActivity(1l, 3l);
 
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 10:00");
             endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-07 15:00");
 
-            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Lesson on Turtle Conversation", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.PLANNED), 4l);
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Lesson on Turtle Conversation", startDate, endDate, 1.3008, 103.9122, "1 Hour Break Lunch from 12pm - 1pm (Lunch Provided)", ActivityStatusEnum.COMPLETED), 4l);
             activitySessionBeanLocal.addMemberToActivity(2l, 1l);
             activitySessionBeanLocal.addMemberToActivity(2l, 3l);
 
-            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 10:00");
-            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-07 12:00");
+            startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-15 10:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-15 18:00");
 
-            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Meeting", startDate, endDate, 1.4491, 103.8185, "Meeting to discuss about budget", ActivityStatusEnum.COMPLETED), 4l);
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Meeting", startDate, endDate, 1.4491, 103.8185, "Meeting to discuss about budget", ActivityStatusEnum.PLANNED), 4l);
             activitySessionBeanLocal.addMemberToActivity(3l, 1l);
             activitySessionBeanLocal.addMemberToActivity(3l, 2l);
             activitySessionBeanLocal.addMemberToActivity(3l, 3l);
             activitySessionBeanLocal.addMemberToActivity(3l, 8l);
 
             startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-11 8:00");
-            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-11-30 18:00");
+            endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-11 18:00");
 
-            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Volunteer", startDate, endDate, 7.8731, 80.7718, "Volunteering in Sri Lanka", ActivityStatusEnum.PLANNED), 4l);
+            activitySessionBeanLocal.createNewActivity(new ActivityEntity("Volunteer", startDate, endDate, 7.8731, 80.7718, "Volunteering in Sri Lanka", ActivityStatusEnum.ONGOING), 4l);
             activitySessionBeanLocal.addMemberToActivity(4l, 1l);
             activitySessionBeanLocal.addMemberToActivity(4l, 4l);
             activitySessionBeanLocal.addMemberToActivity(4l, 7l);
@@ -360,44 +377,71 @@ public class DataInitializationSessionBean {
             activitySessionBeanLocal.allocateHrpToActivity(4l, 2l);
             humanResourcePostingSessionBean.joinHrp(7l, 1l);
 
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Canned Food", "item(s)", 50.0, 0.0, 50.0, "Canned food like tuna, luncheon meat but no canned soup", startDate, endDate, 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(11l)));
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 5.0, 0.0, 5.0, "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-11"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-05"), 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
-            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", startDate, endDate, 7.8731, 80.7718), 4l, new ArrayList<>(Arrays.asList(23l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Canned Food", "item(s)", 50.0, 0.0, 50.0, "Canned food like tuna, luncheon meat but no canned fruits", new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-08"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-11"), 35.929673, -78.948237), 4l, new ArrayList<>(Arrays.asList(11l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Laptops", "item(s)", 5.0, 0.0, 5.0, "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-20"), null, 1.305815, 103.785754), 4l, new ArrayList<>(Arrays.asList(16l)));
+            materialResourcePostingSessionBean.createMaterialResourcePosting(new MaterialResourcePostingEntity("Wood", "kg", 100.0, 0.0, 100.0, "Hardwood", new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-11"), null, 7.8731, 80.7718), 4l, new ArrayList<>(Arrays.asList(23l)));
 
             List<TagEntity> tags = new ArrayList<>();
             tags.add(tagSessionBean.getTagById(12l));
-            MaterialResourceAvailableEntity mra = new MaterialResourceAvailableEntity("Laptops", 3, "item(s)", "Asus laptops", null, null, "35.929673", "-78.948237", tags);
+            MaterialResourceAvailableEntity mra = new MaterialResourceAvailableEntity("Asus Laptops", "item(s)", "Different models of Asus laptops available", "35.929673", "-78.948237", 20.0, MraTypeEnum.WEEKLY, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
             tags.clear();
             tags.add(tagSessionBean.getTagById(23l));
-            mra = new MaterialResourceAvailableEntity("Wood", 10, "kg", "", null, null, "1.384667", "103.770707", tags);
+            mra = new MaterialResourceAvailableEntity("Wood", "kg", "Cedar, pine, oak and ash", "1.384667", "103.770707", 17.5, MraTypeEnum.ONETIMEPAYMENT, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(2l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Wood", 25, "kg", "", null, null, "36.379450", "-75.830290", tags);
+            mra = new MaterialResourceAvailableEntity("Rosewood", null, null, "36.379450", "-75.830290", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Wood", 50, "kg", "", null, null, "2.543298", "103.807023", tags);
+            mra = new MaterialResourceAvailableEntity("Softwoods", "kg", null, "2.543298", "103.807023", 10.0, MraTypeEnum.MONTHLY, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(4l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
             tags.clear();
             tags.add(tagSessionBean.getTagById(11l));
-            mra = new MaterialResourceAvailableEntity("Canned Soup", 25, "item(s)", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-10-04"), new SimpleDateFormat("yyyy-MM-dd").parse("2021-01-04"), "36.379450", "-75.830290", tags);
+            mra = new MaterialResourceAvailableEntity("Canned Soup", null, null, "36.379450", "-75.830290", 0.0, MraTypeEnum.ONETIMEDONATION, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(6l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            mra = new MaterialResourceAvailableEntity("Canned Tuna", 18, "item(s)", "", new SimpleDateFormat("yyyy-MM-dd").parse("2020-09-18"), new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-08"), "22.955532", "112.486407", tags);
+            mra = new MaterialResourceAvailableEntity("Canned Tuna", "item(s)", null, "22.955532", "112.486407", 2.5, MraTypeEnum.ONETIMEPAYMENT, tags);
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(7l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0), 2l, 3l, 2l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0), 6l, 3l, 3l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 0.0, 30.0), 4l, 3l, 4l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(2.0, 0.0, 2.0), 6l, 2l, 1l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0), 6l, 1l, 5l);
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(8.0, 0.0, 8.0), 7l, 1l, 6l);
+
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0, 17.5), 2l, 3l, 2l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0, 0.0), 6l, 1l, 5l);
+            
+            //One-Time Payments
+            Long fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(25.0, 0.0, 25.0, 2.5), 7l, 1l, 6l); 
+            FulfillmentEntity fulfillmentToUpdate = fulfillmentSessionBean.getFulfillmentById(fulfillmentId);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId);
+            fulfillmentToUpdate.setReceivedQuantity(20.0);
+            fulfillmentToUpdate.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity() - 20.0);
+            fulfillmentToUpdate.setStatus(FulfillmentStatusEnum.PARTIALLYFULFILLED);
+            fulfillmentSessionBean.receiveResource(fulfillmentToUpdate, null);
+            
+            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(10.0, 0.0, 10.0, 5.0), 6l, 3l, 3l); 
+            fulfillmentToUpdate = fulfillmentSessionBean.getFulfillmentById(fulfillmentId);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId);
+            fulfillmentToUpdate.setReceivedQuantity(5.0);
+            fulfillmentToUpdate.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity() - 5.0);
+            fulfillmentToUpdate.setStatus(FulfillmentStatusEnum.PARTIALLYFULFILLED);
+            fulfillmentSessionBean.receiveResource(fulfillmentToUpdate, null);
+            
+            //Recurring subscriptions
+            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(30.0, 10.0, MraTypeEnum.MONTHLY, PaymentBasisEnum.MONTHLY), 4l, 3l, 4l);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId); //create first payment
+            
+            fulfillmentId = fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(5.0, 10.0, MraTypeEnum.WEEKLY, PaymentBasisEnum.WEEKLY), 6l, 2l, 1l);
+            fulfillmentSessionBean.acceptFulfillment(fulfillmentId); //create first payment
+            //for demo, manually implementing
+            ejbTimerSessionBeanLocal.updateFulfillmentStatus(); //update fulfillment to ongoing
+            ejbTimerSessionBeanLocal.generateRecurringPayments(); 
+            ejbTimerSessionBeanLocal.generateRecurringPayments(); 
+            ejbTimerSessionBeanLocal.updateMrpStatus(); //update mrps
+
             //create tasks
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Planning", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 8:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-12-28 12:00"), 0.3, 0l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);
@@ -406,10 +450,20 @@ public class DataInitializationSessionBean {
         } catch (NoResultException ex) {
             System.out.println(ex.getMessage());
         }
-
+        
         try {
-            dataMappingSessionBean.createProfileFromFiles("EMERGEdatabase.xlsx");
-        } catch (IOException ex) {
+            activitySessionBeanLocal.createNewProjectReview(new ReviewEntity("Test", "Test review", 5), 1l, 4l, 1l);
+        } catch (NoResultException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            UserEntity user = userSessionBean.getUserById(2l);
+            TagRequestEntity tagRequest = new TagRequestEntity("Test", TagTypeEnum.SKILL, user);
+            tagSessionBean.createTagRequest(tagRequest);
+        } catch (TagNameExistException ex) {
+            System.out.println(ex.getMessage());
+        } catch (NoResultException ex) {
             System.out.println(ex.getMessage());
         }
     }

@@ -10,7 +10,14 @@
     <div *ngFor="let mrp of mrpList">
         <div class="card" style="width: 100%;">
             <div class="card-header">
-                <h5 class="card-title" style="font-size: 20px; margin-top: 7px;"><b>{{mrp.name}}</b>
+                <h5 class="card-title" style="font-size: 20px; margin-top: 7px;">
+                    <b>{{mrp.name}} </b>
+                    <span class="badge badge-pill" style="margin-top: 10px; font-size: 12px; vertical-align: 25%; background-color: darkgreen; color: white;"
+                        *ngIf="mrp.status == 'OPEN'">OPEN
+                    </span>
+                    <span class="badge badge-pill" style="margin-top: 10px; font-size: 12px; vertical-align: 27%; background-color: darkred; color: white;"
+                        *ngIf="mrp.status == 'CLOSED'">CLOSED
+                    </span>
                     <br />
                     <span class="text-muted" style="font-size: 15px;">{{mrp.description}}</span>
                 </h5>
@@ -18,8 +25,7 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-edit-mrp"
-                        (click)="clickEditMrp(mrp)">
+                    <button type="button" class="btn btn-tool" (click)="clickEditMrp(mrp)">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button type="button" class="btn btn-tool" (click)="clickDeleteMrp(mrp)">
@@ -29,8 +35,9 @@
             </div>
             <div class="card-body" style="display: block; color: rgb(44, 44, 44);">
                 <p style="margin: 0 7px 0 7px;">
-                    <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} to
-                        {{mrp.endDate.toString().slice(0,15) | date }}</b>
+                    <b>Required from {{mrp.startDate.toString().slice(0,15) | date }} 
+                        <span *ngIf="mrp.endDate"> to {{mrp.endDate.toString().slice(0,15) | date }}</span>
+                    </b>
                     <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
                         (click)="changehref(mrp.latitude, mrp.longitude)" target="_blank"> At location
                         {{mrp.latitude | number:'1.1-6'}}, {{mrp.longitude | number:'1.1-6'}}</a>
@@ -45,13 +52,12 @@
                         data-backdrop="static">
                         <i class="fas fa-tasks"></i> Fulfillments
                     </button>
-                    {{mrp.lackingQuantity}} {{mrp.unit}} required<span class="text-muted"> / {{mrp.totalQuantity}}
-                        {{mrp.unit}} total</span>
+                    {{mrp.lackingQuantity | number:'1.0-2'}} {{mrp.unit}} required
+                    <span class="text-muted"> / {{mrp.totalQuantity | number:'1.0-2'}} {{mrp.unit}} total</span>
                     <br />
-                    <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;"
-                        *ngIf="mrp.tags.length > 0">
+                    <span class="d-flex flex-wrap align-items-stretch" *ngIf="mrp.tags.length > 0">
                         <div *ngFor="let tag of mrp.tags">
-                            <small class="badge badge-dark ml-2">{{tag.name}}</small>
+                            <small class="badge badge-dark mr-2">{{tag.name}}</small>
                         </div>
                     </span>
                 </p>
@@ -65,7 +71,7 @@
         <div class="modal-content bg-info">
             <div class="modal-header">
                 <h4 class="modal-title">Create Material Resource Posting</h4>
-                <button type="button" class="close" data-dismiss="modal" (click)="cancel()" aria-label="Close">
+                <button id="createMrpModalCloseBtn" type="button" class="close" data-dismiss="modal" (click)="cancel()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -77,13 +83,13 @@
                             [(ngModel)]="newMrp.name" required>
                     </div>
                     <div class="form-group">
-                        <label for="quantity"> Quantity Required *</label>
-                        <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity"
-                            name="quantity" [(ngModel)]="newMrp.totalQuantity" required>
+                        <label for="mrpQuantity"> Quantity Required *</label>
+                        <input type="number" id="mrpQuantity" class="form-control" placeholder="Enter Quantity"
+                            name="mrpQuantity" [(ngModel)]="newMrp.totalQuantity" required>
                     </div>
                     <div class="form-group">
-                        <label for="unit"> Unit *</label>
-                        <select id="unit" class="form-control" placeholder="Select Unit" name="unit"
+                        <label for="mrpUnit"> Unit *</label>
+                        <select id="mrpUnit" class="form-control" placeholder="Select Unit" name="mrpUnit"
                             [(ngModel)]="newMrp.unit" required>
                             <option disabled value="Select Unit">Select Unit</option>
                             <option value="item(s)">item(s)</option>
@@ -92,20 +98,41 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control"
-                            placeholder="Enter Description (eg. specific measurements)" name="description"
+                        <label for="mrpDescription">Description</label>
+                        <input type="text" id="mrpDescription" class="form-control"
+                            placeholder="Enter Description (eg. specific measurements)" name="mrpDescription"
                             [(ngModel)]="newMrp.description">
                     </div>
-                    <div class="form-group">
-                        <label>Date Required From *</label>
-                        <input type="date" id="startDate" class="form-control" name="startDate"
-                            [(ngModel)]="newMrp.startDate" [min]="minDate" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Date Required To *</label>
-                        <input type="date" id="endDate" class="form-control" name="endDate" [(ngModel)]="newMrp.endDate"
-                            [min]="newMrp.startDate" required />
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Required From *</label>
+                                <div class="input-group">
+                                    <input type="date" id="mrpStartDate" class="form-control" name="mrpStartDate"
+                                        [(ngModel)]="newMrp.startDate" [min]="minDate" [max]="newMrp.endDate" required/>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn input-group-text" title="Clear" (click)="cancelStartDate(newMrp)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Required To </label>
+                                <div class="input-group">
+                                    <input type="date" id="mrpEndDate" class="form-control" name="mrpEndDate" [(ngModel)]="newMrp.endDate"
+                                        [min]="newMrp.startDate"/>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn input-group-text" title="Clear" (click)="cancelEndDate(newMrp)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Material Resource Tags *</label>
@@ -116,25 +143,26 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Location of Resource</label>
+                        <label>Location Required</label>
                         <google-map height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options"
                             (mapClick)="clickNewLocation($event)"></google-map>
                     </div>
                     <div class="form-group">
-                        <label for="latitude">Latitude *</label>
-                        <input type="text" id="latitude" class="form-control" name="latitude"
-                            [(ngModel)]="newMrp.latitude" required disabled>
+                        <label for="mrpLatitude">Latitude *</label>
+                        <input type="text" id="mrpLatitude" class="form-control" name="mrpLatitude"
+                            [(ngModel)]="newMrp.latitude" required readonly>
                     </div>
                     <div class="form-group">
-                        <label for="longitude">Longitude *</label>
-                        <input type="text" id="longitude" class="form-control" name="longitude"
-                            [(ngModel)]="newMrp.longitude" required disabled>
+                        <label for="mrpLongitude">Longitude *</label>
+                        <input type="text" id="mrpLongitude" class="form-control" name="mrpLongitude"
+                            [(ngModel)]="newMrp.longitude" required readonly>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light" (click)="cancel()"
                         data-dismiss="modal">Cancel</button>
-                    <button type="button" type="submit" class="btn btn-outline-light">Create</button>
+                    <button type="button" type="submit" class="btn btn-outline-light" 
+                        [disabled]="!createMrpForm.valid">Create</button>
                 </div>
             </form>
         </div>
@@ -148,52 +176,68 @@
         <div class="modal-content bg-info">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Material Resource Posting</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button id="editMrpModalCloseBtn" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form (ngSubmit)="editMrp(editMrpForm)" #editMrpForm="ngForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="mrpName">Material Resource Name *</label>
-                        <input type="text" id="name" class="form-control" placeholder="Enter Name" name="name"
+                        <label for="editMrpName">Material Resource Name *</label>
+                        <input type="text" id="editMrpName" class="form-control" placeholder="Enter Name" name="editMrpName"
                             [(ngModel)]="mrpToEdit.name" required>
                     </div>
                     <div class="form-group">
-                        <label for="quantity"> Quantity Required *</label>
-                        <input type="number" id="quantity" class="form-control" placeholder="Enter Quantity"
-                            name="quantity" [(ngModel)]="mrpToEdit.totalQuantity" [min]="mrpToEdit.obtainedQuantity"
+                        <label for="editMrpQuantity"> Quantity Required *</label>
+                        <input type="number" id="editMrpQuantity" class="form-control" placeholder="Enter Quantity"
+                            name="editMrpQuantity" [(ngModel)]="mrpToEdit.totalQuantity" [min]="mrpToEdit.obtainedQuantity"
                             required>
                     </div>
-                    <div *ngIf="mrpToEdit.fulfillments.length != 0" class="form-group">
-                        <label for="units"> Unit</label>
-                        <input type="text" id="unit" class="form-control" name="unit" [(ngModel)]="mrpToEdit.unit"
-                            disabled>
-                    </div>
-                    <div *ngIf="mrpToEdit.fulfillments.length == 0" class="form-group">
-                        <label for="unit"> Unit *</label>
-                        <select id="unit" class="form-control" placeholder="Select Unit" name="unit"
-                            [(ngModel)]="mrpToEdit.unit" required>
-                            <option disabled value="Select Unit">Select Unit</option>
+                    <div class="form-group">
+                        <label for="editMrpUnit"> Unit <span *ngIf="mrpToEdit.fulfillments.length == 0">*</span></label>
+                        <select id="editMrpUnit" class="form-control" placeholder="Select Unit" name="editMrpUnit"
+                            [(ngModel)]="mrpToEdit.unit" required [disabled]="mrpToEdit.fulfillments.length != 0">
+                            <option disabled>Select Unit</option>
                             <option value="item(s)">item(s)</option>
                             <option value="kg">kg</option>
                             <option value="m">m</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="description">Description</label>
-                        <input type="text" id="description" class="form-control" placeholder="Enter Description"
-                            name="description" [(ngModel)]="mrpToEdit.description">
+                        <label for="editMrpDescription">Description</label>
+                        <input type="text" id="editMrpDescription" class="form-control" placeholder="Enter Description"
+                            name="editMrpDescription" [(ngModel)]="mrpToEdit.description">
                     </div>
-                    <div class="form-group">
-                        <label>Date Required From *</label>
-                        <input type="date" id="startDate" class="form-control" name="startDate"
-                            [(ngModel)]="editMrpStartDate" [min]="minDate" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Date Required To *</label>
-                        <input type="date" id="endDate" class="form-control" name="endDate" [(ngModel)]="editMrpEndDate"
-                            [min]="editMrpStartDate" required />
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Required From *</label>
+                                <div class="input-group">
+                                    <input type="date" id="editMrpStartDate" class="form-control" name="editMrpStartDate"
+                                        [(ngModel)]="editMrpStartDate" [min]="minDate" [max]="editMrpEndDate" required/>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn input-group-text" title="Clear" (click)="cancelStartDate(mrpToEdit)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Required To </label>
+                                <div class="input-group">
+                                    <input type="date" id="editMrpEndDate" class="form-control" name="editMrpEndDate" [(ngModel)]="editMrpEndDate"
+                                        [min]="editMrpStartDate"/>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn input-group-text" title="Clear" (click)="cancelEndDate(mrpToEdit)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Material Resource Tags *</label>
@@ -209,19 +253,19 @@
                             (mapClick)="clickEditLocation($event)"></google-map>
                     </div>
                     <div class="form-group">
-                        <label for="latitude">Latitude *</label>
-                        <input type="text" id="latitude" class="form-control" name="latitude"
-                            [(ngModel)]="mrpToEdit.latitude" required disabled>
+                        <label for="editMrpLatitude">Latitude *</label>
+                        <input type="text" id="editMrpLatitude" class="form-control" name="editMrpLatitude"
+                            [(ngModel)]="mrpToEdit.latitude" required readonly>
                     </div>
                     <div class="form-group">
-                        <label for="longitude">Longitude *</label>
-                        <input type="text" id="longitude" class="form-control" name="longitude"
-                            [(ngModel)]="mrpToEdit.longitude" required disabled>
+                        <label for="editMrpLongitude">Longitude *</label>
+                        <input type="text" id="editMrpLongitude" class="form-control" name="editMrpLongitude"
+                            [(ngModel)]="mrpToEdit.longitude" required readonly>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
-                    <button type="button" type="submit" class="btn btn-outline-light">Update</button>
+                    <button type="button" type="submit" class="btn btn-outline-light" [disabled]="!editMrpForm.valid">Update</button>
                 </div>
             </form>
         </div>
@@ -260,12 +304,12 @@
             </div>
             <div class="modal-body">
                 <div *ngIf="fulfillmentList.length > 0" class="input-group" style="width: auto">
-                    <input class="form-control" placeholder="Search fulfillments by user or resource name"
+                    <input class="form-control" placeholder="Search fulfillments by resource owner, resource name or description"
                         [(ngModel)]="searchInput" (ngModelChange)="filter()">
                 </div>
                 <div *ngIf="fulfillmentList.length > 0" class="form-row" style="width: auto; margin: 10px 5px 5px 5px">
-                    <label class="col-sm-3">Filter by Status: </label>
-                    <div class="col-sm-9">
+                    <label style="margin-right: 10px;">Filter by Status: </label>
+                    <div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="pledged" [(ngModel)]="pledged"
                                 (ngModelChange)="filter()">
@@ -282,6 +326,16 @@
                             <label class="form-check-label" for="partiallyfulfilled">Partially Fulfilled</label>
                         </div>
                         <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="ongoing" [(ngModel)]="ongoing"
+                                (ngModelChange)="filter()">
+                            <label class="form-check-label" for="ongoing">Ongoing</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="ended" [(ngModel)]="ended"
+                                (ngModelChange)="filter()">
+                            <label class="form-check-label" for="ended">Ended</label>
+                        </div>
+                        <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="fulfilled" [(ngModel)]="fulfilled"
                                 (ngModelChange)="filter()">
                             <label class="form-check-label" for="fulfilled">Fulfilled</label>
@@ -289,14 +343,13 @@
                     </div>
                 </div>
                 <div *ngIf="fulfillmentList.length == 0"> <b>No fulfillments at the moment</b></div>
-                <div *ngIf="fulfillmentList.length > 0" style="max-height: 500px; overflow-y: scroll;">
+                <div *ngIf="fulfillmentList.length > 0" style="max-height: 500px; overflow-y: auto;">
                     <div id="fulfillmentList" *ngFor="let fulfillment of filteredList; let i = index">
                         <div *ngIf="fulfillment.status != fulfillmentStatus.REJECTED" class="card"
                             style="width: 100%; color: black;">
                             <div class="card-header">
                                 <h6 class="card-title" style="font-size: 20px; margin-top: 5px;">
-                                    <b>{{fulfillment.fulfillmentOwner.firstName}}
-                                        {{fulfillment.fulfillmentOwner.lastName}}</b>&nbsp;
+                                    <b>{{fulfillment.fulfillmentOwner.firstName}} {{fulfillment.fulfillmentOwner.lastName}}</b>&nbsp;
                                     <span class="badge badge-secondary"
                                         *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED"
                                         style="font-size: 12px; vertical-align: 30%;">{{fulfillment.status}}</span>
@@ -309,39 +362,66 @@
                                     <span class="badge badge-success"
                                         *ngIf="fulfillment.status == fulfillmentStatus.FULFILLED"
                                         style="font-size: 12px; background-color: rgb(11, 139, 11); vertical-align: 30%;">{{fulfillment.status}}</span>
+                                    <span class="badge" *ngIf="fulfillment.status == fulfillmentStatus.ONGOING"
+                                        style="font-size: 12px; background-color: rgb(89, 13, 175); color: white; vertical-align: 30%;">{{fulfillment.status}}</span>
+                                    <span class="badge" *ngIf="fulfillment.status == fulfillmentStatus.ENDED"
+                                        style="font-size: 12px; background-color: rgb(202, 89, 13); color: white; vertical-align: 30%;">{{fulfillment.status}}</span>
                                 </h6>
                                 <button *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" type="button"
                                     class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                     style="margin-right: 10px;"><i class="fas fa-ellipsis-h"></i></button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED || fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED"
-                                        class="dropdown-item" data-toggle="modal" data-target="#modal-receive"
-                                        (click)="clickReceive(fulfillment)">Receive Resources</a>
                                     <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item"
-                                        data-toggle="modal" data-target="#modal-accept"
-                                        (click)="clickAcceptReject(fulfillment)">Accept</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a *ngIf="fulfillment.status != fulfillmentStatus.PLEDGED" class="dropdown-item"
-                                        data-toggle="modal" data-target="#modal-update"
-                                        (click)="clickUpdate(fulfillment)">Update Quantity</a>
+                                        (click)="clickAccept(fulfillment)">Accept</a>
                                     <a *ngIf="fulfillment.status == fulfillmentStatus.PLEDGED" class="dropdown-item"
                                         data-toggle="modal" data-target="#modal-reject-fulfillment"
-                                        (click)="clickAcceptReject(fulfillment)">Reject</a>
+                                        (click)="clickRejectEnd(fulfillment)">Reject</a>
+                                    <!--One-Time Payment and One-Time Donations-->
+                                    <span *ngIf="fulfillment.mra.type == mraType.ONETIMEDONATION || fulfillment.mra.type == mraType.ONETIMEPAYMENT">
+                                        <a *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED || fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED"
+                                            class="dropdown-item" data-toggle="modal" data-target="#modal-receive"
+                                            (click)="clickReceive(fulfillment)">Receive Resources</a>
+                                        <a *ngIf="fulfillment.status == fulfillmentStatus.ACCEPTED || fulfillment.status == fulfillmentStatus.PARTIALLYFULFILLED" 
+                                            class="dropdown-item" data-toggle="modal" data-target="#modal-update"
+                                            (click)="clickUpdate(fulfillment)">Update Quantity</a>
+                                    </span>
+                                    <!--Recurring-->
+                                    <span *ngIf="fulfillment.mra.type != mraType.ONETIMEDONATION && fulfillment.mra.type != mraType.ONETIMEPAYMENT">
+                                        <a *ngIf="fulfillment.status == fulfillmentStatus.ONGOING || fulfillment.status == fulfillmentStatus.ENDED" class="dropdown-item"
+                                            (click)="clickMakePayment(fulfillment)">Make Payment</a>
+                                        <a *ngIf="fulfillment.status == fulfillmentStatus.ONGOING && !mrpToFulfill.endDate" class="dropdown-item"
+                                            data-toggle="modal" data-target="#modal-end-subscription"
+                                            (click)="clickRejectEnd(fulfillment)">End Subscription</a>
+                                    </span>
                                 </div>
                             </div>
                             <div class="card-body" style="display: block;">
-                                <b>{{fulfillment.mra.name}}</b>
+                                <b style="font-size: 18px;">{{fulfillment.mra.name}}</b>
                                 <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
-                                    (click)="changehref(mrpToFulfill.latitude, mrpToFulfill.longitude)" target="_blank">
-                                    View location at {{fulfillment.mra.latitude | number:'1.1-6'}},
+                                    (click)="changehref(fulfillment.mra.latitude, fulfillment.mra.longitude)" target="_blank">
+                                    Required Location at {{fulfillment.mra.latitude | number:'1.1-6'}},
                                     {{fulfillment.mra.longitude | number:'1.1-6'}}</a>
                                 <br />
-                                {{fulfillment.receivedQuantity}} {{mrpToFulfill.unit}} received /
-                                {{fulfillment.totalPledgedQuantity}} {{mrpToFulfill.unit}} pledged
+                                <b>
+                                    <span *ngIf="fulfillment.mra.type == mraType.ONETIMEDONATION">Free</span>
+                                    <span *ngIf="fulfillment.mra.type != mraType.ONETIMEDONATION">
+                                        US ${{fulfillment.priceOffered | number:'1.2-2'}}/<span *ngIf="mrpToFulfill.unit == 'item(s)'">item</span>
+                                        <span *ngIf="mrpToFulfill.unit != 'item(s)'">{{mrpToFulfill.unit}}</span>
+                                        <span *ngIf="fulfillment.basisOffered == mraType.DAILY"> per day</span>
+                                        <span *ngIf="fulfillment.basisOffered == mraType.WEEKLY"> per week</span>
+                                        <span *ngIf="fulfillment.basisOffered == mraType.MONTHLY"> per month</span>
+                                    </span>
+                                </b>
                                 <br />
-                                <span class="text-muted">{{fulfillment.mra.description}}</span>
-                                <br />
+                                <span *ngIf="fulfillment.status != fulfillmentStatus.PLEDGED && (fulfillment.mra.type == mraType.ONETIMEDONATION || fulfillment.mra.type == mraType.ONETIMEPAYMENT)">
+                                    {{fulfillment.receivedQuantity | number:'1.0-2'}} {{mrpToFulfill.unit}} received /
+                                </span> {{fulfillment.totalPledgedQuantity | number:'1.0-2'}} {{mrpToFulfill.unit}} pledged
+                                <br/>
+                                <span *ngIf="fulfillment.mra.description">
+                                    <span class="text-muted">{{fulfillment.mra.description}}</span>
+                                    <br />
+                                </span>
                                 <span class="d-flex flex-wrap align-items-stretch" style="margin: 5px 0 0 -8px;"
                                     *ngIf="fulfillment.mra.tags.length > 0">
                                     <div *ngFor="let tag of fulfillment.mra.tags">
@@ -367,19 +447,39 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div *ngIf="mraRecommendations.length == 0"> <b>No recommendations at the moment</b></div>
-                <div *ngIf="mraRecommendations.length > 0" style="max-height: 500px; overflow-y: scroll;">
-                    <div *ngFor="let mra of mraRecommendations" style="max-width:95%">
+                <div *ngIf="mrpMatches.length == 0"> <b>No recommendations at the moment</b></div>
+                <div *ngIf="mrpMatches.length > 0" style="max-height: 500px; overflow-y: scroll;">
+                    <div *ngFor="let match of mrpMatches" style="max-width:95%">
                         <div class="card">
                             <!-- /.card-header -->
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
                                     <div class="card-title">
-                                        <h5 style="color: black;"><b>{{mra.materialResourceAvailableOwner.firstName}}
-                                                {{mra.materialResourceAvailableOwner.lastName}}'s {{mra.name}}</b>
+                                        <h5 style="color: black;">
+                                            <b>{{match.mraToRecommend.materialResourceAvailableOwner.firstName}}
+                                                {{match.mraToRecommend.materialResourceAvailableOwner.lastName}}'s
+                                                {{match.mraToRecommend.name}}</b>
+                                            &nbsp;
+                                            <span class="badge badge-success" *ngIf="match.percentageMatch >= 75"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
+                                            <span class="badge badge-warning"
+                                                *ngIf="match.percentageMatch >= 50 && match.percentageMatch < 75"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
+                                            <span class="badge badge-danger"
+                                                *ngIf="match.percentageMatch >= 25 && match.percentageMatch < 50"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
+                                            <span class="badge badge-pill" style="font-size: 12px; vertical-align: 25%; background-color: bisque;"
+                                                *ngIf="match.mraToRecommend.type == 'ONETIMEDONATION' || match.mraToRecommend.type == 'ONETIMEPAYMENT'">ONE-TIME
+                                            </span>
+                                            <span class="badge badge-pill" style="margin-top: 10px; font-size: 12px; vertical-align: 27%; background-color: burlywood;"
+                                                *ngIf="match.mraToRecommend.type != 'ONETIMEDONATION' && match.mraToRecommend.type != 'ONETIMEPAYMENT'">RECURRING
+                                            </span>
                                         </h5>
                                     </div>
-                                    <a routerLink="/userProfile/{{mra.materialResourceAvailableOwner.userId}}"
+                                    <a routerLink="/userProfile/{{match.mraToRecommend.materialResourceAvailableOwner.userId}}"
                                         class="btn btn-sm btn-primary" data-dismiss="modal">
                                         <i class="fas fa-user"></i> View Profile
                                     </a>
@@ -389,31 +489,25 @@
                             <div class="card-body p-0" style="display: block;">
                                 <ul class="products-list product-list-in-card pl-2 pr-2">
                                     <li class="item">
-                                        <div class="product-info">
-                                            <a *ngIf="mra.startDate != null" class="product-title">Available from
-                                                {{mra.startDate.toString().slice(0,15) | date }} to
-                                                {{mra.endDate.toString().slice(0,15) | date}}
-                                                <span class="badge badge-secondary float-right">
-                                                    At location
-                                                    {{mra.latitude | number:'1.1-6'}},
-                                                    {{mra.longitude | number:'1.1-6'}}
+                                        <div class="product-info ml-3 mr-3" style="color: black;">
+                                            <a class="product-title">
+                                                <span *ngIf="match.mraToRecommend.type == 'ONETIMEDONATION'">Free</span>
+                                                <span *ngIf="match.mraToRecommend.type != 'ONETIMEDONATION'">
+                                                    US ${{match.mraToRecommend.price}}/<span *ngIf="match.mraToRecommend.units == 'item(s)'">item</span>
+                                                    <span *ngIf="match.mraToRecommend.units != 'item(s)'">{{match.mraToRecommend.units}}</span>
+                                                    <span *ngIf="match.mraToRecommend.type == 'DAILY'"> per day</span>
+                                                    <span *ngIf="match.mraToRecommend.type == 'WEEKLY'"> per week</span>
+                                                    <span *ngIf="match.mraToRecommend.type == 'MONTHLY'"> per month</span>
                                                 </span>
-                                            </a>
-                                            <a *ngIf="mra.startDate == null" class="product-title"
-                                                style="color: black;">
-                                                No Expiry Date
-                                                <span class="badge badge-secondary float-right">
-                                                    At location
-                                                    {{mra.latitude | number:'1.1-6'}},
-                                                    {{mra.longitude | number:'1.1-6'}}
-                                                </span>
+                                                <a class="badge badge-secondary float-right" style="cursor: pointer; color: white;"
+                                                    (click)="changehref(match.mraToRecommend.latitude, match.mraToRecommend.longitude)" target="_blank"> 
+                                                    At location {{match.mraToRecommend.latitude | number:'1.1-6'}}, {{match.mraToRecommend.longitude | number:'1.1-6'}}
+                                                </a>
                                             </a>
                                             <span class="product-description">
-                                                {{mra.quantity}} {{mra.units}} {{mra.name}}
-                                                <br />
-                                                {{mra.description}}
-                                                <span *ngIf="mra.tags.length > 0">
-                                                    <div *ngFor="let tag of mra.tags">
+                                                {{match.mraToRecommend.description}}
+                                                <span *ngIf="match.mraToRecommend.tags.length > 0">
+                                                    <div *ngFor="let tag of match.mraToRecommend.tags">
                                                         <small class="badge badge-info">
                                                             {{tag.name}}
                                                         </small>
@@ -452,7 +546,7 @@
                     required>
                 <b> {{mrpToFulfill.unit}}</b>
                 <span>
-                    <b> / {{fulfillmentToUpdate.unreceivedQuantity}} {{mrpToFulfill.unit}} unreceived</b>
+                    <b> / {{fulfillmentToUpdate.unreceivedQuantity | number:'1.0-2'}} {{mrpToFulfill.unit}} unreceived</b>
                 </span>
             </div>
             <div class="modal-footer justify-content-between">
@@ -490,6 +584,40 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-receive-resource-payment">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="oneTimePaymentLabel">Payment</h5>
+                <button type="button" id="receiveResourcePaymentModalCloseBtn" class="close" data-dismiss="modal" (click)="closeReceivePayment()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Amount to be Paid: US$ {{ roundToTwoDecimal(paymentAmount).toFixed(2) }}
+                <div id="paypal-checkout-btn-receive" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-update-fulfillment-payment">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="oneTimePaymentLabel">Payment</h5>
+                <button type="button" id="updateFulfillmentPaymentModalCloseBtn" class="close" data-dismiss="modal" (click)="closeUpdatePayment()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Amount to be Paid: US$ {{ roundToTwoDecimal(paymentAmount).toFixed(2) }}
+                <div id="paypal-checkout-btn-update" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="modal-accept">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -500,6 +628,12 @@
                 </button>
             </div>
             <div class="modal-body">
+                <p *ngIf="fulfillmentToUpdate.mra.type != mraType.ONETIMEDONATION && fulfillmentToUpdate.mra.type != mraType.ONETIMEPAYMENT">
+                    Payment will be due
+                    <span *ngIf="fulfillmentToUpdate.paymentBasis == 'ONCE'">in full on {{mrpToFulfill.endDate.toString().slice(0,15) | date }}.</span>
+                    <span *ngIf="fulfillmentToUpdate.paymentBasis == 'DAILY' || fulfillmentToUpdate.paymentBasis == 'WEEKLY'">weekly.</span>
+                    <span *ngIf="fulfillmentToUpdate.paymentBasis == 'MONTHLY'">monthly.</span>
+                </p>
                 <p>Do you confirm the acceptance of this fulfillment?</p>
             </div>
             <div class="modal-footer justify-content-between">
@@ -528,6 +662,82 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Cancel</button>
                 <button id="reject-fulfillment" type="button" class="btn btn-danger" data-dismiss="modal"
                     (click)="rejectFulfillment()">Reject</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-end-subscription">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDialogLabel">End Subscription</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This action cannot be undone.</p>
+                <p>Are you sure you want to end the subscription of this fulfillment?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Cancel</button>
+                <button id="end-subscription" type="button" class="btn btn-primary" data-dismiss="modal"
+                    (click)="endSubscription()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-make-payment">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="makePaymentLabel">Payment</h5>
+                <button type="button" id="makePaymentModalCloseBtn" class="close" data-dismiss="modal" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" *ngIf="currentAmount > 0.0"> 
+                    <div class="col-3"></div>
+                    <div class="col-3" style="text-align: left;">
+                        Current
+                    </div>
+                    <div class="col-3">
+                        US$ {{ roundToTwoDecimal(currentAmount).toFixed(2) }}
+                    </div>
+                </div>
+                <div class="row" *ngIf="outstandingAmount > 0.0"> 
+                    <div class="col-3"></div>
+                    <div class="col-3" style="text-align: left;">
+                        Outstanding
+                    </div>
+                    <div class="col-3">
+                        US$ {{ roundToTwoDecimal(outstandingAmount).toFixed(2) }}
+                    </div>
+                </div>
+                <div class="row" *ngIf="outstandingAmount > 0.0"> 
+                    <div class="col-3"></div>
+                    <div class="col-3" style="text-align: left;">
+                        Penalty
+                    </div>
+                    <div class="col-3">
+                        US$ {{ roundToTwoDecimal(outstandingAmount * 0.05).toFixed(2) }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row"> 
+                    <div class="col-3"></div>
+                    <div class="col-3" style="text-align: left;">
+                        <b>Total</b>
+                    </div>
+                    <div class="col-3">
+                        <b>US$ {{ roundToTwoDecimal(outstandingAmount * 1.05 + currentAmount).toFixed(2) }}</b>
+                    </div>
+                </div>
+                
+                <div id="paypal-checkout-btn-recurring" style="margin-top: 10px;"></div>
             </div>
         </div>
     </div>

@@ -10,6 +10,8 @@ import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ActionSheetController, ToastController } from '@ionic/angular';
 import { Location } from '@angular/common';
+import { Notification } from './../../classes/notification';
+import { NotificationService } from './../../services/notification.service';
 
 declare var Camera: any;
 declare var navigator: any;
@@ -48,6 +50,7 @@ export class CreatePostPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private projectService: ProjectService,
     private location: Location,
+    private notificationService: NotificationService,
     private groupService: GroupService
   ) {}
 
@@ -96,6 +99,29 @@ export class CreatePostPage implements OnInit {
 
       this.postService.createPost(createdPost).subscribe(
         async (data: Post) => {
+          if (this.newsfeedType == "project") {
+            let newNotification = new Notification();
+            newNotification.msg = "A new post has been added to " + this.project.name;
+            newNotification.projectId = this.project.projectId;
+            newNotification.groupId = null;
+            newNotification.tabName = "projectfeed-tab";
+            for (let member of this.project.projectMembers) {
+              if (member.userId != this.loggedInUser.userId) {
+                this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+              }
+            }
+          } else if (this.newsfeedType == "group") {
+            let newNotification = new Notification();
+            newNotification.msg = "A new post has been added to " + this.group.name;
+            newNotification.projectId = null;
+            newNotification.groupId = this.group.groupId;
+            newNotification.tabName = "groupfeed-tab";
+            for (let member of this.group.groupMembers) {
+              if (member.userId != this.loggedInUser.userId) {
+                this.notificationService.createNewNotification(newNotification, member.userId).subscribe();
+              }
+            }
+          }
           const toast = await this.toastController.create({
             message: 'Post created!',
             duration: 2000

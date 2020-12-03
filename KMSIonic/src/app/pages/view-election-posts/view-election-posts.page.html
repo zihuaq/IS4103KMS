@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Election</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="hasActiveElection">
+    <ion-card *ngIf="activeElections">
+      <ion-card-header>
+        <ion-card-title>{{activeElections.name}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p *ngIf="activeElections.description && activeElections.description != ''">{{activeElections.description}}</p>
+        <p *ngIf="!activeElections.description || activeElections.description == ''">No Description Available</p>
+        <p>Looking for {{activeElections.numSlots}} new Admins</p>
+        <p>Minimum of {{activeElections.minRepPointsRequired}} Reputation Points to apply</p>
+        <p><b>Vote for your favourite candidates by liking their post!</b></p>
+        <ion-button size="small" [routerLink]="['/election-application']" [state]="activeElections">
+          <ion-label>Apply Now</ion-label>
+        </ion-button>
+      </ion-card-content>
+
+    </ion-card>
+    <app-newsfeed [loggedInUser]="loggedInUser" [newsfeedPosts]="newsfeedPosts" newsfeedType="election"
+      [filteredPosts]="newsfeedPosts" (init)="ionViewWillEnter()">
+    </app-newsfeed>
+  </div>
+  <div *ngIf="!hasActiveElection">
+    <ion-card>
+      <ion-card-content>
+        There is currently no active election.
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

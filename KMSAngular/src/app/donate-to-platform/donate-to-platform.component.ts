@@ -101,7 +101,7 @@ export class DonateToPlatformComponent implements OnInit, AfterViewChecked {
           delay: 4000,
           body: 'Please enter your donation amount',
         });
-      } else if (this.donationAmount == 0) {
+      } else if (this.donationAmount <= 0) {
         $(document).Toasts('create', {
           class: 'bg-warning',
           title: 'Invalid Donation Amount',
