@@ -367,19 +367,34 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div *ngIf="mraRecommendations.length == 0"> <b>No recommendations at the moment</b></div>
-                <div *ngIf="mraRecommendations.length > 0" style="max-height: 500px; overflow-y: scroll;">
-                    <div *ngFor="let mra of mraRecommendations" style="max-width:95%">
+                <div *ngIf="mrpMatches.length == 0"> <b>No recommendations at the moment</b></div>
+                <div *ngIf="mrpMatches.length > 0" style="max-height: 500px; overflow-y: scroll;">
+                    <div *ngFor="let match of mrpMatches" style="max-width:95%">
                         <div class="card">
                             <!-- /.card-header -->
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
                                     <div class="card-title">
-                                        <h5 style="color: black;"><b>{{mra.materialResourceAvailableOwner.firstName}}
-                                                {{mra.materialResourceAvailableOwner.lastName}}'s {{mra.name}}</b>
+                                        <h5 style="color: black;">
+                                            <b>{{match.mraToRecommend.materialResourceAvailableOwner.firstName}}
+                                                {{match.mraToRecommend.materialResourceAvailableOwner.lastName}}'s
+                                                {{match.mraToRecommend.name}}</b>
+                                            &nbsp;
+                                            <span class="badge badge-success" *ngIf="match.percentageMatch >= 75"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
+                                            <span class="badge badge-warning"
+                                                *ngIf="match.percentageMatch >= 50 && match.percentageMatch < 75"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
+                                            <span class="badge badge-danger"
+                                                *ngIf="match.percentageMatch >= 25 && match.percentageMatch < 50"
+                                                style="width: min-content; font-size: 12px; vertical-align: 30%;">{{ match.percentageMatch }}%
+                                                Match</span>
+
                                         </h5>
                                     </div>
-                                    <a routerLink="/userProfile/{{mra.materialResourceAvailableOwner.userId}}"
+                                    <a routerLink="/userProfile/{{match.mraToRecommend.materialResourceAvailableOwner.userId}}"
                                         class="btn btn-sm btn-primary" data-dismiss="modal">
                                         <i class="fas fa-user"></i> View Profile
                                     </a>
@@ -390,30 +405,32 @@
                                 <ul class="products-list product-list-in-card pl-2 pr-2">
                                     <li class="item">
                                         <div class="product-info">
-                                            <a *ngIf="mra.startDate != null" class="product-title">Available from
-                                                {{mra.startDate.toString().slice(0,15) | date }} to
-                                                {{mra.endDate.toString().slice(0,15) | date}}
+                                            <a *ngIf="match.mraToRecommend.startDate != null"
+                                                class="product-title">Available from
+                                                {{match.mraToRecommend.startDate.toString().slice(0,15) | date }} to
+                                                {{match.mraToRecommend.endDate.toString().slice(0,15) | date}}
                                                 <span class="badge badge-secondary float-right">
                                                     At location
-                                                    {{mra.latitude | number:'1.1-6'}},
-                                                    {{mra.longitude | number:'1.1-6'}}
+                                                    {{match.mraToRecommend.latitude | number:'1.1-6'}},
+                                                    {{match.mraToRecommend.longitude | number:'1.1-6'}}
                                                 </span>
                                             </a>
-                                            <a *ngIf="mra.startDate == null" class="product-title"
+                                            <a *ngIf="match.mraToRecommend.startDate == null" class="product-title"
                                                 style="color: black;">
                                                 No Expiry Date
                                                 <span class="badge badge-secondary float-right">
                                                     At location
-                                                    {{mra.latitude | number:'1.1-6'}},
-                                                    {{mra.longitude | number:'1.1-6'}}
+                                                    {{match.mraToRecommend.latitude | number:'1.1-6'}},
+                                                    {{match.mraToRecommend.longitude | number:'1.1-6'}}
                                                 </span>
                                             </a>
                                             <span class="product-description">
-                                                {{mra.quantity}} {{mra.units}} {{mra.name}}
+                                                {{match.mraToRecommend.quantity}} {{match.mraToRecommend.units}}
+                                                {{match.mraToRecommend.name}}
                                                 <br />
-                                                {{mra.description}}
-                                                <span *ngIf="mra.tags.length > 0">
-                                                    <div *ngFor="let tag of mra.tags">
+                                                {{match.mraToRecommend.description}}
+                                                <span *ngIf="match.mraToRecommend.tags.length > 0">
+                                                    <div *ngFor="let tag of match.mraToRecommend.tags">
                                                         <small class="badge badge-info">
                                                             {{tag.name}}
                                                         </small>
