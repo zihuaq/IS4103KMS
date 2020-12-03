@@ -1003,18 +1003,19 @@ public class UserSessionBean implements UserSessionBeanLocal {
     }
 
     @Override
-    public void promoteUserToAdmin(Long userToPromoteId) throws NoResultException {
+    public UserEntity promoteUserToAdmin(Long userToPromoteId) throws NoResultException {
         UserEntity user = em.find(UserEntity.class, userToPromoteId);
 
         if (user != null && user.getUserType() != UserTypeEnum.ADMIN) {
             user.setUserType(UserTypeEnum.ADMIN);
+            return user;
         } else {
             throw new NoResultException("No User Found.");
         }
     }
 
     @Override
-    public void resignFromAdmin(Long userId) throws NoResultException,ResignFromAdminException {
+    public UserEntity resignFromAdmin(Long userId) throws NoResultException,ResignFromAdminException {
         UserEntity user = em.find(UserEntity.class, userId);
 
         if (user != null && user.getUserType() == UserTypeEnum.ADMIN) {
@@ -1022,7 +1023,8 @@ public class UserSessionBean implements UserSessionBeanLocal {
             q.setParameter("userType", UserTypeEnum.ADMIN);
             List<UserEntity> admins = (List<UserEntity>) q.getResultList();
             if(admins.size() > 1) {
-            user.setUserType(UserTypeEnum.ADMIN);
+            user.setUserType(UserTypeEnum.INDIVIDUAL);
+            return user;
             } else {
                 throw new ResignFromAdminException("There must be at least one Admin on the platform.");
             }

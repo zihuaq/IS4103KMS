@@ -120,6 +120,10 @@ import { AdminManageElectionsComponent } from './admin-manage-elections/admin-ma
 import { EditElectionComponent } from './admin-manage-elections/edit-election/edit-election.component';
 import { ManageApplicationsComponent } from './admin-manage-elections/manage-applications/manage-applications.component';
 import { ViewElectionPostsComponent } from './view-election-posts/view-election-posts.component';
+import { ViewLeaderboardComponent } from './view-leaderboard/view-leaderboard.component';
+import { ReputationPointsLeaderboardComponent } from './view-leaderboard/reputation-points-leaderboard/reputation-points-leaderboard.component';
+import { WeeklyDonationLeaderboardComponent } from './view-leaderboard/weekly-donation-leaderboard/weekly-donation-leaderboard.component';
+import { WeeklyProjectLeaderboardComponent } from './view-leaderboard/weekly-project-leaderboard/weekly-project-leaderboard.component';
 
 export const environment = {
   production: false,
@@ -237,7 +241,11 @@ export const environment = {
     AdminManageElectionsComponent,
     EditElectionComponent,
     ManageApplicationsComponent,
-    ViewElectionPostsComponent
+    ViewElectionPostsComponent,
+    ViewLeaderboardComponent,
+    ReputationPointsLeaderboardComponent,
+    WeeklyDonationLeaderboardComponent,
+    WeeklyProjectLeaderboardComponent
   ],
   imports: [
     BrowserModule,

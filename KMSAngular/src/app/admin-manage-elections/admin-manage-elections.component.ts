@@ -65,6 +65,7 @@ export class AdminManageElectionsComponent implements OnInit {
   }
 
   private updateElection(){
+    this.activeElection = null;
     this.electionService.getHasActiveElection().subscribe(
       (result) => {
         this.hasActiveElection = result;

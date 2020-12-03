@@ -34,6 +34,7 @@ import { ViewOwnGroupComponent } from './group/view-own-group/view-own-group.com
 import { CreateNewGroupComponent } from './group/create-new-group/create-new-group.component';
 import { GroupDetailsComponent } from './group/viewGroup/group-details/group-details.component';
 import { EditGroupComponent } from './group/editGroup/edit-group/edit-group.component';
+import { ViewLeaderboardComponent } from './view-leaderboard/view-leaderboard.component';
 
 import { DonateToProjectComponent } from './project/viewProject/donate-to-project/donate-to-project.component';
 import { ChatComponent } from './chat/chat.component';
@@ -168,7 +169,11 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     component: EditGroupComponent,
   },
-
+  {
+    path: 'view-leaderboard',
+    canActivate: [RouteGuard],
+    component: ViewLeaderboardComponent,
+  },
   { path: '', canActivate: [RouteGuard], component: IndexComponent },
   {
     path: 'projectDetails/:projectId/:tabName',

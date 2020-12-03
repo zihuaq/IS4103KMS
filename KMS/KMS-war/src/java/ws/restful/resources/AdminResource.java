@@ -10,8 +10,13 @@ import Exception.NoResultException;
 import Exception.ResignFromAdminException;
 import Exception.UserNotFoundException;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.GroupEntity;
+import entity.HumanResourcePostingEntity;
+import entity.ProfileEntity;
+import entity.ProjectEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -108,8 +113,10 @@ public class AdminResource {
     @Path("/promoteUserToAdmin/{userIdToPromote}")
     public Response promoteUserToAdmin(@PathParam("userIdToPromote") Long userIdToPromote) {
         try {
-            userSessionBeanLocal.promoteUserToAdmin(userIdToPromote);
-            return Response.status(200).build();
+            UserEntity user = userSessionBeanLocal.promoteUserToAdmin(userIdToPromote);
+            UserEntity temp = new UserEntity();
+            temp.setUserType(user.getUserType());
+            return Response.status(200).entity(temp).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -122,9 +129,11 @@ public class AdminResource {
     @Path("/resignFromAdmin/{userId}")
     public Response resignFromAdmin(@PathParam("userId") Long userId) {
         try {
-            userSessionBeanLocal.resignFromAdmin(userId);
-            return Response.status(200).build();
-        } catch (NoResultException|ResignFromAdminException ex) {
+            UserEntity user = userSessionBeanLocal.resignFromAdmin(userId);
+            UserEntity temp = new UserEntity();
+            temp.setUserType(user.getUserType());
+            return Response.status(200).entity(temp).build();
+        } catch (NoResultException | ResignFromAdminException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
                     .build();

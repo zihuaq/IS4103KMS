@@ -125,7 +125,7 @@ public interface UserSessionBeanLocal {
 
     public List<ProfileEntity> getProfilesForUser(Long userId) throws NoResultException;
 
-    public void promoteUserToAdmin(Long userToPromoteId) throws NoResultException;
+    public UserEntity promoteUserToAdmin(Long userToPromoteId) throws NoResultException;
 
-    public void resignFromAdmin(Long userId) throws NoResultException, ResignFromAdminException;
+    public UserEntity resignFromAdmin(Long userId) throws NoResultException, ResignFromAdminException;
 }
