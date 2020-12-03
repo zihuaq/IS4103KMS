@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -51,7 +53,9 @@ import util.security.CryptographicHelper;
  * @author Jeremy
  */
 @Stateless
-public class UserSessionBean implements UserSessionBeanLocal {
+@Local(UserSessionBeanLocal.class)
+@Remote(UserSessionBeanRemote.class)
+public class UserSessionBean implements UserSessionBeanLocal, UserSessionBeanRemote {
 
     @EJB
     private ReportSessionBeanLocal reportSessionBean;
@@ -178,6 +182,7 @@ public class UserSessionBean implements UserSessionBeanLocal {
             user.getReviewsReceived().size();
             user.getSdgs().size();
             user.getSkills().size();
+            user.getReceivedAwards().size();
             return user;
         } else {
             throw new NoResultException("User not found");
