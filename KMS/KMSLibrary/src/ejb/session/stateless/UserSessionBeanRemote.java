@@ -29,9 +29,10 @@ import java.util.List;
 
 /**
  *
- * @author chai
+ * @author Cassie
  */
 public interface UserSessionBeanRemote {
+
     public UserEntity createNewUser(UserEntity user) throws DuplicateEmailException;
 
     public UserEntity getUserById(long userId) throws NoResultException;
@@ -125,5 +126,4 @@ public interface UserSessionBeanRemote {
     public UserEntity promoteUserToAdmin(Long userToPromoteId) throws NoResultException;
 
     public UserEntity resignFromAdmin(Long userId) throws NoResultException, ResignFromAdminException;
-
 }

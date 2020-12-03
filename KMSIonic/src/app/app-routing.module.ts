@@ -498,6 +498,10 @@ const routes: Routes = [
   {
     path: 'view-election-posts',
     loadChildren: () => import('./pages/view-election-posts/view-election-posts.module').then( m => m.ViewElectionPostsPageModule)
+  },
+  {
+    path: 'leaderboard',
+    loadChildren: () => import('./pages/leaderboard/leaderboard.module').then( m => m.LeaderboardPageModule)
   }
 
 ];

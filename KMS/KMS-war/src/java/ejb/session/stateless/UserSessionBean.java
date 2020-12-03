@@ -182,6 +182,7 @@ public class UserSessionBean implements UserSessionBeanLocal, UserSessionBeanRem
             user.getReviewsReceived().size();
             user.getSdgs().size();
             user.getSkills().size();
+            user.getReceivedAwards().size();
             return user;
         } else {
             throw new NoResultException("User not found");

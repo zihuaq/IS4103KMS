@@ -36,12 +36,12 @@
         <remote>ejb.session.stateless.TagSessionBeanRemote</remote>
     </ejb-ref>
     <ejb-ref>
-        <ejb-ref-name>TagSessionBeanRemote</ejb-ref-name>
+        <ejb-ref-name>AwardSessionBean</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
-        <remote>ejb.session.stateless.TagSessionBeanRemote</remote>
+        <remote>ejb.session.stateless.AwardSessionBeanRemote</remote>
     </ejb-ref>
     <ejb-ref>
-        <ejb-ref-name>UserSessionBeanRemote</ejb-ref-name>
+        <ejb-ref-name>UserSessionBean</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
         <remote>ejb.session.stateless.UserSessionBeanRemote</remote>
     </ejb-ref>

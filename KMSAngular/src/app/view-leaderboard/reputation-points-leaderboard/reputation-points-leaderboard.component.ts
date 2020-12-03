@@ -18,10 +18,10 @@ export class ReputationPointsLeaderboardComponent implements OnInit {
   constructor(
     private sessionService: SessionService,
     private leaderboardService: LeaderboardService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    $('input[data-bootstrap-switch]').bootstrapSwitch({
+    $('#rep-points-bootstrap-switch').bootstrapSwitch({
       state: this.isGlobalLeaderBoard,
       onSwitchChange: (event, state) => {
         event.preventDefault();
@@ -29,19 +29,9 @@ export class ReputationPointsLeaderboardComponent implements OnInit {
         this.updateLeaderboard();
       },
       onText: "Global",
-      offText: "Following" 
+      offText: "Following"
     });
     this.loggedInUser = this.sessionService.getCurrentUser();
-    this.updateLeaderboard();
-  }
-
-  setIsGlobal() {
-    this.isGlobalLeaderBoard = true;
-    this.updateLeaderboard();
-  }
-
-  setNotGlobal() {
-    this.isGlobalLeaderBoard = false;
     this.updateLeaderboard();
   }
 
@@ -52,12 +42,14 @@ export class ReputationPointsLeaderboardComponent implements OnInit {
         .getReputationPointLeaderboard()
         .subscribe((result) => {
           this.leaderboardUsers = result;
+          this.leaderboardUsers.splice(10);
         });
     } else {
       this.leaderboardService
         .getReputationPointLeaderboardForFollowing(this.loggedInUser.userId)
         .subscribe((result) => {
           this.leaderboardUsers = result;
+          this.leaderboardUsers.splice(10);
         });
     }
   }
