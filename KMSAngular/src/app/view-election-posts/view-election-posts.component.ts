@@ -46,6 +46,7 @@ export class ViewElectionPostsComponent implements OnInit {
   selectedShareOption: string;
   sharePostText: string = '';
   UserType = UserType;
+  hasActiveElection: boolean;
   activeElections: Election;
   searchString: string = '';
 
@@ -56,27 +57,32 @@ export class ViewElectionPostsComponent implements OnInit {
     private tagService: TagService,
     private reportService: ReportService,
     private electionService: ElectionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     let loggedInUserId = this.sessionService.getCurrentUser().userId;
-    this.electionService.getActiveElection().subscribe((result) => {
-      this.activeElections = result;
-      forkJoin([
-        this.userService.getUser(loggedInUserId.toString()),
-        this.postService.getPostForElection(this.activeElections.id),
-        this.tagService.getAllPostReportTags(),
-        this.tagService.getAllCommentReportTags(),
-      ]).subscribe((result) => {
-        this.loggedInUser = result[0];
-        this.electionPosts = result[1];
-        this.filteredPosts = this.electionPosts;
-        this.postReportTags = result[2];
-        this.commentReportTags = result[3];
-        this.initElements();
-        console.log(this.electionPosts);
-      });
-    });
+    this.electionService.getHasActiveElection().subscribe((result) => {
+      this.hasActiveElection = result;
+      if (this.hasActiveElection) {
+        this.electionService.getActiveElection().subscribe((result) => {
+          this.activeElections = result;
+          forkJoin([
+            this.userService.getUser(loggedInUserId.toString()),
+            this.postService.getPostForElection(this.activeElections.id),
+            this.tagService.getAllPostReportTags(),
+            this.tagService.getAllCommentReportTags(),
+          ]).subscribe((result) => {
+            this.loggedInUser = result[0];
+            this.electionPosts = result[1];
+            this.filteredPosts = this.electionPosts;
+            this.postReportTags = result[2];
+            this.commentReportTags = result[3];
+            this.initElements();
+            console.log(this.electionPosts);
+          });
+        });
+      }
+    })
   }
 
   initElements() {
@@ -504,7 +510,7 @@ export class ViewElectionPostsComponent implements OnInit {
     if (electionForm.valid) {
       if (
         this.activeElections.minRepPointsRequired <=
-          this.loggedInUser.reputationPoints &&
+        this.loggedInUser.reputationPoints &&
         this.loggedInUser.userType == UserType.INDIVIDUAL
       ) {
         let electionApplciation = new ElectionApplication();

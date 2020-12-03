@@ -19,22 +19,16 @@ declare var $: any;
 export class SideNavbarComponent implements OnInit {
   loggedInUser: User;
   TagType = TagType;
-  hasActiveElection: boolean;
 
   constructor(
     private userService: UserService,
     private sessionService: SessionService,
-    public tagService: TagService,
-    private electionService: ElectionService
+    public tagService: TagService
   ) {
   }
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
-    this.electionService.getHasActiveElection().subscribe(
-      (result) => {
-        this.hasActiveElection = result;
-      });
   }
 
   logout() {
