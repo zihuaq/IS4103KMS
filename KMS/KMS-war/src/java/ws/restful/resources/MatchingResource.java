@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import ws.restful.model.FollowingOfFollowingRsp;
 import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
+import ws.restful.model.MrpMatchesRsp;
 import ws.restful.model.ProjectMatchesRsp;
 import ws.restful.model.ProjectRecommendationBasedOnFollowingRsp;
 
@@ -59,9 +60,9 @@ public class MatchingResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMatchesForMrp(@PathParam("mrpId") Long mrpId) {
         try {
-            List<MaterialResourceAvailableEntity> mras = matchingSessionBean.getMatchesForMrp(mrpId);
-            mras = getMraResponse(mras);
-            return Response.status(200).entity(mras).build();
+            List<MrpMatchesRsp> matches = matchingSessionBean.getMatchesForMrp(mrpId);
+            matches = getMrpMatchesResponse(matches);
+            return Response.status(200).entity(matches).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -235,6 +236,17 @@ public class MatchingResource {
             mras.get(i).setMaterialResourceAvailableOwner(user);
         }
         return mras;
+    }
+
+    private List<MrpMatchesRsp> getMrpMatchesResponse(List<MrpMatchesRsp> matches) {
+        for (int i = 0; i < matches.size(); i++) {
+            UserEntity user = new UserEntity();
+            user.setUserId(matches.get(i).getMraToRecommend().getMaterialResourceAvailableOwner().getUserId());
+            user.setFirstName(matches.get(i).getMraToRecommend().getMaterialResourceAvailableOwner().getFirstName());
+            user.setLastName(matches.get(i).getMraToRecommend().getMaterialResourceAvailableOwner().getLastName());
+            matches.get(i).getMraToRecommend().setMaterialResourceAvailableOwner(user);
+        }
+        return matches;
     }
 
     private List<ProjectMatchesRsp> getProjectsMatchesResponse(List<ProjectMatchesRsp> matches) {

@@ -41,6 +41,7 @@ import org.apache.commons.text.similarity.FuzzyScore;
 import util.enumeration.ProjectStatusEnum;
 import ws.restful.model.FollowingOfFollowingRsp;
 import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
+import ws.restful.model.MrpMatchesRsp;
 import ws.restful.model.ProjectMatchesRsp;
 import ws.restful.model.ProjectRecommendationBasedOnFollowingRsp;
 
@@ -87,13 +88,13 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
     }
     
     @Override
-    public List<MaterialResourceAvailableEntity> getMatchesForMrp(long mrpId) throws NoResultException {
+    public List<MrpMatchesRsp> getMatchesForMrp(long mrpId) throws NoResultException {
         MaterialResourcePostingEntity mrp = materialResourcePostingSessionBean.getMrpById(mrpId);
         String mrpString = removeStopWords(mrp.getName()) + removeStopWords(mrp.getDescription());
         System.out.println(mrpString);
         
         List<MaterialResourceAvailableEntity> allMras = materialResourceAvailableSessionBean.getAllMaterialResourceAvailable();
-        Map<MaterialResourceAvailableEntity, Integer> mras = new HashMap<>();
+        Map<MaterialResourceAvailableEntity, Long> mras = new HashMap<>();
         
         for (int i = 0; i < allMras.size(); i++) {
             if (hasMatchingTags(mrp.getTags(), allMras.get(i).getTags())) {
@@ -101,15 +102,22 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
                 int maxFuzzyScore = getMaxFuzzyScore(mrpString.length());
                 double fuzzyScore = new FuzzyScore(Locale.getDefault()).fuzzyScore(mrpString, mraString);
                 if (fuzzyScore >= maxFuzzyScore / 4) {
-                    mras.put(allMras.get(i), (int) Math.round(fuzzyScore / maxFuzzyScore * 100));
+                    mras.put(allMras.get(i), Math.round(fuzzyScore / maxFuzzyScore * 100));
                 }
             }
         }
         System.out.println(mras);
-        LinkedHashMap<MaterialResourceAvailableEntity, Integer> sortedMras = new LinkedHashMap<>();
+        LinkedHashMap<MaterialResourceAvailableEntity, Long> sortedMras = new LinkedHashMap<>();
         mras.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> sortedMras.put(x.getKey(), x.getValue()));
         System.out.println(sortedMras);
-        List<MaterialResourceAvailableEntity> matches = new ArrayList<>(sortedMras.keySet());
+        List<MrpMatchesRsp> matches = new ArrayList<>();
+        for (Map.Entry<MaterialResourceAvailableEntity, Long> entry : sortedMras.entrySet()) {
+            MrpMatchesRsp response = new MrpMatchesRsp();
+            response.setMraToRecommend(entry.getKey());
+            response.setPercentageMatch(entry.getValue());
+            System.out.println("Value: " + entry.getValue());
+            matches.add(response);
+        }
         return matches;
     }
     

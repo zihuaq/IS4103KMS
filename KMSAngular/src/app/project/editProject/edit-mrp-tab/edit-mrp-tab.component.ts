@@ -17,6 +17,7 @@ import { User } from 'src/app/classes/user';
 import { SessionService } from 'src/app/session.service';
 import { Notification } from 'src/app/classes/notification';
 import { NotificationService } from 'src/app/notification.service';
+import { MrpMatchesRsp } from 'src/app/models/MrpMatchesRsp';
 
 declare var $: any;
 
@@ -70,7 +71,7 @@ export class EditMrpTabComponent implements OnInit {
   rejected: boolean = false;
 
   mrpToRecommend: MaterialResourcePosting;
-  mraRecommendations: MaterialResourceAvailable[];
+  mrpMatches: MrpMatchesRsp[];
 
   constructor(public projectService: ProjectService,
     public materialResourcePostingService: MaterialResourcePostingService,
@@ -91,7 +92,7 @@ export class EditMrpTabComponent implements OnInit {
     this.mrpToFulfill = new MaterialResourcePosting;
     this.fulfillmentToUpdate = new Fulfillment;
     this.mrpToRecommend = new MaterialResourcePosting;
-    this.mraRecommendations = [];
+    this.mrpMatches = [];
   }
 
   ngOnInit(): void {
@@ -453,9 +454,9 @@ export class EditMrpTabComponent implements OnInit {
   refreshRecommendations(mrpId: number) {
     this.matchingService.getMatchesForMrp(mrpId).subscribe(
       response => {
-        this.mraRecommendations = response;
-        this.mraRecommendations.splice(10);
-        console.log("Recommendations" + this.mraRecommendations);
+        this.mrpMatches = response;
+        this.mrpMatches.splice(10);
+        console.log("Recommendations" + this.mrpMatches);
       }
     )
   }
