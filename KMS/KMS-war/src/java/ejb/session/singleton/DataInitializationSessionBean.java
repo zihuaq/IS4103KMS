@@ -408,7 +408,7 @@ public class DataInitializationSessionBean {
             mra.setMaterialResourceAvailableOwner(userSessionBean.getUserById(7l));
             materialResourceAvailableSessionBean.createMaterialResourceAvailable(mra);
 
-            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0, 0.0), 2l, 3l, 2l);
+            fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(3.0, 0.0, 3.0, 17.5), 2l, 3l, 2l);
             fulfillmentSessionBean.createFulfillment(new FulfillmentEntity(15.0, 0.0, 15.0, 0.0), 6l, 1l, 5l);
             
             //One-Time Payments
