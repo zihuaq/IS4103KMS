@@ -82,14 +82,12 @@ public class GroupSessionBeanTest {
         groupSessionBean.createNewGroup(newGroup, userId, tagIds);
     }
 
-    @Test
-    public void testCreateNewUserReview() throws Exception {
-
-    }
 
     @Test
     public void testRetrieveAllGroup() throws Exception {
-
+        
+        List<GroupEntity> groups = groupSessionBean.retrieveAllGroup();
+        assertEquals(0, groups.size());
     }
 
     @Test
