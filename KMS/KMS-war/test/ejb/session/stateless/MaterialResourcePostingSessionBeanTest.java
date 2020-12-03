@@ -90,7 +90,7 @@ public class MaterialResourcePostingSessionBeanTest {
     }
     
     @Test
-    public void test05GetListOfMaterialResourcePostingByProjectIf() {
+    public void test05GetListOfMaterialResourcePostingByProjectId() {
         List result = materialResourcePostingSessionBean.getListOfMaterialResourcePostingByProjectId(4l);
         
         assertFalse(result.isEmpty());
