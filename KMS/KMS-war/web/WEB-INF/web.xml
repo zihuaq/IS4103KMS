@@ -35,4 +35,14 @@
         <ejb-ref-type>Session</ejb-ref-type>
         <remote>ejb.session.stateless.TagSessionBeanRemote</remote>
     </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>TagSessionBeanRemote</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>ejb.session.stateless.TagSessionBeanRemote</remote>
+    </ejb-ref>
+    <ejb-ref>
+        <ejb-ref-name>UserSessionBeanRemote</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <remote>ejb.session.stateless.UserSessionBeanRemote</remote>
+    </ejb-ref>
 </web-app>

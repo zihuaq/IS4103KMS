@@ -44,6 +44,7 @@ public class TagSessionBean implements TagSessionBeanLocal, TagSessionBeanRemote
 
         if (tags.isEmpty()) {
             em.persist(tagRequest);
+            em.flush();
         } else {
             throw new TagNameExistException("Name of Tag exist");
         }
@@ -89,6 +90,7 @@ public class TagSessionBean implements TagSessionBeanLocal, TagSessionBeanRemote
 
         if (tags.isEmpty()) {
             em.persist(tag);
+            em.flush();
         } else {
             throw new TagNameExistException("Name of Tag exist");
         }

@@ -5,6 +5,7 @@
  */
 package entity;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,7 +23,7 @@ import util.enumeration.TagTypeEnum;
  * @author Cassie
  */
 @Entity
-public class TagRequestEntity {
+public class TagRequestEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,6 +43,18 @@ public class TagRequestEntity {
     @JoinColumn(nullable = false)
     @ManyToOne
     private UserEntity requestOwner;
+
+    public TagRequestEntity() {
+    }
+
+    public TagRequestEntity(String requestedName, TagTypeEnum requestedTagType, UserEntity requestOwner) {
+        this();
+        this.requestedName = requestedName;
+        this.requestedTagType = requestedTagType;
+        this.requestOwner = requestOwner;
+    }
+    
+    
 
     public Long getTagRequestId() {
         return tagRequestId;

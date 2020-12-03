@@ -36,6 +36,7 @@ import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
 import entity.TagEntity;
+import entity.TagRequestEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
 import java.text.SimpleDateFormat;
@@ -431,6 +432,16 @@ public class DataInitializationSessionBean {
             taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-16 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 18:00"), 0.2, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Seek Sponsorship", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-20 12:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 12:00"), 0.0, 0l), 4l);
+        } catch (NoResultException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            UserEntity user = userSessionBean.getUserById(2l);
+            TagRequestEntity tagRequest = new TagRequestEntity("Test", TagTypeEnum.SKILL, user);
+            tagSessionBean.createTagRequest(tagRequest);
+        } catch (TagNameExistException ex) {
+            System.out.println(ex.getMessage());
         } catch (NoResultException ex) {
             System.out.println(ex.getMessage());
         }
