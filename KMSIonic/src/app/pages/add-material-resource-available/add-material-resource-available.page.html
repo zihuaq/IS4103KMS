@@ -77,14 +77,14 @@
           </ion-item>
           <ion-item *ngIf="hasExpiry">
             <ion-label position="stacked">Start Date (DD/MM/YYYY):</ion-label>
-            <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" display-format="DD/MM/YYYY"
+            <ion-datetime required name="startDate" placeholder="DD/MM/YYYY" [min]="minDate" [max]="maxDate" display-format="DD/MM/YYYY"
               [(ngModel)]="editingMraStartDate">
             </ion-datetime>
           </ion-item>
           <ion-item *ngIf="hasExpiry">
             <ion-label position="stacked">End Date (DD/MM/YYYY):</ion-label>
             <ion-datetime required name="endDate" placeholder="DD/MM/YYYY" display-format="DD/MM/YYYY"
-              [min]="editingMraStartDate" [(ngModel)]="editingMraEndDate">
+              [min]="editingMraStartDate" [max]="maxDate" [(ngModel)]="editingMraEndDate">
             </ion-datetime>
           </ion-item>
         </ion-item-group>

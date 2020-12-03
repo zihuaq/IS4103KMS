@@ -24,6 +24,7 @@ export class EditBasicInfoPage implements OnInit {
   privacySettings = AccountPrivacySettingEnum;
   genders = ['Male', 'Female'];
   UserType = UserType;
+  maxDate: string;
 
   constructor(
     private location: Location,
@@ -39,6 +40,9 @@ export class EditBasicInfoPage implements OnInit {
   ngOnInit() {}
 
   ionViewWillEnter() {
+    let date = new Date();
+    date.setFullYear(date.getFullYear() + 1);
+    this.maxDate = date.toISOString().slice(0, 10);
     let profileid = this.activatedRoute.snapshot.params.userid;
     this.authenticationService.getCurrentUser().then((user: User) => {
       this.loggedInUserId = user.userId;

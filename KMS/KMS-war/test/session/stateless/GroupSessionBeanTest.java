@@ -24,6 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import ejb.session.stateless.TagSessionBeanRemote;
+import ejb.session.stateless.UserSessionBeanRemote;
 import entity.UserEntity;
 
 /**
@@ -31,6 +32,8 @@ import entity.UserEntity;
  * @author Jeremy
  */
 public class GroupSessionBeanTest {
+
+    UserSessionBeanRemote userSessionBean = lookupUserSessionBeanRemote();
 
     TagSessionBeanRemote tagSessionBean = lookupTagSessionBeanRemote();
 
@@ -169,6 +172,16 @@ public class GroupSessionBeanTest {
         try {
             Context c = new InitialContext();
             return (TagSessionBeanRemote) c.lookup("java:global/KMS/KMS-war/TagSessionBean!ejb.session.stateless.TagSessionBeanRemote");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private UserSessionBeanRemote lookupUserSessionBeanRemote() {
+        try {
+            Context c = new InitialContext();
+            return (UserSessionBeanRemote) c.lookup("java:global/KMS/KMS-war/UserSessionBean!ejb.session.stateless.UserSessionBeanRemote");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
