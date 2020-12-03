@@ -53,6 +53,12 @@ export class ProfileService {
       .pipe(catchError(this.handleError));
   }
 
+  uploadProfiles(uploadProfilesReq: Object): Observable<any> {
+    return this.http
+      .post<any>(this.baseUrl + '/uploadProfiles', uploadProfilesReq)
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage: string = '';
 

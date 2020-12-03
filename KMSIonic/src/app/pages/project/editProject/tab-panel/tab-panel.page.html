@@ -46,12 +46,12 @@
   <span *ngIf="segment == 'hrp'">
     <ion-card-content class="ion-no-margin">
       <ion-button expand="full" (click)="createHrp()" style="font-size: 13px;">
-        <ion-icon name="add-outline" ></ion-icon>
+        <ion-icon name="add-outline"></ion-icon>
         New Human Resource Posting
       </ion-button>
-      
+
       <span *ngIf="hrpList.length == 0">There is no human resource posting at the moment.</span>
-      
+
       <span *ngIf="hrpList.length > 0">
           <ion-card *ngFor="let hrp of hrpList" style="margin: 10px 0 0 0; padding: 5px;">
             <ion-item lines="full">
@@ -59,8 +59,8 @@
                 <b style="font-size: 23px;">{{hrp.name}}</b>
               </ion-card-title>
               <ion-buttons slot="end">
-                <ion-icon class="iconButton" name="create-outline" (click)="editHrp(hrp.humanResourcePostingId)" style="margin-right: 5px;"></ion-icon>
-                <ion-icon class="iconButton" name="close-circle-outline" (click)="deleteHrpAlert(hrp.humanResourcePostingId)"></ion-icon>
+                <ion-icon class="iconButton" name="ellipsis-horizontal-outline"
+                (click)="handleHrpActionSheet(hrp.humanResourcePostingId)"></ion-icon>
               </ion-buttons>
             </ion-item>
             <ion-grid style="padding: 15px">
@@ -82,7 +82,6 @@
               </ion-row>
             </ion-grid>
           </ion-card>
-
       </span>
     </ion-card-content>
   </span>
@@ -93,9 +92,9 @@
         <ion-icon name="add-outline"></ion-icon>
         New Material Resource Posting
       </ion-button>
-      
+
       <span *ngIf="noMrp">There is no material resource posting at the moment.</span>
-      
+
       <span *ngIf="!noMrp">
           <ion-card *ngFor="let mrp of mrpList" style="margin: 10px 0 0 0; padding: 5px;">
             <ion-item lines="full">
@@ -138,18 +137,18 @@
   <ion-card *ngIf="segment == 'docs'">
     <ion-card-content class="ion-no-margin">
       <ion-button expand="full" style="font-size: 12px;" (click)="uploadModal()">
-        <ion-icon name="cloud-upload-outline"></ion-icon> 
+        <ion-icon name="cloud-upload-outline"></ion-icon>
         Upload Documents
       </ion-button>
       <span *ngIf="!hasLoad">
         Loading...
       </span>
-      
+
       <span *ngIf="hasLoad">
         <span *ngIf="files.length == 0">
           There is no documents.
         </span>
-      
+
         <span *ngIf="files.length > 0">
           <ion-card *ngFor="let doc of docs" style="margin: 10px 0 0 0; padding: 5px;">
             <ion-item lines="full">
@@ -158,13 +157,14 @@
                 <ion-card-subtitle style="margin-top: 5px; overflow: hidden;">{{doc.timeStamp}}</ion-card-subtitle>
               </ion-card-title>
               <ion-buttons slot="end">
-                <ion-icon class="iconButton" name="document-outline" style="margin-right: 5px;" (click)="viewFile(doc.key)" ></ion-icon>
+                <ion-icon class="iconButton" name="document-outline" style="margin-right: 5px;"
+                  (click)="viewFile(doc.key)"></ion-icon>
                 <ion-icon class="iconButton" name="close-circle-outline" (click)="deleteDocs(doc.key)"></ion-icon>
               </ion-buttons>
             </ion-item>
             <ion-card-content style="padding: 15px">
               Uploaded By: {{doc.author}}
-              <br/>
+              <br />
               Description: {{doc.description}}
             </ion-card-content>
           </ion-card>

@@ -3,6 +3,8 @@ import { User } from 'src/app/classes/user';
 import { AdminService } from 'src/app/admin.service';
 import { NgForm } from '@angular/forms';
 import { SessionService } from 'src/app/session.service';
+import { UserType } from 'src/app/classes/user-type.enum';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -16,10 +18,75 @@ export class UserSettingComponent implements OnInit {
   @Input() user: User;
   @Output() userChanged = new EventEmitter<User>();
   settingStatus = ['Active', 'Deactive'];
+  UserType = UserType;
+  loggedInUser: User;
 
-  constructor(private adminService: AdminService, private sessionService: SessionService) { }
+  constructor(private adminService: AdminService, private sessionService: SessionService,
+    private router: Router) {
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+  }
 
   ngOnInit(): void {
+    this.loggedInUser = this.sessionService.getCurrentUser();
+  }
+
+  promoteToAdmin() {
+    this.adminService.promoteUserToAdmin(this.user.userId)
+      .subscribe(
+        (responsedata) => {
+          this.user = {
+            ...this.user,
+            userType: responsedata.userType
+          };
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Promoted User to Admin successfully',
+          })
+          this.userChanged.emit(this.user);
+        },
+        (error) => {
+          $(document).Toasts('create', {
+            class: 'bg-warning',
+            autohide: true,
+            delay: 2500,
+            body: error,
+          });
+        }
+      )
+  }
+
+  resignFromAdmin() {
+    this.adminService.resignFromAdmin(this.loggedInUser.userId)
+      .subscribe(
+        (responsedata) => {
+          this.user = {
+            ...this.user,
+            userType: responsedata.userType
+          };
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Resigned from Admin successfully',
+          })
+          this.userChanged.emit(this.user);
+          this.router.navigate(["/userProfile/" + this.user.userId]);
+        },
+        (error) => {
+          $(document).Toasts('create', {
+            class: 'bg-warning',
+            autohide: true,
+            delay: 2500,
+            body: error,
+          });
+        }
+      )
   }
 
   onEditUser(disableForm: NgForm) {
@@ -27,43 +94,43 @@ export class UserSettingComponent implements OnInit {
       console.log(disableForm)
     }
     let active: boolean
-    if(disableForm.value.status == "Active"){
+    if (disableForm.value.status == "Active") {
       active = true;
     }
-    else{
+    else {
       active = false;
     }
     this.adminService.changeUserStatus(this.sessionService.getCurrentUser().email, this.user.email, active)
-    .subscribe(
-      (responsedata: User)=>{
-        this.user = {
-          ...this.user,
-          firstName: responsedata.firstName,
-          lastName: responsedata.lastName,
-          email: responsedata.email,
-          dob: responsedata.dob,
-          profilePicture: responsedata.profilePicture,
-          sdgs: responsedata.sdgs,
-          isActive: responsedata.isActive
-        };
-        $(document).Toasts('create', {
-          class: 'bg-success',
-          title: 'Success',
-          autohide: true,
-          delay: 2500,
-          body: 'Profile picture updated successfully',
-        })
-        this.userChanged.emit(this.user);
-      },
-      (error)=>{
-        $(document).Toasts('create', {
-          class: 'bg-warning',
-          autohide: true,
-          delay: 2500,
-          body: error,
-        });
-      }
-    )
+      .subscribe(
+        (responsedata: User) => {
+          this.user = {
+            ...this.user,
+            firstName: responsedata.firstName,
+            lastName: responsedata.lastName,
+            email: responsedata.email,
+            dob: responsedata.dob,
+            profilePicture: responsedata.profilePicture,
+            sdgs: responsedata.sdgs,
+            isActive: responsedata.isActive
+          };
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            autohide: true,
+            delay: 2500,
+            body: 'Profile picture updated successfully',
+          })
+          this.userChanged.emit(this.user);
+        },
+        (error) => {
+          $(document).Toasts('create', {
+            class: 'bg-warning',
+            autohide: true,
+            delay: 2500,
+            body: error,
+          });
+        }
+      )
 
 
   }

@@ -1,0 +1,179 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Recommendations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Recommended Users To Follow</ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="followersToFollow && followingOfFollowing">
+      <ion-label *ngIf="!hasFollowRecommendations">No recommendations at the moment</ion-label>
+      <ion-item *ngFor="let user of followersToFollow" (click)="goToProfile(user)">
+        <ion-avatar slot="start" style="width: 40px; height: 40px;">
+          <img *ngIf="user.profilePicture" class="ion-border" [src]="user.profilePicture" alt="User Image">
+          <img *ngIf="!user.profilePicture" class="ion-border"
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            alt="User Image">
+        </ion-avatar>
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col class="ion-no-padding" size="12">
+              <ion-text style="font-size: large;">{{user.firstName}}
+                {{user.lastName}}</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="ion-no-padding" size="12">
+              <ion-text class="ion-text-wrap" style="font-size: small;" color="medium">follows you</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button *ngIf="!checkLoginUserHasFollowed(user.userId) && !checkLoginUserHaveSentFollowReq(user.userId)"
+          class="ion-activatable ripple-parent" (click)="follow(user.userId, $event)" style="margin: 5px;">
+          <i class="fas fa-user-plus"></i> Follow
+        </ion-button>
+        <ion-button *ngIf="!checkLoginUserHasFollowed(user.userId) && checkLoginUserHaveSentFollowReq(user.userId)"
+          class="ion-activatable ripple-parent" disabled=true style="margin: 5px;">
+          <i class="fas fa-check"></i> Follow Request Sent
+        </ion-button>
+      </ion-item>
+      <ion-item *ngFor="let followingOfFollowingRsp of followingOfFollowing"
+        (click)="goToProfile(followingOfFollowingRsp.userToRecommend)">
+        <ion-avatar slot="start" style="width: 40px; height: 40px;">
+          <img *ngIf="followingOfFollowingRsp.userToRecommend.profilePicture" class="ion-border"
+            [src]="followingOfFollowingRsp.userToRecommend.profilePicture" alt="User Image">
+          <img *ngIf="!followingOfFollowingRsp.userToRecommend.profilePicture" class="ion-border"
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            alt="User Image">
+        </ion-avatar>
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col class="ion-no-padding" size="12">
+              <ion-text style="font-size: large;">{{followingOfFollowingRsp.userToRecommend.firstName}}
+                {{followingOfFollowingRsp.userToRecommend.lastName}}</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="ion-no-padding" size="12">
+              <ion-text *ngIf="followingOfFollowingRsp.usersFollowing.length == 1" class="ion-text-wrap"
+                style="font-size: small;" color="medium">followed by
+                {{followingOfFollowingRsp.usersFollowing[0].firstName}}
+                {{followingOfFollowingRsp.usersFollowing[0].lastName}}</ion-text>
+              <ion-text *ngIf="followingOfFollowingRsp.usersFollowing.length == 2" class="ion-text-wrap"
+                style="font-size: small;" color="medium">followed by
+                {{followingOfFollowingRsp.usersFollowing[0].firstName}}
+                {{followingOfFollowingRsp.usersFollowing[0].lastName}}
+                and {{followingOfFollowingRsp.usersFollowing[1].firstName}}
+                {{followingOfFollowingRsp.usersFollowing[1].lastName}}</ion-text>
+              <ion-text *ngIf="followingOfFollowingRsp.usersFollowing.length > 2" class="ion-text-wrap"
+                style="font-size: small;" color="medium">followed by
+                {{followingOfFollowingRsp.usersFollowing[0].firstName}}
+                {{followingOfFollowingRsp.usersFollowing[0].lastName}},
+                {{followingOfFollowingRsp.usersFollowing[1].firstName}}
+                {{followingOfFollowingRsp.usersFollowing[1].lastName}} and
+                {{followingOfFollowingRsp.usersFollowing.length-2}} others</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button
+          *ngIf="!checkLoginUserHasFollowed(followingOfFollowingRsp.userToRecommend.userId) && !checkLoginUserHaveSentFollowReq(followingOfFollowingRsp.userToRecommend.userId)"
+          class="ion-activatable ripple-parent" (click)="follow(followingOfFollowingRsp.userToRecommend.userId, $event)"
+          style="margin: 5px;">
+          <i class="fas fa-user-plus"></i> Follow
+        </ion-button>
+        <ion-button
+          *ngIf="!checkLoginUserHasFollowed(followingOfFollowingRsp.userToRecommend.userId) && checkLoginUserHaveSentFollowReq(followingOfFollowingRsp.userToRecommend.userId)"
+          class="ion-activatable ripple-parent" disabled=true style="margin: 5px;">
+          <i class="fas fa-check"></i> Follow Request Sent
+        </ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Recommended Groups To Join</ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="groupRecoBySDG && groupRecoByFollowing">
+      <ion-label *ngIf="!hasGroupRecommendations">No recommendations at the moment</ion-label>
+      <span *ngFor="let group of groupRecoBySDG">
+        <ion-card tappable (click)="goToGroup(group)">
+          <ion-card-header>
+            <p style="font-size: 17px; margin-top: 8px; margin-bottom: -8px;"><b>{{group.name}}</b></p>
+          </ion-card-header>
+          <ion-card-content>
+            <p *ngIf="group.description" style="margin-bottom: 8px;">{{group.description}}</p>
+            <p *ngIf="!group.description" style="margin-bottom: 8px; font-style: italic;">Group has no description</p>
+            <span *ngFor="let sdg of sortSDG(group.sdgs)">
+              <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
+            </span>
+          </ion-card-content>
+        </ion-card>
+      </span>
+      <span *ngFor="let groupReco of groupRecoByFollowing">
+        <ion-card tappable (click)="goToGroup(groupReco.groupToRecommend)">
+          <ion-card-header>
+            <p style="font-size: 17px; margin-top: 8px; margin-bottom: -8px;"><b>{{groupReco.groupToRecommend.name}}</b>
+            </p>
+          </ion-card-header>
+          <ion-card-content>
+            <p *ngIf="groupReco.groupToRecommend.description" style="margin-bottom: 8px;">
+              {{groupReco.groupToRecommend.description}}</p>
+            <p *ngIf="!groupReco.groupToRecommend.description" style="margin-bottom: 8px; font-style: italic;">Group has
+              no description</p>
+            <span *ngFor="let sdg of sortSDG(groupReco.groupToRecommend.sdgs)">
+              <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
+            </span>
+          </ion-card-content>
+        </ion-card>
+      </span>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Recommended Projects To Join</ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="projectRecoBySDG && projectRecoByFollowing">
+      <ion-label *ngIf="!hasProjectRecommendations">No recommendations at the moment</ion-label>
+      <span *ngFor="let project of projectRecoBySDG">
+        <ion-card tappable (click)="goToProject(project)">
+          <ion-card-header>
+            <ion-badge color="primary">{{project.status}}</ion-badge>
+            <p style="font-size: 17px; margin-top: 8px; margin-bottom: -8px;"><b>{{project.name}}</b></p>
+          </ion-card-header>
+          <ion-card-content>
+            <p *ngIf="project.description" style="margin-bottom: 8px;">{{project.description}}</p>
+            <p *ngIf="!project.description" style="margin-bottom: 8px; font-style: italic;">Project has no description
+            </p>
+            <span *ngFor="let sdg of sortSDG(project.sdgs)">
+              <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
+            </span>
+          </ion-card-content>
+        </ion-card>
+      </span>
+      <span *ngFor="let projectReco of projectRecoByFollowing">
+        <ion-card tappable (click)="goToProject(projectReco.projectToRecommend)">
+          <ion-card-header>
+            <ion-badge color="primary">{{projectReco.projectToRecommend.status}}</ion-badge>
+            <p style="font-size: 17px; margin-top: 8px; margin-bottom: -8px;">
+              <b>{{projectReco.projectToRecommend.name}}</b></p>
+          </ion-card-header>
+          <ion-card-content>
+            <p *ngIf="projectReco.projectToRecommend.description" style="margin-bottom: 8px;">
+              {{projectReco.projectToRecommend.description}}</p>
+            <p *ngIf="!projectReco.projectToRecommend.description" style="margin-bottom: 8px; font-style: italic;">
+              Project has no description</p>
+            <span *ngFor="let sdg of sortSDG(projectReco.projectToRecommend.sdgs)">
+              <ion-badge color="dark">{{sdg.name}}</ion-badge>&nbsp;
+            </span>
+          </ion-card-content>
+        </ion-card>
+      </span>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

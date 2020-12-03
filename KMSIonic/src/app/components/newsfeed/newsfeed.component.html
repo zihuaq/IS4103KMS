@@ -35,7 +35,7 @@
   No Post found
 </ion-item>
 <ion-card *ngFor="let post of filteredPosts">
-  <ion-toolbar lines="none">
+  <ion-toolbar lines="none" *ngIf="!post.electionApplication">
     <ion-avatar slot="start" style="width: 40px; height: 40px; margin-left: 5px;">
       <img *ngIf="post.postOwner.profilePicture" class="ion-border" [src]="post.postOwner.profilePicture"
         alt="User profile picture" routerLink="/user-profile/{{post.postOwner.userId}}">
@@ -50,10 +50,14 @@
             {{post.postOwner.lastName}}
           </ion-label>
           <ion-icon *ngIf="post.group || post.project" name="caret-forward"></ion-icon>
-          <a routerLink="/project-details/{{post.project.projectId}}/projectfeed-tab" *ngIf="post.project" style="font-size: smaller;">
+          <a routerLink="/project-details/{{post.project.projectId}}/projectfeed-tab" *ngIf="post.project"
+            style="font-size: smaller;">
             {{post.project.name}}</a>
           <a routerLink="/group-details/{{post.group.groupId}}" *ngIf="post.group" style="font-size: smaller;">
             {{post.group.name}}</a>
+          &nbsp;
+          <ion-badge color="dark" *ngIf="post.isPinnedPost">Pinned Post</ion-badge>
+          <ion-badge color="dark" *ngIf="post.isElectionPost">Election Post</ion-badge>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -65,7 +69,47 @@
     <ion-icon name="ellipsis-horizontal-outline" slot="end" (click)="postActionSheet(post)" class="ion-margin-end">
     </ion-icon>
   </ion-toolbar>
+  <ion-toolbar lines="none" *ngIf="post.electionApplication">
+    <ion-avatar slot="start" style="width: 40px; height: 40px; margin-left: 5px;">
+      <img *ngIf="post.postOwner.profilePicture" class="ion-border" [src]="post.postOwner.profilePicture"
+        alt="User profile picture" routerLink="/user-profile/{{post.postOwner.userId}}">
+      <img *ngIf="!post.postOwner.profilePicture" class="ion-border"
+        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+        alt="User profile picture" routerLink="/user-profile/{{post.postOwner.userId}}">
+    </ion-avatar>
+    <ion-grid fixed>
+      <ion-row>
+        <ion-col class="ion-no-padding" size="12">
+          <ion-label routerLink="/user-profile/{{post.postOwner.userId}}">{{post.postOwner.firstName}}
+            {{post.postOwner.lastName}}
+          </ion-label>
+          &nbsp;
+          <ion-badge color="black" *ngIf="post.isElectionPost">Election Post</ion-badge>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="ion-no-padding" size="12">
+          <ion-card-subtitle style="font-size: smaller;">Endorsed by {{post.endorser.firstName}}
+            {{post.endorser.lastName}}</ion-card-subtitle>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-icon name="ellipsis-horizontal-outline" slot="end" (click)="postActionSheet(post)" class="ion-margin-end"
+      *ngIf="loggedInUser.userId != post.postOwner.userId">
+    </ion-icon>
+  </ion-toolbar>
   <ion-card-content>
+    <div *ngIf="post.electionApplication">
+      <label> Reasons For Applying: </label>
+      <br />
+      <p>{{post.electionApplication.reasons}}</p>
+      <label> Contributions to KMS: </label>
+      <br />
+      <p>{{post.electionApplication.contributions}}</p>
+      <label> Additional Comments: </label>
+      <br />
+      <p>{{post.electionApplication.additionalComments}}</p>
+    </div>
     {{post.text}}
     <ion-card *ngIf="post.sharedGroupId || post.sharedProjectId">
       <img *ngIf="post.picture" [src]="post.picture" alt="Photo">
@@ -78,14 +122,39 @@
       <ion-card-content *ngIf="post.sharedGroupOrProjectDescription && post.sharedGroupOrProjectDescription != ''">
         {{post.sharedGroupOrProjectDescription}}
       </ion-card-content>
-      <ion-card-content *ngIf="!post.sharedGroupOrProjectDescription && post.sharedGroupOrProjectDescription != ''">
+      <ion-card-content *ngIf="!post.sharedGroupOrProjectDescription || post.sharedGroupOrProjectDescription == ''">
         No Description Available
       </ion-card-content>
       <ion-item button *ngIf="post.sharedGroupId" routerLink="/group-details/{{post.sharedGroupId}}">
         <ion-label>View Group</ion-label>
       </ion-item>
-      <ion-item button *ngIf="post.sharedProjectId" routerLink="/project-details/{{post.sharedProjectId}}/projectfeed-tab">
+      <ion-item button *ngIf="post.sharedProjectId"
+        routerLink="/project-details/{{post.sharedProjectId}}/projectfeed-tab">
         <ion-label>View Project</ion-label>
+      </ion-item>
+    </ion-card>
+
+    <ion-card *ngIf="post.election">
+      <ion-card-header>
+        <ion-card-title>{{post.election.name}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content *ngIf="post.election.description && post.election.description != ''">
+        {{post.election.description}}
+      </ion-card-content>
+      <ion-card-content *ngIf="!post.election.description || post.election.description == ''">
+        No Description Available
+      </ion-card-content>
+      <ion-card-content>
+        Looking for {{post.election.numSlots}} new Admins
+      </ion-card-content>
+      <ion-card-content>
+        Minimum of {{post.election.minRepPointsRequired}} Reputation Points to apply
+      </ion-card-content>
+      <ion-item button routerLink="/view-election-posts">
+        <ion-label>View Election Page</ion-label>
+      </ion-item>
+      <ion-item button [routerLink]="['/election-application']" [state]="post.election">
+        <ion-label>Apply Now</ion-label>
       </ion-item>
     </ion-card>
 
@@ -107,12 +176,15 @@
                 {{post.originalPost.postOwner.lastName}}
               </ion-label>
               <ion-icon *ngIf="post.originalPost.group || post.originalPost.project" name="caret-forward"></ion-icon>
-              <a routerLink="/project-details/{{post.originalPost.project.projectId}}/projectfeed-tab" *ngIf="post.originalPost.project"
-                style="font-size: smaller;">
+              <a routerLink="/project-details/{{post.originalPost.project.projectId}}/projectfeed-tab"
+                *ngIf="post.originalPost.project" style="font-size: smaller;">
                 {{post.originalPost.project.name}}</a>
               <a routerLink="/group-details/{{post.originalPost.group.groupId}}" *ngIf="post.originalPost.group"
                 style="font-size: smaller;">
                 {{post.originalPost.group.name}}</a>
+              &nbsp;
+              <ion-badge color="black" *ngIf="post.isPinnedPost">Pinned Post</ion-badge>
+              <ion-badge color="black" *ngIf="post.isElectionPost">Election Post</ion-badge>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -123,6 +195,17 @@
         </ion-grid>
       </ion-toolbar>
       <ion-card-content>
+        <div *ngIf="post.originalPost.electionApplication">
+          <label> Reasons For Applying: </label>
+          <br />
+          <p>{{post.originalPost.electionApplication.reasons}}</p>
+          <label> Contributions to KMS: </label>
+          <br />
+          <p>{{post.originalPost.electionApplication.contributions}}</p>
+          <label> Additional Comments: </label>
+          <br />
+          <p>{{post.originalPost.electionApplication.additionalComments}}</p>
+        </div>
         {{post.originalPost.text}}
 
         <ion-card *ngIf="post.originalPost.sharedGroupId || post.originalPost.sharedProjectId">
@@ -138,7 +221,7 @@
             {{post.originalPost.sharedGroupOrProjectDescription}}
           </ion-card-content>
           <ion-card-content
-            *ngIf="!post.originalPost.sharedGroupOrProjectDescription && post.originalPost.sharedGroupOrProjectDescription != ''">
+            *ngIf="!post.originalPost.sharedGroupOrProjectDescription || post.originalPost.sharedGroupOrProjectDescription == ''">
             No Description Available
           </ion-card-content>
           <ion-item button *ngIf="post.originalPost.sharedGroupId"
@@ -148,6 +231,32 @@
           <ion-item button *ngIf="post.originalPost.sharedProjectId"
             routerLink="/project-details/{{post.originalPost.sharedProjectId}}/projectfeed-tab">
             <ion-label>View Project</ion-label>
+          </ion-item>
+        </ion-card>
+
+        <ion-card *ngIf="post.originalPost.election">
+          <ion-card-header>
+            <ion-card-title>{{post.originalPost.election.name}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content
+            *ngIf="post.originalPost.election.description && post.originalPost.election.description != ''">
+            {{post.originalPost.election.description}}
+          </ion-card-content>
+          <ion-card-content
+            *ngIf="!post.originalPost.election.description || post.originalPost.election.description == ''">
+            No Description Available
+          </ion-card-content>
+          <ion-card-content>
+            Looking for {{post.originalPost.election.numSlots}} new Admins
+          </ion-card-content>
+          <ion-card-content>
+            Minimum of {{post.originalPost.election.minRepPointsRequired}} Reputation Points to apply
+          </ion-card-content>
+          <ion-item button routerLink="/view-election-posts">
+            <ion-label>View Election Page</ion-label>
+          </ion-item>
+          <ion-item button [routerLink]="['/election-application']" [state]="post.election">
+            <ion-label>Apply Now</ion-label>
           </ion-item>
         </ion-card>
 

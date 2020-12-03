@@ -1,11 +1,89 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Profile</ion-title>
+    <ion-button *ngIf="profile && canSendProfileClaimRequest() && !hasProfile()" (click)="makeProfileClaim(profile.id)"
+      slot="end" size="small" class="ion-margin-end">
+      Claim Profile
+    </ion-button>
+    <ion-button *ngIf="profile && !canSendProfileClaimRequest() && !hasProfile()" disabled slot="end" size="small"
+      class="ion-margin-end">
+      Claim Request Sent
+    </ion-button>
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
+<ion-content *ngIf="profile">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title *ngIf="profile.name">{{profile.name}}
+      </ion-card-title>
+      <ion-card-subtitle>Organization: {{profile.organization}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        <ion-label *ngIf="profile.description">{{profile.description}}</ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.industry"><b>Industry: </b>{{profile.industry}}</ion-label>
+        <ion-label *ngIf="!profile.industry"><b>Industry: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.productsOrServices"><b>Products or Services: </b>{{profile.productsOrServices}}
+        </ion-label>
+        <ion-label *ngIf="!profile.productsOrServices"><b>Products or Services: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.focusRegions"><b>Focus Regions: </b>{{profile.focusRegions}}</ion-label>
+        <ion-label *ngIf="!profile.focusRegions"><b>Focus Regions: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.region"><b>Region: </b>{{profile.region}}</ion-label>
+        <ion-label *ngIf="!profile.region"><b>Region: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.targetPopulation"><b>Target Population: </b>{{profile.targetPopulation}}</ion-label>
+        <ion-label *ngIf="!profile.targetPopulation"><b>Target Population: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.country"><b>Country: </b>{{profile.country}}</ion-label>
+        <ion-label *ngIf="!profile.country"><b>Country: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.cityState"><b>City/State: </b>{{profile.cityState}}</ion-label>
+        <ion-label *ngIf="!profile.cityState"><b>City/State: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.website"><b>Website: </b>{{profile.website}}</ion-label>
+        <ion-label *ngIf="!profile.website"><b>Website: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.contactDetails"><b>Contact Details: </b>{{profile.contactDetails}}</ion-label>
+        <ion-label *ngIf="!profile.contactDetails"><b>Contact Details: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.yearOfEstablishment"><b>Year of establishment: </b>{{profile.yearOfEstablishment}}
+        </ion-label>
+        <ion-label *ngIf="!profile.yearOfEstablishment"><b>Year of establishment: </b> - </ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.sdgs.length > 0"><b>Interested SDGs: </b>
+          <span *ngFor="let tag of profile.sdgs" style="margin-right: 5px; vertical-align: middle;">
+            <ion-badge color="primary" style="margin-bottom: 5px;">{{tag.name}}</ion-badge>
+          </span>
+        </ion-label>
+        <ion-label *ngIf="profile.sdgs.length == 0"><b>Interested SDGs: </b>Profile has no SDG indicated</ion-label>
+      </p>
+      <p>
+        <ion-label *ngIf="profile.sdgTargets.length > 0"><b>Interested SDG Targets: </b>
+          <span *ngFor="let tag of profile.sdgTargets" style="margin-right: 5px; vertical-align: middle;">
+            <ion-badge color="primary" style="margin-bottom: 5px;">{{tag.name}}</ion-badge>
+          </span>
+        </ion-label>
+        <ion-label *ngIf="profile.sdgTargets.length == 0"><b>Interested SDG Targets: </b>Profile has no SDG Targets
+          indicated</ion-label>
+      </p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

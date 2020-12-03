@@ -17,8 +17,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -34,51 +36,65 @@ public class PostEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
-    
+
     @Temporal(TemporalType.DATE)
     private Date postDate;
-    
+
     private String text;
-    
+
     @Lob
     @Column
     private String picture;
-    
+
     @NotNull
-    @JoinColumn(nullable=false)
+    @JoinColumn(nullable = false)
     @ManyToOne
     private UserEntity postOwner;
-    
+
     @JoinTable(name = "likedPosts")
+    @ManyToMany
     private List<UserEntity> likers;
-    
+
     @JoinTable(name = "sharedPosts")
     @OneToMany
     private List<PostEntity> sharedPosts;
-    
+
     @ManyToOne
     private PostEntity originalPost;
 
     @OneToMany(mappedBy = "post")
     private List<PostCommentEntity> comments;
-    
+
     @ManyToOne
     private ProjectEntity project;
-    
+
     @ManyToOne
     private GroupEntity group;
-    
+
     private boolean originalPostDeleted;
-    
+
     private Boolean isActive;
-    
+
     private String sharedGroupId;
-    
+
     private String sharedProjectId;
-    
+
     private String sharedGroupOrProjectDescription;
-    
+
     private String sharedGroupOrProjectName;
+
+    private Boolean isPinnedPost;
+
+    private Boolean isElectionPost;
+
+    @OneToOne
+    private ElectionEntity election;
+    
+    @OneToOne
+    private ElectionApplicationEntity electionApplication;
+
+    @ManyToOne
+    private UserEntity endorser;
 
     public PostEntity() {
         this.likers = new ArrayList<>();
@@ -99,9 +115,7 @@ public class PostEntity implements Serializable {
         this.postDate = postDate;
         this.text = text;
     }
-    
-    
-     
+
     public Long getPostId() {
         return postId;
     }
@@ -215,7 +229,6 @@ public class PostEntity implements Serializable {
         this.originalPostDeleted = originalPostDeleted;
     }
 
-
     public Boolean getIsActive() {
         return isActive;
     }
@@ -223,8 +236,6 @@ public class PostEntity implements Serializable {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
-    
-    
 
     public GroupEntity getGroup() {
         return group;
@@ -264,5 +275,45 @@ public class PostEntity implements Serializable {
 
     public void setSharedGroupOrProjectName(String sharedGroupOrProjectName) {
         this.sharedGroupOrProjectName = sharedGroupOrProjectName;
+    }
+
+    public Boolean getIsPinnedPost() {
+        return isPinnedPost;
+    }
+
+    public void setIsPinnedPost(Boolean isPinnedPost) {
+        this.isPinnedPost = isPinnedPost;
+    }
+
+    public Boolean getIsElectionPost() {
+        return isElectionPost;
+    }
+
+    public void setIsElectionPost(Boolean isElectionPost) {
+        this.isElectionPost = isElectionPost;
+    }
+
+    public UserEntity getEndorser() {
+        return endorser;
+    }
+
+    public void setEndorser(UserEntity endorser) {
+        this.endorser = endorser;
+    }
+
+    public ElectionEntity getElection() {
+        return election;
+    }
+
+    public void setElection(ElectionEntity election) {
+        this.election = election;
+    }
+
+    public ElectionApplicationEntity getElectionApplication() {
+        return electionApplication;
+    }
+
+    public void setElectionApplication(ElectionApplicationEntity electionApplication) {
+        this.electionApplication = electionApplication;
     }
 }

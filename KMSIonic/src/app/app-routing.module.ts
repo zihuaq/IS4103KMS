@@ -466,7 +466,40 @@ const routes: Routes = [
       import(
         './pages/project/viewProject/mrp-details/add-mra/add-mra.module'
       ).then( m => m.AddMraPageModule)
+  },
+  {
+    path: 'view-recommendations',
+    loadChildren: () =>
+      import('./pages/view-recommendations/view-recommendations.module').then(
+        (m) => m.ViewRecommendationsPageModule
+      )
+  },
+  {
+    path: 'mrp-recommendations-modal',
+    loadChildren: () =>
+      import('./pages/project/editProject/mrp-recommendations-modal/mrp-recommendations-modal.module'
+      ).then((m) => m.MrpRecommendationsModalPageModule)
+  },
+  {
+    path: 'hrp-recommendations-modal',
+    loadChildren: () =>
+      import(
+        './pages/project/editProject/hrp-recommendations-modal/hrp-recommendations-modal.module'
+      ).then((m) => m.HrpRecommendationsModalPageModule)
+  },
+  {
+    path: 'make-tag-request',
+    loadChildren: () => import('./pages/make-tag-request/make-tag-request.module').then( m => m.MakeTagRequestPageModule)
+  },
+  {
+    path: 'election-application',
+    loadChildren: () => import('./pages/election-application/election-application.module').then( m => m.ElectionApplicationPageModule)
+  },
+  {
+    path: 'view-election-posts',
+    loadChildren: () => import('./pages/view-election-posts/view-election-posts.module').then( m => m.ViewElectionPostsPageModule)
   }
+
 ];
 
 @NgModule({

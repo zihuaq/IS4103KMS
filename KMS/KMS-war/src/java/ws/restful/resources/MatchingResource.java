@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import ws.restful.model.FollowingOfFollowingRsp;
 import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
+import ws.restful.model.ProjectMatchesRsp;
 import ws.restful.model.ProjectRecommendationBasedOnFollowingRsp;
 
 /**
@@ -90,9 +91,9 @@ public class MatchingResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMatchesForProjects(@PathParam("projectId") Long projectId) {
         try {
-            List<ProjectEntity> projects = matchingSessionBean.getMatchesForProjects(projectId);
-            projects = getProjectsResponse(projects);
-            return Response.status(200).entity(projects).build();
+            List<ProjectMatchesRsp> matches = matchingSessionBean.getMatchesForProjects(projectId);
+            matches = getProjectsMatchesResponse(matches);
+            return Response.status(200).entity(matches).build();
         } catch (NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
                     .add("error", ex.getMessage())
@@ -234,6 +235,24 @@ public class MatchingResource {
             mras.get(i).setMaterialResourceAvailableOwner(user);
         }
         return mras;
+    }
+
+    private List<ProjectMatchesRsp> getProjectsMatchesResponse(List<ProjectMatchesRsp> matches) {
+        System.out.println(matches);
+        for (ProjectMatchesRsp match : matches) {
+            match.getMatchingProject().getActivities().clear();
+            match.getMatchingProject().getDonations().clear();
+            match.getMatchingProject().getHumanResourcePostings().clear();
+            match.getMatchingProject().getMaterialResourcePostings().clear();
+            match.getMatchingProject().getPosts().clear();
+            match.getMatchingProject().getProjectAdmins().clear();
+            match.getMatchingProject().getProjectMembers().clear();
+            match.getMatchingProject().getTasks().clear();
+            match.getMatchingProject().getReviews().clear();
+            match.getMatchingProject().setProjectOwner(null);
+        }
+        System.out.println(matches);
+        return matches;
     }
 
     private List<ProjectEntity> getProjectsResponse(List<ProjectEntity> projects) {

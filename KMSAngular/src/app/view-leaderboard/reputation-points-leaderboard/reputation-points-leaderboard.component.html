@@ -1,0 +1,24 @@
+<div class="list-group-item clearfix">
+    <h5 style="text-align: center;">Reputation Points Leaderboard</h5>
+    <div style="display: flex; justify-content: space-around;">
+        <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch>
+    </div>
+    <hr />
+    <span *ngIf="leaderboardUsers">
+        <div *ngFor="let user of leaderboardUsers; let i = index">
+            <div class="user-panel mt-1 pb-1 mb-1 d-flex">
+                <div class="image" *ngIf="user.profilePicture">
+                    <img [src]="user.profilePicture" class="img-circle" alt="User Image">
+                </div>
+                <div class="image" *ngIf="!user.profilePicture">
+                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                        class="img-circle elevation-2" alt="User Image">
+                </div>
+                <div class="info">
+                    <a class="d-block" routerLink="/userProfile/{{user.userId}}">{{user.firstName}}
+                        {{user.lastName}} {{i+1}}</a>
+                </div>
+            </div>
+        </div>
+    </span>
+</div>

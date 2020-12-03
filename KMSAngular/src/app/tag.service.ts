@@ -6,6 +6,8 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Tag } from './classes/tag';
+import { TagRequest } from './classes/tag-request';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -17,7 +19,44 @@ const httpOptions = {
 export class TagService {
   baseUrl: string = '/api/tag';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  createNewTag(tag: Tag) {
+    return this.http
+      .put<any>(this.baseUrl + '/createNewTag', tag, httpOptions).pipe(catchError(this.handleError));
+  }
+
+  updateTag(tag: Tag) {
+    return this.http
+      .put<any>(this.baseUrl + '/updateTag', tag, httpOptions).pipe(catchError(this.handleError));
+  }
+
+  createTagRequest(tagRequest: TagRequest) {
+    return this.http
+      .put<any>(this.baseUrl + '/createTagRequest', tagRequest, httpOptions).pipe(catchError(this.handleError));
+  }
+
+  getTagRequests(): Observable<any> {
+    return this.http
+      .get<any>(this.baseUrl + '/tagRequests')
+      .pipe(catchError(this.handleError));
+  }
+
+  rejectTagRequest(
+    tagRequestId: number
+  ): Observable<any> {
+    return this.http
+      .delete<any>(this.baseUrl + '/rejectTagRequest/' + tagRequestId)
+      .pipe(catchError(this.handleError));
+  }
+
+  acceptTagRequest(
+    tagRequestId: number
+  ): Observable<any> {
+    return this.http
+      .put<any>(this.baseUrl + '/acceptTagRequest/' + tagRequestId, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
 
   getAllSkillTags(): Observable<any> {
     return this.http

@@ -1,3 +1,5 @@
+<h5> Account Settings </h5>
+<br/>
 <form class="form-horizontal" (ngSubmit)="onEditUser(disableForm)" #disableForm="ngForm">
   <div class="form-group row">
     <label for="inputFirstName" class="col-sm-2 col-form-label">First Name</label>
@@ -15,9 +17,9 @@
   </div>
   <div>
     <label>Account Status</label>
-    <div class = "radio" *ngFor = "let status of settingStatus" style="display: inline; position:relative; left:30px;">
-      <label style="padding-right: 10px;" >
-        <input type = "radio" name = "status" [ngModel] = "user.isActive ? 'Active' : 'Deactive'" [value] = "status">
+    <div class="radio" *ngFor="let status of settingStatus" style="display: inline; position:relative; left:30px;">
+      <label style="padding-right: 10px;">
+        <input type="radio" name="status" [ngModel]="user.isActive ? 'Active' : 'Deactive'" [value]="status">
         {{status}}
       </label>
     </div>
@@ -33,10 +35,64 @@
   </div> -->
 
   <div class="form-group row">
-    <div class="offset-sm-2 col-sm-10">
+    <div class="offset-sm-10 col-sm-2">
       <button type="submit" class="btn btn-danger" [disabled]="!disableForm.valid">Submit</button>
     </div>
   </div>
 </form>
+<hr />
+<h5 *ngIf="user.userType != UserType.INSTITUTE"> Admin Management </h5>
+<button type="button" class="btn btn-block bg-olive btn-sm" data-toggle="modal" data-target="#promote-to-admin-modal"
+  style="width: 50%; margin-left: auto; margin: auto;" *ngIf="user.userType == UserType.INDIVIDUAL">
+  Promote {{user.firstName}} {{user.lastName}} To Admin
+</button>
+<button type="button" class="btn btn-block bg-olive btn-sm" disabled
+  style="width: 50%; margin-left: auto; margin: auto;" *ngIf="user.userType == UserType.ADMIN && user.userId != loggedInUser.userId">
+  {{user.firstName}} {{user.lastName}} is an Admin
+</button>
+<button type="button" class="btn btn-block bg-danger btn-sm" data-toggle="modal" data-target="#resign-from-admin-modal"
+  style="width: 50%; margin-left: auto; margin: auto;" *ngIf="user.userId == loggedInUser.userId">
+  Resign From Admin
+</button>
 
+<div class="modal fade" id="promote-to-admin-modal">
+  <div class="modal-dialog">
+      <div class="modal-content bg-olive">
+          <div class="modal-header">
+              <h4 class="modal-title">Do you want to promote {{user.firstName}} {{user.lastName}} to Admin?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-outline-light" (click)="promoteToAdmin()"
+                  data-dismiss="modal">Yes</button>
+          </div>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
+<div class="modal fade" id="resign-from-admin-modal">
+  <div class="modal-dialog">
+      <div class="modal-content bg-danger">
+          <div class="modal-header">
+              <h4 class="modal-title">Do you want to resign from Admin?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-outline-light" (click)="resignFromAdmin()"
+                  data-dismiss="modal">Yes</button>
+          </div>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

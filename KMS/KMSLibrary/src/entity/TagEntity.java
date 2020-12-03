@@ -27,13 +27,13 @@ public class TagEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tagId;
-    
+
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String name;
-    
+
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TagTypeEnum tagType;
 
@@ -45,7 +45,7 @@ public class TagEntity implements Serializable {
         this.name = name;
         this.tagType = tagType;
     }
-    
+
     public Long getTagId() {
         return tagId;
     }
@@ -86,14 +86,13 @@ public class TagEntity implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public TagTypeEnum getTagType() {
         return tagType;
     }
 
     public void setTagType(TagTypeEnum tagType) {
-        this.tagType = this.tagType;
+        this.tagType = tagType;
     }
-}
 
-   
+}

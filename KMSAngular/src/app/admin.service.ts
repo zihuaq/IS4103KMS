@@ -28,7 +28,7 @@ export class AdminService {
     private sessionService: SessionService,
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   changeUserStatus(
     adminEmail: String,
@@ -47,6 +47,18 @@ export class AdminService {
         ChangeUserStatusReq,
         httpOptions
       )
+      .pipe(catchError(this.handleError));
+  }
+
+  promoteUserToAdmin(userIdToPromote: number) {
+    return this.http
+      .put<any>(this.baseUrl + '/promoteUserToAdmin/' + userIdToPromote, httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+  resignFromAdmin(userId: number) {
+    return this.http
+      .put<any>(this.baseUrl + '/resignFromAdmin/' + userId, httpOptions)
       .pipe(catchError(this.handleError));
   }
 

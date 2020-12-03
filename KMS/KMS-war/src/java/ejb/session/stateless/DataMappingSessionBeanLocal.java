@@ -19,15 +19,15 @@ import javax.ejb.Local;
 @Local
 public interface DataMappingSessionBeanLocal {
 
-    public void createProfileFromFiles(String filePath) throws IOException;
+    public void uploadProfiles(byte[] fileBytes) throws IOException;
 
-    public List<ProfileEntity> getAllProfiles() throws NoResultException;
+    public List<ProfileEntity> getAllProfiles();
 
     public ProfileEntity getProfile(long id) throws NoResultException;
 
     public void settleProfileClaim(long claimProfileRequestId, boolean accept) throws NoResultException;
 
-    public List<ClaimProfileRequestEntity> getAllProfileClaims() throws NoResultException;
+    public List<ClaimProfileRequestEntity> getAllProfileClaims();
 
     public void makeProfileClaim(long userId, long profileId) throws NoResultException;
 

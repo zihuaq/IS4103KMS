@@ -433,6 +433,46 @@ export class PostService {
     );
   }
 
+  getPostForElection(electionId: number): Observable<any> {
+    return this.http.get<any>(this.baseUrl + '/election/' + electionId).pipe(
+      map((data) => {
+        // return data.map((post) => {this.parsePostDate})
+        return data.map((post) => {
+          post = {
+            ...post,
+            postDate: new Date(
+              Date.UTC(
+                post.postDate.substring(0, 4),
+                post.postDate.substring(5, 7) - 1,
+                post.postDate.substring(8, 10),
+                post.postDate.substring(11, 13),
+                post.postDate.substring(14, 16),
+                post.postDate.substring(17, 19)
+              )
+            ),
+          };
+          post.comments = post.comments.map((postComment) => {
+            return {
+              ...postComment,
+              dateTime: new Date(
+                Date.UTC(
+                  postComment.dateTime.substring(0, 4),
+                  postComment.dateTime.substring(5, 7) - 1,
+                  postComment.dateTime.substring(8, 10),
+                  postComment.dateTime.substring(11, 13),
+                  postComment.dateTime.substring(14, 16),
+                  postComment.dateTime.substring(17, 19)
+                )
+              ),
+            };
+          });
+          return post;
+        });
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   private parsePostDate(post: any) {
     return {
       ...post,

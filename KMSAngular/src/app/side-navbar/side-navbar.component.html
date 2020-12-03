@@ -24,70 +24,44 @@
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/searchUsers">
-            <i class="fas fa-search nav-icon"></i>
-            <p>Search Users</p>
-          </a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" routerLink="/userProfile">
             <i class="fas fa-user nav-icon"></i>
             <p>User Profile</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/searchProfiles">
-            <i class="fas fa-user nav-icon"></i>
-            <p>Search Profiles</p>
-          </a>
-        </li>
         <li class="nav-item has-treeview">
           <a class="nav-link">
-            <i class="nav-icon fas fa-hands-helping"></i>
+            <i class="fas fa-search nav-icon"></i>
             <p>
-              Project
+              Discover
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/searchUsers">
+                <p>Search Users</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/searchProfiles">
+                <p>Search Profiles</p>
+              </a>
+            </li>
+          </ul>
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a class="nav-link" routerLink="/viewAllProjects">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Discover Projects</p>
+                <p>Search Projects</p>
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/viewOwnProjects/', loggedInUser.userId]">
-                <i class="far fa-circle nav-icon"></i>
-                <p>My Projects</p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- group -->
-        <li class="nav-item has-treeview">
-          <a class="nav-link">
-            <i class="nav-icon fas fa-hands-helping"></i>
-            <p>
-              Group
-              <i class="fas fa-angle-left right"></i>
-            </p>
-          </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a class="nav-link" routerLink="/viewAllGroups">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Discover Groups</p>
-              </a>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/viewOwnGroups/', loggedInUser.userId]">
-                <i class="far fa-circle nav-icon"></i>
-                <p>My Groups</p>
+                <p>Search Groups</p>
               </a>
             </li>
           </ul>
@@ -119,9 +93,33 @@
           </ul>
         </li>
         <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/viewOwnProjects/', loggedInUser.userId]">
+            <i class="nav-icon fas fa-hands-helping"></i>
+            <p>My Projects</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/viewOwnGroups/', loggedInUser.userId]">
+            <i class="nav-icon fas fa-hands-helping"></i>
+            <p>My Groups</p>
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="hasActiveElection">
+          <a class="nav-link" [routerLink]="['/view-election-posts']">
+            <i class="nav-icon fas fa-poll"></i>
+            <p>Election</p>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" routerLink="/notifications">
             <i class="fas fa-bell nav-icon"></i>
             <p>Notifications</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/view-leaderboard">
+            <i class="fas fa-trophy nav-icon"></i>
+            <p>Leaderboard</p>
           </a>
         </li>
         <li class="nav-item">
@@ -136,11 +134,35 @@
             <p>Chat</p>
           </a>
         </li>
-        <li class="nav-item" *ngIf="loggedInUser.userType.toString() == 'ADMIN'">
-          <a class="nav-link" routerLink="/admin">
-            <i class="fas fa-bell nav-icon"></i>
-            <p>Administration</p>
+        <li class="nav-item has-treeview" *ngIf="loggedInUser.userType.toString() == 'ADMIN'">
+          <a class="nav-link">
+            <i class="fas fa-user-shield nav-icon"></i>
+            <p>
+              Administration
+              <i class="fas fa-angle-left right"></i>
+            </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin">
+                <p> Manage Reports</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin-manage-tags">
+                <p> Manage Tags</p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin-manage-elections">
+                <p> Manage Elections</p>
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="nav-item">
           <a class="nav-link" (click)="logout()" routerLink="/login">
@@ -148,10 +170,57 @@
             <p>Logout</p>
           </a>
         </li>
-        <button type="button" class="btn btn-warning" routerLink="/donateToPlatform">Donate</button>
+        <button type="button" class="btn btn-warning" routerLink="/donateToPlatform"
+          style="margin: 2px;">Donate</button>
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-make-tag-request"
+          style="margin: 2px;">Make Tag
+          Request</button>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
   </div>
   <!-- /.sidebar -->
 </aside>
+
+
+<div class="modal fade" id="modal-make-tag-request">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDialogLabel">Make Tag Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form (ngSubmit)="submitTagRequest(tagForm)" #tagForm="ngForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="tag-request-name">Tag Name</label>
+            <input type="text" id="tag-request-name" class="form-control" placeholder="Enter Name" name="name" required
+              ngModel>
+          </div>
+          <label for="requested-tag-type"> Tag Type </label>
+          <select id="requested-tag-type" class="form-control" placeholder="Select Tag Type" name="tagType" required
+            ngModel>
+            <option disabled value="Select Tag Type">Select Tag Type</option>
+            <option value="SKILL">Skill</option>
+            <option value="SDG">SDG</option>
+            <option value="MATERIALRESOURCE">Material Resource</option>
+            <option value="REPORTPROFILE">Report Profile</option>
+            <option value="REPORTGROUP">Report Group</option>
+            <option value="REPORTPROJECT">Report Project</option>
+            <option value="REPORTPOST">Report Post</option>
+            <option value="REPORTCOMMENT">Report Comment</option>
+            <option value="REPORTREVIEW">Report Review</option>
+          </select>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" id="makeTagReqModalCloseBtn" class="btn btn-secondary" data-dismiss="modal"
+            (click)="clear(tagForm)">Cancel</button>
+          <button type="button" class="btn btn-success" [disabled]="!tagForm.valid" type="submit">Submit
+            Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

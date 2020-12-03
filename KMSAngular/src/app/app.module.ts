@@ -110,10 +110,22 @@ import { ViewRecommendationsComponent } from './view-recommendations/view-recomm
 import { FollowRecommendationsComponent } from './view-recommendations/follow-recommendations/follow-recommendations.component';
 import { ProjectRecommendationsComponent } from './view-recommendations/project-recommendations/project-recommendations.component';
 import { GroupRecommendationsComponent } from './view-recommendations/group-recommendations/group-recommendations.component';
-import { ManageTagsComponent } from './administration/manage-tags/manage-tags.component';
+import { ManageTagsComponent } from './admin-manage-tags/manage-tags/manage-tags.component';
 import { AwardsAndBadgesComponent } from './user-profile/awards-and-badges/awards-and-badges.component';
 import { ViewAllMrasComponent } from './view-all-mras/view-all-mras.component';
 import { ViewAllMrpsComponent } from './view-all-mrps/view-all-mrps.component';
+import { HandleTagRequestsComponent } from './admin-manage-tags/handle-tag-requests/handle-tag-requests.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { UploadProfilesComponent } from './administration/upload-profiles/upload-profiles.component';
+import { AdminManageTagsComponent } from './admin-manage-tags/admin-manage-tags.component';
+import { AdminManageElectionsComponent } from './admin-manage-elections/admin-manage-elections.component';
+import { EditElectionComponent } from './admin-manage-elections/edit-election/edit-election.component';
+import { ManageApplicationsComponent } from './admin-manage-elections/manage-applications/manage-applications.component';
+import { ViewElectionPostsComponent } from './view-election-posts/view-election-posts.component';
+import { ViewLeaderboardComponent } from './view-leaderboard/view-leaderboard.component';
+import { ReputationPointsLeaderboardComponent } from './view-leaderboard/reputation-points-leaderboard/reputation-points-leaderboard.component';
+import { WeeklyDonationLeaderboardComponent } from './view-leaderboard/weekly-donation-leaderboard/weekly-donation-leaderboard.component';
+import { WeeklyProjectLeaderboardComponent } from './view-leaderboard/weekly-project-leaderboard/weekly-project-leaderboard.component';
 
 export const environment = {
   production: false,
@@ -226,7 +238,18 @@ export const environment = {
     ManageTagsComponent,
     AwardsAndBadgesComponent,
     ViewAllMrasComponent,
-    ViewAllMrpsComponent
+    ViewAllMrpsComponent,
+    HandleTagRequestsComponent,
+    UploadProfilesComponent,
+    AdminManageTagsComponent,
+    AdminManageElectionsComponent,
+    EditElectionComponent,
+    ManageApplicationsComponent,
+    ViewElectionPostsComponent,
+    ViewLeaderboardComponent,
+    ReputationPointsLeaderboardComponent,
+    WeeklyDonationLeaderboardComponent,
+    WeeklyProjectLeaderboardComponent
   ],
   imports: [
     BrowserModule,
@@ -241,8 +264,9 @@ export const environment = {
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule, NgbModule,
+    ReactiveFormsModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

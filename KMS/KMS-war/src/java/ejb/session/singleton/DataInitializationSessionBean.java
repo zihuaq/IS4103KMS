@@ -35,11 +35,9 @@ import entity.HumanResourcePostingEntity;
 import entity.MaterialResourceAvailableEntity;
 import entity.MaterialResourcePostingEntity;
 import entity.ProjectEntity;
-import entity.ReviewEntity;
 import entity.TagEntity;
 import entity.TaskEntity;
 import entity.UserEntity;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -252,15 +250,13 @@ public class DataInitializationSessionBean {
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTCOMMENT));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTCOMMENT));
-        
+
         tagSessionBean.createNewTag(new TagEntity("Fake News", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Harassment or Bullying", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Inappropriate Content", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Hate Speech", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Spam", TagTypeEnum.REPORTREVIEW));
         tagSessionBean.createNewTag(new TagEntity("Suspicious Intent", TagTypeEnum.REPORTREVIEW));
-        
-        
 
         try {
             projectSessionBean.createNewProject(new ProjectEntity("Litter Picking", "Picking litter at East Coast Park", new Date(), "Singapore", null, 0.0, null), 1l, new ArrayList<>(Arrays.asList(37l)));
@@ -435,18 +431,6 @@ public class DataInitializationSessionBean {
             taskSessionBeanLocal.createNewTask(new TaskEntity("Draft Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-01 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-15 18:00"), 1.0, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Budget Proposal", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-16 15:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 18:00"), 0.2, 1l), 4l);
             taskSessionBeanLocal.createNewTask(new TaskEntity("Seek Sponsorship", new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-20 12:00"), new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2020-10-31 12:00"), 0.0, 0l), 4l);
-        } catch (NoResultException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        try {
-            dataMappingSessionBean.createProfileFromFiles("EMERGEdatabase.xlsx");
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-        
-        try {
-            activitySessionBeanLocal.createNewProjectReview(new ReviewEntity("Test", "Test review", 5), 1l, 4l, 1l);
         } catch (NoResultException ex) {
             System.out.println(ex.getMessage());
         }

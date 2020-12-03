@@ -41,6 +41,7 @@ import org.apache.commons.text.similarity.FuzzyScore;
 import util.enumeration.ProjectStatusEnum;
 import ws.restful.model.FollowingOfFollowingRsp;
 import ws.restful.model.GroupRecommendationBasedOnFollowingRsp;
+import ws.restful.model.ProjectMatchesRsp;
 import ws.restful.model.ProjectRecommendationBasedOnFollowingRsp;
 
 /**
@@ -92,19 +93,20 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
         System.out.println(mrpString);
 
         List<MaterialResourceAvailableEntity> allMras = materialResourceAvailableSessionBean.getAllMaterialResourceAvailable();
-        Map<MaterialResourceAvailableEntity, Double> mras = new HashMap<>();
+        Map<MaterialResourceAvailableEntity, Integer> mras = new HashMap<>();
 
         for (int i = 0; i < allMras.size(); i++) {
             if (hasMatchingTags(mrp.getTags(), allMras.get(i).getTags())) {
                 String mraString = removeStopWords(allMras.get(i).getName()) + removeStopWords(allMras.get(i).getDescription());
-                double fuzzyScore = new FuzzyScore(Locale.getDefault()).fuzzyScore(mraString, mrpString);
-                if (fuzzyScore > 3) {
-                    mras.put(allMras.get(i), fuzzyScore);
+                int maxFuzzyScore = getMaxFuzzyScore(mrpString.length());
+                double fuzzyScore = new FuzzyScore(Locale.getDefault()).fuzzyScore(mrpString, mraString);
+                if (fuzzyScore >= maxFuzzyScore / 4) {
+                    mras.put(allMras.get(i), (int) Math.round(fuzzyScore / maxFuzzyScore * 100));
                 }
             }
         }
         System.out.println(mras);
-        LinkedHashMap<MaterialResourceAvailableEntity, Double> sortedMras = new LinkedHashMap<>();
+        LinkedHashMap<MaterialResourceAvailableEntity, Integer> sortedMras = new LinkedHashMap<>();
         mras.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> sortedMras.put(x.getKey(), x.getValue()));
         System.out.println(sortedMras);
         List<MaterialResourceAvailableEntity> matches = new ArrayList<>(sortedMras.keySet());
@@ -135,27 +137,41 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
     }
 
     @Override
-    public List<ProjectEntity> getMatchesForProjects(long projectId) throws NoResultException {
+    public List<ProjectMatchesRsp> getMatchesForProjects(long projectId) throws NoResultException {
         ProjectEntity project = projectSessionBean.getProjectById(projectId);
         String projectString = removeStopWords(project.getName()) + removeStopWords(project.getDescription());
 
         List<ProjectEntity> completedProjects = projectSessionBean.retrieveAllProject();
-        Map<ProjectEntity, Double> projects = new HashMap<>();
+        Map<ProjectEntity, Long> projects = new HashMap<>();
 
         for (int i = 0; i < completedProjects.size(); i++) {
             if (hasMatchingTags(project.getSdgs(), completedProjects.get(i).getSdgs()) && completedProjects.get(i).getProjectId() != project.getProjectId()) {
                 String projectString2 = removeStopWords(completedProjects.get(i).getName()) + removeStopWords(completedProjects.get(i).getDescription());
+                int maxFuzzyScore = getMaxFuzzyScore(projectString.length());
+                System.out.println(projectString);
+                System.out.println(projectString2);
+                System.out.println(maxFuzzyScore);
                 double fuzzyScore = new FuzzyScore(Locale.getDefault()).fuzzyScore(projectString, projectString2);
                 System.out.println(fuzzyScore);
-                if (fuzzyScore > 3) {
-                    projects.put(completedProjects.get(i), fuzzyScore);
+                if (fuzzyScore >= maxFuzzyScore / 4) {
+                    projects.put(completedProjects.get(i), Math.round(fuzzyScore / maxFuzzyScore * 100));
+                    System.out.println(fuzzyScore);
+                    System.out.println("rounded: " + Math.round(fuzzyScore / maxFuzzyScore * 100));
                 }
             }
         }
         System.out.println(projects);
-        LinkedHashMap<ProjectEntity, Double> sortedProjects = new LinkedHashMap<>();
+        LinkedHashMap<ProjectEntity, Long> sortedProjects = new LinkedHashMap<>();
         projects.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> sortedProjects.put(x.getKey(), x.getValue()));
-        List<ProjectEntity> matches = new ArrayList<>(sortedProjects.keySet());
+
+        List<ProjectMatchesRsp> matches = new ArrayList<>();
+        for (Map.Entry<ProjectEntity, Long> entry : sortedProjects.entrySet()) {
+            ProjectMatchesRsp response = new ProjectMatchesRsp();
+            response.setMatchingProject(entry.getKey());
+            response.setPercentageMatch(entry.getValue());
+            System.out.println("Value: " + entry.getValue());
+            matches.add(response);
+        }
         return matches;
     }
 
@@ -357,5 +373,9 @@ public class MatchingSessionBean implements MatchingSessionBeanLocal {
             }
         }
         return result;
+    }
+
+    private int getMaxFuzzyScore(int stringLength) {
+        return stringLength + (2 * (stringLength - 1));
     }
 }

@@ -11,16 +11,16 @@ declare var $: any;
   styleUrls: ['./profile-claims.component.css'],
 })
 export class ProfileClaimsComponent implements OnInit {
-  claims: Observable<ClaimProfileRequest[]>;
+  claims$: Observable<ClaimProfileRequest[]>;
   constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {
-    this.claims = this.profileService.getAllProfileClaims();
+    this.claims$ = this.profileService.getAllProfileClaims();
   }
 
   settleProfileClaim(claimId: string, accept: boolean) {
     this.profileService.settleProfileClaim(claimId, accept).subscribe(() => {
-      this.claims = this.profileService.getAllProfileClaims();
+      this.claims$ = this.profileService.getAllProfileClaims();
       if (accept) {
         $(document).Toasts('create', {
           class: 'bg-success',

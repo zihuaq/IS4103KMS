@@ -41,6 +41,11 @@ export class AppComponent implements OnInit {
       icon: 'search'
     },
     {
+      title: 'Recommendations',
+      url: '/view-recommendations',
+      icon: 'star'
+    },
+    {
       title: 'Notifications',
       url: '/notifications',
       icon: 'notifications'
@@ -74,6 +79,11 @@ export class AppComponent implements OnInit {
       title: 'Chat',
       url: '/chat',
       icon: 'chatbubble'
+    },
+    {
+      title: 'Make Tag Request',
+      url: '/make-tag-request',
+      icon: 'pricetag'
     },
     {
       title: 'Log Out',
@@ -115,7 +125,7 @@ export class AppComponent implements OnInit {
       //   } else {
       //     console.log('Received in foreground');
       //   }
-      // });      
+      // });
 
       // // refresh the FCM token
       // FCM.onTokenRefresh().subscribe(token => {
@@ -124,7 +134,6 @@ export class AppComponent implements OnInit {
 
       // // unsubscribe from a topic
       // // this.fcm.unsubscribeFromTopic('offers');
-      
     });
   }
 

@@ -7,10 +7,16 @@ package ws.restful.resources;
 
 import Exception.DuplicateEmailException;
 import Exception.NoResultException;
+import Exception.ResignFromAdminException;
 import Exception.UserNotFoundException;
 import ejb.session.stateless.UserSessionBeanLocal;
+import entity.GroupEntity;
+import entity.HumanResourcePostingEntity;
+import entity.ProfileEntity;
+import entity.ProjectEntity;
 import entity.UserEntity;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -22,7 +28,9 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import util.enumeration.UserTypeEnum;
@@ -38,7 +46,6 @@ public class AdminResource {
 
     UserSessionBeanLocal userSessionBeanLocal = lookupUserSessionBeanLocal();
 
-    
     @Context
     private UriInfo context;
 
@@ -56,7 +63,7 @@ public class AdminResource {
         try {
             UserEntity adminUser = userSessionBeanLocal.retrieveUserByEmail(changeUserStatusReq.getAdminEmail());
             UserEntity user = userSessionBeanLocal.retrieveUserByEmail(changeUserStatusReq.getUserEmail());
-            if(adminUser.getUserType().equals(UserTypeEnum.ADMIN)){
+            if (adminUser.getUserType().equals(UserTypeEnum.ADMIN)) {
                 user.setIsActive(changeUserStatusReq.getIsActive());
                 user = userSessionBeanLocal.updateUser(user);
                 user.setReviewsGiven(new ArrayList<>());
@@ -82,12 +89,12 @@ public class AdminResource {
                 user.setAffiliationRequestReceived(new ArrayList<>());
                 user.setHrpApplied(new ArrayList<>());
                 user.setFulfillments(new ArrayList<>());
-                user.setActivityJoined(new ArrayList<>());   
+                user.setActivityJoined(new ArrayList<>());
                 user.setDonations(new ArrayList<>());
                 user.setNotifications(new ArrayList<>());
                 user.setPassword("");
-            }      
-            
+            }
+
             return Response.status(200).entity(user).build();
         } catch (UserNotFoundException | NoResultException ex) {
             JsonObject exception = Json.createObjectBuilder()
@@ -99,6 +106,38 @@ public class AdminResource {
                     .add("error", ex.getMessage())
                     .build();
             return Response.status(400).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/promoteUserToAdmin/{userIdToPromote}")
+    public Response promoteUserToAdmin(@PathParam("userIdToPromote") Long userIdToPromote) {
+        try {
+            UserEntity user = userSessionBeanLocal.promoteUserToAdmin(userIdToPromote);
+            UserEntity temp = new UserEntity();
+            temp.setUserType(user.getUserType());
+            return Response.status(200).entity(temp).build();
+        } catch (NoResultException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
+        }
+    }
+
+    @PUT
+    @Path("/resignFromAdmin/{userId}")
+    public Response resignFromAdmin(@PathParam("userId") Long userId) {
+        try {
+            UserEntity user = userSessionBeanLocal.resignFromAdmin(userId);
+            UserEntity temp = new UserEntity();
+            temp.setUserType(user.getUserType());
+            return Response.status(200).entity(temp).build();
+        } catch (NoResultException | ResignFromAdminException ex) {
+            JsonObject exception = Json.createObjectBuilder()
+                    .add("error", ex.getMessage())
+                    .build();
+            return Response.status(404).entity(exception).build();
         }
     }
 
