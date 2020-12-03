@@ -6,6 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MrpMatchesRsp } from 'src/app/models/MrpMatchesRsp';
+import { MraType } from 'src/app/enum/mra-type.enum';
 
 @Component({
   selector: 'app-mrp-recommendations-modal',
@@ -42,5 +43,9 @@ export class MrpRecommendationsModalPage implements OnInit {
   goToProfile(user: User) {
     this.dismiss();
     this.router.navigate(['/user-profile/' + user.userId]);
+  }
+
+  get mraType(): typeof MraType {
+    return MraType;
   }
 }

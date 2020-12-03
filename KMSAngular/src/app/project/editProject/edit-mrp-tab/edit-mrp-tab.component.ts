@@ -900,7 +900,7 @@ export class EditMrpTabComponent implements OnInit {
           title: 'Subscription Ended Successfully',
           autohide: true,
           delay: 4000,
-          body: 'Please remember to make all payments by ' + moment(dueDate.slice(0, dueDate.indexOf("["))).format("MMM D, YYYY") + '!',
+          body: 'Remember to pay by ' + moment(dueDate.slice(0, dueDate.indexOf("["))).format("MMM D, YYYY") + '!',
         });
         this.refreshFulfillment(this.mrpToFulfill.materialResourcePostingId);
         $('#modal-fulfillments').show();

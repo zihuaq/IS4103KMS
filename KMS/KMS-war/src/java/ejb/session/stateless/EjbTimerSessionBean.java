@@ -102,6 +102,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanLocal {
         }
     }
     
+    @Override
     public void updateMrpStatus() {
         Query query = em.createQuery("SELECT mrp FROM MaterialResourcePostingEntity mrp WHERE mrp.status = :inStatus");
         query.setParameter("inStatus", MrpStatusEnum.OPEN);

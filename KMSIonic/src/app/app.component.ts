@@ -51,6 +51,11 @@ export class AppComponent implements OnInit {
       icon: 'notifications'
     },
     {
+      title: 'Chat',
+      url: '/chat',
+      icon: 'chatbubble'
+    },
+    {
       title: 'Leaderboard',
       url: '/leaderboard',
       icon: 'trophy'
@@ -68,7 +73,7 @@ export class AppComponent implements OnInit {
     {
       title: 'My Group',
       url: '/view-own-groups',
-      icon: 'person'
+      icon: 'people'
     },
     {
       title: 'Discover Project',
@@ -78,17 +83,22 @@ export class AppComponent implements OnInit {
     {
       title: 'My Project',
       url: '/view-own-projects',
-      icon: 'person'
+      icon: 'bulb'
+    },
+    {
+      title: 'Search Material Resources',
+      url: '/view-all-mras',
+      icon: 'cube'
+    },
+    {
+      title: 'Search Material Postings',
+      url: '/view-all-mrps',
+      icon: 'briefcase'
     },
     {
       title: 'Election',
       url: '/view-election-posts',
       icon: 'bar-chart'
-    },
-    {
-      title: 'Chat',
-      url: '/chat',
-      icon: 'chatbubble'
     },
     {
       title: 'Make Tag Request',

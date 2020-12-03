@@ -500,6 +500,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/view-election-posts/view-election-posts.module').then( m => m.ViewElectionPostsPageModule)
   },
   {
+    path: 'view-all-mras',
+    loadChildren: () => import('./pages/view-all-mras/view-all-mras.module').then( m => m.ViewAllMrasPageModule)
+  },
+  {
+    path: 'view-all-mrps',
+    loadChildren: () => import('./pages/view-all-mrps/view-all-mrps.module').then( m => m.ViewAllMrpsPageModule)
+  },
+  {
     path: 'leaderboard',
     loadChildren: () => import('./pages/leaderboard/leaderboard.module').then( m => m.LeaderboardPageModule)
   }
