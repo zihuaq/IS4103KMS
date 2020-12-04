@@ -326,11 +326,11 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
 
                 Transport.send(message);
                 
-                if(report.getReportedUser().getReputationPoints() < 10){
-                   report.getReportedUser().setReputationPoints(0);
+                if(currentReport.getReportedUser().getReputationPoints() < 10){
+                   currentReport.getReportedUser().setReputationPoints(0);
                }
                else{
-                   report.getReportedUser().setReputationPoints(report.getReportedUser().getReputationPoints() - 10);
+                   currentReport.getReportedUser().setReputationPoints(currentReport.getReportedUser().getReputationPoints() - 10);
                }
             }
             if(currentReport.getReportType() == ReportTypeEnum.PROJECT){
@@ -342,11 +342,11 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
 
                 Transport.send(message);
                 
-                if(report.getReportedProject().getProjectOwner().getReputationPoints() < 10){
-                   report.getReportedUser().setReputationPoints(0);
+                if(currentReport.getReportedProject().getProjectOwner().getReputationPoints() < 10){
+                   currentReport.getReportedUser().setReputationPoints(0);
                }
                else{
-                   report.getReportedProject().getProjectOwner().setReputationPoints(report.getReportedProject().getProjectOwner().getReputationPoints() - 10);
+                   currentReport.getReportedProject().getProjectOwner().setReputationPoints(currentReport.getReportedProject().getProjectOwner().getReputationPoints() - 10);
                }
             }
             if(currentReport.getReportType() == ReportTypeEnum.GROUP){
@@ -358,11 +358,11 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
 
                 Transport.send(message);
                 
-                if(report.getReportedGroup().getGroupOwner().getReputationPoints() < 10){
-                   report.getReportedGroup().getGroupOwner().setReputationPoints(0);
+                if(currentReport.getReportedGroup().getGroupOwner().getReputationPoints() < 10){
+                   currentReport.getReportedGroup().getGroupOwner().setReputationPoints(0);
                }
                else{
-                   report.getReportedGroup().getGroupOwner().setReputationPoints(report.getReportedGroup().getGroupOwner().getReputationPoints() - 10);
+                   currentReport.getReportedGroup().getGroupOwner().setReputationPoints(currentReport.getReportedGroup().getGroupOwner().getReputationPoints() - 10);
                }
             }
             if(currentReport.getReportType() == ReportTypeEnum.POST){
@@ -374,11 +374,11 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
 
                 Transport.send(message);
                 
-                if(report.getReportedPost().getPostOwner().getReputationPoints() < 10){
-                   report.getReportedPost().getPostOwner().setReputationPoints(0);
+                if(currentReport.getReportedPost().getPostOwner().getReputationPoints() < 10){
+                   currentReport.getReportedPost().getPostOwner().setReputationPoints(0);
                }
                else{
-                   report.getReportedPost().getPostOwner().setReputationPoints(report.getReportedPost().getPostOwner().getReputationPoints() - 10);
+                   currentReport.getReportedPost().getPostOwner().setReputationPoints(currentReport.getReportedPost().getPostOwner().getReputationPoints() - 10);
                }
             }
             if(currentReport.getReportType() == ReportTypeEnum.COMMENT){
@@ -390,11 +390,11 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
 
                 Transport.send(message);
                 
-                if(report.getReportedComment().getCommentOwner().getReputationPoints() < 10){
-                   report.getReportedComment().getCommentOwner().setReputationPoints(0);
+                if(currentReport.getReportedComment().getCommentOwner().getReputationPoints() < 10){
+                   currentReport.getReportedComment().getCommentOwner().setReputationPoints(0);
                }
                else{
-                   report.getReportedComment().getCommentOwner().setReputationPoints(report.getReportedComment().getCommentOwner().getReputationPoints() - 10);
+                   currentReport.getReportedComment().getCommentOwner().setReputationPoints(currentReport.getReportedComment().getCommentOwner().getReputationPoints() - 10);
                }
             }
             if(currentReport.getReportType() == ReportTypeEnum.REVIEW){
@@ -406,11 +406,11 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
 
                 Transport.send(message);
                 
-                if(report.getReportedReview().getFrom().getReputationPoints() < 10){
-                   report.getReportedReview().getFrom().setReputationPoints(0);
+                if(currentReport.getReportedReview().getFrom().getReputationPoints() < 10){
+                   currentReport.getReportedReview().getFrom().setReputationPoints(0);
                }
                else{
-                   report.getReportedReview().getFrom().setReputationPoints(report.getReportedReview().getFrom().getReputationPoints() - 10);
+                   currentReport.getReportedReview().getFrom().setReputationPoints(currentReport.getReportedReview().getFrom().getReputationPoints() - 10);
                }
             }
             
