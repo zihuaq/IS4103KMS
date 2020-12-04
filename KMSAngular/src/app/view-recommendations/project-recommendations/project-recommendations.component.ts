@@ -23,6 +23,7 @@ export class ProjectRecommendationsComponent implements OnInit {
   projectRecoBySDG: Project[];
   projectRecoByFollowing: ProjectRecommendationBasedOnFollowingRsp[];
   hasRecommendations: Boolean;
+  hasMoreRecommendations: Boolean;
   loggedInUserProjects: Project[];
   ProjectType = ProjectType;
   fullView: boolean = false;
@@ -46,6 +47,9 @@ export class ProjectRecommendationsComponent implements OnInit {
       this.loggedInUserProjects = result[2];
       if (this.projectRecoBySDG.length == 0 && this.projectRecoByFollowing.length == 0) {
         this.hasRecommendations = false;
+        if(this.projectRecoBySDG.length > 1 || this.projectRecoByFollowing.length > 1) {
+          this.hasMoreRecommendations = true;
+        }
       } else {
         this.hasRecommendations = true;
       }

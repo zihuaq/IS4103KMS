@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Tag } from 'src/app/classes/tag';
 import { TagType } from 'src/app/classes/tag-type.enum';
@@ -35,8 +36,12 @@ export class ManageTagsComponent implements OnInit {
 
   constructor(
     public tagService: TagService,
-    private sessionService: SessionService
-  ) { }
+    private sessionService: SessionService,private router: Router
+  ) { 
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+  }
 
   ngOnInit(): void {
     this.loggedInUser = this.sessionService.getCurrentUser();
@@ -69,6 +74,7 @@ export class ManageTagsComponent implements OnInit {
           body: error,
         });
         this.tagToEdit = null;
+        this.router.navigate(["/admin-manage-tags"]);
       }
     );
   }
@@ -102,6 +108,7 @@ export class ManageTagsComponent implements OnInit {
         }
       );
       $('#addTagModalCloseBtn').click();
+      tagForm.reset();
     }
   }
 
