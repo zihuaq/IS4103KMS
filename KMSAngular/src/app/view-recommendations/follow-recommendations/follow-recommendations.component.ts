@@ -20,6 +20,7 @@ export class FollowRecommendationsComponent implements OnInit {
   followersToFollow: User[];
   followingOfFollowing: FollowingOfFollowingRsp[];
   hasRecommendations: Boolean;
+  hasMoreRecommendations: Boolean;
   loggedInUserFollowing: User[];
   loggedInUserFollowRequestMade: FollowRequest[];
   fullView: boolean = false;
@@ -59,10 +60,13 @@ export class FollowRecommendationsComponent implements OnInit {
       this.followingOfFollowing = result[1];
       this.loggedInUserFollowing = result[2];
       this.loggedInUserFollowRequestMade = result[3];
-      if (this.followingOfFollowing.length == 0 && this.followersToFollow.length == 0) {
-        this.hasRecommendations = false;
-      } else {
+      if (this.followingOfFollowing.length > 0 || this.followersToFollow.length > 0) {
         this.hasRecommendations = true;
+        if(this.followingOfFollowing.length > 2 || this.followersToFollow.length > 2){
+          this.hasMoreRecommendations = true;
+        }
+      } else {
+        this.hasRecommendations = false;
       }
     })
   }

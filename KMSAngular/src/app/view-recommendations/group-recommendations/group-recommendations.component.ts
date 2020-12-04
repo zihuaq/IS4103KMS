@@ -22,6 +22,7 @@ export class GroupRecommendationsComponent implements OnInit {
   groupRecoBySDG: Group[];
   groupRecoByFollowing: GroupRecommendationBasedOnFollowingRsp[];
   hasRecommendations: Boolean;
+  hasMoreRecommendations: Boolean;
   loggedInUserGroups: Group[];
   fullView: boolean = false;
 
@@ -44,6 +45,9 @@ export class GroupRecommendationsComponent implements OnInit {
       this.loggedInUserGroups = result[2];
       if (this.groupRecoBySDG.length == 0 && this.groupRecoByFollowing.length == 0) {
         this.hasRecommendations = false;
+        if(this.groupRecoBySDG.length > 1 || this.groupRecoByFollowing.length > 1) {
+          this.hasMoreRecommendations = true;
+        }
       } else {
         this.hasRecommendations = true;
       }
