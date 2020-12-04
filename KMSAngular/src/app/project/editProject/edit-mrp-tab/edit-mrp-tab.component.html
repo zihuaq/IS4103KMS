@@ -367,8 +367,8 @@
                                     <span class="badge" *ngIf="fulfillment.status == fulfillmentStatus.ENDED"
                                         style="font-size: 12px; background-color: rgb(202, 89, 13); color: white; vertical-align: 30%;">{{fulfillment.status}}</span>
                                 </h6>
-                                <button *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED" type="button"
-                                    class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton"
+                                <button *ngIf="fulfillment.status != fulfillmentStatus.FULFILLED && !(fulfillment.mra.type != mraType.ONETIMEDONATION && fulfillment.mra.type != mraType.ONETIMEPAYMENT && fulfillment.status != fulfillmentStatus.ONGOING)" 
+                                    type="button" class="btn bg-gradient-primary float-right pb-0" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                     style="margin-right: 10px;"><i class="fas fa-ellipsis-h"></i></button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
