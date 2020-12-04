@@ -108,11 +108,11 @@ public class AwardSessionBeanTest {
     @Test(expected = NoResultException.class)
     public void testDeleteProjectAwardSuccess_deletedAwardCannotBeRetrieved() throws NoResultException {
         AwardEntity award = new AwardEntity();
-        award.setName("Test award");
-        award.setDescription("Award description");
+        award.setName("Test award 2");
+        award.setDescription("Award description 2");
         Long projectId = 1l;
         Long result = awardSessionBean.createNewProjectAward(award, projectId);
-        AwardEntity awardRetrieved = awardSessionBean.getAwardById(result);
+        awardSessionBean.getAwardById(result);
 
         awardSessionBean.deleteProjectAward(result);
         awardSessionBean.getAwardById(result);
@@ -175,12 +175,12 @@ public class AwardSessionBeanTest {
         Long projectId = 1l;
 
         AwardEntity award = new AwardEntity();
-        award.setName("Test award");
-        award.setDescription("Award description");
+        award.setName("Test award 3");
+        award.setDescription("Award description 3");
         Long result = awardSessionBean.createNewProjectAward(award, projectId);
         UserEntity user = userSessionBean.createNewUser(new UserEntity("Jeremy", "Chua", new Date(), "Male", "abcde6@gmail.com", "1", new Date(), UserTypeEnum.ADMIN));
 
-        awardSessionBean.issueAwardToUser(user.getUserId(), result);
+        awardSessionBean.issueAwardToUser(result,user.getUserId());
         AwardEntity awardRetrieved = awardSessionBean.getAwardById(result);
         UserEntity userAfterIssuingAward = userSessionBean.getUserById(user.getUserId());
         assertTrue(awardRetrieved.getUsersReceived().contains(userAfterIssuingAward));
@@ -204,13 +204,13 @@ public class AwardSessionBeanTest {
         Long projectId = 1l;
 
         AwardEntity award = new AwardEntity();
-        award.setName("Test award");
-        award.setDescription("Award description");
+        award.setName("Test award 4");
+        award.setDescription("Award description 4");
         Long result = awardSessionBean.createNewProjectAward(award, projectId);
         UserEntity user = userSessionBean.createNewUser(new UserEntity("Jeremy", "Chua", new Date(), "Male", "fghij6@gmail.com", "1", new Date(), UserTypeEnum.ADMIN));
 
-        awardSessionBean.issueAwardToUser(user.getUserId(), result);
-        awardSessionBean.issueAwardToUser(user.getUserId(), result);
+        awardSessionBean.issueAwardToUser(result, user.getUserId());
+        awardSessionBean.issueAwardToUser(result,user.getUserId());
     }
 
     @Test
@@ -218,12 +218,12 @@ public class AwardSessionBeanTest {
         Long projectId = 1l;
 
         AwardEntity award = new AwardEntity();
-        award.setName("Test award");
-        award.setDescription("Award description");
+        award.setName("Test award 5");
+        award.setDescription("Award description 5");
         Long result = awardSessionBean.createNewProjectAward(award, projectId);
         UserEntity user = userSessionBean.createNewUser(new UserEntity("Jeremy", "Chua", new Date(), "Male", "klmnop6@gmail.com", "1", new Date(), UserTypeEnum.ADMIN));
 
-        awardSessionBean.issueAwardToUser(user.getUserId(), result);
+        awardSessionBean.issueAwardToUser(result,user.getUserId());
         awardSessionBean.withdrawAwardfromUser(result, user.getUserId());
 
         AwardEntity awardRetrieved = awardSessionBean.getAwardById(result);
