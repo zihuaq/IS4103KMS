@@ -26,8 +26,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -53,8 +51,6 @@ public class ReportResource {
 
     ActivitySessionBeanLocal activitySessionBean = lookupActivitySessionBeanLocal();
 
-    
-
     PostSessionBeanLocal postSessionBean = lookupPostSessionBeanLocal();
 
     GroupSessionBeanLocal groupSessionBean = lookupGroupSessionBeanLocal();
@@ -64,11 +60,7 @@ public class ReportResource {
     UserSessionBeanLocal userSessionBean = lookupUserSessionBeanLocal();
 
     ReportSessionBeanLocal reportSessionBean = lookupReportSessionBeanLocal();
-    
-    
-    
-    
-    
+
     @Context
     private UriInfo context;
 
@@ -81,7 +73,7 @@ public class ReportResource {
     @POST
     @Path("/reportProfile")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response reportProfile (ReportEntity report) {
+    public Response reportProfile(ReportEntity report) {
         System.out.println("******** ReportResource: reportProfile()");
         try {
             ReportEntity reportResponse = reportSessionBean.reportProfile(report);
@@ -93,7 +85,7 @@ public class ReportResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    
+
     @POST
     @Path("/reportProject")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -107,7 +99,7 @@ public class ReportResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @POST
     @Path("/reportGroup")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -121,7 +113,7 @@ public class ReportResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @POST
     @Path("/reportPost")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -135,7 +127,7 @@ public class ReportResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
+
     @POST
     @Path("/reportComment")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -149,8 +141,8 @@ public class ReportResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
-     @POST
+
+    @POST
     @Path("/reportReview")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response reportReview(ReportEntity report) {
@@ -163,8 +155,7 @@ public class ReportResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
-    
+
     @GET
     @Path("/getProfileReports")
     @Produces(MediaType.APPLICATION_JSON)
@@ -174,15 +165,15 @@ public class ReportResource {
             List<ReportEntity> profileReports = reportSessionBean.getProfileReports();
             List<ReportEntity> profileReportsResponse = getProfileReportResponse(profileReports);
             return Response.status(Response.Status.OK).entity(profileReportsResponse).build();
-            
+
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
-     private List<ReportEntity> getProfileReportResponse(List<ReportEntity> reports){
-         List<ReportEntity> profileReportResponse = new ArrayList<>();
+
+    private List<ReportEntity> getProfileReportResponse(List<ReportEntity> reports) {
+        List<ReportEntity> profileReportResponse = new ArrayList<>();
         for (ReportEntity reportEntity : reports) {
             UserEntity reportOwner = new UserEntity();
             reportOwner.setUserId(reportEntity.getReportOwner().getUserId());
@@ -206,17 +197,17 @@ public class ReportResource {
             profileReportResponse.add(temp);
         }
         return profileReportResponse;
-    } 
-     
-     @POST
-     @Path("passProfileReportVerdict")
-     @Consumes(MediaType.APPLICATION_JSON)
-     @Produces(MediaType.APPLICATION_JSON)
-     public Response passProfileReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
+    }
+
+    @POST
+    @Path("passProfileReportVerdict")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response passProfileReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
             UserEntity reportedUser = userSessionBean.getUserById(passProfileReportVerdictReq.getReport().getReportedUser().getUserId());
             reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
-            if(!passProfileReportVerdictReq.getActive()){
+            if (!passProfileReportVerdictReq.getActive()) {
                 reportedUser.setIsActive(Boolean.FALSE);
                 userSessionBean.updateUser(reportedUser);
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
@@ -227,16 +218,16 @@ public class ReportResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-     
-     @POST
-     @Path("passProjectReportVerdict")
-     @Consumes(MediaType.APPLICATION_JSON)
-     @Produces(MediaType.APPLICATION_JSON)
-     public Response passProjectReportVerdict(PassProjectReportVerdictReq passProjectReportVerdictReq) {
+
+    @POST
+    @Path("passProjectReportVerdict")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response passProjectReportVerdict(PassProjectReportVerdictReq passProjectReportVerdictReq) {
         try {
             ProjectEntity reportedProject = projectSessionBean.getProjectById(passProjectReportVerdictReq.getReport().getReportedProject().getProjectId());
             reportSessionBean.updateReportVerdict(passProjectReportVerdictReq.getReport());
-            if(!passProjectReportVerdictReq.getActive()){
+            if (!passProjectReportVerdictReq.getActive()) {
                 reportedProject.setIsActive(Boolean.FALSE);
                 projectSessionBean.updateProject(reportedProject);
                 reportSessionBean.sentReportVerdictEmail(passProjectReportVerdictReq.getReport());
@@ -247,16 +238,16 @@ public class ReportResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-     
-     @POST
-     @Path("passGroupReportVerdict")
-     @Consumes(MediaType.APPLICATION_JSON)
-     @Produces(MediaType.APPLICATION_JSON)
-     public Response passGroupReportVerdict(PassGroupReportVerdictReq passGroupReportVerdictReq) {
+
+    @POST
+    @Path("passGroupReportVerdict")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response passGroupReportVerdict(PassGroupReportVerdictReq passGroupReportVerdictReq) {
         try {
             GroupEntity reportedGroup = groupSessionBean.getGroupById(passGroupReportVerdictReq.getReport().getReportedGroup().getGroupId());
             reportSessionBean.updateReportVerdict(passGroupReportVerdictReq.getReport());
-            if(!passGroupReportVerdictReq.getActive()){
+            if (!passGroupReportVerdictReq.getActive()) {
                 reportedGroup.setIsActive(Boolean.FALSE);
                 groupSessionBean.updateGroup(reportedGroup);
                 reportSessionBean.sentReportVerdictEmail(passGroupReportVerdictReq.getReport());
@@ -267,18 +258,18 @@ public class ReportResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-     
-     @POST
-     @Path("passPostReportVerdict")
-     @Consumes(MediaType.APPLICATION_JSON)
-     @Produces(MediaType.APPLICATION_JSON)
-     public Response passPostReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
+
+    @POST
+    @Path("passPostReportVerdict")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response passPostReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
             System.out.println("**************reportResource: passPostReportVerdict");
             PostEntity reportedPost = postSessionBean.getPostById(passProfileReportVerdictReq.getReport().getReportedPost().getPostId());
             //reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
             Long reportId = 0L;
-            if(!passProfileReportVerdictReq.getActive()){
+            if (!passProfileReportVerdictReq.getActive()) {
                 System.out.println("**************passPostReportVerdict: active = false");
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
                 System.out.println("**************passPostReportVerdict email sent");
@@ -287,77 +278,72 @@ public class ReportResource {
                 System.out.println("**************passPostReportVerdict delete report");
                 postSessionBean.deletePostById(reportedPost.getPostId());
                 System.out.println("**************passPostReportVerdict delete post");
-            }else{
+            } else {
                 reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
             }
-            
+
             return Response.status(Status.OK).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-     
-          
-     @POST
-     @Path("passCommentReportVerdict")
-     @Consumes(MediaType.APPLICATION_JSON)
-     @Produces(MediaType.APPLICATION_JSON)
-     
-     public Response passCommentReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
+
+    @POST
+    @Path("passCommentReportVerdict")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response passCommentReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
             PostCommentEntity reportedComment = postSessionBean.getPostCommentById(passProfileReportVerdictReq.getReport().getReportedComment().getPostCommentId());
             //reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
             Long reportId = 0L;
-            if(!passProfileReportVerdictReq.getActive()){
+            if (!passProfileReportVerdictReq.getActive()) {
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
                 reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
                 postSessionBean.deleteComment(reportedComment.getPostCommentId());
-            }
-            else{
+            } else {
                 reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
 
             }
-            
+
             return Response.status(Status.OK).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-     
-      @POST
-     @Path("passReviewReportVerdict")
-     @Consumes(MediaType.APPLICATION_JSON)
-     @Produces(MediaType.APPLICATION_JSON)
-     
-     public Response passReviewReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
+
+    @POST
+    @Path("passReviewReportVerdict")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response passReviewReportVerdict(PassProfileReportVerdictReq passProfileReportVerdictReq) {
         try {
             ReviewEntity reportedReview = activitySessionBean.getReviewById(passProfileReportVerdictReq.getReport().getReportedReview().getReviewId());
             //reportSessionBean.updateReportVerdict(passProfileReportVerdictReq.getReport());
             Long reportId = 0L;
-            if(!passProfileReportVerdictReq.getActive()){
+            if (!passProfileReportVerdictReq.getActive()) {
                 reportSessionBean.sentReportVerdictEmail(passProfileReportVerdictReq.getReport());
                 reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
                 activitySessionBean.deleteReview(reportedReview.getReviewId());
-            }
-            else{
+            } else {
                 reportId = passProfileReportVerdictReq.getReport().getReportId();
                 reportSessionBean.deleteReport(passProfileReportVerdictReq.getReport().getReportId());
 
             }
-            
+
             return Response.status(Status.OK).build();
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-     
+
     @GET
     @Path("/getProjectReports")
     @Produces(MediaType.APPLICATION_JSON)
@@ -367,15 +353,15 @@ public class ReportResource {
             List<ReportEntity> projectReports = reportSessionBean.getProjectReports();
             List<ReportEntity> projectReportsResponse = getProjectReportResponse(projectReports);
             return Response.status(Response.Status.OK).entity(projectReportsResponse).build();
-            
+
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
-     private List<ReportEntity> getProjectReportResponse(List<ReportEntity> reports){
-         List<ReportEntity> projectReportResponse = new ArrayList<>();
+
+    private List<ReportEntity> getProjectReportResponse(List<ReportEntity> reports) {
+        List<ReportEntity> projectReportResponse = new ArrayList<>();
         for (ReportEntity reportEntity : reports) {
             UserEntity reportOwner = new UserEntity();
             reportOwner.setUserId(reportEntity.getReportOwner().getUserId());
@@ -397,8 +383,8 @@ public class ReportResource {
             projectReportResponse.add(temp);
         }
         return projectReportResponse;
-    } 
-     
+    }
+
     @GET
     @Path("/getGroupReports")
     @Produces(MediaType.APPLICATION_JSON)
@@ -408,15 +394,15 @@ public class ReportResource {
             List<ReportEntity> groupReports = reportSessionBean.getGroupReports();
             List<ReportEntity> groupReportsResponse = getGroupReportResponse(groupReports);
             return Response.status(Response.Status.OK).entity(groupReportsResponse).build();
-            
+
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
-     private List<ReportEntity> getGroupReportResponse(List<ReportEntity> reports){
-         List<ReportEntity> groupReportResponse = new ArrayList<>();
+
+    private List<ReportEntity> getGroupReportResponse(List<ReportEntity> reports) {
+        List<ReportEntity> groupReportResponse = new ArrayList<>();
         for (ReportEntity reportEntity : reports) {
             UserEntity reportOwner = new UserEntity();
             reportOwner.setUserId(reportEntity.getReportOwner().getUserId());
@@ -438,8 +424,8 @@ public class ReportResource {
             groupReportResponse.add(temp);
         }
         return groupReportResponse;
-    } 
-     
+    }
+
     @GET
     @Path("/getPostReports")
     @Produces(MediaType.APPLICATION_JSON)
@@ -449,15 +435,15 @@ public class ReportResource {
             List<ReportEntity> postReports = reportSessionBean.getPostReports();
             List<ReportEntity> postReportsResponse = getPostReportResponse(postReports);
             return Response.status(Response.Status.OK).entity(postReportsResponse).build();
-            
+
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
-     private List<ReportEntity> getPostReportResponse(List<ReportEntity> reports){
-         List<ReportEntity> postReportResponse = new ArrayList<>();
+
+    private List<ReportEntity> getPostReportResponse(List<ReportEntity> reports) {
+        List<ReportEntity> postReportResponse = new ArrayList<>();
         for (ReportEntity reportEntity : reports) {
             UserEntity reportOwner = new UserEntity();
             reportOwner.setUserId(reportEntity.getReportOwner().getUserId());
@@ -479,9 +465,9 @@ public class ReportResource {
             postReportResponse.add(temp);
         }
         return postReportResponse;
-    } 
-     
-     @GET
+    }
+
+    @GET
     @Path("/getCommentReports")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCommentReports() {
@@ -490,15 +476,15 @@ public class ReportResource {
             List<ReportEntity> commentReports = reportSessionBean.getCommentReports();
             List<ReportEntity> commentReportsResponse = getCommentReportResponse(commentReports);
             return Response.status(Response.Status.OK).entity(commentReportsResponse).build();
-            
+
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
-     private List<ReportEntity> getCommentReportResponse(List<ReportEntity> reports){
-         List<ReportEntity> postReportResponse = new ArrayList<>();
+
+    private List<ReportEntity> getCommentReportResponse(List<ReportEntity> reports) {
+        List<ReportEntity> postReportResponse = new ArrayList<>();
         for (ReportEntity reportEntity : reports) {
             UserEntity reportOwner = new UserEntity();
             reportOwner.setUserId(reportEntity.getReportOwner().getUserId());
@@ -520,9 +506,9 @@ public class ReportResource {
             postReportResponse.add(temp);
         }
         return postReportResponse;
-    } 
-     
-      @GET
+    }
+
+    @GET
     @Path("/getReviewReports")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReviewReports() {
@@ -531,27 +517,27 @@ public class ReportResource {
             List<ReportEntity> reviewReports = reportSessionBean.getReviewReports();
             List<ReportEntity> reviewReportsResponse = getReviewReportResponse(reviewReports);
             return Response.status(Response.Status.OK).entity(reviewReportsResponse).build();
-            
+
         } catch (Exception ex) {
             ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-    
-     private List<ReportEntity> getReviewReportResponse(List<ReportEntity> reports){
-         List<ReportEntity> postReportResponse = new ArrayList<>();
+
+    private List<ReportEntity> getReviewReportResponse(List<ReportEntity> reports) {
+        List<ReportEntity> postReportResponse = new ArrayList<>();
         for (ReportEntity reportEntity : reports) {
             UserEntity reportOwner = new UserEntity();
             reportOwner.setUserId(reportEntity.getReportOwner().getUserId());
             reportOwner.setFirstName(reportEntity.getReportOwner().getFirstName());
             reportOwner.setLastName(reportEntity.getReportOwner().getLastName());
             reportOwner.setProfilePicture(reportEntity.getReportOwner().getProfilePicture());
-            
+
             ReviewEntity reportedReview = new ReviewEntity();
             reportedReview.setReviewId(reportEntity.getReportedReview().getReviewId());
             reportedReview.setTitle(reportEntity.getReportedReview().getTitle());
             reportedReview.setReviewField(reportEntity.getReportedReview().getReviewField());
-            
+
             ReportEntity temp = new ReportEntity();
             temp.setReportId(reportEntity.getReportId());
             temp.setReportContent(reportEntity.getReportContent());
@@ -564,10 +550,8 @@ public class ReportResource {
             postReportResponse.add(temp);
         }
         return postReportResponse;
-    } 
-     
-    
-    
+    }
+
     private ReportSessionBeanLocal lookupReportSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -628,30 +612,6 @@ public class ReportResource {
         }
     }
 
-    public void persist(Object object) {
-        /* Add this to the deployment descriptor of this module (e.g. web.xml, ejb-jar.xml):
-         * <persistence-context-ref>
-         * <persistence-context-ref-name>persistence/LogicalName</persistence-context-ref-name>
-         * <persistence-unit-name>KMS-warPU</persistence-unit-name>
-         * </persistence-context-ref>
-         * <resource-ref>
-         * <res-ref-name>UserTransaction</res-ref-name>
-         * <res-type>javax.transaction.UserTransaction</res-type>
-         * <res-auth>Container</res-auth>
-         * </resource-ref> */
-        try {
-            javax.naming.Context ctx = new InitialContext();
-            UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
-            utx.begin();
-            EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
-            em.persist(object);
-            utx.commit();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
-        }
-    }
-
     private ActivitySessionBeanLocal lookupActivitySessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -662,5 +622,4 @@ public class ReportResource {
         }
     }
 
-   
 }

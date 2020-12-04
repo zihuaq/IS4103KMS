@@ -1055,27 +1055,6 @@ public class UserResource {
             return Response.status(404).entity(exception).build();
         }
     }
-    //    @POST
-//    @Path("ResetPassword")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response changePassword(@PathParam("password") String password) {
-////            try {
-////                userSessionBeanLocal.customerLogin(changePasswordReq.getUsername(), changePasswordReq.getPassword());
-////                
-////                userSessionBeanLocal.changePassword(changePasswordReq.getUsername(), changePasswordReq.getOldPassword(), changePasswordReq.getNewPassword());
-////                
-////                return Response.status(Response.Status.OK).build();
-////            } catch (InvalidLoginCredentialException | ChangePasswordException ex) {
-////                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-////
-////                return Response.status(Response.Status.UNAUTHORIZED).entity(errorRsp).build();
-////            } catch (Exception ex) {
-////                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-////
-////                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
-////            }
-//    }
 
     @Path("/projectsOwned/{userId}")
     @GET
@@ -1336,57 +1315,5 @@ public class UserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
-
-
-    public void persist(Object object) {
-        /* Add this to the deployment descriptor of this module (e.g. web.xml, ejb-jar.xml):
-         * <persistence-context-ref>
-         * <persistence-context-ref-name>persistence/LogicalName</persistence-context-ref-name>
-         * <persistence-unit-name>KMS-warPU</persistence-unit-name>
-         * </persistence-context-ref>
-         * <resource-ref>
-         * <res-ref-name>UserTransaction</res-ref-name>
-         * <res-type>javax.transaction.UserTransaction</res-type>
-         * <res-auth>Container</res-auth>
-         * </resource-ref> */
-        try {
-            javax.naming.Context ctx = new InitialContext();
-            UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
-            utx.begin();
-            EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
-            em.persist(object);
-            utx.commit();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void persist1(Object object) {
-        /* Add this to the deployment descriptor of this module (e.g. web.xml, ejb-jar.xml):
-         * <persistence-context-ref>
-         * <persistence-context-ref-name>persistence/LogicalName</persistence-context-ref-name>
-         * <persistence-unit-name>KMS-warPU</persistence-unit-name>
-         * </persistence-context-ref>
-         * <resource-ref>
-         * <res-ref-name>UserTransaction</res-ref-name>
-         * <res-type>javax.transaction.UserTransaction</res-type>
-         * <res-auth>Container</res-auth>
-         * </resource-ref> */
-        try {
-            javax.naming.Context ctx = new InitialContext();
-            UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
-            utx.begin();
-            EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
-            em.persist(object);
-            utx.commit();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
-        }
-    }
-
-   
-    
 
 }
