@@ -48,7 +48,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
     private MaterialResourcePostingSessionBeanLocal materialResourcePostingSessionBeanLocal;
 
     @EJB(name = "UserSessionBeanLocal")
-    private UserSessionBeanLocal userSessionBeanLocal; 
+    private UserSessionBeanLocal userSessionBeanLocal;
 
     @PersistenceContext(unitName = "KMS-warPU")
     private EntityManager em;
@@ -56,11 +56,11 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
     @Override
     public Long createFulfillment(FulfillmentEntity newFulfillment, Long ownerId, Long postingId, Long mraId) throws NoResultException {
         System.out.println("******** FulfillmentSessionBean: createFulfillment()");
-        
+
         UserEntity fulfillmentOwner = userSessionBeanLocal.getUserById(ownerId);
         MaterialResourcePostingEntity posting = materialResourcePostingSessionBeanLocal.getMrpById(postingId);
         MaterialResourceAvailableEntity mra = materialResourceAvailableSessionBeanLocal.getMaterialResourceAvailableById(mraId);
-        
+
         if (mra.getType() == MraTypeEnum.ONETIMEDONATION || mra.getType() == MraTypeEnum.ONETIMEPAYMENT) { //if one-time
             newFulfillment.setReceivedQuantity(0.0);
             newFulfillment.setUnreceivedQuantity(newFulfillment.getTotalPledgedQuantity());
@@ -69,7 +69,7 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
             newFulfillment.setUnreceivedQuantity(null);
         }
         posting.setLackingQuantity(posting.getLackingQuantity() - newFulfillment.getTotalPledgedQuantity());
-        
+
         if (posting.getLackingQuantity() == 0.0) {
             posting.setStatus(MrpStatusEnum.CLOSED);
         }
@@ -78,24 +78,24 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
         newFulfillment.setPosting(posting);
         posting.getFulfillments().add(newFulfillment);
         newFulfillment.setMra(mra);
-        
+
         em.persist(newFulfillment);
         em.flush();
-        
+
         return newFulfillment.getFulfillmentId();
     }
-    
+
     @Override
     public FulfillmentEntity getFulfillmentById(Long fulfillmentId) throws NoResultException {
         FulfillmentEntity fulfillment = em.find(FulfillmentEntity.class, fulfillmentId);
-        
+
         if (fulfillment != null) {
             return fulfillment;
         } else {
             throw new NoResultException("Fulfillment does not exist");
         }
     }
-    
+
     @Override
     public List<FulfillmentEntity> getListOfFulfillmentsByMrp(Long mrpId) throws NoResultException {
         MaterialResourcePostingEntity mrp = materialResourcePostingSessionBeanLocal.getMrpById(mrpId);
@@ -105,85 +105,87 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
 
         return fulfillmentList;
     }
-    
+
     //only for one-time donations and payments
     @Override
     public void receiveResource(FulfillmentEntity fulfillmentToUpdate, PaymentEntity payment) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
-        
-        fulfillment.getPosting().setObtainedQuantity(fulfillment.getPosting().getObtainedQuantity() + fulfillmentToUpdate.getReceivedQuantity());
+
+        if (fulfillment.getPosting().getObtainedQuantity() != null) {
+            fulfillment.getPosting().setObtainedQuantity(fulfillment.getPosting().getObtainedQuantity() + fulfillmentToUpdate.getReceivedQuantity());
+        }
         fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
         fulfillment.setReceivedQuantity(fulfillmentToUpdate.getReceivedQuantity());
         fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getUnreceivedQuantity());
         fulfillment.setStatus(fulfillmentToUpdate.getStatus());
-        
+
         if (payment != null) {
             payment.setFulfillment(fulfillment);
-            
+
             em.persist(payment);
             em.flush();
         }
     }
-    
+
     //only for one-time donations and payments by project owners/admins
     @Override
     public void updateQuantity(FulfillmentEntity fulfillmentToUpdate, PaymentEntity payment) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
-        
+
         Double difference = fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity();
         fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + difference);
         fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
         fulfillment.setUnreceivedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity() - fulfillmentToUpdate.getReceivedQuantity());
         fulfillment.setStatus(fulfillmentToUpdate.getStatus());
-        
+
         LocalDate today = LocalDate.now();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getStartDate()));
-        
+
         if (fulfillment.getPosting().getLackingQuantity() == 0.0 || !today.isBefore(startDate)) {
             fulfillment.getPosting().setStatus(MrpStatusEnum.CLOSED);
         } else {
             fulfillment.getPosting().setStatus(MrpStatusEnum.OPEN);
         }
-        
+
         if (payment != null) {
             payment.setFulfillment(fulfillment);
-            
+
             em.persist(payment);
             em.flush();
         }
     }
-    
+
     //only for pledged fulfillments by mra owner
     @Override
     public void updateFulfillment(FulfillmentEntity fulfillmentToUpdate) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentToUpdate.getFulfillmentId());
-        
+
         Double difference = fulfillment.getTotalPledgedQuantity() - fulfillmentToUpdate.getTotalPledgedQuantity();
         fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + difference);
         fulfillment.setTotalPledgedQuantity(fulfillmentToUpdate.getTotalPledgedQuantity());
         fulfillment.setBasisOffered(fulfillmentToUpdate.getBasisOffered());
         fulfillment.setPaymentBasis(fulfillmentToUpdate.getPaymentBasis());
         fulfillment.setPriceOffered(fulfillmentToUpdate.getPriceOffered());
-        
+
         LocalDate today = LocalDate.now();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getStartDate()));
-        
+
         if (fulfillment.getPosting().getLackingQuantity() == 0.0 || !today.isBefore(startDate)) {
             fulfillment.getPosting().setStatus(MrpStatusEnum.CLOSED);
         } else {
             fulfillment.getPosting().setStatus(MrpStatusEnum.OPEN);
         }
     }
-    
+
     @Override
     public void rejectFulfillment(Long fulfillmentId) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentId);
-        
+
         fulfillment.setStatus(FulfillmentStatusEnum.REJECTED);
         fulfillment.getPosting().setLackingQuantity(fulfillment.getPosting().getLackingQuantity() + fulfillment.getTotalPledgedQuantity());
-        
+
         LocalDate today = LocalDate.now();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getStartDate()));
@@ -192,24 +194,24 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
             fulfillment.getPosting().setStatus(MrpStatusEnum.OPEN);
         }
     }
-    
+
     @Override
     public void acceptFulfillment(Long fulfillmentId) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentId);
-        
+
         fulfillment.setStatus(FulfillmentStatusEnum.ACCEPTED);
-        
+
         //if recurring
         if (fulfillment.getMra().getType() != MraTypeEnum.ONETIMEDONATION && fulfillment.getMra().getType() != MraTypeEnum.ONETIMEPAYMENT) {
             fulfillment.getPosting().setObtainedQuantity(null);
-            
+
             LocalDate today = LocalDate.now();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             LocalDate startDate = LocalDate.parse(sdf.format(fulfillment.getPosting().getStartDate()));
-            
+
             if (today.isEqual(startDate)) {
                 fulfillment.setStatus(FulfillmentStatusEnum.ONGOING);
-            }    
+            }
             PaymentEntity newPayment = new PaymentEntity();
             Double amount = fulfillment.getPriceOffered() * fulfillment.getTotalPledgedQuantity();
             if (fulfillment.getPaymentBasis() == PaymentBasisEnum.ONCE) { //pay in full
@@ -236,21 +238,21 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
             newPayment.setPreviousDueDate(fulfillment.getPosting().getStartDate());
             newPayment.setAmount(amount);
             newPayment.setFulfillment(fulfillment);
-            
+
             em.persist(newPayment);
             em.flush();
         }
     }
-    
+
     //for recurring fulfillments where mrp has no end date
     @Override
     public PaymentEntity endSubscription(Long fulfillmentId) throws NoResultException {
         FulfillmentEntity fulfillment = getFulfillmentById(fulfillmentId);
-        
+
         List<PaymentEntity> payments = paymentSessionBeanLocal.getListOfPaymentsByFulfillmentNewestToOldest(fulfillmentId);
         PaymentEntity latestPayment = payments.get(0);
         latestPayment.setIsLast(true);
-        
+
         if (latestPayment.getStatus() == PaymentStatusEnum.NOTDUE && fulfillment.getBasisOffered() == MraTypeEnum.DAILY) {
             LocalDate today = LocalDate.now();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -260,23 +262,23 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
             latestPayment.setAmount(amount);
         }
         fulfillment.setStatus(FulfillmentStatusEnum.ENDED);
-        
+
         return latestPayment;
     }
-    
+
     @Override //only pledged or rejected fulfillments
     public void deleteFulfillment(Long fulfillmentId) throws NoResultException {
         FulfillmentEntity fulfillmentToDelete = getFulfillmentById(fulfillmentId);
-        
-        if (fulfillmentToDelete.getFulfillmentOwner()!= null) {
+
+        if (fulfillmentToDelete.getFulfillmentOwner() != null) {
             fulfillmentToDelete.getFulfillmentOwner().getFulfillments().remove(fulfillmentToDelete);
             fulfillmentToDelete.setFulfillmentOwner(null);
         }
-        
-        if (fulfillmentToDelete.getPosting()!= null) {
+
+        if (fulfillmentToDelete.getPosting() != null) {
             if (fulfillmentToDelete.getStatus() != FulfillmentStatusEnum.REJECTED) {
                 fulfillmentToDelete.getPosting().setLackingQuantity(fulfillmentToDelete.getPosting().getLackingQuantity() + fulfillmentToDelete.getTotalPledgedQuantity());
-                
+
                 LocalDate today = LocalDate.now();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 LocalDate startDate = LocalDate.parse(sdf.format(fulfillmentToDelete.getPosting().getStartDate()));
@@ -288,27 +290,27 @@ public class FulfillmentSessionBean implements FulfillmentSessionBeanLocal {
             fulfillmentToDelete.getPosting().getFulfillments().remove(fulfillmentToDelete);
             fulfillmentToDelete.setPosting(null);
         }
-        
-        if (fulfillmentToDelete.getMra()!= null) {
+
+        if (fulfillmentToDelete.getMra() != null) {
             fulfillmentToDelete.setMra(null);
         }
         em.remove(fulfillmentToDelete);
     }
-    
+
     @Override
     public List<FulfillmentEntity> getListOfFulfillmentsByUserAndProject(Long userId, Long projectId) throws NoResultException {
         Query query = em.createQuery("SELECT f FROM FulfillmentEntity f WHERE f.fulfillmentOwner.userId = :inUserId AND f.posting.project.projectId = :inProjectId");
         query.setParameter("inUserId", userId);
         query.setParameter("inProjectId", projectId);
-        
+
         return query.getResultList();
     }
-    
+
     @Override
     public List<FulfillmentEntity> getListOfFulfillmentsByProject(Long projectId) throws NoResultException {
         Query query = em.createQuery("SELECT f FROM FulfillmentEntity f WHERE f.posting.project.projectId = :inProjectId");
         query.setParameter("inProjectId", projectId);
-        
+
         return query.getResultList();
     }
 }
