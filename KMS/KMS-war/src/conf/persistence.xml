@@ -30,6 +30,8 @@
     <class>entity.ElectionApplicationEntity</class>
     <class>entity.ElectionEntity</class>
     <class>entity.TagRequestEntity</class>
+    <class>entity.IndividualQuestionnaireEntity</class>
+    <class>entity.OrganisationQuestionnaireEntity</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
