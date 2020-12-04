@@ -6,7 +6,8 @@
     <hr />
     <span *ngIf="leaderboardUsers">
         <div *ngFor="let user of leaderboardUsers; let i = index">
-            <div class="user-panel d-flex" style="padding:2%" [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
+            <div class="user-panel d-flex" style="padding:2%"
+                [ngStyle]="{'background-color': (i <= 2) ? (i <= 1) ? (i == 0) ?'#FFD700': '#C0C0C0' :'#cd8032' : '#ffffff'}">
                 <div class="container">
                     <div class="row">
                         <div class="col-1">
@@ -27,9 +28,6 @@
                                 {{user.lastName}}</a>
                         </div>
                         <div class="col-4">
-                            <div>
-                                {{user.reputationPoints}} points
-                            </div>
                         </div>
                     </div>
                 </div>
