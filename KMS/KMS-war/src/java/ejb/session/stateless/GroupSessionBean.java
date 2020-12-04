@@ -111,6 +111,10 @@ public class GroupSessionBean implements GroupSessionBeanLocal, GroupSessionBean
     public GroupEntity getGroupById(Long groupId) throws NoResultException {
         GroupEntity group = em.find(GroupEntity.class, groupId);
         if (group != null) {
+            group.getGroupAdmins().size();
+            group.getGroupMembers().size();
+            group.getPosts().size();
+            group.getSdgs().size();
             return group;
         } else {
             throw new NoResultException("Group does not exists");

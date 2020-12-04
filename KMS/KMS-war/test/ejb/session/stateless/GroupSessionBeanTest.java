@@ -43,26 +43,6 @@ public class GroupSessionBeanTest {
     public GroupSessionBeanTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-        System.out.println("@Before setUp");
-
-    }
-
-    @After
-    public void tearDown() {
-        System.out.println("@After tearDown");
-    }
-
     @Test
     public void testCreateNewGroup() throws CreateGroupException, NoResultException {
         System.out.println("testCreateNewGroupSuccess");
@@ -97,8 +77,8 @@ public class GroupSessionBeanTest {
 
     @Test
     public void testGetGroupById() throws NoResultException {
-        GroupEntity groupEntity = groupSessionBean.getGroupById(1l);
-        assertTrue(groupEntity.getGroupId() == 1l);
+        GroupEntity groupEntity = groupSessionBean.getGroupById(2l);
+        assertTrue(groupEntity.getGroupId() == 2l);
     }
 
     @Test(expected = NoResultException.class)
@@ -108,11 +88,11 @@ public class GroupSessionBeanTest {
 
     @Test
     public void testJoinGroup() throws NoResultException {
-        groupSessionBean.joinGroup(1l, 1l);
+        groupSessionBean.joinGroup(2l, 11l);
         boolean hasUser = false;
-        List<UserEntity> members = groupSessionBean.getGroupById(1l).getGroupMembers();
+        List<UserEntity> members = groupSessionBean.getGroupById(2l).getGroupMembers();
         for (int i = 0; i < members.size(); i++) {
-            if (members.get(i).getUserId() == 1l) {
+            if (members.get(i).getUserId() == 11l) {
                 hasUser = true;
             }
         }
@@ -121,28 +101,28 @@ public class GroupSessionBeanTest {
 
     @Test(expected = NoResultException.class)
     public void testJoinGroupInvalidGroupId() throws NoResultException {
-        groupSessionBean.joinGroup(-1l, 1l);
+        groupSessionBean.joinGroup(-1l, 10l);
     }
 
     @Test(expected = NoResultException.class)
     public void testJoinGroupInvalidUserId() throws NoResultException {
-        groupSessionBean.joinGroup(1l, -1l);
+        groupSessionBean.joinGroup(2l, -1l);
     }
 
     @Test
     public void testRemoveMember() throws Exception {
-        groupSessionBean.joinGroup(1l, 1l);
+        groupSessionBean.joinGroup(2l, 1l);
         boolean hasUser = false;
-        List<UserEntity> members = groupSessionBean.getGroupById(1l).getGroupMembers();
+        List<UserEntity> members = groupSessionBean.getGroupById(2l).getGroupMembers();
         for (int i = 0; i < members.size(); i++) {
             if (members.get(i).getUserId() == 1l) {
                 hasUser = true;
             }
         }
         assertTrue(hasUser);
-        groupSessionBean.removeMember(1l, 1l);
+        groupSessionBean.removeMember(2l, 1l);
         hasUser = false;
-        members = groupSessionBean.getGroupById(1l).getGroupMembers();
+        members = groupSessionBean.getGroupById(2l).getGroupMembers();
         for (int i = 0; i < members.size(); i++) {
             if (members.get(i).getUserId() == 1l) {
                 hasUser = true;
@@ -153,21 +133,21 @@ public class GroupSessionBeanTest {
 
     @Test(expected = InvalidRoleException.class)
     public void testRemoveMemberGroupOwner() throws InvalidRoleException, NoResultException {
-        long ownerUserId = groupSessionBean.getGroupById(1l).getGroupOwner().getUserId();
-        groupSessionBean.removeMember(1l, ownerUserId);
+        long ownerUserId = groupSessionBean.getGroupById(2l).getGroupOwner().getUserId();
+        groupSessionBean.removeMember(2l, ownerUserId);
     }
 
     @Test
     public void testUpdateGroup() throws Exception {
         GroupEntity group = new GroupEntity("group test", "great group", "Malaysia");
-        group.setGroupId(1l);
+        group.setGroupId(2l);
         List<TagEntity> sdgs = tagSessionBean.getAllSDGTags();
         List<TagEntity> tag = new ArrayList<>();
         tag.add(tagSessionBean.getTagById(sdgs.get(1).getTagId()));
         tag.add(tagSessionBean.getTagById(sdgs.get(3).getTagId()));
         group.setSdgs(tag);
         groupSessionBean.updateGroup(group);
-        GroupEntity result = groupSessionBean.getGroupById(1l);
+        GroupEntity result = groupSessionBean.getGroupById(2l);
         assertEquals("group test", result.getName());
         assertEquals("great group", result.getDescription());
         assertEquals("Malaysia", result.getCountry());
@@ -187,11 +167,12 @@ public class GroupSessionBeanTest {
 
     @Test
     public void testAddAdmin() throws Exception {
-        groupSessionBean.addAdmin(1l, 1l);
+        groupSessionBean.joinGroup(1l, 5l);
+        groupSessionBean.addAdmin(1l, 5l);
         List<UserEntity> admins = groupSessionBean.getGroupById(1l).getGroupAdmins();
         boolean hasUser = false;
         for (int i = 0; i < admins.size(); i++) {
-            if (admins.get(i).getUserId() == 1l) {
+            if (admins.get(i).getUserId() == 5l) {
                 hasUser = true;
             }
         }
@@ -205,20 +186,21 @@ public class GroupSessionBeanTest {
 
     @Test
     public void testRemoveAdmin() throws Exception {
-        groupSessionBean.addAdmin(1l, 1l);
-        List<UserEntity> admins = groupSessionBean.getGroupById(1l).getGroupAdmins();
+        groupSessionBean.joinGroup(2l, 5l);
+        groupSessionBean.addAdmin(2l, 5l);
+        List<UserEntity> admins = groupSessionBean.getGroupById(2l).getGroupAdmins();
         boolean hasUser = false;
         for (int i = 0; i < admins.size(); i++) {
-            if (admins.get(i).getUserId() == 1l) {
+            if (admins.get(i).getUserId() == 5l) {
                 hasUser = true;
             }
         }
         assertTrue(hasUser);
-        groupSessionBean.removeAdmin(1l, 1l);
-        admins = groupSessionBean.getGroupById(1l).getGroupAdmins();
+        groupSessionBean.removeAdmin(2l, 5l);
+        admins = groupSessionBean.getGroupById(2l).getGroupAdmins();
         hasUser = false;
         for (int i = 0; i < admins.size(); i++) {
-            if (admins.get(i).getUserId() == 1l) {
+            if (admins.get(i).getUserId() == 5l) {
                 hasUser = true;
             }
         }
