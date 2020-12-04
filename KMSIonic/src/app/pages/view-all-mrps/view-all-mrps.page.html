@@ -19,7 +19,7 @@
     No material resource postings at the moment
   </ion-card-content>
   <span *ngIf="mrpList.length > 0">
-    <ion-card *ngFor="let mrp of filteredMrpList" tappable [routerLink]="['/project-details', mrp.project.projectId, '/mrp-tab']">
+    <ion-card *ngFor="let mrp of filteredMrpList" tappable [routerLink]="['/project-details', mrp.project.projectId, 'mrp-tab']">
       <ion-card-content class="ion-text-wrap ion-no-padding" style="padding: 15px;">
         <ion-grid>
           <ion-row>
