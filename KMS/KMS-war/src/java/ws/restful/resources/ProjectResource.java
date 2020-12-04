@@ -146,6 +146,7 @@ public class ProjectResource {
             project.getProjectOwner().setDonations(new ArrayList<>());
             project.getProjectOwner().setNotifications(new ArrayList<>());
             project.getProjectOwner().setReceivedAwards(new ArrayList<>());
+            project.getProjectOwner().setProfiles(new ArrayList<>());
             for (UserEntity member : project.getProjectMembers()) {
                 member.setReviewsGiven(new ArrayList<>());
                 member.setReviewsReceived(new ArrayList<>());
@@ -174,6 +175,7 @@ public class ProjectResource {
                 member.setDonations(new ArrayList<>());
                 member.setNotifications(new ArrayList<>());
                 member.setReceivedAwards(new ArrayList<>());
+                member.setProfiles(new ArrayList<>());
             }
             for (UserEntity admin : project.getProjectAdmins()) {
                 admin.setReviewsGiven(new ArrayList<>());
@@ -203,6 +205,7 @@ public class ProjectResource {
                 admin.setDonations(new ArrayList<>());
                 admin.setNotifications(new ArrayList<>());
                 admin.setReceivedAwards(new ArrayList<>());
+                admin.setProfiles(new ArrayList<>());
             }
             for (ActivityEntity ae : project.getActivities()) {
                 ae.setProject(null);
