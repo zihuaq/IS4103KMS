@@ -20,8 +20,9 @@ export class ReviewsWrittenComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getWrittenReviews(this.profile.userId).subscribe(
-      (response)=>{
+      response=>{
         this.reviewsWritten = response;
+        console.log(this.reviewsWritten)
       },
       (error) =>{
         this.errorMessage = error

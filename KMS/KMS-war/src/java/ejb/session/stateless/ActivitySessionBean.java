@@ -121,6 +121,7 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
             activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
             for(UserEntity user: activity.getJoinedUsers()){
                 user.setCountOfActivitiesCompleted(user.getCountOfActivitiesCompleted()+1);
+                user.setReputationPoints(user.getReputationPoints() + 3);  
             }
         } else if (today.isBefore(startDate)) {
             activity.setActivityStatus(ActivityStatusEnum.PLANNED);
@@ -206,8 +207,46 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         activity.getHumanResourcePostings().remove(hrp);
     }
     
+    
+    public List<ActivityEntity> retrieveActivitiesNotCompleted() {
+        
+        Query query = em.createQuery("SELECT a FROM ActivityEntity a WHERE a.activityStatus <> :inStatus");
+        query.setParameter("inStatus", ActivityStatusEnum.COMPLETED);
+        
+        return query.getResultList();
+    }
+    
+    
+    public void updateActivitiesStatus(List<ActivityEntity> activities) {
+        LocalDateTime today = LocalDateTime.now().withSecond(0).withNano(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+        if (!activities.isEmpty()) {
+            for (ActivityEntity activity: activities) {
+                LocalDateTime startDate = LocalDateTime.parse(sdf.format(activity.getStartDate()));
+                LocalDateTime endDate = LocalDateTime.parse(sdf.format(activity.getEndDate()));
+
+                if (today.isAfter(endDate)) {
+                    activity.setActivityStatus(ActivityStatusEnum.COMPLETED);
+                    for(UserEntity user: activity.getJoinedUsers()){
+                        user.setReputationPoints(user.getReputationPoints() + 3);
+                    }
+                    
+                } else if (!today.isBefore(startDate)) {
+                    activity.setActivityStatus(ActivityStatusEnum.ONGOING);
+                }
+
+                em.merge(activity);
+                em.flush();
+            }
+        }
+    }
+    
     @Override
+    //public List<MaterialResourcePostingEntity> getAllocatedResources(Long activityId) throws NoResultException {
+
     public List<MaterialResourcePostingEntity> getAllocatedMrps(Long activityId) throws NoResultException {
+
         ActivityEntity activity = this.getActivityById(activityId);
         activity.getMaterialResourcePostings().size();
         
@@ -312,6 +351,8 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         
         ReviewEntity newReview = new ReviewEntity(review.getTitle(), review.getReviewField(), review.getRating());
         
+        em.persist(newReview);
+        em.flush();
         
         UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
         UserEntity toUser = userSessionBeanLocal.getUserById(toId);
@@ -326,9 +367,9 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         newReview.setMadeFromActivity(madeFromActivity);
         madeFromActivity.getReviews().add(newReview);
         
-        em.persist(newReview);
-        em.flush();
+        
         fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+        fromUser.setReputationPoints(fromUser.getReputationPoints() + 2);
         
         return newReview.getReviewId();
     }
@@ -340,6 +381,9 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         System.out.println(review.getTitle());
         System.out.println(review.getReviewField());
         System.out.println(review.getRating());
+        
+        em.persist(newReview);
+        em.flush();
         
         UserEntity fromUser = userSessionBeanLocal.getUserById(fromId);
         ProjectEntity toProject = projectSessionBeanLocal.getProjectById(toProjectId);
@@ -354,10 +398,10 @@ public class ActivitySessionBean implements ActivitySessionBeanLocal {
         newReview.setMadeFromActivity(madeFromActivity);
         madeFromActivity.getReviews().add(newReview);
         
-        em.persist(newReview);
-        em.flush();
+        
         
         fromUser.setCountOfReviewsCreated(fromUser.getCountOfReviewsCreated() + 1);
+        fromUser.setReputationPoints(fromUser.getReputationPoints() + 2);
         
         return newReview.getReviewId();
     }

@@ -9,6 +9,7 @@ import Exception.DuplicateTagInProfileException;
 import Exception.InvalidLoginCredentialException;
 import Exception.InvalidUUIDException;
 import Exception.NoResultException;
+import Exception.QuestionnaireAlreadyCompletedException;
 import Exception.ResignFromAdminException;
 import Exception.UserNotFoundException;
 import entity.AffiliationRequestEntity;
@@ -16,7 +17,9 @@ import entity.AwardEntity;
 import entity.FollowRequestEntity;
 import entity.FulfillmentEntity;
 import entity.GroupEntity;
+import entity.IndividualQuestionnaireEntity;
 import entity.MaterialResourceAvailableEntity;
+import entity.OrganisationQuestionnaireEntity;
 import entity.PostEntity;
 import entity.ProfileEntity;
 import entity.ProjectEntity;
@@ -82,6 +85,8 @@ public class UserSessionBean implements UserSessionBeanLocal, UserSessionBeanRem
         user.setCountOfProjectsCreated(0);
         user.setCountOfProjectsJoined(0);
         user.setCountOfReviewsCreated(0);
+        user.setReputationPoints(0);
+        user.setCompletedQuestionnaire(Boolean.FALSE);
         em.persist(user);
         em.flush();
         System.out.println(user);
@@ -1007,6 +1012,78 @@ public class UserSessionBean implements UserSessionBeanLocal, UserSessionBeanRem
         return userEntity.getProfiles();
     }
 
+    
+    public Long submitIndividualQuestionnaire(IndividualQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException{
+        UserEntity user = getUserById(userId);
+        if(user.getCompletedQuestionnaire()){
+            throw new QuestionnaireAlreadyCompletedException("Questionnaire has already been submitted");
+        }
+        else{
+            List<TagEntity> currentSDGs = user.getSdgs();
+            List<TagEntity> updatedSDGs = new ArrayList<>();
+            for(TagEntity incomingSdg : sdg){
+                boolean incomingSDGinCurrent = false;
+                for(TagEntity currentSdg: currentSDGs){
+                    if(incomingSdg.getTagId().equals(currentSdg.getTagId())){
+                        incomingSDGinCurrent = true;
+                    }
+                }
+                if(incomingSDGinCurrent == false){
+                    try{
+                        addSDGToProfile(userId, incomingSdg.getTagId());
+                    }
+                    catch (DuplicateTagInProfileException ex){
+                        continue;
+                    }
+                }
+            }
+           
+            
+            
+            
+            user.setCompletedQuestionnaire(Boolean.TRUE);
+            em.persist(questionnaire);
+            user.setIndividualQuestionnaire(questionnaire);
+            em.flush();
+        }
+        
+        return questionnaire.getIndividualQuestionnaireId();
+    }
+    
+    public Long submitOrganisationQuestionnaire(OrganisationQuestionnaireEntity questionnaire, Long userId, List<TagEntity> sdg) throws NoResultException, QuestionnaireAlreadyCompletedException{
+        UserEntity user = getUserById(userId);
+        if(user.getCompletedQuestionnaire()){
+            throw new QuestionnaireAlreadyCompletedException("Questionnaire has already been submitted");
+        }
+        else{
+             List<TagEntity> currentSDGs = user.getSdgs();
+            List<TagEntity> updatedSDGs = new ArrayList<>();
+            for(TagEntity incomingSdg : sdg){
+                boolean incomingSDGinCurrent = false;
+                for(TagEntity currentSdg: currentSDGs){
+                    if(incomingSdg.getTagId().equals(currentSdg.getTagId())){
+                        incomingSDGinCurrent = true;
+                    }
+                }
+                if(incomingSDGinCurrent == false){
+                    try{
+                        addSDGToProfile(userId, incomingSdg.getTagId());
+                    }
+                    catch (DuplicateTagInProfileException ex){
+                        continue;
+                    }
+                }
+            }
+            
+            em.persist(questionnaire);
+            user.setOrganisationQuestionnaire(questionnaire);
+            em.flush();
+            user.setCompletedQuestionnaire(Boolean.TRUE);
+        }
+        
+        return questionnaire.getOrganisationQuestionnaireId();
+    }
+
     @Override
     public UserEntity promoteUserToAdmin(Long userToPromoteId) throws NoResultException {
         UserEntity user = em.find(UserEntity.class, userToPromoteId);
@@ -1036,5 +1113,6 @@ public class UserSessionBean implements UserSessionBeanLocal, UserSessionBeanRem
         } else {
             throw new NoResultException("No Admin Found.");
         }
+
     }
 }

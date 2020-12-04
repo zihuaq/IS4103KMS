@@ -5,7 +5,6 @@ export class Award {
   awardId: number;
   name: string;
   description: string;
-  country: string;
   awardPicture: string | ArrayBuffer;
   usersReceived: User[];
   project: Project;

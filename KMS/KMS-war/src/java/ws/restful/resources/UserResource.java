@@ -54,6 +54,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import ws.restful.model.ErrorRsp;
+import ws.restful.model.SubmitIndividualQuestionnaireReq;
+import ws.restful.model.SubmitOrganisationQuestionnaireReq;
 import ws.restful.model.UpdateUserPasswordReq;
 import ws.restful.model.editReviewReq;
 import ws.restful.model.editReviewRsp;
@@ -67,6 +69,8 @@ import ws.restful.model.editReviewRsp;
 public class UserResource {
 
     BadgeSessionBeanLocal badgeSessionBean = lookupBadgeSessionBeanLocal();
+
+   
 
     UserSessionBeanLocal userSessionBeanLocal = lookupUserSessionBeanLocal();
 
@@ -102,6 +106,17 @@ public class UserResource {
             throw new RuntimeException(ne);
         }
     }
+    
+     private BadgeSessionBeanLocal lookupBadgeSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (BadgeSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/BadgeSessionBean!ejb.session.stateless.BadgeSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
 
     @PUT
     @Path("/addskills/{userId}")
@@ -499,7 +514,7 @@ public class UserResource {
     public Response userLogin(@QueryParam("email") String email, @QueryParam("password") String password) {
         try {
             UserEntity user = this.userSessionBeanLocal.userLogin(email, password);
-            System.out.println("here");
+            System.out.println(email + " login");
 
             user.setReviewsGiven(new ArrayList<>());
             user.setReviewsReceived(new ArrayList<>());
@@ -529,6 +544,7 @@ public class UserResource {
             user.setNotifications(new ArrayList<>());
             user.setClaimProfileRequestMade(new ArrayList<>());
             user.setProfiles(new ArrayList<>());
+            user.setReceivedAwards(new ArrayList<>());
 
             return Response.status(Response.Status.OK).entity(user).build();
         } catch (InvalidLoginCredentialException ex) {
@@ -936,8 +952,9 @@ public class UserResource {
 
     private List<ReviewEntity> getWrittenReviewsResponse(List<ReviewEntity> reviews) {
         List<ReviewEntity> writtenReviewsResponse = new ArrayList<>();
-        ReviewEntity temp = new ReviewEntity();
+        
         for (ReviewEntity reviewEntity : reviews) {
+            ReviewEntity temp = new ReviewEntity();
             UserEntity to = new UserEntity();
             if (reviewEntity.getTo() != null) {
                 to.setUserId(reviewEntity.getTo().getUserId());
@@ -1215,12 +1232,14 @@ public class UserResource {
         try {
             List<AwardEntity> awardsReceived = userSessionBeanLocal.getReceivedAwards(userId);
             for (AwardEntity a : awardsReceived) {
-                a.getUsersReceived().clear();
+                a.setUsersReceived(new ArrayList<>());
                 ProjectEntity p = new ProjectEntity();
                 p.setProjectId(a.getProject().getProjectId());
                 p.setName(a.getProject().getName());
                 a.setProject(p);
+                System.out.println(a);
             }
+            System.out.println("before get awards received return");
             return Response.status(Status.OK).entity(awardsReceived).build();
 
         } catch (UserNotFoundException ex) {
@@ -1261,6 +1280,63 @@ public class UserResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
         }
     }
+    
+    @Path("submitIndividualQuestionnaire")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response submitIndividualQuestionnaire(SubmitIndividualQuestionnaireReq submitIndividualQuestionnaireReq) {
+        System.out.println("******** UserResource: submitIndividualQuestionnaire()");
+        try {
+            Long questionnaireId = userSessionBeanLocal.submitIndividualQuestionnaire(submitIndividualQuestionnaireReq.getIndividualQuestionnaire(), submitIndividualQuestionnaireReq.getUserId(), submitIndividualQuestionnaireReq.getSdgs());   
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+    
+    @Path("submitOrganisationQuestionnaire")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response submitOrganisationQuestionnaire(SubmitOrganisationQuestionnaireReq submitOrganisationQuestionnaireReq) {
+        try {
+            Long questionnaireId = userSessionBeanLocal.submitOrganisationQuestionnaire(submitOrganisationQuestionnaireReq.getOrganisationQuestionnaire(), submitOrganisationQuestionnaireReq.getUserId(), submitOrganisationQuestionnaireReq.getSdgs());
+            UserEntity user = userSessionBeanLocal.getUserById(submitOrganisationQuestionnaireReq.getUserId());
+            List<TagEntity> currentSDGs = user.getSdgs();
+            List<TagEntity> updatedSDGs = new ArrayList<>();
+//            for(TagEntity sdg : submitOrganisationQuestionnaireReq.getSdgs()){
+//                if(currentSDGs.stream().filter(t -> t.getName().equals(sdg.getName())).findFirst().isPresent()){
+//                    continue;
+//                }
+//                else{
+//                    updatedSDGs.add(sdg);
+//                }
+//            }
+            for(TagEntity incomingSdg : submitOrganisationQuestionnaireReq.getSdgs()){
+                boolean incomingSDGinCurrent = false;
+                TagEntity curentIncomingTag = tagSessionBeanLocal.getTagById(incomingSdg.getTagId());
+                for(TagEntity currentSdg: currentSDGs){
+                    if(curentIncomingTag.getTagId().equals(currentSdg.getTagId())){
+                        incomingSDGinCurrent = true;
+                    }
+                }
+                if(incomingSDGinCurrent == false){
+                    updatedSDGs.add(curentIncomingTag);
+                }
+            }
+            if(updatedSDGs.size() > 0){
+                userSessionBeanLocal.addSDGsToProfile(submitOrganisationQuestionnaireReq.getUserId(), updatedSDGs);
+            }
+//          
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(errorRsp).build();
+        }
+    }
+
 
     public void persist(Object object) {
         /* Add this to the deployment descriptor of this module (e.g. web.xml, ejb-jar.xml):
@@ -1310,14 +1386,7 @@ public class UserResource {
         }
     }
 
-    private BadgeSessionBeanLocal lookupBadgeSessionBeanLocal() {
-        try {
-            javax.naming.Context c = new InitialContext();
-            return (BadgeSessionBeanLocal) c.lookup("java:global/KMS/KMS-war/BadgeSessionBean!ejb.session.stateless.BadgeSessionBeanLocal");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
-        }
-    }
+   
+    
 
 }

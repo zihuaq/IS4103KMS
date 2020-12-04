@@ -240,6 +240,8 @@ onAwardSelected(awardData: Award){
 
   this.withdrawAwardArray =  this.selectedAward.usersReceived;
 
+  this.issueAwardArray = []
+
   for(let member of this.project.projectMembers){
     let recievedAward = false;
     for(let recieved of this.selectedAward.usersReceived){
@@ -247,7 +249,7 @@ onAwardSelected(awardData: Award){
       recievedAward = true;
       }
     }
-    if (recievedAward == false){
+    if (recievedAward == false && member.userId != this.sessionService.getCurrentUser().userId){
       this.issueAwardArray.push(member)
     }
 

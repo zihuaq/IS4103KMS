@@ -6,6 +6,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MomentModule } from 'angular2-moment';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { YouTubePlayerModule } from '@angular/youtube-player'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -263,7 +264,7 @@ export const environment = {
     ModalModule.forRoot(),
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule, NgbModule,
+    AngularFireDatabaseModule, NgbModule, YouTubePlayerModule,
     ReactiveFormsModule
   ],
   providers: [DatePipe],

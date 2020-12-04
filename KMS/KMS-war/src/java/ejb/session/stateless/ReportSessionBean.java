@@ -325,6 +325,13 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setText("Dear User," +'\n' + "Your account has been deactivated for violating our terms of service" + '\n' + currentReport.getVerdictComments());
 
                 Transport.send(message);
+                
+                if(report.getReportedUser().getReputationPoints() < 10){
+                   report.getReportedUser().setReputationPoints(0);
+               }
+               else{
+                   report.getReportedUser().setReputationPoints(report.getReportedUser().getReputationPoints() - 10);
+               }
             }
             if(currentReport.getReportType() == ReportTypeEnum.PROJECT){
                 Message message = new MimeMessage(session);
@@ -334,6 +341,13 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setText("Dear User," +'\n' + "Your project has been deactivated for violating our terms of service" + '\n' + currentReport.getVerdictComments());
 
                 Transport.send(message);
+                
+                if(report.getReportedProject().getProjectOwner().getReputationPoints() < 10){
+                   report.getReportedUser().setReputationPoints(0);
+               }
+               else{
+                   report.getReportedProject().getProjectOwner().setReputationPoints(report.getReportedProject().getProjectOwner().getReputationPoints() - 10);
+               }
             }
             if(currentReport.getReportType() == ReportTypeEnum.GROUP){
                 Message message = new MimeMessage(session);
@@ -343,6 +357,13 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setText("Dear User," +'\n' + "Your group has been deactivated for violating our terms of service" + '\n' + currentReport.getVerdictComments());
 
                 Transport.send(message);
+                
+                if(report.getReportedGroup().getGroupOwner().getReputationPoints() < 10){
+                   report.getReportedGroup().getGroupOwner().setReputationPoints(0);
+               }
+               else{
+                   report.getReportedGroup().getGroupOwner().setReputationPoints(report.getReportedGroup().getGroupOwner().getReputationPoints() - 10);
+               }
             }
             if(currentReport.getReportType() == ReportTypeEnum.POST){
                 Message message = new MimeMessage(session);
@@ -352,6 +373,13 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setText("Dear User," +'\n' + "Your post has been deleted for violating our terms of service" + '\n');
 
                 Transport.send(message);
+                
+                if(report.getReportedPost().getPostOwner().getReputationPoints() < 10){
+                   report.getReportedPost().getPostOwner().setReputationPoints(0);
+               }
+               else{
+                   report.getReportedPost().getPostOwner().setReputationPoints(report.getReportedPost().getPostOwner().getReputationPoints() - 10);
+               }
             }
             if(currentReport.getReportType() == ReportTypeEnum.COMMENT){
                 Message message = new MimeMessage(session);
@@ -361,6 +389,13 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setText("Dear User," +'\n' + "Your comment has been deleted for violating our terms of service" + '\n');
 
                 Transport.send(message);
+                
+                if(report.getReportedComment().getCommentOwner().getReputationPoints() < 10){
+                   report.getReportedComment().getCommentOwner().setReputationPoints(0);
+               }
+               else{
+                   report.getReportedComment().getCommentOwner().setReputationPoints(report.getReportedComment().getCommentOwner().getReputationPoints() - 10);
+               }
             }
             if(currentReport.getReportType() == ReportTypeEnum.REVIEW){
                 Message message = new MimeMessage(session);
@@ -370,6 +405,13 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
                 message.setText("Dear User," +'\n' + "Your review has been deleted for violating our terms of service" + '\n');
 
                 Transport.send(message);
+                
+                if(report.getReportedReview().getFrom().getReputationPoints() < 10){
+                   report.getReportedReview().getFrom().setReputationPoints(0);
+               }
+               else{
+                   report.getReportedReview().getFrom().setReputationPoints(report.getReportedReview().getFrom().getReputationPoints() - 10);
+               }
             }
             
 

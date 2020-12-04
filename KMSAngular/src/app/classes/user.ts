@@ -12,6 +12,8 @@ import { Group } from './group';
 import { Award } from './award';
 import { Profile } from './profile';
 import { ClaimProfileRequest } from './claim-profile-request';
+import { IndividualQuestionnaire } from './individualQuestionnaire';
+import { OrganisationQuestionnaire } from './organisationQuestionnaire';
 
 export class User {
   userId: number;
@@ -46,16 +48,19 @@ export class User {
   activityJoined: Activity[];
   groupsJoined: Group[];
   recievedAwards: Award[];
-  CountOfGroupsJoined: number;
-  CountOfProjectsJoined: number;
-  CountOfProjectsCreated: number;
-  CountOfGroupsCreated: number;
-  CountOfActivitiesCompleted: number;
-  CountOfPostCreated: number;
-  CountOfCommentsCreated: number;
-  CountOfReviewsCreated: number;
+  countOfGroupsJoined: number;
+  countOfProjectsJoined: number;
+  countOfProjectsCreated: number;
+  countOfGroupsCreated: number;
+  countOfActivitiesCompleted: number;
+  countOfPostCreated: number;
+  countOfCommentsCreated: number;
+  countOfReviewsCreated: number;
   profiles: Profile[];
   claimProfileRequestMade: ClaimProfileRequest[];
+  completedQuestionnaire: boolean
+  individualQuestionnaire: IndividualQuestionnaire
+  organisationQuestionnaire: OrganisationQuestionnaire
 
   constructor(
     userId?: number,
@@ -90,7 +95,18 @@ export class User {
     activityJoined?: Activity[],
     groupsJoined?: Group[],
     profiles?: Profile[],
-    claimProfileRequestMade?: ClaimProfileRequest[]
+    claimProfileRequestMade?: ClaimProfileRequest[],
+    completedQuestionnaire?: boolean,
+    individualQuestionnaire?: IndividualQuestionnaire,
+    organisationQuestionnaire?: OrganisationQuestionnaire,
+    countOfGroupsJoined?: number,
+    countOfProjectsJoined?: number,
+    countOfProjectsCreated?: number,
+    countOfGroupsCreated?: number,
+    countOfActivitiesCompleted?: number,
+    countOfPostCreated?: number,
+    countOfCommentsCreated?: number,
+    countOfReviewsCreated?: number
   ) {
     this.userId = userId;
     this.firstName = firstName;
@@ -125,5 +141,16 @@ export class User {
     this.groupsJoined = groupsJoined;
     this.profiles = profiles;
     this.claimProfileRequestMade = claimProfileRequestMade;
+    this.completedQuestionnaire = completedQuestionnaire
+    this.individualQuestionnaire = individualQuestionnaire
+    this.organisationQuestionnaire = organisationQuestionnaire
+    this.countOfGroupsJoined = countOfGroupsJoined
+    this.countOfProjectsJoined = countOfProjectsJoined
+    this.countOfProjectsCreated = countOfProjectsCreated
+    this.countOfGroupsCreated = countOfGroupsCreated
+    this.countOfActivitiesCompleted = countOfActivitiesCompleted
+    this.countOfPostCreated = countOfPostCreated
+    this.countOfCommentsCreated = countOfCommentsCreated
+    this.countOfReviewsCreated = countOfReviewsCreated
   }
 }

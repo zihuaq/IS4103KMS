@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { User } from './classes/user';
+import { IndividualQuestionnaire } from './classes/individualQuestionnaire';
+import { OrganisationQuestionnaire } from './classes/organisationQuestionnaire';
 import {
   HttpClient,
   HttpErrorResponse,
@@ -350,6 +352,46 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  submitIndividualQuestionnaire(
+    userId: number,
+    individualQuestionnaire: IndividualQuestionnaire,
+    sdgTags: Tag[]
+    ){
+
+      let submitIndividualQuestionnaireReq = {
+        userId: userId,
+        individualQuestionnaire: individualQuestionnaire,
+        sdgs: sdgTags
+      };
+
+      return this.http
+      .post<any>(
+        this.baseUrl + '/submitIndividualQuestionnaire',
+        submitIndividualQuestionnaireReq,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  submitOrganisationQuestionnaire(
+    userId: number,
+    organisationQuestionnaire: OrganisationQuestionnaire,
+    sdgTags: Tag[]){
+
+      let submitOrganisationQuestionnaireReq = {
+        userId: userId,
+        organisationQuestionnaire: organisationQuestionnaire,
+        sdgs: sdgTags
+      };
+
+      return this.http
+      .post<any>(
+        this.baseUrl + '/submitOrganisationQuestionnaire',
+        submitOrganisationQuestionnaireReq,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
 
 
   verifyEmail(email: String, uuid: String) {
@@ -438,7 +480,7 @@ export class UserService {
   }
 
   getAwardsReceived(userId: number): Observable<any>{
-    return this.http.get<any>(this.baseUrl + "/awardsReceived/" + userId)
+    return this.http.get<any>(this.baseUrl + /awardsReceived/ + userId)
     .pipe(catchError(this.handleError));
   }
 }
