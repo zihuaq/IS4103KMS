@@ -52,37 +52,39 @@ export class EditMembersPage implements OnInit {
       (user: User) => {
         this.currentUserId = user.userId;
         console.log(this.currentUserId);
-      }
-    );
-    this.groupId = parseInt(this.activatedRoute.snapshot.paramMap.get("groupId"));
-    this.groupService.getGroupById(this.groupId).subscribe(
-      async response => {
-        this.group = response;
-        if (this.group.groupOwner.userId == this.currentUserId) {
-          this.isOwner = true;
-        }
-        this.noOfMembers = this.group.groupMembers.length;
 
-        this.owner = this.group.groupOwner;
+        this.groupId = parseInt(this.activatedRoute.snapshot.paramMap.get("groupId"));
+        this.groupService.getGroupById(this.groupId).subscribe(
+          async response => {
+            this.group = response;
+            if (this.group.groupOwner.userId == this.currentUserId) {
+              this.isOwner = true;
+            }
+            this.noOfMembers = this.group.groupMembers.length;
 
-        //this.dateCreated = this.group.dateCreated.toString().slice(0,10);
+            this.owner = this.group.groupOwner;
 
-        for (let admin of this.group.groupAdmins) {
-          if (this.currentUserId == admin.userId) {
-            this.isMember = true;
-            this.isAdmin = true;
-          }
-        }
+            //this.dateCreated = this.group.dateCreated.toString().slice(0,10);
 
-        if (!this.isAdmin) {
-          for (let member of this.group.groupMembers) {
-            if (this.currentUserId == member.userId) {
-              this.isMember = true;
+            for (let admin of this.group.groupAdmins) {
+              if (this.currentUserId == admin.userId) {
+                this.isMember = true;
+                this.isAdmin = true;
+              }
+            }
+
+            if (!this.isAdmin) {
+              for (let member of this.group.groupMembers) {
+                if (this.currentUserId == member.userId) {
+                  this.isMember = true;
+                }
+              }
             }
           }
-        }
+        )
       }
-    )
+    );
+    
   }
 
   checkAdmin(user: User): boolean {
@@ -283,6 +285,7 @@ export class EditMembersPage implements OnInit {
   }
 
   async ownerActionForAdmin(user: User) {
+    console.log("clicked")
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
         text: 'Pass Owner',
@@ -305,6 +308,7 @@ export class EditMembersPage implements OnInit {
   }
 
   async adminAction(user: User) {
+    console.log("clickedAdmin")
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
         text: 'Promote to Admin',
