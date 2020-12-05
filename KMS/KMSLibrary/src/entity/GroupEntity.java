@@ -52,7 +52,7 @@ public class GroupEntity implements Serializable {
     private List<UserEntity> groupMembers;
     
     @JoinTable(name= "groupAdmins")
-    @ManyToMany(mappedBy="groupAdmins")    
+    @ManyToMany(mappedBy="groupsManaged")    
     private List<UserEntity> groupAdmins;
     
     @ManyToMany

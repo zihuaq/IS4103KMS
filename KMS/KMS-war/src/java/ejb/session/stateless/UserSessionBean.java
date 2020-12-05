@@ -447,11 +447,11 @@ public class UserSessionBean implements UserSessionBeanLocal, UserSessionBeanRem
         followRequestReceived.clear();
         user.getFollowers().clear();
         user.getFollowing().clear();
-        List<GroupEntity> groupAdmins = user.getGroupAdmins();
-        for (int i = 0; i < groupAdmins.size(); i++) {
-            groupAdmins.get(i).getGroupAdmins().remove(user);
+        List<GroupEntity> groupsManaged = user.getGroupsManaged();
+        for (int i = 0; i < groupsManaged.size(); i++) {
+            groupsManaged.get(i).getGroupAdmins().remove(user);
         }
-        groupAdmins.clear();
+        groupsManaged.clear();
         List<GroupEntity> groupsJoined = user.getGroupsJoined();
         for (int i = 0; i < groupsJoined.size(); i++) {
             groupsJoined.get(i).getGroupMembers().remove(user);
@@ -977,8 +977,8 @@ public class UserSessionBean implements UserSessionBeanLocal, UserSessionBeanRem
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
-        user.getGroupAdmins().size();
-        return user.getGroupAdmins();
+        user.getGroupsManaged().size();
+        return user.getGroupsManaged();
 
     }
 
