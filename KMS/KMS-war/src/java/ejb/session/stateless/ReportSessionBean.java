@@ -58,6 +58,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         }
     }
     
+    @Override
     public ReportEntity getReportById(Long reportId) throws NoResultException{
        
         ReportEntity returnReport = em.find(ReportEntity.class, reportId);
@@ -115,6 +116,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         }
     }
     
+    @Override
      public ReportEntity createPostReport(ReportEntity report, List<Long> tagIds) throws NoResultException {
         UserEntity reportOwner = em.find(UserEntity.class, report.getReportOwner().getUserId());
         PostEntity reportedPost = em.find(PostEntity.class, report.getReportedPost().getPostId());
@@ -254,6 +256,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         return postReports;
     }
     
+    @Override
     public void deleteReport(Long reportId) throws NoResultException{
         ReportEntity report = getReportById(reportId);
         em.remove(report);
@@ -296,6 +299,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         return commentReports;
     }
     
+    @Override
     public void sentReportVerdictEmail(ReportEntity report) throws NoResultException{
         final String username = "4103kms";
         final String password = "4103kmsemail";

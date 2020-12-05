@@ -37,9 +37,6 @@ import ws.restful.model.SharePostToProjectOrGroupsReq;
 public class PostSessionBean implements PostSessionBeanLocal {
 
     @EJB
-    private ReportSessionBeanLocal reportSessionBean;
-
-    @EJB
     private GroupSessionBeanLocal groupSessionBean;
 
     @EJB

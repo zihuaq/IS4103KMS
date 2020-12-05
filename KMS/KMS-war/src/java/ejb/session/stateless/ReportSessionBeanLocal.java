@@ -53,5 +53,7 @@ public interface ReportSessionBeanLocal {
 
     public ReportEntity reportReview(ReportEntity report) throws NoResultException;
 
+    public ReportEntity getReportById(Long reportId) throws NoResultException;
+
 
 }
